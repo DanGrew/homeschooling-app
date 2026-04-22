@@ -59,6 +59,15 @@ function dotR(){
   return Math.max(15,Math.min(60,Math.round(30/(w/vbW))));
 }
 
+function tightVB(shape,r){
+  var pad=Math.max(r+15,60);
+  var xs=shape.dots.map(function(d){return d.cx;});
+  var parts=shape.vb.split(' ').map(Number);
+  var minX=Math.max(0,Math.min.apply(null,xs)-pad);
+  var maxX=Math.min(parts[2],Math.max.apply(null,xs)+pad);
+  return minX+' 0 '+(maxX-minX)+' '+parts[3];
+}
+
 var resizeTimer;
 window.addEventListener('resize',function(){
   clearTimeout(resizeTimer);
@@ -68,7 +77,6 @@ window.addEventListener('resize',function(){
 function render(){
   var shape=shapes[shapeIdx];
   var svg=document.getElementById('svg');
-  svg.setAttribute('viewBox',shape.vb);
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
   document.getElementById('title').textContent=shape.name;
@@ -76,6 +84,7 @@ function render(){
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 
   var r=dotR();
+  svg.setAttribute('viewBox',tightVB(shape,r));
   var fontSize=Math.round(r*0.85);
 
   shape.guides.forEach(function(g){
