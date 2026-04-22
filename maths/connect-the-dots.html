@@ -66,8 +66,8 @@ function render(){
   shape.dots.forEach(function(d){
     var g=ns('g',{});
     g.style.cursor='pointer';
-    var c=ns('circle',{cx:d.cx,cy:d.cy,r:20,fill:'white',stroke:'#444','stroke-width':'2.5',id:'c'+d.n});
-    var t=ns('text',{x:d.cx,y:d.cy,'font-size':'18','font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
+    var c=ns('circle',{cx:d.cx,cy:d.cy,r:30,fill:'white',stroke:'#444','stroke-width':'3',id:'c'+d.n});
+    var t=ns('text',{x:d.cx,y:d.cy,'font-size':'26','font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
     t.textContent=d.n;
     g.appendChild(c);g.appendChild(t);
     g.addEventListener('click',function(){tap(d.n);});
