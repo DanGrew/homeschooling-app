@@ -9,19 +9,23 @@
 .wrong-flash{animation:wrong 0.4s ease}
 </style>
 </head>
-<body style="margin:0;background:#fff8f0;min-height:100vh;display:flex;flex-direction:column;font-family:'Comic Sans MS','Chalkboard SE',cursive;overflow:hidden;">
-<div style="display:flex;align-items:center;padding:15px 20px;gap:12px;">
-  <a href="index.html" style="font-size:1.8em;color:#666;text-decoration:none;padding:6px 18px;background:#eee;border-radius:12px;">&#8592;</a>
-  <span id="title" style="font-size:2em;font-weight:bold;color:#333;flex:1;"></span>
-  <button onclick="prevShape()" style="font-size:1.8em;padding:6px 18px;background:#eee;border:none;border-radius:12px;font-family:inherit;cursor:pointer;">&#8592;</button>
-  <button onclick="nextShape()" style="font-size:1.8em;padding:6px 18px;background:#eee;border:none;border-radius:12px;font-family:inherit;cursor:pointer;">&#8594;</button>
+<body style="margin:0;background:#fff8f0;height:100vh;display:flex;flex-direction:row;font-family:'Comic Sans MS','Chalkboard SE',cursive;overflow:hidden;">
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px 10px;background:#eee;border-right:2px solid #ddd;">
+  <a href="index.html" style="font-size:1.6em;color:#666;text-decoration:none;padding:10px 14px;background:#fff;border-radius:12px;">&#127968;</a>
+  <button onclick="prevShape()" style="font-size:1.6em;padding:10px 14px;background:#fff;border:none;border-radius:12px;font-family:inherit;cursor:pointer;">&#8593;</button>
+  <button onclick="nextShape()" style="font-size:1.6em;padding:10px 14px;background:#fff;border:none;border-radius:12px;font-family:inherit;cursor:pointer;">&#8595;</button>
 </div>
-<div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 20px 8px;"></div>
-<div style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
-  <svg id="svg" style="width:100%;max-height:calc(100vh - 160px);" preserveAspectRatio="xMidYMid meet"></svg>
-  <div id="done" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,248,240,0.85);">
-    <div style="font-size:2.5em;margin-bottom:12px;">&#11088; Well done! &#11088;</div>
-    <button onclick="nextShape()" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;">Next Shape &#8594;</button>
+<div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;align-items:center;padding:12px 16px;">
+    <span id="title" style="font-size:1.8em;font-weight:bold;color:#333;"></span>
+  </div>
+  <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+    <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="done" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,248,240,0.85);">
+      <div style="font-size:2.5em;margin-bottom:12px;">&#11088; Well done! &#11088;</div>
+      <button onclick="nextShape()" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;">Next &#8595;</button>
+    </div>
   </div>
 </div>
 <script>var shapes=[];</script>
@@ -49,15 +53,39 @@ function ns(tag,attrs){
   return el;
 }
 
+function tightVB(shape){
+  var pad=60;
+  var xs=shape.dots.map(function(d){return d.cx;});
+  var parts=shape.vb.split(' ').map(Number);
+  var minX=Math.max(0,Math.min.apply(null,xs)-pad);
+  var maxX=Math.min(parts[2],Math.max.apply(null,xs)+pad);
+  return minX+' 0 '+(maxX-minX)+' '+parts[3];
+}
+
+function dotR(vbW){
+  var w=window.innerWidth-70;
+  return Math.max(15,Math.min(60,Math.round(30/(w/vbW))));
+}
+
+var resizeTimer;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(render,150);
+});
+
 function render(){
   var shape=shapes[shapeIdx];
   var svg=document.getElementById('svg');
-  svg.setAttribute('viewBox',shape.vb);
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
   document.getElementById('title').textContent=shape.name;
   document.getElementById('done').style.display='none';
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
+
+  var vb=tightVB(shape);
+  svg.setAttribute('viewBox',vb);
+  var r=dotR(parseInt(vb.split(' ')[2]));
+  var fontSize=Math.round(r*0.85);
 
   shape.guides.forEach(function(g){
     svg.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':'3','stroke-dasharray':'10 6'}));
@@ -68,8 +96,8 @@ function render(){
   shape.dots.forEach(function(d){
     var g=ns('g',{});
     g.style.cursor='pointer';
-    var c=ns('circle',{cx:d.cx,cy:d.cy,r:30,fill:'white',stroke:'#444','stroke-width':'3',id:'c'+d.n});
-    var t=ns('text',{x:d.cx,y:d.cy,'font-size':'26','font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
+    var c=ns('circle',{cx:d.cx,cy:d.cy,r:r,fill:'white',stroke:'#444','stroke-width':'3',id:'c'+d.n});
+    var t=ns('text',{x:d.cx,y:d.cy,'font-size':fontSize,'font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
     t.textContent=d.n;
     g.appendChild(c);g.appendChild(t);
     g.addEventListener('click',function(){tap(d.n);});
@@ -117,15 +145,8 @@ function drawLine(x1,y1,x2,y2){
   line.setAttribute('stroke-dashoffset','0');
 }
 
-function nextShape(){
-  shapeIdx=(shapeIdx+1)%shapes.length;
-  render();
-}
-
-function prevShape(){
-  shapeIdx=(shapeIdx+shapes.length-1)%shapes.length;
-  render();
-}
+function nextShape(){shapeIdx=(shapeIdx+1)%shapes.length;render();}
+function prevShape(){shapeIdx=(shapeIdx+shapes.length-1)%shapes.length;render();}
 
 render();
 </script>
