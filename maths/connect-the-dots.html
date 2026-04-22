@@ -54,12 +54,16 @@ function ns(tag,attrs){
 }
 
 function dotR(){
-  var svgEl=document.getElementById('svg');
-  var w=svgEl.getBoundingClientRect().width||window.innerWidth;
   var vbW=parseInt(shapes[shapeIdx].vb.split(' ')[2]);
-  var scale=w/vbW;
-  return Math.round(22/scale);
+  var w=window.innerWidth-70;
+  return Math.max(15,Math.min(50,Math.round(22/(w/vbW))));
 }
+
+var resizeTimer;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(render,150);
+});
 
 function render(){
   var shape=shapes[shapeIdx];
