@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Connect the Dots</title>
+<style>
+@keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
+.wrong-flash{animation:wrong 0.4s ease}
+</style>
+</head>
+<body style="margin:0;background:#fff8f0;min-height:100vh;display:flex;flex-direction:column;font-family:'Comic Sans MS','Chalkboard SE',cursive;overflow:hidden;">
+<div style="display:flex;align-items:center;padding:15px 20px;">
+  <a href="index.html" style="font-size:1.8em;color:#666;text-decoration:none;padding:6px 18px;background:#eee;border-radius:12px;">&#8592;</a>
+  <span id="title" style="font-size:2em;font-weight:bold;color:#333;margin-left:20px;"></span>
+</div>
+<div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 20px 8px;"></div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:0 10px;">
+  <svg id="svg" style="width:100%;max-width:650px;max-height:65vh;" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+<div style="text-align:center;padding:16px 20px 40px;">
+  <div id="done" style="display:none;">
+    <div style="font-size:2.5em;margin-bottom:12px;">&#11088; Well done! &#11088;</div>
+    <button onclick="nextShape()" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;">Next Shape &#8594;</button>
+  </div>
+</div>
+<script>
+var shapes=[
+  {name:'Triangle',vb:'0 0 650 305',
+   dots:[{n:1,cx:325,cy:40},{n:2,cx:455,cy:265},{n:3,cx:195,cy:265}],
+   guides:[{x1:335,y1:57,x2:445,y2:248},{x1:435,y1:265,x2:215,y2:265},{x1:205,y1:248,x2:315,y2:57}]
+  },
+  {name:'Star',vb:'0 0 650 280',
+   dots:[{n:1,cx:325,cy:32},{n:2,cx:397,cy:252},{n:3,cx:211,cy:118},{n:4,cx:439,cy:118},{n:5,cx:253,cy:252}],
+   guides:[{x1:331,y1:51,x2:391,y2:233},{x1:381,y1:240,x2:227,y2:130},{x1:231,y1:118,x2:419,y2:118},{x1:423,y1:130,x2:269,y2:240},{x1:259,y1:233,x2:319,y2:51}]
+  },
+  {name:'House',vb:'0 0 650 280',
+   dots:[{n:1,cx:115,cy:148},{n:2,cx:325,cy:42},{n:3,cx:535,cy:148},{n:4,cx:535,cy:245},{n:5,cx:115,cy:245}],
+   guides:[{x1:133,y1:139,x2:307,y2:51},{x1:343,y1:51,x2:517,y2:139},{x1:535,y1:168,x2:535,y2:225},{x1:515,y1:245,x2:135,y2:245},{x1:115,y1:225,x2:115,y2:168}]
+  },
+  {name:'Pentagon',vb:'0 0 650 335',
+   dots:[{n:1,cx:325,cy:40},{n:2,cx:463,cy:140},{n:3,cx:410,cy:302},{n:4,cx:240,cy:302},{n:5,cx:187,cy:140}],
+   guides:[{x1:341,y1:52,x2:447,y2:128},{x1:457,y1:159,x2:416,y2:283},{x1:390,y1:302,x2:260,y2:302},{x1:234,y1:283,x2:193,y2:159},{x1:203,y1:128,x2:309,y2:52}]
+  }
+];
+
+var shapeIdx=0,nextDot,prevDot,complete;
+
+function ns(tag,attrs){
+  var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
+  return el;
+}
+
+function render(){
+  var shape=shapes[shapeIdx];
+  var svg=document.getElementById('svg');
+  svg.setAttribute('viewBox',shape.vb);
+  svg.innerHTML='';
+  nextDot=1;prevDot=null;complete=false;
+  document.getElementById('title').textContent=shape.name;
+  document.getElementById('done').style.display='none';
+  document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
+
+  shape.guides.forEach(function(g){
+    svg.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':'3','stroke-dasharray':'10 6'}));
+  });
+
+  svg.appendChild(ns('g',{id:'lines'}));
+
+  shape.dots.forEach(function(d){
+    var g=ns('g',{});
+    g.style.cursor='pointer';
+    var c=ns('circle',{cx:d.cx,cy:d.cy,r:20,fill:'white',stroke:'#444','stroke-width':'2.5',id:'c'+d.n});
+    var t=ns('text',{x:d.cx,y:d.cy,'font-size':'18','font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
+    t.textContent=d.n;
+    g.appendChild(c);g.appendChild(t);
+    g.addEventListener('click',function(){tap(d.n);});
+    svg.appendChild(g);
+  });
+}
+
+function tap(n){
+  if(complete)return;
+  var shape=shapes[shapeIdx];
+  if(n===nextDot){
+    document.getElementById('c'+n).setAttribute('fill','#2ECC71');
+    document.getElementById('c'+n).setAttribute('stroke','#27AE60');
+    if(prevDot!==null){
+      var f=shape.dots[prevDot-1],t=shape.dots[n-1];
+      drawLine(f.cx,f.cy,t.cx,t.cy);
+    }
+    prevDot=n;
+    nextDot++;
+    if(nextDot>shape.dots.length){
+      complete=true;
+      var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
+      drawLine(f.cx,f.cy,t.cx,t.cy);
+      document.getElementById('instruction').textContent='';
+      document.getElementById('done').style.display='block';
+    } else {
+      document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
+    }
+  } else if(n>nextDot){
+    var c=document.getElementById('c'+n);
+    c.classList.remove('wrong-flash');
+    void c.offsetWidth;
+    c.classList.add('wrong-flash');
+    setTimeout(function(){c.classList.remove('wrong-flash');},400);
+  }
+}
+
+function drawLine(x1,y1,x2,y2){
+  var g=document.getElementById('lines');
+  var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+  var line=ns('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#3498DB','stroke-width':'5','stroke-linecap':'round','stroke-dasharray':len,'stroke-dashoffset':len});
+  g.appendChild(line);
+  line.getBoundingClientRect();
+  line.style.transition='stroke-dashoffset 0.35s ease';
+  line.setAttribute('stroke-dashoffset','0');
+}
+
+function nextShape(){
+  shapeIdx=(shapeIdx+1)%shapes.length;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

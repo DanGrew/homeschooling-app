@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Match Shape</title>
+</head>
+<body style="margin:0;background:#fff8f0;min-height:100vh;display:flex;flex-direction:column;font-family:'Comic Sans MS','Chalkboard SE',cursive;overflow:hidden;">
+<div style="display:flex;align-items:center;padding:15px 20px;">
+  <a href="index.html" style="font-size:1.8em;color:#666;text-decoration:none;padding:6px 18px;background:#eee;border-radius:12px;">←</a>
+  <span style="font-size:2em;font-weight:bold;color:#333;margin-left:20px;">Match the shape!</span>
+</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;">
+  <div id="shape"></div>
+</div>
+<div id="options" style="display:flex;justify-content:center;gap:18px;padding:20px 20px 44px;flex-wrap:wrap;"></div>
+<script>
+var colours=['#E74C3C','#3498DB','#2ECC71','#F1C40F','#9B59B6','#E67E22'];
+var types=['circle','square','triangle','star'];
+var current,locked,lastCol;
+
+function svg(t,c,size){
+  var s='<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120">';
+  if(t==='circle')s+='<circle cx="60" cy="60" r="54" fill="'+c+'"/>';
+  else if(t==='square')s+='<rect x="8" y="8" width="104" height="104" rx="14" fill="'+c+'"/>';
+  else if(t==='triangle')s+='<polygon points="60,8 112,112 8,112" fill="'+c+'"/>';
+  else s+='<polygon points="60,6 73,42 111,43 81,67 92,104 60,82 28,104 39,67 9,43 47,42" fill="'+c+'"/>';
+  return s+'</svg>';
+}
+
+function pickCol(){
+  var c,avail=colours.filter(function(x){return x!==lastCol;});
+  c=avail[Math.floor(Math.random()*avail.length)];
+  lastCol=c;
+  return c;
+}
+
+function newRound(){
+  locked=false;
+  var col=pickCol();
+  current={col:col,type:types[Math.floor(Math.random()*types.length)]};
+  document.getElementById('shape').innerHTML=svg(current.type,col,190);
+  var shuffled=types.slice().sort(function(){return Math.random()-0.5;});
+  document.getElementById('options').innerHTML=shuffled.map(function(t){
+    return '<button data-type="'+t+'" onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,88)+'</button>';
+  }).join('');
+}
+
+function check(btn){
+  if(locked)return;
+  if(btn.dataset.type===current.type){
+    locked=true;
+    btn.style.outline='6px solid #333';
+    btn.style.transform='scale(1.15)';
+    setTimeout(newRound,900);
+  }else{
+    btn.style.opacity='0.3';
+    setTimeout(function(){btn.style.opacity='1';},500);
+  }
+}
+
+newRound();
+</script>
+</body>
+</html>

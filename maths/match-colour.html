@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Match Colour</title>
+</head>
+<body style="margin:0;background:#fff8f0;min-height:100vh;display:flex;flex-direction:column;font-family:'Comic Sans MS','Chalkboard SE',cursive;overflow:hidden;">
+<div style="display:flex;align-items:center;padding:15px 20px;">
+  <a href="index.html" style="font-size:1.8em;color:#666;text-decoration:none;padding:6px 18px;background:#eee;border-radius:12px;">←</a>
+  <span style="font-size:2em;font-weight:bold;color:#333;margin-left:20px;">Match the colour!</span>
+</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;">
+  <div id="shape"></div>
+</div>
+<div id="swatches" style="display:flex;justify-content:center;gap:22px;padding:20px 20px 44px;flex-wrap:wrap;"></div>
+<script>
+var colours=[
+  {hex:'#E74C3C'},
+  {hex:'#3498DB'},
+  {hex:'#2ECC71'},
+  {hex:'#F1C40F'}
+];
+var types=['circle','square','triangle'];
+var current,locked;
+
+function svg(t,c){
+  var s='<svg width="190" height="190" viewBox="0 0 190 190">';
+  if(t==='circle')s+='<circle cx="95" cy="95" r="86" fill="'+c+'"/>';
+  else if(t==='square')s+='<rect x="9" y="9" width="172" height="172" rx="20" fill="'+c+'"/>';
+  else s+='<polygon points="95,9 181,178 9,178" fill="'+c+'"/>';
+  return s+'</svg>';
+}
+
+function newRound(){
+  locked=false;
+  current=colours[Math.floor(Math.random()*colours.length)];
+  var t=types[Math.floor(Math.random()*types.length)];
+  document.getElementById('shape').innerHTML=svg(t,current.hex);
+  var shuffled=colours.slice().sort(function(){return Math.random()-0.5;});
+  document.getElementById('swatches').innerHTML=shuffled.map(function(c){
+    return '<button data-hex="'+c.hex+'" onclick="check(this)" style="width:88px;height:88px;background:'+c.hex+';border:4px solid rgba(0,0,0,0.12);border-radius:50%;cursor:pointer;transition:transform 0.1s;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;"></button>';
+  }).join('');
+}
+
+function check(btn){
+  if(locked)return;
+  if(btn.dataset.hex===current.hex){
+    locked=true;
+    btn.style.outline='6px solid #333';
+    btn.style.transform='scale(1.2)';
+    setTimeout(newRound,900);
+  }else{
+    btn.style.opacity='0.3';
+    setTimeout(function(){btn.style.opacity='1';},500);
+  }
+}
+
+newRound();
+</script>
+</body>
+</html>
