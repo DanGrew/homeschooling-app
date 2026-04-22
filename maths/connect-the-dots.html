@@ -53,19 +53,18 @@ function ns(tag,attrs){
   return el;
 }
 
-function dotR(){
-  var vbW=parseInt(shapes[shapeIdx].vb.split(' ')[2]);
-  var w=window.innerWidth-70;
-  return Math.max(15,Math.min(60,Math.round(30/(w/vbW))));
-}
-
-function tightVB(shape,r){
-  var pad=Math.max(r+15,60);
+function tightVB(shape){
+  var pad=60;
   var xs=shape.dots.map(function(d){return d.cx;});
   var parts=shape.vb.split(' ').map(Number);
   var minX=Math.max(0,Math.min.apply(null,xs)-pad);
   var maxX=Math.min(parts[2],Math.max.apply(null,xs)+pad);
   return minX+' 0 '+(maxX-minX)+' '+parts[3];
+}
+
+function dotR(vbW){
+  var w=window.innerWidth-70;
+  return Math.max(15,Math.min(60,Math.round(30/(w/vbW))));
 }
 
 var resizeTimer;
@@ -83,8 +82,9 @@ function render(){
   document.getElementById('done').style.display='none';
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 
-  var r=dotR();
-  svg.setAttribute('viewBox',tightVB(shape,r));
+  var vb=tightVB(shape);
+  svg.setAttribute('viewBox',vb);
+  var r=dotR(parseInt(vb.split(' ')[2]));
   var fontSize=Math.round(r*0.85);
 
   shape.guides.forEach(function(g){
