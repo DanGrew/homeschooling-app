@@ -5,17 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Connect the Dots</title>
 <link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
 <style>
 @keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
 .wrong-flash{animation:wrong 0.4s ease}
 </style>
 </head>
 <body>
-<div class="nav-bar">
-  <a href="index.html" class="nav-btn">&#127968;</a>
-  <button onclick="prevShape()" class="nav-btn">&#8593;</button>
-  <button onclick="nextShape()" class="nav-btn">&#8595;</button>
-</div>
+<div class="nav-bar" data-prev="prevShape" data-next="nextShape"></div>
 <div class="game-area">
   <div class="game-title"><span id="title"></span></div>
   <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
