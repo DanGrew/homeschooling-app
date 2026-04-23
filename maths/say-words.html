@@ -52,7 +52,7 @@ function bestVoice(){
 
 function speak(){
   var u=new SpeechSynthesisUtterance(words[idx].label);
-  u.rate=0.5;
+  u.rate=1.0;
   u.pitch=1.1;
   var v=bestVoice();
   if(v)u.voice=v;
