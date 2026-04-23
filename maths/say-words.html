@@ -44,7 +44,7 @@ function show(){
 
 function speak(){
   var u=new SpeechSynthesisUtterance(words[idx].label);
-  u.rate=0.8;
+  u.rate=0.5;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
