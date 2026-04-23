@@ -42,9 +42,20 @@ function show(){
   document.getElementById('label').textContent=w.label;
 }
 
+function bestVoice(){
+  var voices=speechSynthesis.getVoices();
+  return voices.find(function(v){return v.lang==='en-GB'&&v.name.match(/female|woman|girl|karen|serena|moira|kate/i);})
+    ||voices.find(function(v){return v.lang==='en-GB';})
+    ||voices.find(function(v){return v.lang.startsWith('en');})
+    ||null;
+}
+
 function speak(){
   var u=new SpeechSynthesisUtterance(words[idx].label);
   u.rate=0.5;
+  u.pitch=1.4;
+  var v=bestVoice();
+  if(v)u.voice=v;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
