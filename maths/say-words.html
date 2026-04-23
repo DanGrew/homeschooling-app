@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Say Words</title>
+<link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
+</head>
+<body>
+<div class="nav-bar"></div>
+<div class="game-area">
+  <div class="game-title">What is this?</div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(16px,4vmin,32px);">
+    <div id="shape"></div>
+    <div id="label" style="font-size:clamp(2em,8vmin,4em);font-weight:bold;color:#333;letter-spacing:0.05em;"></div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:clamp(16px,4vw,32px);padding:20px 20px 44px;">
+    <button onclick="speak()" style="font-size:clamp(1.4em,5vmin,2.2em);padding:clamp(14px,3vmin,22px) clamp(28px,6vw,48px);border:none;border-radius:20px;background:#3498DB;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#128266; Say it!</button>
+    <button onclick="next()" style="font-size:clamp(1.4em,5vmin,2.2em);padding:clamp(14px,3vmin,22px) clamp(28px,6vw,48px);border:none;border-radius:20px;background:#2ECC71;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">Next &#8594;</button>
+  </div>
+</div>
+<script>
+var words=[
+  {label:'circle',shape:'circle',colour:'#E74C3C'},
+  {label:'square',shape:'square',colour:'#3498DB'},
+  {label:'triangle',shape:'triangle',colour:'#9B59B6'}
+];
+var idx=0;
+
+function svg(shape,colour){
+  var s='<svg viewBox="0 0 190 190" style="width:clamp(120px,32vmin,260px);height:clamp(120px,32vmin,260px)">';
+  if(shape==='circle')s+='<circle cx="95" cy="95" r="86" fill="'+colour+'"/>';
+  else if(shape==='square')s+='<rect x="9" y="9" width="172" height="172" rx="20" fill="'+colour+'"/>';
+  else s+='<polygon points="95,9 181,178 9,178" fill="'+colour+'"/>';
+  return s+'</svg>';
+}
+
+function show(){
+  var w=words[idx];
+  document.getElementById('shape').innerHTML=svg(w.shape,w.colour);
+  document.getElementById('label').textContent=w.label;
+}
+
+function bestVoice(){
+  var voices=speechSynthesis.getVoices();
+  return voices.find(function(v){return v.lang==='en-GB'&&v.name.match(/female|woman|girl|karen|serena|moira|kate/i);})
+    ||voices.find(function(v){return v.lang==='en-GB';})
+    ||voices.find(function(v){return v.lang.startsWith('en');})
+    ||null;
+}
+
+function speak(){
+  var u=new SpeechSynthesisUtterance(words[idx].label);
+  u.rate=1.0;
+  u.pitch=1.1;
+  var v=bestVoice();
+  if(v)u.voice=v;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function next(){
+  idx=(idx+1)%words.length;
+  show();
+}
+
+show();
+</script>
+</body>
+</html>
