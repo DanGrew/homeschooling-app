@@ -21,8 +21,8 @@ var colours=['#E74C3C','#3498DB','#2ECC71','#F1C40F','#9B59B6','#E67E22'];
 var types=['circle','square','triangle','star'];
 var current,locked,lastCol;
 
-function svg(t,c,size){
-  var s='<svg width="'+size+'" height="'+size+'" viewBox="0 0 120 120">';
+function svg(t,c,cssSize){
+  var s='<svg viewBox="0 0 120 120" style="width:'+cssSize+';height:'+cssSize+'">';
   if(t==='circle')s+='<circle cx="60" cy="60" r="54" fill="'+c+'"/>';
   else if(t==='square')s+='<rect x="8" y="8" width="104" height="104" rx="14" fill="'+c+'"/>';
   else if(t==='triangle')s+='<polygon points="60,8 112,112 8,112" fill="'+c+'"/>';
@@ -41,10 +41,10 @@ function newRound(){
   locked=false;
   var col=pickCol();
   current={col:col,type:types[Math.floor(Math.random()*types.length)]};
-  document.getElementById('shape').innerHTML=svg(current.type,col,190);
+  document.getElementById('shape').innerHTML=svg(current.type,col,'clamp(100px,28vmin,220px)');
   var shuffled=types.slice().sort(function(){return Math.random()-0.5;});
   document.getElementById('options').innerHTML=shuffled.map(function(t){
-    return '<button data-type="'+t+'" onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,88)+'</button>';
+    return '<button data-type="'+t+'" onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,'clamp(60px,13vmin,96px)')+'</button>';
   }).join('');
 }
 
