@@ -6,6 +6,7 @@
 <title>Match Colour</title>
 <link rel="stylesheet" href="style.css">
 <script src="menu.js" defer></script>
+<script src="shapes.js"></script>
 </head>
 <body>
 <div class="nav-bar"></div>
@@ -17,39 +18,21 @@
   <div id="swatches" style="display:flex;justify-content:center;gap:22px;padding:20px 20px 44px;flex-wrap:wrap;"></div>
 </div>
 <script>
-var colours=[
-  {hex:'#E74C3C'},
-  {hex:'#3498DB'},
-  {hex:'#2ECC71'},
-  {hex:'#F1C40F'},
-  {hex:'#E67E22'},
-  {hex:'#9B59B6'}
-];
-var types=['circle','square','triangle'];
 var current,locked;
-
-function svg(t,c){
-  var s='<svg viewBox="0 0 190 190" style="width:clamp(100px,28vmin,220px);height:clamp(100px,28vmin,220px)">';
-  if(t==='circle')s+='<circle cx="95" cy="95" r="86" fill="'+c+'"/>';
-  else if(t==='square')s+='<rect x="9" y="9" width="172" height="172" rx="20" fill="'+c+'"/>';
-  else s+='<polygon points="95,9 181,178 9,178" fill="'+c+'"/>';
-  return s+'</svg>';
-}
 
 function newRound(){
   locked=false;
-  current=colours[Math.floor(Math.random()*colours.length)];
-  var t=types[Math.floor(Math.random()*types.length)];
-  document.getElementById('shape').innerHTML=svg(t,current.hex);
+  current={col:pickCol(),type:types[Math.floor(Math.random()*types.length)]};
+  document.getElementById('shape').innerHTML=svg(current.type,current.col);
   var shuffled=colours.slice().sort(function(){return Math.random()-0.5;});
   document.getElementById('swatches').innerHTML=shuffled.map(function(c){
-    return '<button data-hex="'+c.hex+'" onclick="check(this)" style="width:clamp(60px,13vmin,96px);height:clamp(60px,13vmin,96px);background:'+c.hex+';border:4px solid rgba(0,0,0,0.12);border-radius:50%;cursor:pointer;transition:transform 0.1s;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;"></button>';
+    return '<button data-col="'+c+'" onclick="check(this)" style="width:clamp(60px,13vmin,96px);height:clamp(60px,13vmin,96px);background:'+c+';border:4px solid rgba(0,0,0,0.12);border-radius:50%;cursor:pointer;transition:transform 0.1s;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;"></button>';
   }).join('');
 }
 
 function check(btn){
   if(locked)return;
-  if(btn.dataset.hex===current.hex){
+  if(btn.dataset.col===current.col){
     locked=true;
     btn.style.outline='6px solid #333';
     btn.style.transform='scale(1.2)';
