@@ -60,8 +60,7 @@ function tightVB(shape){
 }
 
 function dotR(vbW){
-  var w=window.innerWidth-70;
-  return Math.min(Math.round(vbW*0.08),Math.round(30/(w/vbW)));
+  return Math.round(vbW*0.055);
 }
 
 var resizeTimer;
@@ -85,7 +84,7 @@ function render(){
   var fontSize=Math.round(r*0.85);
 
   shape.guides.forEach(function(g){
-    svg.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':'3','stroke-dasharray':'10 6'}));
+    svg.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':String(Math.max(1,Math.round(r*0.12))),'stroke-dasharray':'10 6'}));
   });
 
   svg.appendChild(ns('g',{id:'lines'}));
@@ -93,7 +92,7 @@ function render(){
   shape.dots.forEach(function(d){
     var g=ns('g',{});
     g.style.cursor='pointer';
-    var c=ns('circle',{cx:d.cx,cy:d.cy,r:r,fill:'white',stroke:'#444','stroke-width':'3',id:'c'+d.n});
+    var c=ns('circle',{cx:d.cx,cy:d.cy,r:r,fill:'white',stroke:'#444','stroke-width':String(Math.max(1,Math.round(r*0.15))),id:'c'+d.n});
     var t=ns('text',{x:d.cx,y:d.cy,'font-size':fontSize,'font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
     t.textContent=d.n;
     g.appendChild(c);g.appendChild(t);
@@ -135,7 +134,8 @@ function tap(n){
 function drawLine(x1,y1,x2,y2){
   var g=document.getElementById('lines');
   var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-  var line=ns('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#3498DB','stroke-width':'5','stroke-linecap':'round','stroke-dasharray':len,'stroke-dashoffset':len});
+  var r=dotR(parseInt(document.getElementById('svg').getAttribute('viewBox').split(' ')[2]));
+  var line=ns('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#3498DB','stroke-width':String(Math.max(1,Math.round(r*0.3))),'stroke-linecap':'round','stroke-dasharray':len,'stroke-dashoffset':len});
   g.appendChild(line);
   line.getBoundingClientRect();
   line.style.transition='stroke-dashoffset 0.35s ease';
