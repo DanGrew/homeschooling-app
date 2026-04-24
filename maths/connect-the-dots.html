@@ -61,7 +61,7 @@ function tightVB(shape){
 
 function dotR(vbW){
   var w=window.innerWidth-70;
-  return Math.max(15,Math.min(60,Math.round(30/(w/vbW))));
+  return Math.min(Math.round(vbW*0.08),Math.round(30/(w/vbW)));
 }
 
 var resizeTimer;
