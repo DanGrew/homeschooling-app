@@ -1,4 +1,4 @@
-pictures.push({name:'Horse',vb:'0 0 150 150',shapes:[
+pictures.push({name:'Horse',tags:['animals'],vb:'0 0 150 150',shapes:[
   {tag:'path',attrs:{'d':'M95.88,56.62c-5.17-19.28.43-46.89,16.28-50.8C126.95,30,108.8,45.68,95.88,56.62Z','stroke-width':'2'},colour:'#C0392B'},
   {tag:'path',attrs:{'d':'M54.12,56.62c5.17-19.28-.43-46.89-16.28-50.8C23.05,30,41.2,45.68,54.12,56.62Z','stroke-width':'2'},colour:'#C0392B'},
   {tag:'path',attrs:{'d':'M45.06,45.68c-9-9.36-15.48-21.33-6.3-37.49l.24.09C38.41,22.26,41.68,35.33,45.06,45.68Z','stroke-width':'2'},colour:'#F48FB1'},

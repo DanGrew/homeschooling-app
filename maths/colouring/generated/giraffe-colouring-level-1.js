@@ -1,4 +1,4 @@
-pictures.push({name:'Giraffe',vb:'0 0 150 150',shapes:[
+pictures.push({name:'Giraffe',tags:['animals'],vb:'0 0 150 150',shapes:[
   {tag:'path',attrs:{'d':'M64.92,16.38c.33,4.43.6,11.63-.75,16.52-2.06,7.52-10,.29-10,.29a82.49,82.49,0,0,1,2.46-17.7,6.06,6.06,0,1,1,8.28.89Z','stroke-width':'2'},colour:'#E67E22'},
   {tag:'path',attrs:{'d':'M85.08,16.38c-.33,4.43-.6,11.63.75,16.52,2.06,7.52,10,.29,10,.29a82.49,82.49,0,0,0-2.46-17.7,6.06,6.06,0,1,0-8.28.89Z','stroke-width':'2'},colour:'#E67E22'},
   {tag:'polyline',attrs:{'points':'58.52 145.5 58.52 109.09 91.67 109.09 91.67 145.5','stroke-width':'2'},colour:'#F1C40F'},

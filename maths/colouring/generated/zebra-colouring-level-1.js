@@ -1,4 +1,4 @@
-pictures.push({name:'Zebra',vb:'0 0 150 150',shapes:[
+pictures.push({name:'Zebra',tags:['animals'],vb:'0 0 150 150',shapes:[
   {tag:'path',attrs:{'d':'M94.73,61.36c-2.07-23.67,10.2-54.88,29.59-56.19C136.66,36.53,112.14,51.2,94.73,61.36Z','stroke-width':'2'},colour:'#FFFFFF'},
   {tag:'path',attrs:{'d':'M55.27,61.36C57.35,37.68,45.08,6.47,25.68,5.16,13.34,36.53,37.86,51.2,55.27,61.36Z','stroke-width':'2'},colour:'#FFFFFF'},
   {tag:'path',attrs:{'d':'M102.5,54.34C104.91,38.66,110.81,20,123,7.46,131.73,31.6,117.29,44.9,102.5,54.34Z','stroke-width':'2'},colour:'#FDBCB4'},

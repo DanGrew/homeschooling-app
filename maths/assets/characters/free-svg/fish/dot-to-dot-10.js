@@ -1,5 +1,6 @@
 shapes.push({
   name:'Fish',
+  tags:['prototype'],
   vb:'0 0 150 150',
   dots:[{n:1,cx:23,cy:82},{n:2,cx:25,cy:27},{n:3,cx:55,cy:51},{n:4,cx:91,cy:5},{n:5,cx:98,cy:45},{n:6,cx:116,cy:101},{n:7,cx:120,cy:134},{n:8,cx:65,cy:143},{n:9,cx:32,cy:122},{n:10,cx:19,cy:116}],
   guides:[],

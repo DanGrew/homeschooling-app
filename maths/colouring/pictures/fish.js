@@ -1,4 +1,4 @@
-pictures.push({name:'Fish',vb:'0 0 500 350',shapes:[
+pictures.push({name:'Fish',tags:['prototype'],vb:'0 0 500 350',shapes:[
   {tag:'polygon',attrs:{points:'378,90 458,175 378,260'},colour:'#2980B9'},
   {tag:'ellipse',attrs:{cx:'228',cy:'175',rx:'158',ry:'95'},colour:'#3498DB'},
   {tag:'polygon',attrs:{points:'198,82 230,55 268,84'},colour:'#2471A3'},

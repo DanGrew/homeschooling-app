@@ -1,4 +1,4 @@
-pictures.push({name:'Cat',vb:'0 0 400 490',shapes:[
+pictures.push({name:'Cat',tags:['prototype'],vb:'0 0 400 490',shapes:[
   {tag:'ellipse',attrs:{cx:'325',cy:'420',rx:'20',ry:'68',transform:'rotate(-20,325,420)'},colour:'#E67E22'},
   {tag:'ellipse',attrs:{cx:'200',cy:'405',rx:'112',ry:'72'},colour:'#E67E22'},
   {tag:'polygon',attrs:{points:'72,152 118,50 178,126'},colour:'#E67E22'},

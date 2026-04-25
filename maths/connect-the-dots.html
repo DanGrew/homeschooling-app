@@ -14,6 +14,7 @@
 <body>
 <div class="nav-bar" data-prev="prevShape" data-next="nextShape"></div>
 <div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
   <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
@@ -41,8 +42,36 @@
 <script src="connect-the-dots/shapes/desk.js"></script>
 <script src="connect-the-dots/shapes/octagon.js"></script>
 <script src="assets/characters/free-svg/fish/dot-to-dot-10.js"></script>
+<script src="colouring/generated/elephant-connect-the-dots-level-1.js"></script>
 <script>
-var shapeIdx=0,nextDot,prevDot,complete;
+var filtIdx=0,nextDot,prevDot,complete,filtered=[];
+
+function buildFilterBar(){
+  var tags=['all'];
+  shapes.forEach(function(s){(s.tags||[]).forEach(function(t){if(tags.indexOf(t)<0)tags.push(t);});});
+  var bar=document.getElementById('filter-bar');
+  tags.forEach(function(t){
+    var b=document.createElement('button');
+    b.textContent=t.charAt(0).toUpperCase()+t.slice(1);
+    b.setAttribute('data-tag',t);
+    b.style.cssText='padding:6px 14px;border-radius:12px;border:2px solid #ddd;background:#fff;font-family:inherit;font-size:0.95em;cursor:pointer;';
+    b.onclick=function(){setFilter(t);};
+    bar.appendChild(b);
+  });
+  setFilter('all');
+}
+
+function setFilter(tag){
+  filtered=tag==='all'?shapes.slice():shapes.filter(function(s){return(s.tags||[]).indexOf(tag)>=0;});
+  filtIdx=0;
+  document.querySelectorAll('#filter-bar button').forEach(function(b){
+    var active=b.getAttribute('data-tag')===tag;
+    b.style.background=active?'#2ECC71':'#fff';
+    b.style.color=active?'white':'#333';
+    b.style.borderColor=active?'#27AE60':'#ddd';
+  });
+  render();
+}
 
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
@@ -75,7 +104,7 @@ window.addEventListener('resize',function(){
 });
 
 function render(){
-  var shape=shapes[shapeIdx];
+  var shape=filtered[filtIdx];
   var svg=document.getElementById('svg');
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
@@ -108,7 +137,7 @@ function render(){
 
 function tap(n){
   if(complete)return;
-  var shape=shapes[shapeIdx];
+  var shape=filtered[filtIdx];
   if(n===nextDot){
     document.getElementById('c'+n).setAttribute('fill','#2ECC71');
     document.getElementById('c'+n).setAttribute('stroke','#27AE60');
@@ -147,10 +176,10 @@ function drawLine(x1,y1,x2,y2){
   line.setAttribute('stroke-dashoffset','0');
 }
 
-function nextShape(){shapeIdx=(shapeIdx+1)%shapes.length;render();}
-function prevShape(){shapeIdx=(shapeIdx+shapes.length-1)%shapes.length;render();}
+function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
+function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-render();
+buildFilterBar();
 </script>
 </body>
 </html>

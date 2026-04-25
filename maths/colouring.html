@@ -10,6 +10,7 @@
 <body>
 <div class="nav-bar" data-prev="prevPicture" data-next="nextPicture"></div>
 <div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
     <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
@@ -42,10 +43,37 @@
 <script src="colouring/generated/turtle-colouring-level-1.js"></script>
 <script src="colouring/generated/zebra-colouring-level-1.js"></script>
 <script>
-var picIdx=0,filled,total;
+var filtIdx=0,filled,total,filtered=[];
+
+function buildFilterBar(){
+  var tags=['all'];
+  pictures.forEach(function(p){(p.tags||[]).forEach(function(t){if(tags.indexOf(t)<0)tags.push(t);});});
+  var bar=document.getElementById('filter-bar');
+  tags.forEach(function(t){
+    var b=document.createElement('button');
+    b.textContent=t.charAt(0).toUpperCase()+t.slice(1);
+    b.setAttribute('data-tag',t);
+    b.style.cssText='padding:6px 14px;border-radius:12px;border:2px solid #ddd;background:#fff;font-family:inherit;font-size:0.95em;cursor:pointer;';
+    b.onclick=function(){setFilter(t);};
+    bar.appendChild(b);
+  });
+  setFilter('all');
+}
+
+function setFilter(tag){
+  filtered=tag==='all'?pictures.slice():pictures.filter(function(p){return(p.tags||[]).indexOf(tag)>=0;});
+  filtIdx=0;
+  document.querySelectorAll('#filter-bar button').forEach(function(b){
+    var active=b.getAttribute('data-tag')===tag;
+    b.style.background=active?'#2ECC71':'#fff';
+    b.style.color=active?'white':'#333';
+    b.style.borderColor=active?'#27AE60':'#ddd';
+  });
+  render();
+}
 
 function render(){
-  var pic=pictures[picIdx];
+  var pic=filtered[filtIdx];
   var svg=document.getElementById('svg');
   svg.innerHTML='';
   hideBanner();
@@ -71,10 +99,10 @@ function render(){
   });
 }
 
-function nextPicture(){picIdx=(picIdx+1)%pictures.length;render();}
-function prevPicture(){picIdx=(picIdx+pictures.length-1)%pictures.length;render();}
+function nextPicture(){filtIdx=(filtIdx+1)%filtered.length;render();}
+function prevPicture(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-render();
+buildFilterBar();
 </script>
 </body>
 </html>
