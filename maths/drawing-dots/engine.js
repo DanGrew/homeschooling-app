@@ -1,4 +1,4 @@
-var shapeIdx=0,selectedDot=null,completedEdges,adj,complete;
+var shapeIdx=0,selectedDot=null,completedEdges,adj,complete,filtered=[];
 
 (function(){
   function injectBanner(){
@@ -49,7 +49,7 @@ function computeR(shape){
 }
 
 function render(){
-  var shape=shapes[shapeIdx];
+  var shape=filtered[shapeIdx];
   adj=buildAdj(shape);
   completedEdges=new Set();
   complete=false;
@@ -120,7 +120,7 @@ function makeDotsGroup(shape,r){
 }
 
 function refreshDots(){
-  var shape=shapes[shapeIdx];
+  var shape=filtered[shapeIdx];
   var r=computeR(shape);
   var svg=document.getElementById('svg');
   var old=document.getElementById('dots');
@@ -141,10 +141,10 @@ function tap(i){
     selectedDot=null;refreshDots();updateInstruction();return;
   }
   if(adj[selectedDot].indexOf(i)>=0){
-    var a=shapes[shapeIdx].dots[selectedDot],b=shapes[shapeIdx].dots[i];
+    var a=filtered[shapeIdx].dots[selectedDot],b=filtered[shapeIdx].dots[i];
     drawLine(a.cx,a.cy,b.cx,b.cy);
     completedEdges.add(key);
-    if(completedEdges.size===shapes[shapeIdx].edges.length){
+    if(completedEdges.size===filtered[shapeIdx].edges.length){
       complete=true;selectedDot=null;refreshDots();revealImage();
     }else{
       var iDone=adj[i].length>0&&adj[i].every(function(n){return completedEdges.has(edgeKey(i,n));});
@@ -156,7 +156,7 @@ function tap(i){
 }
 
 function drawLine(x1,y1,x2,y2){
-  var r=computeR(shapes[shapeIdx]);
+  var r=computeR(filtered[shapeIdx]);
   var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
   var line=ns('line',{
     x1:x1,y1:y1,x2:x2,y2:y2,
@@ -208,7 +208,7 @@ function updateInstruction(msg){
   var el=document.getElementById('instruction');
   if(msg!==undefined){el.textContent=msg;return;}
   if(selectedDot!==null){
-    el.innerHTML='Now tap a dot connected to <b>'+shapes[shapeIdx].dots[selectedDot].id+'</b>!';
+    el.innerHTML='Now tap a dot connected to <b>'+filtered[shapeIdx].dots[selectedDot].id+'</b>!';
   }else if(completedEdges&&completedEdges.size>0){
     el.textContent='Keep going \u2014 tap any dot!';
   }else{
@@ -216,7 +216,7 @@ function updateInstruction(msg){
   }
 }
 
-function nextShape(){shapeIdx=(shapeIdx+1)%shapes.length;render();}
-function prevShape(){shapeIdx=(shapeIdx+shapes.length-1)%shapes.length;render();}
+function nextShape(){shapeIdx=(shapeIdx+1)%filtered.length;render();}
+function prevShape(){shapeIdx=(shapeIdx+filtered.length-1)%filtered.length;render();}
 
-render();
+buildFilterBar(shapes,function(f){filtered=f;shapeIdx=0;render();});

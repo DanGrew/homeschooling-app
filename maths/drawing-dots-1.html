@@ -14,6 +14,7 @@
 <body>
 <div class="nav-bar" data-prev="prevShape" data-next="nextShape"></div>
 <div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
   <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
@@ -22,6 +23,7 @@
 </div>
 <script>var shapes=[];</script>
 <script src="colouring/generated/elephant-drawing-dots-level-1.js"></script>
+<script src="filter-bar.js"></script>
 <script src="drawing-dots/engine.js"></script>
 </body>
 </html>
