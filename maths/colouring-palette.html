@@ -18,9 +18,10 @@
 .swatch.selected{border-color:#333;box-shadow:0 0 0 2px #fff,0 0 0 4px #333;}
 @media(orientation:portrait){
   #layout{flex-direction:column;}
-  #sidebar{width:100%;flex-direction:row;height:120px;}
+  #sidebar{width:100%;flex-direction:row;height:120px;box-sizing:border-box;}
   #ref-wrap{flex:1;min-width:0;}
-  #palette{grid-template-columns:repeat(5,1fr);flex:2;min-width:0;}
+  #palette{grid-template-columns:repeat(5,1fr);grid-auto-rows:min(48px,11vw);flex:2;min-width:0;align-content:center;}
+  .swatch{aspect-ratio:unset;}
 }
 </style>
 </head>
