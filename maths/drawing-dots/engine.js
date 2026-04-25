@@ -38,7 +38,8 @@ function buildAdj(shape){
 
 function computeR(shape){
   var vbP=shape.vb.split(' ').map(Number);
-  var baseR=Math.max(2,Math.round(vbP[2]*0.055));
+  var scale=typeof ddDotScale!=='undefined'?ddDotScale:0.055;
+  var baseR=Math.max(2,Math.round(vbP[2]*scale));
   if(!shape.edges.length)return baseR;
   var lens=shape.edges.map(function(e){
     var a=shape.dots[e[0]],b=shape.dots[e[1]];
