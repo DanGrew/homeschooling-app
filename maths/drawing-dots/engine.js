@@ -147,7 +147,8 @@ function tap(i){
     if(completedEdges.size===shapes[shapeIdx].edges.length){
       complete=true;selectedDot=null;refreshDots();revealImage();
     }else{
-      selectedDot=i;refreshDots();updateInstruction();
+      var iDone=adj[i].length>0&&adj[i].every(function(n){return completedEdges.has(edgeKey(i,n));});
+      selectedDot=iDone?null:i;refreshDots();updateInstruction();
     }
   }else{
     flashDot(i);
