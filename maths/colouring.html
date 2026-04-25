@@ -17,6 +17,7 @@
   </div>
 </div>
 <script src="colouring/colouring-common.js"></script>
+<script src="filter-bar.js"></script>
 <script>var pictures=[];</script>
 <script src="colouring/pictures/sun.js"></script>
 <script src="colouring/pictures/cat.js"></script>
@@ -44,33 +45,6 @@
 <script src="colouring/generated/zebra-colouring-level-1.js"></script>
 <script>
 var filtIdx=0,filled,total,filtered=[];
-
-function buildFilterBar(){
-  var tags=['all'];
-  pictures.forEach(function(p){(p.tags||[]).forEach(function(t){if(tags.indexOf(t)<0)tags.push(t);});});
-  var bar=document.getElementById('filter-bar');
-  tags.forEach(function(t){
-    var b=document.createElement('button');
-    b.textContent=t.charAt(0).toUpperCase()+t.slice(1);
-    b.setAttribute('data-tag',t);
-    b.style.cssText='padding:6px 14px;border-radius:12px;border:2px solid #ddd;background:#fff;font-family:inherit;font-size:0.95em;cursor:pointer;';
-    b.onclick=function(){setFilter(t);};
-    bar.appendChild(b);
-  });
-  setFilter('all');
-}
-
-function setFilter(tag){
-  filtered=tag==='all'?pictures.slice():pictures.filter(function(p){return(p.tags||[]).indexOf(tag)>=0;});
-  filtIdx=0;
-  document.querySelectorAll('#filter-bar button').forEach(function(b){
-    var active=b.getAttribute('data-tag')===tag;
-    b.style.background=active?'#2ECC71':'#fff';
-    b.style.color=active?'white':'#333';
-    b.style.borderColor=active?'#27AE60':'#ddd';
-  });
-  render();
-}
 
 function render(){
   var pic=filtered[filtIdx];
@@ -102,7 +76,7 @@ function render(){
 function nextPicture(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevPicture(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-buildFilterBar();
+buildFilterBar(pictures,function(f){filtered=f;filtIdx=0;render();});
 </script>
 </body>
 </html>

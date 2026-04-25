@@ -25,6 +25,7 @@
     </div>
   </div>
 </div>
+<script src="filter-bar.js"></script>
 <script>var shapes=[];</script>
 <script src="connect-the-dots/shapes/triangle.js"></script>
 <script src="connect-the-dots/shapes/square.js"></script>
@@ -45,33 +46,6 @@
 <script src="colouring/generated/elephant-connect-the-dots-level-1.js"></script>
 <script>
 var filtIdx=0,nextDot,prevDot,complete,filtered=[];
-
-function buildFilterBar(){
-  var tags=['all'];
-  shapes.forEach(function(s){(s.tags||[]).forEach(function(t){if(tags.indexOf(t)<0)tags.push(t);});});
-  var bar=document.getElementById('filter-bar');
-  tags.forEach(function(t){
-    var b=document.createElement('button');
-    b.textContent=t.charAt(0).toUpperCase()+t.slice(1);
-    b.setAttribute('data-tag',t);
-    b.style.cssText='padding:6px 14px;border-radius:12px;border:2px solid #ddd;background:#fff;font-family:inherit;font-size:0.95em;cursor:pointer;';
-    b.onclick=function(){setFilter(t);};
-    bar.appendChild(b);
-  });
-  setFilter('all');
-}
-
-function setFilter(tag){
-  filtered=tag==='all'?shapes.slice():shapes.filter(function(s){return(s.tags||[]).indexOf(tag)>=0;});
-  filtIdx=0;
-  document.querySelectorAll('#filter-bar button').forEach(function(b){
-    var active=b.getAttribute('data-tag')===tag;
-    b.style.background=active?'#2ECC71':'#fff';
-    b.style.color=active?'white':'#333';
-    b.style.borderColor=active?'#27AE60':'#ddd';
-  });
-  render();
-}
 
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
@@ -179,7 +153,7 @@ function drawLine(x1,y1,x2,y2){
 function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-buildFilterBar();
+buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
 </script>
 </body>
 </html>
