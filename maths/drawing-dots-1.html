@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Drawing Dots</title>
+<link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
+<style>
+@keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
+.dot-wrong{animation:wrong 0.4s ease}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-prev="prevShape" data-next="nextShape"></div>
+<div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
+  <div class="game-title"><span id="title"></span></div>
+  <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+    <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+</div>
+<script>var shapes=[];</script>
+<script src="colouring/generated/elephant-drawing-dots-level-1.js"></script>
+<script src="filter-bar.js"></script>
+<script src="drawing-dots/engine.js"></script>
+</body>
+</html>
