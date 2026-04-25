@@ -72,6 +72,7 @@ function render(){
   svg.appendChild(bg);
 
   var guides=document.createElementNS('http://www.w3.org/2000/svg','g');
+  guides.setAttribute('id','guides');
   shape.edges.forEach(function(e){
     var a=shape.dots[e[0]],b=shape.dots[e[1]];
     guides.appendChild(ns('line',{
@@ -186,11 +187,18 @@ function revealImage(){
   updateInstruction('');
   var bg=document.getElementById('bg');
   if(!bg){showBannerDone();return;}
-  var start=null,from=0.2,dur=900;
+  var guides=document.getElementById('guides');
+  var lines=document.getElementById('lines');
+  var dots=document.getElementById('dots');
+  var start=null,dur=900;
   function step(ts){
     if(!start)start=ts;
     var t=Math.min((ts-start)/dur,1);
-    bg.setAttribute('opacity',String(from+(1-from)*t));
+    bg.setAttribute('opacity',String(0.2+0.8*t));
+    var ov=String(1.0-0.8*t);
+    if(guides)guides.setAttribute('opacity',ov);
+    if(lines)lines.setAttribute('opacity',ov);
+    if(dots)dots.setAttribute('opacity',ov);
     if(t<1)requestAnimationFrame(step);else showBannerDone();
   }
   requestAnimationFrame(step);
