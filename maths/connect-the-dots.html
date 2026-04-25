@@ -79,13 +79,18 @@ function render(){
   var svg=document.getElementById('svg');
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
+
+  var vb=tightVB(shape);
+  var r=dotR(parseInt(vb.split(' ')[2]));
+  if(!shape.decor){
+    var pts=shape.dots.map(function(d){return d.cx+','+d.cy}).join(' ');
+    svg.appendChild(ns('polygon',{points:pts,fill:'none',stroke:'#ccc','stroke-width':String(Math.max(1,Math.round(r*0.25))),'stroke-dasharray':'8 5','stroke-linejoin':'round'}));
+  }
   document.getElementById('title').textContent=shape.name;
   document.getElementById('done').style.display='none';
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 
-  var vb=tightVB(shape);
   svg.setAttribute('viewBox',vb);
-  var r=dotR(parseInt(vb.split(' ')[2]));
   var fontSize=Math.round(r*0.85);
 
   shape.guides.forEach(function(g){
