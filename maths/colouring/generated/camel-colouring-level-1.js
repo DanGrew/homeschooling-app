@@ -1,4 +1,4 @@
-pictures.push({name:'Camel',vb:'0 0 150 150',shapes:[
+pictures.push({name:'Camel',tags:['animals'],vb:'0 0 150 150',shapes:[
   {tag:'path',attrs:{'d':'M102.28,106.06c0,20-4.59,39.44-26.81,39.44s-26.81-19.4-26.81-39.44,12-2.13,26.81-2.13S102.28,86,102.28,106.06Z','stroke-width':'2'},colour:'#F1C40F'},
   {tag:'circle',attrs:{'cx':'75.48','cy':'119.45','r':'21.23','stroke-width':'2'},colour:'#E74C3C'},
   {tag:'path',attrs:{'d':'M109.06,30.65c7.39-13,19.34-21.28,26.38-21.1,3.63.09,2,7.32-.15,16.63-2,8.74-6.76,19.29-19,28.56C91,73.9,109.06,30.65,109.06,30.65Z','stroke-width':'2'},colour:'#E67E22'},

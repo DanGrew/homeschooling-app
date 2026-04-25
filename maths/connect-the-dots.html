@@ -14,6 +14,7 @@
 <body>
 <div class="nav-bar" data-prev="prevShape" data-next="nextShape"></div>
 <div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
   <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
@@ -24,6 +25,7 @@
     </div>
   </div>
 </div>
+<script src="filter-bar.js"></script>
 <script>var shapes=[];</script>
 <script src="connect-the-dots/shapes/triangle.js"></script>
 <script src="connect-the-dots/shapes/square.js"></script>
@@ -41,8 +43,9 @@
 <script src="connect-the-dots/shapes/desk.js"></script>
 <script src="connect-the-dots/shapes/octagon.js"></script>
 <script src="assets/characters/free-svg/fish/dot-to-dot-10.js"></script>
+<script src="colouring/generated/elephant-connect-the-dots-level-1.js"></script>
 <script>
-var shapeIdx=0,nextDot,prevDot,complete;
+var filtIdx=0,nextDot,prevDot,complete,filtered=[];
 
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
@@ -75,7 +78,7 @@ window.addEventListener('resize',function(){
 });
 
 function render(){
-  var shape=shapes[shapeIdx];
+  var shape=filtered[filtIdx];
   var svg=document.getElementById('svg');
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
@@ -108,7 +111,7 @@ function render(){
 
 function tap(n){
   if(complete)return;
-  var shape=shapes[shapeIdx];
+  var shape=filtered[filtIdx];
   if(n===nextDot){
     document.getElementById('c'+n).setAttribute('fill','#2ECC71');
     document.getElementById('c'+n).setAttribute('stroke','#27AE60');
@@ -147,10 +150,10 @@ function drawLine(x1,y1,x2,y2){
   line.setAttribute('stroke-dashoffset','0');
 }
 
-function nextShape(){shapeIdx=(shapeIdx+1)%shapes.length;render();}
-function prevShape(){shapeIdx=(shapeIdx+shapes.length-1)%shapes.length;render();}
+function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
+function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-render();
+buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
 </script>
 </body>
 </html>

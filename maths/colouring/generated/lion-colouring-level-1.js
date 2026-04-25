@@ -1,4 +1,4 @@
-pictures.push({name:'Lion',vb:'0 0 150 150',shapes:[
+pictures.push({name:'Lion',tags:['animals'],vb:'0 0 150 150',shapes:[
   {tag:'ellipse',attrs:{'cx':'35.51','cy':'36.38','rx':'19.37','ry':'24.22','transform':'matrix(0.98, -0.17, 0.17, 0.98, -5.78, 6.72)','stroke-width':'2'},colour:'#F1C40F'},
   {tag:'path',attrs:{'d':'M39.67,51.53a8.45,8.45,0,0,1-1.42.38C32.07,53,25.59,46.81,24.1,38.39c-1.37-7.78,1.74-15.16,7.25-17.17a8.45,8.45,0,0,1,1.42-.38,10.11,10.11,0,0,1,8.42,2.77,18.53,18.53,0,0,1,5.73,10.75C48.29,42.15,45.17,49.53,39.67,51.53Z','stroke-width':'2'},colour:'#FDBCB4'},
   {tag:'ellipse',attrs:{'cx':'114.49','cy':'36.38','rx':'24.22','ry':'19.37','transform':'translate(58.79 142.81) rotate(-80)','stroke-width':'2'},colour:'#F1C40F'},

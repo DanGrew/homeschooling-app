@@ -1,4 +1,4 @@
-pictures.push({name:'House',vb:'0 0 500 460',shapes:[
+pictures.push({name:'House',tags:['prototype'],vb:'0 0 500 460',shapes:[
   {tag:'rect',attrs:{x:'0',y:'390',width:'500',height:'70'},colour:'#27AE60'},
   {tag:'rect',attrs:{x:'70',y:'220',width:'360',height:'175'},colour:'#F0D99A'},
   {tag:'rect',attrs:{x:'105',y:'60',width:'65',height:'190'},colour:'#95A5A6'},

@@ -1,4 +1,4 @@
-pictures.push({name:'Tree',vb:'0 0 400 500',shapes:[
+pictures.push({name:'Tree',tags:['prototype'],vb:'0 0 400 500',shapes:[
   {tag:'rect',attrs:{x:'175',y:'330',width:'50',height:'160',rx:'5'},colour:'#8B4513'},
   {tag:'circle',attrs:{cx:'200',cy:'295',r:'108'},colour:'#27AE60'},
   {tag:'circle',attrs:{cx:'200',cy:'215',r:'85'},colour:'#2ECC71'},

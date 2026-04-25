@@ -1,4 +1,4 @@
-pictures.push({name:'Monkey',vb:'0 0 150 150',shapes:[
+pictures.push({name:'Monkey',tags:['animals'],vb:'0 0 150 150',shapes:[
   {tag:'ellipse',attrs:{'cx':'124','cy':'49.24','rx':'19.83','ry':'23.09','stroke-width':'2'},colour:'#C0392B'},
   {tag:'ellipse',attrs:{'cx':'26','cy':'49.24','rx':'19.83','ry':'23.09','stroke-width':'2'},colour:'#C0392B'},
   {tag:'ellipse',attrs:{'cx':'120.33','cy':'50.54','rx':'13.83','ry':'16.83','stroke-width':'2'},colour:'#FDBCB4'},
