@@ -1,5 +1,27 @@
 var shapeIdx=0,selectedDot=null,completedEdges,adj,complete;
 
+(function(){
+  function injectBanner(){
+    var b=document.createElement('div');
+    b.id='dd-banner';
+    b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;font-family:inherit;';
+    b.innerHTML='<span style="font-size:1.6em;">&#11088; Well done!</span><button id="dd-next" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Next &#8594;</button>';
+    document.body.appendChild(b);
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectBanner);}
+  else{injectBanner();}
+})();
+
+function showBannerDone(){
+  var b=document.getElementById('dd-banner');
+  if(!b)return;
+  b.style.transform='translateY(0)';
+  document.getElementById('dd-next').onclick=function(){
+    b.style.transform='translateY(100%)';
+    nextShape();
+  };
+}
+
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,String(attrs[k]));});
@@ -14,7 +36,17 @@ function buildAdj(shape){
   return a;
 }
 
-function dotR(vbW){return Math.max(2,Math.round(vbW*0.055));}
+function computeR(shape){
+  var vbP=shape.vb.split(' ').map(Number);
+  var baseR=Math.max(2,Math.round(vbP[2]*0.055));
+  if(!shape.edges.length)return baseR;
+  var lens=shape.edges.map(function(e){
+    var a=shape.dots[e[0]],b=shape.dots[e[1]];
+    return Math.sqrt((b.cx-a.cx)*(b.cx-a.cx)+(b.cy-a.cy)*(b.cy-a.cy));
+  }).sort(function(a,b){return a-b;});
+  var p25=lens[Math.floor(lens.length*0.25)];
+  return Math.max(2,Math.min(baseR,Math.floor(p25*0.28)));
+}
 
 function render(){
   var shape=shapes[shapeIdx];
@@ -23,11 +55,12 @@ function render(){
   complete=false;
   selectedDot=null;
 
-  document.getElementById('title').textContent=shape.name;
-  document.getElementById('done').style.display='none';
+  var b=document.getElementById('dd-banner');
+  if(b)b.style.transform='translateY(100%)';
 
-  var vbP=shape.vb.split(' ').map(Number);
-  var r=dotR(vbP[2]);
+  document.getElementById('title').textContent=shape.name;
+
+  var r=computeR(shape);
   var svg=document.getElementById('svg');
   svg.setAttribute('viewBox',shape.vb);
   svg.innerHTML='';
@@ -43,7 +76,9 @@ function render(){
     var a=shape.dots[e[0]],b=shape.dots[e[1]];
     guides.appendChild(ns('line',{
       x1:a.cx,y1:a.cy,x2:b.cx,y2:b.cy,
-      stroke:'#ddd','stroke-width':Math.max(0.5,r*0.12),'stroke-dasharray':'4 3'
+      stroke:'#888',
+      'stroke-width':Math.max(1,r*0.22),
+      'stroke-dasharray':'6 4'
     }));
   });
   svg.appendChild(guides);
@@ -85,8 +120,7 @@ function makeDotsGroup(shape,r){
 
 function refreshDots(){
   var shape=shapes[shapeIdx];
-  var vbP=shape.vb.split(' ').map(Number);
-  var r=dotR(vbP[2]);
+  var r=computeR(shape);
   var svg=document.getElementById('svg');
   var old=document.getElementById('dots');
   if(old)svg.removeChild(old);
@@ -121,8 +155,7 @@ function tap(i){
 }
 
 function drawLine(x1,y1,x2,y2){
-  var vbP=shapes[shapeIdx].vb.split(' ').map(Number);
-  var r=dotR(vbP[2]);
+  var r=computeR(shapes[shapeIdx]);
   var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
   var line=ns('line',{
     x1:x1,y1:y1,x2:x2,y2:y2,
@@ -152,19 +185,15 @@ function flashDot(i){
 function revealImage(){
   updateInstruction('');
   var bg=document.getElementById('bg');
-  if(!bg){setTimeout(showDone,600);return;}
+  if(!bg){showBannerDone();return;}
   var start=null,from=0.2,dur=900;
   function step(ts){
     if(!start)start=ts;
     var t=Math.min((ts-start)/dur,1);
     bg.setAttribute('opacity',String(from+(1-from)*t));
-    if(t<1)requestAnimationFrame(step);else showDone();
+    if(t<1)requestAnimationFrame(step);else showBannerDone();
   }
   requestAnimationFrame(step);
-}
-
-function showDone(){
-  document.getElementById('done').style.display='flex';
 }
 
 function updateInstruction(msg){
