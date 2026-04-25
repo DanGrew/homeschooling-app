@@ -60,7 +60,7 @@ function selectColour(c){
 }
 
 function checkComplete(){
-  var done=filledEls.every(function(el){return el.getAttribute('fill')!=='url(#dots)';});
+  var done=filledEls.every(function(el){return el.getAttribute('fill')===el.dataset.target;});
   if(done)showBanner(nextPicture);
 }
 
@@ -80,6 +80,7 @@ function render(){
     var el=ns(s.tag,attrs);
     if(s.noColour){svg.appendChild(el);return;}
     el.style.cursor='pointer';
+    el.dataset.target=s.colour;
     filledEls.push(el);
     el.addEventListener('click',function(){
       if(!selectedColour)return;
