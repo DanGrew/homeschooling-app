@@ -144,11 +144,10 @@ function tap(i){
     var a=shapes[shapeIdx].dots[selectedDot],b=shapes[shapeIdx].dots[i];
     drawLine(a.cx,a.cy,b.cx,b.cy);
     completedEdges.add(key);
-    selectedDot=null;
     if(completedEdges.size===shapes[shapeIdx].edges.length){
-      complete=true;refreshDots();revealImage();
+      complete=true;selectedDot=null;refreshDots();revealImage();
     }else{
-      refreshDots();updateInstruction();
+      selectedDot=i;refreshDots();updateInstruction();
     }
   }else{
     flashDot(i);
