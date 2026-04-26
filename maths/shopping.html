@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Shopping List</title>
+<link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
+<style>
+#filter-bar{display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;flex-shrink:0;}
+#game-body{display:flex;flex:1;overflow:hidden;}
+#catalog-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+#catalog-title{padding:10px 16px 4px;font-size:1.1em;color:#888;flex-shrink:0;}
+#tiles-scroll{flex:1;overflow-y:auto;padding:12px 16px;}
+#tiles{display:flex;flex-wrap:wrap;gap:14px;}
+.ctile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:120px;height:120px;border-radius:20px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.12);cursor:pointer;padding:0 0 10px;transition:transform 0.12s,box-shadow 0.12s;border:none;font-family:'Comic Sans MS','Chalkboard SE',cursive;}
+.ctile:hover{transform:translateY(-3px);box-shadow:0 7px 16px rgba(0,0,0,0.18);}
+.ctile-icon{font-size:2.6em;flex:1;display:flex;align-items:center;justify-content:center;}
+.ctile-name{font-size:0.82em;font-weight:bold;color:#333;text-align:center;padding:0 6px;}
+#list-panel{width:260px;display:flex;flex-direction:column;border-left:2px solid #eee;background:#fffdf8;}
+#list-header{padding:12px 16px 6px;font-size:1.2em;font-weight:bold;color:#333;flex-shrink:0;}
+#list-items{flex:1;overflow-y:auto;padding:4px 12px;}
+.list-row{display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+.list-icon{font-size:1.5em;flex-shrink:0;}
+.list-name{flex:1;font-size:0.95em;color:#333;}
+.list-remove{background:none;border:none;font-size:1.1em;color:#E74C3C;cursor:pointer;padding:2px 4px;}
+#list-footer{padding:10px 12px;flex-shrink:0;}
+#btn-go{width:100%;padding:14px;border:none;border-radius:14px;font-family:inherit;font-size:1.1em;font-weight:bold;cursor:pointer;background:#27AE60;color:#fff;transition:opacity 0.2s;}
+#btn-go:disabled{opacity:0.4;cursor:default;}
+#empty-list{color:#bbb;font-style:italic;font-size:0.9em;text-align:center;padding:16px 0;}
+#phase2{display:none;flex:1;flex-direction:column;overflow:hidden;}
+#phase2-title{padding:12px 16px;font-size:1.4em;font-weight:bold;color:#333;flex-shrink:0;border-bottom:1px solid #eee;}
+#scan-list{flex:1;overflow-y:auto;padding:12px 16px;}
+.scan-row{display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:8px;border-radius:14px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
+.scan-row.found{background:#f0fff4;opacity:0.6;}
+.scan-icon{font-size:1.8em;}
+.scan-name{flex:1;font-size:1.1em;color:#333;}
+.scan-row.found .scan-name{text-decoration:line-through;color:#888;}
+.scan-tick{font-size:1.4em;}
+.btn-got{padding:8px 14px;border:none;border-radius:10px;font-family:inherit;font-size:0.9em;cursor:pointer;background:#3498DB;color:#fff;}
+.btn-got:disabled{opacity:0.3;cursor:default;}
+#success-banner{display:none;position:fixed;inset:0;background:rgba(39,174,96,0.95);flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:2.8em;font-weight:bold;text-align:center;font-family:'Comic Sans MS','Chalkboard SE',cursive;}
+#btn-again{margin-top:24px;padding:14px 32px;border:3px solid #fff;border-radius:16px;background:transparent;color:#fff;font-family:inherit;font-size:0.55em;cursor:pointer;}
+@media(orientation:portrait){
+  #game-body{flex-direction:column;}
+  #list-panel{width:auto;height:200px;border-left:none;border-top:2px solid #eee;}
+  #list-items{display:flex;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding:4px 8px;gap:6px;}
+  .list-row{flex-direction:column;min-width:80px;padding:6px 8px;}
+  .list-name{font-size:0.75em;text-align:center;}
+}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-prev="index.html"></div>
+<div class="game-area">
+  <div id="filter-bar"></div>
+  <div id="game-body">
+    <div id="catalog-area">
+      <div id="catalog-title">Choose items for your list:</div>
+      <div id="tiles-scroll"><div id="tiles"></div></div>
+    </div>
+    <div id="list-panel">
+      <div id="list-header">🛒 My List</div>
+      <div id="list-items"><div id="empty-list">Tap items to add them</div></div>
+      <div id="list-footer">
+        <button id="btn-go" disabled>Go Shopping! →</button>
+      </div>
+    </div>
+    <div id="phase2">
+      <div id="phase2-title">Find each item! 🛒</div>
+      <div id="scan-list"></div>
+    </div>
+  </div>
+</div>
+<div id="success-banner">
+  🎉 Well done! 🎉
+  <button id="btn-again">Play Again!</button>
+</div>
+<script src="filter-bar.js"></script>
+<script>
+var CATALOGS=[
+  {
+    name:'Groceries',
+    tags:['groceries','food'],
+    items:[
+      {name:'Milk',barcode:'5000169105428',icon:'🥛'},
+      {name:'Bread',barcode:'5010251007333',icon:'🍞'},
+      {name:'Eggs',barcode:'5011476101040',icon:'🥚'},
+      {name:'Cheese',barcode:'5010251100036',icon:'🧀'},
+      {name:'Butter',barcode:'5010251007319',icon:'🧈'},
+      {name:'Banana',barcode:'0000000004011',icon:'🍌'},
+      {name:'Apple',barcode:'0000000003107',icon:'🍎'},
+      {name:'Orange Juice',barcode:'5000152009835',icon:'🧃'},
+      {name:'Pasta',barcode:'5010251083067',icon:'🍜'},
+      {name:'Chocolate',barcode:'7622210100054',icon:'🍫'}
+    ]
+  }
+];
+
+var TILE_COLOURS=['#FFF0E0','#EAF4FF','#F0FFF4','#FFF0FA','#FFF5E0','#F5EEFF','#F0F8FF','#FFFBEA','#FFF0F0','#E8FFF0'];
+
+var allItems=[];
+var listItems=[];
+var shownItems=[];
+
+function flattenCatalogs(catalogs){
+  var out=[];
+  catalogs.forEach(function(c){
+    c.items.forEach(function(it){
+      out.push({name:it.name,barcode:it.barcode,icon:it.icon,tags:c.tags,catalog:c.name});
+    });
+  });
+  return out;
+}
+
+function renderTiles(items){
+  shownItems=items.filter(function(it){return listItems.indexOf(it)<0;});
+  var wrap=document.getElementById('tiles');
+  wrap.innerHTML='';
+  shownItems.forEach(function(it,i){
+    var btn=document.createElement('button');
+    btn.className='ctile';
+    btn.style.background=TILE_COLOURS[i%TILE_COLOURS.length];
+    btn.innerHTML='<span class="ctile-icon">'+it.icon+'</span><span class="ctile-name">'+escHtml(it.name)+'</span>';
+    btn.onclick=function(){addToList(it);};
+    wrap.appendChild(btn);
+  });
+}
+
+function renderList(){
+  var wrap=document.getElementById('list-items');
+  wrap.innerHTML='';
+  if(listItems.length===0){
+    wrap.innerHTML='<div id="empty-list">Tap items to add them</div>';
+    document.getElementById('btn-go').disabled=true;
+    return;
+  }
+  document.getElementById('btn-go').disabled=false;
+  listItems.forEach(function(it){
+    var row=document.createElement('div');
+    row.className='list-row';
+    row.innerHTML='<span class="list-icon">'+it.icon+'</span><span class="list-name">'+escHtml(it.name)+'</span><button class="list-remove">✕</button>';
+    row.querySelector('.list-remove').onclick=function(){removeFromList(it);};
+    wrap.appendChild(row);
+  });
+}
+
+function addToList(it){
+  listItems.push(it);
+  renderList();
+  renderTiles(shownItems.concat([]));
+  var idx=allItems.indexOf(it);
+  renderTiles(allItems);
+}
+
+function removeFromList(it){
+  listItems.splice(listItems.indexOf(it),1);
+  renderList();
+  renderTiles(allItems);
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+document.getElementById('btn-go').onclick=function(){
+  startPhase2();
+};
+
+function startPhase2(){
+  document.getElementById('catalog-area').style.display='none';
+  document.getElementById('list-panel').style.display='none';
+  document.getElementById('filter-bar').style.display='none';
+  var p2=document.getElementById('phase2');
+  p2.style.display='flex';
+  var sl=document.getElementById('scan-list');
+  sl.innerHTML='';
+  var found=0;
+  listItems.forEach(function(it){
+    var row=document.createElement('div');
+    row.className='scan-row';
+    row.innerHTML='<span class="scan-icon">'+it.icon+'</span><span class="scan-name">'+escHtml(it.name)+'</span><span class="scan-tick"></span><button class="btn-got">Got it! ✓</button>';
+    var btn=row.querySelector('.btn-got');
+    btn.onclick=function(){
+      row.classList.add('found');
+      row.querySelector('.scan-tick').textContent='✅';
+      btn.disabled=true;
+      found++;
+      if(found===listItems.length){
+        setTimeout(showSuccess,400);
+      }
+    };
+    sl.appendChild(row);
+  });
+}
+
+function showSuccess(){
+  var b=document.getElementById('success-banner');
+  b.style.display='flex';
+}
+
+document.getElementById('btn-again').onclick=function(){
+  document.getElementById('success-banner').style.display='none';
+  listItems=[];
+  document.getElementById('phase2').style.display='none';
+  document.getElementById('catalog-area').style.display='flex';
+  document.getElementById('list-panel').style.display='flex';
+  document.getElementById('filter-bar').style.display='flex';
+  renderList();
+  renderTiles(allItems);
+};
+
+allItems=flattenCatalogs(CATALOGS);
+buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags,name:c.name};}),function(filtered){
+  var items=[];
+  filtered.forEach(function(c){
+    CATALOGS.forEach(function(cat){
+      if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,barcode:it.barcode,icon:it.icon,tags:cat.tags,catalog:cat.name};}));
+    });
+  });
+  allItems=items;
+  listItems=listItems.filter(function(li){return items.indexOf(li)>=0||items.some(function(i){return i.barcode===li.barcode;});});
+  renderTiles(allItems);
+  renderList();
+});
+</script>
+</body>
+</html>

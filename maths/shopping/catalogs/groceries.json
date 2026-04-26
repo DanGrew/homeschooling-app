@@ -1,0 +1,16 @@
+{
+  "name": "Groceries",
+  "tags": ["groceries", "food"],
+  "items": [
+    { "name": "Milk", "barcode": "5000169105428", "icon": "🥛" },
+    { "name": "Bread", "barcode": "5010251007333", "icon": "🍞" },
+    { "name": "Eggs", "barcode": "5011476101040", "icon": "🥚" },
+    { "name": "Cheese", "barcode": "5010251100036", "icon": "🧀" },
+    { "name": "Butter", "barcode": "5010251007319", "icon": "🧈" },
+    { "name": "Banana", "barcode": "0000000004011", "icon": "🍌" },
+    { "name": "Apple", "barcode": "0000000003107", "icon": "🍎" },
+    { "name": "Orange Juice", "barcode": "5000152009835", "icon": "🧃" },
+    { "name": "Pasta", "barcode": "5010251083067", "icon": "🍜" },
+    { "name": "Chocolate", "barcode": "7622210100054", "icon": "🍫" }
+  ]
+}
