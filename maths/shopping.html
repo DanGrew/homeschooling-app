@@ -147,11 +147,12 @@ function flattenCatalogs(catalogs){
 }
 
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function byName(a,b){return a.name.localeCompare(b.name);}
 
 function renderTiles(items){
   var wrap=document.getElementById('tiles');
   wrap.innerHTML='';
-  items.filter(function(it){return listItems.indexOf(it)<0;}).forEach(function(it,i){
+  items.filter(function(it){return listItems.indexOf(it)<0;}).slice().sort(byName).forEach(function(it,i){
     var btn=document.createElement('button');
     btn.className='ctile';
     btn.style.background=TILE_COLOURS[i%TILE_COLOURS.length];
@@ -168,7 +169,7 @@ function renderList(){
   if(empty){wrap.innerHTML='<div id="empty-list">Tap items to add them</div>';}
   document.getElementById('btn-find').disabled=empty;
   document.getElementById('btn-scan-it').disabled=empty;
-  listItems.forEach(function(it){
+  listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='list-row';
     row.innerHTML='<span class="list-icon">'+it.icon+'</span><span class="list-name">'+escHtml(it.name)+'</span><button class="list-remove">✕</button>';
@@ -197,7 +198,7 @@ document.getElementById('btn-find').onclick=function(){
   var fl=document.getElementById('find-list');
   fl.innerHTML='';
   var found=0;
-  listItems.forEach(function(it){
+  listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='find-row';
     row.innerHTML='<span class="find-icon">'+it.icon+'</span><span class="find-name">'+escHtml(it.name)+'</span><span class="find-tick"></span><button class="btn-got">Got it! ✓</button><button class="btn-undo">Undo</button>';
@@ -225,7 +226,7 @@ document.getElementById('btn-scan-it').onclick=function(){
   var barcodeMap={};
   scanFound=0;
   scanTotal=listItems.length;
-  listItems.forEach(function(it){
+  listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='sc-row';
     row.innerHTML='<span class="sc-tick">☐</span><span class="sc-icon">'+it.icon+'</span><span class="sc-name">'+escHtml(it.name)+'</span>';
