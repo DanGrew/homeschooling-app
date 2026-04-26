@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Camera Test</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,sans-serif;background:#1a1a2e;color:#eee;padding:20px;min-height:100vh;}
+h1{font-size:1.4em;margin-bottom:16px;color:#fff;}
+.card{background:#16213e;border-radius:12px;padding:16px;margin-bottom:14px;}
+.card h2{font-size:1em;margin-bottom:10px;color:#a8b2d8;}
+.status{display:flex;align-items:center;gap:8px;font-size:0.95em;margin-bottom:6px;}
+.dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;}
+.dot.ok{background:#27AE60;}
+.dot.warn{background:#E67E22;}
+.dot.err{background:#E74C3C;}
+.dot.idle{background:#555;}
+button{padding:10px 20px;border:none;border-radius:8px;font-size:0.95em;cursor:pointer;background:#0f3460;color:#fff;margin-top:8px;}
+button:hover{background:#1a4a80;}
+button:disabled{opacity:0.4;cursor:default;}
+#video-wrap{position:relative;background:#000;border-radius:8px;overflow:hidden;margin-top:10px;max-width:480px;}
+video{width:100%;display:block;}
+#aim{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:200px;height:100px;border:2px solid #27AE60;border-radius:6px;pointer-events:none;}
+#results{margin-top:10px;font-size:0.85em;font-family:monospace;background:#0a0a1a;padding:10px;border-radius:8px;max-height:160px;overflow-y:auto;color:#7fdbca;}
+#results p{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<h1>Camera &amp; Barcode Test</h1>
+
+<div class="card">
+  <h2>API Support</h2>
+  <div class="status"><div class="dot" id="dot-detector"></div><span id="msg-detector">Checking BarcodeDetector…</span></div>
+  <div class="status"><div class="dot" id="dot-camera"></div><span id="msg-camera">Checking getUserMedia…</span></div>
+</div>
+
+<div class="card">
+  <h2>Camera feed</h2>
+  <button id="btn-start">Start camera</button>
+  <button id="btn-stop" disabled>Stop camera</button>
+  <div id="video-wrap" style="display:none;">
+    <video id="video" autoplay playsinline muted></video>
+    <div id="aim"></div>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Barcode detection</h2>
+  <div class="status"><div class="dot idle" id="dot-scan"></div><span id="msg-scan">Not scanning</span></div>
+  <div id="results"><p style="color:#555;">Results will appear here…</p></div>
+</div>
+
+<script>
+var stream=null,interval=null,detector=null,seen={};
+
+function dot(id,state){document.getElementById(id).className='dot '+state;}
+function msg(id,text){document.getElementById(id).textContent=text;}
+
+var hasDetector=typeof BarcodeDetector!=='undefined';
+var hasCamera=!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+
+dot('dot-detector',hasDetector?'ok':'err');
+msg('msg-detector',hasDetector?'BarcodeDetector available ✓':'BarcodeDetector NOT available — Chrome/Edge on Android or ChromeOS only');
+
+dot('dot-camera',hasCamera?'ok':'err');
+msg('msg-camera',hasCamera?'getUserMedia available ✓':'getUserMedia NOT available');
+
+if(hasDetector)detector=new BarcodeDetector();
+
+document.getElementById('btn-start').onclick=function(){
+  if(!hasCamera){msg('msg-scan','getUserMedia not available');return;}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(function(s){
+    stream=s;
+    var v=document.getElementById('video');
+    v.srcObject=s;
+    document.getElementById('video-wrap').style.display='block';
+    document.getElementById('btn-start').disabled=true;
+    document.getElementById('btn-stop').disabled=false;
+    dot('dot-camera','ok');
+    msg('msg-camera','Camera active ✓');
+    if(hasDetector){
+      dot('dot-scan','ok');
+      msg('msg-scan','Scanning…');
+      interval=setInterval(function(){
+        if(v.readyState<2)return;
+        detector.detect(v).then(function(codes){
+          codes.forEach(function(c){
+            if(!seen[c.rawValue]){
+              seen[c.rawValue]=true;
+              var p=document.createElement('p');
+              p.textContent='['+c.format+'] '+c.rawValue;
+              document.getElementById('results').prepend(p);
+              msg('msg-scan','Last: '+c.rawValue);
+            }
+          });
+        }).catch(function(){});
+      },400);
+    }else{
+      dot('dot-scan','warn');
+      msg('msg-scan','Camera running but BarcodeDetector unavailable — cannot decode');
+    }
+  }).catch(function(e){
+    dot('dot-camera','err');
+    msg('msg-camera','Camera error: '+e.message);
+  });
+};
+
+document.getElementById('btn-stop').onclick=function(){
+  if(interval){clearInterval(interval);interval=null;}
+  if(stream){stream.getTracks().forEach(function(t){t.stop();});stream=null;}
+  document.getElementById('video').srcObject=null;
+  document.getElementById('video-wrap').style.display='none';
+  document.getElementById('btn-start').disabled=false;
+  document.getElementById('btn-stop').disabled=true;
+  dot('dot-scan','idle');msg('msg-scan','Stopped');
+  msg('msg-camera','Camera stopped');
+};
+</script>
+</body>
+</html>
