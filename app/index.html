@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Home</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;}
+h1{font-size:3em;color:#333;margin-bottom:48px;}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:28px;}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:180px;height:180px;border-radius:24px;text-decoration:none;color:#333;font-size:1.1em;font-family:inherit;font-weight:bold;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.12);transition:transform 0.15s,box-shadow 0.15s;background:#fff;padding:0 0 16px;}
+.tile:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(0,0,0,0.18);}
+.tile svg{flex:1;width:100%;padding:20px 20px 8px;}
+.tile span{font-size:1em;text-align:center;padding:0 8px;}
+</style>
+</head>
+<body>
+<h1>Let's Learn!</h1>
+<div class="tiles">
+
+  <a class="tile" href="lessons/" style="background:#FFF0FA;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="6" width="60" height="44" rx="6" fill="#F5EEFF" stroke="#C39BD3" stroke-width="2"/>
+      <line x1="20" y1="18" x2="60" y2="18" stroke="#9B59B6" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="28" x2="60" y2="28" stroke="#9B59B6" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="20" y1="38" x2="44" y2="38" stroke="#9B59B6" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <span>Lessons</span>
+  </a>
+
+  <a class="tile" href="worksheets/" style="background:#F0FFF4;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="12" y="4" width="44" height="52" rx="5" fill="#E8F8F0" stroke="#27AE60" stroke-width="2"/>
+      <rect x="20" y="14" width="28" height="6" rx="2" fill="#27AE60"/>
+      <rect x="20" y="26" width="20" height="4" rx="2" fill="#A9DFBF"/>
+      <rect x="20" y="34" width="24" height="4" rx="2" fill="#A9DFBF"/>
+      <rect x="20" y="42" width="16" height="4" rx="2" fill="#A9DFBF"/>
+      <circle cx="62" cy="46" r="12" fill="#27AE60"/>
+      <path d="M56 46 L60 50 L68 40" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span>Worksheets</span>
+  </a>
+
+  <a class="tile" href="games/" style="background:#EAF4FF;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="18" width="64" height="36" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2"/>
+      <circle cx="24" cy="36" r="7" fill="#3498DB"/>
+      <circle cx="56" cy="36" r="7" fill="#E74C3C"/>
+      <rect x="37" y="29" width="6" height="14" rx="2" fill="#27AE60"/>
+      <rect x="34" y="32" width="12" height="6" rx="2" fill="#27AE60"/>
+      <polygon points="40,6 46,16 34,16" fill="#F1C40F"/>
+    </svg>
+    <span>Games</span>
+  </a>
+
+</div>
+</body>
+</html>
