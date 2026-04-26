@@ -183,12 +183,14 @@ function removeFromList(it){listItems.splice(listItems.indexOf(it),1);renderList
 
 function hidePhase1(){
   document.getElementById('phase1').style.display='none';
-  document.getElementById('filter-bar').style.display='none';
+  var fb=document.getElementById('filter-bar');
+  if(fb)fb.style.display='none';
 }
 
 function showPhase1(){
   document.getElementById('phase1').style.display='flex';
-  document.getElementById('filter-bar').style.display='flex';
+  var fb=document.getElementById('filter-bar');
+  if(fb)fb.style.display='flex';
 }
 
 document.getElementById('btn-find').onclick=function(){
