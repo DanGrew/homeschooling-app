@@ -169,7 +169,7 @@ function renderList(){
   var empty=listItems.length===0;
   if(empty){wrap.innerHTML='<div id="empty-list">Tap items to add them</div>';}
   document.getElementById('btn-find').disabled=empty;
-  document.getElementById('btn-scan-it').disabled=empty||!hasDetector;
+  document.getElementById('btn-scan-it').disabled=empty;
   listItems.forEach(function(it){
     var row=document.createElement('div');
     row.className='list-row';
@@ -309,8 +309,7 @@ document.getElementById('btn-again').onclick=function(){
 };
 
 if(!hasDetector){
-  document.getElementById('btn-scan-it').disabled=true;
-  document.getElementById('scan-unavailable').textContent='Scanning not available on this device';
+  document.getElementById('scan-unavailable').textContent='No camera — stub mode active';
 }
 
 function initGame(){
