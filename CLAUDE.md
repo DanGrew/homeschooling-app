@@ -10,8 +10,11 @@ Public-facing homeschooling app. Activities built for a child aged 3–4. This r
 
 ## Repository Structure
 
-- `maths/` — maths activities (count shapes, match colour, match shape, connect the dots)
-- `index.html` — root redirect to `maths/`
+- `index.html` — root redirect to `app/`
+- `app/index.html` — home page (Lessons / Worksheets / Games tiles)
+- `app/lessons/` — lessons section
+- `app/worksheets/` — worksheets section
+- `app/games/` — games activities (count shapes, match colour, match shape, connect the dots, etc.)
 
 ## Guidelines
 
