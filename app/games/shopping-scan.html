@@ -3,48 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Shopping List</title>
+<title>Shopping Scan</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="shopping-shared.css">
 <script src="menu.js" defer></script>
 <style>
-#filter-bar{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
-#phase1{display:flex;flex-direction:column;flex:1;overflow:hidden;}
-#game-body{display:flex;flex:1;overflow:hidden;}
-#catalog-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-#catalog-title{padding:10px 16px 4px;font-size:1.1em;color:#888;flex-shrink:0;}
-#tiles-scroll{flex:1;overflow-y:auto;padding:12px 16px;}
-#tiles{display:flex;flex-wrap:wrap;gap:14px;}
-.ctile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:120px;height:120px;border-radius:20px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,0.12);cursor:pointer;padding:0 0 10px;transition:transform 0.12s,box-shadow 0.12s;border:none;font-family:'Comic Sans MS','Chalkboard SE',cursive;}
-.ctile:hover{transform:translateY(-3px);box-shadow:0 7px 16px rgba(0,0,0,0.18);}
-.ctile-icon{font-size:2.6em;flex:1;display:flex;align-items:center;justify-content:center;}
-.ctile-name{font-size:0.82em;font-weight:bold;color:#333;text-align:center;padding:0 6px;}
-#list-panel{width:220px;display:flex;flex-direction:column;border-left:2px solid #eee;background:#fffdf8;}
-#list-header{padding:12px 16px 6px;font-size:1.2em;font-weight:bold;color:#333;flex-shrink:0;}
-#list-items{flex:1;overflow-y:auto;padding:4px 12px;}
-.list-row{display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
-.list-icon{font-size:1.4em;flex-shrink:0;}
-.list-name{flex:1;font-size:0.9em;color:#333;}
-.list-remove{background:none;border:none;font-size:1.1em;color:#E74C3C;cursor:pointer;padding:2px 4px;}
-#empty-list{color:#bbb;font-style:italic;font-size:0.9em;text-align:center;padding:16px 0;}
-#go-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:2px solid #eee;flex-shrink:0;background:#fffdf8;}
-.btn-go{flex:1;padding:13px 8px;border:none;border-radius:14px;font-family:inherit;font-size:1em;font-weight:bold;cursor:pointer;color:#fff;transition:opacity 0.2s;}
-.btn-go:disabled{opacity:0.35;cursor:default;}
-#btn-find{background:#3498DB;}
 #btn-scan-it{background:#9B59B6;}
 #scan-unavailable{font-size:0.75em;color:#bbb;text-align:center;}
-#phase2{display:none;flex:1;flex-direction:column;overflow:hidden;}
-#phase2-title{padding:12px 16px;font-size:1.4em;font-weight:bold;color:#333;flex-shrink:0;border-bottom:1px solid #eee;}
-#find-list{flex:1;overflow-y:auto;padding:12px 16px;}
-.find-row{display:flex;align-items:center;gap:10px;padding:10px 14px;margin-bottom:8px;border-radius:14px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,0.1);}
-.find-row.found{background:#f0fff4;}
-.find-icon{font-size:1.8em;}
-.find-name{flex:1;font-size:1.1em;color:#333;}
-.find-row.found .find-name{text-decoration:line-through;color:#888;}
-.find-tick{font-size:1.4em;width:28px;text-align:center;}
-.btn-got{padding:8px 14px;border:none;border-radius:10px;font-family:inherit;font-size:0.9em;cursor:pointer;background:#3498DB;color:#fff;}
-.btn-undo{padding:6px 10px;border:none;border-radius:10px;font-family:inherit;font-size:0.8em;cursor:pointer;background:#E67E22;color:#fff;display:none;}
-.find-row.found .btn-undo{display:inline-block;}
-.find-row.found .btn-got{display:none;}
 #phase-scan{display:none;flex:1;flex-direction:row;overflow:hidden;}
 #scan-video-wrap{flex:1;background:#111;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
 #scan-video{width:100%;height:100%;object-fit:cover;}
@@ -69,18 +34,7 @@
 .sc-icon{font-size:1.3em;flex-shrink:0;}
 .sc-name{flex:1;font-size:0.9em;color:#333;}
 .sc-row.found .sc-name{text-decoration:line-through;color:#aaa;}
-#success-banner{display:none;position:fixed;inset:0;background:rgba(39,174,96,0.95);flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:2.8em;font-weight:bold;text-align:center;font-family:'Comic Sans MS','Chalkboard SE',cursive;}
-#btn-again{margin-top:24px;padding:14px 32px;border:3px solid #fff;border-radius:16px;background:transparent;color:#fff;font-family:inherit;font-size:0.55em;cursor:pointer;}
 @media(orientation:portrait){
-  .nav-bar{flex-wrap:wrap;}
-  #game-body{flex-direction:column;}
-  #list-panel{width:auto;height:160px;border-left:none;border-top:2px solid #eee;}
-  #list-header{padding:8px 12px 4px;font-size:1em;}
-  .list-row{padding:6px 8px;margin-bottom:4px;}
-  .list-icon{font-size:1.2em;}
-  .list-name{font-size:0.82em;}
-  #go-bar{padding:8px 12px;gap:8px;}
-  .btn-go{padding:10px 8px;font-size:0.88em;}
   #scan-checklist{width:160px;}
 }
 </style>
@@ -136,90 +90,13 @@
   <button id="btn-again">Play Again!</button>
 </div>
 <script src="filter-bar.js"></script>
+<script src="shopping-shared.js"></script>
 <script>
 var hasDetector=typeof BarcodeDetector!=='undefined';
 var CATALOGS=[{"name":"My Catalog","items":[{"barcode":"00348188","name":"Milk","icon":"🥛"},{"barcode":"00907897","name":"Sauce - BBQ","icon":"🥫"},{"barcode":"00556293","name":"Boule","icon":"🍞"},{"barcode":"00580458","name":"Organic Butter","icon":"🧈"},{"barcode":"5010044005126","name":"Crumpets","icon":"🛒"},{"barcode":"5000157150974","name":"Beans","icon":"🥫"},{"barcode":"5060107330764","name":"Orange Breakie","icon":"🍊"},{"barcode":"5060107330740","name":"Purple Breakie","icon":"🛒"},{"barcode":"5060503504073","name":"Pouch - Pulled Pork","icon":"🥩"},{"barcode":"5060107337879","name":"Pouch - Cottage Pie","icon":"🥣"}]}];
-var TILE_COLOURS=['#FFF0E0','#EAF4FF','#F0FFF4','#FFF0FA','#FFF5E0','#F5EEFF','#F0F8FF','#FFFBEA','#FFF0F0','#E8FFF0'];
-var allItems=[],listItems=[],scanStream=null,scanInterval=null,scanFound=0,scanTotal=0;
+var scanStream=null,scanInterval=null,scanFound=0,scanTotal=0;
 
-function flattenCatalogs(catalogs){
-  var out=[];
-  catalogs.forEach(function(c){c.items.forEach(function(it){out.push({name:it.name,barcode:it.barcode,icon:it.icon,tags:c.tags,catalog:c.name});});});
-  return out;
-}
-
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function byName(a,b){return a.name.localeCompare(b.name);}
-
-function renderTiles(items){
-  var wrap=document.getElementById('tiles');
-  wrap.innerHTML='';
-  items.filter(function(it){return listItems.indexOf(it)<0;}).slice().sort(byName).forEach(function(it,i){
-    var btn=document.createElement('button');
-    btn.className='ctile';
-    btn.style.background=TILE_COLOURS[i%TILE_COLOURS.length];
-    btn.innerHTML='<span class="ctile-icon">'+it.icon+'</span><span class="ctile-name">'+escHtml(it.name)+'</span>';
-    btn.onclick=function(){addToList(it);};
-    wrap.appendChild(btn);
-  });
-}
-
-function renderList(){
-  var wrap=document.getElementById('list-items');
-  wrap.innerHTML='';
-  var empty=listItems.length===0;
-  if(empty){wrap.innerHTML='<div id="empty-list">Tap items to add them</div>';}
-  document.getElementById('btn-find').disabled=empty;
-  document.getElementById('btn-scan-it').disabled=empty;
-  listItems.slice().sort(byName).forEach(function(it){
-    var row=document.createElement('div');
-    row.className='list-row';
-    row.innerHTML='<span class="list-icon">'+it.icon+'</span><span class="list-name">'+escHtml(it.name)+'</span><button class="list-remove">✕</button>';
-    row.querySelector('.list-remove').onclick=function(){removeFromList(it);};
-    wrap.appendChild(row);
-  });
-}
-
-function addToList(it){listItems.push(it);renderList();renderTiles(allItems);}
-function removeFromList(it){listItems.splice(listItems.indexOf(it),1);renderList();renderTiles(allItems);}
-
-function hidePhase1(){
-  document.getElementById('phase1').style.display='none';
-  var fb=document.getElementById('filter-bar');
-  if(fb)fb.style.display='none';
-}
-
-function showPhase1(){
-  document.getElementById('phase1').style.display='flex';
-  var fb=document.getElementById('filter-bar');
-  if(fb)fb.style.display='flex';
-}
-
-document.getElementById('btn-find').onclick=function(){
-  hidePhase1();
-  var p2=document.getElementById('phase2');
-  p2.style.display='flex';
-  var fl=document.getElementById('find-list');
-  fl.innerHTML='';
-  var found=0;
-  listItems.slice().sort(byName).forEach(function(it){
-    var row=document.createElement('div');
-    row.className='find-row';
-    row.innerHTML='<span class="find-icon">'+it.icon+'</span><span class="find-name">'+escHtml(it.name)+'</span><span class="find-tick"></span><button class="btn-got">Got it! ✓</button><button class="btn-undo">Undo</button>';
-    row.querySelector('.btn-got').onclick=function(){
-      row.classList.add('found');
-      row.querySelector('.find-tick').textContent='✅';
-      found++;
-      if(found===listItems.length)setTimeout(showSuccess,400);
-    };
-    row.querySelector('.btn-undo').onclick=function(){
-      row.classList.remove('found');
-      row.querySelector('.find-tick').textContent='';
-      found--;
-    };
-    fl.appendChild(row);
-  });
-};
+document.getElementById('btn-find').onclick=startFindPhase;
 
 document.getElementById('btn-scan-it').onclick=function(){
   hidePhase1();
@@ -305,8 +182,6 @@ function showScanToast(icon,name){
   clearTimeout(_toastTimer);
   _toastTimer=setTimeout(function(){t.classList.remove('show');},1500);
 }
-
-function showSuccess(){document.getElementById('success-banner').style.display='flex';}
 
 document.getElementById('btn-again').onclick=function(){
   stopScan();
