@@ -126,24 +126,7 @@
 <script src="filter-bar.js"></script>
 <script>
 var hasDetector=typeof BarcodeDetector!=='undefined';
-var CATALOGS=[
-  {
-    name:'Groceries',
-    tags:['groceries','food'],
-    items:[
-      {name:'Milk',barcode:'1000000000001',icon:'🥛'},
-      {name:'Bread',barcode:'1000000000002',icon:'🍞'},
-      {name:'Eggs',barcode:'1000000000003',icon:'🥚'},
-      {name:'Cheese',barcode:'1000000000004',icon:'🧀'},
-      {name:'Butter',barcode:'1000000000005',icon:'🧈'},
-      {name:'Banana',barcode:'1000000000006',icon:'🍌'},
-      {name:'Apple',barcode:'1000000000007',icon:'🍎'},
-      {name:'Orange Juice',barcode:'1000000000008',icon:'🧃'},
-      {name:'Pasta',barcode:'1000000000009',icon:'🍜'},
-      {name:'Chocolate',barcode:'1000000000010',icon:'🍫'}
-    ]
-  }
-];
+var CATALOGS=[];
 var TILE_COLOURS=['#FFF0E0','#EAF4FF','#F0FFF4','#FFF0FA','#FFF5E0','#F5EEFF','#F0F8FF','#FFFBEA','#FFF0F0','#E8FFF0'];
 var allItems=[],listItems=[],scanStream=null,scanInterval=null,scanFound=0,scanTotal=0;
 
@@ -301,19 +284,26 @@ if(!hasDetector){
   document.getElementById('scan-unavailable').textContent='Scanning not available on this device';
 }
 
-allItems=flattenCatalogs(CATALOGS);
-buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags,name:c.name};}),function(filtered){
-  var items=[];
-  filtered.forEach(function(c){
-    CATALOGS.forEach(function(cat){
-      if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,barcode:it.barcode,icon:it.icon,tags:cat.tags,catalog:cat.name};}));
+function initGame(){
+  allItems=flattenCatalogs(CATALOGS);
+  buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags||[],name:c.name};}),function(filtered){
+    var items=[];
+    filtered.forEach(function(c){
+      CATALOGS.forEach(function(cat){
+        if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,barcode:it.barcode,icon:it.icon,tags:cat.tags||[],catalog:cat.name};}));
+      });
     });
+    allItems=items;
+    listItems=listItems.filter(function(li){return items.some(function(i){return i.barcode===li.barcode;});});
+    renderTiles(allItems);
+    renderList();
   });
-  allItems=items;
-  listItems=listItems.filter(function(li){return items.some(function(i){return i.barcode===li.barcode;});});
-  renderTiles(allItems);
-  renderList();
-});
+}
+
+fetch('shopping/catalogs/groceries.json')
+  .then(function(r){return r.json();})
+  .then(function(data){CATALOGS=[data];initGame();})
+  .catch(function(){initGame();});
 </script>
 </body>
 </html>
