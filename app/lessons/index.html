@@ -9,16 +9,30 @@
 body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;flex-direction:column;align-items:center;padding:32px 16px 48px;}
 h1{font-size:3em;color:#333;margin-bottom:32px;}
 .tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
-.empty{color:#aaa;font-style:italic;font-size:1.1em;text-align:center;padding:16px 0;}
 .home{display:block;margin-bottom:24px;color:#9B59B6;font-size:1em;text-decoration:none;}
 .home:hover{text-decoration:underline;}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:180px;height:180px;border-radius:24px;text-decoration:none;color:#333;font-size:1.1em;font-family:inherit;font-weight:bold;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.12);transition:transform 0.15s,box-shadow 0.15s;background:#fff;padding:0 0 16px;}
+.tile:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(0,0,0,0.18);}
+.tile svg{flex:1;width:100%;padding:20px 20px 8px;}
+.tile span{font-size:1em;text-align:center;padding:0 8px;}
 </style>
 </head>
 <body>
 <a class="home" href="../index.html">&#127968; Home</a>
 <h1>Lessons</h1>
 <div class="tiles">
-  <p class="empty">More coming soon!</p>
+  <a class="tile" href="story-time/" style="background:#FFF8E7;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="8" width="42" height="44" rx="5" fill="#FFF0C0" stroke="#F0B429" stroke-width="2"/>
+      <rect x="16" y="8" width="6" height="44" rx="2" fill="#F0B429"/>
+      <line x1="26" y1="20" x2="46" y2="20" stroke="#F0B429" stroke-width="2" stroke-linecap="round"/>
+      <line x1="26" y1="28" x2="46" y2="28" stroke="#F0B429" stroke-width="2" stroke-linecap="round"/>
+      <line x1="26" y1="36" x2="38" y2="36" stroke="#F0B429" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="60" cy="38" r="14" fill="#9B59B6"/>
+      <polygon points="56,32 68,38 56,44" fill="#fff"/>
+    </svg>
+    <span>Story Time</span>
+  </a>
 </div>
 </body>
 </html>
