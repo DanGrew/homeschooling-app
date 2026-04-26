@@ -126,7 +126,7 @@
 <script src="filter-bar.js"></script>
 <script>
 var hasDetector=typeof BarcodeDetector!=='undefined';
-var CATALOGS=[];
+var CATALOGS=[{"name":"My Catalog","items":[{"barcode":"00348188","name":"Milk","icon":"🥛"},{"barcode":"00907897","name":"Sauce - BBQ","icon":"🥫"},{"barcode":"00556293","name":"Boule","icon":"🍞"},{"barcode":"00580458","name":"Organic Butter","icon":"🧈"},{"barcode":"5010044005126","name":"Crumpets","icon":"🛒"},{"barcode":"5000157150974","name":"Beans","icon":"🥫"},{"barcode":"5060107330764","name":"Orange Breakie","icon":"🍊"},{"barcode":"5060107330740","name":"Purple Breakie","icon":"🛒"},{"barcode":"5060503504073","name":"Pouch - Pulled Pork","icon":"🥩"},{"barcode":"5060107337879","name":"Pouch - Cottage Pie","icon":"🥣"}]}];
 var TILE_COLOURS=['#FFF0E0','#EAF4FF','#F0FFF4','#FFF0FA','#FFF5E0','#F5EEFF','#F0F8FF','#FFFBEA','#FFF0F0','#E8FFF0'];
 var allItems=[],listItems=[],scanStream=null,scanInterval=null,scanFound=0,scanTotal=0;
 
@@ -300,10 +300,7 @@ function initGame(){
   });
 }
 
-fetch('shopping/catalogs/groceries.json')
-  .then(function(r){return r.json();})
-  .then(function(data){CATALOGS=[data];initGame();})
-  .catch(function(){initGame();});
+initGame();
 </script>
 </body>
 </html>
