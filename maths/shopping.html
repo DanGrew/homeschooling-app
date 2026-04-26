@@ -8,6 +8,7 @@
 <script src="menu.js" defer></script>
 <style>
 #filter-bar{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
+#phase1{display:flex;flex-direction:column;flex:1;overflow:hidden;}
 #game-body{display:flex;flex:1;overflow:hidden;}
 #catalog-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 #catalog-title{padding:10px 16px 4px;font-size:1.1em;color:#888;flex-shrink:0;}
@@ -88,42 +89,44 @@
   <div id="filter-bar"></div>
 </div>
 <div class="game-area">
-  <div id="game-body">
-    <div id="catalog-area">
-      <div id="catalog-title">Choose items for your list:</div>
-      <div id="tiles-scroll"><div id="tiles"></div></div>
-    </div>
-    <div id="list-panel">
-      <div id="list-header">🛒 My List</div>
-      <div id="list-items"><div id="empty-list">Tap items to add them</div></div>
-    </div>
-    <div id="phase2">
-      <div id="phase2-title">Find each item! 🔍</div>
-      <div id="find-list"></div>
-    </div>
-    <div id="phase-scan">
-      <div id="scan-video-wrap">
-        <video id="scan-video" autoplay playsinline muted></video>
-        <div id="scan-aim"></div>
-        <div id="scan-stub">
-          <p>No camera/BarcodeDetector — type a barcode to simulate a scan:</p>
-          <div id="scan-stub-row">
-            <input id="stub-input" type="text" placeholder="e.g. 00348188">
-            <button id="stub-btn">Scan</button>
-          </div>
-        </div>
-        <div id="scan-toast"><div id="scan-toast-icon"></div><div id="scan-toast-name"></div></div>
+  <div id="phase1">
+    <div id="game-body">
+      <div id="catalog-area">
+        <div id="catalog-title">Choose items for your list:</div>
+        <div id="tiles-scroll"><div id="tiles"></div></div>
       </div>
-      <div id="scan-checklist">
-        <div id="scan-checklist-title">Scan each item! 📷</div>
-        <div id="scan-checklist-items"></div>
+      <div id="list-panel">
+        <div id="list-header">🛒 My List</div>
+        <div id="list-items"><div id="empty-list">Tap items to add them</div></div>
       </div>
+    </div>
+    <div id="go-bar">
+      <button class="btn-go" id="btn-find" disabled>Find it! 🔍</button>
+      <button class="btn-go" id="btn-scan-it" disabled>Scan it! 📷</button>
+      <div id="scan-unavailable"></div>
     </div>
   </div>
-  <div id="go-bar">
-    <button class="btn-go" id="btn-find" disabled>Find it! 🔍</button>
-    <button class="btn-go" id="btn-scan-it" disabled>Scan it! 📷</button>
-    <div id="scan-unavailable"></div>
+  <div id="phase2">
+    <div id="phase2-title">Find each item! 🔍</div>
+    <div id="find-list"></div>
+  </div>
+  <div id="phase-scan">
+    <div id="scan-video-wrap">
+      <video id="scan-video" autoplay playsinline muted></video>
+      <div id="scan-aim"></div>
+      <div id="scan-stub">
+        <p>No camera/BarcodeDetector — type a barcode to simulate a scan:</p>
+        <div id="scan-stub-row">
+          <input id="stub-input" type="text" placeholder="e.g. 00348188">
+          <button id="stub-btn">Scan</button>
+        </div>
+      </div>
+      <div id="scan-toast"><div id="scan-toast-icon"></div><div id="scan-toast-name"></div></div>
+    </div>
+    <div id="scan-checklist">
+      <div id="scan-checklist-title">Scan each item! 📷</div>
+      <div id="scan-checklist-items"></div>
+    </div>
   </div>
 </div>
 <div id="success-banner">
@@ -178,17 +181,13 @@ function addToList(it){listItems.push(it);renderList();renderTiles(allItems);}
 function removeFromList(it){listItems.splice(listItems.indexOf(it),1);renderList();renderTiles(allItems);}
 
 function hidePhase1(){
-  document.getElementById('catalog-area').style.display='none';
-  document.getElementById('list-panel').style.display='none';
+  document.getElementById('phase1').style.display='none';
   document.getElementById('filter-bar').style.display='none';
-  document.getElementById('go-bar').style.display='none';
 }
 
 function showPhase1(){
-  document.getElementById('catalog-area').style.display='flex';
-  document.getElementById('list-panel').style.display='flex';
+  document.getElementById('phase1').style.display='flex';
   document.getElementById('filter-bar').style.display='flex';
-  document.getElementById('go-bar').style.display='flex';
 }
 
 document.getElementById('btn-find').onclick=function(){
