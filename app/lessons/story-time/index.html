@@ -17,9 +17,12 @@ body{font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;height:100
 #playbtn{background:#9B59B6;color:#fff;}
 #stopbtn{background:#E74C3C;color:#fff;}
 #restartbtn{background:#2980B9;color:#fff;}
+#speed-btns{display:flex;gap:6px;}
+.speed-btn{font-family:inherit;font-size:0.85em;padding:8px 0;border:2px solid #ccc;border-radius:8px;cursor:pointer;touch-action:manipulation;flex:1;background:#fff;color:#555;}
+.speed-btn.active{border-color:#9B59B6;background:#9B59B6;color:#fff;}
 #main{flex:1;overflow-y:auto;background:#fff8f0;}
 #player-area{padding:35vh 24px;display:flex;justify-content:center;}
-#words{font-size:min(2em,5.5vw);line-height:2.2;text-align:center;max-width:640px;width:100%;}
+#words{font-size:min(2em,5.5vw);line-height:2.2;text-align:center;width:min(80%,900px);}
 </style>
 </head>
 <body>
@@ -32,6 +35,11 @@ body{font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;height:100
     <button class="ctrl-btn" id="playbtn">&#9654; Play</button>
     <button class="ctrl-btn" id="stopbtn">&#9646;&#9646; Stop</button>
     <button class="ctrl-btn" id="restartbtn">&#8635; Restart</button>
+    <div id="speed-btns">
+      <button class="speed-btn" data-speed="0.25">&#188;x</button>
+      <button class="speed-btn" data-speed="0.5">&#189;x</button>
+      <button class="speed-btn active" data-speed="1">1x</button>
+    </div>
   </div>
 </div>
 <div id="main">

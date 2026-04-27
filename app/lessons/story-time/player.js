@@ -30,6 +30,16 @@
   var lastActive = -1;
   var playing = false;
   var rafId = null;
+  var currentSpeed = 1;
+
+  document.querySelectorAll('.speed-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      currentSpeed = parseFloat(this.dataset.speed);
+      audio.playbackRate = currentSpeed;
+      document.querySelectorAll('.speed-btn').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+    });
+  });
 
   function wordEl(ci, wi) {
     return document.getElementById('w' + ci + '_' + wi);
@@ -56,6 +66,7 @@
     clearHighlight();
     if (currentClip + 1 < clips.length) {
       loadClip(currentClip + 1);
+      audio.playbackRate = currentSpeed;
       audio.play();
     } else {
       playing = false;
@@ -72,6 +83,7 @@
       rafId = null;
       this.textContent = '\u25b6 Play';
     } else {
+      audio.playbackRate = currentSpeed;
       audio.play();
       playing = true;
       this.textContent = '\u23f8 Pause';
@@ -99,6 +111,7 @@
       audio.removeEventListener('canplay', onReady);
       playing = true;
       document.getElementById('playbtn').textContent = '\u23f8 Pause';
+      audio.playbackRate = currentSpeed;
       audio.play();
       tick();
     }, { once: true });
