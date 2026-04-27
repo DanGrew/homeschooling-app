@@ -25,11 +25,12 @@ body{font-family:Verdana,Arial,sans-serif;display:flex;height:100vh;overflow:hid
 #words{font-size:min(2em,5.5vw);line-height:2.2;text-align:center;}
 @media (orientation:portrait){
   body{flex-direction:column;}
-  #panel{width:100%;min-width:0;border-right:none;border-bottom:2px solid #ddd;flex-direction:row;align-items:center;}
+  #panel{width:100%;min-width:0;border-right:none;border-bottom:2px solid #ddd;flex-direction:row;align-items:center;overflow-x:auto;flex-shrink:0;}
   #panel-header{border-bottom:none;padding:10px 14px;flex-shrink:0;}
   #panel-header h2{display:none;}
-  #panel-controls{flex-direction:row;padding:10px 14px;gap:8px;flex:1;align-items:center;}
+  #panel-controls{flex-direction:row;padding:10px 14px;gap:8px;align-items:center;flex-shrink:0;flex-wrap:nowrap;}
   .ctrl-btn{width:auto;padding:10px 14px;flex-shrink:0;}
+  .speed-btn{flex-shrink:0;}
   #player-area{padding:20vh 16px;}
   #words{font-size:min(1.6em,5vw);}
 }
@@ -38,7 +39,8 @@ body{font-family:Verdana,Arial,sans-serif;display:flex;height:100vh;overflow:hid
 <body>
 <div id="panel">
   <div id="panel-header">
-    <a href="../index.html">&#8592; Lessons</a>
+    <a href="../../index.html">&#127968; Home</a>
+    <a href="../index.html" style="display:block;margin-top:6px;">&#8592; Lessons</a>
     <h2 id="story-title"></h2>
   </div>
   <div id="panel-controls">
