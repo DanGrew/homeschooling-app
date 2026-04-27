@@ -8,35 +8,40 @@
     return { clip: CLIPS[clipId], ann: ann, words: words };
   });
 
-  var area = document.getElementById('player-area');
+  document.getElementById('story-title').textContent = CLIPS[LESSON.clips[0]].title;
 
-  var wordsHtml = '';
+  var wordsEl = document.getElementById('words');
+  var html = '';
   clips.forEach(function (c, ci) {
-    if (ci > 0) wordsHtml += '<div style="height:0.4em;"></div>';
+    if (ci > 0) html += '<div style="height:0.6em;"></div>';
     var wi = 0;
     c.ann.segments.forEach(function (seg, si) {
-      if (si > 0) wordsHtml += '<br>';
+      if (si > 0) html += '<br>';
       seg.words.forEach(function (w) {
-        wordsHtml += '<span id="w' + ci + '_' + wi + '" style="display:inline-block;padding:4px 8px;border-radius:10px;transition:background 0.08s,color 0.08s;">' + w.w + '\u00a0</span>';
+        html += '<span id="w' + ci + '_' + wi + '" style="display:inline-block;padding:4px 8px;border-radius:10px;transition:background 0.08s,color 0.08s;">' + w.w + '\u00a0</span>';
         wi++;
       });
     });
   });
-
-  area.innerHTML =
-    '<div style="width:100%;max-width:680px;background:#fff;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,0.1);padding:28px 24px;">' +
-    '<div style="font-size:1.3em;color:#9B59B6;text-align:center;margin-bottom:20px;">' + CLIPS[LESSON.clips[0]].title + '</div>' +
-    '<div id="words" style="font-size:2em;line-height:2.2;text-align:center;margin-bottom:28px;min-height:100px;">' + wordsHtml + '</div>' +
-    '<audio id="aud" preload="auto"></audio>' +
-    '<div style="display:flex;justify-content:center;gap:16px;">' +
-    '<button id="playbtn" onclick="togglePlay()" style="font-family:inherit;font-size:1.2em;padding:14px 36px;border:none;border-radius:16px;background:#9B59B6;color:#fff;cursor:pointer;touch-action:manipulation;">\u25b6 Play</button>' +
-    '</div></div>';
+  wordsEl.innerHTML = html;
 
   var audio = document.getElementById('aud');
   var currentClip = 0;
   var lastActive = -1;
   var playing = false;
   var rafId = null;
+
+  function wordEl(ci, wi) {
+    return document.getElementById('w' + ci + '_' + wi);
+  }
+
+  function clearHighlight() {
+    if (lastActive >= 0) {
+      var el = wordEl(currentClip, lastActive);
+      if (el) { el.style.background = ''; el.style.color = ''; }
+      lastActive = -1;
+    }
+  }
 
   function loadClip(idx) {
     currentClip = idx;
@@ -48,29 +53,56 @@
   loadClip(0);
 
   audio.addEventListener('ended', function () {
+    clearHighlight();
     if (currentClip + 1 < clips.length) {
       loadClip(currentClip + 1);
       audio.play();
     } else {
       playing = false;
+      rafId = null;
       document.getElementById('playbtn').textContent = '\u25b6 Play';
-      cancelAnimationFrame(rafId);
     }
   });
 
-  window.togglePlay = function () {
+  document.getElementById('playbtn').addEventListener('click', function () {
     if (playing) {
       audio.pause();
       playing = false;
-      document.getElementById('playbtn').textContent = '\u25b6 Play';
       cancelAnimationFrame(rafId);
+      rafId = null;
+      this.textContent = '\u25b6 Play';
     } else {
       audio.play();
       playing = true;
-      document.getElementById('playbtn').textContent = '\u23f8 Pause';
+      this.textContent = '\u23f8 Pause';
       tick();
     }
-  };
+  });
+
+  document.getElementById('stopbtn').addEventListener('click', function () {
+    audio.pause();
+    playing = false;
+    cancelAnimationFrame(rafId);
+    rafId = null;
+    clearHighlight();
+    document.getElementById('playbtn').textContent = '\u25b6 Play';
+    loadClip(0);
+  });
+
+  document.getElementById('restartbtn').addEventListener('click', function () {
+    audio.pause();
+    cancelAnimationFrame(rafId);
+    rafId = null;
+    clearHighlight();
+    loadClip(0);
+    audio.addEventListener('canplay', function onReady() {
+      audio.removeEventListener('canplay', onReady);
+      playing = true;
+      document.getElementById('playbtn').textContent = '\u23f8 Pause';
+      audio.play();
+      tick();
+    }, { once: true });
+  });
 
   function activeIndex(t) {
     var words = clips[currentClip].words;
@@ -82,20 +114,20 @@
     return idx;
   }
 
-  function wordId(clipIdx, wordIdx) {
-    return 'w' + clipIdx + '_' + wordIdx;
-  }
-
   function tick() {
     var idx = activeIndex(audio.currentTime);
     if (idx !== lastActive) {
       if (lastActive >= 0) {
-        var prev = document.getElementById(wordId(currentClip, lastActive));
+        var prev = wordEl(currentClip, lastActive);
         if (prev) { prev.style.background = ''; prev.style.color = ''; }
       }
       if (idx >= 0) {
-        var el = document.getElementById(wordId(currentClip, idx));
-        if (el) { el.style.background = '#FFD700'; el.style.color = '#222'; }
+        var el = wordEl(currentClip, idx);
+        if (el) {
+          el.style.background = '#FFD700';
+          el.style.color = '#222';
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
       lastActive = idx;
     }
