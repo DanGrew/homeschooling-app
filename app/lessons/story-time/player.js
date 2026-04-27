@@ -72,6 +72,7 @@
       playing = false;
       rafId = null;
       document.getElementById('playbtn').textContent = '\u25b6 Play';
+      loadClip(0);
     }
   });
 
