@@ -131,7 +131,8 @@
           if (el) {
             el.style.background = '#FFD700';
             el.style.color = '#222';
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            var main = document.getElementById('main');
+            main.scrollTo({ top: el.offsetTop - main.clientHeight / 2 + el.offsetHeight / 2, behavior: 'smooth' });
           }
         }
         lastActive = idx;
