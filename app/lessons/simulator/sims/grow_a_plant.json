@@ -1,0 +1,76 @@
+{
+  "simulation": {
+    "id": "grow_a_plant",
+    "title": "Grow a Plant",
+    "age_range": "2-5"
+  },
+  "scene": {
+    "background": "garden",
+    "width": 360,
+    "height": 580
+  },
+  "objects": [
+    {
+      "id": "plant",
+      "type": "actor",
+      "x": 115,
+      "y": 210,
+      "w": 130,
+      "h": 160,
+      "sprite_states": ["seed", "sprout", "plant_stage", "flower"]
+    },
+    {
+      "id": "watering_can",
+      "type": "tool",
+      "x": 16,
+      "y": 450,
+      "w": 100,
+      "h": 100,
+      "sprite": "watering_can",
+      "clickable": true
+    },
+    {
+      "id": "sun",
+      "type": "tool",
+      "x": 260,
+      "y": 20,
+      "w": 90,
+      "h": 90,
+      "sprite": "sun",
+      "clickable": true
+    }
+  ],
+  "state": {
+    "watered": 0,
+    "sunned": 0,
+    "growth": 0
+  },
+  "input_modes": ["direct_tap"],
+  "actions": [
+    {
+      "when": { "tap": "watering_can" },
+      "do": ["state.watered += 1", "animate: splash watering_can", "say: Water the plant!"]
+    },
+    {
+      "when": { "tap": "sun" },
+      "do": ["state.sunned += 1", "animate: shine sun", "say: Sunshine!"]
+    }
+  ],
+  "rules": [
+    {
+      "if": { "all": ["state.watered >= 1", "state.sunned >= 1"] },
+      "do": [
+        "state.growth += 1",
+        "state.watered = 0",
+        "state.sunned = 0",
+        "animate: grow plant",
+        "say: The plant is growing!"
+      ]
+    }
+  ],
+  "win_condition": "state.growth >= 3",
+  "win_response": [
+    "animate: celebrate plant",
+    "say: Your flower bloomed!"
+  ]
+}
