@@ -101,21 +101,6 @@
     loadClip(0);
   });
 
-  document.getElementById('restartbtn').addEventListener('click', function () {
-    audio.pause();
-    cancelAnimationFrame(rafId);
-    rafId = null;
-    clearHighlight();
-    loadClip(0);
-    audio.addEventListener('canplay', function onReady() {
-      audio.removeEventListener('canplay', onReady);
-      playing = true;
-      document.getElementById('playbtn').textContent = '\u23f8 Pause';
-      audio.playbackRate = currentSpeed;
-      audio.play();
-      tick();
-    }, { once: true });
-  });
 
   function activeIndex(t) {
     var words = clips[currentClip].words;
