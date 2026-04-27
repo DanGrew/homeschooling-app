@@ -15,17 +15,7 @@ body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;disp
 <body>
 <a class="home" href="../index.html">&#127968; Home</a>
 <div id="scene"></div>
-<script src="sprites.js"></script>
-<script src="engine.js"></script>
-<script>
-const sim = new URLSearchParams(location.search).get('sim') || 'grow_a_plant';
-fetch(`sims/${sim}.json`)
-  .then(r => r.json())
-  .then(spec => {
-    document.title = spec.simulation.title;
-    const engine = new SimulatorEngine(spec, document.getElementById('scene'));
-    engine.start();
-  });
-</script>
+<script src="engine/engine.js"></script>
+<script src="engine/loader.js"></script>
 </body>
 </html>
