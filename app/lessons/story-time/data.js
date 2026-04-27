@@ -1,55 +1,44 @@
 const LESSON = {
   lessonId: "lesson_001",
-  title: "Baa Baa Black Sheep",
-  clips: ["clip_001"]
+  title: "David and Goliath",
+  clips: ["saul-first-line"]
 };
 
 const CLIPS = {
-  clip_001: {
-    id: "clip_001",
-    title: "Baa Baa Black Sheep",
-    audioUrl: "audio/baa-baa.mp3",
-    type: "song"
+  "saul-first-line": {
+    id: "saul-first-line",
+    title: "David and Goliath",
+    audioUrl: "audio/david-and-goliath-opener.mpeg",
+    type: "story"
   }
 };
 
 const ANNOTATIONS = {
-  clip_001: {
-    clipId: "clip_001",
+  "saul-first-line": {
+    clipId: "saul-first-line",
     segments: [
       {
-        text: "Baa baa black sheep",
+        text: "Saul was the first king of Israel",
         words: [
-          { w: "Baa", t: 0.2 },
-          { w: "baa", t: 0.8 },
-          { w: "black", t: 1.4 },
-          { w: "sheep,", t: 2.0 }
+          { w: "Saul", t: 0.002 },
+          { w: "was", t: 0.52 },
+          { w: "the", t: 0.745 },
+          { w: "first", t: 0.889 },
+          { w: "king", t: 1.249 },
+          { w: "of", t: 1.488 },
+          { w: "Israel", t: 1.575 }
         ]
       },
       {
-        text: "Have you any wool?",
+        text: "He had a problem with the Philistines",
         words: [
-          { w: "Have", t: 3.1 },
-          { w: "you", t: 3.5 },
-          { w: "any", t: 3.9 },
-          { w: "wool?", t: 4.3 }
-        ]
-      },
-      {
-        text: "Yes sir, yes sir,",
-        words: [
-          { w: "Yes", t: 5.2 },
-          { w: "sir,", t: 5.8 },
-          { w: "yes", t: 6.5 },
-          { w: "sir,", t: 7.0 }
-        ]
-      },
-      {
-        text: "Three bags full.",
-        words: [
-          { w: "Three", t: 7.8 },
-          { w: "bags", t: 8.4 },
-          { w: "full.", t: 9.0 }
+          { w: "He", t: 2.314 },
+          { w: "had", t: 2.514 },
+          { w: "a", t: 2.677 },
+          { w: "problem", t: 2.829 },
+          { w: "with", t: 3.379 },
+          { w: "the", t: 3.578 },
+          { w: "Philistines", t: 3.743 }
         ]
       }
     ]
