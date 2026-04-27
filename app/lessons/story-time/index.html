@@ -22,7 +22,8 @@ body{font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;height:100
 .speed-btn.active{border-color:#9B59B6;background:#9B59B6;color:#fff;}
 #main{flex:1;overflow-y:auto;background:#fff8f0;}
 #player-area{padding:35vh 24px;display:flex;justify-content:center;}
-#words{font-size:min(2em,5.5vw);line-height:2.2;text-align:center;width:min(80%,900px);}
+#words-card{background:#fff;border-radius:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);padding:32px 28px;width:min(80%,900px);}
+#words{font-size:min(2em,5.5vw);line-height:2.2;text-align:center;}
 </style>
 </head>
 <body>
@@ -43,7 +44,9 @@ body{font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;height:100
 </div>
 <div id="main">
   <div id="player-area">
-    <div id="words"></div>
+    <div id="words-card">
+      <div id="words"></div>
+    </div>
   </div>
 </div>
 <audio id="aud" preload="auto"></audio>
