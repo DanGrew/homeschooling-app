@@ -1,0 +1,62 @@
+{
+  "clipId": "david-and-goliath-p4",
+  "segments": [
+    {
+      "text": "Everyone loved David after that day.\nHe became the next king of Israel.",
+      "words": [
+        {
+          "w": "Everyone",
+          "t": 0.096
+        },
+        {
+          "w": "loved",
+          "t": 0.502
+        },
+        {
+          "w": "David",
+          "t": 0.839
+        },
+        {
+          "w": "after",
+          "t": 1.243
+        },
+        {
+          "w": "that",
+          "t": 1.573
+        },
+        {
+          "w": "day.",
+          "t": 1.856
+        },
+        {
+          "w": "He",
+          "t": 2.554
+        },
+        {
+          "w": "became",
+          "t": 2.762
+        },
+        {
+          "w": "the",
+          "t": 3.154
+        },
+        {
+          "w": "next",
+          "t": 3.313
+        },
+        {
+          "w": "king",
+          "t": 3.665
+        },
+        {
+          "w": "of",
+          "t": 3.782
+        },
+        {
+          "w": "Israel.",
+          "t": 3.909
+        }
+      ]
+    }
+  ]
+}

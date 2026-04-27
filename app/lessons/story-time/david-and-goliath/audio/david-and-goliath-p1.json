@@ -1,0 +1,126 @@
+{
+  "clipId": "david-and-goliath-p1",
+  "segments": [
+    {
+      "text": "King Saul was the first king of Israel.\nOne day, the Philistines came to fight.\nTheir giant, Goliath, was big and scary; and no one wanted to face him.",
+      "words": [
+        {
+          "w": "King",
+          "t": 0.232
+        },
+        {
+          "w": "Saul",
+          "t": 0.457
+        },
+        {
+          "w": "was",
+          "t": 0.717
+        },
+        {
+          "w": "the",
+          "t": 0.853
+        },
+        {
+          "w": "first",
+          "t": 1.012
+        },
+        {
+          "w": "king",
+          "t": 1.435
+        },
+        {
+          "w": "of",
+          "t": 1.73
+        },
+        {
+          "w": "Israel.",
+          "t": 1.889
+        },
+        {
+          "w": "One",
+          "t": 2.652
+        },
+        {
+          "w": "day,",
+          "t": 3.014
+        },
+        {
+          "w": "the",
+          "t": 3.648
+        },
+        {
+          "w": "Philistines",
+          "t": 3.791
+        },
+        {
+          "w": "came",
+          "t": 4.517
+        },
+        {
+          "w": "to",
+          "t": 4.814
+        },
+        {
+          "w": "fight.",
+          "t": 4.961
+        },
+        {
+          "w": "Their",
+          "t": 5.848
+        },
+        {
+          "w": "giant,",
+          "t": 6.114
+        },
+        {
+          "w": "Goliath,",
+          "t": 6.658
+        },
+        {
+          "w": "was",
+          "t": 7.387
+        },
+        {
+          "w": "big",
+          "t": 7.786
+        },
+        {
+          "w": "and",
+          "t": 8.142
+        },
+        {
+          "w": "scary;",
+          "t": 8.313
+        },
+        {
+          "w": "and",
+          "t": 9.274
+        },
+        {
+          "w": "no",
+          "t": 9.521
+        },
+        {
+          "w": "one",
+          "t": 9.821
+        },
+        {
+          "w": "wanted",
+          "t": 10.047
+        },
+        {
+          "w": "to",
+          "t": 10.364
+        },
+        {
+          "w": "face",
+          "t": 10.486
+        },
+        {
+          "w": "him.",
+          "t": 10.863
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "clipId": "david-and-goliath-p3",
+  "segments": [
+    {
+      "text": "David swung his sling and one stone flew through the air.\nIt hit Goliath on the head and the giant fell down.\nDavid had won, and everyone cheered.",
+      "words": [
+        {
+          "w": "David",
+          "t": 0.152
+        },
+        {
+          "w": "swung",
+          "t": 0.494
+        },
+        {
+          "w": "his",
+          "t": 0.782
+        },
+        {
+          "w": "sling",
+          "t": 0.992
+        },
+        {
+          "w": "and",
+          "t": 1.329
+        },
+        {
+          "w": "one",
+          "t": 1.474
+        },
+        {
+          "w": "stone",
+          "t": 1.728
+        },
+        {
+          "w": "flew",
+          "t": 2.132
+        },
+        {
+          "w": "through",
+          "t": 2.555
+        },
+        {
+          "w": "the",
+          "t": 2.688
+        },
+        {
+          "w": "air.",
+          "t": 2.847
+        },
+        {
+          "w": "It",
+          "t": 3.543
+        },
+        {
+          "w": "hit",
+          "t": 3.816
+        },
+        {
+          "w": "Goliath",
+          "t": 4.068
+        },
+        {
+          "w": "on",
+          "t": 4.509
+        },
+        {
+          "w": "the",
+          "t": 4.631
+        },
+        {
+          "w": "head",
+          "t": 4.74
+        },
+        {
+          "w": "and",
+          "t": 4.984
+        },
+        {
+          "w": "the",
+          "t": 5.178
+        },
+        {
+          "w": "giant",
+          "t": 5.42
+        },
+        {
+          "w": "fell",
+          "t": 5.789
+        },
+        {
+          "w": "down.",
+          "t": 6.016
+        },
+        {
+          "w": "David",
+          "t": 6.98
+        },
+        {
+          "w": "had",
+          "t": 7.35
+        },
+        {
+          "w": "won,",
+          "t": 7.487
+        },
+        {
+          "w": "and",
+          "t": 8.025
+        },
+        {
+          "w": "everyone",
+          "t": 8.341
+        },
+        {
+          "w": "cheered.",
+          "t": 8.867
+        }
+      ]
+    }
+  ]
+}
