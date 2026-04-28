@@ -1,0 +1,172 @@
+{
+  "simulation": {
+    "id": "grow_a_plant_v2",
+    "title": "Grow a Plant",
+    "age_range": "3-5",
+    "instructions": "Use the tools to plant a seed and grow a flower!"
+  },
+  "scene": {
+    "width": 360,
+    "height": 700,
+    "bg_color": "#d4efc1"
+  },
+  "toolbar": [
+    { "id": "tool_pot",    "sprite": "tool_pot.svg" },
+    { "id": "tool_soil",   "sprite": "tool_soil.svg" },
+    { "id": "tool_seed",   "sprite": "tool_seed.svg" },
+    { "id": "tool_water",  "sprite": "tool_water.svg" },
+    { "id": "tool_sun",    "sprite": "tool_sun.svg" },
+    { "id": "tool_trowel", "sprite": "tool_trowel.svg" }
+  ],
+  "objects": [
+    {
+      "id": "table_bg",
+      "sprite": "bg_table.svg",
+      "fit": "cover",
+      "x": 0, "y": 0, "w": 360, "h": 616,
+      "clickable": true,
+      "visible": true
+    },
+    {
+      "id": "garden_bg",
+      "sprite": "bg_garden.svg",
+      "fit": "cover",
+      "x": 0, "y": 0, "w": 360, "h": 616,
+      "visible": false
+    },
+    {
+      "id": "pot",
+      "sprite": "pot.svg",
+      "x": 130, "y": 360, "w": 100, "h": 130,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "soil_in_pot",
+      "sprite": "soil_pot.svg",
+      "x": 140, "y": 365, "w": 80, "h": 70,
+      "visible": false
+    },
+    {
+      "id": "plant_pot",
+      "sprite_states": ["plant_sprout.svg", "plant_small.svg"],
+      "x": 85, "y": 60, "w": 190, "h": 310,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "ground_patch",
+      "sprite": "ground_patch.svg",
+      "x": 60, "y": 400, "w": 240, "h": 110,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "soil_ground",
+      "sprite": "soil_ground.svg",
+      "x": 100, "y": 408, "w": 160, "h": 80,
+      "visible": false
+    },
+    {
+      "id": "plant_garden",
+      "sprite_states": ["plant_small.svg", "plant_medium.svg", "plant_flower.svg"],
+      "x": 85, "y": 60, "w": 190, "h": 310,
+      "clickable": true,
+      "visible": false
+    }
+  ],
+  "state": {
+    "stage": 0,
+    "watered": 0,
+    "sunned": 0
+  },
+  "actions": [
+    {
+      "when": { "tool_tap": { "tool": "tool_pot", "target": "table_bg" }, "if": "state.stage == 0" },
+      "do": ["state.stage = 1", "show: pot", "say: Great! You placed the pot!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_soil", "target": "pot" }, "if": "state.stage == 1" },
+      "do": ["state.stage = 2", "show: soil_in_pot", "animate: splash pot", "say: Now add some seeds!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_seed", "target": "pot" }, "if": "state.stage == 2" },
+      "do": ["state.stage = 3", "say: Now cover the seeds with soil!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_soil", "target": "pot" }, "if": "state.stage == 3" },
+      "do": ["state.stage = 4", "animate: splash pot", "say: Now give it some water!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_water", "target": "pot" }, "if": "state.stage == 4" },
+      "do": ["state.stage = 5", "animate: splash pot", "say: Now give it some sunshine!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_sun", "target": "pot" }, "if": "state.stage == 5" },
+      "do": ["state.stage = 6", "state.watered = 0", "state.sunned = 0", "show: plant_pot", "animate: glow pot", "say: A sprout! Keep watering and sunning it!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_water", "target": "pot" }, "if": "state.stage == 6" },
+      "do": ["state.watered += 1", "animate: splash pot", "say: Watered!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_sun", "target": "pot" }, "if": "state.stage == 6" },
+      "do": ["state.sunned += 1", "animate: glow plant_pot", "say: Sunshine!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_trowel", "target": "ground_patch" }, "if": "state.stage == 7" },
+      "do": ["state.stage = 8", "show: soil_ground", "animate: splash ground_patch", "say: Great digging! Now tap the sprout to plant it!"]
+    },
+    {
+      "when": { "tap": "plant_pot", "if": "state.stage == 8" },
+      "do": ["state.stage = 9", "state.watered = 0", "state.sunned = 0", "hide: plant_pot", "show: plant_garden", "say: Planted! Now water and sunshine to grow it!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_water", "target": "plant_garden" }, "if": "state.stage == 9" },
+      "do": ["state.watered += 1", "animate: splash plant_garden", "say: Watered!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_sun", "target": "plant_garden" }, "if": "state.stage == 9" },
+      "do": ["state.sunned += 1", "animate: glow plant_garden", "say: Sunshine!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_water", "target": "plant_garden" }, "if": "state.stage == 10" },
+      "do": ["state.stage = 11", "advance_sprite: plant_garden", "animate: celebrate plant_garden"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_sun", "target": "plant_garden" }, "if": "state.stage == 10" },
+      "do": ["state.stage = 11", "advance_sprite: plant_garden", "animate: celebrate plant_garden"]
+    }
+  ],
+  "rules": [
+    {
+      "if": { "all": ["state.stage == 6", "state.watered >= 1", "state.sunned >= 1"] },
+      "do": [
+        "state.stage = 7",
+        "state.watered = 0",
+        "state.sunned = 0",
+        "advance_sprite: plant_pot",
+        "show: garden_bg",
+        "show: ground_patch",
+        "hide: pot",
+        "hide: soil_in_pot",
+        "say: Your plant is big! Let's plant it outside — dig a hole!"
+      ]
+    },
+    {
+      "if": { "all": ["state.stage == 9", "state.watered >= 1", "state.sunned >= 1"] },
+      "do": [
+        "state.stage = 10",
+        "state.watered = 0",
+        "state.sunned = 0",
+        "advance_sprite: plant_garden",
+        "say: Almost there! One more water or sunshine for the flower!"
+      ]
+    }
+  ],
+  "win_condition": "state.stage >= 11",
+  "win_response": [
+    "animate: celebrate plant_garden",
+    "say: Amazing! You grew a beautiful flower!"
+  ]
+}
