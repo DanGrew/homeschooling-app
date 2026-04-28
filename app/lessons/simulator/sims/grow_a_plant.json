@@ -7,16 +7,16 @@
   "scene": {
     "background": "garden",
     "width": 360,
-    "height": 580
+    "height": 700
   },
   "objects": [
     {
       "id": "plant",
       "type": "actor",
-      "x": 55,
-      "y": 150,
-      "w": 250,
-      "h": 320,
+      "x": 20,
+      "y": 120,
+      "w": 320,
+      "h": 520,
       "sprite_states": ["seed", "shoot", "bloom", "fruit"]
     },
     {

@@ -127,12 +127,22 @@ class SimulatorEngine {
     }
 
     if (name === 'splash' && el) {
-      const overlay = document.createElement('img');
-      overlay.src = 'sprites/splash.png';
-      overlay.style.cssText = `position:absolute;left:${el.offsetLeft - 10}px;top:${el.offsetTop - 20}px;width:${el.offsetWidth + 20}px;height:${el.offsetHeight + 20}px;object-fit:contain;pointer-events:none;z-index:5;transition:opacity 0.3s;`;
-      this.container.appendChild(overlay);
-      setTimeout(() => overlay.style.opacity = '0', 300);
-      setTimeout(() => overlay.remove(), 650);
+      const sw = Math.round(el.offsetWidth / 4);
+      const sh = Math.round(el.offsetHeight / 4);
+      const cx = el.offsetLeft + el.offsetWidth / 2;
+      const cy = el.offsetTop + el.offsetHeight / 2;
+      const pop = (ox, oy, delay) => {
+        setTimeout(() => {
+          const img = document.createElement('img');
+          img.src = 'sprites/splash.png';
+          img.style.cssText = `position:absolute;left:${cx + ox - sw/2}px;top:${cy + oy - sh/2}px;width:${sw}px;height:${sh}px;object-fit:contain;pointer-events:none;z-index:5;transition:opacity 0.25s;`;
+          this.container.appendChild(img);
+          setTimeout(() => img.style.opacity = '0', 280);
+          setTimeout(() => img.remove(), 550);
+        }, delay);
+      };
+      pop(-35, -45, 0);
+      pop(30, 40, 320);
       return;
     }
 
