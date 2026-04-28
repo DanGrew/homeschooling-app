@@ -17,7 +17,7 @@
       "y": 210,
       "w": 130,
       "h": 160,
-      "sprite_states": ["seed", "sprout", "plant_stage", "flower"]
+      "sprite_states": ["seed", "shoot", "bloom", "fruit"]
     },
     {
       "id": "watering_can",
@@ -26,7 +26,7 @@
       "y": 450,
       "w": 100,
       "h": 100,
-      "sprite": "watering_can",
+      "sprite": "watering-can",
       "clickable": true
     },
     {
@@ -71,6 +71,6 @@
   "win_condition": "state.growth >= 3",
   "win_response": [
     "animate: celebrate plant",
-    "say: Your flower bloomed!"
+    "say: Your plant grew fruit!"
   ]
 }

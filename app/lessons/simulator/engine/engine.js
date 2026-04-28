@@ -15,10 +15,14 @@ class SimulatorEngine {
   }
 
   _renderBackground() {
-    const backgrounds = {
-      garden: 'linear-gradient(to bottom, #87CEEB 0%, #87CEEB 55%, #6abf3a 55%, #4a9a1a 100%)'
-    };
-    this.container.style.cssText = `position:relative;width:${this.spec.scene.width}px;height:${this.spec.scene.height}px;background:${backgrounds[this.spec.scene.background] || '#eee'};overflow:hidden;border-radius:20px;touch-action:none;`;
+    this.container.style.cssText = `position:relative;width:${this.spec.scene.width}px;height:${this.spec.scene.height}px;background:#f0f8e8;overflow:hidden;border-radius:20px;touch-action:none;`;
+  }
+
+  _img(spriteName) {
+    const img = document.createElement('img');
+    img.src = `sprites/${spriteName}.png`;
+    img.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+    return img;
   }
 
   _renderObjects() {
@@ -28,9 +32,9 @@ class SimulatorEngine {
       el.style.cssText = `position:absolute;left:${obj.x}px;top:${obj.y}px;width:${obj.w}px;height:${obj.h}px;transition:transform 0.25s;`;
       if (obj.sprite_states) {
         this.actorIndices[obj.id] = 0;
-        el.innerHTML = (window.SPRITES[obj.sprite_states[0]] || '');
+        el.appendChild(this._img(obj.sprite_states[0]));
       } else {
-        el.innerHTML = (window.SPRITES[obj.sprite] || '');
+        el.appendChild(this._img(obj.sprite));
       }
       if (obj.clickable) {
         el.style.cursor = 'pointer';
@@ -115,10 +119,20 @@ class SimulatorEngine {
       if (obj && obj.sprite_states) {
         const next = Math.min(this.actorIndices[targetId] + 1, obj.sprite_states.length - 1);
         this.actorIndices[targetId] = next;
-        el.innerHTML = window.SPRITES[obj.sprite_states[next]] || '';
+        el.querySelector('img').src = `sprites/${obj.sprite_states[next]}.png`;
         el.style.transform = 'scale(1.18)';
         setTimeout(() => el.style.transform = 'scale(1)', 280);
       }
+      return;
+    }
+
+    if (name === 'splash' && el) {
+      const overlay = document.createElement('img');
+      overlay.src = 'sprites/splash.png';
+      overlay.style.cssText = `position:absolute;left:${el.offsetLeft - 10}px;top:${el.offsetTop - 20}px;width:${el.offsetWidth + 20}px;height:${el.offsetHeight + 20}px;object-fit:contain;pointer-events:none;z-index:5;transition:opacity 0.3s;`;
+      this.container.appendChild(overlay);
+      setTimeout(() => overlay.style.opacity = '0', 300);
+      setTimeout(() => overlay.remove(), 650);
       return;
     }
 
@@ -132,7 +146,7 @@ class SimulatorEngine {
     }
 
     if (el) {
-      el.style.transform = name === 'splash' ? 'translateY(-8px)' : 'rotate(20deg) scale(1.15)';
+      el.style.transform = name === 'shine' ? 'rotate(20deg) scale(1.15)' : 'translateY(-8px)';
       setTimeout(() => el.style.transform = '', 350);
     }
   }
