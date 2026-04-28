@@ -13,17 +13,17 @@
     {
       "id": "plant",
       "type": "actor",
-      "x": 115,
-      "y": 210,
-      "w": 130,
-      "h": 160,
+      "x": 55,
+      "y": 150,
+      "w": 250,
+      "h": 320,
       "sprite_states": ["seed", "shoot", "bloom", "fruit"]
     },
     {
       "id": "watering_can",
       "type": "tool",
       "x": 16,
-      "y": 450,
+      "y": 20,
       "w": 100,
       "h": 100,
       "sprite": "watering-can",
@@ -49,11 +49,11 @@
   "actions": [
     {
       "when": { "tap": "watering_can" },
-      "do": ["state.watered += 1", "animate: splash watering_can", "say: Water the plant!"]
+      "do": ["state.watered += 1", "animate: splash plant", "say: Water the plant!"]
     },
     {
       "when": { "tap": "sun" },
-      "do": ["state.sunned += 1", "animate: shine sun", "say: Sunshine!"]
+      "do": ["state.sunned += 1", "animate: shine sun", "animate: glow plant", "say: Sunshine!"]
     }
   ],
   "rules": [

@@ -136,6 +136,14 @@ class SimulatorEngine {
       return;
     }
 
+    if (name === 'glow' && el) {
+      const img = el.querySelector('img');
+      img.style.transition = 'filter 0.2s';
+      img.style.filter = 'sepia(1) brightness(1.4) saturate(4) hue-rotate(-10deg)';
+      setTimeout(() => { img.style.filter = ''; }, 800);
+      return;
+    }
+
     if (name === 'celebrate' && el) {
       let count = 0;
       const bounce = setInterval(() => {
