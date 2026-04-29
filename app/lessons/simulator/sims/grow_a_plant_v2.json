@@ -39,14 +39,14 @@
     {
       "id": "the_pot",
       "sprite_states": ["empty-pot.png", "pot-with-dirt.png", "pot-with-seeds.png", "pot-with-shoot.png", "pot-with-bloom.png", "pot-with-fruit.png"],
-      "x": 50, "y": 180, "w": 260, "h": 340,
+      "x": 50, "y": 40, "w": 260, "h": 340,
       "clickable": true,
       "visible": false
     },
     {
       "id": "the_fruit_on_table",
       "sprite": "fruit-outside-pot.png",
-      "x": 310, "y": 30, "w": 240, "h": 582,
+      "x": 210, "y": -70, "w": 240, "h": 582,
       "visible": false
     },
     {
