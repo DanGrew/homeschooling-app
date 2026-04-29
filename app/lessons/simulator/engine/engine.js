@@ -8,6 +8,7 @@ class SimulatorEngine {
     this._sayTimer = null;
     this.selectedTool = null;
     this.toolEls = {};
+    this.spritesPath = spec.scene.sprites_path || 'sprites/';
   }
 
   start() {
@@ -23,7 +24,7 @@ class SimulatorEngine {
 
   _img(spriteName, fit) {
     const img = document.createElement('img');
-    img.src = spriteName.includes('.') ? `sprites/${spriteName}` : `sprites/${spriteName}.png`;
+    img.src = spriteName.includes('.') ? `${this.spritesPath}${spriteName}` : `${this.spritesPath}${spriteName}.png`;
     img.style.cssText = `width:100%;height:100%;object-fit:${fit||'contain'};`;
     return img;
   }
@@ -37,6 +38,7 @@ class SimulatorEngine {
       const btn = document.createElement('div');
       btn.id = `tool-${tool.id}`;
       btn.style.cssText = `width:60px;height:60px;cursor:pointer;border-radius:12px;padding:4px;box-sizing:border-box;transition:background 0.15s,outline 0.15s;flex-shrink:0;`;
+      if (tool.visible === false) btn.style.display = 'none';
       btn.appendChild(this._img(tool.sprite));
       btn.addEventListener('click', () => this._selectTool(tool.id));
       btn.addEventListener('touchend', e => { e.preventDefault(); this._selectTool(tool.id); }, { passive: false });
@@ -71,9 +73,19 @@ class SimulatorEngine {
       el.id = `obj-${obj.id}`;
       el.style.cssText = `position:absolute;left:${obj.x}px;top:${obj.y}px;width:${obj.w}px;height:${obj.h}px;transition:transform 0.25s;z-index:${i + 1};`;
       if (obj.visible === false) el.style.display = 'none';
-      const spriteName = obj.sprite_states ? obj.sprite_states[0] : obj.sprite;
-      el.appendChild(this._img(spriteName, obj.fit));
-      if (obj.sprite_states) this.actorIndices[obj.id] = 0;
+
+      if (obj.type === 'button') {
+        const btn = document.createElement('div');
+        btn.textContent = obj.label || '';
+        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:'Comic Sans MS',cursive;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;`;
+        el.appendChild(btn);
+      } else if (obj.sprite_states) {
+        this.actorIndices[obj.id] = 0;
+        el.appendChild(this._img(obj.sprite_states[0], obj.fit));
+      } else {
+        el.appendChild(this._img(obj.sprite, obj.fit));
+      }
+
       if (obj.clickable) {
         el.style.cursor = 'pointer';
         el.addEventListener('click', () => this._handleTap(obj.id));
@@ -92,7 +104,9 @@ class SimulatorEngine {
   }
 
   _handleTap(objectId) {
-    if (this.won) return;
+    const obj = this.spec.objects.find(o => o.id === objectId);
+    if (this.won && !(obj && obj.always_clickable)) return;
+
     if (this.selectedTool) {
       const exactMatch = this.spec.actions.find(a =>
         a.when.tool_tap &&
@@ -137,6 +151,8 @@ class SimulatorEngine {
   _execActions(actions) { actions.forEach(a => this._exec(a)); }
 
   _exec(action) {
+    if (action === 'reset') { this._reset(); return; }
+
     const sm = action.match(/^state\.(\w+)\s*(\+=|-=|=)\s*(\d+)$/);
     if (sm) {
       const [, key, op, val] = sm;
@@ -154,6 +170,44 @@ class SimulatorEngine {
     if (show) { const el = document.getElementById(`obj-${show[1]}`); if (el) el.style.display = ''; return; }
     const hide = action.match(/^hide:\s*(\S+)$/);
     if (hide) { const el = document.getElementById(`obj-${hide[1]}`); if (el) el.style.display = 'none'; return; }
+    const fi = action.match(/^fade_in:\s*(\S+)(?:\s+(\d+))?$/);
+    if (fi) {
+      const el = document.getElementById(`obj-${fi[1]}`);
+      if (el) {
+        el.style.opacity = '0';
+        el.style.display = '';
+        el.style.transition = `opacity ${fi[2] || 800}ms`;
+        requestAnimationFrame(() => requestAnimationFrame(() => { el.style.opacity = '1'; }));
+      }
+      return;
+    }
+    const fo = action.match(/^fade_out:\s*(\S+)(?:\s+(\d+))?$/);
+    if (fo) {
+      const dur = parseInt(fo[2] || 800);
+      const el = document.getElementById(`obj-${fo[1]}`);
+      if (el) {
+        el.style.transition = `opacity ${dur}ms`;
+        el.style.opacity = '0';
+        setTimeout(() => { el.style.display = 'none'; el.style.opacity = ''; el.style.transition = ''; }, dur);
+      }
+      return;
+    }
+    const showTool = action.match(/^show_tool:\s*(\S+)$/);
+    if (showTool) { const btn = document.getElementById(`tool-${showTool[1]}`); if (btn) btn.style.display = ''; return; }
+    const hideTool = action.match(/^hide_tool:\s*(\S+)$/);
+    if (hideTool) { const btn = document.getElementById(`tool-${hideTool[1]}`); if (btn) btn.style.display = 'none'; return; }
+    const ss = action.match(/^set_sprite:\s*(\S+)\s+(\d+)$/);
+    if (ss) {
+      const id = ss[1], idx = parseInt(ss[2]);
+      const obj = this.spec.objects.find(o => o.id === id);
+      const el = document.getElementById(`obj-${id}`);
+      if (obj && obj.sprite_states && el) {
+        this.actorIndices[id] = Math.min(idx, obj.sprite_states.length - 1);
+        const s = obj.sprite_states[this.actorIndices[id]];
+        el.querySelector('img').src = s.includes('.') ? `${this.spritesPath}${s}` : `${this.spritesPath}${s}.png`;
+      }
+      return;
+    }
     const adv = action.match(/^advance_sprite:\s*(\S+)$/);
     if (adv) {
       const id = adv[1];
@@ -163,12 +217,43 @@ class SimulatorEngine {
         const next = Math.min((this.actorIndices[id] || 0) + 1, obj.sprite_states.length - 1);
         this.actorIndices[id] = next;
         const s = obj.sprite_states[next];
-        el.querySelector('img').src = s.includes('.') ? `sprites/${s}` : `sprites/${s}.png`;
+        el.querySelector('img').src = s.includes('.') ? `${this.spritesPath}${s}` : `${this.spritesPath}${s}.png`;
       }
       return;
     }
     const mv = action.match(/^move:\s*(\S+)\s+(\d+)\s+(\d+)$/);
     if (mv) { const el = document.getElementById(`obj-${mv[1]}`); if (el) { el.style.left = `${mv[2]}px`; el.style.top = `${mv[3]}px`; } return; }
+  }
+
+  _reset() {
+    this.won = false;
+    this.state = Object.assign({}, this.spec.state);
+    this.actorIndices = {};
+    this._clearTool();
+    this.spec.objects.forEach(obj => {
+      const el = document.getElementById(`obj-${obj.id}`);
+      if (!el) return;
+      el.style.display = obj.visible === false ? 'none' : '';
+      el.style.opacity = '';
+      el.style.transition = '';
+      el.style.transform = '';
+      if (obj.sprite_states) {
+        this.actorIndices[obj.id] = 0;
+        const img = el.querySelector('img');
+        if (img) {
+          const s = obj.sprite_states[0];
+          img.src = s.includes('.') ? `${this.spritesPath}${s}` : `${this.spritesPath}${s}.png`;
+        }
+      }
+    });
+    if (this.spec.toolbar) {
+      this.spec.toolbar.forEach(tool => {
+        const btn = document.getElementById(`tool-${tool.id}`);
+        if (btn) btn.style.display = tool.visible === false ? 'none' : '';
+      });
+    }
+    const b = document.getElementById('speech-bubble');
+    if (b) b.style.opacity = '0';
   }
 
   _evalCond(cond) {
@@ -207,7 +292,7 @@ class SimulatorEngine {
         const next = Math.min(this.actorIndices[targetId] + 1, obj.sprite_states.length - 1);
         this.actorIndices[targetId] = next;
         const s = obj.sprite_states[next];
-        el.querySelector('img').src = s.includes('.') ? `sprites/${s}` : `sprites/${s}.png`;
+        el.querySelector('img').src = s.includes('.') ? `${this.spritesPath}${s}` : `${this.spritesPath}${s}.png`;
         el.style.transform = 'scale(1.18)';
         setTimeout(() => el.style.transform = 'scale(1)', 280);
       }
@@ -222,7 +307,7 @@ class SimulatorEngine {
       const pop = (ox, oy, delay) => {
         setTimeout(() => {
           const img = document.createElement('img');
-          img.src = 'sprites/splash.png';
+          img.src = `${this.spritesPath}splash.png`;
           img.style.cssText = `position:absolute;left:${cx + ox - sw/2}px;top:${cy + oy - sh/2}px;width:${sw}px;height:${sh}px;object-fit:contain;pointer-events:none;z-index:50;transition:opacity 0.25s;`;
           this.container.appendChild(img);
           setTimeout(() => img.style.opacity = '0', 280);
@@ -236,9 +321,25 @@ class SimulatorEngine {
 
     if (name === 'glow' && el) {
       const img = el.querySelector('img');
+      if (!img) return;
       img.style.transition = 'filter 0.2s';
       img.style.filter = 'sepia(1) brightness(1.4) saturate(4) hue-rotate(-10deg)';
       setTimeout(() => { img.style.filter = ''; }, 800);
+      return;
+    }
+
+    if (name === 'dirt' && el) {
+      const sz = 80;
+      const cx = el.offsetLeft + el.offsetWidth / 2 - sz / 2;
+      const startY = el.offsetTop + el.offsetHeight / 2 - sz * 1.5;
+      const endY = el.offsetTop + el.offsetHeight / 2 - sz / 2;
+      const img = document.createElement('img');
+      img.src = `${this.spritesPath}dirt-falling.png`;
+      img.style.cssText = `position:absolute;left:${cx}px;top:${startY}px;width:${sz}px;height:${sz}px;object-fit:contain;pointer-events:none;z-index:50;transition:top 0.35s ease-in;`;
+      this.container.appendChild(img);
+      requestAnimationFrame(() => requestAnimationFrame(() => { img.style.top = `${endY}px`; }));
+      setTimeout(() => { img.style.transition += ',opacity 0.25s'; img.style.opacity = '0'; }, 400);
+      setTimeout(() => img.remove(), 700);
       return;
     }
 
@@ -263,6 +364,6 @@ class SimulatorEngine {
     b.textContent = text;
     b.style.opacity = '1';
     clearTimeout(this._sayTimer);
-    this._sayTimer = setTimeout(() => b.style.opacity = '0', 2500);
+    this._sayTimer = setTimeout(() => b.style.opacity = '0', 4500);
   }
 }
