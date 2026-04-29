@@ -1,0 +1,156 @@
+{
+  "simulation": {
+    "id": "grow-tomatoes-level-3",
+    "title": "Grow Tomatoes [Level 3]",
+    "age_range": "3-5",
+    "instructions": "Plant a seed and grow a tomato plant!"
+  },
+  "scene": {
+    "width": 560,
+    "height": 700,
+    "bg_color": "#f8f4ee",
+    "sprites_path": "sprites/"
+  },
+  "toolbar": [
+    { "id": "tool_pot",    "sprite": "empty-pot.png" },
+    { "id": "tool_seeds",  "sprite": "seeds.png" },
+    { "id": "tool_water",  "sprite": "watering-can.png" },
+    { "id": "tool_sun",    "sprite": "sun.png" },
+    { "id": "tool_trowel", "sprite": "trowel.png" },
+    { "id": "tool_dirt",   "sprite": "dirt-tool.png" },
+    { "id": "tool_plant",  "sprite": "fruit-outside-pot.png", "visible": false }
+  ],
+  "objects": [
+    {
+      "id": "bg_table",
+      "sprite": "table.png",
+      "fit": "contain",
+      "x": 0, "y": 200, "w": 560, "h": 400,
+      "clickable": true
+    },
+    {
+      "id": "bg_ground",
+      "sprite_states": ["ground.png", "ground-with-hole.png"],
+      "fit": "cover",
+      "x": 0, "y": 0, "w": 560, "h": 616,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "the_pot",
+      "sprite_states": ["empty-pot.png", "pot-with-dirt.png", "pot-with-seeds.png", "pot-with-shoot.png", "pot-with-bloom.png", "pot-with-fruit.png"],
+      "x": 50, "y": 40, "w": 260, "h": 340,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "the_fruit_on_table",
+      "sprite": "fruit-outside-pot.png",
+      "x": 210, "y": -70, "w": 240, "h": 582,
+      "visible": false
+    },
+    {
+      "id": "go_outside_btn",
+      "type": "button",
+      "label": "Go Outside!",
+      "x": 180, "y": 430, "w": 200, "h": 60,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "the_plant_scene",
+      "sprite_states": ["planted-fruit-in-ground.png", "planted-in-ground-grow-max-fruit.png"],
+      "fit": "cover",
+      "x": 0, "y": 0, "w": 560, "h": 616,
+      "clickable": true,
+      "visible": false
+    },
+    {
+      "id": "well_done_btn",
+      "type": "button",
+      "label": "Well done! Play again!",
+      "x": 180, "y": 250, "w": 200, "h": 70,
+      "clickable": true,
+      "always_clickable": true,
+      "visible": false
+    }
+  ],
+  "state": {
+    "stage": 0,
+    "watered": 0,
+    "sunned": 0
+  },
+  "actions": [
+    {
+      "when": { "tool_tap": { "tool": "tool_pot", "target": "bg_table" }, "if": "state.stage == 0" },
+      "do": ["state.stage = 1", "fade_in: the_pot 600", "say: You placed the pot!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_dirt", "target": "the_pot" }, "if": "state.stage == 1" },
+      "do": ["state.stage = 2", "advance_sprite: the_pot", "animate: dirt the_pot", "say: Great — soil in the pot!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_seeds", "target": "the_pot" }, "if": "state.stage == 2" },
+      "do": ["state.stage = 3", "state.watered = 0", "state.sunned = 0", "advance_sprite: the_pot", "say: Seeds planted! Water and sunshine now!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_water", "target": "the_pot" }, "if": { "all": ["state.stage >= 3", "state.stage <= 5"] } },
+      "do": ["state.watered += 1", "animate: splash the_pot", "say: Watered!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_sun", "target": "the_pot" }, "if": { "all": ["state.stage >= 3", "state.stage <= 5"] } },
+      "do": ["state.sunned += 1", "animate: glow the_pot", "say: Sunshine!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_trowel", "target": "the_pot" }, "if": "state.stage == 6" },
+      "do": ["state.stage = 7", "set_sprite: the_pot 1", "show: the_fruit_on_table", "show: go_outside_btn", "say: You took the plant out! Ready to go outside?"]
+    },
+    {
+      "when": { "tap": "go_outside_btn", "if": "state.stage == 7" },
+      "do": ["state.stage = 8", "hide: go_outside_btn", "hide: the_pot", "hide: the_fruit_on_table", "fade_out: bg_table 1200", "fade_in: bg_ground 1200", "show_tool: tool_plant", "say: Now dig a hole with your trowel!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_trowel", "target": "bg_ground" }, "if": "state.stage == 8" },
+      "do": ["state.stage = 9", "advance_sprite: bg_ground", "say: Great digging! Now plant your tomato!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_plant", "target": "bg_ground" }, "if": "state.stage == 9" },
+      "do": ["state.stage = 10", "state.watered = 0", "state.sunned = 0", "hide: bg_ground", "fade_in: the_plant_scene 800", "say: Planted! Give it lots of water and sunshine!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_water", "target": "the_plant_scene" }, "if": "state.stage == 10" },
+      "do": ["state.watered += 1", "animate: splash the_plant_scene", "say: Watered!"]
+    },
+    {
+      "when": { "tool_tap": { "tool": "tool_sun", "target": "the_plant_scene" }, "if": "state.stage == 10" },
+      "do": ["state.sunned += 1", "animate: glow the_plant_scene", "say: Sunshine!"]
+    },
+    {
+      "when": { "tap": "well_done_btn" },
+      "do": ["hide: well_done_btn", "reset"]
+    }
+  ],
+  "rules": [
+    {
+      "if": { "all": ["state.stage == 3", "state.watered >= 1", "state.sunned >= 1"] },
+      "do": ["state.stage = 4", "state.watered = 0", "state.sunned = 0", "advance_sprite: the_pot", "say: It's growing!"]
+    },
+    {
+      "if": { "all": ["state.stage == 4", "state.watered >= 1", "state.sunned >= 1"] },
+      "do": ["state.stage = 5", "state.watered = 0", "state.sunned = 0", "advance_sprite: the_pot", "say: Look at those flowers!"]
+    },
+    {
+      "if": { "all": ["state.stage == 5", "state.watered >= 1", "state.sunned >= 1"] },
+      "do": ["state.stage = 6", "state.watered = 0", "state.sunned = 0", "advance_sprite: the_pot", "say: Tomatoes! Use the trowel to take it out!"]
+    },
+    {
+      "if": { "all": ["state.stage == 10", "state.watered >= 3", "state.sunned >= 3"] },
+      "do": ["state.stage = 11", "advance_sprite: the_plant_scene"]
+    }
+  ],
+  "win_condition": "state.stage >= 11",
+  "win_response": [
+    "show: well_done_btn",
+    "say: Amazing! You grew tomatoes!"
+  ]
+}
