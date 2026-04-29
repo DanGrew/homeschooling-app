@@ -18,7 +18,7 @@
   "objects": [
     {
       "id": "plant",
-      "sprite_states": ["seed.png", "shoot.png", "bloom.png", "fruit.png"],
+      "sprite_states": ["pot-with-seeds.png", "pot-with-shoot.png", "pot-with-bloom.png", "pot-with-fruit.png"],
       "x": 20, "y": 100, "w": 320, "h": 500,
       "clickable": true
     },

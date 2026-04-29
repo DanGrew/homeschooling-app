@@ -19,7 +19,7 @@
       "y": 120,
       "w": 320,
       "h": 520,
-      "sprite_states": ["seed", "shoot", "bloom", "fruit"]
+      "sprite_states": ["pot-with-seeds.png", "pot-with-shoot.png", "pot-with-bloom.png", "pot-with-fruit.png"]
     },
     {
       "id": "watering_can",
