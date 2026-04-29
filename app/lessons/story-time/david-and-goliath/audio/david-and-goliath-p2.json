@@ -2,7 +2,7 @@
   "clipId": "david-and-goliath-p2",
   "segments": [
     {
-      "text": "Then young David came to the camp, and David loved God and trusted Him.\nDavid said, “God is with me.”\nHe picked up his sling and five smooth stones from the stream.",
+      "text": "Then young David came to the camp, and David loved God and trusted Him.",
       "words": [
         {
           "w": "Then",
@@ -59,7 +59,12 @@
         {
           "w": "Him.",
           "t": 4.019
-        },
+        }
+      ]
+    },
+    {
+      "text": "David said, “God is with me.”",
+      "words": [
         {
           "w": "David",
           "t": 4.87
@@ -83,7 +88,12 @@
         {
           "w": "me.”",
           "t": 6.649
-        },
+        }
+      ]
+    },
+    {
+      "text": "He picked up his sling and five smooth stones from the stream.",
+      "words": [
         {
           "w": "He",
           "t": 7.335

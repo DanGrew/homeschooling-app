@@ -2,7 +2,7 @@
   "clipId": "david-and-goliath-p3",
   "segments": [
     {
-      "text": "David swung his sling and one stone flew through the air.\nIt hit Goliath on the head and the giant fell down.\nDavid had won, and everyone cheered.",
+      "text": "David swung his sling and one stone flew through the air.",
       "words": [
         {
           "w": "David",
@@ -47,7 +47,12 @@
         {
           "w": "air.",
           "t": 2.847
-        },
+        }
+      ]
+    },
+    {
+      "text": "It hit Goliath on the head and the giant fell down.",
+      "words": [
         {
           "w": "It",
           "t": 3.543
@@ -91,7 +96,12 @@
         {
           "w": "down.",
           "t": 6.016
-        },
+        }
+      ]
+    },
+    {
+      "text": "David had won, and everyone cheered.",
+      "words": [
         {
           "w": "David",
           "t": 6.98

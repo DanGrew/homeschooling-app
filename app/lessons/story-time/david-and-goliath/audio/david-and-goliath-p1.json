@@ -2,7 +2,7 @@
   "clipId": "david-and-goliath-p1",
   "segments": [
     {
-      "text": "King Saul was the first king of Israel.\nOne day, the Philistines came to fight.\nTheir giant, Goliath, was big and scary; and no one wanted to face him.",
+      "text": "King Saul was the first king of Israel.",
       "words": [
         {
           "w": "King",
@@ -35,7 +35,12 @@
         {
           "w": "Israel.",
           "t": 1.889
-        },
+        }
+      ]
+    },
+    {
+      "text": "One day, the Philistines came to fight.",
+      "words": [
         {
           "w": "One",
           "t": 2.652
@@ -63,7 +68,12 @@
         {
           "w": "fight.",
           "t": 4.961
-        },
+        }
+      ]
+    },
+    {
+      "text": "Their giant, Goliath, was big and scary;",
+      "words": [
         {
           "w": "Their",
           "t": 5.848
@@ -91,7 +101,12 @@
         {
           "w": "scary;",
           "t": 8.313
-        },
+        }
+      ]
+    },
+    {
+      "text": "and no one wanted to face him.",
+      "words": [
         {
           "w": "and",
           "t": 9.274
