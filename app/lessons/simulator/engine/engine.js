@@ -33,11 +33,11 @@ class SimulatorEngine {
     if (!this.spec.toolbar) return;
     const bar = document.createElement('div');
     bar.id = 'toolbar';
-    bar.style.cssText = `position:absolute;bottom:0;left:0;width:100%;height:84px;display:flex;align-items:center;justify-content:space-around;background:rgba(255,255,255,0.92);z-index:100;border-top:3px solid #ddd;box-sizing:border-box;padding:0 8px;`;
+    bar.style.cssText = `position:absolute;bottom:0;left:0;width:100%;height:96px;display:flex;align-items:center;justify-content:space-around;background:rgba(255,255,255,0.92);z-index:100;border-top:3px solid #ddd;box-sizing:border-box;padding:0 8px;`;
     this.spec.toolbar.forEach(tool => {
       const btn = document.createElement('div');
       btn.id = `tool-${tool.id}`;
-      btn.style.cssText = `width:60px;height:60px;cursor:pointer;border-radius:12px;padding:4px;box-sizing:border-box;transition:background 0.15s,outline 0.15s;flex-shrink:0;`;
+      btn.style.cssText = `width:72px;height:72px;cursor:pointer;border-radius:12px;padding:4px;box-sizing:border-box;transition:background 0.15s,outline 0.15s;flex-shrink:0;`;
       if (tool.visible === false) btn.style.display = 'none';
       btn.appendChild(this._img(tool.sprite));
       btn.addEventListener('click', () => this._selectTool(tool.id));
@@ -77,7 +77,7 @@ class SimulatorEngine {
       if (obj.type === 'button') {
         const btn = document.createElement('div');
         btn.textContent = obj.label || '';
-        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:'Comic Sans MS',cursive;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;`;
+        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:'Comic Sans MS',cursive;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;pointer-events:none;`;
         el.appendChild(btn);
       } else if (obj.sprite_states) {
         this.actorIndices[obj.id] = 0;
@@ -98,8 +98,7 @@ class SimulatorEngine {
   _renderSpeechBubble() {
     const b = document.createElement('div');
     b.id = 'speech-bubble';
-    const bottom = this.spec.toolbar ? '92px' : '14px';
-    b.style.cssText = `position:absolute;bottom:${bottom};left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:24px;padding:10px 22px;font-family:'Comic Sans MS',cursive;font-size:18px;color:#333;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.15);`;
+    b.style.cssText = `position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:24px;padding:12px 28px;font-family:'Comic Sans MS',cursive;font-size:24px;color:#333;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.15);`;
     this.container.appendChild(b);
   }
 
@@ -278,7 +277,7 @@ class SimulatorEngine {
   _checkWin() {
     if (!this.won && this._evalCond(this.spec.win_condition)) {
       this.won = true;
-      this._execActions(this.spec.win_response);
+      setTimeout(() => this._execActions(this.spec.win_response), 2500);
     }
   }
 

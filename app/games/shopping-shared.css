@@ -31,9 +31,17 @@
 .find-row.found .find-name{text-decoration:line-through;color:#888;}
 .find-tick{font-size:1.4em;width:28px;text-align:center;}
 .btn-got{padding:8px 14px;border:none;border-radius:10px;font-family:inherit;font-size:0.9em;cursor:pointer;background:#3498DB;color:#fff;}
+.btn-cross{padding:8px 14px;border:none;border-radius:10px;font-family:inherit;font-size:0.9em;cursor:pointer;background:#E74C3C;color:#fff;}
 .btn-undo{padding:6px 10px;border:none;border-radius:10px;font-family:inherit;font-size:0.8em;cursor:pointer;background:#E67E22;color:#fff;display:none;}
 .find-row.found .btn-undo{display:inline-block;}
 .find-row.found .btn-got{display:none;}
+.find-row.found .btn-cross{display:none;}
+.find-row.crossed{background:#fff5f5;}
+.find-row.crossed .find-name{text-decoration:line-through;color:#aaa;}
+.find-row.crossed .find-tick{color:#E74C3C;}
+.find-row.crossed .btn-got{display:none;}
+.find-row.crossed .btn-cross{display:none;}
+.find-row.crossed .btn-undo{display:inline-block;}
 #success-banner{display:none;position:fixed;inset:0;background:rgba(39,174,96,0.95);flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:2.8em;font-weight:bold;text-align:center;font-family:'Comic Sans MS','Chalkboard SE',cursive;}
 #btn-again{margin-top:24px;padding:14px 32px;border:3px solid #fff;border-radius:16px;background:transparent;color:#fff;font-family:inherit;font-size:0.55em;cursor:pointer;}
 @media(orientation:portrait){
