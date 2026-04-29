@@ -98,8 +98,7 @@ class SimulatorEngine {
   _renderSpeechBubble() {
     const b = document.createElement('div');
     b.id = 'speech-bubble';
-    const bottom = this.spec.toolbar ? '92px' : '14px';
-    b.style.cssText = `position:absolute;bottom:${bottom};left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:24px;padding:10px 22px;font-family:'Comic Sans MS',cursive;font-size:18px;color:#333;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.15);`;
+    b.style.cssText = `position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:24px;padding:12px 28px;font-family:'Comic Sans MS',cursive;font-size:24px;color:#333;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.15);`;
     this.container.appendChild(b);
   }
 
