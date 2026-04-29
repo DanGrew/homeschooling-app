@@ -1,0 +1,760 @@
+{
+  "clipId": "jonah-and-the-big-fish",
+  "segments": [
+    {
+      "text": "God told Jonah to go to the city of Nineveh, but Jonah did not want to.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 0.12
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 0.44
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 0.68
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 1.08
+        },
+        {
+          "w": "go",
+          "normal": "go",
+          "t": 1.26
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 1.5
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 1.66
+        },
+        {
+          "w": "city",
+          "normal": "city",
+          "t": 1.8
+        },
+        {
+          "w": "of",
+          "normal": "of",
+          "t": 2.121
+        },
+        {
+          "w": "Nineveh,",
+          "normal": "nineveh",
+          "t": 2.241
+        },
+        {
+          "w": "but",
+          "normal": "but",
+          "t": 2.921
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 3.141
+        },
+        {
+          "w": "did",
+          "normal": "did",
+          "t": 3.461
+        },
+        {
+          "w": "not",
+          "normal": "not",
+          "t": 3.641
+        },
+        {
+          "w": "want",
+          "normal": "want",
+          "t": 3.841
+        },
+        {
+          "w": "to.",
+          "normal": "to",
+          "t": 4.101
+        }
+      ]
+    },
+    {
+      "text": "He got on a boat and sailed away.",
+      "words": [
+        {
+          "w": "He",
+          "normal": "he",
+          "t": 4.981
+        },
+        {
+          "w": "got",
+          "normal": "got",
+          "t": 5.181
+        },
+        {
+          "w": "on",
+          "normal": "on",
+          "t": 5.521
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 5.641
+        },
+        {
+          "w": "boat",
+          "normal": "boat",
+          "t": 5.721
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 6.082
+        },
+        {
+          "w": "sailed",
+          "normal": "sailed",
+          "t": 6.242
+        },
+        {
+          "w": "away.",
+          "normal": "away",
+          "t": 6.582
+        }
+      ]
+    },
+    {
+      "text": "While he was at sea, God sent a big storm.",
+      "words": [
+        {
+          "w": "While",
+          "normal": "while",
+          "t": 7.602
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 7.902
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 8.042
+        },
+        {
+          "w": "at",
+          "normal": "at",
+          "t": 8.262
+        },
+        {
+          "w": "sea,",
+          "normal": "sea",
+          "t": 8.422
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 9.042
+        },
+        {
+          "w": "sent",
+          "normal": "sent",
+          "t": 9.322
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 9.622
+        },
+        {
+          "w": "big",
+          "normal": "big",
+          "t": 9.742
+        },
+        {
+          "w": "storm.",
+          "normal": "storm",
+          "t": 10.043
+        }
+      ]
+    },
+    {
+      "text": "The wind blew hard and the waves crashed against the boat.",
+      "words": [
+        {
+          "w": "The",
+          "normal": "the",
+          "t": 11.043
+        },
+        {
+          "w": "wind",
+          "normal": "wind",
+          "t": 11.243
+        },
+        {
+          "w": "blew",
+          "normal": "blew",
+          "t": 11.523
+        },
+        {
+          "w": "hard",
+          "normal": "hard",
+          "t": 11.803
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 12.263
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 12.403
+        },
+        {
+          "w": "waves",
+          "normal": "waves",
+          "t": 12.563
+        },
+        {
+          "w": "crashed",
+          "normal": "crashed",
+          "t": 12.963
+        },
+        {
+          "w": "against",
+          "normal": "against",
+          "t": 13.363
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 13.643
+        },
+        {
+          "w": "boat.",
+          "normal": "boat",
+          "t": 13.764
+        }
+      ]
+    },
+    {
+      "text": "The sailors were scared but Jonah was asleep!",
+      "words": [
+        {
+          "w": "The",
+          "normal": "the",
+          "t": 14.544
+        },
+        {
+          "w": "sailors",
+          "normal": "sailors",
+          "t": 14.764
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 15.264
+        },
+        {
+          "w": "scared",
+          "normal": "scared",
+          "t": 15.524
+        },
+        {
+          "w": "but",
+          "normal": "but",
+          "t": 16.184
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 16.424
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 16.784
+        },
+        {
+          "w": "asleep!",
+          "normal": "asleep",
+          "t": 16.984
+        }
+      ]
+    },
+    {
+      "text": "The sailors ran to Jonah and shouted, “Wake up!”",
+      "words": [
+        {
+          "w": "The",
+          "normal": "the",
+          "t": 18.145
+        },
+        {
+          "w": "sailors",
+          "normal": "sailors",
+          "t": 18.385
+        },
+        {
+          "w": "ran",
+          "normal": "ran",
+          "t": 19.105
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 19.445
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 19.625
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 20.045
+        },
+        {
+          "w": "shouted,",
+          "normal": "shouted",
+          "t": 20.245
+        },
+        {
+          "w": "“Wake",
+          "normal": "wake",
+          "t": 21.065
+        },
+        {
+          "w": "up!”",
+          "normal": "up",
+          "t": 21.485
+        }
+      ]
+    },
+    {
+      "text": "Jonah told the sailors it was his fault.",
+      "words": [
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 22.286
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 22.666
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 22.946
+        },
+        {
+          "w": "sailors",
+          "normal": "sailors",
+          "t": 23.066
+        },
+        {
+          "w": "it",
+          "normal": "it",
+          "t": 23.646
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 23.746
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 24.006
+        },
+        {
+          "w": "fault.",
+          "normal": "fault",
+          "t": 24.266
+        }
+      ]
+    },
+    {
+      "text": "The sailors threw Jonah into the sea and the storm became calm.",
+      "words": [
+        {
+          "w": "The",
+          "normal": "the",
+          "t": 25.126
+        },
+        {
+          "w": "sailors",
+          "normal": "sailors",
+          "t": 25.286
+        },
+        {
+          "w": "threw",
+          "normal": "threw",
+          "t": 25.707
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 26.007
+        },
+        {
+          "w": "into",
+          "normal": "into",
+          "t": 26.427
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 26.667
+        },
+        {
+          "w": "sea",
+          "normal": "sea",
+          "t": 26.807
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 27.147
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 27.267
+        },
+        {
+          "w": "storm",
+          "normal": "storm",
+          "t": 27.407
+        },
+        {
+          "w": "became",
+          "normal": "became",
+          "t": 27.727
+        },
+        {
+          "w": "calm.",
+          "normal": "calm",
+          "t": 28.147
+        }
+      ]
+    },
+    {
+      "text": "Then God sent a big fish.",
+      "words": [
+        {
+          "w": "Then",
+          "normal": "then",
+          "t": 29.067
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 29.348
+        },
+        {
+          "w": "sent",
+          "normal": "sent",
+          "t": 29.688
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 29.968
+        },
+        {
+          "w": "big",
+          "normal": "big",
+          "t": 30.148
+        },
+        {
+          "w": "fish.",
+          "normal": "fish",
+          "t": 30.468
+        }
+      ]
+    },
+    {
+      "text": "The fish swallowed Jonah, GULP! BURP!",
+      "words": [
+        {
+          "w": "The",
+          "normal": "the",
+          "t": 31.288
+        },
+        {
+          "w": "fish",
+          "normal": "fish",
+          "t": 31.468
+        },
+        {
+          "w": "swallowed",
+          "normal": "swallowed",
+          "t": 31.788
+        },
+        {
+          "w": "Jonah,",
+          "normal": "jonah",
+          "t": 32.268
+        },
+        {
+          "w": "GULP!",
+          "normal": "gulp",
+          "t": 33.068
+        },
+        {
+          "w": "BURP!",
+          "normal": "burp",
+          "t": 34.049
+        }
+      ]
+    },
+    {
+      "text": "Inside the fish, Jonah prayed to God for three days.",
+      "words": [
+        {
+          "w": "Inside",
+          "normal": "inside",
+          "t": 35.929
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 36.369
+        },
+        {
+          "w": "fish,",
+          "normal": "fish",
+          "t": 36.509
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 37.129
+        },
+        {
+          "w": "prayed",
+          "normal": "prayed",
+          "t": 37.51
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 37.77
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 37.93
+        },
+        {
+          "w": "for",
+          "normal": "for",
+          "t": 38.31
+        },
+        {
+          "w": "three",
+          "normal": "three",
+          "t": 38.59
+        },
+        {
+          "w": "days.",
+          "normal": "days",
+          "t": 38.89
+        }
+      ]
+    },
+    {
+      "text": "“I’m sorry. I will go to Nineveh.”",
+      "words": [
+        {
+          "w": "“I’m",
+          "normal": "im",
+          "t": 40.17
+        },
+        {
+          "w": "sorry.",
+          "normal": "sorry",
+          "t": 40.39
+        },
+        {
+          "w": "I",
+          "normal": "i",
+          "t": 41.151
+        },
+        {
+          "w": "will",
+          "normal": "will",
+          "t": 41.231
+        },
+        {
+          "w": "go",
+          "normal": "go",
+          "t": 41.451
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 41.671
+        },
+        {
+          "w": "Nineveh.”",
+          "normal": "nineveh",
+          "t": 41.831
+        }
+      ]
+    },
+    {
+      "text": "God forgave Jonah so the fish went to Nineveh and spat out Jonah.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 42.971
+        },
+        {
+          "w": "forgave",
+          "normal": "forgave",
+          "t": 43.311
+        },
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 43.791
+        },
+        {
+          "w": "so",
+          "normal": "so",
+          "t": 44.311
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 44.511
+        },
+        {
+          "w": "fish",
+          "normal": "fish",
+          "t": 44.651
+        },
+        {
+          "w": "went",
+          "normal": "went",
+          "t": 44.951
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 45.152
+        },
+        {
+          "w": "Nineveh",
+          "normal": "nineveh",
+          "t": 45.292
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 45.832
+        },
+        {
+          "w": "spat",
+          "normal": "spat",
+          "t": 46.032
+        },
+        {
+          "w": "out",
+          "normal": "out",
+          "t": 46.532
+        },
+        {
+          "w": "Jonah.",
+          "normal": "jonah",
+          "t": 46.732
+        }
+      ]
+    },
+    {
+      "text": "Jonah told the people God’s message; and the people said sorry and changed.",
+      "words": [
+        {
+          "w": "Jonah",
+          "normal": "jonah",
+          "t": 47.792
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 48.172
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 48.412
+        },
+        {
+          "w": "people",
+          "normal": "people",
+          "t": 48.572
+        },
+        {
+          "w": "God’s",
+          "normal": "gods",
+          "t": 48.993
+        },
+        {
+          "w": "message;",
+          "normal": "message",
+          "t": 49.333
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 50.133
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 50.273
+        },
+        {
+          "w": "people",
+          "normal": "people",
+          "t": 50.413
+        },
+        {
+          "w": "said",
+          "normal": "said",
+          "t": 50.813
+        },
+        {
+          "w": "sorry",
+          "normal": "sorry",
+          "t": 51.113
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 51.653
+        },
+        {
+          "w": "changed.",
+          "normal": "changed",
+          "t": 51.853
+        }
+      ]
+    }
+  ]
+}

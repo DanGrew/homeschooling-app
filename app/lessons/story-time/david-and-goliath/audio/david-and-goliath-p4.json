@@ -2,7 +2,7 @@
   "clipId": "david-and-goliath-p4",
   "segments": [
     {
-      "text": "Everyone loved David after that day.\nHe became the next king of Israel.",
+      "text": "Everyone loved David after that day.",
       "words": [
         {
           "w": "Everyone",
@@ -27,7 +27,12 @@
         {
           "w": "day.",
           "t": 1.856
-        },
+        }
+      ]
+    },
+    {
+      "text": "He became the next king of Israel.",
+      "words": [
         {
           "w": "He",
           "t": 2.554

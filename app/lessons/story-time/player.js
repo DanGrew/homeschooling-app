@@ -1,5 +1,7 @@
 (function () {
-  document.getElementById('story-title').textContent = CLIPS[LESSON.clips[0]].title;
+  var storyId = new URLSearchParams(window.location.search).get('story') || 'david-and-goliath';
+  var LESSON = LESSONS[storyId] || LESSONS['david-and-goliath'];
+  document.getElementById('story-title').textContent = LESSON.title;
   document.getElementById('words').textContent = 'Loading\u2026';
 
   Promise.all(LESSON.clips.map(function (clipId) {
