@@ -33,11 +33,11 @@ class SimulatorEngine {
     if (!this.spec.toolbar) return;
     const bar = document.createElement('div');
     bar.id = 'toolbar';
-    bar.style.cssText = `position:absolute;bottom:0;left:0;width:100%;height:84px;display:flex;align-items:center;justify-content:space-around;background:rgba(255,255,255,0.92);z-index:100;border-top:3px solid #ddd;box-sizing:border-box;padding:0 8px;`;
+    bar.style.cssText = `position:absolute;bottom:0;left:0;width:100%;height:96px;display:flex;align-items:center;justify-content:space-around;background:rgba(255,255,255,0.92);z-index:100;border-top:3px solid #ddd;box-sizing:border-box;padding:0 8px;`;
     this.spec.toolbar.forEach(tool => {
       const btn = document.createElement('div');
       btn.id = `tool-${tool.id}`;
-      btn.style.cssText = `width:60px;height:60px;cursor:pointer;border-radius:12px;padding:4px;box-sizing:border-box;transition:background 0.15s,outline 0.15s;flex-shrink:0;`;
+      btn.style.cssText = `width:72px;height:72px;cursor:pointer;border-radius:12px;padding:4px;box-sizing:border-box;transition:background 0.15s,outline 0.15s;flex-shrink:0;`;
       if (tool.visible === false) btn.style.display = 'none';
       btn.appendChild(this._img(tool.sprite));
       btn.addEventListener('click', () => this._selectTool(tool.id));
