@@ -1,25 +1,44 @@
 {
   "simulation": {
-    "id": "grow_a_plant_tools",
-    "title": "Grow Tomatoes [Level 2]",
+    "id": "grow-tomatoes-level-1",
+    "title": "Grow Tomatoes [Level 1]",
     "age_range": "2-5",
-    "instructions": "Pick a tool and tap the plant to help it grow!"
+    "instructions": "Help your plant grow! Give it some water and sunshine."
   },
   "scene": {
+    "background": "garden",
     "width": 360,
     "height": 700,
-    "bg_color": "#f0f8e8",
     "sprites_path": "sprites/"
   },
-  "toolbar": [
-    { "id": "tool_water", "sprite": "watering-can.png" },
-    { "id": "tool_sun",   "sprite": "sun.png" }
-  ],
   "objects": [
     {
       "id": "plant",
-      "sprite_states": ["pot-with-seeds.png", "pot-with-shoot.png", "pot-with-bloom.png", "pot-with-fruit.png"],
-      "x": 20, "y": 100, "w": 320, "h": 500,
+      "type": "actor",
+      "x": 20,
+      "y": 120,
+      "w": 320,
+      "h": 520,
+      "sprite_states": ["pot-with-seeds.png", "pot-with-shoot.png", "pot-with-bloom.png", "pot-with-fruit.png"]
+    },
+    {
+      "id": "watering_can",
+      "type": "tool",
+      "x": 16,
+      "y": 20,
+      "w": 100,
+      "h": 100,
+      "sprite": "watering-can",
+      "clickable": true
+    },
+    {
+      "id": "sun",
+      "type": "tool",
+      "x": 260,
+      "y": 20,
+      "w": 90,
+      "h": 90,
+      "sprite": "sun",
       "clickable": true
     },
     {
@@ -37,14 +56,15 @@
     "sunned": 0,
     "growth": 0
   },
+  "input_modes": ["direct_tap"],
   "actions": [
     {
-      "when": { "tool_tap": { "tool": "tool_water", "target": "plant" } },
+      "when": { "tap": "watering_can" },
       "do": ["state.watered += 1", "animate: splash plant", "say: Water the plant!"]
     },
     {
-      "when": { "tool_tap": { "tool": "tool_sun", "target": "plant" } },
-      "do": ["state.sunned += 1", "animate: glow plant", "say: Sunshine!"]
+      "when": { "tap": "sun" },
+      "do": ["state.sunned += 1", "animate: shine sun", "animate: glow plant", "say: Sunshine!"]
     },
     {
       "when": { "tap": "well_done_btn" },
