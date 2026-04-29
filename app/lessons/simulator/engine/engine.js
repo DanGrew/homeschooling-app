@@ -77,7 +77,7 @@ class SimulatorEngine {
       if (obj.type === 'button') {
         const btn = document.createElement('div');
         btn.textContent = obj.label || '';
-        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:'Comic Sans MS',cursive;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;`;
+        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:'Comic Sans MS',cursive;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;pointer-events:none;`;
         el.appendChild(btn);
       } else if (obj.sprite_states) {
         this.actorIndices[obj.id] = 0;
