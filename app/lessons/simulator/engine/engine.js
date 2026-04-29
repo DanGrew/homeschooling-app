@@ -277,7 +277,7 @@ class SimulatorEngine {
   _checkWin() {
     if (!this.won && this._evalCond(this.spec.win_condition)) {
       this.won = true;
-      this._execActions(this.spec.win_response);
+      setTimeout(() => this._execActions(this.spec.win_response), 2500);
     }
   }
 
