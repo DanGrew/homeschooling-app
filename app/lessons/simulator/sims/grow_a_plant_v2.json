@@ -1,7 +1,7 @@
 {
   "simulation": {
     "id": "grow_a_plant_v2",
-    "title": "Grow a Plant",
+    "title": "Grow Tomatoes [Level 3]",
     "age_range": "3-5",
     "instructions": "Plant a seed and grow a tomato plant!"
   },
@@ -9,7 +9,7 @@
     "width": 560,
     "height": 700,
     "bg_color": "#f8f4ee",
-    "sprites_path": "sprites-v2/"
+    "sprites_path": "sprites/"
   },
   "toolbar": [
     { "id": "tool_pot",    "sprite": "empty-pot.png" },
