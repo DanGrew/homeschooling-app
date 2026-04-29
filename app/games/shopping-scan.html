@@ -29,11 +29,16 @@
 #scan-checklist-items{flex:1;overflow-y:auto;padding:6px 10px;}
 .sc-row{display:flex;align-items:center;gap:8px;padding:8px 10px;margin-bottom:6px;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.08);}
 .sc-row.found{background:#f0fff4;}
+.sc-row.crossed{background:#fff5f5;}
 .sc-tick{font-size:1.1em;width:20px;text-align:center;flex-shrink:0;color:#bbb;}
 .sc-row.found .sc-tick{color:inherit;}
+.sc-row.crossed .sc-tick{color:#E74C3C;}
 .sc-icon{font-size:1.3em;flex-shrink:0;}
 .sc-name{flex:1;font-size:0.9em;color:#333;}
 .sc-row.found .sc-name{text-decoration:line-through;color:#aaa;}
+.sc-row.crossed .sc-name{text-decoration:line-through;color:#aaa;}
+.btn-not-here{padding:3px 7px;border:none;border-radius:8px;font-family:inherit;font-size:0.75em;cursor:pointer;background:#E74C3C;color:#fff;flex-shrink:0;}
+.sc-row.found .btn-not-here{display:none;}
 @media(orientation:portrait){
   #scan-checklist{width:160px;}
 }
@@ -94,7 +99,7 @@
 <script>
 var hasDetector=typeof BarcodeDetector!=='undefined';
 var CATALOGS=[{"name":"My Catalog","items":[{"barcode":"00348188","name":"Milk","icon":"🥛"},{"barcode":"00907897","name":"Sauce - BBQ","icon":"🥫"},{"barcode":"00556293","name":"Boule","icon":"🍞"},{"barcode":"00580458","name":"Organic Butter","icon":"🧈"},{"barcode":"5010044005126","name":"Crumpets","icon":"🛒"},{"barcode":"5000157150974","name":"Beans","icon":"🥫"},{"barcode":"5060107330764","name":"Orange Breakie","icon":"🍊"},{"barcode":"5060107330740","name":"Purple Breakie","icon":"🛒"},{"barcode":"5060503504073","name":"Pouch - Pulled Pork","icon":"🥩"},{"barcode":"5060107337879","name":"Pouch - Cottage Pie","icon":"🥣"}]}];
-var scanStream=null,scanInterval=null,scanFound=0,scanTotal=0;
+var scanStream=null,scanInterval=null,scanFound=0,scanCrossed=0,scanTotal=0;
 
 document.getElementById('btn-find').onclick=startFindPhase;
 
@@ -105,12 +110,24 @@ document.getElementById('btn-scan-it').onclick=function(){
   var ci=document.getElementById('scan-checklist-items');
   ci.innerHTML='';
   var barcodeMap={};
-  scanFound=0;
+  scanFound=0;scanCrossed=0;
   scanTotal=listItems.length;
   listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='sc-row';
-    row.innerHTML='<span class="sc-tick">☐</span><span class="sc-icon">'+it.icon+'</span><span class="sc-name">'+escHtml(it.name)+'</span>';
+    row.innerHTML='<span class="sc-tick">☐</span><span class="sc-icon">'+it.icon+'</span><span class="sc-name">'+escHtml(it.name)+'</span><button class="btn-not-here">Not here ✕</button>';
+    var notHereBtn=row.querySelector('.btn-not-here');
+    notHereBtn.onclick=function(){
+      if(row.classList.contains('found'))return;
+      if(row.classList.contains('crossed')){
+        row.classList.remove('crossed');row.querySelector('.sc-tick').textContent='☐';
+        scanCrossed--;notHereBtn.textContent='Not here ✕';
+      }else{
+        row.classList.add('crossed');row.querySelector('.sc-tick').textContent='✕';
+        scanCrossed++;notHereBtn.textContent='Undo';
+        if(scanFound+scanCrossed===scanTotal){stopScan();setTimeout(showSuccess,600);}
+      }
+    };
     barcodeMap[it.barcode]={row:row,name:it.name,icon:it.icon};
     ci.appendChild(row);
   });
@@ -123,7 +140,7 @@ document.getElementById('btn-scan-it').onclick=function(){
       beep();
       showScanToast(entry.icon,entry.name);
       scanFound++;
-      if(scanFound===scanTotal){stopScan();setTimeout(showSuccess,600);}
+      if(scanFound+scanCrossed===scanTotal){stopScan();setTimeout(showSuccess,600);}
     }
   }
 
@@ -189,7 +206,7 @@ document.getElementById('btn-again').onclick=function(){
   document.getElementById('phase2').style.display='none';
   document.getElementById('phase-scan').style.display='none';
   document.getElementById('scan-stub').style.display='none';
-  listItems=[];
+  listItems=[];scanFound=0;scanCrossed=0;
   showPhase1();
   renderList();
   renderTiles(allItems);

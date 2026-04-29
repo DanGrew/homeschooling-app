@@ -63,21 +63,27 @@ function startFindPhase(){
   p2.style.display='flex';
   var fl=document.getElementById('find-list');
   fl.innerHTML='';
-  var found=0;
+  var found=0,crossed=0;
   listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='find-row';
-    row.innerHTML='<span class="find-icon">'+it.icon+'</span><span class="find-name">'+escHtml(it.name)+'</span><span class="find-tick"></span><button class="btn-got">Got it! ✓</button><button class="btn-undo">Undo</button>';
+    row.innerHTML='<span class="find-icon">'+it.icon+'</span><span class="find-name">'+escHtml(it.name)+'</span><span class="find-tick"></span><button class="btn-got">Got it! ✓</button><button class="btn-cross">Not here ✕</button><button class="btn-undo">Undo</button>';
     row.querySelector('.btn-got').onclick=function(){
       row.classList.add('found');
       row.querySelector('.find-tick').textContent='✅';
       found++;
-      if(found===listItems.length)setTimeout(showSuccess,400);
+      if(found+crossed===listItems.length)setTimeout(showSuccess,400);
+    };
+    row.querySelector('.btn-cross').onclick=function(){
+      row.classList.add('crossed');
+      row.querySelector('.find-tick').textContent='✕';
+      crossed++;
+      if(found+crossed===listItems.length)setTimeout(showSuccess,400);
     };
     row.querySelector('.btn-undo').onclick=function(){
-      row.classList.remove('found');
+      if(row.classList.contains('found')){row.classList.remove('found');found--;}
+      else if(row.classList.contains('crossed')){row.classList.remove('crossed');crossed--;}
       row.querySelector('.find-tick').textContent='';
-      found--;
     };
     fl.appendChild(row);
   });
