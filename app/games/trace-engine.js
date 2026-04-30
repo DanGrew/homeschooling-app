@@ -89,10 +89,10 @@ class TraceEngine {
   }
 
   _localNearest(pt, center, stroke) {
-    const RADIUS = 15;
+    const RADIUS = 30;
     let best = center, bestD2 = Infinity;
-    for (let i = -RADIUS; i <= RADIUS; i++) {
-      const d = Math.max(0, Math.min(stroke.totalLen, center + i * stroke.sampleStep * 0.5));
+    for (let i = 0; i <= RADIUS; i++) {
+      const d = Math.min(stroke.totalLen, center + i * stroke.sampleStep);
       const p = stroke.mp.getPointAtLength(d);
       const d2 = (p.x - pt.x) ** 2 + (p.y - pt.y) ** 2;
       if (d2 < bestD2) { bestD2 = d2; best = d; }
