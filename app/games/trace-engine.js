@@ -8,7 +8,7 @@ class TraceEngine {
     this._strokeJustCompleted = false;
 
     const o = opts || {};
-    this.tolerance = o.tolerance !== undefined ? o.tolerance : 30;
+    this.tolerance = o.tolerance !== undefined ? o.tolerance : 45;
     this.maxStep = o.maxStep !== undefined ? o.maxStep : 0.04;
     this.completionAt = o.completionAt !== undefined ? o.completionAt : 0.96;
     this.onComplete = o.onComplete || null;
@@ -68,6 +68,16 @@ class TraceEngine {
       pp.setAttribute('stroke-dashoffset', this.strokes[i].totalLen);
     });
     const p = this.strokes[0].mp.getPointAtLength(0);
+    this.ball.setAttribute('cx', p.x);
+    this.ball.setAttribute('cy', p.y);
+  }
+
+  _resetCurrentStroke() {
+    this.currentDist = 0;
+    this.active = false;
+    const stroke = this.strokes[this.currentStrokeIdx];
+    this.progressPaths[this.currentStrokeIdx].setAttribute('stroke-dashoffset', stroke.totalLen);
+    const p = stroke.mp.getPointAtLength(0);
     this.ball.setAttribute('cx', p.x);
     this.ball.setAttribute('cy', p.y);
   }
@@ -151,7 +161,7 @@ class TraceEngine {
       if (this._strokeJustCompleted) { this._strokeJustCompleted = false; return; }
       if (!this.active) return;
       this.active = false;
-      this._reset();
+      this._resetCurrentStroke();
     };
     this.svg.addEventListener('pointerup', stop);
     this.svg.addEventListener('pointercancel', stop);

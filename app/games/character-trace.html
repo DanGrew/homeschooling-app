@@ -51,6 +51,34 @@
     font-weight: bold;
     color: #333;
   }
+  #success-banner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #2ECC71;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+    box-sizing: border-box;
+  }
+  #success-banner.visible { transform: translateY(0); }
+  #banner-btns { display: flex; gap: 12px; }
+  #banner-btns button {
+    background: white;
+    border: none;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #btn-banner-reset { color: #E74C3C; }
+  #btn-banner-next { color: #2ECC71; }
 </style>
 </head>
 <body>
@@ -74,12 +102,17 @@
         stroke-linejoin="round" stroke-dasharray="20 10"/>
       <circle id="ball" r="16" fill="#E74C3C" stroke="white" stroke-width="3"/>
     </svg>
-    <div id="done" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,248,240,0.9);">
-      <div style="font-size:2.5em;margin-bottom:12px;">&#11088; Well done! &#11088;</div>
-      <button id="btn-done-next" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;">Next &#8594;</button>
-    </div>
   </div>
 </div>
+
+<div id="success-banner">
+  <span style="font-size:1.6em;">&#11088; Well done!</span>
+  <div id="banner-btns">
+    <button id="btn-banner-reset">&#8635; Again</button>
+    <button id="btn-banner-next">Next &#8594;</button>
+  </div>
+</div>
+
 <script src="trace-engine.js"></script>
 <script>
 const CHARS = [
@@ -114,13 +147,21 @@ function applyFilter(filter) {
   });
 }
 
+function showBanner() {
+  document.getElementById('success-banner').classList.add('visible');
+}
+
+function hideBanner() {
+  document.getElementById('success-banner').classList.remove('visible');
+}
+
 function navTo(idx) {
-  currentIdx = idx;
+  currentIdx = ((idx % filteredChars.length) + filteredChars.length) % filteredChars.length;
   const entry = filteredChars[currentIdx];
   document.getElementById('char-label').textContent = entry.char;
-  document.getElementById('btn-prev').disabled = currentIdx === 0;
-  document.getElementById('btn-next').disabled = currentIdx === filteredChars.length - 1;
-  document.getElementById('done').style.display = 'none';
+  document.getElementById('btn-prev').disabled = false;
+  document.getElementById('btn-next').disabled = false;
+  hideBanner();
   setParam(entry.char, currentFilter);
   loadChar(entry);
 }
@@ -132,6 +173,19 @@ function loadChar(entry) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(svgText, 'image/svg+xml');
       const d = doc.getElementById('trace-path').getAttribute('d');
+      const svg = document.getElementById('svg');
+
+      const decorations = svg.querySelectorAll('.char-decoration');
+      decorations.forEach(el => el.remove());
+
+      const circle = doc.querySelector('circle');
+      if (circle) {
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        ['cx','cy','r','fill'].forEach(a => c.setAttribute(a, circle.getAttribute(a)));
+        c.classList.add('char-decoration');
+        svg.insertBefore(c, svg.querySelector('#base'));
+      }
+
       document.getElementById('base').setAttribute('d', d);
       document.querySelectorAll('.progress-path').forEach(el => el.remove());
       engine = null;
@@ -149,9 +203,7 @@ function initEngine() {
       progressStroke: '#FFD700',
       progressWidth: 20,
       progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
-      onComplete: function() {
-        document.getElementById('done').style.display = 'flex';
-      }
+      onComplete: showBanner
     }
   );
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
@@ -160,27 +212,20 @@ function initEngine() {
 function init() {
   const paramChar = getParam('char') || 'a';
   const paramFilter = getParam('filter') || 'all';
-
   applyFilter(paramFilter);
-
   let idx = filteredChars.findIndex(e => e.char === paramChar);
   if (idx === -1) idx = 0;
-
   navTo(idx);
 }
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    applyFilter(btn.dataset.filter);
-    navTo(0);
-  });
+  btn.addEventListener('click', () => { applyFilter(btn.dataset.filter); navTo(0); });
 });
 
 document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
 document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
-document.getElementById('btn-done-next').addEventListener('click', () => {
-  if (currentIdx < filteredChars.length - 1) navTo(currentIdx + 1);
-});
+document.getElementById('btn-banner-reset').addEventListener('click', () => { hideBanner(); if (engine) engine.restart(); });
+document.getElementById('btn-banner-next').addEventListener('click', () => navTo(currentIdx + 1));
 
 window.addEventListener('load', init);
 </script>
