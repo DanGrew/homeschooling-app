@@ -8,7 +8,8 @@ async function startSim(simId) {
   const scene = document.getElementById('scene');
   const frame = document.getElementById('scene-frame');
 
-  new SimulatorEngine(spec, scene).start();
+  window.engine = new SimulatorEngine(spec, scene);
+  window.engine.start();
 
   const scale = Math.min(1, (window.innerWidth - 32) / spec.scene.width);
   scene.style.transformOrigin = 'top left';
