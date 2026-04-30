@@ -121,7 +121,7 @@
 <script src="trace-engine.js"></script>
 <script>
 const CHARS = [
-  ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: c + '.svg', group: 'lower'})),
+  ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower'})),
   ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => ({char: c, file: 'upper-' + c.toLowerCase() + '.svg', group: 'upper'})),
   ...'0123456789'.split('').map(c => ({char: c, file: c + '.svg', group: 'digit'}))
 ];
