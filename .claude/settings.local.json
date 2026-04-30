@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(npx serve *)",
-      "Bash(curl -s http://localhost:3000/connect-the-dots.html)"
-    ]
-  }
-}
