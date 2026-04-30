@@ -2,5 +2,5 @@
   <circle cx="100" cy="60" r="10" fill="#ccc"/>
   <path id="trace-path" d="M 100,85 L 100,215"
     fill="none" stroke="#ccc" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
-    stroke-dasharray="20 10"/>
+    />
 </svg>

@@ -79,6 +79,11 @@
   }
   #btn-banner-reset { color: #E74C3C; }
   #btn-banner-next { color: #2ECC71; }
+  @keyframes dot-pulse {
+    0%, 100% { r: 14; opacity: 1; }
+    50% { r: 18; opacity: 0.7; }
+  }
+  .dot-pulse { animation: dot-pulse 0.7s ease-in-out infinite; }
 </style>
 </head>
 <body>
@@ -97,9 +102,9 @@
   </div>
   <div style="text-align:center;font-size:1em;color:#888;padding:4px 16px 4px;">Hold the red ball and trace!</div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-    <svg id="svg" viewBox="0 0 200 240" style="width:100%;height:100%;touch-action:none;" preserveAspectRatio="xMidYMid meet">
+    <svg id="svg" viewBox="0 0 200 250" style="width:100%;height:100%;touch-action:none;" preserveAspectRatio="xMidYMid meet">
       <path id="base" fill="none" stroke="#ddd" stroke-width="18" stroke-linecap="butt"
-        stroke-linejoin="round" stroke-dasharray="20 10"/>
+        stroke-linejoin="round"/>
       <circle id="ball" r="16" fill="#E74C3C" stroke="white" stroke-width="3"/>
     </svg>
   </div>
@@ -127,6 +132,7 @@ let currentFilter = 'all';
 let filteredChars = CHARS.slice();
 let currentIdx = 0;
 let engine = null;
+let dotEl = null;
 
 function getParam(key) {
   return new URLSearchParams(location.search).get(key);
@@ -178,12 +184,16 @@ function loadChar(entry) {
       const decorations = svg.querySelectorAll('.char-decoration');
       decorations.forEach(el => el.remove());
 
+      dotEl = null;
       const circle = doc.querySelector('circle');
       if (circle) {
         const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         ['cx','cy','r','fill'].forEach(a => c.setAttribute(a, circle.getAttribute(a)));
         c.classList.add('char-decoration');
+        c.style.cursor = 'pointer';
+        c.addEventListener('pointerdown', onDotTapped);
         svg.insertBefore(c, svg.querySelector('#base'));
+        dotEl = c;
       }
 
       document.getElementById('base').setAttribute('d', d);
@@ -203,10 +213,26 @@ function initEngine() {
       progressStroke: '#FFD700',
       progressWidth: 20,
       progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
-      onComplete: showBanner
+      onComplete: function() {
+        if (dotEl) {
+          dotEl.setAttribute('fill', '#E74C3C');
+          dotEl.setAttribute('r', '14');
+          dotEl.classList.add('dot-pulse');
+        } else {
+          showBanner();
+        }
+      }
     }
   );
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
+}
+
+function onDotTapped() {
+  if (!dotEl || !engine || !engine.done) return;
+  dotEl.classList.remove('dot-pulse');
+  dotEl.setAttribute('fill', '#FFD700');
+  dotEl.style.filter = 'drop-shadow(0 0 8px #FFD700)';
+  showBanner();
 }
 
 function init() {
