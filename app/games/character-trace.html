@@ -81,7 +81,6 @@
   </div>
 </div>
 <script src="trace-engine.js"></script>
-<script src="character-paths.js"></script>
 <script>
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: c + '.svg', group: 'lower'})),
@@ -127,11 +126,17 @@ function navTo(idx) {
 }
 
 function loadChar(entry) {
-  const d = CHARACTER_PATHS[entry.char];
-  document.getElementById('base').setAttribute('d', d);
-  document.querySelectorAll('.progress-path').forEach(el => el.remove());
-  engine = null;
-  initEngine();
+  fetch('../assets/characters/' + entry.file)
+    .then(r => r.text())
+    .then(svgText => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, 'image/svg+xml');
+      const d = doc.getElementById('trace-path').getAttribute('d');
+      document.getElementById('base').setAttribute('d', d);
+      document.querySelectorAll('.progress-path').forEach(el => el.remove());
+      engine = null;
+      initEngine();
+    });
 }
 
 function initEngine() {
