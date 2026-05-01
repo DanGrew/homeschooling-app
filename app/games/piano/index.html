@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Piano Game</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#1a1a2e;font-family:'Comic Sans MS','Chalkboard SE',cursive;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));}
+#header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;flex-shrink:0;}
+#controls{display:flex;gap:10px;align-items:center;justify-content:center;padding:6px 16px;flex-shrink:0;}
+.ctrl-btn{font-size:1.3em;padding:8px 18px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:bold;touch-action:manipulation;-webkit-touch-callout:none;}
+#game-area{flex:1;position:relative;overflow:hidden;border-radius:12px;background:#16213e;margin:0 4px;min-height:80px;}
+#hit-line{position:absolute;bottom:2px;left:0;right:0;height:3px;background:rgba(255,255,255,0.2);border-radius:2px;}
+#score-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.8);flex-direction:column;align-items:center;justify-content:center;gap:14px;border-radius:12px;}
+#keys-wrap{height:130px;flex-shrink:0;padding:4px 4px 4px;gap:3px;}
+</style>
+</head>
+<body>
+<div id="header">
+  <a href="../index.html" style="font-size:1.6em;text-decoration:none;">&#127968;</a>
+  <span style="font-size:1.3em;font-weight:bold;color:#eee;">&#127929; Piano Game</span>
+  <a href="../../lessons/piano/index.html" style="font-size:0.95em;color:#B3C6FF;text-decoration:none;font-weight:bold;">&#9664; Lesson</a>
+</div>
+<div id="controls">
+  <button class="ctrl-btn" id="btn-play" onclick="pressPlay()" style="background:#2ECC71;color:#fff;">&#9654; Play</button>
+  <button class="ctrl-btn" id="btn-pause" onclick="pressPause()" style="background:#F39C12;color:#fff;display:none;">&#9646;&#9646; Pause</button>
+  <button class="ctrl-btn" id="btn-stop" onclick="pressStop()" style="background:#E74C3C;color:#fff;display:none;">&#9646; Stop</button>
+  <span id="score-display" style="font-size:1.2em;color:#eee;min-width:60px;text-align:center;"></span>
+</div>
+<div id="game-area">
+  <div id="hit-line"></div>
+  <div id="score-overlay">
+    <div id="score-emoji" style="font-size:4em;"></div>
+    <div id="score-text" style="font-size:1.8em;font-weight:bold;color:#fff;"></div>
+    <div id="score-sub" style="font-size:1.1em;color:#ccc;"></div>
+    <button onclick="playAgain()" style="margin-top:8px;font-size:1.2em;padding:10px 28px;border:none;border-radius:12px;background:#2ECC71;color:#fff;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;">Play Again</button>
+  </div>
+</div>
+<div id="keys-wrap"></div>
+<script src="../../assets/js/piano-shared.js"></script>
+<script>
+var gameState = 'idle';
+var startTime = 0, pausedOffset = 0, pausedAt = 0;
+var notes = [], hitCount = 0, rafId = null;
+var NOTE_HEIGHT = 36;
+
+function generateNotes() {
+  var cfg = PIANO_CONFIG;
+  var result = [];
+  var hitTime = cfg.LOOKAHEAD_MS + 600;
+  for (var i = 0; i < cfg.NOTE_COUNT; i++) {
+    var keyIndex = Math.floor(Math.random() * cfg.KEY_COUNT);
+    if (i > 0) hitTime += cfg.MIN_NOTE_GAP_MS + Math.random() * (cfg.MAX_NOTE_GAP_MS - cfg.MIN_NOTE_GAP_MS);
+    result.push({
+      id: i,
+      keyIndex: keyIndex,
+      note: cfg.NOTES[keyIndex],
+      spawnTime: hitTime - cfg.LOOKAHEAD_MS,
+      hitTime: hitTime,
+      state: 'active'
+    });
+  }
+  return result;
+}
+
+function gameLoop() {
+  if (gameState !== 'playing') return;
+  var elapsed = performance.now() - startTime - pausedOffset;
+  var gameArea = document.getElementById('game-area');
+  var areaHeight = gameArea.clientHeight;
+  var cfg = PIANO_CONFIG;
+
+  notes.forEach(function(note) {
+    if (note.state === 'active' && elapsed > note.hitTime + cfg.HIT_WINDOW_MS) {
+      note.state = 'missed';
+      var el = document.getElementById('note-' + note.id);
+      if (el) el.remove();
+      return;
+    }
+    if (note.state !== 'active') return;
+    var progress = (elapsed - note.spawnTime) / cfg.LOOKAHEAD_MS;
+    if (progress < 0 || progress > 1.15) return;
+    var el = document.getElementById('note-' + note.id);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'note-' + note.id;
+      el.dataset.keyIndex = note.keyIndex;
+      el.dataset.noteId = note.id;
+      el.dataset.noteState = 'active';
+      var lw = 100 / cfg.KEY_COUNT;
+      el.style.cssText = 'position:absolute;pointer-events:none;width:' + (lw - 0.5) + '%;left:' + (note.keyIndex * lw) + '%;height:' + NOTE_HEIGHT + 'px;border-radius:8px;background:' + cfg.KEY_COLORS[note.keyIndex] + ';border:2px solid rgba(0,0,0,0.2);box-sizing:border-box;';
+      gameArea.appendChild(el);
+    }
+    el.style.top = (progress * (areaHeight - NOTE_HEIGHT)) + 'px';
+  });
+
+  var allDone = notes.length > 0 && notes.every(function(n) { return n.state !== 'active'; });
+  if (allDone) { endGame(); return; }
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+function endGame() {
+  gameState = 'idle';
+  if (rafId) cancelAnimationFrame(rafId);
+  updateControls();
+  var emoji, text, sub;
+  if (hitCount >= 10)     { emoji = '\uD83E\uDD47'; text = 'Amazing!';      sub = 'Perfect score!'; }
+  else if (hitCount >= 7) { emoji = '\uD83C\uDF89'; text = 'Well done!';    sub = hitCount + ' out of 10!'; }
+  else if (hitCount >= 4) { emoji = '\u2B50';        text = 'Good try!';     sub = hitCount + ' out of 10!'; }
+  else                    { emoji = '\uD83C\uDFB5';  text = 'Keep playing!'; sub = hitCount + ' out of 10'; }
+  document.getElementById('score-emoji').textContent = emoji;
+  document.getElementById('score-text').textContent = text;
+  document.getElementById('score-sub').textContent = sub;
+  var overlay = document.getElementById('score-overlay');
+  overlay.style.display = 'flex';
+}
+
+function pressPlay() {
+  if (gameState === 'paused') {
+    pausedOffset += performance.now() - pausedAt;
+    gameState = 'playing';
+    updateControls();
+    rafId = requestAnimationFrame(gameLoop);
+    return;
+  }
+  if (gameState === 'playing') return;
+  initAudio().then(function() {
+    notes = generateNotes();
+    hitCount = 0;
+    startTime = performance.now();
+    pausedOffset = 0;
+    gameState = 'playing';
+    updateControls();
+    document.getElementById('score-display').textContent = '';
+    document.getElementById('score-overlay').style.display = 'none';
+    rafId = requestAnimationFrame(gameLoop);
+  }).catch(function(){});
+}
+
+function pressPause() {
+  if (gameState !== 'playing') return;
+  pausedAt = performance.now();
+  gameState = 'paused';
+  if (rafId) cancelAnimationFrame(rafId);
+  updateControls();
+}
+
+function pressStop() {
+  if (rafId) cancelAnimationFrame(rafId);
+  gameState = 'idle';
+  notes.forEach(function(n) {
+    var el = document.getElementById('note-' + n.id);
+    if (el) el.remove();
+  });
+  notes = [];
+  hitCount = 0;
+  document.getElementById('score-display').textContent = '';
+  document.getElementById('score-overlay').style.display = 'none';
+  updateControls();
+}
+
+function playAgain() {
+  pressStop();
+  pressPlay();
+}
+
+function updateControls() {
+  var s = gameState;
+  var playBtn = document.getElementById('btn-play');
+  var pauseBtn = document.getElementById('btn-pause');
+  var stopBtn = document.getElementById('btn-stop');
+  playBtn.style.display = s === 'playing' ? 'none' : '';
+  playBtn.innerHTML = s === 'paused' ? '&#9654; Resume' : '&#9654; Play';
+  pauseBtn.style.display = s === 'playing' ? '' : 'none';
+  stopBtn.style.display = s === 'idle' ? 'none' : '';
+}
+
+renderKeys(document.getElementById('keys-wrap'), function(i, note, keyEl) {
+  if (gameState !== 'playing') return;
+  var elapsed = performance.now() - startTime - pausedOffset;
+  var cfg = PIANO_CONFIG;
+  var activeInLane = notes.filter(function(n) { return n.state === 'active' && n.keyIndex === i; });
+  if (!activeInLane.length) { glowKey(keyEl, 'miss'); return; }
+  var closest = activeInLane.reduce(function(a, b) {
+    return Math.abs(elapsed - a.hitTime) < Math.abs(elapsed - b.hitTime) ? a : b;
+  });
+  if (Math.abs(elapsed - closest.hitTime) <= cfg.HIT_WINDOW_MS) {
+    closest.state = 'hit';
+    hitCount++;
+    playNote(closest.note, 1.0);
+    glowKey(keyEl, 'hit');
+    var el = document.getElementById('note-' + closest.id);
+    if (el) el.remove();
+    document.getElementById('score-display').textContent = hitCount + ' \u2B50';
+  } else {
+    glowKey(keyEl, 'miss');
+  }
+});
+</script>
+</body>
+</html>
