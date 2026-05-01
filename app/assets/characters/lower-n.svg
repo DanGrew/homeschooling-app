@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <path id="trace-path" d="M 55,110 L 55,215 C 55,90 90,80 120,92 C 145,102 145,125 145,145 L 145,215"
+    fill="none" stroke="#ccc" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
+    />
+</svg>

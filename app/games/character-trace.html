@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Trace</title>
+<link rel="stylesheet" href="style.css">
+<script src="menu.js" defer></script>
+<style>
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    padding: 8px 16px 0;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    background: #f0f0f0;
+    border: 2px solid #ddd;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 1em;
+    font-family: inherit;
+    cursor: pointer;
+    color: #555;
+  }
+  .filter-btn.active {
+    background: #3498DB;
+    border-color: #3498DB;
+    color: white;
+  }
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px 0;
+  }
+  .nav-btn {
+    background: #eee;
+    border: none;
+    border-radius: 14px;
+    font-size: 1.6em;
+    padding: 8px 22px;
+    cursor: pointer;
+    font-family: inherit;
+    color: #333;
+  }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
+  .char-label {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+  }
+  #success-banner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #2ECC71;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 100;
+    box-sizing: border-box;
+  }
+  #success-banner.visible { transform: translateY(0); }
+  #banner-btns { display: flex; gap: 12px; }
+  #banner-btns button {
+    background: white;
+    border: none;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #btn-banner-reset { color: #E74C3C; }
+  #btn-banner-next { color: #2ECC71; }
+  @keyframes dot-pulse {
+    0%, 100% { r: 14; opacity: 1; }
+    50% { r: 18; opacity: 0.7; }
+  }
+  .dot-pulse { animation: dot-pulse 0.7s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div class="nav-bar"></div>
+<div class="game-area">
+  <div class="filter-bar">
+    <button class="filter-btn" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="lower">a–z</button>
+    <button class="filter-btn" data-filter="upper">A–Z</button>
+    <button class="filter-btn" data-filter="digit">0–9</button>
+  </div>
+  <div class="nav-row">
+    <button class="nav-btn" id="btn-prev">&#8592;</button>
+    <span class="char-label" id="char-label"></span>
+    <button class="nav-btn" id="btn-next">&#8594;</button>
+  </div>
+  <div style="text-align:center;font-size:1em;color:#888;padding:4px 16px 4px;">Hold the red ball and trace!</div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+    <svg id="svg" viewBox="0 0 200 250" style="width:100%;height:100%;touch-action:none;" preserveAspectRatio="xMidYMid meet">
+      <path id="base" fill="none" stroke="#ddd" stroke-width="18" stroke-linecap="butt"
+        stroke-linejoin="round"/>
+      <circle id="ball" r="16" fill="#E74C3C" stroke="white" stroke-width="3"/>
+    </svg>
+  </div>
+</div>
+
+<div id="success-banner">
+  <span style="font-size:1.6em;">&#11088; Well done!</span>
+  <div id="banner-btns">
+    <button id="btn-banner-reset">&#8635; Again</button>
+    <button id="btn-banner-next">Next &#8594;</button>
+  </div>
+</div>
+
+<script src="trace-engine.js"></script>
+<script>
+const CHARS = [
+  ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower'})),
+  ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => ({char: c, file: 'upper-' + c.toLowerCase() + '.svg', group: 'upper'})),
+  ...'0123456789'.split('').map(c => ({char: c, file: c + '.svg', group: 'digit'}))
+];
+
+const FILTERS = {all: () => true, lower: e => e.group === 'lower', upper: e => e.group === 'upper', digit: e => e.group === 'digit'};
+
+let currentFilter = 'all';
+let filteredChars = CHARS.slice();
+let currentIdx = 0;
+let engine = null;
+let dotEl = null;
+
+function getParam(key) {
+  return new URLSearchParams(location.search).get(key);
+}
+
+function setParam(char, filter) {
+  const url = new URL(location.href);
+  url.searchParams.set('char', char);
+  url.searchParams.set('filter', filter);
+  history.replaceState(null, '', url);
+}
+
+function applyFilter(filter) {
+  currentFilter = filter;
+  filteredChars = CHARS.filter(FILTERS[filter]);
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.filter === filter);
+  });
+}
+
+function showBanner() {
+  document.getElementById('success-banner').classList.add('visible');
+}
+
+function hideBanner() {
+  document.getElementById('success-banner').classList.remove('visible');
+}
+
+function navTo(idx) {
+  currentIdx = ((idx % filteredChars.length) + filteredChars.length) % filteredChars.length;
+  const entry = filteredChars[currentIdx];
+  document.getElementById('char-label').textContent = entry.char;
+  document.getElementById('btn-prev').disabled = false;
+  document.getElementById('btn-next').disabled = false;
+  hideBanner();
+  setParam(entry.char, currentFilter);
+  loadChar(entry);
+}
+
+function loadChar(entry) {
+  fetch('../assets/characters/' + entry.file)
+    .then(r => r.text())
+    .then(svgText => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(svgText, 'image/svg+xml');
+      const d = doc.getElementById('trace-path').getAttribute('d');
+      const svg = document.getElementById('svg');
+
+      const decorations = svg.querySelectorAll('.char-decoration');
+      decorations.forEach(el => el.remove());
+
+      dotEl = null;
+      const circle = doc.querySelector('circle');
+      if (circle) {
+        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        ['cx','cy','r','fill'].forEach(a => c.setAttribute(a, circle.getAttribute(a)));
+        c.classList.add('char-decoration');
+        c.style.cursor = 'pointer';
+        c.addEventListener('pointerdown', onDotTapped);
+        svg.insertBefore(c, svg.querySelector('#base'));
+        dotEl = c;
+      }
+
+      document.getElementById('base').setAttribute('d', d);
+      document.querySelectorAll('.progress-path').forEach(el => el.remove());
+      engine = null;
+      initEngine();
+    });
+}
+
+function initEngine() {
+  engine = new TraceEngine(
+    document.getElementById('svg'),
+    document.getElementById('base'),
+    document.getElementById('ball'),
+    null,
+    {
+      progressStroke: '#FFD700',
+      progressWidth: 20,
+      progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
+      onComplete: function() {
+        if (dotEl) {
+          dotEl.setAttribute('fill', '#E74C3C');
+          dotEl.setAttribute('r', '14');
+          dotEl.classList.add('dot-pulse');
+        } else {
+          showBanner();
+        }
+      }
+    }
+  );
+  engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
+}
+
+function onDotTapped() {
+  if (!dotEl || !engine || !engine.done) return;
+  dotEl.classList.remove('dot-pulse');
+  dotEl.setAttribute('fill', '#FFD700');
+  dotEl.style.filter = 'drop-shadow(0 0 8px #FFD700)';
+  showBanner();
+}
+
+function init() {
+  const paramChar = getParam('char') || 'a';
+  const paramFilter = getParam('filter') || 'all';
+  applyFilter(paramFilter);
+  let idx = filteredChars.findIndex(e => e.char === paramChar);
+  if (idx === -1) idx = 0;
+  navTo(idx);
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => { applyFilter(btn.dataset.filter); navTo(0); });
+});
+
+document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
+document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
+document.getElementById('btn-banner-reset').addEventListener('click', () => { hideBanner(); if (engine) engine.restart(); });
+document.getElementById('btn-banner-next').addEventListener('click', () => navTo(currentIdx + 1));
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>

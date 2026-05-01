@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+  <circle cx="110" cy="60" r="10" fill="#ccc"/>
+  <path id="trace-path" d="M 110,85 L 110,195 C 110,220 90,228 70,222 C 52,216 45,200 45,185"
+    fill="none" stroke="#ccc" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
+    />
+</svg>
