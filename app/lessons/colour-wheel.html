@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Colour Wheel</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100vh;height:100dvh;display:flex;flex-direction:column;background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;user-select:none;-webkit-user-select:none;overflow:hidden;}
+</style>
+</head>
+<body>
+<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:#eee;border-bottom:2px solid #ddd;flex-shrink:0;">
+  <a href="index.html" style="font-size:1.5em;text-decoration:none;padding:6px 10px;background:#fff;border-radius:10px;color:#666;">&#127968;</a>
+  <span style="font-size:1.4em;font-weight:bold;color:#333;flex:1;">Colour Wheel</span>
+  <a href="../games/colour-mixing-1.html" style="text-decoration:none;padding:6px 12px;background:#fff;border-radius:10px;color:#666;font-size:0.9em;font-weight:bold;">&#127918; Level 1</a>
+  <a href="../games/colour-mixing-2.html" style="text-decoration:none;padding:6px 12px;background:#fff;border-radius:10px;color:#666;font-size:0.9em;font-weight:bold;">&#127918; Level 2</a>
+</div>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:12px;min-height:0;">
+  <svg id="wheel-svg" viewBox="0 0 300 300" style="width:100%;height:100%;max-width:320px;max-height:320px;"></svg>
+</div>
+<div style="flex-shrink:0;background:#fff;border-top:2px solid #eee;padding:14px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+      <div id="lsn-slot-a" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
+      <span style="font-size:0.8em;color:#bbb;font-weight:bold;">A</span>
+    </div>
+    <span style="font-size:1.5em;color:#ccc;font-weight:bold;">+</span>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+      <div id="lsn-slot-b" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
+      <span style="font-size:0.8em;color:#bbb;font-weight:bold;">B</span>
+    </div>
+    <span style="font-size:1.5em;color:#ccc;font-weight:bold;">=</span>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+      <div id="lsn-result" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;"></div>
+      <span id="lsn-result-label" style="font-size:0.8em;color:#bbb;">Result</span>
+    </div>
+  </div>
+  <div id="lsn-palette" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+</div>
+
+<script>
+var LSN_COLOURS={
+  red:            {hex:'#E74C3C',label:'Red'},
+  yellow:         {hex:'#F1C40F',label:'Yellow'},
+  blue:           {hex:'#3498DB',label:'Blue'},
+  orange:         {hex:'#E67E22',label:'Orange'},
+  green:          {hex:'#2ECC71',label:'Green'},
+  purple:         {hex:'#9B59B6',label:'Purple'},
+  'red-orange':   {hex:'#E8562A',label:'Red-Orange'},
+  'yellow-orange':{hex:'#F4A228',label:'Yellow-Orange'},
+  'yellow-green': {hex:'#95C23C',label:'Yellow-Green'},
+  'blue-green':   {hex:'#1AAD8E',label:'Blue-Green'},
+  'blue-purple':  {hex:'#6A64B8',label:'Blue-Purple'},
+  'red-purple':   {hex:'#C03890',label:'Red-Purple'},
+  'red-green-mix':    {hex:'#6B5030',label:'Brown'},
+  'yellow-purple-mix':{hex:'#7A6A30',label:'Brown'},
+  'blue-orange-mix':  {hex:'#5A5A50',label:'Grey'},
+  'orange-green-mix': {hex:'#7A7A25',label:'Olive'},
+  'orange-purple-mix':{hex:'#7A3A20',label:'Brown'},
+  'green-purple-mix': {hex:'#3A5A50',label:'Dark Green'}
+};
+
+var LSN_MIXES={
+  'red+yellow':'orange',              'yellow+red':'orange',
+  'red+blue':'purple',                'blue+red':'purple',
+  'blue+yellow':'green',              'yellow+blue':'green',
+  'red+orange':'red-orange',          'orange+red':'red-orange',
+  'yellow+orange':'yellow-orange',    'orange+yellow':'yellow-orange',
+  'yellow+green':'yellow-green',      'green+yellow':'yellow-green',
+  'blue+green':'blue-green',          'green+blue':'blue-green',
+  'blue+purple':'blue-purple',        'purple+blue':'blue-purple',
+  'red+purple':'red-purple',          'purple+red':'red-purple',
+  'red+green':'red-green-mix',        'green+red':'red-green-mix',
+  'yellow+purple':'yellow-purple-mix','purple+yellow':'yellow-purple-mix',
+  'blue+orange':'blue-orange-mix',    'orange+blue':'blue-orange-mix',
+  'orange+green':'orange-green-mix',  'green+orange':'orange-green-mix',
+  'orange+purple':'orange-purple-mix','purple+orange':'orange-purple-mix',
+  'green+purple':'green-purple-mix',  'purple+green':'green-purple-mix'
+};
+
+var PALETTE=['red','yellow','blue','orange','green','purple'];
+
+// Colour wheel layout (3 concentric rings)
+// Primary: inner disc, segments centered at 0°(red), 120°(yellow), 240°(blue)
+// Secondary: middle ring, centered at 60°(orange), 180°(green), 300°(purple)
+// Tertiary: outer ring, centered at 30°,90°,150°,210°,270°,330°
+var PRIMARIES   =[{c:'red',start:-60},{c:'yellow',start:60},{c:'blue',start:180}];
+var SECONDARIES =[{c:'orange',start:0},{c:'green',start:120},{c:'purple',start:240}];
+var TERTIARIES  =[
+  {c:'red-orange',start:0},{c:'yellow-orange',start:60},{c:'yellow-green',start:120},
+  {c:'blue-green',start:180},{c:'blue-purple',start:240},{c:'red-purple',start:300}
+];
+
+var slotA=null,slotB=null,sel=null;
+
+function hex(id){return LSN_COLOURS[id].hex;}
+function el(id){return document.getElementById(id);}
+
+// wheel_deg=0 is top, clockwise → standard SVG radians
+function w2r(deg){return(deg-90)*Math.PI/180;}
+
+function pieSeg(cx,cy,r,a1deg,a2deg,gap){
+  var a1=w2r(a1deg+gap),a2=w2r(a2deg-gap);
+  var x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+  var x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+  return 'M'+cx+' '+cy+' L'+x1+' '+y1+' A'+r+' '+r+' 0 0 1 '+x2+' '+y2+'Z';
+}
+
+function annulusSeg(cx,cy,ro,ri,a1deg,a2deg,gap){
+  var a1=w2r(a1deg+gap),a2=w2r(a2deg-gap);
+  var x1o=cx+ro*Math.cos(a1),y1o=cy+ro*Math.sin(a1);
+  var x2o=cx+ro*Math.cos(a2),y2o=cy+ro*Math.sin(a2);
+  var x1i=cx+ri*Math.cos(a1),y1i=cy+ri*Math.sin(a1);
+  var x2i=cx+ri*Math.cos(a2),y2i=cy+ri*Math.sin(a2);
+  return 'M'+x1o+' '+y1o+' A'+ro+' '+ro+' 0 0 1 '+x2o+' '+y2o+
+         ' L'+x2i+' '+y2i+' A'+ri+' '+ri+' 0 0 0 '+x1i+' '+y1i+'Z';
+}
+
+(function buildWheel(){
+  var svg=el('wheel-svg');
+  var cx=150,cy=150;
+  var rPi=55, rSiIn=60, rSiOut=100, rToIn=105, rToOut=140;
+  var gap=1.5;
+
+  function addPath(d,fill){
+    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d',d);p.setAttribute('fill',fill);
+    svg.appendChild(p);
+  }
+
+  PRIMARIES.forEach(function(s){
+    addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c));
+  });
+  SECONDARIES.forEach(function(s){
+    addPath(annulusSeg(cx,cy,rSiOut,rSiIn,s.start,s.start+120,gap),hex(s.c));
+  });
+  TERTIARIES.forEach(function(s){
+    addPath(annulusSeg(cx,cy,rToOut,rToIn,s.start,s.start+60,gap),hex(s.c));
+  });
+
+  var cc=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  cc.setAttribute('cx','150');cc.setAttribute('cy','150');cc.setAttribute('r','16');
+  cc.setAttribute('fill','#fff8f0');
+  svg.appendChild(cc);
+})();
+
+(function buildPalette(){
+  var pal=el('lsn-palette');
+  PALETTE.forEach(function(c){
+    var sw=document.createElement('div');
+    sw.id='lsn-sw-'+c;
+    sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c)+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:transform 0.1s;outline-offset:3px;';
+    sw.addEventListener('click',function(){handleSwatch(c);});
+    pal.appendChild(sw);
+  });
+})();
+
+el('lsn-slot-a').addEventListener('click',function(){handleSlot('a');});
+el('lsn-slot-b').addEventListener('click',function(){handleSlot('b');});
+
+function lsnMix(a,b){
+  if(a===b) return a;
+  return LSN_MIXES[a+'+'+b];
+}
+
+function handleSwatch(c){
+  sel=c;
+  renderPalette();
+}
+
+function handleSlot(slot){
+  if(!sel) return;
+  if(slot==='a') slotA=sel;
+  else slotB=sel;
+  sel=null;
+  el('lsn-slot-a').style.background=slotA?hex(slotA):'#f0f0f0';
+  el('lsn-slot-b').style.background=slotB?hex(slotB):'#f0f0f0';
+  renderPalette();
+  updateResult();
+}
+
+function updateResult(){
+  var r=el('lsn-result');
+  var lbl=el('lsn-result-label');
+  if(slotA&&slotB){
+    var result=lsnMix(slotA,slotB);
+    var col=result?LSN_COLOURS[result]:null;
+    r.style.background=col?col.hex:'#f0f0f0';
+    lbl.textContent=col?col.label:'Result';
+  } else {
+    r.style.background='#f0f0f0';
+    lbl.textContent='Result';
+  }
+}
+
+function renderPalette(){
+  PALETTE.forEach(function(c){
+    var sw=el('lsn-sw-'+c);
+    sw.style.outline=sel===c?'4px solid #333':'none';
+    sw.style.transform=sel===c?'scale(1.12)':'scale(1)';
+  });
+}
+</script>
+</body>
+</html>
