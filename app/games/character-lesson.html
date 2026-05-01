@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Trace</title>
+<title>Learn</title>
 <link rel="stylesheet" href="style.css">
 <script src="menu.js" defer></script>
 <style>
@@ -51,43 +51,29 @@
     font-weight: bold;
     color: #333;
   }
-  #success-banner {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: #2ECC71;
-    color: white;
+  .lesson-btns {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    z-index: 100;
-    box-sizing: border-box;
+    gap: 12px;
+    justify-content: center;
+    padding: 10px 16px 0;
   }
-  #success-banner.visible { transform: translateY(0); }
-  #banner-btns { display: flex; gap: 12px; }
-  #banner-btns button {
-    background: white;
+  .lesson-btn {
     border: none;
+    border-radius: 16px;
+    padding: 12px 28px;
     font-size: 1.1em;
-    padding: 10px 20px;
-    border-radius: 12px;
     font-family: inherit;
-    cursor: pointer;
     font-weight: bold;
+    cursor: pointer;
   }
-  #btn-banner-reset { color: #E74C3C; }
-  #btn-banner-next { color: #2ECC71; }
-  @keyframes dot-pulse {
-    0%, 100% { r: 14; opacity: 1; }
-    50% { r: 18; opacity: 0.7; }
-  }
-  .dot-pulse { animation: dot-pulse 0.7s ease-in-out infinite; }
+  .lesson-btn:disabled { opacity: 0.35; cursor: default; }
+  #btn-trace { background: #E74C3C; color: white; }
+  #btn-speak { background: #3498DB; color: white; }
+  #btn-tryit { background: #2ECC71; color: white; text-decoration: none; display: flex; align-items: center; }
 </style>
 </head>
 <body>
-<div class="nav-bar"><a id="lesson-link" class="nav-btn">&#128218;</a></div>
+<div class="nav-bar"><a href="../lessons/index.html" class="nav-btn">&#127968;</a></div>
 <div class="game-area">
   <div class="filter-bar">
     <button class="filter-btn" data-filter="all">All</button>
@@ -100,7 +86,11 @@
     <span class="char-label" id="char-label"></span>
     <button class="nav-btn" id="btn-next">&#8594;</button>
   </div>
-  <div style="text-align:center;font-size:1em;color:#888;padding:4px 16px 4px;">Hold the red ball and trace!</div>
+  <div class="lesson-btns">
+    <button class="lesson-btn" id="btn-trace">&#9654; Trace</button>
+    <button class="lesson-btn" id="btn-speak">&#128264; Speak</button>
+    <a class="lesson-btn" id="btn-tryit">Try It &#8594;</a>
+  </div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
     <svg id="svg" viewBox="0 0 200 250" style="width:100%;height:100%;touch-action:none;" preserveAspectRatio="xMidYMid meet">
       <path id="base" fill="none" stroke="#ddd" stroke-width="18" stroke-linecap="butt"
@@ -110,20 +100,12 @@
   </div>
 </div>
 
-<div id="success-banner">
-  <span style="font-size:1.6em;">&#11088; Well done!</span>
-  <div id="banner-btns">
-    <button id="btn-banner-reset">&#8635; Again</button>
-    <button id="btn-banner-next">Next &#8594;</button>
-  </div>
-</div>
-
 <script src="trace-engine.js"></script>
 <script>
 const CHARS = [
-  ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower'})),
-  ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => ({char: c, file: 'upper-' + c.toLowerCase() + '.svg', group: 'upper'})),
-  ...'0123456789'.split('').map(c => ({char: c, file: c + '.svg', group: 'digit'}))
+  ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
+  ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => ({char: c, file: 'upper-' + c.toLowerCase() + '.svg', group: 'upper', speak: c})),
+  ...'0123456789'.split('').map(c => ({char: c, file: c + '.svg', group: 'digit', speak: c}))
 ];
 
 const FILTERS = {all: () => true, lower: e => e.group === 'lower', upper: e => e.group === 'upper', digit: e => e.group === 'digit'};
@@ -132,7 +114,7 @@ let currentFilter = 'all';
 let filteredChars = CHARS.slice();
 let currentIdx = 0;
 let engine = null;
-let dotEl = null;
+let currentEntry = null;
 
 function getParam(key) {
   return new URLSearchParams(location.search).get(key);
@@ -153,28 +135,24 @@ function applyFilter(filter) {
   });
 }
 
-function showBanner() {
-  document.getElementById('success-banner').classList.add('visible');
-}
-
-function hideBanner() {
-  document.getElementById('success-banner').classList.remove('visible');
-}
-
 function navTo(idx) {
   currentIdx = ((idx % filteredChars.length) + filteredChars.length) % filteredChars.length;
-  const entry = filteredChars[currentIdx];
-  document.getElementById('char-label').textContent = entry.char;
-  document.getElementById('btn-prev').disabled = false;
-  document.getElementById('btn-next').disabled = false;
-  hideBanner();
-  setParam(entry.char, currentFilter);
-  const ll = document.getElementById('lesson-link');
-  ll.href = 'character-lesson.html?char=' + encodeURIComponent(entry.char) + '&filter=' + currentFilter;
-  loadChar(entry);
+  currentEntry = filteredChars[currentIdx];
+  document.getElementById('char-label').textContent = currentEntry.char;
+  setParam(currentEntry.char, currentFilter);
+  updateTryItLink();
+  loadChar(currentEntry);
+}
+
+function updateTryItLink() {
+  const url = new URL('character-trace.html', location.href);
+  url.searchParams.set('char', currentEntry.char);
+  url.searchParams.set('filter', currentFilter);
+  document.getElementById('btn-tryit').href = url.toString();
 }
 
 function loadChar(entry) {
+  document.getElementById('btn-trace').disabled = false;
   fetch('../assets/characters/' + entry.file)
     .then(r => r.text())
     .then(svgText => {
@@ -183,45 +161,41 @@ function loadChar(entry) {
       const d = doc.getElementById('trace-path').getAttribute('d');
       const svg = document.getElementById('svg');
 
-      const decorations = svg.querySelectorAll('.char-decoration');
-      decorations.forEach(el => el.remove());
+      svg.querySelectorAll('.char-decoration').forEach(el => el.remove());
 
-      dotEl = null;
       const circle = doc.querySelector('circle');
       if (circle) {
         const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         ['cx','cy','r','fill'].forEach(a => c.setAttribute(a, circle.getAttribute(a)));
+        c.dataset.origFill = circle.getAttribute('fill');
         c.classList.add('char-decoration');
-        c.style.cursor = 'pointer';
-        c.addEventListener('pointerdown', onDotTapped);
         svg.insertBefore(c, svg.querySelector('#base'));
-        dotEl = c;
       }
 
       document.getElementById('base').setAttribute('d', d);
       document.querySelectorAll('.progress-path').forEach(el => el.remove());
-      engine = null;
+      engine = window.engine = null;
       initEngine();
     });
 }
 
 function initEngine() {
-  engine = new TraceEngine(
+  engine = window.engine = new TraceEngine(
     document.getElementById('svg'),
     document.getElementById('base'),
     document.getElementById('ball'),
     null,
     {
+      interactive: false,
       progressStroke: '#FFD700',
       progressWidth: 20,
       progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
       onComplete: function() {
-        if (dotEl) {
-          dotEl.setAttribute('fill', '#E74C3C');
-          dotEl.setAttribute('r', '14');
-          dotEl.classList.add('dot-pulse');
-        } else {
-          showBanner();
+        document.getElementById('btn-trace').disabled = false;
+        const dot = document.querySelector('.char-decoration');
+        if (dot) {
+          dot.setAttribute('fill', '#FFD700');
+          dot.style.filter = 'drop-shadow(0 0 8px #FFD700)';
         }
       }
     }
@@ -229,13 +203,45 @@ function initEngine() {
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
 }
 
-function onDotTapped() {
-  if (!dotEl || !engine || !engine.done) return;
-  dotEl.classList.remove('dot-pulse');
-  dotEl.setAttribute('fill', '#FFD700');
-  dotEl.style.filter = 'drop-shadow(0 0 8px #FFD700)';
-  showBanner();
+document.getElementById('btn-trace').addEventListener('click', () => {
+  if (!engine) return;
+  engine.stopAnimation();
+  engine.done = false;
+  document.getElementById('btn-trace').disabled = true;
+  const dot = document.querySelector('.char-decoration');
+  if (dot) { dot.setAttribute('fill', dot.dataset.origFill || '#ccc'); dot.style.filter = ''; }
+  engine.startAnimation(2500);
+});
+
+function bestVoice() {
+  const voices = speechSynthesis.getVoices();
+  return voices.find(v => v.lang === 'en-GB' && v.name.match(/female|woman|girl|karen|serena|moira|kate/i))
+    || voices.find(v => v.lang === 'en-GB')
+    || voices.find(v => v.lang.startsWith('en'))
+    || null;
 }
+
+function speak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 1.0;
+  u.pitch = 1.1;
+  const v = bestVoice();
+  if (v) u.voice = v;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+document.getElementById('btn-speak').addEventListener('click', () => {
+  if (!currentEntry) return;
+  speak(currentEntry.speak);
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => { applyFilter(btn.dataset.filter); navTo(0); });
+});
+
+document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
+document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
 
 function init() {
   const paramChar = getParam('char') || 'a';
@@ -245,15 +251,6 @@ function init() {
   if (idx === -1) idx = 0;
   navTo(idx);
 }
-
-document.querySelectorAll('.filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => { applyFilter(btn.dataset.filter); navTo(0); });
-});
-
-document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
-document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
-document.getElementById('btn-banner-reset').addEventListener('click', () => { hideBanner(); if (engine) engine.restart(); });
-document.getElementById('btn-banner-next').addEventListener('click', () => navTo(currentIdx + 1));
 
 window.addEventListener('load', init);
 </script>
