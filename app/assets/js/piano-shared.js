@@ -64,8 +64,16 @@ function renderKeys(container, onKeyPress) {
 }
 
 function glowKey(keyEl, type) {
-  var c = type === 'miss' ? '#FF5555' : '#FFD700';
-  keyEl.style.filter = 'brightness(1.5) drop-shadow(0 0 12px ' + c + ')';
+  var bg = type === 'miss' ? '#FF4444' : '#FFD700';
+  var orig = keyEl._origBg || keyEl.style.background;
+  if (!keyEl._origBg) keyEl._origBg = orig;
+  keyEl.style.background = bg;
+  keyEl.style.filter = 'brightness(1.3) drop-shadow(0 0 16px ' + bg + ')';
+  keyEl.style.transform = 'scaleY(0.93)';
   clearTimeout(keyEl._glowTimer);
-  keyEl._glowTimer = setTimeout(function() { keyEl.style.filter = ''; }, 350);
+  keyEl._glowTimer = setTimeout(function() {
+    keyEl.style.background = keyEl._origBg;
+    keyEl.style.filter = '';
+    keyEl.style.transform = '';
+  }, 300);
 }
