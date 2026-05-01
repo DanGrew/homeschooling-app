@@ -17,7 +17,12 @@ var Dictionary=(function(){
           phonetic:entry.meta.phonetic,
           tags:entry.meta.tags,
           viewBox:entry.viewBox,
-          svg:svgText
+          svg:svgText,
+          colouring:entry.colouring||null,
+          puzzle:entry.puzzle||null,
+          connectDots:entry.connectDots||null,
+          freeDots:entry.freeDots||null,
+          tracing:entry.tracing||null
         };
         cache[id]=item;
         return item;
