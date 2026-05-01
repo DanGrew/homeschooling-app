@@ -18,31 +18,13 @@
 </div>
 <script src="colouring/colouring-common.js"></script>
 <script src="filter-bar.js"></script>
+<script src="../dictionary/dictionary.js"></script>
 <script>var pictures=[];</script>
 <script src="colouring/pictures/sun.js"></script>
 <script src="colouring/pictures/cat.js"></script>
 <script src="colouring/pictures/fish.js"></script>
 <script src="colouring/pictures/house.js"></script>
 <script src="colouring/pictures/tree.js"></script>
-<script src="colouring/generated/bird-colouring-level-1.js"></script>
-<script src="colouring/generated/bull-colouring-level-1.js"></script>
-<script src="colouring/generated/camel-colouring-level-1.js"></script>
-<script src="colouring/generated/cat-colouring-level-1.js"></script>
-<script src="colouring/generated/cow-colouring-level-1.js"></script>
-<script src="colouring/generated/dog-colouring-level-1.js"></script>
-<script src="colouring/generated/duck-colouring-level-1.js"></script>
-<script src="colouring/generated/elephant-colouring-level-1.js"></script>
-<script src="colouring/generated/fish-colouring-level-1.js"></script>
-<script src="colouring/generated/giraffe-colouring-level-1.js"></script>
-<script src="colouring/generated/goose-colouring-level-1.js"></script>
-<script src="colouring/generated/horse-colouring-level-1.js"></script>
-<script src="colouring/generated/lion-colouring-level-1.js"></script>
-<script src="colouring/generated/monkey-colouring-level-1.js"></script>
-<script src="colouring/generated/mouse-colouring-level-1.js"></script>
-<script src="colouring/generated/rabbit-colouring-level-1.js"></script>
-<script src="colouring/generated/tiger-colouring-level-1.js"></script>
-<script src="colouring/generated/turtle-colouring-level-1.js"></script>
-<script src="colouring/generated/zebra-colouring-level-1.js"></script>
 <script>
 var filtIdx=0,filled,total,filtered=[];
 
@@ -76,7 +58,16 @@ function render(){
 function nextPicture(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevPicture(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-buildFilterBar(pictures,function(f){filtered=f;filtIdx=0;render();});
+Dictionary.init('../dictionary/');
+Dictionary.loadAll().then(function(items){
+  items.forEach(function(item){
+    if(!item.colouring)return;
+    pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.colouring.shapes});
+  });
+  buildFilterBar(pictures,function(f){filtered=f;filtIdx=0;render();});
+}).catch(function(){
+  buildFilterBar(pictures,function(f){filtered=f;filtIdx=0;render();});
+});
 </script>
 </body>
 </html>
