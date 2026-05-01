@@ -1,0 +1,10 @@
+{
+  "id": "bull",
+  "meta": {
+    "name": "Bull",
+    "phonetic": "bull",
+    "tags": ["animals"]
+  },
+  "src": "assets/bull.svg",
+  "viewBox": "0 0 150 150"
+}

@@ -10,36 +10,36 @@
 <body>
 <div class="nav-bar"></div>
 <div class="game-area">
-  <div class="game-title">What is this?</div>
-  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(16px,4vmin,32px);">
-    <div id="shape"></div>
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2vmin,16px);overflow:hidden;padding:8px;">
+    <div id="picture" style="width:clamp(200px,55vmin,420px);height:clamp(200px,55vmin,420px);display:flex;align-items:center;justify-content:center;"></div>
     <div id="label" style="font-size:clamp(2em,8vmin,4em);font-weight:bold;color:#333;letter-spacing:0.05em;"></div>
+    <div id="phonetic" style="font-size:clamp(1em,4vmin,2em);color:#888;letter-spacing:0.08em;"></div>
   </div>
-  <div style="display:flex;justify-content:center;gap:clamp(16px,4vw,32px);padding:20px 20px 44px;">
-    <button onclick="speak()" style="font-size:clamp(1.4em,5vmin,2.2em);padding:clamp(14px,3vmin,22px) clamp(28px,6vw,48px);border:none;border-radius:20px;background:#3498DB;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#128266; Say it!</button>
-    <button onclick="next()" style="font-size:clamp(1.4em,5vmin,2.2em);padding:clamp(14px,3vmin,22px) clamp(28px,6vw,48px);border:none;border-radius:20px;background:#2ECC71;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">Next &#8594;</button>
+  <div style="display:flex;justify-content:center;gap:clamp(12px,3vw,24px);padding:20px 20px 44px;">
+    <button onclick="prev()" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(8px,1.5vmin,14px) clamp(16px,3vw,28px);border:none;border-radius:16px;background:#95A5A6;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#8592;</button>
+    <button onclick="speak()" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(8px,1.5vmin,14px) clamp(16px,3vw,28px);border:none;border-radius:16px;background:#3498DB;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#128266; Say it!</button>
+    <button onclick="next()" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(8px,1.5vmin,14px) clamp(16px,3vw,28px);border:none;border-radius:16px;background:#2ECC71;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#8594;</button>
   </div>
 </div>
+<script src="../dictionary/dictionary.js"></script>
+<script src="filter-bar.js"></script>
 <script>
-var words=[
-  {label:'circle',shape:'circle',colour:'#E74C3C'},
-  {label:'square',shape:'square',colour:'#3498DB'},
-  {label:'triangle',shape:'triangle',colour:'#9B59B6'}
-];
-var idx=0;
-
-function svg(shape,colour){
-  var s='<svg viewBox="0 0 190 190" style="width:clamp(120px,32vmin,260px);height:clamp(120px,32vmin,260px)">';
-  if(shape==='circle')s+='<circle cx="95" cy="95" r="86" fill="'+colour+'"/>';
-  else if(shape==='square')s+='<rect x="9" y="9" width="172" height="172" rx="20" fill="'+colour+'"/>';
-  else s+='<polygon points="95,9 181,178 9,178" fill="'+colour+'"/>';
-  return s+'</svg>';
-}
+Dictionary.init('../dictionary/');
+var filtered=[],idx=0;
 
 function show(){
-  var w=words[idx];
-  document.getElementById('shape').innerHTML=svg(w.shape,w.colour);
-  document.getElementById('label').textContent=w.label;
+  var w=filtered[idx];
+  if(!w)return;
+  var pic=document.getElementById('picture');
+  pic.innerHTML=w.svg;
+  var svg=pic.querySelector('svg');
+  if(svg){
+    svg.style.cssText='width:clamp(200px,55vmin,420px);height:clamp(200px,55vmin,420px);';
+    if(w.viewBox)svg.setAttribute('viewBox',w.viewBox);
+  }
+  document.getElementById('label').textContent=w.name;
+  document.getElementById('phonetic').textContent=w.phonetic||'';
 }
 
 function bestVoice(){
@@ -51,21 +51,21 @@ function bestVoice(){
 }
 
 function speak(){
-  var u=new SpeechSynthesisUtterance(words[idx].label);
-  u.rate=1.0;
-  u.pitch=1.1;
-  var v=bestVoice();
-  if(v)u.voice=v;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+  if(!filtered[idx])return;
+  var u=new SpeechSynthesisUtterance(filtered[idx].name);
+  u.rate=1.0;u.pitch=1.1;
+  var v=bestVoice();if(v)u.voice=v;
+  speechSynthesis.cancel();speechSynthesis.speak(u);
 }
 
-function next(){
-  idx=(idx+1)%words.length;
-  show();
-}
+function prev(){idx=(idx-1+filtered.length)%filtered.length;show();}
+function next(){idx=(idx+1)%filtered.length;show();}
 
-show();
+Dictionary.loadAll().then(function(items){
+  buildFilterBar(items,function(f){filtered=f;idx=0;show();});
+}).catch(function(e){
+  document.getElementById('picture').textContent='Failed to load dictionary: '+e.message;
+});
 </script>
 </body>
 </html>
