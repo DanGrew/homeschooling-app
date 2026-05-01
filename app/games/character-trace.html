@@ -206,7 +206,7 @@ function loadChar(entry) {
 }
 
 function initEngine() {
-  engine = new TraceEngine(
+  engine = window.engine = new TraceEngine(
     document.getElementById('svg'),
     document.getElementById('base'),
     document.getElementById('ball'),
