@@ -1,0 +1,10 @@
+{
+  "id": "turtle",
+  "meta": {
+    "name": "Turtle",
+    "phonetic": "tur-tle",
+    "tags": ["animals"]
+  },
+  "src": "assets/turtle.svg",
+  "viewBox": "0 0 150 150"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "goose",
+  "meta": {
+    "name": "Goose",
+    "phonetic": "goose",
+    "tags": ["animals"]
+  },
+  "src": "assets/goose.svg",
+  "viewBox": "0 0 150 150"
+}
