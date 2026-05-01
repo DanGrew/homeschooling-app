@@ -30,7 +30,7 @@ class TraceEngine {
     });
 
     this._reset();
-    this._bind();
+    if (o.interactive !== false) this._bind();
   }
 
   _parseStrokes() {
@@ -135,6 +135,53 @@ class TraceEngine {
       this.done = true;
       if (this.onComplete) this.onComplete();
     }
+  }
+
+  startAnimation(durationMs) {
+    if (this._animating) return;
+    this.done = false;
+    this._reset();
+    this._animating = true;
+    const totalLen = this.strokes.reduce((s, str) => s + str.totalLen, 0);
+    let startTime = null;
+
+    const tick = (ts) => {
+      if (!startTime) startTime = ts;
+      const t = Math.min((ts - startTime) / durationMs, 1);
+      let rem = t * totalLen;
+      let si = 0;
+      for (let i = 0; i < this.strokes.length; i++) {
+        if (rem <= this.strokes[i].totalLen) { si = i; break; }
+        rem -= this.strokes[i].totalLen;
+        si = i + 1;
+      }
+      si = Math.min(si, this.strokes.length - 1);
+      rem = Math.min(rem, this.strokes[si].totalLen);
+
+      for (let i = 0; i < si; i++) {
+        this.progressPaths[i].setAttribute('stroke-dashoffset', 0);
+      }
+      this.currentStrokeIdx = si;
+      this.currentDist = rem;
+      const pt = this.strokes[si].mp.getPointAtLength(rem);
+      this.ball.setAttribute('cx', pt.x);
+      this.ball.setAttribute('cy', pt.y);
+      this.progressPaths[si].setAttribute('stroke-dashoffset', this.strokes[si].totalLen - rem);
+
+      if (t < 1) {
+        this._rafId = requestAnimationFrame(tick);
+      } else {
+        this._animating = false;
+        this.done = true;
+        if (this.onComplete) this.onComplete();
+      }
+    };
+    this._rafId = requestAnimationFrame(tick);
+  }
+
+  stopAnimation() {
+    if (this._rafId) cancelAnimationFrame(this._rafId);
+    this._animating = false;
   }
 
   _bind() {
