@@ -123,8 +123,8 @@ var CM_MIXES={
     var ta=document.createElement('div');
     ta.style.cssText='display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;';
     ta.innerHTML='<div style="font-size:1em;color:#999;">Mix to make:</div>'+
-      '<div style="width:90px;height:90px;border-radius:50%;background:'+hex(target)+';box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>'+
-      '<div style="font-size:1.1em;font-weight:bold;color:#333;">'+CM_COLOURS[target].label+'</div>';
+      '<div id="cm-target-swatch" style="width:90px;height:90px;border-radius:50%;background:'+hex(target)+';box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>'+
+      '<div id="cm-target-label" style="font-size:1.1em;font-weight:bold;color:#333;">'+CM_COLOURS[target].label+'</div>';
     root.appendChild(ta);
 
     var mr=document.createElement('div');
