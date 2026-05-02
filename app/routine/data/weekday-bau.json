@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "name": "Weekday",
+    "rollingWindow": true,
+    "windowRadius": 3,
+    "defaultStartHour": 7,
+    "defaultEndHour": 20,
+    "slotMinutes": 15
+  },
+  "activities": {
+    "wake": { "label": "Wake Up", "emoji": "☀️", "color": "#FDE68A", "notes": "Get up, open curtains, quick stretch.", "planId": null },
+    "breakfast": { "label": "Breakfast", "emoji": "🍳", "color": "#FCD34D", "notes": "Breakfast at the table together.", "planId": null },
+    "dressed": { "label": "Get Dressed", "emoji": "👕", "color": "#A7F3D0", "notes": "Independent dressing practice.", "planId": null },
+    "learning": { "label": "Learning Time", "emoji": "📚", "color": "#93C5FD", "notes": "Focused learning activities.", "planId": null },
+    "snack": { "label": "Snack", "emoji": "🍎", "color": "#6EE7B7", "notes": "Fruit or light snack.", "planId": null },
+    "outdoor": { "label": "Outdoor Play", "emoji": "🌳", "color": "#86EFAC", "notes": "Garden or park. Fresh air and movement.", "planId": null },
+    "lunch": { "label": "Lunch", "emoji": "🥪", "color": "#FCA5A5", "notes": "Lunch together.", "planId": null },
+    "rest": { "label": "Quiet Time", "emoji": "🛋️", "color": "#E9D5FF", "notes": "Books, puzzles, or light rest.", "planId": null },
+    "creative": { "label": "Creative Play", "emoji": "🎨", "color": "#FBCFE8", "notes": "Drawing, crafts, imaginative play.", "planId": null },
+    "dinner": { "label": "Dinner", "emoji": "🍽️", "color": "#FED7AA", "notes": "Dinner together.", "planId": null },
+    "bathtime": { "label": "Bath Time", "emoji": "🛁", "color": "#BAE6FD", "notes": "Bath and wind down.", "planId": null },
+    "stories": { "label": "Stories", "emoji": "📖", "color": "#DDD6FE", "notes": "2–3 bedtime stories.", "planId": null },
+    "bed": { "label": "Bedtime", "emoji": "🌙", "color": "#C4B5FD", "notes": "Lights out.", "planId": null }
+  },
+  "days": [
+    {
+      "key": "monday",
+      "label": "Monday",
+      "schedule": [
+        { "start": "07:00", "end": "07:30", "activity": "wake" },
+        { "start": "07:30", "end": "08:15", "activity": "breakfast" },
+        { "start": "08:15", "end": "08:45", "activity": "dressed" },
+        { "start": "09:00", "end": "10:30", "activity": "learning" },
+        { "start": "10:30", "end": "10:45", "activity": "snack" },
+        { "start": "10:45", "end": "12:00", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "12:45", "end": "13:30", "activity": "rest" },
+        { "start": "13:30", "end": "15:00", "activity": "learning" },
+        { "start": "15:00", "end": "16:30", "activity": "creative" },
+        { "start": "17:00", "end": "17:45", "activity": "dinner" },
+        { "start": "18:00", "end": "18:30", "activity": "bathtime" },
+        { "start": "18:30", "end": "19:15", "activity": "stories" },
+        { "start": "19:15", "end": "19:30", "activity": "bed" }
+      ]
+    },
+    {
+      "key": "tuesday",
+      "label": "Tuesday",
+      "schedule": [
+        { "start": "07:00", "end": "07:30", "activity": "wake" },
+        { "start": "07:30", "end": "08:15", "activity": "breakfast" },
+        { "start": "08:15", "end": "08:45", "activity": "dressed" },
+        { "start": "09:00", "end": "10:30", "activity": "learning" },
+        { "start": "10:30", "end": "10:45", "activity": "snack" },
+        { "start": "10:45", "end": "12:00", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "12:45", "end": "13:30", "activity": "rest" },
+        { "start": "13:30", "end": "15:00", "activity": "creative" },
+        { "start": "15:00", "end": "16:30", "activity": "outdoor" },
+        { "start": "17:00", "end": "17:45", "activity": "dinner" },
+        { "start": "18:00", "end": "18:30", "activity": "bathtime" },
+        { "start": "18:30", "end": "19:15", "activity": "stories" },
+        { "start": "19:15", "end": "19:30", "activity": "bed" }
+      ]
+    },
+    {
+      "key": "wednesday",
+      "label": "Wednesday",
+      "schedule": [
+        { "start": "07:00", "end": "07:30", "activity": "wake" },
+        { "start": "07:30", "end": "08:15", "activity": "breakfast" },
+        { "start": "08:15", "end": "08:45", "activity": "dressed" },
+        { "start": "09:00", "end": "10:30", "activity": "learning" },
+        { "start": "10:30", "end": "10:45", "activity": "snack" },
+        { "start": "10:45", "end": "12:00", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "12:45", "end": "13:30", "activity": "rest" },
+        { "start": "13:30", "end": "15:00", "activity": "learning" },
+        { "start": "15:00", "end": "16:30", "activity": "creative" },
+        { "start": "17:00", "end": "17:45", "activity": "dinner" },
+        { "start": "18:00", "end": "18:30", "activity": "bathtime" },
+        { "start": "18:30", "end": "19:15", "activity": "stories" },
+        { "start": "19:15", "end": "19:30", "activity": "bed" }
+      ]
+    },
+    {
+      "key": "thursday",
+      "label": "Thursday",
+      "schedule": [
+        { "start": "07:00", "end": "07:30", "activity": "wake" },
+        { "start": "07:30", "end": "08:15", "activity": "breakfast" },
+        { "start": "08:15", "end": "08:45", "activity": "dressed" },
+        { "start": "09:00", "end": "10:30", "activity": "learning" },
+        { "start": "10:30", "end": "10:45", "activity": "snack" },
+        { "start": "10:45", "end": "12:00", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "12:45", "end": "13:30", "activity": "rest" },
+        { "start": "13:30", "end": "15:00", "activity": "creative" },
+        { "start": "15:00", "end": "16:30", "activity": "outdoor" },
+        { "start": "17:00", "end": "17:45", "activity": "dinner" },
+        { "start": "18:00", "end": "18:30", "activity": "bathtime" },
+        { "start": "18:30", "end": "19:15", "activity": "stories" },
+        { "start": "19:15", "end": "19:30", "activity": "bed" }
+      ]
+    },
+    {
+      "key": "friday",
+      "label": "Friday",
+      "schedule": [
+        { "start": "07:00", "end": "07:30", "activity": "wake" },
+        { "start": "07:30", "end": "08:15", "activity": "breakfast" },
+        { "start": "08:15", "end": "08:45", "activity": "dressed" },
+        { "start": "09:00", "end": "10:30", "activity": "learning" },
+        { "start": "10:30", "end": "10:45", "activity": "snack" },
+        { "start": "10:45", "end": "12:00", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "12:45", "end": "13:30", "activity": "rest" },
+        { "start": "13:30", "end": "16:00", "activity": "creative" },
+        { "start": "17:00", "end": "17:45", "activity": "dinner" },
+        { "start": "18:00", "end": "18:30", "activity": "bathtime" },
+        { "start": "18:30", "end": "19:15", "activity": "stories" },
+        { "start": "19:15", "end": "19:30", "activity": "bed" }
+      ]
+    },
+    {
+      "key": "saturday",
+      "label": "Saturday",
+      "schedule": [
+        { "start": "07:30", "end": "08:00", "activity": "wake" },
+        { "start": "08:00", "end": "09:00", "activity": "breakfast" },
+        { "start": "09:30", "end": "11:30", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "13:00", "end": "14:00", "activity": "rest" },
+        { "start": "14:00", "end": "16:30", "activity": "creative" },
+        { "start": "17:30", "end": "18:15", "activity": "dinner" },
+        { "start": "18:30", "end": "19:00", "activity": "bathtime" },
+        { "start": "19:00", "end": "19:30", "activity": "stories" },
+        { "start": "19:30", "end": "19:45", "activity": "bed" }
+      ]
+    },
+    {
+      "key": "sunday",
+      "label": "Sunday",
+      "schedule": [
+        { "start": "07:30", "end": "08:00", "activity": "wake" },
+        { "start": "08:00", "end": "09:00", "activity": "breakfast" },
+        { "start": "09:30", "end": "11:30", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "13:00", "end": "14:00", "activity": "rest" },
+        { "start": "14:00", "end": "16:00", "activity": "learning" },
+        { "start": "17:30", "end": "18:15", "activity": "dinner" },
+        { "start": "18:30", "end": "19:00", "activity": "bathtime" },
+        { "start": "19:00", "end": "19:30", "activity": "stories" },
+        { "start": "19:30", "end": "19:45", "activity": "bed" }
+      ]
+    }
+  ]
+}

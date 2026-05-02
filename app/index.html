@@ -6,13 +6,16 @@
 <title>Home</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;}
+body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:32px 16px 48px;}
 h1{font-size:3em;color:#333;margin-bottom:48px;}
 .tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:28px;}
 .tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:180px;height:180px;border-radius:24px;text-decoration:none;color:#333;font-size:1.1em;font-family:inherit;font-weight:bold;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.12);transition:transform 0.15s,box-shadow 0.15s;background:#fff;padding:0 0 16px;}
 .tile:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(0,0,0,0.18);}
 .tile svg{flex:1;width:100%;padding:20px 20px 8px;}
 .tile span{font-size:1em;text-align:center;padding:0 8px;}
+.section-divider{width:100%;max-width:600px;display:flex;align-items:center;gap:16px;margin:48px 0 32px;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:2px;background:#e5e7eb;border-radius:2px;}
+.section-divider h2{font-size:1.1em;color:#9ca3af;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -29,6 +32,24 @@ h1{font-size:3em;color:#333;margin-bottom:48px;}
     <span>Lessons</span>
   </a>
 
+  <a class="tile" href="games/" style="background:#EAF4FF;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="18" width="64" height="36" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2"/>
+      <circle cx="24" cy="36" r="7" fill="#3498DB"/>
+      <circle cx="56" cy="36" r="7" fill="#E74C3C"/>
+      <rect x="37" y="29" width="6" height="14" rx="2" fill="#27AE60"/>
+      <rect x="34" y="32" width="12" height="6" rx="2" fill="#27AE60"/>
+      <polygon points="40,6 46,16 34,16" fill="#F1C40F"/>
+    </svg>
+    <span>Games</span>
+  </a>
+
+</div>
+
+<div class="section-divider"><h2>Resources</h2></div>
+
+<div class="tiles">
+
   <a class="tile" href="worksheets/" style="background:#F0FFF4;">
     <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="12" y="4" width="44" height="52" rx="5" fill="#E8F8F0" stroke="#27AE60" stroke-width="2"/>
@@ -42,16 +63,20 @@ h1{font-size:3em;color:#333;margin-bottom:48px;}
     <span>Worksheets</span>
   </a>
 
-  <a class="tile" href="games/" style="background:#EAF4FF;">
+  <a class="tile" href="routine/" style="background:#FFF7ED;">
     <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="8" y="18" width="64" height="36" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2"/>
-      <circle cx="24" cy="36" r="7" fill="#3498DB"/>
-      <circle cx="56" cy="36" r="7" fill="#E74C3C"/>
-      <rect x="37" y="29" width="6" height="14" rx="2" fill="#27AE60"/>
-      <rect x="34" y="32" width="12" height="6" rx="2" fill="#27AE60"/>
-      <polygon points="40,6 46,16 34,16" fill="#F1C40F"/>
+      <rect x="10" y="8" width="60" height="46" rx="6" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
+      <rect x="10" y="8" width="60" height="14" rx="6" fill="#FCD34D" stroke="#F59E0B" stroke-width="2"/>
+      <rect x="10" y="16" width="60" height="6" rx="0" fill="#FCD34D"/>
+      <line x1="24" y1="8" x2="24" y2="16" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+      <line x1="56" y1="8" x2="56" y2="16" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+      <rect x="18" y="28" width="10" height="8" rx="2" fill="#93C5FD"/>
+      <rect x="35" y="28" width="10" height="8" rx="2" fill="#86EFAC"/>
+      <rect x="52" y="28" width="10" height="8" rx="2" fill="#FBCFE8"/>
+      <rect x="18" y="40" width="10" height="8" rx="2" fill="#FCA5A5"/>
+      <rect x="35" y="40" width="10" height="8" rx="2" fill="#DDD6FE"/>
     </svg>
-    <span>Games</span>
+    <span>Routine</span>
   </a>
 
 </div>

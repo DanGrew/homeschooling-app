@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Routine</title>
+<link rel="stylesheet" href="routine.css">
+</head>
+<body>
+
+<div id="header">
+  <a href="../" style="font-size:1.3em;text-decoration:none;">🏠</a>
+  <h1>📅 Routine</h1>
+  <select id="routine-picker"></select>
+  <div class="sep"></div>
+  <div class="ctrl-group">
+    <select id="slot-size"></select>
+    Jump <select id="jump-hour"></select>
+    <button id="reset-view">⏎ Reset</button>
+  </div>
+</div>
+
+<div id="now-next">
+  <span>Now: <b id="now-label">—</b></span>
+  <span>Next: <b id="next-label">—</b></span>
+</div>
+
+<div id="nav-bar">
+  <button id="prev-day">◀ Prev</button>
+  <span id="focused-label"></span>
+  <button id="next-day">Next ▶</button>
+  <div class="sep-flex"></div>
+  <button id="snap-today" style="display:none;">⏱ Today</button>
+</div>
+
+<div id="grid-outer">
+  <div id="grid">
+    <div id="time-axis"></div>
+    <div id="cols-wrap"></div>
+  </div>
+</div>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <button id="modal-close">×</button>
+    <h2 id="modal-title"></h2>
+    <div class="time-range" id="modal-time"></div>
+    <div class="notes" id="modal-notes"></div>
+    <button class="plan-link" id="modal-plan" style="display:none;">📋 Open Plan</button>
+  </div>
+</div>
+
+<script src="routine.js"></script>
+</body>
+</html>
