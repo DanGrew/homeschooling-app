@@ -59,7 +59,7 @@ function nextPicture(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevPicture(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
 Dictionary.init('../dictionary/');
-Dictionary.loadAll().then(function(items){
+Dictionary.loadAll(['colouring']).then(function(items){
   items.forEach(function(item){
     if(!item.colouring)return;
     pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.colouring.shapes});
