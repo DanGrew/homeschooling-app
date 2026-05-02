@@ -226,7 +226,7 @@ function scrollToFocused() {
 
 function scrollToJumpTime() {
   const gridOuter = document.getElementById('grid-outer');
-  gridOuter.scrollTop = DAY_HEADER_H + jumpHour * 60 * pixelsPerMin();
+  gridOuter.scrollTop = jumpHour * 60 * pixelsPerMin();
 }
 
 function scrollToNow() {
