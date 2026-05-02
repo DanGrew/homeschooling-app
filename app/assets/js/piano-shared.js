@@ -13,6 +13,20 @@ PIANO_CONFIG.KEY_COUNT = PIANO_CONFIG.NOTES.length;
 var _audioCtx = null;
 var _audioBuffers = {};
 var _audioLoaded = false;
+var _rawBuffers = {};
+var _prefetchPromise = null;
+
+function _prefetchAudio() {
+  if (_prefetchPromise) return _prefetchPromise;
+  _prefetchPromise = Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
+    return fetch('../../assets/audio/piano/' + note + '.wav')
+      .then(function(r) { return r.arrayBuffer(); })
+      .then(function(buf) { _rawBuffers[note] = buf; })
+      .catch(function() {});
+  }));
+  return _prefetchPromise;
+}
+_prefetchAudio();
 
 function initAudio() {
   if (!_audioCtx) {
@@ -21,13 +35,17 @@ function initAudio() {
   var resume = _audioCtx.state === 'suspended' ? _audioCtx.resume() : Promise.resolve();
   if (_audioLoaded) return resume;
   return resume.then(function() {
-    return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-      return fetch('../../assets/audio/piano/' + note + '.wav')
-        .then(function(r) { return r.arrayBuffer(); })
-        .then(function(buf) { return _audioCtx.decodeAudioData(buf); })
-        .then(function(decoded) { _audioBuffers[note] = decoded; })
-        .catch(function() {});
-    }));
+    return _prefetchAudio().then(function() {
+      return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
+        var src = _rawBuffers[note]
+          ? Promise.resolve(_rawBuffers[note])
+          : fetch('../../assets/audio/piano/' + note + '.wav').then(function(r) { return r.arrayBuffer(); });
+        return src
+          .then(function(buf) { return _audioCtx.decodeAudioData(buf); })
+          .then(function(decoded) { _audioBuffers[note] = decoded; })
+          .catch(function() {});
+      }));
+    });
   }).then(function() { _audioLoaded = true; });
 }
 
@@ -51,7 +69,7 @@ function renderKeys(container, onKeyPress) {
     key.dataset.note = note;
     key.style.cssText = 'flex:1;height:100%;background:' + PIANO_CONFIG.KEY_COLORS[i] +
       ';border-radius:0 0 14px 14px;display:flex;align-items:flex-end;justify-content:center' +
-      ';padding-bottom:6px;font-size:clamp(10px,2.2vw,15px);font-weight:bold;color:#555' +
+      ';padding-bottom:8px;font-size:clamp(14px,3vw,20px);font-weight:bold;color:#555' +
       ';cursor:pointer;user-select:none;touch-action:none' +
       ';border:2px solid rgba(0,0,0,0.08);box-sizing:border-box';
     key.textContent = PIANO_CONFIG.NOTE_LABELS[i];
