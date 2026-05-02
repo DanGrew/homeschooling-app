@@ -15,6 +15,8 @@ body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;min-
 .sep{flex:1;}
 .ctrl-group{display:flex;align-items:center;gap:6px;font-size:0.85em;color:#555;}
 .ctrl-group select{font-family:inherit;font-size:0.85em;padding:3px 6px;border:2px solid #d1d5db;border-radius:8px;background:#fff8f0;}
+#reset-view{font-family:inherit;font-size:0.8em;padding:3px 9px;border:2px solid #d1d5db;border-radius:8px;background:#fff8f0;cursor:pointer;white-space:nowrap;}
+#reset-view:hover{background:#f3f4f6;}
 
 /* NOW/NEXT BAR */
 #now-next{background:#fef9c3;border-bottom:2px solid #fde68a;padding:8px 16px;display:flex;gap:24px;flex-wrap:wrap;font-size:0.85em;color:#555;}
@@ -49,6 +51,9 @@ body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;min-
 .slot-line{position:absolute;left:0;right:0;border-top:1px solid #f3f4f6;pointer-events:none;}
 .slot-line.hour{border-top-color:#e5e7eb;}
 
+/* FOCUS WINDOW BAND */
+.focus-band{position:absolute;left:0;right:0;background:rgba(219,234,254,0.15);pointer-events:none;border-top:1px dashed #93c5fd;border-bottom:1px dashed #93c5fd;}
+
 /* BLOCKS */
 .block{position:absolute;left:3px;right:3px;border-radius:6px;padding:3px 5px;font-size:0.75em;overflow:hidden;cursor:pointer;display:flex;align-items:flex-start;gap:3px;line-height:1.2;transition:opacity 0.15s;box-shadow:0 1px 3px rgba(0,0,0,0.12);}
 .block:hover{opacity:0.85;box-shadow:0 2px 6px rgba(0,0,0,0.18);}
@@ -80,7 +85,8 @@ body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;min-
   <select id="routine-picker"></select>
   <div class="sep"></div>
   <div class="ctrl-group">
-    From <select id="start-hour"></select> to <select id="end-hour"></select>
+    Focus <select id="start-hour"></select> – <select id="end-hour"></select>
+    <button id="reset-view">⏎ Reset</button>
   </div>
 </div>
 
@@ -120,9 +126,14 @@ const ROUTINES = [
   { id: 'bank-holiday-weekend', label: 'Bank Holiday Weekend' }
 ];
 
+const AXIS_W = 52;
+const DAY_HEADER_H = 36;
+
 let R = null;
-let startHour = 7;
-let endHour = 20;
+let focusStart = 7;
+let focusEnd = 20;
+let gridStartMins = 0;
+let gridEndMins = 24 * 60;
 let focusedIndex = 0;
 let orderedDays = [];
 let nowTimer = null;
@@ -132,14 +143,20 @@ function toMins(t) {
   return h * 60 + m;
 }
 
-function fmtTime(t) { return t; }
-
-function dayOfWeekIndex(key) {
-  return ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'].indexOf(key.toLowerCase());
-}
-
 function getTodayKey() {
   return ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][new Date().getDay()];
+}
+
+function computeGridRange() {
+  let minM = Infinity, maxM = 0;
+  for (const day of R.days) {
+    for (const item of (day.schedule || [])) {
+      minM = Math.min(minM, toMins(item.start));
+      maxM = Math.max(maxM, toMins(item.end));
+    }
+  }
+  gridStartMins = minM === Infinity ? 0 : Math.floor(minM / 60) * 60;
+  gridEndMins = maxM === 0 ? 24 * 60 : Math.ceil(maxM / 60) * 60;
 }
 
 function buildOrderedDays() {
@@ -149,13 +166,11 @@ function buildOrderedDays() {
     const allKeys = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
     const todayIdx = allKeys.indexOf(todayKey);
     const r = R.meta.windowRadius || 3;
-    const window7 = [];
-    for (let i = -r; i <= r; i++) {
-      const k = allKeys[(todayIdx + i + 7) % 7];
-      window7.push(k);
-    }
-    orderedDays = window7.map(k => R.days.find(d => d.key === k)).filter(Boolean);
-    focusedIndex = r;
+    const keys = [];
+    for (let i = -r; i <= r; i++) keys.push(allKeys[(todayIdx + i + 7) % 7]);
+    orderedDays = keys.map(k => R.days.find(d => d.key === k)).filter(Boolean);
+    focusedIndex = orderedDays.findIndex(d => d.key === todayKey);
+    if (focusedIndex === -1) focusedIndex = r;
   } else {
     orderedDays = R.days.slice();
     focusedIndex = 0;
@@ -163,16 +178,18 @@ function buildOrderedDays() {
 }
 
 function pixelsPerMin() {
-  const totalMins = (endHour - startHour) * 60;
+  const focusMins = (focusEnd - focusStart) * 60;
   const gridH = Math.max(window.innerHeight - 200, 400);
-  return gridH / totalMins;
+  return gridH / focusMins;
 }
 
 function render() {
   if (!R) return;
   const ppm = pixelsPerMin();
-  const totalMins = (endHour - startHour) * 60;
-  const bodyH = totalMins * ppm;
+  const totalGridMins = gridEndMins - gridStartMins;
+  const bodyH = totalGridMins * ppm;
+  const focusBandTop = (focusStart * 60 - gridStartMins) * ppm;
+  const focusBandH = (focusEnd - focusStart) * 60 * ppm;
   const todayKey = getTodayKey();
 
   renderTimeAxis(ppm, bodyH);
@@ -196,6 +213,12 @@ function render() {
     body.style.height = bodyH + 'px';
     body.style.position = 'relative';
 
+    const band = document.createElement('div');
+    band.className = 'focus-band';
+    band.style.top = focusBandTop + 'px';
+    band.style.height = focusBandH + 'px';
+    body.appendChild(band);
+
     renderSlotLines(body, ppm);
 
     (day.schedule || []).forEach(item => {
@@ -203,11 +226,8 @@ function render() {
       if (!act) return;
       const startM = toMins(item.start);
       const endM = toMins(item.end);
-      if (endM <= startHour * 60 || startM >= endHour * 60) return;
-      const clampedStart = Math.max(startM, startHour * 60);
-      const clampedEnd = Math.min(endM, endHour * 60);
-      const top = (clampedStart - startHour * 60) * ppm;
-      const height = Math.max((clampedEnd - clampedStart) * ppm, 20);
+      const top = (startM - gridStartMins) * ppm;
+      const height = Math.max((endM - startM) * ppm, 20);
 
       const block = document.createElement('div');
       block.className = 'block';
@@ -233,27 +253,29 @@ function render() {
 
 function renderTimeAxis(ppm, bodyH) {
   const axis = document.getElementById('time-axis');
-  const headerH = 36;
-  axis.style.height = (bodyH + headerH) + 'px';
+  axis.style.height = (bodyH + DAY_HEADER_H) + 'px';
   axis.innerHTML = '';
   const spacer = document.createElement('div');
-  spacer.style.height = headerH + 'px';
+  spacer.style.height = DAY_HEADER_H + 'px';
   axis.appendChild(spacer);
-  for (let h = startHour; h <= endHour; h++) {
-    const top = (h - startHour) * 60 * ppm;
+  const startH = Math.floor(gridStartMins / 60);
+  const endH = Math.ceil(gridEndMins / 60);
+  for (let h = startH; h <= endH; h++) {
+    const top = (h * 60 - gridStartMins) * ppm;
     const lbl = document.createElement('div');
     lbl.className = 'time-label';
-    lbl.style.top = (headerH + top) + 'px';
+    lbl.style.top = (DAY_HEADER_H + top) + 'px';
     lbl.textContent = String(h).padStart(2,'0') + ':00';
     axis.appendChild(lbl);
   }
 }
 
 function renderSlotLines(body, ppm) {
-  const totalMins = (endHour - startHour) * 60;
-  for (let m = 0; m <= totalMins; m += 15) {
+  const totalGridMins = gridEndMins - gridStartMins;
+  for (let m = 0; m <= totalGridMins; m += 15) {
     const line = document.createElement('div');
-    line.className = 'slot-line' + (m % 60 === 0 ? ' hour' : '');
+    const absMin = gridStartMins + m;
+    line.className = 'slot-line' + (absMin % 60 === 0 ? ' hour' : '');
     line.style.top = (m * ppm) + 'px';
     body.appendChild(line);
   }
@@ -262,11 +284,11 @@ function renderSlotLines(body, ppm) {
 function renderNowLine(body, ppm) {
   const now = new Date();
   const nowMins = now.getHours() * 60 + now.getMinutes();
-  if (nowMins < startHour * 60 || nowMins > endHour * 60) return;
+  if (nowMins < gridStartMins || nowMins > gridEndMins) return;
   const line = document.createElement('div');
   line.className = 'now-line';
   line.id = 'now-line';
-  line.style.top = ((nowMins - startHour * 60) * ppm) + 'px';
+  line.style.top = ((nowMins - gridStartMins) * ppm) + 'px';
   body.appendChild(line);
 }
 
@@ -277,16 +299,13 @@ function updateNowNext() {
   const nextLabel = document.getElementById('next-label');
   if (!today) { nowLabel.textContent = '—'; nextLabel.textContent = '—'; return; }
 
-  const now = new Date();
-  const nowMins = now.getHours() * 60 + now.getMinutes();
+  const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
   let current = null, next = null;
-
   for (const item of (today.schedule || [])) {
     const s = toMins(item.start), e = toMins(item.end);
     if (nowMins >= s && nowMins < e) current = item;
     else if (nowMins < s && !next) next = item;
   }
-
   const fmt = item => {
     const act = R.activities[item.activity];
     return act ? `${act.emoji} ${act.label} (${item.start})` : item.activity;
@@ -299,9 +318,8 @@ function updateFocusedLabel() {
   const day = orderedDays[focusedIndex];
   document.getElementById('focused-label').textContent = day ? day.label : '';
   const snapBtn = document.getElementById('snap-today');
-  if (R.meta.rollingWindow) {
-    const todayKey = getTodayKey();
-    const todayIdx = orderedDays.findIndex(d => d.key === todayKey);
+  if (R && R.meta.rollingWindow) {
+    const todayIdx = orderedDays.findIndex(d => d.key === getTodayKey());
     snapBtn.style.display = todayIdx !== -1 && focusedIndex !== todayIdx ? '' : 'none';
   } else {
     snapBtn.style.display = 'none';
@@ -311,26 +329,30 @@ function updateFocusedLabel() {
 function scrollToFocused() {
   const colsWrap = document.getElementById('cols-wrap');
   const cols = colsWrap.querySelectorAll('.day-col');
+  cols.forEach((c, i) => c.classList.toggle('is-focused', i === focusedIndex));
   if (!cols[focusedIndex]) return;
   const gridOuter = document.getElementById('grid-outer');
   const col = cols[focusedIndex];
-  const axisW = 52;
   const colLeft = col.offsetLeft;
   const colW = col.offsetWidth;
-  const viewW = gridOuter.clientWidth - axisW;
-  const scrollX = colLeft - axisW - (viewW / 2 - colW / 2);
+  const scrollX = AXIS_W + colLeft - (gridOuter.clientWidth / 2 - colW / 2);
   gridOuter.scrollLeft = Math.max(0, scrollX);
+}
+
+function scrollToFocusWindow() {
+  const gridOuter = document.getElementById('grid-outer');
+  const ppm = pixelsPerMin();
+  const focusTop = (focusStart * 60 - gridStartMins) * ppm + DAY_HEADER_H;
+  gridOuter.scrollTop = Math.max(0, focusTop);
 }
 
 function scrollToNow() {
   if (!R || !R.meta.rollingWindow) return;
   const gridOuter = document.getElementById('grid-outer');
-  const now = new Date();
-  const nowMins = now.getHours() * 60 + now.getMinutes();
-  if (nowMins < startHour * 60 || nowMins > endHour * 60) return;
+  const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+  if (nowMins < gridStartMins || nowMins > gridEndMins) { scrollToFocusWindow(); return; }
   const ppm = pixelsPerMin();
-  const headerH = 36 + 36;
-  const nowTop = (nowMins - startHour * 60) * ppm + headerH;
+  const nowTop = (nowMins - gridStartMins) * ppm + DAY_HEADER_H;
   gridOuter.scrollTop = Math.max(0, nowTop - gridOuter.clientHeight / 2);
 }
 
@@ -362,8 +384,8 @@ function populateHourSelects() {
     startSel.add(new Option(lbl, h));
     endSel.add(new Option(lbl, h));
   }
-  startSel.value = startHour;
-  endSel.value = endHour;
+  startSel.value = focusStart;
+  endSel.value = focusEnd;
 }
 
 function populateRoutinePicker() {
@@ -377,30 +399,25 @@ function loadRoutine(id) {
     .then(r => r.json())
     .then(data => {
       R = data;
-      startHour = R.meta.defaultStartHour;
-      endHour = R.meta.defaultEndHour;
-      document.getElementById('start-hour').value = startHour;
-      document.getElementById('end-hour').value = endHour;
+      focusStart = R.meta.defaultStartHour;
+      focusEnd = R.meta.defaultEndHour;
+      document.getElementById('start-hour').value = focusStart;
+      document.getElementById('end-hour').value = focusEnd;
+      computeGridRange();
       buildOrderedDays();
       render();
-      setTimeout(scrollToNow, 50);
+      setTimeout(() => R.meta.rollingWindow ? scrollToNow() : scrollToFocusWindow(), 50);
       clearInterval(nowTimer);
       nowTimer = setInterval(() => {
         updateNowNext();
         const line = document.getElementById('now-line');
         if (line) {
           const ppm = pixelsPerMin();
-          const now = new Date();
-          const nowMins = now.getHours() * 60 + now.getMinutes();
-          line.style.top = ((nowMins - startHour * 60) * ppm) + 'px';
+          const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
+          line.style.top = ((nowMins - gridStartMins) * ppm) + 'px';
         }
       }, 60000);
     });
-}
-
-function getDefaultRoutineId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('r') || ROUTINES[0].id;
 }
 
 document.getElementById('routine-picker').addEventListener('change', e => {
@@ -411,15 +428,21 @@ document.getElementById('routine-picker').addEventListener('change', e => {
 });
 
 document.getElementById('start-hour').addEventListener('change', e => {
-  startHour = parseInt(e.target.value);
-  if (startHour >= endHour) { endHour = startHour + 1; document.getElementById('end-hour').value = endHour; }
+  focusStart = parseInt(e.target.value);
+  if (focusStart >= focusEnd) { focusEnd = focusStart + 1; document.getElementById('end-hour').value = focusEnd; }
   render();
+  scrollToFocusWindow();
 });
 
 document.getElementById('end-hour').addEventListener('change', e => {
-  endHour = parseInt(e.target.value);
-  if (endHour <= startHour) { startHour = endHour - 1; document.getElementById('start-hour').value = startHour; }
+  focusEnd = parseInt(e.target.value);
+  if (focusEnd <= focusStart) { focusStart = focusEnd - 1; document.getElementById('start-hour').value = focusStart; }
   render();
+  scrollToFocusWindow();
+});
+
+document.getElementById('reset-view').addEventListener('click', () => {
+  scrollToFocusWindow();
 });
 
 document.getElementById('prev-day').addEventListener('click', () => {
@@ -432,8 +455,7 @@ document.getElementById('next-day').addEventListener('click', () => {
 
 document.getElementById('snap-today').addEventListener('click', () => {
   if (!R || !R.meta.rollingWindow) return;
-  const todayKey = getTodayKey();
-  const idx = orderedDays.findIndex(d => d.key === todayKey);
+  const idx = orderedDays.findIndex(d => d.key === getTodayKey());
   if (idx !== -1) { focusedIndex = idx; updateFocusedLabel(); scrollToFocused(); scrollToNow(); }
 });
 
@@ -444,7 +466,7 @@ window.addEventListener('resize', () => render());
 
 populateRoutinePicker();
 populateHourSelects();
-const defaultId = getDefaultRoutineId();
+const defaultId = new URLSearchParams(window.location.search).get('r') || ROUTINES[0].id;
 document.getElementById('routine-picker').value = defaultId;
 loadRoutine(defaultId);
 </script>

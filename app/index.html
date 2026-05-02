@@ -6,13 +6,16 @@
 <title>Home</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px 16px;}
+body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:32px 16px 48px;}
 h1{font-size:3em;color:#333;margin-bottom:48px;}
 .tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:28px;}
 .tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:180px;height:180px;border-radius:24px;text-decoration:none;color:#333;font-size:1.1em;font-family:inherit;font-weight:bold;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.12);transition:transform 0.15s,box-shadow 0.15s;background:#fff;padding:0 0 16px;}
 .tile:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(0,0,0,0.18);}
 .tile svg{flex:1;width:100%;padding:20px 20px 8px;}
 .tile span{font-size:1em;text-align:center;padding:0 8px;}
+.section-divider{width:100%;max-width:600px;display:flex;align-items:center;gap:16px;margin:48px 0 32px;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:2px;background:#e5e7eb;border-radius:2px;}
+.section-divider h2{font-size:1.1em;color:#9ca3af;white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -28,6 +31,24 @@ h1{font-size:3em;color:#333;margin-bottom:48px;}
     </svg>
     <span>Lessons</span>
   </a>
+
+  <a class="tile" href="games/" style="background:#EAF4FF;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="18" width="64" height="36" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2"/>
+      <circle cx="24" cy="36" r="7" fill="#3498DB"/>
+      <circle cx="56" cy="36" r="7" fill="#E74C3C"/>
+      <rect x="37" y="29" width="6" height="14" rx="2" fill="#27AE60"/>
+      <rect x="34" y="32" width="12" height="6" rx="2" fill="#27AE60"/>
+      <polygon points="40,6 46,16 34,16" fill="#F1C40F"/>
+    </svg>
+    <span>Games</span>
+  </a>
+
+</div>
+
+<div class="section-divider"><h2>Resources</h2></div>
+
+<div class="tiles">
 
   <a class="tile" href="worksheets/" style="background:#F0FFF4;">
     <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -56,18 +77,6 @@ h1{font-size:3em;color:#333;margin-bottom:48px;}
       <rect x="35" y="40" width="10" height="8" rx="2" fill="#DDD6FE"/>
     </svg>
     <span>Routine</span>
-  </a>
-
-  <a class="tile" href="games/" style="background:#EAF4FF;">
-    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="8" y="18" width="64" height="36" rx="8" fill="#D6EAF8" stroke="#3498DB" stroke-width="2"/>
-      <circle cx="24" cy="36" r="7" fill="#3498DB"/>
-      <circle cx="56" cy="36" r="7" fill="#E74C3C"/>
-      <rect x="37" y="29" width="6" height="14" rx="2" fill="#27AE60"/>
-      <rect x="34" y="32" width="12" height="6" rx="2" fill="#27AE60"/>
-      <polygon points="40,6 46,16 34,16" fill="#F1C40F"/>
-    </svg>
-    <span>Games</span>
   </a>
 
 </div>
