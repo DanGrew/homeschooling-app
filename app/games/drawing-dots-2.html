@@ -23,16 +23,12 @@
 </div>
 <script src="filter-bar.js"></script>
 <script src="../dictionary/dictionary.js"></script>
+<script src="../dictionary/dictionary-helpers.js"></script>
 <script>var shapes=[],ddDotScale=0.035;</script>
 <script src="drawing-dots/engine.js"></script>
 <script>
 Dictionary.init('../dictionary/');
-Dictionary.loadAll(['drawingDots2']).then(function(items){
-  items.forEach(function(item){
-    if(!item.drawingDots2)return;
-    shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.drawingDots2.dots,edges:item.drawingDots2.edges,decor:item.drawingDots2.decor});
-  });
-}).catch(function(){}).then(function(){startEngine();});
+loadDrawingDots(shapes,2,startEngine);
 </script>
 </body>
 </html>

@@ -47,26 +47,9 @@ body{font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;height:100
     <p id="empty-msg">Select images from the list to build your worksheet.</p>
   </div>
 </div>
+<script src="../dictionary/dictionary.js"></script>
+<script src="../dictionary/dictionary-helpers.js"></script>
 <script>var pictures=[];</script>
-<script src="../games/colouring/generated/bird-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/bull-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/camel-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/cat-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/cow-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/dog-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/duck-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/elephant-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/fish-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/giraffe-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/goose-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/horse-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/lion-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/monkey-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/mouse-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/rabbit-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/tiger-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/turtle-colouring-level-1.js"></script>
-<script src="../games/colouring/generated/zebra-colouring-level-1.js"></script>
 <script>
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
@@ -96,8 +79,6 @@ function renderSVG(pic,uid){
   });
   return svg;
 }
-
-pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
 
 function buildPanel(){
   var list=document.getElementById('panel-list');
@@ -135,7 +116,11 @@ function removeImage(idx){
   if(!sheet.querySelector('.worksheet-item'))document.getElementById('empty-msg').style.display='';
 }
 
-buildPanel();
+Dictionary.init('../dictionary/');
+loadColouringPictures(pictures,function(){
+  pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
+  buildPanel();
+});
 </script>
 </body>
 </html>

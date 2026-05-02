@@ -27,6 +27,7 @@
 </div>
 <script src="filter-bar.js"></script>
 <script src="../dictionary/dictionary.js"></script>
+<script src="../dictionary/dictionary-helpers.js"></script>
 <script>var shapes=[];</script>
 <script src="connect-the-dots/shapes/triangle.js"></script>
 <script src="connect-the-dots/shapes/square.js"></script>
@@ -154,12 +155,7 @@ function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
 Dictionary.init('../dictionary/');
-Dictionary.loadAll(['connectDots']).then(function(items){
-  items.forEach(function(item){
-    if(!item.connectDots)return;
-    shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.connectDots.dots,guides:item.connectDots.guides,decor:item.connectDots.decor});
-  });
-}).catch(function(){}).then(function(){
+loadConnectDots(shapes,function(){
   buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
 });
 </script>
