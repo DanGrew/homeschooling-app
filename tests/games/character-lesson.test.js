@@ -62,6 +62,12 @@ test('speak button is visible', async ({ page }) => {
   await expect(page.locator('#btn-speak')).toBeVisible()
 })
 
+test('home nav button points to lessons index', async ({ page }) => {
+  await page.goto('/app/games/character-lesson')
+  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  expect(href).toBe('../lessons/index.html')
+})
+
 test('try-it link points to game page for same char', async ({ page }) => {
   await page.goto('/app/games/character-lesson?char=m&filter=lower')
   await expect(page.locator('#char-label')).toHaveText('m')
