@@ -79,6 +79,7 @@ function render() {
     col.className = 'day-col';
     if (R.meta.rollingWindow && day.key === todayKey) col.classList.add('is-today');
     if (idx === focusedIndex) col.classList.add('is-focused');
+    if (R.meta.rollingWindow && day.key !== todayKey && idx !== focusedIndex) col.classList.add('is-dim');
 
     const hdr = document.createElement('div');
     hdr.className = 'day-header';
@@ -206,13 +207,18 @@ function updateFocusedLabel() {
 function scrollToFocused() {
   const colsWrap = document.getElementById('cols-wrap');
   const cols = colsWrap.querySelectorAll('.day-col');
-  cols.forEach((c, i) => c.classList.toggle('is-focused', i === focusedIndex));
+  const todayKey = getTodayKey();
+  cols.forEach((c, i) => {
+    c.classList.toggle('is-focused', i === focusedIndex);
+    if (R && R.meta.rollingWindow) {
+      c.classList.toggle('is-dim', orderedDays[i]?.key !== todayKey && i !== focusedIndex);
+    }
+  });
   if (!cols[focusedIndex]) return;
   const gridOuter = document.getElementById('grid-outer');
   const col = cols[focusedIndex];
-  const colLeft = col.offsetLeft;
   const colW = col.offsetWidth;
-  const scrollX = AXIS_W + colLeft - (gridOuter.clientWidth / 2 - colW / 2);
+  const scrollX = col.offsetLeft - (gridOuter.clientWidth / 2 - colW / 2);
   gridOuter.scrollLeft = Math.max(0, scrollX);
 }
 

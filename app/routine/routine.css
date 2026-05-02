@@ -33,6 +33,7 @@ body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;min-
 .day-col.is-today .day-header{background:#FEF9C3;color:#b45309;}
 .day-col.is-focused .day-header{background:#dbeafe;color:#1d4ed8;}
 .day-body{position:relative;}
+.day-col.is-dim .day-body{filter:saturate(0.15) opacity(0.45);transition:filter 0.2s;}
 
 .slot-line{position:absolute;left:0;right:0;border-top:1px solid #f3f4f6;pointer-events:none;}
 .slot-line.hour{border-top-color:#e5e7eb;}
