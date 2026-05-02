@@ -25,3 +25,9 @@ test('Play and Stop buttons are visible', async ({ page }) => {
   await expect(page.locator('#playbtn')).toBeVisible()
   await expect(page.locator('#stopbtn')).toBeVisible()
 })
+
+test('nav link points to lessons index not home', async ({ page }) => {
+  await page.goto('/app/lessons/story-time/?story=david-and-goliath')
+  const href = await page.locator('#panel-header a').getAttribute('href')
+  expect(href).toBe('../index.html')
+})
