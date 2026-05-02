@@ -30,8 +30,8 @@ body{background:#fff8f0;font-family:'Comic Sans MS','Chalkboard SE',cursive;min-
 .day-col{min-width:140px;flex:1;border-right:1px solid #e5e7eb;position:relative;cursor:default;}
 .day-col:last-child{border-right:none;}
 .day-header{position:sticky;top:0;background:#fff8f0;z-index:5;text-align:center;padding:6px 4px;font-size:0.85em;font-weight:bold;color:#555;border-bottom:2px solid #e5e7eb;}
-.day-col.is-today .day-header{background:#FEF9C3;color:#b45309;}
 .day-col.is-focused .day-header{background:#dbeafe;color:#1d4ed8;}
+.today-dot{color:#ef4444;margin-right:3px;font-size:0.7em;vertical-align:middle;}
 .day-body{position:relative;}
 .day-col.is-dim .day-body{filter:saturate(0.15) opacity(0.45);transition:filter 0.2s;}
 

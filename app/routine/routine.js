@@ -77,13 +77,16 @@ function render() {
   orderedDays.forEach((day, idx) => {
     const col = document.createElement('div');
     col.className = 'day-col';
-    if (R.meta.rollingWindow && day.key === todayKey) col.classList.add('is-today');
     if (idx === focusedIndex) col.classList.add('is-focused');
-    if (R.meta.rollingWindow && day.key !== todayKey && idx !== focusedIndex) col.classList.add('is-dim');
+    if (R.meta.rollingWindow && idx !== focusedIndex) col.classList.add('is-dim');
 
     const hdr = document.createElement('div');
     hdr.className = 'day-header';
-    hdr.textContent = day.label;
+    if (R.meta.rollingWindow && day.key === todayKey) {
+      hdr.innerHTML = `<span class="today-dot">●</span>${day.label}`;
+    } else {
+      hdr.textContent = day.label;
+    }
     col.appendChild(hdr);
 
     const body = document.createElement('div');
@@ -207,12 +210,9 @@ function updateFocusedLabel() {
 function scrollToFocused() {
   const colsWrap = document.getElementById('cols-wrap');
   const cols = colsWrap.querySelectorAll('.day-col');
-  const todayKey = getTodayKey();
   cols.forEach((c, i) => {
     c.classList.toggle('is-focused', i === focusedIndex);
-    if (R && R.meta.rollingWindow) {
-      c.classList.toggle('is-dim', orderedDays[i]?.key !== todayKey && i !== focusedIndex);
-    }
+    if (R && R.meta.rollingWindow) c.classList.toggle('is-dim', i !== focusedIndex);
   });
   if (!cols[focusedIndex]) return;
   const gridOuter = document.getElementById('grid-outer');
