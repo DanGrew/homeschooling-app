@@ -26,15 +26,8 @@ function getTodayKey() {
 }
 
 function computeGridRange() {
-  let minM = Infinity, maxM = 0;
-  for (const day of R.days) {
-    for (const item of (day.schedule || [])) {
-      minM = Math.min(minM, toMins(item.start));
-      maxM = Math.max(maxM, toMins(item.end));
-    }
-  }
-  gridStartMins = minM === Infinity ? 0 : Math.floor(minM / 60) * 60;
-  gridEndMins = maxM === 0 ? 24 * 60 : Math.ceil(maxM / 60) * 60;
+  gridStartMins = 0;
+  gridEndMins = 24 * 60;
 }
 
 function buildOrderedDays() {
@@ -93,7 +86,25 @@ function render() {
 
     renderSlotLines(body, ppm);
 
-    (day.schedule || []).forEach(item => {
+    const schedule = day.schedule || [];
+    if (schedule.length) {
+      const firstStart = Math.min(...schedule.map(i => toMins(i.start)));
+      const lastEnd = Math.max(...schedule.map(i => toMins(i.end)));
+      if (firstStart > 0) {
+        const band = document.createElement('div');
+        band.className = 'inactive-band';
+        band.style.cssText = `top:0;height:${firstStart * ppm}px;`;
+        body.appendChild(band);
+      }
+      if (lastEnd < 24 * 60) {
+        const band = document.createElement('div');
+        band.className = 'inactive-band';
+        band.style.cssText = `top:${lastEnd * ppm}px;height:${(24 * 60 - lastEnd) * ppm}px;`;
+        body.appendChild(band);
+      }
+    }
+
+    schedule.forEach(item => {
       const act = R.activities[item.activity];
       if (!act) return;
       const startM = toMins(item.start);
@@ -215,8 +226,7 @@ function scrollToFocused() {
 
 function scrollToJumpTime() {
   const gridOuter = document.getElementById('grid-outer');
-  const top = DAY_HEADER_H + (jumpHour * 60 - gridStartMins) * pixelsPerMin();
-  gridOuter.scrollTop = Math.max(0, top);
+  gridOuter.scrollTop = DAY_HEADER_H + jumpHour * 60 * pixelsPerMin();
 }
 
 function scrollToNow() {
