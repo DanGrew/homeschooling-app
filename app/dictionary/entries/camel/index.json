@@ -7,7 +7,7 @@
       "animals"
     ]
   },
-  "src": "assets/camel.svg",
+  "src": "entries/camel/camel.svg",
   "viewBox": "0 0 150 150",
   "representations": {
     "colouring": "entries/camel/colouring.json"

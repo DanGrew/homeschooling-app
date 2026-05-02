@@ -7,7 +7,7 @@
       "animals"
     ]
   },
-  "src": "assets/goose.svg",
+  "src": "entries/goose/goose.svg",
   "viewBox": "0 0 150 150",
   "representations": {
     "colouring": "entries/goose/colouring.json"

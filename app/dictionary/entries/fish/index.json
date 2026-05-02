@@ -7,7 +7,7 @@
       "animals"
     ]
   },
-  "src": "assets/fish.svg",
+  "src": "entries/fish/fish.svg",
   "viewBox": "0 0 150 150",
   "representations": {
     "colouring": "entries/fish/colouring.json"
