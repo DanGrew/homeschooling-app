@@ -19,7 +19,21 @@ function loadConnectDots(shapes,callback){
 function loadDrawingDots(shapes,level,callback){
   Dictionary.loadManifest('drawingDots',level).then(function(items){
     items.forEach(function(item){
-      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.dots,edges:item.edges,decor:item.decor});
+      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
+    });
+    callback();
+  }).catch(function(){callback();});
+}
+
+function loadAllDrawingDots(shapes,callback){
+  Dictionary.loadManifest('drawingDots',1).then(function(l1){
+    l1.forEach(function(item){
+      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
+    });
+    return Dictionary.loadManifest('drawingDots',2);
+  }).then(function(l2){
+    l2.forEach(function(item){
+      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
     });
     callback();
   }).catch(function(){callback();});
