@@ -10,6 +10,6 @@
   "src": "assets/duck.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/duck-colouring.json"
+    "colouring": "entries/duck/colouring.json"
   }
 }

@@ -10,6 +10,6 @@
   "src": "assets/tiger.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/tiger-colouring.json"
+    "colouring": "entries/tiger/colouring.json"
   }
 }

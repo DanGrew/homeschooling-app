@@ -10,6 +10,6 @@
   "src": "assets/camel.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/camel-colouring.json"
+    "colouring": "entries/camel/colouring.json"
   }
 }

@@ -10,6 +10,6 @@
   "src": "assets/bull.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/bull-colouring.json"
+    "colouring": "entries/bull/colouring.json"
   }
 }

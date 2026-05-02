@@ -10,6 +10,6 @@
   "src": "assets/cat.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/cat-colouring.json"
+    "colouring": "entries/cat/colouring.json"
   }
 }

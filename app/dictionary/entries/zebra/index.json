@@ -10,6 +10,6 @@
   "src": "assets/zebra.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/zebra-colouring.json"
+    "colouring": "entries/zebra/colouring.json"
   }
 }

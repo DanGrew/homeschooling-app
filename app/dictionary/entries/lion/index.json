@@ -10,6 +10,6 @@
   "src": "assets/lion.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/lion-colouring.json"
+    "colouring": "entries/lion/colouring.json"
   }
 }

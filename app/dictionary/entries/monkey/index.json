@@ -10,6 +10,6 @@
   "src": "assets/monkey.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/monkey-colouring.json"
+    "colouring": "entries/monkey/colouring.json"
   }
 }

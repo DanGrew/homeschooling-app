@@ -10,7 +10,7 @@ var Dictionary=(function(){
   function loadEntry(id,representations){
     var cacheKey=id+'|'+(representations||[]).slice().sort().join(',');
     if(cache[cacheKey])return Promise.resolve(cache[cacheKey]);
-    return fetchJSON(base+'entries/'+id+'.json').then(function(entry){
+    return fetchJSON(base+'entries/'+id+'/index.json').then(function(entry){
       var repKeys=representations||[];
       var repPromises=repKeys.map(function(rep){
         var path=entry.representations&&entry.representations[rep];

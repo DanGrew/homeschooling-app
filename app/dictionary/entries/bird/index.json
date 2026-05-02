@@ -10,6 +10,6 @@
   "src": "assets/bird.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/bird-colouring.json"
+    "colouring": "entries/bird/colouring.json"
   }
 }

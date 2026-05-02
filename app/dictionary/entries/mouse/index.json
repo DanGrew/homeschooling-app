@@ -10,6 +10,6 @@
   "src": "assets/mouse.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/mouse-colouring.json"
+    "colouring": "entries/mouse/colouring.json"
   }
 }

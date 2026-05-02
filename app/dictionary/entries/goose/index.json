@@ -10,6 +10,6 @@
   "src": "assets/goose.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/goose-colouring.json"
+    "colouring": "entries/goose/colouring.json"
   }
 }

@@ -10,6 +10,6 @@
   "src": "assets/fish.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/fish-colouring.json"
+    "colouring": "entries/fish/colouring.json"
   }
 }
