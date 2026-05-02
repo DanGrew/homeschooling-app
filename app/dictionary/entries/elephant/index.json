@@ -10,6 +10,9 @@
   "src": "assets/elephant.svg",
   "viewBox": "0 0 150 150",
   "representations": {
-    "colouring": "entries/elephant/colouring.json"
+    "colouring": "entries/elephant/colouring.json",
+    "connectDots": "entries/elephant/connect-dots.json",
+    "drawingDots1": "entries/elephant/drawing-dots-1.json",
+    "drawingDots2": "entries/elephant/drawing-dots-2.json"
   }
 }

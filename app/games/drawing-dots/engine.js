@@ -220,4 +220,4 @@ function updateInstruction(msg){
 function nextShape(){shapeIdx=(shapeIdx+1)%filtered.length;render();}
 function prevShape(){shapeIdx=(shapeIdx+filtered.length-1)%filtered.length;render();}
 
-buildFilterBar(shapes,function(f){filtered=f;shapeIdx=0;render();});
+function startEngine(){buildFilterBar(shapes,function(f){filtered=f;shapeIdx=0;render();});}
