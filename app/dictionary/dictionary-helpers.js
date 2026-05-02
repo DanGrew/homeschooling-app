@@ -35,6 +35,7 @@ function loadAllDrawingDots(shapes,callback){
     l2.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
     });
+    shapes.sort(function(a,b){var n=a.name.localeCompare(b.name);return n!==0?n:a.level-b.level;});
     callback();
   }).catch(function(){callback();});
 }
