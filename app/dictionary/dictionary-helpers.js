@@ -1,30 +1,33 @@
 function loadColouringPictures(pictures,callback){
-  Dictionary.loadAll(['colouring']).then(function(items){
+  Dictionary.loadManifest('colouring',1).then(function(items){
     items.forEach(function(item){
-      if(!item.colouring)return;
-      pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.colouring.shapes});
+      pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.shapes});
     });
     callback();
   }).catch(function(){callback();});
 }
 
 function loadConnectDots(shapes,callback){
-  Dictionary.loadAll(['connectDots']).then(function(items){
+  Dictionary.loadManifest('connectDots',1).then(function(items){
     items.forEach(function(item){
-      if(!item.connectDots)return;
-      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.connectDots.dots,guides:item.connectDots.guides,decor:item.connectDots.decor});
+      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.dots,guides:item.guides,decor:item.decor});
     });
     callback();
   }).catch(function(){callback();});
 }
 
 function loadDrawingDots(shapes,level,callback){
-  var repKey='drawingDots'+level;
-  Dictionary.loadAll([repKey]).then(function(items){
+  Dictionary.loadManifest('drawingDots',level).then(function(items){
     items.forEach(function(item){
-      if(!item[repKey])return;
-      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item[repKey].dots,edges:item[repKey].edges,decor:item[repKey].decor});
+      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.dots,edges:item.edges,decor:item.decor});
     });
+    callback();
+  }).catch(function(){callback();});
+}
+
+function loadImages(items,callback){
+  Dictionary.loadManifest('image',1).then(function(loaded){
+    loaded.forEach(function(item){items.push(item);});
     callback();
   }).catch(function(){callback();});
 }

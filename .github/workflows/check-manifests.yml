@@ -1,0 +1,21 @@
+name: Check manifests up to date
+
+on:
+  pull_request:
+
+jobs:
+  check-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Regenerate manifests
+        run: node scripts/generate-manifests.js
+      - name: Fail if manifests are stale
+        run: |
+          if ! git diff --exit-code app/dictionary/manifests/; then
+            echo "Manifests are out of date. Run 'node generate-manifests.js' and commit the result."
+            exit 1
+          fi

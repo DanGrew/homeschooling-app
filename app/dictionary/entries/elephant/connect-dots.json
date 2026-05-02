@@ -1,4 +1,8 @@
 {
+  "concept": "elephant",
+  "type": "connectDots",
+  "level": 1,
+  "viewBox": "0 0 150 150",
   "dots": [
     {
       "n": 1,

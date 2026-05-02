@@ -1,45 +1,46 @@
 var Dictionary=(function(){
-  var cache={};
   var base='';
+  var conceptCache={};
+  var repCache={};
 
   function init(basePath){base=basePath;}
 
-  function fetchText(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});}
   function fetchJSON(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
+  function fetchText(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();});}
 
-  function loadEntry(id,representations){
-    var cacheKey=id+'|'+(representations||[]).slice().sort().join(',');
-    if(cache[cacheKey])return Promise.resolve(cache[cacheKey]);
-    return fetchJSON(base+'entries/'+id+'/index.json').then(function(entry){
-      var repKeys=representations||[];
-      var repPromises=repKeys.map(function(rep){
-        var path=entry.representations&&entry.representations[rep];
-        if(!path)return Promise.resolve(null);
-        return fetchJSON(base+path).then(function(data){return{rep:rep,data:data};});
-      });
-      return Promise.all([fetchText(base+entry.src),Promise.all(repPromises)]).then(function(results){
-        var svgText=results[0];
-        var repResults=results[1];
-        var item={
-          id:entry.id,
-          name:entry.meta.name,
-          phonetic:entry.meta.phonetic,
-          tags:entry.meta.tags,
-          viewBox:entry.viewBox,
-          svg:svgText
-        };
-        repResults.forEach(function(r){if(r)item[r.rep]=r.data;});
-        cache[cacheKey]=item;
+  function loadConcept(id){
+    if(conceptCache[id])return Promise.resolve(conceptCache[id]);
+    return fetchJSON(base+'entries/'+id+'/concept.json').then(function(c){
+      conceptCache[id]=c;
+      return c;
+    });
+  }
+
+  function loadRep(repPath){
+    if(repCache[repPath])return Promise.resolve(repCache[repPath]);
+    return fetchJSON(base+repPath).then(function(rep){
+      return loadConcept(rep.concept).then(function(concept){
+        var item=Object.assign({},concept,rep);
+        delete item.concept;
+        if(rep.src){
+          return fetchText(base+rep.src).then(function(svg){
+            item.svg=svg;
+            repCache[repPath]=item;
+            return item;
+          });
+        }
+        repCache[repPath]=item;
         return item;
       });
     });
   }
 
-  function loadAll(representations){
-    return fetchJSON(base+'entries/manifest.json').then(function(ids){
-      return Promise.all(ids.map(function(id){return loadEntry(id,representations);}));
+  function loadManifest(type,level){
+    var manifestPath=base+'manifests/'+type+'-level-'+level+'.json';
+    return fetchJSON(manifestPath).then(function(paths){
+      return Promise.all(paths.map(function(p){return loadRep(p);}));
     });
   }
 
-  return{init:init,loadAll:loadAll,loadEntry:loadEntry};
+  return{init:init,loadManifest:loadManifest};
 })();

@@ -23,6 +23,7 @@
   </div>
 </div>
 <script src="../dictionary/dictionary.js"></script>
+<script src="../dictionary/dictionary-helpers.js"></script>
 <script src="filter-bar.js"></script>
 <script>
 Dictionary.init('../dictionary/');
@@ -61,11 +62,7 @@ function speak(){
 function prev(){idx=(idx-1+filtered.length)%filtered.length;show();}
 function next(){idx=(idx+1)%filtered.length;show();}
 
-Dictionary.loadAll().then(function(items){
-  buildFilterBar(items,function(f){filtered=f;idx=0;show();});
-}).catch(function(e){
-  document.getElementById('picture').textContent='Failed to load dictionary: '+e.message;
-});
+loadImages(filtered=[],function(){buildFilterBar(filtered,function(f){filtered=f;idx=0;show();});});
 </script>
 </body>
 </html>

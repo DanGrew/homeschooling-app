@@ -1,4 +1,8 @@
 {
+  "concept": "rabbit",
+  "type": "colouring",
+  "level": 1,
+  "viewBox": "0 0 150 150",
   "shapes": [
     {
       "id": "shape_1",
