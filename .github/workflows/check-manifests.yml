@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: 20
       - name: Regenerate manifests
-        run: node generate-manifests.js
+        run: node scripts/generate-manifests.js
       - name: Fail if manifests are stale
         run: |
           if ! git diff --exit-code app/dictionary/manifests/; then

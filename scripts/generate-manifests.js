@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dictDir = path.join(__dirname, 'app/dictionary');
+const dictDir = path.join(__dirname, '..', 'app/dictionary');
 const entriesDir = path.join(dictDir, 'entries');
 const manifestsDir = path.join(dictDir, 'manifests');
 
