@@ -1,4 +1,8 @@
 {
+  "concept": "cat",
+  "type": "drawingDots",
+  "level": 2,
+  "viewBox": "0 0 150 150",
   "dots": [
     {
       "id": 1,
