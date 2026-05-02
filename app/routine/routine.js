@@ -5,10 +5,11 @@ const ROUTINES = [
 
 const AXIS_W = 52;
 const DAY_HEADER_H = 36;
+const SLOT_PX = { 15: 28, 30: 44, 60: 64 };
 
 let R = null;
-let focusStart = 7;
-let focusEnd = 20;
+let slotMins = 30;
+let jumpHour = 8;
 let gridStartMins = 0;
 let gridEndMins = 24 * 60;
 let focusedIndex = 0;
@@ -55,9 +56,7 @@ function buildOrderedDays() {
 }
 
 function pixelsPerMin() {
-  const focusMins = (focusEnd - focusStart) * 60;
-  const gridH = Math.max(window.innerHeight - 200, 400);
-  return gridH / focusMins;
+  return SLOT_PX[slotMins] / slotMins;
 }
 
 function render() {
@@ -65,8 +64,6 @@ function render() {
   const ppm = pixelsPerMin();
   const totalGridMins = gridEndMins - gridStartMins;
   const bodyH = totalGridMins * ppm;
-  const focusBandTop = (focusStart * 60 - gridStartMins) * ppm;
-  const focusBandH = (focusEnd - focusStart) * 60 * ppm;
   const todayKey = getTodayKey();
 
   renderTimeAxis(ppm, bodyH);
@@ -93,12 +90,6 @@ function render() {
     body.className = 'day-body';
     body.style.height = bodyH + 'px';
     body.style.position = 'relative';
-
-    const band = document.createElement('div');
-    band.className = 'focus-band';
-    band.style.top = focusBandTop + 'px';
-    band.style.height = focusBandH + 'px';
-    body.appendChild(band);
 
     renderSlotLines(body, ppm);
 
@@ -130,6 +121,7 @@ function render() {
   updateFocusedLabel();
   updateNowNext();
   scrollToFocused();
+  applySticky();
 }
 
 function renderTimeAxis(ppm, bodyH) {
@@ -137,16 +129,15 @@ function renderTimeAxis(ppm, bodyH) {
   axis.style.height = (bodyH + DAY_HEADER_H) + 'px';
   axis.innerHTML = '';
   const spacer = document.createElement('div');
-  spacer.style.height = DAY_HEADER_H + 'px';
+  spacer.style.cssText = `height:${DAY_HEADER_H}px;background:#fff8f0;`;
   axis.appendChild(spacer);
-  const startH = Math.floor(gridStartMins / 60);
-  const endH = Math.ceil(gridEndMins / 60);
-  for (let h = startH; h <= endH; h++) {
-    const top = (h * 60 - gridStartMins) * ppm;
+  for (let m = gridStartMins; m <= gridEndMins; m += slotMins) {
+    const top = (m - gridStartMins) * ppm;
     const lbl = document.createElement('div');
     lbl.className = 'time-label';
     lbl.style.top = (DAY_HEADER_H + top) + 'px';
-    lbl.textContent = String(h).padStart(2,'0') + ':00';
+    const h = Math.floor(m / 60), min = m % 60;
+    lbl.textContent = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
     axis.appendChild(lbl);
   }
 }
@@ -154,17 +145,18 @@ function renderTimeAxis(ppm, bodyH) {
 function renderSlotLines(body, ppm) {
   const totalGridMins = gridEndMins - gridStartMins;
   for (let m = 0; m <= totalGridMins; m += 15) {
-    const line = document.createElement('div');
     const absMin = gridStartMins + m;
-    line.className = 'slot-line' + (absMin % 60 === 0 ? ' hour' : '');
+    const isHour = absMin % 60 === 0;
+    const isSlot = absMin % slotMins === 0;
+    const line = document.createElement('div');
+    line.className = 'slot-line' + (isHour ? ' hour' : isSlot ? ' slot' : '');
     line.style.top = (m * ppm) + 'px';
     body.appendChild(line);
   }
 }
 
 function renderNowLine(body, ppm) {
-  const now = new Date();
-  const nowMins = now.getHours() * 60 + now.getMinutes();
+  const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
   if (nowMins < gridStartMins || nowMins > gridEndMins) return;
   const line = document.createElement('div');
   line.className = 'now-line';
@@ -217,26 +209,30 @@ function scrollToFocused() {
   if (!cols[focusedIndex]) return;
   const gridOuter = document.getElementById('grid-outer');
   const col = cols[focusedIndex];
-  const colW = col.offsetWidth;
-  const scrollX = col.offsetLeft - (gridOuter.clientWidth / 2 - colW / 2);
+  const scrollX = col.offsetLeft - (gridOuter.clientWidth / 2 - col.offsetWidth / 2);
   gridOuter.scrollLeft = Math.max(0, scrollX);
 }
 
-function scrollToFocusWindow() {
+function scrollToJumpTime() {
   const gridOuter = document.getElementById('grid-outer');
-  const ppm = pixelsPerMin();
-  const focusTop = (focusStart * 60 - gridStartMins) * ppm + DAY_HEADER_H;
-  gridOuter.scrollTop = Math.max(0, focusTop);
+  const top = DAY_HEADER_H + (jumpHour * 60 - gridStartMins) * pixelsPerMin();
+  gridOuter.scrollTop = Math.max(0, top);
 }
 
 function scrollToNow() {
   if (!R || !R.meta.rollingWindow) return;
   const gridOuter = document.getElementById('grid-outer');
   const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
-  if (nowMins < gridStartMins || nowMins > gridEndMins) { scrollToFocusWindow(); return; }
-  const ppm = pixelsPerMin();
-  const nowTop = (nowMins - gridStartMins) * ppm + DAY_HEADER_H;
+  if (nowMins < gridStartMins || nowMins > gridEndMins) { scrollToJumpTime(); return; }
+  const nowTop = DAY_HEADER_H + (nowMins - gridStartMins) * pixelsPerMin();
   gridOuter.scrollTop = Math.max(0, nowTop - gridOuter.clientHeight / 2);
+}
+
+function applySticky() {
+  const gridOuter = document.getElementById('grid-outer');
+  const x = gridOuter.scrollLeft, y = gridOuter.scrollTop;
+  document.getElementById('time-axis').style.transform = `translateX(${x}px)`;
+  document.querySelectorAll('.day-header').forEach(h => h.style.transform = `translateY(${y}px)`);
 }
 
 function openModal(act, item) {
@@ -257,18 +253,18 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
-function populateHourSelects() {
-  const startSel = document.getElementById('start-hour');
-  const endSel = document.getElementById('end-hour');
-  startSel.innerHTML = '';
-  endSel.innerHTML = '';
-  for (let h = 0; h <= 23; h++) {
-    const lbl = String(h).padStart(2,'0') + ':00';
-    startSel.add(new Option(lbl, h));
-    endSel.add(new Option(lbl, h));
-  }
-  startSel.value = focusStart;
-  endSel.value = focusEnd;
+function populateSlotSelect() {
+  const sel = document.getElementById('slot-size');
+  sel.innerHTML = '';
+  [{v:15,l:'15 min'},{v:30,l:'30 min'},{v:60,l:'1 hour'}].forEach(({v,l}) => sel.add(new Option(l, v)));
+  sel.value = slotMins;
+}
+
+function populateJumpSelect() {
+  const sel = document.getElementById('jump-hour');
+  sel.innerHTML = '';
+  for (let h = 0; h <= 23; h++) sel.add(new Option(String(h).padStart(2,'0') + ':00', h));
+  sel.value = jumpHour;
 }
 
 function populateRoutinePicker() {
@@ -282,26 +278,25 @@ function loadRoutine(id) {
     .then(r => r.json())
     .then(data => {
       R = data;
-      focusStart = R.meta.defaultStartHour;
-      focusEnd = R.meta.defaultEndHour;
-      document.getElementById('start-hour').value = focusStart;
-      document.getElementById('end-hour').value = focusEnd;
+      jumpHour = R.meta.defaultStartHour || 8;
+      document.getElementById('jump-hour').value = jumpHour;
       computeGridRange();
       buildOrderedDays();
       render();
-      setTimeout(() => R.meta.rollingWindow ? scrollToNow() : scrollToFocusWindow(), 50);
+      setTimeout(() => R.meta.rollingWindow ? scrollToNow() : scrollToJumpTime(), 50);
       clearInterval(nowTimer);
       nowTimer = setInterval(() => {
         updateNowNext();
         const line = document.getElementById('now-line');
         if (line) {
-          const ppm = pixelsPerMin();
           const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
-          line.style.top = ((nowMins - gridStartMins) * ppm) + 'px';
+          line.style.top = ((nowMins - gridStartMins) * pixelsPerMin()) + 'px';
         }
       }, 60000);
     });
 }
+
+document.getElementById('grid-outer').addEventListener('scroll', applySticky, {passive: true});
 
 document.getElementById('routine-picker').addEventListener('change', e => {
   const url = new URL(window.location);
@@ -310,21 +305,22 @@ document.getElementById('routine-picker').addEventListener('change', e => {
   loadRoutine(e.target.value);
 });
 
-document.getElementById('start-hour').addEventListener('change', e => {
-  focusStart = parseInt(e.target.value);
-  if (focusStart >= focusEnd) { focusEnd = focusStart + 1; document.getElementById('end-hour').value = focusEnd; }
+document.getElementById('slot-size').addEventListener('change', e => {
+  slotMins = parseInt(e.target.value);
   render();
-  scrollToFocusWindow();
+  scrollToJumpTime();
 });
 
-document.getElementById('end-hour').addEventListener('change', e => {
-  focusEnd = parseInt(e.target.value);
-  if (focusEnd <= focusStart) { focusStart = focusEnd - 1; document.getElementById('start-hour').value = focusStart; }
-  render();
-  scrollToFocusWindow();
+document.getElementById('jump-hour').addEventListener('change', e => {
+  jumpHour = parseInt(e.target.value);
+  scrollToJumpTime();
 });
 
-document.getElementById('reset-view').addEventListener('click', scrollToFocusWindow);
+document.getElementById('reset-view').addEventListener('click', () => {
+  scrollToJumpTime();
+  scrollToFocused();
+});
+
 document.getElementById('prev-day').addEventListener('click', () => {
   if (focusedIndex > 0) { focusedIndex--; updateFocusedLabel(); scrollToFocused(); }
 });
@@ -341,7 +337,8 @@ document.getElementById('modal-overlay').addEventListener('click', e => { if (e.
 window.addEventListener('resize', render);
 
 populateRoutinePicker();
-populateHourSelects();
+populateSlotSelect();
+populateJumpSelect();
 const defaultId = new URLSearchParams(window.location.search).get('r') || ROUTINES[0].id;
 document.getElementById('routine-picker').value = defaultId;
 loadRoutine(defaultId);
