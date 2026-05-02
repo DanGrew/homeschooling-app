@@ -48,6 +48,7 @@ body{font-family:'Comic Sans MS','Chalkboard SE',cursive;display:flex;height:100
   </div>
 </div>
 <script src="../dictionary/dictionary.js"></script>
+<script src="../dictionary/dictionary-helpers.js"></script>
 <script>var pictures=[];</script>
 <script>
 function ns(tag,attrs){
@@ -116,14 +117,10 @@ function removeImage(idx){
 }
 
 Dictionary.init('../dictionary/');
-Dictionary.loadAll(['colouring']).then(function(items){
-  items.forEach(function(item){
-    if(!item.colouring)return;
-    pictures.push({name:item.name,vb:item.viewBox,shapes:item.colouring.shapes});
-  });
+loadColouringPictures(pictures,function(){
   pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
   buildPanel();
-}).catch(function(){buildPanel();});
+});
 </script>
 </body>
 </html>
