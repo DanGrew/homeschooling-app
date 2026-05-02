@@ -47,7 +47,7 @@ function buildFilterBar(items,onChange){
   });
   bar.appendChild(tagRow);
 
-  if(levels.length>1){
+  if(levels.length>0){
     var levelRow=row('border-top:1px solid #eee;');
     ['all'].concat(levels).forEach(function(l){
       var b=document.createElement('button');
