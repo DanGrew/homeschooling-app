@@ -59,7 +59,7 @@ function render(){
   var b=document.getElementById('dd-banner');
   if(b)b.style.transform='translateY(100%)';
 
-  document.getElementById('title').textContent=shape.name;
+  document.getElementById('title').textContent=shape.name+(shape.level!==undefined?' [Level '+shape.level+']':'');
 
   var r=computeR(shape);
   var svg=document.getElementById('svg');
