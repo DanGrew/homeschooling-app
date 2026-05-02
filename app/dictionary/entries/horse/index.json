@@ -1,0 +1,15 @@
+{
+  "id": "horse",
+  "meta": {
+    "name": "Horse",
+    "phonetic": "horse",
+    "tags": [
+      "animals"
+    ]
+  },
+  "src": "assets/horse.svg",
+  "viewBox": "0 0 150 150",
+  "representations": {
+    "colouring": "entries/horse/colouring.json"
+  }
+}

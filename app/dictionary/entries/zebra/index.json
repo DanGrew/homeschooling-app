@@ -1,0 +1,15 @@
+{
+  "id": "zebra",
+  "meta": {
+    "name": "Zebra",
+    "phonetic": "ze-bra",
+    "tags": [
+      "animals"
+    ]
+  },
+  "src": "assets/zebra.svg",
+  "viewBox": "0 0 150 150",
+  "representations": {
+    "colouring": "entries/zebra/colouring.json"
+  }
+}

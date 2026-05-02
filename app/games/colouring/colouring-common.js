@@ -40,3 +40,13 @@ function hideBanner(){
   var b=document.getElementById('success-banner');
   if(b)b.style.transform='translateY(100%)';
 }
+
+function loadColouringPictures(pictures,callback){
+  Dictionary.loadAll(['colouring']).then(function(items){
+    items.forEach(function(item){
+      if(!item.colouring)return;
+      pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.colouring.shapes});
+    });
+    callback();
+  }).catch(function(){callback();});
+}

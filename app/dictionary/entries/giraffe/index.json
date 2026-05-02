@@ -1,0 +1,15 @@
+{
+  "id": "giraffe",
+  "meta": {
+    "name": "Giraffe",
+    "phonetic": "gi-raffe",
+    "tags": [
+      "animals"
+    ]
+  },
+  "src": "assets/giraffe.svg",
+  "viewBox": "0 0 150 150",
+  "representations": {
+    "colouring": "entries/giraffe/colouring.json"
+  }
+}

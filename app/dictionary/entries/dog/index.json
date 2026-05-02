@@ -1,0 +1,15 @@
+{
+  "id": "dog",
+  "meta": {
+    "name": "Dog",
+    "phonetic": "dog",
+    "tags": [
+      "animals"
+    ]
+  },
+  "src": "assets/dog.svg",
+  "viewBox": "0 0 150 150",
+  "representations": {
+    "colouring": "entries/dog/colouring.json"
+  }
+}

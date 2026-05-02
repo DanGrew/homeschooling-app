@@ -1,0 +1,15 @@
+{
+  "id": "rabbit",
+  "meta": {
+    "name": "Rabbit",
+    "phonetic": "rab-bit",
+    "tags": [
+      "animals"
+    ]
+  },
+  "src": "assets/rabbit.svg",
+  "viewBox": "0 0 150 150",
+  "representations": {
+    "colouring": "entries/rabbit/colouring.json"
+  }
+}
