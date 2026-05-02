@@ -26,6 +26,7 @@
   </div>
 </div>
 <script src="filter-bar.js"></script>
+<script src="../dictionary/dictionary.js"></script>
 <script>var shapes=[];</script>
 <script src="connect-the-dots/shapes/triangle.js"></script>
 <script src="connect-the-dots/shapes/square.js"></script>
@@ -43,7 +44,6 @@
 <script src="connect-the-dots/shapes/desk.js"></script>
 <script src="connect-the-dots/shapes/octagon.js"></script>
 <script src="assets/characters/free-svg/fish/dot-to-dot-10.js"></script>
-<script src="colouring/generated/elephant-connect-the-dots-level-1.js"></script>
 <script>
 var filtIdx=0,nextDot,prevDot,complete,filtered=[];
 
@@ -153,7 +153,15 @@ function drawLine(x1,y1,x2,y2){
 function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
 
-buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
+Dictionary.init('../dictionary/');
+Dictionary.loadAll(['connectDots']).then(function(items){
+  items.forEach(function(item){
+    if(!item.connectDots)return;
+    shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.connectDots.dots,guides:item.connectDots.guides,decor:item.connectDots.decor});
+  });
+}).catch(function(){}).then(function(){
+  buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
+});
 </script>
 </body>
 </html>
