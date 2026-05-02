@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "name": "Bank Holiday Weekend",
+    "rollingWindow": false,
+    "defaultStartHour": 7,
+    "defaultEndHour": 20,
+    "slotMinutes": 15
+  },
+  "activities": {
+    "wake": { "label": "Wake Up", "emoji": "☀️", "color": "#FDE68A", "notes": "Slow start — no rush today.", "planId": null },
+    "breakfast": { "label": "Breakfast", "emoji": "🍳", "color": "#FCD34D", "notes": "Big family breakfast.", "planId": null },
+    "outing": { "label": "Family Outing", "emoji": "🚗", "color": "#86EFAC", "notes": "Park, nature walk, or day trip.", "planId": null },
+    "picnic": { "label": "Picnic Lunch", "emoji": "🧺", "color": "#FCA5A5", "notes": "Lunch outside if weather allows.", "planId": null },
+    "lunch": { "label": "Lunch", "emoji": "🥪", "color": "#FCA5A5", "notes": "Lunch together.", "planId": null },
+    "rest": { "label": "Quiet Time", "emoji": "🛋️", "color": "#E9D5FF", "notes": "Books, puzzles, or light rest.", "planId": null },
+    "outdoor": { "label": "Garden Play", "emoji": "🌳", "color": "#A7F3D0", "notes": "Free play in the garden.", "planId": null },
+    "creative": { "label": "Creative Play", "emoji": "🎨", "color": "#FBCFE8", "notes": "Drawing, crafts, imaginative play.", "planId": null },
+    "bbq": { "label": "BBQ Dinner", "emoji": "🍖", "color": "#FED7AA", "notes": "Barbecue if weather allows, otherwise easy dinner.", "planId": null },
+    "dinner": { "label": "Dinner", "emoji": "🍽️", "color": "#FED7AA", "notes": "Dinner together.", "planId": null },
+    "bathtime": { "label": "Bath Time", "emoji": "🛁", "color": "#BAE6FD", "notes": "Bath and wind down.", "planId": null },
+    "stories": { "label": "Stories", "emoji": "📖", "color": "#DDD6FE", "notes": "2–3 bedtime stories.", "planId": null },
+    "bed": { "label": "Bedtime", "emoji": "🌙", "color": "#C4B5FD", "notes": "Lights out.", "planId": null }
+  },
+  "days": [
+    {
+      "label": "Saturday",
+      "schedule": [
+        { "start": "07:30", "end": "08:00", "activity": "wake" },
+        { "start": "08:00", "end": "09:30", "activity": "breakfast" },
+        { "start": "10:00", "end": "13:00", "activity": "outing" },
+        { "start": "13:00", "end": "14:00", "activity": "picnic" },
+        { "start": "14:00", "end": "15:00", "activity": "rest" },
+        { "start": "15:00", "end": "17:00", "activity": "outdoor" },
+        { "start": "17:30", "end": "18:30", "activity": "bbq" },
+        { "start": "18:45", "end": "19:15", "activity": "bathtime" },
+        { "start": "19:15", "end": "19:45", "activity": "stories" },
+        { "start": "19:45", "end": "20:00", "activity": "bed" }
+      ]
+    },
+    {
+      "label": "Sunday",
+      "schedule": [
+        { "start": "07:30", "end": "08:00", "activity": "wake" },
+        { "start": "08:00", "end": "09:00", "activity": "breakfast" },
+        { "start": "09:30", "end": "11:30", "activity": "outdoor" },
+        { "start": "12:00", "end": "12:45", "activity": "lunch" },
+        { "start": "13:00", "end": "14:00", "activity": "rest" },
+        { "start": "14:00", "end": "16:30", "activity": "creative" },
+        { "start": "17:30", "end": "18:15", "activity": "dinner" },
+        { "start": "18:30", "end": "19:00", "activity": "bathtime" },
+        { "start": "19:00", "end": "19:30", "activity": "stories" },
+        { "start": "19:30", "end": "19:45", "activity": "bed" }
+      ]
+    },
+    {
+      "label": "Bank Holiday Monday",
+      "schedule": [
+        { "start": "07:30", "end": "08:00", "activity": "wake" },
+        { "start": "08:00", "end": "09:30", "activity": "breakfast" },
+        { "start": "10:00", "end": "12:30", "activity": "outing" },
+        { "start": "12:30", "end": "13:15", "activity": "lunch" },
+        { "start": "13:15", "end": "14:00", "activity": "rest" },
+        { "start": "14:00", "end": "16:00", "activity": "creative" },
+        { "start": "16:00", "end": "17:30", "activity": "outdoor" },
+        { "start": "17:30", "end": "18:15", "activity": "dinner" },
+        { "start": "18:30", "end": "19:00", "activity": "bathtime" },
+        { "start": "19:00", "end": "19:30", "activity": "stories" },
+        { "start": "19:30", "end": "19:45", "activity": "bed" }
+      ]
+    }
+  ]
+}
