@@ -83,7 +83,7 @@ function render(){
   var svg=document.getElementById('svg');
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
-  document.getElementById('title').textContent=shape.name;
+  document.getElementById('title').textContent=shape.name+(shape.level!==undefined?' [Level '+shape.level+']':'');
   document.getElementById('done').style.display='none';
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 
