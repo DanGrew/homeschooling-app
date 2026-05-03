@@ -57,6 +57,8 @@ function showPhase1(){
 
 function showSuccess(){document.getElementById('success-banner').style.display='flex';}
 
+if (typeof module !== 'undefined') module.exports = { flattenCatalogs, escHtml, byName };
+
 function startFindPhase(){
   hidePhase1();
   var p2=document.getElementById('phase2');
