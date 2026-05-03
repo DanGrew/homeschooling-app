@@ -38,9 +38,9 @@
   <span style="font-size:0.65em;margin-top:8px;">Well done!</span>
   <button id="btn-again">Play Again!</button>
 </div>
-<script src="/homeschooling-app/app/shared/filter-bar.js"></script>
 <script src="/homeschooling-app/app/shared/shopping-shared.js"></script>
-<script>
+<script type="module">
+import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
 var CATALOGS=[
   {"name":"Fruit","tags":["fruit"],"items":[
     {"name":"Apple","icon":"🍎"},
