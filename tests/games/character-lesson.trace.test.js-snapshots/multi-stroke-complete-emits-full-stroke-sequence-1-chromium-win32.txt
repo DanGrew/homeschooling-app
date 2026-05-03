@@ -1,0 +1,27 @@
+[
+  {
+    "type": "event",
+    "name": "strokeStart",
+    "strokeIdx": 0
+  },
+  {
+    "type": "event",
+    "name": "strokeComplete",
+    "strokeIdx": 0
+  },
+  {
+    "type": "event",
+    "name": "strokeStart",
+    "strokeIdx": 1
+  },
+  {
+    "type": "event",
+    "name": "strokeComplete",
+    "strokeIdx": 1
+  },
+  {
+    "type": "state",
+    "from": "active",
+    "to": "done"
+  }
+]
