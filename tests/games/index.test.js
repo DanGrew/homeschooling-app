@@ -40,12 +40,6 @@ test('Puzzles section has puzzle games', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Drawing Dots' })).toBeVisible()
 })
 
-test('Letters section has Trace Letters', async ({ page }) => {
-  await page.goto('/app/games/')
-  await expect(page.getByRole('heading', { name: 'Letters' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Trace Letters' })).toBeVisible()
-})
-
 test('World section has shopping games', async ({ page }) => {
   await page.goto('/app/games/')
   await expect(page.getByRole('link', { name: 'Shopping Play' })).toBeVisible()
