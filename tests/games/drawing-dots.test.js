@@ -31,6 +31,21 @@ test('connecting all edges shows Well done', async ({ page }) => {
   await expect(page.locator('#dd-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 3000 })
 })
 
+test('connecting non-adjacent dots triggers dot-wrong flash', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/drawing-dots/')
+  await expect(page.locator('#dot0')).toBeVisible({ timeout: 5000 })
+  const pair = await page.evaluate(() => {
+    const n = filtered[shapeIdx].dots.length
+    for (let i = 0; i < n; i++)
+      for (let j = 0; j < n; j++)
+        if (i !== j && adj[i].indexOf(j) < 0) return { from: i, to: j }
+    return null
+  })
+  await page.evaluate((i) => tap(i), pair.from)
+  await page.evaluate((i) => tap(i), pair.to)
+  await expect(page.locator(`#dot${pair.to} circle`)).toHaveClass(/dot-wrong/)
+})
+
 test('home nav button points to games index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/drawing-dots/')
   const href = await page.locator('.nav-btn').first().getAttribute('href')
