@@ -377,7 +377,6 @@ function traceChar(charIdx) {
   ball.style.display = '';
   ball.setAttribute('fill', '#E74C3C');
   ball.style.filter = '';
-  if (dot) { dot.setAttribute('fill', '#E74C3C'); }
 
   const engine = new TraceEngine(svg, base, ball, null, {
     interactive: true,
@@ -386,10 +385,6 @@ function traceChar(charIdx) {
     progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
     onComplete: () => {
       ball.style.display = 'none';
-      if (dot) {
-        dot.setAttribute('fill', '#FFD700');
-        dot.style.filter = 'drop-shadow(0 0 8px #FFD700)';
-      }
       setTimeout(() => traceChar(charIdx + 1), 300);
     }
   });
