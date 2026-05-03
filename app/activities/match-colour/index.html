@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
 <link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
 <script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<script src="/homeschooling-app/app/shared/colouring-common.js"></script>
 <script src="/homeschooling-app/app/shared/shapes.js"></script>
 </head>
 <body>
@@ -35,12 +36,11 @@ function check(btn){
   if(locked)return;
   if(btn.dataset.col===current.col){
     locked=true;
-    btn.style.outline='6px solid #333';
-    btn.style.transform='scale(1.2)';
-    setTimeout(newRound,900);
+    btn.classList.add('feedback-correct');
+    showBanner(newRound);
   }else{
-    btn.style.opacity='0.3';
-    setTimeout(function(){btn.style.opacity='1';},500);
+    btn.classList.add('feedback-wrong');
+    setTimeout(function(){btn.classList.remove('feedback-wrong');},500);
   }
 }
 

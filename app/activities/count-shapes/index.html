@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
 <link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
 <script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<script src="/homeschooling-app/app/shared/colouring-common.js"></script>
 </head>
 <body>
 <div class="nav-bar" data-home="/homeschooling-app/app/games/"></div>
@@ -36,7 +37,8 @@ function svg(t){
 function reset(){
   locked=false;
   ['b1','b2','b3','b4','b5'].forEach(function(id){
-    document.getElementById(id).style.background='#E8E8E8';
+    var el=document.getElementById(id);
+    el.classList.remove('feedback-correct','feedback-wrong');
   });
 }
 
@@ -53,10 +55,10 @@ function check(n,btn){
   if(locked)return;
   locked=true;
   if(n===count){
-    btn.style.background='#2ECC71';
-    setTimeout(newRound,900);
+    btn.classList.add('feedback-correct');
+    showBanner(newRound);
   }else{
-    btn.style.background='#E74C3C';
+    btn.classList.add('feedback-wrong');
     setTimeout(reset,600);
   }
 }

@@ -44,3 +44,5 @@ var Dictionary=(function(){
 
   return{init:init,loadManifest:loadManifest};
 })();
+
+if(typeof module!=='undefined')module.exports=Dictionary;

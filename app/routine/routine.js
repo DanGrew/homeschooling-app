@@ -30,21 +30,20 @@ function computeGridRange() {
   gridEndMins = 24 * 60;
 }
 
-function buildOrderedDays() {
-  if (!R) return;
-  if (R.meta.rollingWindow) {
-    const todayKey = getTodayKey();
+function buildOrderedDays(routineData, todayKey) {
+  if (!routineData) return { days: [], focusedIndex: 0 };
+  if (routineData.meta.rollingWindow) {
     const allKeys = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
     const todayIdx = allKeys.indexOf(todayKey);
-    const r = R.meta.windowRadius || 3;
+    const r = routineData.meta.windowRadius || 3;
     const keys = [];
     for (let i = -r; i <= r; i++) keys.push(allKeys[(todayIdx + i + 7) % 7]);
-    orderedDays = keys.map(k => R.days.find(d => d.key === k)).filter(Boolean);
-    focusedIndex = orderedDays.findIndex(d => d.key === todayKey);
-    if (focusedIndex === -1) focusedIndex = r;
+    const days = keys.map(k => routineData.days.find(d => d.key === k)).filter(Boolean);
+    let fi = days.findIndex(d => d.key === todayKey);
+    if (fi === -1) fi = r;
+    return { days, focusedIndex: fi };
   } else {
-    orderedDays = R.days.slice();
-    focusedIndex = 0;
+    return { days: routineData.days.slice(), focusedIndex: 0 };
   }
 }
 
@@ -291,7 +290,7 @@ function loadRoutine(id) {
       jumpHour = R.meta.defaultStartHour || 8;
       document.getElementById('jump-hour').value = jumpHour;
       computeGridRange();
-      buildOrderedDays();
+      ({ days: orderedDays, focusedIndex } = buildOrderedDays(R, getTodayKey()));
       render();
       setTimeout(() => R.meta.rollingWindow ? scrollToNow() : scrollToJumpTime(), 50);
       clearInterval(nowTimer);
@@ -306,6 +305,9 @@ function loadRoutine(id) {
     });
 }
 
+if (typeof module !== 'undefined') module.exports = { toMins, getTodayKey, buildOrderedDays };
+
+if (typeof document !== 'undefined') {
 document.getElementById('grid-outer').addEventListener('scroll', applySticky, {passive: true});
 
 document.getElementById('routine-picker').addEventListener('change', e => {
@@ -352,3 +354,4 @@ populateJumpSelect();
 const defaultId = new URLSearchParams(window.location.search).get('r') || ROUTINES[0].id;
 document.getElementById('routine-picker').value = defaultId;
 loadRoutine(defaultId);
+}

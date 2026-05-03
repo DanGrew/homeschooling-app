@@ -2,6 +2,7 @@ const { defineConfig } = require('@playwright/test')
 
 module.exports = defineConfig({
   testDir: './tests',
+  testIgnore: '**/unit/**',
   use: {
     baseURL: 'http://localhost:3000',
   },

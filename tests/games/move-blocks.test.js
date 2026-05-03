@@ -21,5 +21,5 @@ test('reaching the target shows the Well done banner', async ({ page }) => {
   // Player one step left of target, obstacle out of the way
   await page.evaluate(() => { px = 2; py = 2; tx = 3; ty = 2; bx = 0; by = 0; render() })
   await page.keyboard.press('ArrowRight')
-  await expect(page.locator('#done')).toBeVisible()
+  await expect(page.locator('#success-banner')).toBeVisible()
 })

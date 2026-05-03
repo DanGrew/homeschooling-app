@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
 <link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
 <script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<script src="/homeschooling-app/app/shared/colouring-common.js"></script>
 <style>
 #grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#ccc;border:3px solid #ccc;border-radius:8px;overflow:hidden;width:min(62vmin,310px);height:min(62vmin,310px);}
 .cell{background:#fff8f0;border-radius:2px;}
@@ -29,10 +30,6 @@
       <button class="arr" style="grid-area:left" onclick="move(-1,0)">&#8592;</button>
       <button class="arr" style="grid-area:right" onclick="move(1,0)">&#8594;</button>
       <button class="arr" style="grid-area:down" onclick="move(0,1)">&#8595;</button>
-    </div>
-    <div id="done" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,248,240,0.92);">
-      <div style="font-size:2.5em;margin-bottom:20px;">&#11088; Well done! &#11088;</div>
-      <button onclick="newGame()" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;touch-action:manipulation;">Next &#8594;</button>
     </div>
   </div>
 </div>
@@ -57,7 +54,7 @@ function bfs(sc,sr,ec,er,bc,br){
 
 function newGame(){
   locked=false;
-  document.getElementById('done').style.display='none';
+  hideBanner();
   var tries=0;
   while(tries++<300){
     px=rand();py=rand();
@@ -105,7 +102,7 @@ function move(dx,dy){
   if(nx===bx&&ny===by)return;
   px=nx;py=ny;
   render();
-  if(px===tx&&py===ty){locked=true;document.getElementById('done').style.display='flex';}
+  if(px===tx&&py===ty){locked=true;showBanner(newGame);}
 }
 
 document.addEventListener('keydown',function(e){
