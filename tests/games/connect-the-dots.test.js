@@ -28,7 +28,7 @@ test('clicking all dots in order shows Well done', async ({ page }) => {
   for (let n = 1; n <= dotCount; n++) {
     await page.evaluate((dot) => tap(dot), n)
   }
-  await expect(page.locator('#done')).toBeVisible()
+  await expect(page.locator('#success-banner')).toBeVisible()
 })
 
 test('home nav button points to games index', async ({ page }) => {

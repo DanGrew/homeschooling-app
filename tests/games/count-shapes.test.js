@@ -13,20 +13,19 @@ test('shapes are shown on the board', async ({ page }) => {
   await expect(page.locator('#shapes svg')).toHaveCount(shapeCount)
 })
 
-test('correct answer turns green and moves to a new round', async ({ page }) => {
+test('correct answer shows green outline and moves to a new round', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/count-shapes/')
 
   const shapeCount = await page.evaluate(() => count)
   const correctButton = page.getByRole('button', { name: String(shapeCount) })
 
   await correctButton.click()
-  await expect(correctButton).toHaveCSS('background-color', 'rgb(46, 204, 113)') // green
+  await expect(correctButton).toHaveClass(/feedback-correct/)
 
-  // After a moment, a new round starts
   await expect(page.locator('#shapes svg').first()).toBeVisible({ timeout: 2000 })
 })
 
-test('wrong answer turns red then resets', async ({ page }) => {
+test('wrong answer shows red outline then resets', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/count-shapes/')
 
   const shapeCount = await page.evaluate(() => count)
@@ -34,8 +33,6 @@ test('wrong answer turns red then resets', async ({ page }) => {
   const wrongButton = page.getByRole('button', { name: wrongAnswer })
 
   await wrongButton.click()
-  await expect(wrongButton).toHaveCSS('background-color', 'rgb(231, 76, 60)') // red
-
-  // Resets back to grey
-  await expect(wrongButton).toHaveCSS('background-color', 'rgb(232, 232, 232)', { timeout: 2000 })
+  await expect(wrongButton).toHaveClass(/feedback-wrong/)
+  await expect(wrongButton).not.toHaveClass(/feedback-wrong/, { timeout: 2000 })
 })

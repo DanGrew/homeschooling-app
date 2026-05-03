@@ -6,6 +6,7 @@
 <title>Connect the Dots</title>
 <link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
 <script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<script src="/homeschooling-app/app/shared/colouring-common.js"></script>
 <style>
 @keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
 .wrong-flash{animation:wrong 0.4s ease}
@@ -19,10 +20,6 @@
   <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
     <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
-    <div id="done" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,248,240,0.85);">
-      <div style="font-size:2.5em;margin-bottom:12px;">&#11088; Well done! &#11088;</div>
-      <button onclick="nextShape()" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;">Next &#8595;</button>
-    </div>
   </div>
 </div>
 <script src="/homeschooling-app/app/shared/filter-bar.js"></script>
@@ -84,7 +81,7 @@ function render(){
   svg.innerHTML=shape.decor||'';
   nextDot=1;prevDot=null;complete=false;
   document.getElementById('title').textContent=shape.name+(shape.level!==undefined?' [Level '+shape.level+']':'');
-  document.getElementById('done').style.display='none';
+  hideBanner();
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 
   var vb=tightVB(shape);
@@ -127,7 +124,7 @@ function tap(n){
       var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
       drawLine(f.cx,f.cy,t.cx,t.cy);
       document.getElementById('instruction').textContent='';
-      document.getElementById('done').style.display='flex';
+      showBanner(nextShape);
     } else {
       document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
     }

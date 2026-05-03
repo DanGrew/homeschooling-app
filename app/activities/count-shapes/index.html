@@ -35,7 +35,8 @@ function svg(t){
 function reset(){
   locked=false;
   ['b1','b2','b3','b4','b5'].forEach(function(id){
-    document.getElementById(id).style.background='#E8E8E8';
+    var el=document.getElementById(id);
+    el.classList.remove('feedback-correct','feedback-wrong');
   });
 }
 
@@ -52,10 +53,10 @@ function check(n,btn){
   if(locked)return;
   locked=true;
   if(n===count){
-    btn.style.background='#2ECC71';
+    btn.classList.add('feedback-correct');
     setTimeout(newRound,900);
   }else{
-    btn.style.background='#E74C3C';
+    btn.classList.add('feedback-wrong');
     setTimeout(reset,600);
   }
 }
