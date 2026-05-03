@@ -3,10 +3,12 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "test:unit": "vitest run"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
-    "serve": "^14.2.0"
+    "serve": "^14.2.0",
+    "vitest": "^4.1.5"
   }
 }

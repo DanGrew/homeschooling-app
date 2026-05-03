@@ -28,6 +28,13 @@ Full session guidelines (output standards, token efficiency, ways of working) ar
 
 Return only the generated output unless explanation is explicitly requested.
 
+## Testing
+
+See `TESTING.md` for full ways of working. Summary:
+- **Vitest** (`npm run test:unit`) — pure functions, no DOM, `tests/unit/`
+- **Playwright** (`npm test`) — user journeys, browser interactions, `tests/`
+- Both required to pass on every PR.
+
 ## Git and GitHub
 
 **Branching:** Feature branches off `main`. Naming: `<topic>-<descriptor>`.
