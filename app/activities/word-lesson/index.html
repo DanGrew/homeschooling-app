@@ -33,8 +33,6 @@
   #banner-btns button{background:white;border:none;font-size:1.1em;padding:10px 20px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;}
   #btn-banner-again{color:#E74C3C;}
   #btn-banner-next{color:#2ECC71;}
-  @keyframes dot-pulse{0%,100%{r:14;opacity:1;}50%{r:18;opacity:0.7;}}
-  .dot-pulse{animation:dot-pulse 0.7s ease-in-out infinite;}
 </style>
 </head>
 <body>
@@ -86,8 +84,6 @@ let charBases = [];
 let charBalls = [];
 let charDots = [];
 let charEngines = [];
-let confirmListenerRef = null;
-let confirmSvg = null;
 
 function validWord(w) {
   return w.length > 0 && w.split('').every(c =>
@@ -101,14 +97,7 @@ function charFile(c) {
   return c + '.svg';
 }
 
-function cancelConfirm() {
-  if (confirmListenerRef && confirmSvg) confirmSvg.removeEventListener('pointerdown', confirmListenerRef);
-  confirmListenerRef = null;
-  confirmSvg = null;
-}
-
 function stopAllEngines() {
-  cancelConfirm();
   charEngines.forEach(e => { if (e) { e.done = true; e.stopAnimation(); } });
   charEngines = [];
   lessonAnimating = false;
@@ -186,14 +175,14 @@ function setLessonUI() {
   document.getElementById('btn-watch').disabled = false;
   document.getElementById('btn-tryit').style.display = '';
   document.getElementById('btn-tryit').disabled = true;
-  document.getElementById('btn-stop').style.display = 'none';
+  document.getElementById('btn-stop').style.display = '';
 }
 
 function setTraceUI() {
   isTracing = true;
   document.getElementById('btn-watch').disabled = false;
   document.getElementById('btn-tryit').style.display = 'none';
-  document.getElementById('btn-stop').style.display = '';
+  document.getElementById('btn-stop').style.display = 'none';
 }
 
 function bestVoice() {
@@ -310,10 +299,9 @@ function renderWord(chars, charData) {
 }
 
 function clearProgress() {
-  cancelConfirm();
   charSvgs.forEach(svg => svg.querySelectorAll('.progress-path').forEach(p => p.remove()));
-  charBalls.forEach(b => { b.classList.remove('dot-pulse'); b.style.display = 'none'; b.style.filter = ''; b.setAttribute('fill', '#E74C3C'); });
-  charDots.forEach(d => { if (d) { d.classList.remove('dot-pulse'); d.setAttribute('fill', '#ddd'); d.setAttribute('stroke', 'none'); d.style.filter = ''; } });
+  charBalls.forEach(b => { b.style.display = 'none'; b.style.filter = ''; b.setAttribute('fill', '#E74C3C'); });
+  charDots.forEach(d => { if (d) { d.setAttribute('fill', '#ddd'); d.setAttribute('stroke', 'none'); d.style.filter = ''; } });
 }
 
 function startWatch() {
@@ -397,38 +385,15 @@ function traceChar(charIdx) {
     progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
     onComplete: () => {
       ball.style.display = 'none';
-      ball.style.filter = '';
-
       if (dot) {
-        dot.setAttribute('fill', '#E74C3C');
-        dot.classList.add('dot-pulse');
-
-        const onConfirm = () => {
-          confirmListenerRef = null;
-          confirmSvg = null;
-          svg.removeEventListener('pointerdown', onConfirm);
-          dot.classList.remove('dot-pulse');
-          dot.setAttribute('fill', '#FFD700');
-          dot.style.filter = 'drop-shadow(0 0 8px #FFD700)';
-          traceChar(charIdx + 1);
-        };
-        confirmListenerRef = onConfirm;
-        confirmSvg = svg;
-        svg.addEventListener('pointerdown', onConfirm);
-      } else {
-        setTimeout(() => traceChar(charIdx + 1), 300);
+        dot.setAttribute('fill', '#FFD700');
+        dot.style.filter = 'drop-shadow(0 0 8px #FFD700)';
       }
+      setTimeout(() => traceChar(charIdx + 1), 300);
     }
   });
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
   charEngines[charIdx] = engine;
-}
-
-function stopTrace() {
-  stopAllEngines();
-  clearProgress();
-  setLessonUI();
-  document.getElementById('btn-tryit').disabled = false;
 }
 
 function onWordComplete() { isTracing = false; showBanner(); }
@@ -450,7 +415,7 @@ function handleGenerate() {
 
 document.getElementById('btn-watch').addEventListener('click', startWatch);
 document.getElementById('btn-tryit').addEventListener('click', startTrace);
-document.getElementById('btn-stop').addEventListener('click', stopTrace);
+document.getElementById('btn-stop').addEventListener('click', startWatch);
 document.getElementById('btn-sayit').addEventListener('click', () => { if (currentWord) speak(currentWord); });
 document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
 document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
