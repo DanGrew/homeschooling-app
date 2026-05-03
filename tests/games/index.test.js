@@ -22,11 +22,11 @@ test('Numbers section has Count Shapes', async ({ page }) => {
 
 test('Colours section has matching and colouring games', async ({ page }) => {
   await page.goto('/app/games/')
-  await expect(page.getByRole('link', { name: 'Colour Match' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Shape Match' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Colour & Shape Match' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Colour Me' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Colour with Palette' })).toBeVisible()
+  await expect(page.locator('a[href="match-colour.html"]')).toBeVisible()
+  await expect(page.locator('a[href="match-shape.html"]')).toBeVisible()
+  await expect(page.locator('a[href="match-colour-shape.html"]')).toBeVisible()
+  await expect(page.locator('a[href="colouring.html"]')).toBeVisible()
+  await expect(page.locator('a[href="colouring-palette.html"]')).toBeVisible()
 })
 
 test('Music section has Piano Game', async ({ page }) => {
