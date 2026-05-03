@@ -77,7 +77,7 @@ class SimulatorEngine {
       if (obj.type === 'button') {
         const btn = document.createElement('div');
         btn.textContent = obj.label || '';
-        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:'Comic Sans MS',cursive;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;pointer-events:none;`;
+        btn.style.cssText = `width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#4CAF50;color:#fff;font-family:inherit;font-size:18px;font-weight:bold;border-radius:32px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);text-align:center;padding:0 12px;box-sizing:border-box;pointer-events:none;`;
         el.appendChild(btn);
       } else if (obj.sprite_states) {
         this.actorIndices[obj.id] = 0;
@@ -98,7 +98,7 @@ class SimulatorEngine {
   _renderSpeechBubble() {
     const b = document.createElement('div');
     b.id = 'speech-bubble';
-    b.style.cssText = `position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:24px;padding:12px 28px;font-family:'Comic Sans MS',cursive;font-size:24px;color:#333;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.15);`;
+    b.style.cssText = `position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.95);border-radius:24px;padding:12px 28px;font-family:inherit;font-size:24px;color:#333;white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,0.15);`;
     this.container.appendChild(b);
   }
 
