@@ -24,9 +24,9 @@ test('level filter row appears', async ({ page }) => {
 test('clicking all dots in order shows Well done', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
   await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
-  const dotCount = await page.evaluate(() => filtered[filtIdx].dots.length)
+  const dotCount = await page.locator('#svg circle[id^="c"]').count()
   for (let n = 1; n <= dotCount; n++) {
-    await page.evaluate((dot) => tap(dot), n)
+    await page.locator('#c' + n).click({ force: true })
   }
   await expect(page.locator('#success-banner')).toBeVisible()
 })
@@ -34,7 +34,7 @@ test('clicking all dots in order shows Well done', async ({ page }) => {
 test('tapping a dot out of order triggers wrong-flash', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
   await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
-  await page.evaluate(() => tap(2))
+  await page.locator('#c2').click({ force: true })
   await expect(page.locator('#c2')).toHaveClass(/wrong-flash/)
   await expect(page.locator('#c2')).not.toHaveAttribute('fill', '#2ECC71')
 })
@@ -42,7 +42,7 @@ test('tapping a dot out of order triggers wrong-flash', async ({ page }) => {
 test('tapping dot 1 does not wrong-flash', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
   await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
-  await page.evaluate(() => tap(1))
+  await page.locator('#c1').click({ force: true })
   const cls = await page.locator('#c1').getAttribute('class')
   expect(cls || '').not.toMatch(/wrong-flash/)
 })
