@@ -44,10 +44,10 @@ describe('font standardisation', () => {
   );
 
   it.each(sourceFiles.map(f => [f.replace(process.cwd(), '')]))(
-    '%s contains no Comic Sans or Chalkboard SE',
+    '%s contains no hardcoded font names',
     (rel) => {
       const src = readFileSync(join(process.cwd(), rel), 'utf8');
-      expect(src).not.toMatch(/Comic Sans|Chalkboard SE/);
+      expect(src).not.toMatch(/Comic Sans|Chalkboard SE|font-family="Arial/);
     }
   );
 });
