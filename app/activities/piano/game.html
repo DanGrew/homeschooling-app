@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Piano Game</title>
 <link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
+<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#1a1a2e;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));}
-#header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;flex-shrink:0;}
+body{background:#1a1a2e;flex-direction:column;}
+.nav-bar{flex-direction:row;justify-content:space-between;border-right:none;background:#16213e;border-bottom:2px solid #333;padding:8px 16px;}
+.nav-btn{background:#2a2a3e;color:#ccc;}
+.nav-title{color:#eee;}
+.nav-link{color:#B3C6FF;}
 #controls{display:flex;gap:10px;align-items:center;justify-content:center;padding:6px 16px;flex-shrink:0;}
 .ctrl-btn{font-size:1.3em;padding:8px 18px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:bold;touch-action:manipulation;-webkit-touch-callout:none;}
 #game-area{flex:1;position:relative;overflow:hidden;border-radius:12px;background:#16213e;margin:0 4px;min-height:80px;}
@@ -18,27 +22,26 @@ body{background:#1a1a2e;height:100vh;height:100dvh;display:flex;flex-direction:c
 </style>
 </head>
 <body>
-<div id="header">
-  <a href="/homeschooling-app/app/games/" style="font-size:1.6em;text-decoration:none;">&#127968;</a>
-  <span style="font-size:1.3em;font-weight:bold;color:#eee;">&#127929; Piano Game</span>
-  <a href="./lesson.html" style="font-size:0.95em;color:#B3C6FF;text-decoration:none;font-weight:bold;">&#9664; Lesson</a>
-</div>
-<div id="controls">
-  <button class="ctrl-btn" id="btn-play" onclick="pressPlay()" style="background:#2ECC71;color:#fff;">&#9654; Play</button>
-  <button class="ctrl-btn" id="btn-pause" onclick="pressPause()" style="background:#F39C12;color:#fff;display:none;">&#9646;&#9646; Pause</button>
-  <button class="ctrl-btn" id="btn-stop" onclick="pressStop()" style="background:#E74C3C;color:#fff;display:none;">&#9646; Stop</button>
-  <span id="score-display" style="font-size:1.2em;color:#eee;min-width:60px;text-align:center;"></span>
-</div>
-<div id="game-area">
-  <div id="hit-line"></div>
-  <div id="score-overlay">
-    <div id="score-emoji" style="font-size:4em;"></div>
-    <div id="score-text" style="font-size:1.8em;font-weight:bold;color:#fff;"></div>
-    <div id="score-sub" style="font-size:1.1em;color:#ccc;"></div>
-    <button onclick="playAgain()" style="margin-top:8px;font-size:1.2em;padding:10px 28px;border:none;border-radius:12px;background:#2ECC71;color:#fff;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;">Play Again</button>
+<div class="nav-bar" data-home="/homeschooling-app/app/games/" data-title="&#127929; Piano Game" data-links='[{"label":"&#9664; Lesson","href":"./lesson.html"}]'></div>
+<div class="game-area">
+  <div id="controls">
+    <button class="ctrl-btn" id="btn-play" onclick="pressPlay()" style="background:#2ECC71;color:#fff;">&#9654; Play</button>
+    <button class="ctrl-btn" id="btn-pause" onclick="pressPause()" style="background:#F39C12;color:#fff;display:none;">&#9646;&#9646; Pause</button>
+    <button class="ctrl-btn" id="btn-stop" onclick="pressStop()" style="background:#E74C3C;color:#fff;display:none;">&#9646; Stop</button>
+    <span id="score-display" style="font-size:1.2em;color:#eee;min-width:60px;text-align:center;"></span>
   </div>
+  <div id="game-area">
+    <div id="hit-line"></div>
+    <div id="score-overlay">
+      <div id="score-emoji" style="font-size:4em;"></div>
+      <div id="score-text" style="font-size:1.8em;font-weight:bold;color:#fff;"></div>
+      <div id="score-sub" style="font-size:1.1em;color:#ccc;"></div>
+      <button onclick="playAgain()" style="margin-top:8px;font-size:1.2em;padding:10px 28px;border:none;border-radius:12px;background:#2ECC71;color:#fff;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;">Play Again</button>
+    </div>
+  </div>
+  <div id="keys-wrap"></div>
 </div>
-<div id="keys-wrap"></div>
+<script src="/homeschooling-app/app/shared/menu.js" defer></script>
 <script src="/homeschooling-app/app/shared/piano-shared.js"></script>
 <script>
 var gameState = 'idle';

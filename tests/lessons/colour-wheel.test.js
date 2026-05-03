@@ -2,6 +2,22 @@ const { test, expect } = require('@playwright/test')
 
 const URL = '/homeschooling-app/app/activities/colour-wheel/'
 
+test('nav home link points to lessons', async ({ page }) => {
+  await page.goto(URL)
+  const href = await page.locator('.nav-bar a').first().getAttribute('href')
+  expect(href).toBe('/homeschooling-app/app/lessons/')
+})
+
+test('nav shows Primary Colours link', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.getByRole('link', { name: 'Primary Colours' })).toBeVisible()
+})
+
+test('nav shows Secondary Colours link', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.getByRole('link', { name: 'Secondary Colours' })).toBeVisible()
+})
+
 test('page loads with colour wheel and palette', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('#wheel-svg path')).toHaveCount(12)
