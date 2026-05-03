@@ -45,16 +45,16 @@
   </div>
 </div>
 <script src="/homeschooling-app/app/shared/colouring-common.js"></script>
-<script src="/homeschooling-app/app/shared/filter-bar.js"></script>
-<script src="/homeschooling-app/app/dictionary/dictionary.js"></script>
-<script src="/homeschooling-app/app/dictionary/dictionary-helpers.js"></script>
 <script>var pictures=[];</script>
 <script src="/homeschooling-app/app/shared/colouring-pictures/sun.js"></script>
 <script src="/homeschooling-app/app/shared/colouring-pictures/cat.js"></script>
 <script src="/homeschooling-app/app/shared/colouring-pictures/fish.js"></script>
 <script src="/homeschooling-app/app/shared/colouring-pictures/house.js"></script>
 <script src="/homeschooling-app/app/shared/colouring-pictures/tree.js"></script>
-<script>
+<script type="module">
+import Dictionary from '/homeschooling-app/app/dictionary/dictionary.js';
+import { loadColouringPictures } from '/homeschooling-app/app/dictionary/dictionary-helpers.js';
+import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
 var filtIdx=0,selectedColour=null,filledEls,filtered=[];
 
 function selectColour(c){
@@ -119,6 +119,7 @@ function render(){
 
 function nextPicture(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevPicture(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
+window.nextPicture=nextPicture;window.prevPicture=prevPicture;
 
 Dictionary.init('/homeschooling-app/app/dictionary/');
 loadColouringPictures(pictures,function(){

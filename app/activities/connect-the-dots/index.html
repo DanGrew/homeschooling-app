@@ -23,9 +23,6 @@
     <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
 </div>
-<script src="/homeschooling-app/app/shared/filter-bar.js"></script>
-<script src="/homeschooling-app/app/dictionary/dictionary.js"></script>
-<script src="/homeschooling-app/app/dictionary/dictionary-helpers.js"></script>
 <script>var shapes=[];</script>
 <script src="./shapes/triangle.js"></script>
 <script src="./shapes/square.js"></script>
@@ -43,7 +40,10 @@
 <script src="./shapes/desk.js"></script>
 <script src="./shapes/octagon.js"></script>
 <script src="./free-svg/fish/dot-to-dot-10.js"></script>
-<script>
+<script type="module">
+import Dictionary from '/homeschooling-app/app/dictionary/dictionary.js';
+import { loadConnectDots } from '/homeschooling-app/app/dictionary/dictionary-helpers.js';
+import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
 var filtIdx=0,nextDot,prevDot,complete,filtered=[];
 
 function ns(tag,attrs){
@@ -151,6 +151,7 @@ function drawLine(x1,y1,x2,y2){
 
 function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
 function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
+window.nextShape=nextShape;window.prevShape=prevShape;
 
 Dictionary.init('/homeschooling-app/app/dictionary/');
 loadConnectDots(shapes,function(){

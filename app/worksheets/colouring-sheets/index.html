@@ -52,10 +52,10 @@ body{display:flex;height:100vh;overflow:hidden;}
     <p id="empty-msg">Select images from the list to build your worksheet.</p>
   </div>
 </div>
-<script src="/homeschooling-app/app/dictionary/dictionary.js"></script>
-<script src="/homeschooling-app/app/dictionary/dictionary-helpers.js"></script>
 <script>var pictures=[];</script>
-<script>
+<script type="module">
+import Dictionary from '/homeschooling-app/app/dictionary/dictionary.js';
+import { loadColouringPictures } from '/homeschooling-app/app/dictionary/dictionary-helpers.js';
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});

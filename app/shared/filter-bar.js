@@ -1,16 +1,16 @@
-function extractTags(items){
+export function extractTags(items){
   var tags=['all'];
   items.forEach(function(p){(p.tags||[]).forEach(function(t){if(tags.indexOf(t)<0)tags.push(t);});});
   return tags;
 }
 
-function extractLevels(items){
+export function extractLevels(items){
   var levels=[];
   items.forEach(function(p){if(p.level!==undefined&&levels.indexOf(p.level)<0)levels.push(p.level);});
   return levels.sort(function(a,b){return a-b;});
 }
 
-function filterItems(items,activeTag,activeLevel){
+export function filterItems(items,activeTag,activeLevel){
   return items.filter(function(p){
     var tagOk=activeTag==='all'||(p.tags||[]).indexOf(activeTag)>=0;
     var levelOk=activeLevel==='all'||p.level===activeLevel;
@@ -18,9 +18,7 @@ function filterItems(items,activeTag,activeLevel){
   });
 }
 
-if(typeof module!=='undefined')module.exports={extractTags,extractLevels,filterItems};
-
-function buildFilterBar(items,onChange){
+export function buildFilterBar(items,onChange){
   var bar=document.getElementById('filter-bar');
   bar.innerHTML='';
   bar.style.cssText='display:flex;flex-direction:column;border-bottom:1px solid #eee;';

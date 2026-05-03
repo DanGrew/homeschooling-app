@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { extractTags, extractLevels, filterItems } = require('../../app/shared/filter-bar.js');
+import { extractTags, extractLevels, filterItems } from '../../app/shared/filter-bar.js';
 
 const item = (tags, level) => ({ tags, level });
 

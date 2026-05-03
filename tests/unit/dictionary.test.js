@@ -1,11 +1,8 @@
-import { createRequire } from 'module';
 import { vi, beforeEach } from 'vitest';
 
-function freshDictionary() {
-  const req = createRequire(import.meta.url);
-  const path = req.resolve('../../app/dictionary/dictionary.js');
-  delete req.cache[path];
-  return req(path);
+async function freshDictionary() {
+  vi.resetModules();
+  return (await import('../../app/dictionary/dictionary.js')).default;
 }
 
 function okJson(data) {
@@ -29,14 +26,14 @@ beforeEach(() => { vi.unstubAllGlobals(); });
 describe('fetchJSON error handling', () => {
   it('rejects with status on non-ok response', async () => {
     vi.stubGlobal('fetch', notOk(404));
-    const D = freshDictionary();
+    const D = await freshDictionary();
     D.init('/base/');
     await expect(D.loadManifest('colouring', 1)).rejects.toThrow('404');
   });
 
   it('rejects on network failure', async () => {
     vi.stubGlobal('fetch', networkError());
-    const D = freshDictionary();
+    const D = await freshDictionary();
     D.init('/base/');
     await expect(D.loadManifest('colouring', 1)).rejects.toThrow('network');
   });
@@ -51,7 +48,7 @@ describe('loadManifest', () => {
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(rep) })
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(concept) });
     vi.stubGlobal('fetch', fetchMock);
-    const D = freshDictionary();
+    const D = await freshDictionary();
     D.init('/base/');
     const items = await D.loadManifest('colouring', 1);
     expect(items).toHaveLength(1);
@@ -66,7 +63,7 @@ describe('loadManifest', () => {
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(rep) })
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(concept) });
     vi.stubGlobal('fetch', fetchMock);
-    const D = freshDictionary();
+    const D = await freshDictionary();
     D.init('/base/');
     const [item] = await D.loadManifest('colouring', 1);
     expect(item.name).toBe('Dog');
@@ -85,7 +82,7 @@ describe('caching', () => {
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(concept) })                   // concept fetch
       .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(['entries/fish/rep.json']) }); // manifest 2
     vi.stubGlobal('fetch', fetchMock);
-    const D = freshDictionary();
+    const D = await freshDictionary();
     D.init('/base/');
     await D.loadManifest('colouring', 1);
     await D.loadManifest('colouring', 2); // same rep path — should use repCache

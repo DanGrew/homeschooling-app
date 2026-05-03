@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { mix, hex, CM_COLOURS, CM_MIXES } = require('../../app/shared/colour-mixing-engine.js');
+import { mix, hex, CM_COLOURS, CM_MIXES } from '../../app/shared/colour-mixing-engine.js';
 
 describe('mix', () => {
   it('same colour returns itself', () => {
