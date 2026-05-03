@@ -38,9 +38,9 @@
   <span style="font-size:0.65em;margin-top:8px;">Well done!</span>
   <button id="btn-again">Play Again!</button>
 </div>
-<script src="/homeschooling-app/app/shared/shopping-shared.js"></script>
 <script type="module">
 import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
+import { flattenCatalogs, setAllItems, resetListItems, filterListItems, renderTiles, renderList, showPhase1, startFindPhase } from '/homeschooling-app/app/shared/shopping-shared.js';
 var CATALOGS=[
   {"name":"Fruit","tags":["fruit"],"items":[
     {"name":"Apple","icon":"🍎"},
@@ -91,14 +91,14 @@ document.getElementById('btn-find').onclick=startFindPhase;
 document.getElementById('btn-again').onclick=function(){
   document.getElementById('success-banner').style.display='none';
   document.getElementById('phase2').style.display='none';
-  listItems=[];
+  resetListItems();
   showPhase1();
   renderList();
-  renderTiles(allItems);
+  renderTiles();
 };
 
 function initGame(){
-  allItems=flattenCatalogs(CATALOGS);
+  setAllItems(flattenCatalogs(CATALOGS));
   buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags||[],name:c.name};}),function(filtered){
     var items=[];
     filtered.forEach(function(c){
@@ -106,9 +106,9 @@ function initGame(){
         if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,icon:it.icon,tags:cat.tags||[],catalog:cat.name};}));
       });
     });
-    allItems=items;
-    listItems=listItems.filter(function(li){return items.some(function(i){return i.name===li.name&&i.catalog===li.catalog;});});
-    renderTiles(allItems);
+    setAllItems(items);
+    filterListItems(function(li){return items.some(function(i){return i.name===li.name&&i.catalog===li.catalog;});});
+    renderTiles();
     renderList();
   });
 }

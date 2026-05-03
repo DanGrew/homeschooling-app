@@ -94,9 +94,9 @@
   <span style="font-size:0.65em;margin-top:8px;">Well done!</span>
   <button id="btn-again">Play Again!</button>
 </div>
-<script src="/homeschooling-app/app/shared/shopping-shared.js"></script>
 <script type="module">
 import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
+import { flattenCatalogs, escHtml, byName, setAllItems, getListItems, resetListItems, filterListItems, renderTiles, renderList, hidePhase1, showPhase1, showSuccess, startFindPhase } from '/homeschooling-app/app/shared/shopping-shared.js';
 var hasDetector=typeof BarcodeDetector!=='undefined';
 var CATALOGS=[{"name":"My Catalog","items":[{"barcode":"00348188","name":"Milk","icon":"🥛"},{"barcode":"00907897","name":"Sauce - BBQ","icon":"🥫"},{"barcode":"00556293","name":"Boule","icon":"🍞"},{"barcode":"00580458","name":"Organic Butter","icon":"🧈"},{"barcode":"5010044005126","name":"Crumpets","icon":"🛒"},{"barcode":"5000157150974","name":"Beans","icon":"🥫"},{"barcode":"5060107330764","name":"Orange Breakie","icon":"🍊"},{"barcode":"5060107330740","name":"Purple Breakie","icon":"🛒"},{"barcode":"5060503504073","name":"Pouch - Pulled Pork","icon":"🥩"},{"barcode":"5060107337879","name":"Pouch - Cottage Pie","icon":"🥣"}]}];
 var scanStream=null,scanInterval=null,scanFound=0,scanCrossed=0,scanTotal=0;
@@ -111,8 +111,9 @@ document.getElementById('btn-scan-it').onclick=function(){
   ci.innerHTML='';
   var barcodeMap={};
   scanFound=0;scanCrossed=0;
-  scanTotal=listItems.length;
-  listItems.slice().sort(byName).forEach(function(it){
+  var currentList=getListItems();
+  scanTotal=currentList.length;
+  currentList.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='sc-row';
     row.innerHTML='<span class="sc-tick">☐</span><span class="sc-icon">'+it.icon+'</span><span class="sc-name">'+escHtml(it.name)+'</span><button class="btn-not-here">Not here ✕</button>';
@@ -206,10 +207,10 @@ document.getElementById('btn-again').onclick=function(){
   document.getElementById('phase2').style.display='none';
   document.getElementById('phase-scan').style.display='none';
   document.getElementById('scan-stub').style.display='none';
-  listItems=[];scanFound=0;scanCrossed=0;
+  resetListItems();scanFound=0;scanCrossed=0;
   showPhase1();
   renderList();
-  renderTiles(allItems);
+  renderTiles();
 };
 
 if(!hasDetector){
@@ -217,7 +218,7 @@ if(!hasDetector){
 }
 
 function initGame(){
-  allItems=flattenCatalogs(CATALOGS);
+  setAllItems(flattenCatalogs(CATALOGS));
   buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags||[],name:c.name};}),function(filtered){
     var items=[];
     filtered.forEach(function(c){
@@ -225,9 +226,9 @@ function initGame(){
         if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,barcode:it.barcode,icon:it.icon,tags:cat.tags||[],catalog:cat.name};}));
       });
     });
-    allItems=items;
-    listItems=listItems.filter(function(li){return items.some(function(i){return i.barcode===li.barcode;});});
-    renderTiles(allItems);
+    setAllItems(items);
+    filterListItems(function(li){return items.some(function(i){return i.barcode===li.barcode;});});
+    renderTiles();
     renderList();
   });
 }

@@ -1,16 +1,21 @@
 var TILE_COLOURS=['#FFF0E0','#EAF4FF','#F0FFF4','#FFF0FA','#FFF5E0','#F5EEFF','#F0F8FF','#FFFBEA','#FFF0F0','#E8FFF0'];
-var allItems=[],listItems=[];
+let allItems=[],listItems=[];
 
-function flattenCatalogs(catalogs){
+export function setAllItems(items){allItems=items;}
+export function getListItems(){return listItems;}
+export function resetListItems(){listItems=[];}
+export function filterListItems(fn){listItems=listItems.filter(fn);}
+
+export function flattenCatalogs(catalogs){
   var out=[];
   catalogs.forEach(function(c){c.items.forEach(function(it){out.push({name:it.name,barcode:it.barcode,icon:it.icon,tags:c.tags,catalog:c.name});});});
   return out;
 }
 
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function byName(a,b){return a.name.localeCompare(b.name);}
+export function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+export function byName(a,b){return a.name.localeCompare(b.name);}
 
-function renderTiles(items){
+export function renderTiles(items=allItems){
   var wrap=document.getElementById('tiles');
   wrap.innerHTML='';
   items.filter(function(it){return listItems.indexOf(it)<0;}).slice().sort(byName).forEach(function(it,i){
@@ -23,7 +28,7 @@ function renderTiles(items){
   });
 }
 
-function renderList(){
+export function renderList(){
   var wrap=document.getElementById('list-items');
   wrap.innerHTML='';
   var empty=listItems.length===0;
@@ -40,26 +45,24 @@ function renderList(){
   });
 }
 
-function addToList(it){listItems.push(it);renderList();renderTiles(allItems);}
-function removeFromList(it){listItems.splice(listItems.indexOf(it),1);renderList();renderTiles(allItems);}
+function addToList(it){listItems.push(it);renderList();renderTiles();}
+function removeFromList(it){listItems.splice(listItems.indexOf(it),1);renderList();renderTiles();}
 
-function hidePhase1(){
+export function hidePhase1(){
   document.getElementById('phase1').style.display='none';
   var fb=document.getElementById('filter-bar');
   if(fb)fb.style.display='none';
 }
 
-function showPhase1(){
+export function showPhase1(){
   document.getElementById('phase1').style.display='flex';
   var fb=document.getElementById('filter-bar');
   if(fb)fb.style.display='flex';
 }
 
-function showSuccess(){document.getElementById('success-banner').style.display='flex';}
+export function showSuccess(){document.getElementById('success-banner').style.display='flex';}
 
-if (typeof module !== 'undefined') module.exports = { flattenCatalogs, escHtml, byName };
-
-function startFindPhase(){
+export function startFindPhase(){
   hidePhase1();
   var p2=document.getElementById('phase2');
   p2.style.display='flex';
