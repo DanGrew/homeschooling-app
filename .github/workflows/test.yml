@@ -35,6 +35,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           name: Unit Test Coverage
+          comment-on: pr
 
   check-untested:
     runs-on: ubuntu-latest
@@ -58,12 +59,29 @@ jobs:
           script: |
             const fs = require('fs');
             const output = fs.readFileSync('/tmp/untested.txt', 'utf8');
-            await github.rest.issues.createComment({
+            const marker = '<!-- untested-files-check -->';
+            const body = marker + '\n### Untested Files Check\n```\n' + output + '\n```';
+            const { data: comments } = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '### Untested Files Check\n```\n' + output + '\n```',
             });
+            const existing = comments.find(c => c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                comment_id: existing.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              });
+            }
 
   e2e-test:
     runs-on: ubuntu-latest
