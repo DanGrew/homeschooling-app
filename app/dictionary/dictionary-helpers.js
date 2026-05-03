@@ -1,4 +1,6 @@
-function loadColouringPictures(pictures,callback){
+import Dictionary from './dictionary.js';
+
+export function loadColouringPictures(pictures,callback){
   Dictionary.loadManifest('colouring',1).then(function(items){
     items.forEach(function(item){
       pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.shapes});
@@ -7,7 +9,7 @@ function loadColouringPictures(pictures,callback){
   }).catch(function(){callback();});
 }
 
-function loadConnectDots(shapes,callback){
+export function loadConnectDots(shapes,callback){
   Dictionary.loadManifest('connectDots',1).then(function(items){
     items.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,guides:item.guides,decor:item.decor});
@@ -17,7 +19,7 @@ function loadConnectDots(shapes,callback){
   }).catch(function(){callback();});
 }
 
-function loadDrawingDots(shapes,level,callback){
+export function loadDrawingDots(shapes,level,callback){
   Dictionary.loadManifest('drawingDots',level).then(function(items){
     items.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
@@ -26,7 +28,7 @@ function loadDrawingDots(shapes,level,callback){
   }).catch(function(){callback();});
 }
 
-function loadAllDrawingDots(shapes,callback){
+export function loadAllDrawingDots(shapes,callback){
   Dictionary.loadManifest('drawingDots',1).then(function(l1){
     l1.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
@@ -41,11 +43,9 @@ function loadAllDrawingDots(shapes,callback){
   }).catch(function(){callback();});
 }
 
-function loadImages(items,callback){
+export function loadImages(items,callback){
   Dictionary.loadManifest('image',1).then(function(loaded){
     loaded.forEach(function(item){items.push(item);});
     callback();
   }).catch(function(){callback();});
 }
-
-if(typeof module!=='undefined')module.exports={loadColouringPictures,loadConnectDots,loadDrawingDots,loadAllDrawingDots,loadImages};

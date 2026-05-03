@@ -1,4 +1,4 @@
-var CM_COLOURS={
+export const CM_COLOURS={
   red:            {hex:'#E74C3C',label:'Red'},
   yellow:         {hex:'#F1C40F',label:'Yellow'},
   blue:           {hex:'#3498DB',label:'Blue'},
@@ -19,7 +19,7 @@ var CM_COLOURS={
   'green-purple-mix': {hex:'#3A5A50',label:'Dark Green'}
 };
 
-var CM_MIXES={
+export const CM_MIXES={
   'red+yellow':'orange',              'yellow+red':'orange',
   'red+blue':'purple',                'blue+red':'purple',
   'blue+yellow':'green',              'yellow+blue':'green',
@@ -37,14 +37,12 @@ var CM_MIXES={
   'green+purple':'green-purple-mix',  'purple+green':'green-purple-mix'
 };
 
-function mix(a,b){if(a===b)return a;return CM_MIXES[a+'+'+b]||null;}
-function hex(id){return CM_COLOURS[id]?CM_COLOURS[id].hex:'#f0f0f0';}
+export function mix(a,b){if(a===b)return a;return CM_MIXES[a+'+'+b]||null;}
+export function hex(id){return CM_COLOURS[id]?CM_COLOURS[id].hex:'#f0f0f0';}
 
-if(typeof module!=='undefined')module.exports={mix,hex,CM_COLOURS,CM_MIXES};
-
-if(typeof window!=='undefined')(function(){
-  var cfg=window.CM_CONFIG;
-  var slotA=null,slotB=null,sel=null,target=null;
+if(typeof document!=='undefined'){
+  const cfg=window.CM_CONFIG;
+  let slotA=null,slotB=null,sel=null,target=null;
 
   function el(id){return document.getElementById(id);}
 
@@ -180,9 +178,5 @@ if(typeof window!=='undefined')(function(){
     root.appendChild(pal);
   }
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',function(){target=pickTarget();buildUI();});
-  } else {
-    target=pickTarget();buildUI();
-  }
-})();
+  target=pickTarget();buildUI();
+}

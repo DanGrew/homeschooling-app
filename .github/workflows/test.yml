@@ -30,11 +30,35 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test:coverage
-      - uses: davelosert/vitest-coverage-report-action@v2
-        if: always() && github.event_name == 'pull_request'
+        continue-on-error: true
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          name: Unit Test Coverage
+          script: |
+            const fs = require('fs');
+            let body;
+            try {
+              const s = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total;
+              const row = (label, key) => `| ${label} | ${s[key].pct}% | ${s[key].covered} / ${s[key].total} |`;
+              body = [
+                '### Unit Test Coverage',
+                '| Metric | % | Covered / Total |',
+                '|--------|---|-----------------|',
+                row('Lines', 'lines'),
+                row('Statements', 'statements'),
+                row('Functions', 'functions'),
+                row('Branches', 'branches'),
+              ].join('\n');
+            } catch(e) {
+              body = '### Unit Test Coverage\nFailed to read coverage report.';
+            }
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body,
+            });
 
   check-untested:
     runs-on: ubuntu-latest

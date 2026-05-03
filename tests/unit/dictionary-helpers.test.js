@@ -1,13 +1,9 @@
-import { createRequire } from 'module';
 import { vi, beforeEach } from 'vitest';
 
-const require = createRequire(import.meta.url);
-
-function loadHelpers(mockDictionary) {
-  const path = require.resolve('../../app/dictionary/dictionary-helpers.js');
-  delete require.cache[path];
-  global.Dictionary = mockDictionary;
-  return require(path);
+async function loadHelpers(mockDictionary) {
+  vi.doMock('../../app/dictionary/dictionary.js', () => ({ default: mockDictionary }));
+  vi.resetModules();
+  return await import('../../app/dictionary/dictionary-helpers.js');
 }
 
 function call(fn, ...args) {
@@ -18,11 +14,11 @@ function makeItem(overrides) {
   return { name: 'Item', tags: [], viewBox: '0 0 10 10', shapes: [], level: 1, dots: [], edges: [], guides: [], decor: [], ...overrides };
 }
 
-beforeEach(() => { vi.unstubAllGlobals(); delete global.Dictionary; });
+beforeEach(() => { vi.unstubAllGlobals(); });
 
 describe('loadColouringPictures', () => {
   it('pushes items and calls callback on success', async () => {
-    const { loadColouringPictures } = loadHelpers({ loadManifest: () => Promise.resolve([makeItem({ name: 'Cat' })]) });
+    const { loadColouringPictures } = await loadHelpers({ loadManifest: () => Promise.resolve([makeItem({ name: 'Cat' })]) });
     const pictures = [];
     await call(loadColouringPictures, pictures);
     expect(pictures).toHaveLength(1);
@@ -30,7 +26,7 @@ describe('loadColouringPictures', () => {
   });
 
   it('calls callback with empty array on failure', async () => {
-    const { loadColouringPictures } = loadHelpers({ loadManifest: () => Promise.reject(new Error('fail')) });
+    const { loadColouringPictures } = await loadHelpers({ loadManifest: () => Promise.reject(new Error('fail')) });
     const pictures = [];
     await call(loadColouringPictures, pictures);
     expect(pictures).toHaveLength(0);
@@ -41,7 +37,7 @@ describe('loadAllDrawingDots', () => {
   it('merges level 1 and level 2 items', async () => {
     const l1 = [makeItem({ name: 'A', level: 1 })];
     const l2 = [makeItem({ name: 'B', level: 2 })];
-    const { loadAllDrawingDots } = loadHelpers({
+    const { loadAllDrawingDots } = await loadHelpers({
       loadManifest: vi.fn().mockResolvedValueOnce(l1).mockResolvedValueOnce(l2),
     });
     const shapes = [];
@@ -52,7 +48,7 @@ describe('loadAllDrawingDots', () => {
   it('sorts by level then name', async () => {
     const l1 = [makeItem({ name: 'Zebra', level: 1 }), makeItem({ name: 'Apple', level: 1 })];
     const l2 = [makeItem({ name: 'Mango', level: 2 })];
-    const { loadAllDrawingDots } = loadHelpers({
+    const { loadAllDrawingDots } = await loadHelpers({
       loadManifest: vi.fn().mockResolvedValueOnce(l1).mockResolvedValueOnce(l2),
     });
     const shapes = [];
@@ -61,7 +57,7 @@ describe('loadAllDrawingDots', () => {
   });
 
   it('calls callback on failure', async () => {
-    const { loadAllDrawingDots } = loadHelpers({ loadManifest: () => Promise.reject(new Error('fail')) });
+    const { loadAllDrawingDots } = await loadHelpers({ loadManifest: () => Promise.reject(new Error('fail')) });
     const shapes = [];
     await call(loadAllDrawingDots, shapes);
     expect(shapes).toHaveLength(0);
