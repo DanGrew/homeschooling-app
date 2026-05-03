@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test')
 
-const URL = '/homeschooling-app/app/activities/colour-mixing-1/'
+const URL = '/homeschooling-app/app/activities/primary-colours/'
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
