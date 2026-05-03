@@ -68,6 +68,20 @@ test('trace button disables during animation', async ({ page }) => {
   await expect(page.locator('#btn-trace')).toBeDisabled()
 })
 
+test('try-it button disables during animation', async ({ page }) => {
+  await page.goto('/app/games/character-lesson?char=a&filter=lower')
+  await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
+  await page.locator('#btn-trace').click()
+  await expect(page.locator('#btn-tryit')).toBeDisabled()
+})
+
+test('try-it button re-enables after animation completes', async ({ page }) => {
+  await page.goto('/app/games/character-lesson?char=l&filter=lower')
+  await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
+  await page.locator('#btn-trace').click()
+  await expect(page.locator('#btn-tryit')).not.toBeDisabled({ timeout: 5000 })
+})
+
 test('trace button re-enables after animation completes', async ({ page }) => {
   await page.goto('/app/games/character-lesson?char=l&filter=lower')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)

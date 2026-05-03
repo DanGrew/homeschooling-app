@@ -195,6 +195,7 @@ function initEngine() {
 
 function onLessonComplete() {
   document.getElementById('btn-trace').disabled = false;
+  document.getElementById('btn-tryit').disabled = false;
   const dot = document.querySelector('.char-decoration');
   if (dot) {
     dot.setAttribute('fill', '#FFD700');
@@ -243,6 +244,7 @@ document.getElementById('btn-trace').addEventListener('click', () => {
   engine.stopAnimation();
   engine.done = false;
   document.getElementById('btn-trace').disabled = true;
+  document.getElementById('btn-tryit').disabled = true;
   const dot = document.querySelector('.char-decoration');
   if (dot) { dot.setAttribute('fill', dot.dataset.origFill || '#ccc'); dot.style.filter = ''; }
   engine.startAnimation(2500);
