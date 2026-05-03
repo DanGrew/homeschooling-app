@@ -156,3 +156,26 @@ test('home nav button points to lessons index', async ({ page }) => {
   const href = await page.locator('.nav-btn').first().getAttribute('href')
   expect(href).toBe('/homeschooling-app/app/lessons/')
 })
+
+test('completing trace shows success banner directly for chars without a dot', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower&mode=trace')
+  await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
+  await page.evaluate(() => { engine.done = true; engine.onComplete() })
+  await expect(page.locator('#success-banner')).toHaveClass(/visible/)
+})
+
+test('completing trace pulses the dot for chars with a dot', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/character-lesson/?char=i&filter=lower&mode=trace')
+  await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
+  await page.evaluate(() => { engine.done = true; engine.onComplete() })
+  await expect(page.locator('.dot-pulse')).toBeVisible()
+})
+
+test('tapping pulsing dot after trace shows success banner', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/character-lesson/?char=i&filter=lower&mode=trace')
+  await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
+  await page.evaluate(() => { engine.done = true; engine.onComplete() })
+  await page.waitForSelector('.dot-pulse')
+  await page.evaluate(() => dotEl.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })))
+  await expect(page.locator('#success-banner')).toHaveClass(/visible/)
+})

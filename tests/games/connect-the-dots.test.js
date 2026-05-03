@@ -31,6 +31,22 @@ test('clicking all dots in order shows Well done', async ({ page }) => {
   await expect(page.locator('#success-banner')).toBeVisible()
 })
 
+test('tapping a dot out of order triggers wrong-flash', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
+  await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
+  await page.evaluate(() => tap(2))
+  await expect(page.locator('#c2')).toHaveClass(/wrong-flash/)
+  await expect(page.locator('#c2')).not.toHaveAttribute('fill', '#2ECC71')
+})
+
+test('tapping dot 1 does not wrong-flash', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
+  await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
+  await page.evaluate(() => tap(1))
+  const cls = await page.locator('#c1').getAttribute('class')
+  expect(cls || '').not.toMatch(/wrong-flash/)
+})
+
 test('home nav button points to games index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
   const href = await page.locator('.nav-btn').first().getAttribute('href')
