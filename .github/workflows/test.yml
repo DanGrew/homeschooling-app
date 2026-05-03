@@ -21,6 +21,12 @@ jobs:
 
       - run: npm run test:unit
 
+      - name: Coverage report
+        run: npm run test:coverage
+
+      - name: Check for untested files
+        run: npm run check:untested
+
   e2e-test:
     runs-on: ubuntu-latest
     steps:
