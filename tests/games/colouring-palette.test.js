@@ -20,7 +20,7 @@ test('selecting a colour then clicking a shape applies that colour', async ({ pa
   const swatch = page.locator('#palette .swatch').first()
   await swatch.waitFor({ timeout: 5000 })
   await swatch.click()
-  const chosenColour = await page.evaluate(() => selectedColour)
+  const chosenColour = await swatch.getAttribute('data-colour')
   const shape = page.locator('#svg [style*="cursor"]').first()
   await shape.click()
   await expect(shape).toHaveAttribute('fill', chosenColour)
