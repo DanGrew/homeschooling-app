@@ -5,13 +5,12 @@ test('shows the Games heading', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Games!' })).toBeVisible()
 })
 
-test('has all six category headings', async ({ page }) => {
+test('has all five category headings', async ({ page }) => {
   await page.goto('/app/games/')
   await expect(page.getByRole('heading', { name: 'Numbers' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Colours' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Music' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Puzzles' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Letters' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'World' })).toBeVisible()
 })
 
