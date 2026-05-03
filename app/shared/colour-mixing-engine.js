@@ -37,12 +37,15 @@ var CM_MIXES={
   'green+purple':'green-purple-mix',  'purple+green':'green-purple-mix'
 };
 
-(function(){
+function mix(a,b){if(a===b)return a;return CM_MIXES[a+'+'+b]||null;}
+function hex(id){return CM_COLOURS[id]?CM_COLOURS[id].hex:'#f0f0f0';}
+
+if(typeof module!=='undefined')module.exports={mix,hex,CM_COLOURS,CM_MIXES};
+
+if(typeof window!=='undefined')(function(){
   var cfg=window.CM_CONFIG;
   var slotA=null,slotB=null,sel=null,target=null;
 
-  function mix(a,b){if(a===b)return a;return CM_MIXES[a+'+'+b]||null;}
-  function hex(id){return CM_COLOURS[id]?CM_COLOURS[id].hex:'#f0f0f0';}
   function el(id){return document.getElementById(id);}
 
   function pickTarget(){
