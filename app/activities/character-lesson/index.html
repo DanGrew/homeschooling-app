@@ -55,7 +55,7 @@
   </div>
   <div class="trace-hint" id="trace-hint">Hold the red ball and trace!</div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-    <svg id="svg" viewBox="0 0 200 250" style="width:100%;height:100%;touch-action:none;" preserveAspectRatio="xMidYMid meet">
+    <svg id="svg" viewBox="0 0 200 250" style="width:clamp(224px,44vmin,368px);height:clamp(280px,55vmin,460px);touch-action:none;" preserveAspectRatio="xMidYMid meet">
       <path id="base" fill="none" stroke="#ddd" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/>
       <circle id="ball" r="16" fill="#E74C3C" stroke="white" stroke-width="3"/>
     </svg>
@@ -70,6 +70,7 @@
   </div>
 </div>
 
+<script src="/homeschooling-app/app/shared/trace.js"></script>
 <script src="/homeschooling-app/app/shared/trace-engine.js"></script>
 <script>
 const CHARS = [
