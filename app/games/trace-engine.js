@@ -185,6 +185,8 @@ class TraceEngine {
   }
 
   _bind() {
+    this.activePointerId = null;
+
     this.svg.addEventListener('pointerdown', (e) => {
       if (this.done || this.active) return;
       const pt = this._svgPoint(e.clientX, e.clientY);
@@ -194,20 +196,23 @@ class TraceEngine {
       e.preventDefault();
       this._strokeJustCompleted = false;
       this.active = true;
+      this.activePointerId = e.pointerId;
       this.svg.setPointerCapture(e.pointerId);
     });
 
     this.svg.addEventListener('pointermove', (e) => {
-      if (!this.active || this.done) return;
+      if (!this.active || this.done || e.pointerId !== this.activePointerId) return;
       e.preventDefault();
       this._updatePosition(e.clientX, e.clientY);
     });
 
-    const stop = () => {
+    const stop = (e) => {
+      if (e.pointerId !== this.activePointerId) return;
       if (this.done) return;
       if (this._strokeJustCompleted) { this._strokeJustCompleted = false; return; }
       if (!this.active) return;
       this.active = false;
+      this.activePointerId = null;
       this._resetCurrentStroke();
     };
     this.svg.addEventListener('pointerup', stop);
