@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { flattenCatalogs, escHtml, byName } = require('../../app/shared/shopping-shared.js');
+import { flattenCatalogs, escHtml, byName } from '../../app/shared/shopping-shared.js';
 
 const FRUIT = {
   name: 'Fruit & Veg', tags: ['food', 'healthy'],

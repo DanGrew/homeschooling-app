@@ -28,10 +28,9 @@ test('clicking Scan it shows the barcode stub input', async ({ page }) => {
 
 test('entering a barcode marks the item as found', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
-  await page.locator('#tiles .ctile').first().click()
-  const barcode = await page.evaluate(() => listItems[0].barcode)
+  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
   await page.locator('#btn-scan-it').click()
-  await page.locator('#stub-input').fill(barcode)
+  await page.locator('#stub-input').fill('00348188')
   await page.locator('#stub-btn').click()
   await expect(page.locator('.sc-row.found')).toBeVisible()
 })
