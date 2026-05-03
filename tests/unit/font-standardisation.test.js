@@ -26,7 +26,7 @@ describe('theme.css', () => {
   it('exists and defines --font as Arial', () => {
     const css = readFileSync(THEME_CSS, 'utf8');
     expect(css).toContain('--font');
-    expect(css).toContain('Arial');
+    expect(css).toContain('Verdana');
   });
 
   it('sets body font-family via --font variable', () => {
