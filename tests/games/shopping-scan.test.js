@@ -7,27 +7,27 @@ test.beforeEach(async ({ page }) => {
 })
 
 test('page loads with items to choose from', async ({ page }) => {
-  await page.goto('/app/games/shopping-scan.html')
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
   await expect(page.getByText('Choose items for your list:')).toBeVisible()
   await expect(page.locator('#tiles .ctile').first()).toBeVisible()
 })
 
 test('adding an item enables the Scan it button', async ({ page }) => {
-  await page.goto('/app/games/shopping-scan.html')
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
   await expect(page.locator('#btn-scan-it')).toBeDisabled()
   await page.locator('#tiles .ctile').first().click()
   await expect(page.locator('#btn-scan-it')).toBeEnabled()
 })
 
 test('clicking Scan it shows the barcode stub input', async ({ page }) => {
-  await page.goto('/app/games/shopping-scan.html')
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
   await page.locator('#tiles .ctile').first().click()
   await page.locator('#btn-scan-it').click()
   await expect(page.locator('#stub-input')).toBeVisible()
 })
 
 test('entering a barcode marks the item as found', async ({ page }) => {
-  await page.goto('/app/games/shopping-scan.html')
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
   await page.locator('#tiles .ctile').first().click()
   const barcode = await page.evaluate(() => listItems[0].barcode)
   await page.locator('#btn-scan-it').click()

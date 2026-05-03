@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Shopping Play</title>
+<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
+<link rel="stylesheet" href="/homeschooling-app/app/shared/shopping-shared.css">
+<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+</head>
+<body>
+<div class="nav-bar" data-home="/homeschooling-app/app/games/">
+  <div id="filter-bar"></div>
+</div>
+<div class="game-area">
+  <div id="phase1">
+    <div id="game-body">
+      <div id="catalog-area">
+        <div id="catalog-title">Choose items for your list:</div>
+        <div id="tiles-scroll"><div id="tiles"></div></div>
+      </div>
+      <div id="list-panel">
+        <div id="list-header">🛒 My List</div>
+        <div id="list-items"><div id="empty-list">Tap items to add them</div></div>
+      </div>
+    </div>
+    <div id="go-bar">
+      <button class="btn-go" id="btn-find" disabled>Find it! 🔍</button>
+    </div>
+  </div>
+  <div id="phase2">
+    <div id="phase2-title">Find each item! 🔍</div>
+    <div id="find-list"></div>
+  </div>
+</div>
+<div id="success-banner">
+  ✅
+  <span style="font-size:0.65em;margin-top:8px;">Well done!</span>
+  <button id="btn-again">Play Again!</button>
+</div>
+<script src="/homeschooling-app/app/shared/filter-bar.js"></script>
+<script src="/homeschooling-app/app/shared/shopping-shared.js"></script>
+<script>
+var CATALOGS=[
+  {"name":"Fruit","tags":["fruit"],"items":[
+    {"name":"Apple","icon":"🍎"},
+    {"name":"Banana","icon":"🍌"},
+    {"name":"Grapes","icon":"🍇"},
+    {"name":"Lemon","icon":"🍋"},
+    {"name":"Orange","icon":"🍊"},
+    {"name":"Pear","icon":"🍐"},
+    {"name":"Strawberry","icon":"🍓"},
+    {"name":"Watermelon","icon":"🍉"}
+  ]},
+  {"name":"Vegetables","tags":["vegetables"],"items":[
+    {"name":"Broccoli","icon":"🥦"},
+    {"name":"Carrot","icon":"🥕"},
+    {"name":"Corn","icon":"🌽"},
+    {"name":"Lettuce","icon":"🥬"},
+    {"name":"Pepper","icon":"🫑"},
+    {"name":"Tomato","icon":"🍅"}
+  ]},
+  {"name":"Dairy","tags":["dairy"],"items":[
+    {"name":"Butter","icon":"🧈"},
+    {"name":"Cheese","icon":"🧀"},
+    {"name":"Eggs","icon":"🥚"},
+    {"name":"Milk","icon":"🥛"},
+    {"name":"Yogurt","icon":"🫙"}
+  ]},
+  {"name":"Bakery","tags":["bakery"],"items":[
+    {"name":"Bread","icon":"🍞"},
+    {"name":"Croissant","icon":"🥐"},
+    {"name":"Muffin","icon":"🧁"}
+  ]},
+  {"name":"Groceries","tags":["groceries"],"items":[
+    {"name":"Beans","icon":"🥫"},
+    {"name":"Boule","icon":"🍞"},
+    {"name":"Crumpets","icon":"🥖"},
+    {"name":"Milk","icon":"🥛"},
+    {"name":"Orange Breakie","icon":"🍊"},
+    {"name":"Organic Butter","icon":"🧈"},
+    {"name":"Pouch - Cottage Pie","icon":"🥣"},
+    {"name":"Pouch - Pulled Pork","icon":"🥩"},
+    {"name":"Purple Breakie","icon":"🫐"},
+    {"name":"Sauce - BBQ","icon":"🥫"}
+  ]}
+];
+
+document.getElementById('btn-find').onclick=startFindPhase;
+
+document.getElementById('btn-again').onclick=function(){
+  document.getElementById('success-banner').style.display='none';
+  document.getElementById('phase2').style.display='none';
+  listItems=[];
+  showPhase1();
+  renderList();
+  renderTiles(allItems);
+};
+
+function initGame(){
+  allItems=flattenCatalogs(CATALOGS);
+  buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags||[],name:c.name};}),function(filtered){
+    var items=[];
+    filtered.forEach(function(c){
+      CATALOGS.forEach(function(cat){
+        if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,icon:it.icon,tags:cat.tags||[],catalog:cat.name};}));
+      });
+    });
+    allItems=items;
+    listItems=listItems.filter(function(li){return items.some(function(i){return i.name===li.name&&i.catalog===li.catalog;});});
+    renderTiles(allItems);
+    renderList();
+  });
+}
+
+initGame();
+</script>
+</body>
+</html>

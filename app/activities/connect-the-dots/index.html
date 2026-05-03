@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Connect the Dots</title>
+<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
+<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<style>
+@keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
+.wrong-flash{animation:wrong 0.4s ease}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-prev="prevShape" data-next="nextShape"></div>
+<div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
+  <div class="game-title"><span id="title"></span></div>
+  <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+    <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
+    <div id="done" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,248,240,0.85);">
+      <div style="font-size:2.5em;margin-bottom:12px;">&#11088; Well done! &#11088;</div>
+      <button onclick="nextShape()" style="background:#2ECC71;color:white;border:none;font-size:1.8em;padding:20px 44px;border-radius:18px;font-family:inherit;cursor:pointer;">Next &#8595;</button>
+    </div>
+  </div>
+</div>
+<script src="/homeschooling-app/app/shared/filter-bar.js"></script>
+<script src="/homeschooling-app/app/dictionary/dictionary.js"></script>
+<script src="/homeschooling-app/app/dictionary/dictionary-helpers.js"></script>
+<script>var shapes=[];</script>
+<script src="./shapes/triangle.js"></script>
+<script src="./shapes/square.js"></script>
+<script src="./shapes/ball.js"></script>
+<script src="./shapes/star.js"></script>
+<script src="./shapes/house.js"></script>
+<script src="./shapes/bottle.js"></script>
+<script src="./shapes/pencil.js"></script>
+<script src="./shapes/bike.js"></script>
+<script src="./shapes/pentagon.js"></script>
+<script src="./shapes/hexagon.js"></script>
+<script src="./shapes/guitar.js"></script>
+<script src="./shapes/car.js"></script>
+<script src="./shapes/heptagon.js"></script>
+<script src="./shapes/desk.js"></script>
+<script src="./shapes/octagon.js"></script>
+<script src="./free-svg/fish/dot-to-dot-10.js"></script>
+<script>
+var filtIdx=0,nextDot,prevDot,complete,filtered=[];
+
+function ns(tag,attrs){
+  var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
+  return el;
+}
+
+function tightVB(shape){
+  var pad=60;
+  var xs=shape.dots.map(function(d){return d.cx;});
+  var ys=shape.dots.map(function(d){return d.cy;});
+  var parts=shape.vb.split(' ').map(Number);
+  var minX=Math.max(0,Math.min.apply(null,xs)-pad);
+  var maxX=Math.min(parts[2],Math.max.apply(null,xs)+pad);
+  var vbW=maxX-minX;
+  var r=Math.round(vbW*0.055);
+  var minY=Math.min(0,Math.min.apply(null,ys)-r);
+  var maxY=Math.max(parts[3],Math.max.apply(null,ys)+r);
+  return minX+' '+minY+' '+vbW+' '+(maxY-minY);
+}
+
+function dotR(vbW){
+  return Math.round(vbW*0.055);
+}
+
+var resizeTimer;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(render,150);
+});
+
+function render(){
+  var shape=filtered[filtIdx];
+  var svg=document.getElementById('svg');
+  svg.innerHTML=shape.decor||'';
+  nextDot=1;prevDot=null;complete=false;
+  document.getElementById('title').textContent=shape.name+(shape.level!==undefined?' [Level '+shape.level+']':'');
+  document.getElementById('done').style.display='none';
+  document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
+
+  var vb=tightVB(shape);
+  svg.setAttribute('viewBox',vb);
+  var r=dotR(parseInt(vb.split(' ')[2]));
+  var fontSize=Math.round(r*0.85);
+
+  shape.guides.forEach(function(g){
+    svg.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':String(Math.max(1,Math.round(r*0.12))),'stroke-dasharray':'10 6'}));
+  });
+
+  svg.appendChild(ns('g',{id:'lines'}));
+
+  shape.dots.forEach(function(d){
+    var g=ns('g',{});
+    g.style.cursor='pointer';
+    var c=ns('circle',{cx:d.cx,cy:d.cy,r:r,fill:'white',stroke:'#444','stroke-width':String(Math.max(1,Math.round(r*0.15))),id:'c'+d.n});
+    var t=ns('text',{x:d.cx,y:d.cy,'font-size':fontSize,'font-weight':'bold','text-anchor':'middle','dominant-baseline':'central',fill:'#333'});
+    t.textContent=d.n;
+    g.appendChild(c);g.appendChild(t);
+    g.addEventListener('click',function(){tap(d.n);});
+    svg.appendChild(g);
+  });
+}
+
+function tap(n){
+  if(complete)return;
+  var shape=filtered[filtIdx];
+  if(n===nextDot){
+    document.getElementById('c'+n).setAttribute('fill','#2ECC71');
+    document.getElementById('c'+n).setAttribute('stroke','#27AE60');
+    if(prevDot!==null){
+      var f=shape.dots[prevDot-1],t=shape.dots[n-1];
+      drawLine(f.cx,f.cy,t.cx,t.cy);
+    }
+    prevDot=n;
+    nextDot++;
+    if(nextDot>shape.dots.length){
+      complete=true;
+      var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
+      drawLine(f.cx,f.cy,t.cx,t.cy);
+      document.getElementById('instruction').textContent='';
+      document.getElementById('done').style.display='flex';
+    } else {
+      document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
+    }
+  } else if(n>nextDot){
+    var c=document.getElementById('c'+n);
+    c.classList.remove('wrong-flash');
+    void c.offsetWidth;
+    c.classList.add('wrong-flash');
+    setTimeout(function(){c.classList.remove('wrong-flash');},400);
+  }
+}
+
+function drawLine(x1,y1,x2,y2){
+  var g=document.getElementById('lines');
+  var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+  var r=dotR(parseInt(document.getElementById('svg').getAttribute('viewBox').split(' ')[2]));
+  var line=ns('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#3498DB','stroke-width':String(Math.max(1,Math.round(r*0.3))),'stroke-linecap':'round','stroke-dasharray':len,'stroke-dashoffset':len});
+  g.appendChild(line);
+  line.getBoundingClientRect();
+  line.style.transition='stroke-dashoffset 0.35s ease';
+  line.setAttribute('stroke-dashoffset','0');
+}
+
+function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
+function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
+
+Dictionary.init('/homeschooling-app/app/dictionary/');
+loadConnectDots(shapes,function(){
+  buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
+});
+</script>
+</body>
+</html>

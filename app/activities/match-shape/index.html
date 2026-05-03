@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Match Shape</title>
+<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
+<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<script src="/homeschooling-app/app/shared/shapes.js"></script>
+</head>
+<body>
+<div class="nav-bar" data-home="/homeschooling-app/app/games/"></div>
+<div class="game-area">
+  <div class="game-title">Match the shape!</div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;">
+    <div id="shape"></div>
+  </div>
+  <div id="options" style="display:flex;justify-content:center;gap:18px;padding:20px 20px 44px;flex-wrap:wrap;"></div>
+</div>
+<script>
+var current,locked;
+
+function newRound(){
+  locked=false;
+  var col=pickCol();
+  current={col:col,type:types[Math.floor(Math.random()*types.length)]};
+  document.getElementById('shape').innerHTML=svg(current.type,col);
+  var shuffled=types.slice().sort(function(){return Math.random()-0.5;});
+  document.getElementById('options').innerHTML=shuffled.map(function(t){
+    return '<button data-type="'+t+'" onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,'clamp(60px,13vmin,96px)')+'</button>';
+  }).join('');
+}
+
+function check(btn){
+  if(locked)return;
+  if(btn.dataset.type===current.type){
+    locked=true;
+    btn.style.outline='6px solid #333';
+    btn.style.transform='scale(1.15)';
+    setTimeout(newRound,900);
+  }else{
+    btn.style.opacity='0.3';
+    setTimeout(function(){btn.style.opacity='1';},500);
+  }
+}
+
+newRound();
+</script>
+</body>
+</html>
