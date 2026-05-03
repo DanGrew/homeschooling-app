@@ -188,6 +188,12 @@ class TraceEngine {
     this._animating = false;
   }
 
+  _activateStroke() {
+    this._strokeJustCompleted = false;
+    this.active = true;
+    trace.emit('event', { name: 'strokeStart', strokeIdx: this.currentStrokeIdx });
+  }
+
   _bind() {
     this.activePointerId = null;
 
@@ -198,11 +204,9 @@ class TraceEngine {
       const start = stroke.mp.getPointAtLength(0);
       if ((pt.x - start.x) ** 2 + (pt.y - start.y) ** 2 > this.tolerance ** 2) return;
       e.preventDefault();
-      this._strokeJustCompleted = false;
-      this.active = true;
       this.activePointerId = e.pointerId;
       try { this.svg.setPointerCapture(e.pointerId); } catch (_) {}
-      trace.emit('event', { name: 'strokeStart', strokeIdx: this.currentStrokeIdx });
+      this._activateStroke();
     });
 
     this.svg.addEventListener('pointermove', (e) => {
