@@ -10,7 +10,7 @@ test('page loads with keys and play button', async ({ page }) => {
 
 test('nav link points to games index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/piano/game.html')
-  const href = await page.locator('#header a').first().getAttribute('href')
+  const href = await page.locator('.nav-bar a').first().getAttribute('href')
   expect(href).toBe('/homeschooling-app/app/games/')
 })
 

@@ -10,7 +10,7 @@ test('page loads with keys and note display', async ({ page }) => {
 
 test('nav link points to lessons index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/piano/lesson.html')
-  const href = await page.locator('#header a').first().getAttribute('href')
+  const href = await page.locator('.nav-bar a').first().getAttribute('href')
   expect(href).toBe('/homeschooling-app/app/lessons/')
 })
 
