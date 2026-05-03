@@ -55,6 +55,7 @@ class TraceEngine {
   }
 
   restart() {
+    trace.emit('event', { name: 'restart' });
     this.done = false;
     this._reset();
   }
@@ -73,6 +74,7 @@ class TraceEngine {
   }
 
   _resetCurrentStroke() {
+    trace.emit('event', { name: 'strokeReset', strokeIdx: this.currentStrokeIdx });
     this.currentDist = 0;
     this.active = false;
     const stroke = this.strokes[this.currentStrokeIdx];
@@ -121,6 +123,7 @@ class TraceEngine {
   }
 
   _completeStroke() {
+    trace.emit('event', { name: 'strokeComplete', strokeIdx: this.currentStrokeIdx });
     this.progressPaths[this.currentStrokeIdx].setAttribute('stroke-dashoffset', 0);
     this._strokeJustCompleted = true;
     this.active = false;
@@ -133,6 +136,7 @@ class TraceEngine {
       this.ball.setAttribute('cy', p.y);
     } else {
       this.done = true;
+      trace.emit('state', { from: 'active', to: 'done' });
       if (this.onComplete) this.onComplete();
     }
   }
@@ -197,7 +201,8 @@ class TraceEngine {
       this._strokeJustCompleted = false;
       this.active = true;
       this.activePointerId = e.pointerId;
-      this.svg.setPointerCapture(e.pointerId);
+      try { this.svg.setPointerCapture(e.pointerId); } catch (_) {}
+      trace.emit('event', { name: 'strokeStart', strokeIdx: this.currentStrokeIdx });
     });
 
     this.svg.addEventListener('pointermove', (e) => {
