@@ -52,3 +52,9 @@ test('non-adjacent primary + secondary wrong mix shows actual colour', async ({ 
   await expect(page.locator('#cm-result')).toHaveCSS('background-color', 'rgb(107, 80, 48)')
   await expect(page.locator('#cm-slot-a')).toHaveCSS('outline-color', 'rgb(231, 76, 60)')
 })
+
+test('home nav button points to games index', async ({ page }) => {
+  await page.goto(URL)
+  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  expect(href).toBe('/homeschooling-app/app/games/')
+})

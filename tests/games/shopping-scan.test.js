@@ -35,3 +35,9 @@ test('entering a barcode marks the item as found', async ({ page }) => {
   await page.locator('#stub-btn').click()
   await expect(page.locator('.sc-row.found')).toBeVisible()
 })
+
+test('home nav button points to games index', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
+  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  expect(href).toBe('/homeschooling-app/app/games/')
+})

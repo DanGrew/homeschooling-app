@@ -30,3 +30,9 @@ test('clicking all dots in order shows Well done', async ({ page }) => {
   }
   await expect(page.locator('#done')).toBeVisible()
 })
+
+test('home nav button points to games index', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
+  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  expect(href).toBe('/homeschooling-app/app/games/')
+})
