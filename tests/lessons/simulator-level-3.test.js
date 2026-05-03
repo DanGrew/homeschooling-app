@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test')
 
-const SIM_URL = '/app/lessons/simulator/simulator?sim=grow-tomatoes-level-3'
-const specJson = require('../../app/lessons/simulator/sims/grow-tomatoes-level-3.json')
+const SIM_URL = '/homeschooling-app/app/activities/simulator/?sim=grow-tomatoes-level-3'
+const specJson = require('../../app/activities/simulator/sims/grow-tomatoes-level-3.json')
 
 async function waitForEngine(page) {
   await page.waitForFunction(() => window.engine !== undefined, { timeout: 10000 })

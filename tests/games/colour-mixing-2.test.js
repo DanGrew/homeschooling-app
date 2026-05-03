@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test')
 
-const URL = '/app/games/colour-mixing-2.html'
+const URL = '/homeschooling-app/app/activities/colour-mixing-2/'
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -51,4 +51,10 @@ test('non-adjacent primary + secondary wrong mix shows actual colour', async ({ 
   // red + green = brown (#6B5030): wrong
   await expect(page.locator('#cm-result')).toHaveCSS('background-color', 'rgb(107, 80, 48)')
   await expect(page.locator('#cm-slot-a')).toHaveCSS('outline-color', 'rgb(231, 76, 60)')
+})
+
+test('home nav button points to games index', async ({ page }) => {
+  await page.goto(URL)
+  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  expect(href).toBe('/homeschooling-app/app/games/')
 })

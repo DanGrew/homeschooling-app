@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test')
 
-const URL = '/app/lessons/colour-wheel.html'
+const URL = '/homeschooling-app/app/activities/colour-wheel/'
 
 test('page loads with colour wheel and palette', async ({ page }) => {
   await page.goto(URL)

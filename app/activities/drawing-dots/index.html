@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Drawing Dots</title>
+<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
+<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<style>
+@keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
+.dot-wrong{animation:wrong 0.4s ease}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-home="/homeschooling-app/app/games/" data-prev="prevShape" data-next="nextShape"></div>
+<div class="game-area">
+  <div id="filter-bar" style="border-bottom:1px solid #eee;"></div>
+  <div class="game-title"><span id="title"></span></div>
+  <div id="instruction" style="text-align:center;font-size:1.1em;color:#888;padding:0 16px 8px;"></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+    <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+</div>
+<script src="/homeschooling-app/app/shared/filter-bar.js"></script>
+<script src="/homeschooling-app/app/dictionary/dictionary.js"></script>
+<script src="/homeschooling-app/app/dictionary/dictionary-helpers.js"></script>
+<script>var shapes=[];</script>
+<script src="./engine.js"></script>
+<script>
+Dictionary.init('/homeschooling-app/app/dictionary/');
+loadAllDrawingDots(shapes,startEngine);
+</script>
+</body>
+</html>
