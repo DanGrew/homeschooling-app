@@ -47,3 +47,5 @@ function loadImages(items,callback){
     callback();
   }).catch(function(){callback();});
 }
+
+if(typeof module!=='undefined')module.exports={loadColouringPictures,loadConnectDots,loadDrawingDots,loadAllDrawingDots,loadImages};
