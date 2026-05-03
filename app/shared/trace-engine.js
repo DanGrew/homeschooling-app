@@ -41,6 +41,7 @@ class TraceEngine {
       mp.setAttribute('d', subD);
       mp.setAttribute('fill', 'none');
       mp.setAttribute('stroke', 'none');
+      mp.style.pointerEvents = 'none';
       this.svg.appendChild(mp);
       const totalLen = mp.getTotalLength();
       const N = 400;

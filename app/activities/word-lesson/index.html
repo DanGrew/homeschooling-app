@@ -276,6 +276,7 @@ function renderWord(chars, charData) {
       dc.setAttribute('r', dot.r);
       dc.setAttribute('fill', '#ddd');
       dc.setAttribute('stroke', 'none');
+      dc.style.pointerEvents = 'none';
     }
 
     const ball = document.createElementNS(NS, 'circle');
