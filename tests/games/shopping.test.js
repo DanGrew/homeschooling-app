@@ -19,3 +19,14 @@ test('Find it button enables once an item is added', async ({ page }) => {
   await page.locator('#tiles .ctile').first().click()
   await expect(page.locator('#btn-find')).toBeEnabled()
 })
+
+test('filter bar is inside game-area not nav-bar', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-play/')
+  const filterBar = page.locator('#filter-bar')
+  const gameArea = page.locator('.game-area')
+  await expect(filterBar).toBeVisible({ timeout: 5000 })
+  const fbBox = await filterBar.boundingBox()
+  const gaBox = await gameArea.boundingBox()
+  expect(fbBox.x).toBeGreaterThanOrEqual(gaBox.x)
+  expect(fbBox.y).toBeGreaterThanOrEqual(gaBox.y)
+})
