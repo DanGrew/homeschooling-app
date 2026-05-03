@@ -16,6 +16,12 @@ export default defineConfig({
         'app/activities/story-time/data.js',
       ],
       reporter: ['text', 'json-summary'],
+      thresholds: {
+        lines: 80,
+        functions: 80,
+        branches: 70,
+        statements: 80,
+      },
     },
   },
 });

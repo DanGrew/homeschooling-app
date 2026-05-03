@@ -20,6 +20,8 @@ jobs:
 
   coverage:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,9 +30,15 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test:coverage
+      - uses: davelosert/vitest-coverage-report-action@v2
+        if: always() && github.event_name == 'pull_request'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   check-untested:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -38,7 +46,23 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
-      - run: npm run check:untested
+      - name: Check untested files
+        run: |
+          node scripts/check-untested.js 2>&1 | tee /tmp/untested.txt
+          exit ${PIPESTATUS[0]}
+      - name: Comment untested report on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('/tmp/untested.txt', 'utf8');
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '### Untested Files Check\n```\n' + output + '\n```',
+            });
 
   e2e-test:
     runs-on: ubuntu-latest

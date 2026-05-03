@@ -53,5 +53,5 @@ if (untested.length === 0) {
 
 console.log(`check:untested — ${untested.length} file(s) with no unit test coverage:\n`);
 untested.forEach(f => console.log(`  ${f}`));
-console.log('\nConsider adding unit tests or adding to the ignore list in scripts/check-untested.js');
-process.exit(0); // warning only — does not fail CI
+console.log('\nAdd unit tests or add to the ignore list in scripts/check-untested.js');
+process.exit(1);
