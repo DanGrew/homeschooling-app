@@ -27,8 +27,8 @@ test('correct tertiary mix shows green outline', async ({ page }) => {
   await page.locator('#cm-sw-orange').click()
   await page.locator('#cm-slot-b').click()
   // red + orange = red-orange: correct
-  await expect(page.locator('#cm-slot-a')).toHaveCSS('outline-color', 'rgb(39, 174, 96)')
-  await expect(page.locator('#cm-slot-b')).toHaveCSS('outline-color', 'rgb(39, 174, 96)')
+  await expect(page.locator('#cm-slot-a')).toHaveClass(/feedback-correct/)
+  await expect(page.locator('#cm-slot-b')).toHaveClass(/feedback-correct/)
 })
 
 test('secondary + secondary wrong mix shows actual colour not grey', async ({ page }) => {

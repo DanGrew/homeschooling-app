@@ -65,10 +65,10 @@ if(typeof window!=='undefined')(function(){
 
   function clearFeedback(){
     ['cm-slot-a','cm-slot-b'].forEach(function(id){
-      var s=el(id);if(s){s.style.outline='none';}
+      var s=el(id);if(s){s.classList.remove('feedback-correct','feedback-wrong');}
     });
     var r=el('cm-result');
-    if(r){r.style.background='#f0f0f0';r.style.outline='none';}
+    if(r){r.style.background='#f0f0f0';r.classList.remove('feedback-correct');}
   }
 
   function setSlotBg(id,cid){
@@ -82,13 +82,10 @@ if(typeof window!=='undefined')(function(){
     var r=el('cm-result');
     r.style.background=hex(result);
     var correct=result===target;
-    var outlineVal=correct?'4px solid #27AE60':'4px solid #E74C3C';
-    el('cm-slot-a').style.outline=outlineVal;
-    el('cm-slot-a').style.outlineOffset='3px';
-    el('cm-slot-b').style.outline=outlineVal;
-    el('cm-slot-b').style.outlineOffset='3px';
-    r.style.outline=correct?'4px solid #27AE60':'none';
-    r.style.outlineOffset='3px';
+    var feedbackClass=correct?'feedback-correct':'feedback-wrong';
+    el('cm-slot-a').classList.add(feedbackClass);
+    el('cm-slot-b').classList.add(feedbackClass);
+    if(correct) r.classList.add('feedback-correct');
     if(correct){
       showBanner(function(){
         slotA=slotB=sel=null;

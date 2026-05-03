@@ -24,8 +24,8 @@ test('correct mix shows green outline on both slots', async ({ page }) => {
   await page.locator('#cm-sw-yellow').click()
   await page.locator('#cm-slot-b').click()
   // red + yellow = orange: correct
-  await expect(page.locator('#cm-slot-a')).toHaveCSS('outline-color', 'rgb(39, 174, 96)')
-  await expect(page.locator('#cm-slot-b')).toHaveCSS('outline-color', 'rgb(39, 174, 96)')
+  await expect(page.locator('#cm-slot-a')).toHaveClass(/feedback-correct/)
+  await expect(page.locator('#cm-slot-b')).toHaveClass(/feedback-correct/)
 })
 
 test('correct mix shows success banner', async ({ page }) => {
