@@ -1,68 +1,81 @@
 # Testing Gaps — homeschooling-app-2
 
 ## Current State
-- **Vitest**: installed, one test file (`tests/unit/shopping-shared.test.js`, 12 tests)
+- **Vitest**: installed, 8 test files, 175 tests passing
 - **Playwright**: E2E, ~28 user journeys
-- **Missing**: error handling, game engine logic, time/grid calculations
+- **Coverage**: failing thresholds — DOM-coupled code counted against logic coverage
 
 ---
 
 ## Done
 
 - [x] Vitest setup + CI job
-- [x] `app/shared/shopping-shared.js` — `flattenCatalogs`, `escHtml`, `byName`
+- [x] `shopping-shared.js` — `flattenCatalogs`, `escHtml`, `byName`, state fns
+- [x] `colour-mixing-engine.js` — `mix`, `hex`, `CM_COLOURS`, `CM_MIXES`
+- [x] `filter-bar.js` — `extractTags`, `extractLevels`, `filterItems`
+- [x] `routine.js` — `toMins`, `getTodayKey`, `buildOrderedDays`
+- [x] `dictionary.js` + `dictionary-helpers.js` — fetch error paths
+- [x] `shapes.js` — `svg`, `pickCol` (module.exports shim added)
 
 ---
 
-## Next — Pure Function Unit Tests
+## The Plan — `-logic` File Split
 
-### `app/shared/colour-mixing-engine.js`
-- `mix()` is inside an IIFE — move it above the IIFE first (no DOM deps)
-- Then add module.exports shim and test all valid combos + unknown pair → null
-- `CM_MIXES` and `CM_COLOURS` already top-level globals — testable directly
+**Goal:** every file with mixed DOM + logic gets its pure functions extracted to a
+`<name>-logic.js` sibling. Vitest coverage targets only `**/*-logic.js` files.
+This makes 80%+ thresholds achievable and meaningful.
 
-### `app/routine/routine.js`
-- Has top-level DOM event listeners — cannot require directly
-- Extract `toMins`, `buildOrderedDays`, `computeGridRange` to `app/routine/routine-utils.js`
-- Then unit test: `toMins("08:30")→510`, midnight, noon, rolling window day ordering
+### Pattern for each file
 
-### `app/shared/filter-bar.js`
-- Check for top-level DOM calls first
-- Test: tag+level filter combos, no matching items edge case
+1. Create `<name>-logic.js` — pure functions only, `module.exports = { ... }`
+2. Original file imports from `-logic.js` and uses the functions
+3. Move/update unit test to import from `-logic.js`
+4. Update `vitest.config.js` coverage include to `app/**/*-logic.js`
+
+### Files to split
+
+| File | Pure fns to extract | Status |
+|------|---------------------|--------|
+| `app/shared/shapes.js` | `svg`, `pickCol`, `colours`, `types` | shim added, needs extract |
+| `app/shared/colour-mixing-engine.js` | `mix`, `hex`, `CM_COLOURS`, `CM_MIXES` | shim added, needs extract |
+| `app/shared/filter-bar.js` | `extractTags`, `extractLevels`, `filterItems` | shim added, needs extract |
+| `app/shared/shopping-shared.js` | `flattenCatalogs`, `escHtml`, `byName`, state fns | ES module, needs extract |
+| `app/routine/routine.js` | `toMins`, `getTodayKey`, `buildOrderedDays` | shim added, needs extract |
+
+### Files that stay DOM-only (no `-logic` needed, exclude from coverage)
+
+- `app/shared/colouring-common.js`
+- `app/shared/menu.js`
+- `app/shared/piano-shared.js`
+- `app/shared/trace-engine.js`
+- `app/activities/drawing-dots/engine.js`
+- `app/activities/simulator/engine/engine.js`
+- `app/activities/simulator/engine/loader.js`
+- `app/activities/story-time/player.js`
+
+### Vitest config change
+
+```js
+coverage: {
+  include: ['app/**/*-logic.js'],
+  // remove the broad app/**/*.js include
+}
+```
 
 ---
 
-## Error Handling Tests
+## Session Order
 
-### `app/dictionary/dictionary.js` + `app/dictionary/dictionary-helpers.js`
-- Use `vi.stubGlobal('fetch', ...)` to simulate failed fetch
-- Test: failed fetch → callback fires, malformed JSON → no silent hang
-- Risk: silent failures leave UI in broken state
-
----
-
-## Game Engine Logic (Playwright or unit after extraction)
-
-### `app/shared/trace-engine.js`
-- `_parseStrokes(svgPath)` — valid + malformed paths
-- `_updateDistance()` — ball near/far from path
-- Completion detection at 100%
-- DOM-coupled — likely Playwright-only unless extracted
-
-### `app/activities/simulator/engine/engine.js`
-- `_handleTap()` state transitions, `_selectTool()` — valid/invalid tool ids
-- Deeply DOM-coupled — Playwright touch tests via `page.touchscreen`
-
-### `app/activities/drawing-dots/engine.js`
-- Point proximity detection, out-of-order tap validation
-- DOM-coupled — Playwright
+1. Extract each file in the table above → create `-logic.js` sibling
+2. Update each unit test to import from `-logic.js`
+3. Update `vitest.config.js` coverage include
+4. Verify thresholds pass
 
 ---
 
-## Suggested Next Session Order
+## Playwright-only (no unit tests possible)
 
-1. Move `mix()` out of IIFE → add shim → test `colour-mixing-engine.js`
-2. Extract `routine-utils.js` → test `toMins` + `buildOrderedDays`
-3. Check + test `filter-bar.js`
-4. Test `dictionary.js` error paths with `vi.stubGlobal`
-5. Add Playwright touch tests for simulator engine
+- `trace-engine.js` — every method uses SVG DOM APIs
+- `simulator/engine.js` — deeply DOM-coupled
+- `drawing-dots/engine.js` — DOM-coupled
+- `story-time/player.js` — DOM-coupled
