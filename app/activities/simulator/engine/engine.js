@@ -1,3 +1,5 @@
+import { evalCond, applyStateAction } from '../../../../core/simulator/simulator-core.js';
+
 export class SimulatorEngine {
   constructor(spec, container) {
     this.spec = spec;
@@ -152,15 +154,7 @@ export class SimulatorEngine {
   _exec(action) {
     if (action === 'reset') { this._reset(); return; }
 
-    const sm = action.match(/^state\.(\w+)\s*(\+=|-=|=)\s*(\d+)$/);
-    if (sm) {
-      const [, key, op, val] = sm;
-      const n = parseInt(val);
-      if (op === '+=') this.state[key] += n;
-      else if (op === '-=') this.state[key] = Math.max(0, this.state[key] - n);
-      else this.state[key] = n;
-      return;
-    }
+    if (applyStateAction(this.state, action)) return;
     const am = action.match(/^animate:\s*(.+)$/);
     if (am) { this._animate(am[1].trim()); return; }
     const say = action.match(/^say:\s*(.+)$/);
@@ -255,22 +249,7 @@ export class SimulatorEngine {
     if (b) b.style.opacity = '0';
   }
 
-  _evalCond(cond) {
-    if (cond && typeof cond === 'object') {
-      if (cond.all) return cond.all.every(c => this._evalCond(c));
-      if (cond.any) return cond.any.some(c => this._evalCond(c));
-    }
-    const m = String(cond).match(/^state\.(\w+)\s*(>=|==|<=|>|<)\s*(\d+)$/);
-    if (!m) return false;
-    const [, key, op, val] = m;
-    const a = this.state[key], b = parseInt(val);
-    if (op === '>=') return a >= b;
-    if (op === '==') return a == b;
-    if (op === '<=') return a <= b;
-    if (op === '>') return a > b;
-    if (op === '<') return a < b;
-    return false;
-  }
+  _evalCond(cond) { return evalCond(this.state, cond); }
 
   _checkRules() { this.spec.rules.forEach(rule => { if (this._evalCond(rule.if)) this._execActions(rule.do); }); }
 
