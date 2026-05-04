@@ -30,8 +30,13 @@ Dictionary.init('../../dictionary/');
 var allItems=[],filtered=[];
 window.__wmTarget=function(){return getCurrentTarget();};
 loadImages(allItems,function(){
-  buildFilterBar(allItems,function(f){filtered=f;renderRound(filtered);});
-  init(allItems);
+  function start(){
+    buildFilterBar(allItems,function(f){filtered=f;renderRound(filtered);});
+    init(allItems);
+  }
+  document.readyState==='loading'
+    ?document.addEventListener('DOMContentLoaded',start)
+    :start();
 });
 </script>
 </body>
