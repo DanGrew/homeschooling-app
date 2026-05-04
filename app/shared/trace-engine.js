@@ -185,11 +185,6 @@ class TraceEngine {
     this._animating = false;
   }
 
-  _activateStroke() {
-    this._strokeJustCompleted = false;
-    this.active = true;
-  }
-
   _bind() {
     this.activePointerId = null;
 
@@ -202,7 +197,8 @@ class TraceEngine {
       e.preventDefault();
       this.activePointerId = e.pointerId;
       try { this.svg.setPointerCapture(e.pointerId); } catch (_) {}
-      this._activateStroke();
+      this._strokeJustCompleted = false;
+      this.active = true;
     });
 
     this.svg.addEventListener('pointermove', (e) => {
