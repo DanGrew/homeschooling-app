@@ -52,6 +52,7 @@ class TraceEngine {
   }
   get done() { return this.state.done; }
   set done(v) { this.state.done = v; }
+  get currentDist() { return this.state.currentDist; }
   get onComplete() { return this.state.opts.onComplete; }
   set onComplete(fn) { this.state.opts.onComplete = fn; }
   _applyReset(r) {
