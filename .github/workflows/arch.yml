@@ -44,6 +44,8 @@ jobs:
 
   aggregate-report:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs:
       - no-dom-in-core
       - no-ui-imports
