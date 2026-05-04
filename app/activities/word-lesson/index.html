@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Trace Words</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
-<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<script src="../../shared/menu.js" defer></script>
 <style>
   .filter-bar{display:flex;gap:8px;justify-content:center;padding:8px 16px 0;flex-wrap:wrap;}
   .filter-btn{background:#f0f0f0;border:2px solid #ddd;border-radius:20px;padding:6px 18px;font-size:1em;font-family:inherit;cursor:pointer;color:#555;}
@@ -36,7 +36,7 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="/homeschooling-app/app/lessons/"></div>
+<div class="nav-bar" data-home="../../lessons/"></div>
 <div class="game-area">
   <div class="filter-bar" id="filter-bar"></div>
   <div id="custom-input" style="display:none;">
@@ -66,11 +66,11 @@
   </div>
 </div>
 
-<script src="/homeschooling-app/app/shared/trace-engine.js"></script>
-<script src="/homeschooling-app/app/activities/word-lesson/word-lesson-logic.js"></script>
+<script src="../../shared/trace-engine.js"></script>
+<script src="../../activities/word-lesson/word-lesson-logic.js"></script>
 <script>
-const CHAR_BASE = '/homeschooling-app/app/language-characters/';
-const DICT_BASE = '/homeschooling-app/app/dictionary/';
+const CHAR_BASE = '../../language-characters/';
+const DICT_BASE = '../../dictionary/';
 const NS = 'http://www.w3.org/2000/svg';
 
 let words = [];

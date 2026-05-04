@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Shopping Play</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/shopping-shared.css">
-<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<link rel="stylesheet" href="../../shared/shopping-shared.css">
+<script src="../../shared/menu.js" defer></script>
 </head>
 <body>
-<div class="nav-bar" data-home="/homeschooling-app/app/games/"></div>
+<div class="nav-bar" data-home="../../games/"></div>
 <div class="game-area">
   <div id="filter-bar"></div>
   <div id="phase1">
@@ -39,8 +39,8 @@
   <button id="btn-again">Play Again!</button>
 </div>
 <script type="module">
-import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
-import { flattenCatalogs, setAllItems, resetListItems, filterListItems, renderTiles, renderList, showPhase1, startFindPhase } from '/homeschooling-app/app/shared/shopping-shared.js';
+import { buildFilterBar } from '../../shared/filter-bar.js';
+import { flattenCatalogs, setAllItems, resetListItems, filterListItems, renderTiles, renderList, showPhase1, startFindPhase } from '../../shared/shopping-shared.js';
 var CATALOGS=[
   {"name":"Fruit","tags":["fruit"],"items":[
     {"name":"Apple","icon":"🍎"},
