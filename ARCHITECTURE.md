@@ -10,13 +10,13 @@
 
 No bundler. Files are served directly. All imports are relative paths.
 
-Enforced by `scripts/arch-check.js` via GitHub Actions on every PR (rules: `no-dom-in-core`, `no-ui-imports`, `ui-complexity`).
+Enforced by `scripts/arch-check.js` and `scripts/check-ui-cyclomatic.js` via GitHub Actions on every PR.
 
 ---
 
 ## Automated checks
 
-Three rules run on every PR.
+These rules run on every PR.
 
 ### `no-dom-in-core`
 Scans every `.js` file in `/core`.
@@ -42,6 +42,12 @@ Forces all new JS into an owned layer.
 Scans every `.js` file in `/app`.
 Fails if any file contains a top-level `export` statement.
 If a file exports, it's reusable and belongs in `core/` or `ui/`, not `app/`.
+
+### `ui-cyclomatic`
+Scans every `.js` file in `/ui` using ESLint's `complexity` rule (AST-based).
+Fails if any **function** has a cyclomatic complexity above **1** — meaning zero branches per function.
+Threshold 1 means: every UI function must be a pure sequence. No `if`, no `? :`, no `&&`/`||` used for control flow, no loops with break/continue.
+This is intentional: if a UI function needs to make a decision, that decision belongs in `core/` where Vitest can test it. UI = state-in → DOM-out.
 
 ### Escape hatches
 Add a comment to suppress a specific check for one file:
@@ -99,7 +105,7 @@ export function renderSomething(container) {
 }
 ```
 
-Must stay within **80 lines / 5 ifs**. Use `&&` short-circuit and ternary instead of `if` blocks.
+Must pass `ui-cyclomatic` (complexity 1 per function — zero branches). Move all decisions into core first.
 
 **4. HTML wiring** — `app/activities/<activity>/index.html`
 
@@ -116,7 +122,7 @@ Must stay within **80 lines / 5 ifs**. Use `&&` short-circuit and ternary instea
 
 **Changing pure logic** — edit `core/<activity>/<activity>-core.js`, run `npm run test:unit`.
 
-**Changing DOM rendering** — edit `ui/<activity>/<activity>-ui.js`, run `npm test`. If the file is already at 5 ifs, use `&&`/ternary for new branches.
+**Changing DOM rendering** — edit `ui/<activity>/<activity>-ui.js`, run `npm test`. Any branching logic must live in core — UI functions must be pure sequences (cyclomatic complexity 1).
 
 **Changing page wiring** — edit the HTML in `app/`. Run `npm test`.
 
@@ -130,12 +136,7 @@ Both test suites must pass before merging.
 `colour-mixing`, `connect-the-dots`, `colouring`, `dictionary`, `drawing-dots`, `filter-bar`, `piano`, `routine`, `shapes`, `shopping`, `simulator`, `story-time`, `trace`, `word-lesson`
 
 ### `/ui`
-`colour-mixing`, `filter-bar`, `piano`, `shopping`
-
-### `/app/shared` (DOM files not yet moved to `/ui`)
-`colouring-common.js`, `trace-engine.js`
-
-These are candidates for `/ui` once they pass the complexity check (≤80 lines, ≤5 ifs).
+`colour-mixing`, `colouring`, `filter-bar`, `piano`, `shopping`, `trace`
 
 ---
 
@@ -144,7 +145,10 @@ These are candidates for `/ui` once they pass the complexity check (≤80 lines,
 ```sh
 npm run test:unit                                                   # Vitest
 npm test                                                            # Playwright
-node scripts/arch-check.js no-dom-in-core reports/arch.json
-node scripts/arch-check.js no-ui-imports  reports/arch.json
-node scripts/arch-check.js ui-complexity  reports/arch.json
+node scripts/arch-check.js no-dom-in-core    reports/out.txt
+node scripts/arch-check.js no-ui-imports     reports/out.txt
+node scripts/arch-check.js ui-complexity     reports/out.txt
+node scripts/arch-check.js no-stray-files    reports/out.txt
+node scripts/arch-check.js no-app-exports    reports/out.txt
+node scripts/check-ui-cyclomatic.js          reports/out.txt
 ```
