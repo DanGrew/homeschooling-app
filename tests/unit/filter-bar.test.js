@@ -1,4 +1,4 @@
-import { extractTags, extractLevels, filterItems } from '../../app/shared/filter-bar.js';
+import { extractTags, extractLevels, filterItems } from '../../app/shared/filter-bar-logic.js';
 
 const item = (tags, level) => ({ tags, level });
 
