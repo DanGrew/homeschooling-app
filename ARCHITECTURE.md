@@ -67,31 +67,31 @@ These files are too large/complex to move to `/ui` as-is. The `ui-complexity` ch
 ```
 /core
   /routine
-    routine-logic.js
+    routine-core.js
   /drawing-dots
-    drawing-dots-logic.js       ← from engine-logic.js
+    drawing-dots-core.js        ← from engine-logic.js
   /story-time
-    story-time-logic.js         ← from player-logic.js
+    story-time-core.js          ← from player-logic.js
     story-time-data.js          ← from data.js
   /word-lesson
-    word-lesson-logic.js
+    word-lesson-core.js
   /colour-mixing
-    colour-mixing-logic.js
+    colour-mixing-core.js
   /filter-bar
-    filter-bar-logic.js
+    filter-bar-core.js
   /shapes
-    shapes-logic.js
+    shapes-core.js
   /shopping
-    shopping-logic.js           ← from shopping-shared-logic.js
+    shopping-core.js            ← from shopping-shared-logic.js
   /dictionary
-    dictionary.js
-    dictionary-helpers.js
+    dictionary-core.js
+    dictionary-helpers-core.js
   /simulator
-    simulator-logic.js          ← to be extracted
+    simulator-core.js           ← to be extracted
   /trace
-    trace-logic.js              ← to be extracted
+    trace-core.js               ← to be extracted
   /piano
-    piano-logic.js              ← to be extracted
+    piano-core.js               ← to be extracted
   /connect-the-dots
     /shapes                     ← shape definition files
     /free-svg
@@ -116,11 +116,11 @@ These files are too large/complex to move to `/ui` as-is. The `ui-complexity` ch
   /piano
     piano-ui.js                 ← from piano-shared.js
   /trace
-    trace-engine.js
+    trace-ui.js
   /colouring
-    colouring-common.js
+    colouring-ui.js
   /shared
-    menu.js
+    menu-ui.js
   /simulator
     simulator-ui.js             ← to be extracted from engine.js
 
