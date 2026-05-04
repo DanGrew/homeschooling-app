@@ -1,4 +1,4 @@
-import { mix, hex, CM_COLOURS, CM_MIXES } from '../../app/shared/colour-mixing-engine.js';
+import { mix, hex, CM_COLOURS, CM_MIXES } from '../../app/shared/colour-mixing-logic.js';
 
 describe('mix', () => {
   it('same colour returns itself', () => {
