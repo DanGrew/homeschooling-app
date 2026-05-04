@@ -33,6 +33,16 @@ Scans every `.js` file in `/ui`.
 Fails if any file exceeds **80 lines** or **5 `if(` occurrences**.
 Keeps UI files as thin rendering layers. Use `&&` short-circuit and ternary instead of `if` blocks to stay within the limit.
 
+### `no-stray-files`
+Scans all `.js` files in the repo.
+Fails if any file is outside `core/`, `ui/`, `app/`, `scripts/`, `tests/`, `.github/`.
+Forces all new JS into an owned layer.
+
+### `no-app-exports`
+Scans every `.js` file in `/app`.
+Fails if any file contains a top-level `export` statement.
+If a file exports, it's reusable and belongs in `core/` or `ui/`, not `app/`.
+
 ### Escape hatches
 Add a comment to suppress a specific check for one file:
 
@@ -40,6 +50,7 @@ Add a comment to suppress a specific check for one file:
 // arch: allow-dom        — file in /core that legitimately uses DOM
 // arch: allow-import     — file in /core that intentionally imports from /ui
 // arch: allow-complexity — file in /ui whose complexity is justified
+// arch: allow-export     — file in /app that legitimately exports (rare)
 ```
 
 Use sparingly. If a `/core` file needs DOM access it is not a core file.

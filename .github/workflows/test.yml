@@ -129,6 +129,30 @@ jobs:
           name: report-ui-complexity
           path: reports/ui-complexity.txt
 
+  no-stray-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-stray-files reports/no-stray-files.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-stray-files
+          path: reports/no-stray-files.txt
+
+  no-app-exports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-app-exports reports/no-app-exports.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-app-exports
+          path: reports/no-app-exports.txt
+
   pr-report:
     runs-on: ubuntu-latest
     permissions:
@@ -139,6 +163,8 @@ jobs:
       - no-dom-in-core
       - no-ui-imports
       - ui-complexity
+      - no-stray-files
+      - no-app-exports
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -164,6 +190,10 @@ jobs:
             cat reports/no-ui-imports.txt 2>/dev/null || echo "⚠️ no-ui-imports report missing"
             echo ""
             cat reports/ui-complexity.txt 2>/dev/null || echo "⚠️ ui-complexity report missing"
+            echo ""
+            cat reports/no-stray-files.txt 2>/dev/null || echo "⚠️ no-stray-files report missing"
+            echo ""
+            cat reports/no-app-exports.txt 2>/dev/null || echo "⚠️ no-app-exports report missing"
           } > combined.md
 
       - name: Comment on PR
