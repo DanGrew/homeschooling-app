@@ -41,6 +41,7 @@ class TraceEngine {
       mp.setAttribute('d', subD);
       mp.setAttribute('fill', 'none');
       mp.setAttribute('stroke', 'none');
+      mp.style.pointerEvents = 'none';
       this.svg.appendChild(mp);
       const totalLen = mp.getTotalLength();
       const N = 400;
@@ -194,10 +195,10 @@ class TraceEngine {
       const start = stroke.mp.getPointAtLength(0);
       if ((pt.x - start.x) ** 2 + (pt.y - start.y) ** 2 > this.tolerance ** 2) return;
       e.preventDefault();
+      this.activePointerId = e.pointerId;
+      try { this.svg.setPointerCapture(e.pointerId); } catch (_) {}
       this._strokeJustCompleted = false;
       this.active = true;
-      this.activePointerId = e.pointerId;
-      this.svg.setPointerCapture(e.pointerId);
     });
 
     this.svg.addEventListener('pointermove', (e) => {
