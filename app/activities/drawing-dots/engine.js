@@ -1,5 +1,5 @@
 import { edgeKey, buildAdj, computeR, tapResult } from '../../../core/drawing-dots/drawing-dots-core.js';
-import { buildFilterBar } from '../../shared/filter-bar.js';
+import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
 
 var shapeIdx=0,selectedDot=null,completedEdges,adj,complete,filtered=[];
 

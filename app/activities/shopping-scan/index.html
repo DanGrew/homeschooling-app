@@ -95,7 +95,7 @@
   <button id="btn-again">Play Again!</button>
 </div>
 <script type="module">
-import { buildFilterBar } from '../../shared/filter-bar.js';
+import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
 import { flattenCatalogs, escHtml, byName, setAllItems, getListItems, resetListItems, filterListItems, renderTiles, renderList, hidePhase1, showPhase1, showSuccess, startFindPhase } from '../../shared/shopping-shared.js';
 var hasDetector=typeof BarcodeDetector!=='undefined';
 var CATALOGS=[{"name":"My Catalog","items":[{"barcode":"00348188","name":"Milk","icon":"🥛"},{"barcode":"00907897","name":"Sauce - BBQ","icon":"🥫"},{"barcode":"00556293","name":"Boule","icon":"🍞"},{"barcode":"00580458","name":"Organic Butter","icon":"🧈"},{"barcode":"5010044005126","name":"Crumpets","icon":"🛒"},{"barcode":"5000157150974","name":"Beans","icon":"🥫"},{"barcode":"5060107330764","name":"Orange Breakie","icon":"🍊"},{"barcode":"5060107330740","name":"Purple Breakie","icon":"🛒"},{"barcode":"5060503504073","name":"Pouch - Pulled Pork","icon":"🥩"},{"barcode":"5060107337879","name":"Pouch - Cottage Pie","icon":"🥣"}]}];
