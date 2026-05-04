@@ -13,7 +13,7 @@ class TraceEngine {
     this.completionAt = o.completionAt !== undefined ? o.completionAt : 0.96;
     this.onComplete = o.onComplete || null;
 
-    this.strokes = this._parseStrokes();
+    this.strokes = this._parseStrokes(o);
     this.currentStrokeIdx = 0;
     this.currentDist = 0;
 
@@ -33,9 +33,8 @@ class TraceEngine {
     if (o.interactive !== false) this._bind();
   }
 
-  _parseStrokes() {
-    const d = this.path.getAttribute('d');
-    const subDs = d.match(/M[^Mm]*/g).map(s => s.trim());
+  _parseStrokes(o) {
+    const subDs = parseSubPaths(this.path.getAttribute('d'));
     return subDs.map(subD => {
       const mp = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       mp.setAttribute('d', subD);
@@ -68,7 +67,7 @@ class TraceEngine {
     this.progressPaths.forEach((pp, i) => {
       pp.setAttribute('stroke-dashoffset', this.strokes[i].totalLen);
     });
-    const p = this.strokes[0].mp.getPointAtLength(0);
+    const p = this.strokes[0].samples[0];
     this.ball.setAttribute('cx', p.x);
     this.ball.setAttribute('cy', p.y);
   }
@@ -78,7 +77,7 @@ class TraceEngine {
     this.active = false;
     const stroke = this.strokes[this.currentStrokeIdx];
     this.progressPaths[this.currentStrokeIdx].setAttribute('stroke-dashoffset', stroke.totalLen);
-    const p = stroke.mp.getPointAtLength(0);
+    const p = stroke.samples[0];
     this.ball.setAttribute('cx', p.x);
     this.ball.setAttribute('cy', p.y);
   }
@@ -89,35 +88,16 @@ class TraceEngine {
     return pt.matrixTransform(this.svg.getScreenCTM().inverse());
   }
 
-  _localNearest(pt, center, stroke) {
-    const RADIUS = 30;
-    let best = center, bestD2 = Infinity;
-    for (let i = 0; i <= RADIUS; i++) {
-      const d = Math.min(stroke.totalLen, center + i * stroke.sampleStep);
-      const p = stroke.mp.getPointAtLength(d);
-      const d2 = (p.x - pt.x) ** 2 + (p.y - pt.y) ** 2;
-      if (d2 < bestD2) { bestD2 = d2; best = d; }
-    }
-    return best;
-  }
-
   _updatePosition(clientX, clientY) {
     const stroke = this.strokes[this.currentStrokeIdx];
     const pt = this._svgPoint(clientX, clientY);
-    const ballPt = stroke.mp.getPointAtLength(this.currentDist);
-    const distFromBall = Math.sqrt((ballPt.x - pt.x) ** 2 + (ballPt.y - pt.y) ** 2);
-    if (distFromBall > this.tolerance) return;
-
-    let d = this._localNearest(pt, this.currentDist, stroke);
-    d = Math.max(this.currentDist, d);
-    d = Math.min(d, this.currentDist + stroke.totalLen * this.maxStep);
+    const d = advanceDist(pt, stroke, this.currentDist, this.tolerance, this.maxStep);
+    if (d === null) return;
     this.currentDist = d;
-
-    const snap = stroke.mp.getPointAtLength(d);
+    const snap = pointAtDist(stroke.samples, stroke.sampleStep, d);
     this.ball.setAttribute('cx', snap.x);
     this.ball.setAttribute('cy', snap.y);
     this.progressPaths[this.currentStrokeIdx].setAttribute('stroke-dashoffset', stroke.totalLen - d);
-
     if (d / stroke.totalLen >= this.completionAt) this._completeStroke();
   }
 
@@ -129,7 +109,7 @@ class TraceEngine {
     if (this.currentStrokeIdx < this.strokes.length - 1) {
       this.currentStrokeIdx++;
       this.currentDist = 0;
-      const p = this.strokes[this.currentStrokeIdx].mp.getPointAtLength(0);
+      const p = this.strokes[this.currentStrokeIdx].samples[0];
       this.ball.setAttribute('cx', p.x);
       this.ball.setAttribute('cy', p.y);
     } else {
@@ -149,22 +129,14 @@ class TraceEngine {
     const tick = (ts) => {
       if (!startTime) startTime = ts;
       const t = Math.min((ts - startTime) / durationMs, 1);
-      let rem = t * totalLen;
-      let si = 0;
-      for (let i = 0; i < this.strokes.length; i++) {
-        if (rem <= this.strokes[i].totalLen) { si = i; break; }
-        rem -= this.strokes[i].totalLen;
-        si = i + 1;
-      }
-      si = Math.min(si, this.strokes.length - 1);
-      rem = Math.min(rem, this.strokes[si].totalLen);
+      const { strokeIdx: si, rem } = animationProgress(t, totalLen, this.strokes);
 
       for (let i = 0; i < si; i++) {
         this.progressPaths[i].setAttribute('stroke-dashoffset', 0);
       }
       this.currentStrokeIdx = si;
       this.currentDist = rem;
-      const pt = this.strokes[si].mp.getPointAtLength(rem);
+      const pt = pointAtDist(this.strokes[si].samples, this.strokes[si].sampleStep, rem);
       this.ball.setAttribute('cx', pt.x);
       this.ball.setAttribute('cy', pt.y);
       this.progressPaths[si].setAttribute('stroke-dashoffset', this.strokes[si].totalLen - rem);
@@ -192,7 +164,7 @@ class TraceEngine {
       if (this.done || this.active) return;
       const pt = this._svgPoint(e.clientX, e.clientY);
       const stroke = this.strokes[this.currentStrokeIdx];
-      const start = stroke.mp.getPointAtLength(0);
+      const start = stroke.samples[0];
       if ((pt.x - start.x) ** 2 + (pt.y - start.y) ** 2 > this.tolerance ** 2) return;
       e.preventDefault();
       this.activePointerId = e.pointerId;
