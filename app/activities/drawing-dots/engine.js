@@ -1,3 +1,6 @@
+import { edgeKey, buildAdj, computeR, tapResult } from './engine-logic.js';
+import { buildFilterBar } from '../../shared/filter-bar.js';
+
 var shapeIdx=0,selectedDot=null,completedEdges,adj,complete,filtered=[];
 
 (function(){
@@ -28,25 +31,8 @@ function ns(tag,attrs){
   return el;
 }
 
-function edgeKey(a,b){return Math.min(a,b)+','+Math.max(a,b);}
-
-function buildAdj(shape){
-  var a=shape.dots.map(function(){return [];});
-  shape.edges.forEach(function(e){a[e[0]].push(e[1]);a[e[1]].push(e[0]);});
-  return a;
-}
-
-function computeR(shape){
-  var vbP=shape.vb.split(' ').map(Number);
-  var scale=typeof ddDotScale!=='undefined'?ddDotScale:0.055;
-  var baseR=Math.max(2,Math.round(vbP[2]*scale));
-  if(!shape.edges.length)return baseR;
-  var lens=shape.edges.map(function(e){
-    var a=shape.dots[e[0]],b=shape.dots[e[1]];
-    return Math.sqrt((b.cx-a.cx)*(b.cx-a.cx)+(b.cy-a.cy)*(b.cy-a.cy));
-  }).sort(function(a,b){return a-b;});
-  var p25=lens[Math.floor(lens.length*0.25)];
-  return Math.max(2,Math.min(baseR,Math.floor(p25*0.28)));
+function _computeR(shape){
+  return computeR(shape, typeof ddDotScale!=='undefined'?ddDotScale:undefined);
 }
 
 function render(){
@@ -61,7 +47,7 @@ function render(){
 
   document.getElementById('title').textContent=shape.name+(shape.level!==undefined?' [Level '+shape.level+']':'');
 
-  var r=computeR(shape);
+  var r=_computeR(shape);
   var svg=document.getElementById('svg');
   svg.setAttribute('viewBox',shape.vb);
   svg.innerHTML='';
@@ -122,7 +108,7 @@ function makeDotsGroup(shape,r){
 
 function refreshDots(){
   var shape=filtered[shapeIdx];
-  var r=computeR(shape);
+  var r=_computeR(shape);
   var svg=document.getElementById('svg');
   var old=document.getElementById('dots');
   if(old)svg.removeChild(old);
@@ -130,34 +116,27 @@ function refreshDots(){
 }
 
 function tap(i){
-  if(complete)return;
-  if(selectedDot===null){
-    selectedDot=i;refreshDots();updateInstruction();return;
-  }
-  if(selectedDot===i){
-    selectedDot=null;refreshDots();updateInstruction();return;
-  }
-  var key=edgeKey(selectedDot,i);
-  if(completedEdges.has(key)){
-    selectedDot=null;refreshDots();updateInstruction();return;
-  }
-  if(adj[selectedDot].indexOf(i)>=0){
-    var a=filtered[shapeIdx].dots[selectedDot],b=filtered[shapeIdx].dots[i];
+  var prev=selectedDot;
+  var result=tapResult({selectedDot:selectedDot,completedEdges:completedEdges,complete:complete},i,adj,filtered[shapeIdx].edges.length);
+  selectedDot=result.selectedDot;
+  completedEdges=result.completedEdges;
+  complete=result.complete;
+  refreshDots();
+  if(result.action==='draw'){
+    var a=filtered[shapeIdx].dots[prev],b=filtered[shapeIdx].dots[i];
     drawLine(a.cx,a.cy,b.cx,b.cy);
-    completedEdges.add(key);
-    if(completedEdges.size===filtered[shapeIdx].edges.length){
-      complete=true;selectedDot=null;refreshDots();revealImage();
-    }else{
-      var iDone=adj[i].length>0&&adj[i].every(function(n){return completedEdges.has(edgeKey(i,n));});
-      selectedDot=iDone?null:i;refreshDots();updateInstruction();
-    }
-  }else{
+    updateInstruction();
+  }else if(result.action==='reveal'){
+    revealImage();
+  }else if(result.action==='flash'){
     flashDot(i);
+  }else{
+    updateInstruction();
   }
 }
 
 function drawLine(x1,y1,x2,y2){
-  var r=computeR(filtered[shapeIdx]);
+  var r=_computeR(filtered[shapeIdx]);
   var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
   var line=ns('line',{
     x1:x1,y1:y1,x2:x2,y2:y2,
@@ -220,4 +199,17 @@ function updateInstruction(msg){
 function nextShape(){shapeIdx=(shapeIdx+1)%filtered.length;render();}
 function prevShape(){shapeIdx=(shapeIdx+filtered.length-1)%filtered.length;render();}
 
-function startEngine(){buildFilterBar(shapes,function(f){filtered=f;shapeIdx=0;render();});}
+export function startEngine(shapes){
+  buildFilterBar(shapes,function(f){filtered=f;shapeIdx=0;render();});
+}
+
+// Expose for menu.js onclick handlers and Playwright tests
+window.tap=tap;
+window.nextShape=nextShape;
+window.prevShape=prevShape;
+Object.defineProperty(window,'filtered',     {get:()=>filtered,     set:v=>{filtered=v;},     configurable:true});
+Object.defineProperty(window,'shapeIdx',     {get:()=>shapeIdx,     set:v=>{shapeIdx=v;},     configurable:true});
+Object.defineProperty(window,'selectedDot',  {get:()=>selectedDot,  set:v=>{selectedDot=v;},  configurable:true});
+Object.defineProperty(window,'completedEdges',{get:()=>completedEdges,                         configurable:true});
+Object.defineProperty(window,'adj',          {get:()=>adj,                                     configurable:true});
+Object.defineProperty(window,'complete',     {get:()=>complete,                                configurable:true});

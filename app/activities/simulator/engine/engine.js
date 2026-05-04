@@ -1,4 +1,4 @@
-class SimulatorEngine {
+export class SimulatorEngine {
   constructor(spec, container) {
     this.spec = spec;
     this.container = container;
