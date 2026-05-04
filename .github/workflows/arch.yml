@@ -2,6 +2,7 @@ name: Architecture Checks
 
 on:
   push:
+  pull_request:
 
 jobs:
 
@@ -73,6 +74,7 @@ jobs:
           cat reports/ui-complexity.txt >> combined.txt
 
       - name: Comment on PR
+        if: github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
