@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Word Match</title>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<script src="../../shared/menu.js" defer></script>
+</head>
+<body>
+<div class="nav-bar" data-home="../../games/"></div>
+<div class="game-area">
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
+  <div class="game-title">Word Match</div>
+  <div style="font-size:clamp(1em,3.5vmin,1.4em);color:#888;text-align:center;padding:0 16px;">Find the picture!</div>
+  <div id="wm-word" style="font-size:clamp(2em,10vmin,5em);font-weight:bold;color:#333;text-align:center;padding:clamp(8px,2vmin,16px) 16px 0;letter-spacing:0.04em;"></div>
+  <div style="display:flex;justify-content:center;padding:clamp(8px,2vmin,16px);">
+    <button id="wm-say" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(8px,1.5vmin,14px) clamp(16px,3vw,28px);border:none;border-radius:16px;background:#3498DB;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#128266; Say it!</button>
+  </div>
+  <div id="wm-choices" style="display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(12px,3vmin,24px);padding:0 16px clamp(12px,3vmin,24px);flex:1;align-content:center;"></div>
+</div>
+<script type="module">
+import Dictionary from '../../../core/dictionary/dictionary-core.js';
+import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
+import {buildFilterBar} from '../../../ui/filter-bar/filter-bar-ui.js';
+import {init,getCurrentTarget,renderRound} from '../../../ui/word-match/word-match-ui.js';
+Dictionary.init('../../dictionary/');
+var allItems=[],filtered=[];
+window.__wmTarget=function(){return getCurrentTarget();};
+loadImages(allItems,function(){
+  init(allItems);
+  buildFilterBar(allItems,function(f){filtered=f;renderRound(filtered);});
+});
+</script>
+</body>
+</html>

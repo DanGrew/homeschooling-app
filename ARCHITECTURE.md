@@ -116,6 +116,21 @@ Must pass `ui-cyclomatic` (complexity 1 per function — zero branches). Move al
 </script>
 ```
 
+**5. Playwright tests** — `tests/games/<activity>.test.js`
+
+Cover the user journey, not implementation details. Minimum set:
+
+- Page loads with expected elements visible
+- Correct answer: `feedback-correct` class appears, success banner slides up
+- Wrong answer: `feedback-wrong` class appears, clears after ~500ms (use `timeout: 2000` to avoid flakes)
+- Next button on banner: banner hides, new round renders
+
+If state needs to be inspected (e.g. which answer is correct), expose a getter via `window.__<activity>Target` in the app HTML — not directly in core/ui.
+
+**6. Games hub tile** — `app/games/index.html`
+
+Add a tile linking to the new activity. Update `tests/games/index.test.js` to assert the tile and its section heading are visible.
+
 ---
 
 ## Modifying existing files

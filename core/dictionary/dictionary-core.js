@@ -23,6 +23,7 @@ var Dictionary=(function(){
         var item=Object.assign({},concept,rep);
         delete item.concept;
         if(rep.src){
+          item.url=base+rep.src;
           return fetchText(base+rep.src).then(function(svg){
             item.svg=svg;
             repCache[repPath]=item;
