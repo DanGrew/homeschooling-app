@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { svg, pickCol, colours, types } = require('../../app/shared/shapes-logic.js');
+const { svg, pickCol, colours, types } = require('../../core/shapes/shapes-core.js');
 
 describe('svg', () => {
   it('wraps output in svg element with viewBox', () => {

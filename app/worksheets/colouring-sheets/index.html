@@ -52,8 +52,8 @@
 </div>
 <script>var pictures=[];</script>
 <script type="module">
-import Dictionary from '../../dictionary/dictionary.js';
-import { loadColouringPictures } from '../../dictionary/dictionary-helpers.js';
+import Dictionary from '../../../core/dictionary/dictionary-core.js';
+import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});

@@ -34,6 +34,7 @@ function read(file) {
 
 let violations = [];
 let exceptions = [];
+let scanned = [];
 
 function hasAllow(content, tag) {
   return content.includes(`arch: ${tag}`);
@@ -47,7 +48,8 @@ if (rule === 'no-dom-in-core') {
       exceptions.push(file);
       return;
     }
-    if (content.includes('document') || content.includes('window')) {
+    scanned.push(file);
+    if (/\bdocument\b/.test(content) || /\bwindow\b/.test(content)) {
       violations.push(`${file} uses DOM globals`);
     }
   });
@@ -61,6 +63,7 @@ if (rule === 'no-ui-imports') {
       exceptions.push(file);
       return;
     }
+    scanned.push(file);
     if (content.match(/from ['"].*\/ui\//)) {
       violations.push(`${file} imports from /ui`);
     }
@@ -75,7 +78,7 @@ if (rule === 'ui-complexity') {
       exceptions.push(file);
       return;
     }
-
+    scanned.push(file);
     const lines = content.split('\n').length;
     const ifs = (content.match(/if\s*\(/g) || []).length;
 
@@ -88,9 +91,9 @@ if (rule === 'ui-complexity') {
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {
-  output += "✅ No issues\n";
+  output += `✅ No issues (scanned ${scanned.length} files)\n`;
 } else {
-  output += "❌ Violations:\n";
+  output += `❌ Violations (scanned ${scanned.length} files):\n`;
   violations.forEach(v => output += `- ${v}\n`);
 }
 

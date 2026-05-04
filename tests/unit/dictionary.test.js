@@ -2,7 +2,7 @@ import { vi, beforeEach } from 'vitest';
 
 async function freshDictionary() {
   vi.resetModules();
-  return (await import('../../app/dictionary/dictionary.js')).default;
+  return (await import('../../core/dictionary/dictionary-core.js')).default;
 }
 
 function okJson(data) {

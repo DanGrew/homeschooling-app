@@ -1,4 +1,4 @@
-import { extractTags, extractLevels, filterItems } from './filter-bar-logic.js';
+import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/filter-bar-core.js';
 export { extractTags, extractLevels, filterItems };
 
 export function buildFilterBar(items,onChange){

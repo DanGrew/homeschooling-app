@@ -1,9 +1,9 @@
 import { vi, beforeEach } from 'vitest';
 
 async function loadHelpers(mockDictionary) {
-  vi.doMock('../../app/dictionary/dictionary.js', () => ({ default: mockDictionary }));
+  vi.doMock('../../core/dictionary/dictionary-core.js', () => ({ default: mockDictionary }));
   vi.resetModules();
-  return await import('../../app/dictionary/dictionary-helpers.js');
+  return await import('../../core/dictionary/dictionary-helpers-core.js');
 }
 
 function call(fn, ...args) {
