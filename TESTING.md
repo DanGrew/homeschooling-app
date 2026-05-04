@@ -55,4 +55,4 @@ Pure logic with no DOM dependency:
 
 ## Constraints
 
-Source files are plain browser scripts (no `import`/`export`). Unit tests load them via `createRequire`. Functions with top-level DOM calls (e.g. `routine.js`) cannot be required directly — extract pure functions to a separate file first before writing unit tests for them.
+`/core` files use ES module syntax (`export function`). Unit tests import them directly. Files that need a CJS shim for Vitest add `if (typeof module !== 'undefined') module.exports = { ... }` at the bottom and load via `createRequire`. Functions with top-level DOM calls cannot be unit-tested directly — extract pure logic to a `/core` file first.
