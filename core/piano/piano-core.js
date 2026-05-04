@@ -36,4 +36,9 @@ function scoreMessage(hitCount) {
   return              { emoji: '\uD83C\uDFB5',          text: 'Keep playing!', sub: hitCount + ' out of 10' };
 }
 
-if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage };
+function once(fn) {
+  var called = false, result;
+  return function() { if (!called) { called = true; result = fn(); } return result; };
+}
+
+if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, once };

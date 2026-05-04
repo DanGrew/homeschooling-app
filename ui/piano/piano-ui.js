@@ -1,12 +1,8 @@
-// arch: allow-complexity
-// initAudio: lazy AudioContext creation requires a user gesture (browser spec).
-// _audioCtx || and _initPromise || are memoisation guards — browser lifecycle
-// constraints that cannot move to core or be eliminated structurally.
-
 var _audioCtx = null;
 var _audioBuffers = {};
-var _rawBuffers = {};
-var _initPromise = null;
+var _rawBuffers = PIANO_CONFIG.NOTES.reduce(function(acc, note) {
+  acc[note] = new ArrayBuffer(0); return acc;
+}, {});
 
 Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
   return fetch('../../assets/audio/piano/' + note + '.wav')
@@ -17,20 +13,19 @@ Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
 
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
-function initAudio() {
-  _audioCtx = _audioCtx || new AudioContext();
-  _initPromise = _initPromise || _audioCtx.resume().then(function() {
-    PIANO_CONFIG.NOTES.forEach(function(note) {
-      _audioBuffers[note] = _audioCtx.createBuffer(1, 1, 22050);
-    });
+var initAudio = once(function() {
+  _audioCtx = new AudioContext();
+  PIANO_CONFIG.NOTES.forEach(function(note) {
+    _audioBuffers[note] = _audioCtx.createBuffer(1, 1, 22050);
+  });
+  return _audioCtx.resume().then(function() {
     return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-      return _audioCtx.decodeAudioData(_rawBuffers[note] || new ArrayBuffer(0))
+      return _audioCtx.decodeAudioData(_rawBuffers[note])
         .then(function(decoded) { _audioBuffers[note] = decoded; })
         .catch(function() {});
     }));
   });
-  return _initPromise;
-}
+});
 
 function playNote(noteName, volume) {
   var src = _audioCtx.createBufferSource();
