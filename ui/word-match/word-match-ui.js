@@ -3,6 +3,21 @@ import {buildRound} from '../../core/word-match/word-match-core.js';
 
 var current,locked;
 
+function ensureBanner(){
+  if(document.getElementById('success-banner'))return;
+  var b=document.createElement('div');
+  b.id='success-banner';
+  b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;';
+  b.innerHTML='<span style="font-size:1.6em;">&#11088; Well done!</span><button id="success-next" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Next &#8594;</button>';
+  document.body.appendChild(b);
+}
+
+function showSuccess(onNext){
+  var b=document.getElementById('success-banner');
+  b.style.transform='translateY(0)';
+  document.getElementById('success-next').onclick=function(){b.style.transform='translateY(100%)';onNext();};
+}
+
 function makeBtn(item,items){
   var btn=document.createElement('button');
   btn.dataset.id=item.id;
@@ -20,7 +35,7 @@ function pick(btn,item,items){
   if(item.id===current.target.id){
     locked=true;
     btn.classList.add('feedback-correct');
-    window.showBanner(function(){btn.classList.remove('feedback-correct');renderRound(items);});
+    showSuccess(function(){btn.classList.remove('feedback-correct');renderRound(items);});
   }else{
     btn.classList.add('feedback-wrong');
     setTimeout(function(){btn.classList.remove('feedback-wrong');},500);
@@ -38,6 +53,7 @@ export function renderRound(items){
 export function getCurrentTarget(){return current&&current.target;}
 
 export function init(items){
+  ensureBanner();
   document.getElementById('wm-say').onclick=function(){speak(current.target.name);};
   renderRound(items);
 }

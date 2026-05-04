@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
 <script src="../../shared/menu.js" defer></script>
-<script src="../../shared/colouring-common.js"></script>
 </head>
 <body>
 <div class="nav-bar" data-home="../../games/"></div>
@@ -30,13 +29,8 @@ Dictionary.init('../../dictionary/');
 var allItems=[],filtered=[];
 window.__wmTarget=function(){return getCurrentTarget();};
 loadImages(allItems,function(){
-  function start(){
-    buildFilterBar(allItems,function(f){filtered=f;renderRound(filtered);});
-    init(allItems);
-  }
-  document.readyState==='loading'
-    ?document.addEventListener('DOMContentLoaded',start)
-    :start();
+  init(allItems);
+  buildFilterBar(allItems,function(f){filtered=f;renderRound(filtered);});
 });
 </script>
 </body>
