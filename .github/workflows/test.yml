@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 jobs:
+
   unit-test:
     runs-on: ubuntu-latest
     steps:
@@ -20,8 +21,6 @@ jobs:
 
   coverage:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,34 +29,36 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test:coverage
-      - name: Comment coverage on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+      - name: Write coverage report
+        if: always()
+        run: |
+          node -e "
+          const fs = require('fs');
+          if (!fs.existsSync('coverage/coverage-summary.json')) {
+            fs.writeFileSync('coverage-report.md', '### Unit Test Coverage\n⚠️ Coverage data missing — tests may have failed.');
+            process.exit(0);
+          }
+          const s = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total;
+          const row = (label, key) => \`| \${label} | \${s[key].pct}% | \${s[key].covered} / \${s[key].total} |\`;
+          const body = [
+            '### Unit Test Coverage',
+            '| Metric | % | Covered / Total |',
+            '|--------|---|-----------------|',
+            row('Lines', 'lines'),
+            row('Statements', 'statements'),
+            row('Functions', 'functions'),
+            row('Branches', 'branches'),
+          ].join('\n');
+          fs.writeFileSync('coverage-report.md', body);
+          "
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          script: |
-            const fs = require('fs');
-            const s = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total;
-            const row = (label, key) => `| ${label} | ${s[key].pct}% | ${s[key].covered} / ${s[key].total} |`;
-            const body = [
-              '### Unit Test Coverage',
-              '| Metric | % | Covered / Total |',
-              '|--------|---|-----------------|',
-              row('Lines', 'lines'),
-              row('Statements', 'statements'),
-              row('Functions', 'functions'),
-              row('Branches', 'branches'),
-            ].join('\n');
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body,
-            });
+          name: report-coverage
+          path: coverage-report.md
 
   check-untested:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,21 +68,13 @@ jobs:
       - run: npm ci
       - name: Check untested files
         run: |
-          node scripts/check-untested.js 2>&1 | tee /tmp/untested.txt
+          node scripts/check-untested.js 2>&1 | tee untested-report.txt
           exit ${PIPESTATUS[0]}
-      - name: Comment untested report on PR
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          script: |
-            const fs = require('fs');
-            const output = fs.readFileSync('/tmp/untested.txt', 'utf8');
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '### Untested Files Check\n```\n' + output + '\n```',
-            });
+          name: report-untested
+          path: untested-report.txt
 
   e2e-test:
     runs-on: ubuntu-latest
@@ -99,3 +92,82 @@ jobs:
           key: playwright-${{ hashFiles('package-lock.json') }}
       - run: npx playwright install chromium --with-deps
       - run: npm test
+
+  no-dom-in-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-dom-in-core reports/no-dom.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-dom
+          path: reports/no-dom.txt
+
+  no-ui-imports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-ui-imports reports/no-ui-imports.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-ui-imports
+          path: reports/no-ui-imports.txt
+
+  ui-complexity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js ui-complexity reports/ui-complexity.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-ui-complexity
+          path: reports/ui-complexity.txt
+
+  pr-report:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    needs:
+      - coverage
+      - check-untested
+      - no-dom-in-core
+      - no-ui-imports
+      - ui-complexity
+    if: always() && github.event_name == 'pull_request'
+    steps:
+      - name: Download reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: report-*
+          path: reports
+          merge-multiple: true
+
+      - name: Combine reports
+        run: |
+          {
+            cat reports/coverage-report.md 2>/dev/null || echo "### Unit Test Coverage\n⚠️ Report missing"
+            echo ""
+            echo "### Untested Files Check"
+            echo '```'
+            cat reports/untested-report.txt 2>/dev/null || echo "⚠️ Report missing"
+            echo '```'
+            echo ""
+            echo "### Architecture Checks"
+            cat reports/no-dom.txt 2>/dev/null || echo "⚠️ no-dom-in-core report missing"
+            echo ""
+            cat reports/no-ui-imports.txt 2>/dev/null || echo "⚠️ no-ui-imports report missing"
+            echo ""
+            cat reports/ui-complexity.txt 2>/dev/null || echo "⚠️ ui-complexity report missing"
+          } > combined.md
+
+      - name: Comment on PR
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: combined.md
