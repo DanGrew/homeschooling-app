@@ -55,8 +55,7 @@ Add a comment to suppress a specific check for one file:
 ```js
 // arch: allow-dom        — file in /core that legitimately uses DOM
 // arch: allow-import     — file in /core that intentionally imports from /ui
-// arch: allow-complexity — file in /ui whose complexity is justified
-// arch: allow-cyclomatic — file in /ui with documented legitimate complexity
+// arch: allow-complexity — file in /ui whose complexity is justified (suppresses both ui-complexity and ui-cyclomatic checks)
 // arch: allow-export     — file in /app that legitimately exports (rare)
 ```
 
@@ -107,7 +106,7 @@ keyEl.style.background = GLOW_BG[type]; // core config, not a branch
 If you genuinely cannot eliminate a branch — because it represents a real browser API constraint or an unavoidable lifecycle decision — use the escape hatch with a comment explaining the specific reason. The comment is the contract: it must name the function and explain why the decision cannot live in core.
 
 ```js
-// arch: allow-cyclomatic
+// arch: allow-complexity
 // initAudio: lazy AudioContext creation requires a user gesture (browser spec);
 // _initPromise memoisation prevents re-decoding on every keypress.
 // Both || operators are browser lifecycle constraints, not moveable to core.

@@ -30,7 +30,7 @@ async function run() {
   results.forEach(result => {
     const content = fs.readFileSync(result.filePath, 'utf8');
     const rel = path.relative(process.cwd(), result.filePath).replace(/\\/g, '/');
-    if (content.includes('arch: allow-cyclomatic')) {
+    if (content.includes('arch: allow-complexity')) {
       exceptions.push(rel);
       return;
     }

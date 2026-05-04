@@ -30,6 +30,4 @@ function showBanner(onNext){
   document.getElementById('success-next').onclick=function(){hideBanner();onNext();};
 }
 
-function hideBanner(){
-  document.getElementById('success-banner').style.transform='translateY(100%)';
-}
+function hideBanner(){document.getElementById('success-banner')?.style.setProperty('transform','translateY(100%)');}
