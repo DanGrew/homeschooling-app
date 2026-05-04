@@ -67,31 +67,31 @@ These files are too large/complex to move to `/ui` as-is. The `ui-complexity` ch
 ```
 /core
   /routine
-    logic.js                    ← from routine-logic.js
+    routine-logic.js
   /drawing-dots
-    logic.js                    ← from engine-logic.js
+    drawing-dots-logic.js       ← from engine-logic.js
   /story-time
-    player-logic.js
-    data.js
+    story-time-logic.js         ← from player-logic.js
+    story-time-data.js          ← from data.js
   /word-lesson
-    logic.js
+    word-lesson-logic.js
   /colour-mixing
-    logic.js
+    colour-mixing-logic.js
   /filter-bar
-    logic.js
+    filter-bar-logic.js
   /shapes
-    logic.js
+    shapes-logic.js
   /shopping
-    logic.js
+    shopping-logic.js           ← from shopping-shared-logic.js
   /dictionary
     dictionary.js
-    helpers.js
+    dictionary-helpers.js
   /simulator
-    logic.js                    ← to be extracted
+    simulator-logic.js          ← to be extracted
   /trace
-    logic.js                    ← to be extracted
+    trace-logic.js              ← to be extracted
   /piano
-    logic.js                    ← to be extracted
+    piano-logic.js              ← to be extracted
   /connect-the-dots
     /shapes                     ← shape definition files
     /free-svg
@@ -100,29 +100,29 @@ These files are too large/complex to move to `/ui` as-is. The `ui-complexity` ch
 
 /ui
   /routine
-    ui.js                       ← from routine.js
+    routine-ui.js               ← from routine.js
   /drawing-dots
-    ui.js                       ← from engine.js
+    drawing-dots-ui.js          ← from engine.js
   /story-time
-    player.js
+    story-time-ui.js            ← from player.js
   /colour-mixing
-    ui.js                       ← from colour-mixing-engine.js
+    colour-mixing-ui.js         ← from colour-mixing-engine.js
   /filter-bar
-    ui.js                       ← from filter-bar.js
+    filter-bar-ui.js            ← from filter-bar.js
   /shapes
-    ui.js                       ← if needed
+    shapes-ui.js                ← if needed
   /shopping
-    ui.js                       ← from shopping-shared.js
+    shopping-ui.js              ← from shopping-shared.js
   /piano
-    ui.js                       ← from piano-shared.js
+    piano-ui.js                 ← from piano-shared.js
   /trace
-    engine.js
+    trace-engine.js
   /colouring
-    common.js
+    colouring-common.js
   /shared
     menu.js
   /simulator
-    ui.js                       ← to be extracted from engine.js
+    simulator-ui.js             ← to be extracted from engine.js
 
 /app
   (existing HTML pages and wiring, unchanged)
