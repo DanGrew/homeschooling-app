@@ -10,7 +10,7 @@ test('page loads with keys and play button', async ({ page }) => {
 
 test('nav link points to games index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/piano/game.html')
-  await expect(page.locator('a[href="/homeschooling-app/app/games/"]')).toBeVisible()
+  await expect(page.locator('a[href*="games/"]')).toBeVisible()
 })
 
 test('lesson link is visible', async ({ page }) => {

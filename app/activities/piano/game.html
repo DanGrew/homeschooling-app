@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Piano Game</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#1a1a2e;flex-direction:column;}
@@ -22,7 +22,7 @@ body{background:#1a1a2e;flex-direction:column;}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="/homeschooling-app/app/games/" data-title="&#127929; Piano Game" data-links='[{"label":"&#9664; Lesson","href":"./lesson.html"}]'></div>
+<div class="nav-bar" data-home="../../games/" data-title="&#127929; Piano Game" data-links='[{"label":"&#9664; Lesson","href":"./lesson.html"}]'></div>
 <div class="game-area">
   <div id="controls">
     <button class="ctrl-btn" id="btn-play" onclick="pressPlay()" style="background:#2ECC71;color:#fff;">&#9654; Play</button>
@@ -41,8 +41,8 @@ body{background:#1a1a2e;flex-direction:column;}
   </div>
   <div id="keys-wrap"></div>
 </div>
-<script src="/homeschooling-app/app/shared/menu.js" defer></script>
-<script src="/homeschooling-app/app/shared/piano-shared.js"></script>
+<script src="../../shared/menu.js" defer></script>
+<script src="../../shared/piano-shared.js"></script>
 <script>
 var gameState = 'idle';
 var startTime = 0, pausedOffset = 0, pausedAt = 0;

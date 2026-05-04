@@ -153,7 +153,7 @@ test('navigating to new char resets engine in trace mode', async ({ page }) => {
 
 test('home nav button points to lessons index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/')
-  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  const href = await page.locator('.nav-btn').first().evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/lessons/')
 })
 

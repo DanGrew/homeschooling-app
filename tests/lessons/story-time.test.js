@@ -28,6 +28,6 @@ test('Play and Stop buttons are visible', async ({ page }) => {
 
 test('nav link points to lessons index not home', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/story-time/?story=david-and-goliath')
-  const href = await page.locator('#panel-header a').getAttribute('href')
+  const href = await page.locator('#panel-header a').evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/stories/')
 })

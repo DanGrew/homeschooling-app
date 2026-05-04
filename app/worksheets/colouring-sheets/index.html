@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Colouring Sheets</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/panel.css">
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/panel.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 #panel{width:220px;min-width:220px;}
@@ -38,7 +38,7 @@
 <body>
 <div id="panel">
   <div id="panel-header">
-    <a href="/homeschooling-app/app/worksheets/">&#127968; Worksheets</a>
+    <a href="../../worksheets/">&#127968; Worksheets</a>
     <h2>Choose images</h2>
     <p>Tick the animals you want. Then use your device's print button to print the sheet.</p>
   </div>
@@ -52,8 +52,8 @@
 </div>
 <script>var pictures=[];</script>
 <script type="module">
-import Dictionary from '/homeschooling-app/app/dictionary/dictionary.js';
-import { loadColouringPictures } from '/homeschooling-app/app/dictionary/dictionary-helpers.js';
+import Dictionary from '../../dictionary/dictionary.js';
+import { loadColouringPictures } from '../../dictionary/dictionary-helpers.js';
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
@@ -119,7 +119,7 @@ function removeImage(idx){
   if(!sheet.querySelector('.worksheet-item'))document.getElementById('empty-msg').style.display='';
 }
 
-Dictionary.init('/homeschooling-app/app/dictionary/');
+Dictionary.init('../../dictionary/');
 loadColouringPictures(pictures,function(){
   pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
   buildPanel();
