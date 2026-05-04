@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Drawing Dots</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
-<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<script src="../../shared/menu.js" defer></script>
 <style>
 @keyframes wrong{0%,100%{fill:white}50%{fill:#E74C3C}}
 .dot-wrong{animation:wrong 0.4s ease}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="/homeschooling-app/app/games/" data-prev="prevShape" data-next="nextShape"></div>
+<div class="nav-bar" data-home="../../games/" data-prev="prevShape" data-next="nextShape"></div>
 <div class="game-area">
   <div id="filter-bar" style="border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
@@ -25,10 +25,10 @@
 <script>var shapes=[];</script>
 <script src="./engine.js"></script>
 <script type="module">
-import Dictionary from '/homeschooling-app/app/dictionary/dictionary.js';
-import { loadAllDrawingDots } from '/homeschooling-app/app/dictionary/dictionary-helpers.js';
-import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
-Dictionary.init('/homeschooling-app/app/dictionary/');
+import Dictionary from '../../dictionary/dictionary.js';
+import { loadAllDrawingDots } from '../../dictionary/dictionary-helpers.js';
+import { buildFilterBar } from '../../shared/filter-bar.js';
+Dictionary.init('../../dictionary/');
 loadAllDrawingDots(shapes,function(){buildFilterBar(shapes,function(f){filtered=f;shapeIdx=0;render();});});
 </script>
 </body>

@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Say Words</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
-<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<script src="../../shared/menu.js" defer></script>
 </head>
 <body>
-<div class="nav-bar" data-home="/homeschooling-app/app/lessons/"></div>
+<div class="nav-bar" data-home="../../lessons/"></div>
 <div class="game-area">
   <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2vmin,16px);padding:8px;">
@@ -24,10 +24,10 @@
   </div>
 </div>
 <script type="module">
-import Dictionary from '/homeschooling-app/app/dictionary/dictionary.js';
-import { loadImages } from '/homeschooling-app/app/dictionary/dictionary-helpers.js';
-import { buildFilterBar } from '/homeschooling-app/app/shared/filter-bar.js';
-Dictionary.init('/homeschooling-app/app/dictionary/');
+import Dictionary from '../../dictionary/dictionary.js';
+import { loadImages } from '../../dictionary/dictionary-helpers.js';
+import { buildFilterBar } from '../../shared/filter-bar.js';
+Dictionary.init('../../dictionary/');
 var filtered=[],idx=0;
 
 function show(){

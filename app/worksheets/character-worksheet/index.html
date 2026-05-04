@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Letter Worksheet</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/panel.css">
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/panel.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 #panel{width:240px;min-width:240px;}
@@ -42,7 +42,7 @@ input[type=text]:focus{outline:none;border-color:#3498DB;}
 <body>
 <div id="panel">
   <div id="panel-header">
-    <a href="/homeschooling-app/app/worksheets/">&#127968; Worksheets</a>
+    <a href="../../worksheets/">&#127968; Worksheets</a>
     <h2>Letter Worksheet</h2>
     <p>Type your characters, set the grid, then print.</p>
   </div>
@@ -99,7 +99,7 @@ async function loadPath(c) {
   if (!file) return null;
   if (svgCache[file] !== undefined) return svgCache[file];
   try {
-    const r = await fetch('/homeschooling-app/app/language-characters/' + file);
+    const r = await fetch('../../language-characters/' + file);
     const text = await r.text();
     const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
     const path = doc.getElementById('trace-path');

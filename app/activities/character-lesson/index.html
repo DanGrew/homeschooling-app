@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Trace Letters</title>
-<link rel="stylesheet" href="/homeschooling-app/app/shared/theme.css">
-<link rel="stylesheet" href="/homeschooling-app/app/shared/style.css">
-<script src="/homeschooling-app/app/shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<script src="../../shared/menu.js" defer></script>
 <style>
   .filter-bar{display:flex;gap:8px;justify-content:center;padding:8px 16px 0;flex-wrap:wrap;}
   .filter-btn{background:#f0f0f0;border:2px solid #ddd;border-radius:20px;padding:6px 18px;font-size:1em;font-family:inherit;cursor:pointer;color:#555;}
@@ -34,7 +34,7 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="/homeschooling-app/app/lessons/"></div>
+<div class="nav-bar" data-home="../../lessons/"></div>
 <div class="game-area">
   <div class="filter-bar">
     <button class="filter-btn" data-filter="all">All</button>
@@ -70,7 +70,7 @@
   </div>
 </div>
 
-<script src="/homeschooling-app/app/shared/trace-engine.js"></script>
+<script src="../../shared/trace-engine.js"></script>
 <script>
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
@@ -144,7 +144,7 @@ function navTo(idx) {
 
 function loadChar(entry) {
   const isTrace = mode === 'trace';
-  fetch('/homeschooling-app/app/language-characters/' + entry.file)
+  fetch('../../language-characters/' + entry.file)
     .then(r => r.text())
     .then(svgText => {
       const parser = new DOMParser();
