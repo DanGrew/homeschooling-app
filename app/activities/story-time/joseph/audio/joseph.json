@@ -1,0 +1,770 @@
+{
+  "clipId": "joseph",
+  "segments": [
+    {
+      "text": "Jacob had twelve sons.",
+      "words": [
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 0.14
+        },
+        {
+          "w": "had",
+          "normal": "had",
+          "t": 0.52
+        },
+        {
+          "w": "twelve",
+          "normal": "twelve",
+          "t": 0.7
+        },
+        {
+          "w": "sons.",
+          "normal": "sons",
+          "t": 1.02
+        }
+      ]
+    },
+    {
+      "text": "Jacob loved his son Joseph very much.",
+      "words": [
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 1.92
+        },
+        {
+          "w": "loved",
+          "normal": "loved",
+          "t": 2.34
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 2.62
+        },
+        {
+          "w": "son",
+          "normal": "son",
+          "t": 2.78
+        },
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 3.04
+        },
+        {
+          "w": "very",
+          "normal": "very",
+          "t": 3.521
+        },
+        {
+          "w": "much.",
+          "normal": "much",
+          "t": 3.861
+        }
+      ]
+    },
+    {
+      "text": "He gave Joseph a beautiful coat with many colours.",
+      "words": [
+        {
+          "w": "He",
+          "normal": "he",
+          "t": 4.581
+        },
+        {
+          "w": "gave",
+          "normal": "gave",
+          "t": 4.781
+        },
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 5.081
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 5.521
+        },
+        {
+          "w": "beautiful",
+          "normal": "beautiful",
+          "t": 5.661
+        },
+        {
+          "w": "coat",
+          "normal": "coat",
+          "t": 6.181
+        },
+        {
+          "w": "with",
+          "normal": "with",
+          "t": 6.541
+        },
+        {
+          "w": "many",
+          "normal": "many",
+          "t": 6.841
+        },
+        {
+          "w": "colours.",
+          "normal": "colours",
+          "t": 7.141
+        }
+      ]
+    },
+    {
+      "text": "Joseph’s brothers were jealous when they saw the coat.",
+      "words": [
+        {
+          "w": "Joseph’s",
+          "normal": "josephs",
+          "t": 8.201
+        },
+        {
+          "w": "brothers",
+          "normal": "brothers",
+          "t": 8.721
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 9.141
+        },
+        {
+          "w": "jealous",
+          "normal": "jealous",
+          "t": 9.401
+        },
+        {
+          "w": "when",
+          "normal": "when",
+          "t": 9.842
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 9.982
+        },
+        {
+          "w": "saw",
+          "normal": "saw",
+          "t": 10.142
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 10.362
+        },
+        {
+          "w": "coat.",
+          "normal": "coat",
+          "t": 10.502
+        }
+      ]
+    },
+    {
+      "text": "They were annoyed by Joseph, and they were unkind to him.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 11.382
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 11.542
+        },
+        {
+          "w": "annoyed",
+          "normal": "annoyed",
+          "t": 11.742
+        },
+        {
+          "w": "by",
+          "normal": "by",
+          "t": 12.122
+        },
+        {
+          "w": "Joseph,",
+          "normal": "joseph",
+          "t": 12.322
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 13.122
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 13.222
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 13.362
+        },
+        {
+          "w": "unkind",
+          "normal": "unkind",
+          "t": 13.562
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 14.062
+        },
+        {
+          "w": "him.",
+          "normal": "him",
+          "t": 14.262
+        }
+      ]
+    },
+    {
+      "text": "They wanted Joseph to go away.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 15.042
+        },
+        {
+          "w": "wanted",
+          "normal": "wanted",
+          "t": 15.282
+        },
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 15.662
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 16.102
+        },
+        {
+          "w": "go",
+          "normal": "go",
+          "t": 16.263
+        },
+        {
+          "w": "away.",
+          "normal": "away",
+          "t": 16.523
+        }
+      ]
+    },
+    {
+      "text": "One day, the brothers sold Joseph to a passing trader.",
+      "words": [
+        {
+          "w": "One",
+          "normal": "one",
+          "t": 17.643
+        },
+        {
+          "w": "day,",
+          "normal": "day",
+          "t": 17.863
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 18.743
+        },
+        {
+          "w": "brothers",
+          "normal": "brothers",
+          "t": 18.963
+        },
+        {
+          "w": "sold",
+          "normal": "sold",
+          "t": 19.783
+        },
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 20.123
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 20.583
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 20.763
+        },
+        {
+          "w": "passing",
+          "normal": "passing",
+          "t": 20.923
+        },
+        {
+          "w": "trader.",
+          "normal": "trader",
+          "t": 21.443
+        }
+      ]
+    },
+    {
+      "text": "Joseph was taken far away to Egypt.",
+      "words": [
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 22.864
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 23.304
+        },
+        {
+          "w": "taken",
+          "normal": "taken",
+          "t": 23.524
+        },
+        {
+          "w": "far",
+          "normal": "far",
+          "t": 24.084
+        },
+        {
+          "w": "away",
+          "normal": "away",
+          "t": 24.404
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 24.824
+        },
+        {
+          "w": "Egypt.",
+          "normal": "egypt",
+          "t": 25.104
+        }
+      ]
+    },
+    {
+      "text": "Joseph was scared, but God was with Joseph.",
+      "words": [
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 26.164
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 26.584
+        },
+        {
+          "w": "scared,",
+          "normal": "scared",
+          "t": 26.784
+        },
+        {
+          "w": "but",
+          "normal": "but",
+          "t": 27.544
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 27.784
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 28.084
+        },
+        {
+          "w": "with",
+          "normal": "with",
+          "t": 28.264
+        },
+        {
+          "w": "Joseph.",
+          "normal": "joseph",
+          "t": 28.504
+        }
+      ]
+    },
+    {
+      "text": "Joseph was a kind man and made many friends in Egypt.",
+      "words": [
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 29.805
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 30.205
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 30.385
+        },
+        {
+          "w": "kind",
+          "normal": "kind",
+          "t": 30.585
+        },
+        {
+          "w": "man",
+          "normal": "man",
+          "t": 30.945
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 31.385
+        },
+        {
+          "w": "made",
+          "normal": "made",
+          "t": 31.565
+        },
+        {
+          "w": "many",
+          "normal": "many",
+          "t": 31.825
+        },
+        {
+          "w": "friends",
+          "normal": "friends",
+          "t": 32.125
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 32.445
+        },
+        {
+          "w": "Egypt.",
+          "normal": "egypt",
+          "t": 32.685
+        }
+      ]
+    },
+    {
+      "text": "The Pharaoh trusted Joseph and made him an important leader in Egypt.",
+      "words": [
+        {
+          "w": "The",
+          "normal": "the",
+          "t": 33.685
+        },
+        {
+          "w": "Pharaoh",
+          "normal": "pharaoh",
+          "t": 33.925
+        },
+        {
+          "w": "trusted",
+          "normal": "trusted",
+          "t": 34.345
+        },
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 34.805
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 35.345
+        },
+        {
+          "w": "made",
+          "normal": "made",
+          "t": 35.505
+        },
+        {
+          "w": "him",
+          "normal": "him",
+          "t": 35.806
+        },
+        {
+          "w": "an",
+          "normal": "an",
+          "t": 36.066
+        },
+        {
+          "w": "important",
+          "normal": "important",
+          "t": 36.226
+        },
+        {
+          "w": "leader",
+          "normal": "leader",
+          "t": 36.926
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 37.486
+        },
+        {
+          "w": "Egypt.",
+          "normal": "egypt",
+          "t": 37.766
+        }
+      ]
+    },
+    {
+      "text": "Joseph helped many people when food was hard to find.",
+      "words": [
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 39.346
+        },
+        {
+          "w": "helped",
+          "normal": "helped",
+          "t": 39.826
+        },
+        {
+          "w": "many",
+          "normal": "many",
+          "t": 40.266
+        },
+        {
+          "w": "people",
+          "normal": "people",
+          "t": 40.586
+        },
+        {
+          "w": "when",
+          "normal": "when",
+          "t": 40.946
+        },
+        {
+          "w": "food",
+          "normal": "food",
+          "t": 41.186
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 41.486
+        },
+        {
+          "w": "hard",
+          "normal": "hard",
+          "t": 41.666
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 41.926
+        },
+        {
+          "w": "find.",
+          "normal": "find",
+          "t": 42.066
+        }
+      ]
+    },
+    {
+      "text": "Many years later, Jacob and his family were in trouble.",
+      "words": [
+        {
+          "w": "Many",
+          "normal": "many",
+          "t": 43.007
+        },
+        {
+          "w": "years",
+          "normal": "years",
+          "t": 43.307
+        },
+        {
+          "w": "later,",
+          "normal": "later",
+          "t": 43.587
+        },
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 44.367
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 44.787
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 44.907
+        },
+        {
+          "w": "family",
+          "normal": "family",
+          "t": 45.067
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 45.487
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 45.647
+        },
+        {
+          "w": "trouble.",
+          "normal": "trouble",
+          "t": 45.787
+        }
+      ]
+    },
+    {
+      "text": "They went to Egypt to find food.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 46.607
+        },
+        {
+          "w": "went",
+          "normal": "went",
+          "t": 46.827
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 47.067
+        },
+        {
+          "w": "Egypt",
+          "normal": "egypt",
+          "t": 47.327
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 47.607
+        },
+        {
+          "w": "find",
+          "normal": "find",
+          "t": 47.747
+        },
+        {
+          "w": "food.",
+          "normal": "food",
+          "t": 48.047
+        }
+      ]
+    },
+    {
+      "text": "Joseph was reunited with them, and they were welcomed into Egypt.",
+      "words": [
+        {
+          "w": "Joseph",
+          "normal": "joseph",
+          "t": 48.788
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 49.228
+        },
+        {
+          "w": "reunited",
+          "normal": "reunited",
+          "t": 49.448
+        },
+        {
+          "w": "with",
+          "normal": "with",
+          "t": 50.148
+        },
+        {
+          "w": "them,",
+          "normal": "them",
+          "t": 50.368
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 50.948
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 51.088
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 51.288
+        },
+        {
+          "w": "welcomed",
+          "normal": "welcomed",
+          "t": 51.488
+        },
+        {
+          "w": "into",
+          "normal": "into",
+          "t": 52.148
+        },
+        {
+          "w": "Egypt.",
+          "normal": "egypt",
+          "t": 52.488
+        }
+      ]
+    },
+    {
+      "text": "They all lived happily together.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 52.868
+        },
+        {
+          "w": "all",
+          "normal": "all",
+          "t": 53.188
+        },
+        {
+          "w": "lived",
+          "normal": "lived",
+          "t": 53.408
+        },
+        {
+          "w": "happily",
+          "normal": "happily",
+          "t": 53.688
+        },
+        {
+          "w": "together.",
+          "normal": "together",
+          "t": 54.148
+        }
+      ]
+    }
+  ]
+}
