@@ -1,4 +1,4 @@
-import { flattenCatalogs, escHtml, byName } from '../../app/shared/shopping-shared-logic.js';
+import { flattenCatalogs, escHtml, byName } from '../../core/shopping/shopping-core.js';
 
 const FRUIT = {
   name: 'Fruit & Veg', tags: ['food', 'healthy'],

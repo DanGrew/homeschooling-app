@@ -1,4 +1,4 @@
-import { edgeKey, buildAdj, computeR, tapResult } from '../../app/activities/drawing-dots/engine-logic.js';
+import { edgeKey, buildAdj, computeR, tapResult } from '../../core/drawing-dots/drawing-dots-core.js';
 
 // triangle: dots 0,1,2 connected 0-1, 1-2, 0-2
 const triangle = {

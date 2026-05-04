@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { toMins, getTodayKey, buildOrderedDays } = require('../../app/routine/routine-logic.js');
+const { toMins, getTodayKey, buildOrderedDays } = require('../../core/routine/routine-core.js');
 
 const ALL_DAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 

@@ -46,14 +46,14 @@
 </div>
 <script src="../../shared/colouring-common.js"></script>
 <script>var pictures=[];</script>
-<script src="../../shared/colouring-pictures/sun.js"></script>
-<script src="../../shared/colouring-pictures/cat.js"></script>
-<script src="../../shared/colouring-pictures/fish.js"></script>
-<script src="../../shared/colouring-pictures/house.js"></script>
-<script src="../../shared/colouring-pictures/tree.js"></script>
+<script src="../../core/colouring/pictures/sun.js"></script>
+<script src="../../core/colouring/pictures/cat.js"></script>
+<script src="../../core/colouring/pictures/fish.js"></script>
+<script src="../../core/colouring/pictures/house.js"></script>
+<script src="../../core/colouring/pictures/tree.js"></script>
 <script type="module">
-import Dictionary from '../../dictionary/dictionary.js';
-import { loadColouringPictures } from '../../dictionary/dictionary-helpers.js';
+import Dictionary from '../../core/dictionary/dictionary-core.js';
+import { loadColouringPictures } from '../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../shared/filter-bar.js';
 var filtIdx=0,selectedColour=null,filledEls,filtered=[];
 

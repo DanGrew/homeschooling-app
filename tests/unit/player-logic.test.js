@@ -1,4 +1,4 @@
-import { activeIndex } from '../../app/activities/story-time/player-logic.js';
+import { activeIndex } from '../../core/story-time/story-time-core.js';
 
 const words = [
   { t: 0.0, w: 'In' },

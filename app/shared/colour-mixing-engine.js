@@ -1,4 +1,4 @@
-import { CM_COLOURS, CM_MIXES, mix, hex } from './colour-mixing-logic.js';
+import { CM_COLOURS, CM_MIXES, mix, hex } from '../../core/colour-mixing/colour-mixing-core.js';
 export { CM_COLOURS, CM_MIXES, mix, hex };
 
 if(typeof document!=='undefined'){

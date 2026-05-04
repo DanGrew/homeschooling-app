@@ -6,7 +6,7 @@ export function getListItems(){return listItems;}
 export function resetListItems(){listItems=[];}
 export function filterListItems(fn){listItems=listItems.filter(fn);}
 
-import { flattenCatalogs, escHtml, byName } from './shopping-shared-logic.js';
+import { flattenCatalogs, escHtml, byName } from '../../core/shopping/shopping-core.js';
 export { flattenCatalogs, escHtml, byName };
 
 export function renderTiles(items=allItems){

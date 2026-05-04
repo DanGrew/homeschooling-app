@@ -1,4 +1,4 @@
-import Dictionary from './dictionary.js';
+import Dictionary from './dictionary-core.js';
 
 export function loadColouringPictures(pictures,callback){
   Dictionary.loadManifest('colouring',1).then(function(items){

@@ -1,4 +1,4 @@
-import { edgeKey, buildAdj, computeR, tapResult } from './engine-logic.js';
+import { edgeKey, buildAdj, computeR, tapResult } from '../../../core/drawing-dots/drawing-dots-core.js';
 import { buildFilterBar } from '../../shared/filter-bar.js';
 
 var shapeIdx=0,selectedDot=null,completedEdges,adj,complete,filtered=[];

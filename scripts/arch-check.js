@@ -47,7 +47,7 @@ if (rule === 'no-dom-in-core') {
       exceptions.push(file);
       return;
     }
-    if (content.includes('document') || content.includes('window')) {
+    if (/\bdocument\b/.test(content) || /\bwindow\b/.test(content)) {
       violations.push(`${file} uses DOM globals`);
     }
   });

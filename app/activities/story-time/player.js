@@ -1,4 +1,4 @@
-import { activeIndex } from './player-logic.js';
+import { activeIndex } from '../../../core/story-time/story-time-core.js';
 
 (function () {
   var storyId = new URLSearchParams(window.location.search).get('story') || 'david-and-goliath';
