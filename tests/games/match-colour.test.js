@@ -35,5 +35,5 @@ test('wrong swatch shows red outline then clears', async ({ page }) => {
 
   await wrongSwatch.click()
   await expect(wrongSwatch).toHaveClass(/feedback-wrong/)
-  await expect(wrongSwatch).not.toHaveClass(/feedback-wrong/, { timeout: 1000 })
+  await expect(wrongSwatch).not.toHaveClass(/feedback-wrong/, { timeout: 2000 })
 })

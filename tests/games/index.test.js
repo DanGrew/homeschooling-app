@@ -5,13 +5,19 @@ test('shows the Games heading', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Games!' })).toBeVisible()
 })
 
-test('has all five category headings', async ({ page }) => {
+test('has all six category headings', async ({ page }) => {
   await page.goto('/homeschooling-app/app/games/')
+  await expect(page.getByRole('heading', { name: 'Words' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Numbers' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Colours' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Music' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Puzzles' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'World' })).toBeVisible()
+})
+
+test('Words section has Word Match', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/games/')
+  await expect(page.locator('a[href*="activities/word-match/"]')).toBeVisible()
 })
 
 test('Numbers section has Count Shapes', async ({ page }) => {
