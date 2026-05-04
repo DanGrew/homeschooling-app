@@ -24,4 +24,33 @@ function buildOrderedDays(routineData,todayKey){
   }
 }
 
-if(typeof module!=='undefined')module.exports={toMins,getTodayKey,buildOrderedDays};
+const SLOT_PX = { 15: 28, 30: 44, 60: 64 };
+
+function pixelsPerMin(slotMins) {
+  return SLOT_PX[slotMins] / slotMins;
+}
+
+function formatTimeLabel(totalMins) {
+  const h = Math.floor(totalMins / 60), min = totalMins % 60;
+  return String(h).padStart(2, '0') + ':' + String(min).padStart(2, '0');
+}
+
+function slotLineClass(absMin, slotMins) {
+  if (absMin % 60 === 0) return 'hour';
+  if (absMin % slotMins === 0) return 'slot';
+  return '';
+}
+
+function blockLayout(startM, endM, gridStartMins, ppm) {
+  return { top: (startM - gridStartMins) * ppm, height: Math.max((endM - startM) * ppm, 20) };
+}
+
+function focusedScrollX(colOffsetLeft, colOffsetWidth, containerWidth) {
+  return Math.max(0, colOffsetLeft - (containerWidth / 2 - colOffsetWidth / 2));
+}
+
+function nowScrollTop(nowMins, gridStartMins, ppm, containerHeight, dayHeaderH) {
+  return Math.max(0, dayHeaderH + (nowMins - gridStartMins) * ppm - containerHeight / 2);
+}
+
+if(typeof module!=='undefined')module.exports={toMins,getTodayKey,buildOrderedDays,pixelsPerMin,formatTimeLabel,slotLineClass,blockLayout,focusedScrollX,nowScrollTop};
