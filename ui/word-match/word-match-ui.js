@@ -5,14 +5,12 @@ var current,locked;
 
 function makeBtn(item,items){
   var btn=document.createElement('button');
+  btn.dataset.id=item.id;
   btn.style.cssText='display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px;border:3px solid #ddd;border-radius:16px;background:#fff;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;width:clamp(120px,22vmin,180px);font-family:inherit;';
   var img=document.createElement('img');
   img.src=item.url;img.alt=item.name;
   img.style.cssText='width:clamp(80px,16vmin,140px);height:clamp(80px,16vmin,140px);object-fit:contain;pointer-events:none;';
-  var lbl=document.createElement('div');
-  lbl.textContent=item.name;
-  lbl.style.cssText='font-size:clamp(0.85em,2.5vmin,1.1em);font-weight:bold;color:#333;text-align:center;';
-  btn.appendChild(img);btn.appendChild(lbl);
+  btn.appendChild(img);
   btn.onclick=function(){pick(btn,item,items);};
   return btn;
 }

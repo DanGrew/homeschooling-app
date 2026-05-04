@@ -12,7 +12,10 @@
 <body>
 <div class="nav-bar" data-home="../../games/"></div>
 <div class="game-area">
-  <div id="wm-word" style="font-size:clamp(2em,10vmin,5em);font-weight:bold;color:#333;text-align:center;padding:clamp(12px,3vmin,28px) 16px 0;letter-spacing:0.04em;"></div>
+  <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
+  <div class="game-title">Word Match</div>
+  <div style="font-size:clamp(1em,3.5vmin,1.4em);color:#888;text-align:center;padding:0 16px;">Find the picture!</div>
+  <div id="wm-word" style="font-size:clamp(2em,10vmin,5em);font-weight:bold;color:#333;text-align:center;padding:clamp(8px,2vmin,16px) 16px 0;letter-spacing:0.04em;"></div>
   <div style="display:flex;justify-content:center;padding:clamp(8px,2vmin,16px);">
     <button id="wm-say" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(8px,1.5vmin,14px) clamp(16px,3vw,28px);border:none;border-radius:16px;background:#3498DB;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">&#128266; Say it!</button>
   </div>
@@ -21,11 +24,15 @@
 <script type="module">
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
-import {init,getCurrentTarget} from '../../../ui/word-match/word-match-ui.js';
+import {buildFilterBar} from '../../../ui/filter-bar/filter-bar-ui.js';
+import {init,getCurrentTarget,renderRound} from '../../../ui/word-match/word-match-ui.js';
 Dictionary.init('../../dictionary/');
-var items=[];
+var allItems=[],filtered=[];
 window.__wmTarget=function(){return getCurrentTarget();};
-loadImages(items,function(){init(items);});
+loadImages(allItems,function(){
+  buildFilterBar(allItems,function(f){filtered=f;renderRound(filtered);});
+  init(allItems);
+});
 </script>
 </body>
 </html>
