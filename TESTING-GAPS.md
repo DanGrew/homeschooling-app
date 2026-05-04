@@ -6,13 +6,6 @@ _Last updated: 2026-05-04_
 
 ## Remaining Gaps by Priority
 
-### Critical — incomplete or disconnected
-
-| File | Gap | Action |
-|---|---|---|
-| `drawing-dots/engine.js` | `engine-logic.js` disconnected — duplication risk | Convert to module (see above) |
-| `simulator/engine/engine.js` | `_checkRules` untested — rule engine fires silently | Add unit test (easy, no DOM) |
-
 ### High — DOM-coupled, needs extraction first
 
 | File | Extractable Logic | Blocker |
@@ -32,7 +25,6 @@ _Last updated: 2026-05-04_
 
 | File | Notes |
 |---|---|
-| `shared/shapes.js` | `pickCol` color avoidance has state dep; rest static |
 | `shared/colouring-common.js` | DOM injection only |
 | `filter-bar.js` | `buildFilterBar` DOM-only |
 | `colouring-pictures/*.js` | Data-only |

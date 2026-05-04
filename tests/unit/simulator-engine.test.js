@@ -265,7 +265,7 @@ describe('SimulatorEngine._checkWin', () => {
     expect(e.won).toBe(false);
   });
 
-  it('does not fire again once already won', () => {
+  it('does not trigger twice once already won', () => {
     const e = makeEngine({ x: 5 }, {
       win_condition: 'state.x >= 5',
       win_response: [],
@@ -276,5 +276,41 @@ describe('SimulatorEngine._checkWin', () => {
     e._checkWin();
     expect(calls).toBe(0); // setTimeout delayed — just check won not double-set
     expect(e.won).toBe(true);
+  });
+});
+
+describe('SimulatorEngine._checkRules', () => {
+  it('fires rule actions when condition met', () => {
+    const fired = [];
+    const e = makeEngine({ x: 5 }, {
+      rules: [{ if: 'state.x >= 5', do: ['state.x += 1'] }],
+    });
+    e._execActions = (a) => fired.push(...a);
+    e._checkRules();
+    expect(fired).toContain('state.x += 1');
+  });
+
+  it('skips rule when condition not met', () => {
+    const fired = [];
+    const e = makeEngine({ x: 2 }, {
+      rules: [{ if: 'state.x >= 5', do: ['state.x += 1'] }],
+    });
+    e._execActions = (a) => fired.push(...a);
+    e._checkRules();
+    expect(fired).toHaveLength(0);
+  });
+
+  it('fires multiple rules independently', () => {
+    const fired = [];
+    const e = makeEngine({ x: 5, y: 0 }, {
+      rules: [
+        { if: 'state.x >= 5', do: ['state.x += 1'] },
+        { if: 'state.y >= 1', do: ['state.y += 1'] },
+      ],
+    });
+    e._execActions = (a) => fired.push(...a);
+    e._checkRules();
+    expect(fired).toContain('state.x += 1');
+    expect(fired).not.toContain('state.y += 1');
   });
 });
