@@ -55,11 +55,62 @@ Add a comment to suppress a specific check for one file:
 ```js
 // arch: allow-dom        — file in /core that legitimately uses DOM
 // arch: allow-import     — file in /core that intentionally imports from /ui
-// arch: allow-complexity — file in /ui whose complexity is justified
+// arch: allow-complexity — file in /ui whose complexity is justified (suppresses both ui-complexity and ui-cyclomatic checks)
 // arch: allow-export     — file in /app that legitimately exports (rare)
 ```
 
 Use sparingly. If a `/core` file needs DOM access it is not a core file.
+
+---
+
+## Check integrity — do not game the rules
+
+The checks exist to enforce architecture, not to be beaten. A passing check should mean the code is better; not that you found a way to satisfy the assertion without fixing the underlying design.
+
+**What gaming looks like:**
+
+```js
+// WRONG — removing a guard to pass the complexity check
+// The guard existed because _audioBuffers[note] can be undefined (network failure).
+// Deleting it makes the check pass but silently breaks the app on bad networks.
+function playNote(noteName, volume) {
+  // if (!_audioBuffers[noteName]) return;  ← deleted just to hit complexity 1
+  var src = _audioCtx.createBufferSource();
+  src.buffer = _audioBuffers[noteName]; // throws if undefined
+  ...
+}
+
+// WRONG — pre-filling with a dummy value to avoid the guard
+// The problem is not the guard. The problem is the function has a decision.
+var _audioBuffers = PIANO_CONFIG.NOTES.reduce((acc, note) => {
+  acc[note] = _audioCtx.createBuffer(1, 1, 22050); // silent decoy
+  return acc;
+}, {});
+```
+
+**What a genuine fix looks like:**
+
+Move the decision to `core/`, or restructure so the decision is never needed:
+
+```js
+// CORRECT — initAudio guarantees _audioBuffers[note] is always a valid buffer
+// before playNote is ever reachable. Guard is structurally unnecessary.
+// If decode fails, note stays as the silent fallback set during init.
+initAudio().then(() => playNote(note, 1.0));
+
+// CORRECT — glowKey uses a lookup table; no decision in UI
+var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
+keyEl.style.background = GLOW_BG[type]; // core config, not a branch
+```
+
+If you genuinely cannot eliminate a branch — because it represents a real browser API constraint or an unavoidable lifecycle decision — use the escape hatch with a comment explaining the specific reason. The comment is the contract: it must name the function and explain why the decision cannot live in core.
+
+```js
+// arch: allow-complexity
+// initAudio: lazy AudioContext creation requires a user gesture (browser spec);
+// _initPromise memoisation prevents re-decoding on every keypress.
+// Both || operators are browser lifecycle constraints, not moveable to core.
+```
 
 ---
 

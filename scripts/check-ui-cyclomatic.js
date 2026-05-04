@@ -24,11 +24,17 @@ async function run() {
   const results = await eslint.lintFiles([path.join(process.cwd(), 'ui/**/*.js')]);
 
   const violations = [];
+  const exceptions = [];
   let scanned = 0;
 
   results.forEach(result => {
-    scanned++;
+    const content = fs.readFileSync(result.filePath, 'utf8');
     const rel = path.relative(process.cwd(), result.filePath).replace(/\\/g, '/');
+    if (content.includes('arch: allow-complexity')) {
+      exceptions.push(rel);
+      return;
+    }
+    scanned++;
     result.messages.forEach(msg => {
       if (msg.ruleId === 'complexity') {
         violations.push(`${rel} — ${msg.message} (line ${msg.line})`);
@@ -42,6 +48,10 @@ async function run() {
   } else {
     output += `❌ Violations (scanned ${scanned} files, threshold: ${COMPLEXITY_THRESHOLD}):\n`;
     violations.forEach(v => output += `- ${v}\n`);
+  }
+  if (exceptions.length > 0) {
+    output += `\n⚠️ Exceptions (pending fix):\n`;
+    exceptions.forEach(e => output += `- ${e}\n`);
   }
 
   fs.writeFileSync(outputFile, output);

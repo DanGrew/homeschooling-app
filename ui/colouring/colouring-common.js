@@ -1,13 +1,7 @@
 (function(){
-  function injectBanner(){
-    var b=document.createElement('div');
-    b.id='success-banner';
-    b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;';
-    b.innerHTML='<span style="font-size:1.6em;">&#11088; Well done!</span><button id="success-next" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Next &#8594;</button>';
-    document.body.appendChild(b);
-  }
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',injectBanner);}
-  else{injectBanner();}
+  var READY={loading:function(fn){document.addEventListener('DOMContentLoaded',fn);},interactive:function(fn){fn();},complete:function(fn){fn();}};
+  function injectBanner(){var b=document.createElement('div');b.id='success-banner';b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;';b.innerHTML='<span style="font-size:1.6em;">&#11088; Well done!</span><button id="success-next" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Next &#8594;</button>';document.body.appendChild(b);}
+  READY[document.readyState](injectBanner);
 })();
 
 function ns(tag,attrs){
@@ -36,7 +30,4 @@ function showBanner(onNext){
   document.getElementById('success-next').onclick=function(){hideBanner();onNext();};
 }
 
-function hideBanner(){
-  var b=document.getElementById('success-banner');
-  if(b)b.style.transform='translateY(100%)';
-}
+function hideBanner(){document.getElementById('success-banner')?.style.setProperty('transform','translateY(100%)');}
