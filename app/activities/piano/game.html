@@ -42,31 +42,13 @@ body{background:#1a1a2e;flex-direction:column;}
   <div id="keys-wrap"></div>
 </div>
 <script src="../../shared/menu.js" defer></script>
+<script src="../../../core/piano/piano-core.js"></script>
 <script src="../../shared/piano-shared.js"></script>
 <script>
 var gameState = 'idle';
 var startTime = 0, pausedOffset = 0, pausedAt = 0;
 var notes = [], hitCount = 0, rafId = null;
 var NOTE_HEIGHT = 36;
-
-function generateNotes() {
-  var cfg = PIANO_CONFIG;
-  var result = [];
-  var hitTime = cfg.LOOKAHEAD_MS + 600;
-  for (var i = 0; i < cfg.NOTE_COUNT; i++) {
-    var keyIndex = Math.floor(Math.random() * cfg.KEY_COUNT);
-    if (i > 0) hitTime += cfg.MIN_NOTE_GAP_MS + Math.random() * (cfg.MAX_NOTE_GAP_MS - cfg.MIN_NOTE_GAP_MS);
-    result.push({
-      id: i,
-      keyIndex: keyIndex,
-      note: cfg.NOTES[keyIndex],
-      spawnTime: hitTime - cfg.LOOKAHEAD_MS,
-      hitTime: hitTime,
-      state: 'active'
-    });
-  }
-  return result;
-}
 
 function gameLoop() {
   if (gameState !== 'playing') return;
@@ -108,14 +90,10 @@ function endGame() {
   gameState = 'idle';
   if (rafId) cancelAnimationFrame(rafId);
   updateControls();
-  var emoji, text, sub;
-  if (hitCount >= 10)     { emoji = '\uD83E\uDD47'; text = 'Amazing!';      sub = 'Perfect score!'; }
-  else if (hitCount >= 7) { emoji = '\uD83C\uDF89'; text = 'Well done!';    sub = hitCount + ' out of 10!'; }
-  else if (hitCount >= 4) { emoji = '\u2B50';        text = 'Good try!';     sub = hitCount + ' out of 10!'; }
-  else                    { emoji = '\uD83C\uDFB5';  text = 'Keep playing!'; sub = hitCount + ' out of 10'; }
-  document.getElementById('score-emoji').textContent = emoji;
-  document.getElementById('score-text').textContent = text;
-  document.getElementById('score-sub').textContent = sub;
+  var msg = scoreMessage(hitCount);
+  document.getElementById('score-emoji').textContent = msg.emoji;
+  document.getElementById('score-text').textContent = msg.text;
+  document.getElementById('score-sub').textContent = msg.sub;
   var overlay = document.getElementById('score-overlay');
   overlay.style.display = 'flex';
 }
@@ -130,7 +108,7 @@ function pressPlay() {
   }
   if (gameState === 'playing') return;
   initAudio().then(function() {
-    notes = generateNotes();
+    notes = generateNotes(PIANO_CONFIG);
     hitCount = 0;
     startTime = performance.now();
     pausedOffset = 0;
