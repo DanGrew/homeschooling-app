@@ -88,6 +88,38 @@ if (rule === 'ui-complexity') {
   });
 }
 
+if (rule === 'no-stray-files') {
+  const EXCLUDED = new Set(['scripts', 'tests', '.github', 'node_modules', 'coverage', 'reports', '.claude']);
+  const LAYERS = new Set(['core', 'ui', 'app']);
+  const allFiles = getAllFiles(ROOT);
+  allFiles.forEach(file => {
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    const parts = rel.split('/');
+    if (parts.length === 1) return; // root-level config files (vitest.config.js etc.)
+    const topDir = parts[0];
+    if (EXCLUDED.has(topDir)) return;
+    scanned.push(file);
+    if (!LAYERS.has(topDir)) {
+      violations.push(`${rel} is outside a recognised layer (core/ui/app)`);
+    }
+  });
+}
+
+if (rule === 'no-app-exports') {
+  const files = getAllFiles(path.join(ROOT, 'app'));
+  files.forEach(file => {
+    const content = read(file);
+    if (hasAllow(content, 'allow-export')) {
+      exceptions.push(file);
+      return;
+    }
+    scanned.push(file);
+    if (/^export\s/m.test(content)) {
+      violations.push(`${path.relative(ROOT, file).replace(/\\/g, '/')} exports from app/ (move to core/ or ui/)`);
+    }
+  });
+}
+
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {
