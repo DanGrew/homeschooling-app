@@ -5,7 +5,6 @@ const ROUTINES = [
 
 const AXIS_W = 52;
 const DAY_HEADER_H = 36;
-const SLOT_PX = { 15: 28, 30: 44, 60: 64 };
 
 let R = null;
 let slotMins = 30;
@@ -21,13 +20,11 @@ function computeGridRange() {
   gridEndMins = 24 * 60;
 }
 
-function pixelsPerMin() {
-  return SLOT_PX[slotMins] / slotMins;
-}
+function _ppm() { return pixelsPerMin(slotMins); }
 
 function render() {
   if (!R) return;
-  const ppm = pixelsPerMin();
+  const ppm = _ppm();
   const totalGridMins = gridEndMins - gridStartMins;
   const bodyH = totalGridMins * ppm;
   const todayKey = getTodayKey();
@@ -82,8 +79,7 @@ function render() {
       if (!act) return;
       const startM = toMins(item.start);
       const endM = toMins(item.end);
-      const top = (startM - gridStartMins) * ppm;
-      const height = Math.max((endM - startM) * ppm, 20);
+      const { top, height } = blockLayout(startM, endM, gridStartMins, ppm);
 
       const block = document.createElement('div');
       block.className = 'block';
@@ -120,8 +116,7 @@ function renderTimeAxis(ppm, bodyH) {
     const lbl = document.createElement('div');
     lbl.className = 'time-label';
     lbl.style.top = (DAY_HEADER_H + top) + 'px';
-    const h = Math.floor(m / 60), min = m % 60;
-    lbl.textContent = String(h).padStart(2,'0') + ':' + String(min).padStart(2,'0');
+    lbl.textContent = formatTimeLabel(m);
     axis.appendChild(lbl);
   }
 }
@@ -130,10 +125,9 @@ function renderSlotLines(body, ppm) {
   const totalGridMins = gridEndMins - gridStartMins;
   for (let m = 0; m <= totalGridMins; m += 15) {
     const absMin = gridStartMins + m;
-    const isHour = absMin % 60 === 0;
-    const isSlot = absMin % slotMins === 0;
+    const cls = slotLineClass(absMin, slotMins);
     const line = document.createElement('div');
-    line.className = 'slot-line' + (isHour ? ' hour' : isSlot ? ' slot' : '');
+    line.className = 'slot-line' + (cls ? ' ' + cls : '');
     line.style.top = (m * ppm) + 'px';
     body.appendChild(line);
   }
@@ -193,13 +187,12 @@ function scrollToFocused() {
   if (!cols[focusedIndex]) return;
   const gridOuter = document.getElementById('grid-outer');
   const col = cols[focusedIndex];
-  const scrollX = col.offsetLeft - (gridOuter.clientWidth / 2 - col.offsetWidth / 2);
-  gridOuter.scrollLeft = Math.max(0, scrollX);
+  gridOuter.scrollLeft = focusedScrollX(col.offsetLeft, col.offsetWidth, gridOuter.clientWidth);
 }
 
 function scrollToJumpTime() {
   const gridOuter = document.getElementById('grid-outer');
-  gridOuter.scrollTop = jumpHour * 60 * pixelsPerMin();
+  gridOuter.scrollTop = jumpHour * 60 * _ppm();
 }
 
 function scrollToNow() {
@@ -207,8 +200,7 @@ function scrollToNow() {
   const gridOuter = document.getElementById('grid-outer');
   const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
   if (nowMins < gridStartMins || nowMins > gridEndMins) { scrollToJumpTime(); return; }
-  const nowTop = DAY_HEADER_H + (nowMins - gridStartMins) * pixelsPerMin();
-  gridOuter.scrollTop = Math.max(0, nowTop - gridOuter.clientHeight / 2);
+  gridOuter.scrollTop = nowScrollTop(nowMins, gridStartMins, _ppm(), gridOuter.clientHeight, DAY_HEADER_H);
 }
 
 function applySticky() {
@@ -273,7 +265,7 @@ function loadRoutine(id) {
         const line = document.getElementById('now-line');
         if (line) {
           const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
-          line.style.top = ((nowMins - gridStartMins) * pixelsPerMin()) + 'px';
+          line.style.top = ((nowMins - gridStartMins) * _ppm()) + 'px';
         }
       }, 60000);
     });
