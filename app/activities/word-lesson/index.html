@@ -303,7 +303,7 @@ function renderWord(chars, charData) {
 function clearProgress() {
   charSvgs.forEach(svg => svg.querySelectorAll('.progress-path').forEach(p => p.remove()));
   charBalls.forEach(b => { b.style.display = 'none'; b.style.filter = ''; b.setAttribute('fill', '#E74C3C'); });
-  charDots.forEach(d => { if (d) { d.setAttribute('fill', '#ddd'); d.setAttribute('stroke', 'none'); d.style.filter = ''; } });
+  charDots.forEach(d => { if (d) { if (d._tapListener) { d.removeEventListener('pointerdown', d._tapListener); d._tapListener = null; } d.setAttribute('fill', '#ddd'); d.setAttribute('stroke', 'none'); d.style.pointerEvents = 'none'; d.style.cursor = ''; d.style.filter = ''; } });
 }
 
 function startWatch() {
@@ -386,7 +386,23 @@ function traceChar(charIdx) {
     progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
     onComplete: () => {
       ball.style.display = 'none';
-      setTimeout(() => traceChar(charIdx + 1), 300);
+      if (dot) {
+        dot.setAttribute('fill', '#E74C3C');
+        dot.style.pointerEvents = 'auto';
+        dot.style.cursor = 'pointer';
+        const onDotTap = () => {
+          dot.removeEventListener('pointerdown', onDotTap);
+          dot._tapListener = null;
+          dot.style.pointerEvents = 'none';
+          dot.style.cursor = '';
+          dot.setAttribute('fill', '#FFD700');
+          traceChar(charIdx + 1);
+        };
+        dot._tapListener = onDotTap;
+        dot.addEventListener('pointerdown', onDotTap);
+      } else {
+        setTimeout(() => traceChar(charIdx + 1), 300);
+      }
     }
   });
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
