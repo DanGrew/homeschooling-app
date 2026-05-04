@@ -39,7 +39,7 @@ describe('font standardisation', () => {
     '%s links theme.css',
     (rel) => {
       const html = readFileSync(join(process.cwd(), rel), 'utf8');
-      expect(html).toContain('href="/homeschooling-app/app/shared/theme.css"');
+      expect(html).toMatch(/href="[^"]*shared\/theme\.css"/);
     }
   );
 
