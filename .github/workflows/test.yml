@@ -129,6 +129,23 @@ jobs:
           name: report-ui-complexity
           path: reports/ui-complexity.txt
 
+  ui-cyclomatic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: mkdir -p reports
+      - run: node scripts/check-ui-cyclomatic.js reports/ui-cyclomatic.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-ui-cyclomatic
+          path: reports/ui-cyclomatic.txt
+
   no-stray-files:
     runs-on: ubuntu-latest
     steps:
@@ -163,6 +180,7 @@ jobs:
       - no-dom-in-core
       - no-ui-imports
       - ui-complexity
+      - ui-cyclomatic
       - no-stray-files
       - no-app-exports
     if: always() && github.event_name == 'pull_request'
@@ -194,6 +212,8 @@ jobs:
             cat reports/no-stray-files.txt 2>/dev/null || echo "⚠️ no-stray-files report missing"
             echo ""
             cat reports/no-app-exports.txt 2>/dev/null || echo "⚠️ no-app-exports report missing"
+            echo ""
+            cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
           } > combined.md
 
       - name: Comment on PR
