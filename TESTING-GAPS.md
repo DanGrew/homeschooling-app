@@ -1,81 +1,54 @@
-# Testing Gaps — homeschooling-app-2
+# Testing Gaps — homeschooling-app
 
-## Current State
-- **Vitest**: installed, 8 test files, 175 tests passing
-- **Playwright**: E2E, ~28 user journeys
-- **Coverage**: failing thresholds — DOM-coupled code counted against logic coverage
+_Last updated: 2026-05-04_
 
 ---
 
-## Done
+## Known Issues — Needs Fixing
 
-- [x] Vitest setup + CI job
-- [x] `shopping-shared.js` — `flattenCatalogs`, `escHtml`, `byName`, state fns
-- [x] `colour-mixing-engine.js` — `mix`, `hex`, `CM_COLOURS`, `CM_MIXES`
-- [x] `filter-bar.js` — `extractTags`, `extractLevels`, `filterItems`
-- [x] `routine.js` — `toMins`, `getTodayKey`, `buildOrderedDays`
-- [x] `dictionary.js` + `dictionary-helpers.js` — fetch error paths
-- [x] `shapes.js` — `svg`, `pickCol` (module.exports shim added)
+### `drawing-dots/engine-logic.js` is disconnected (duplication risk)
 
----
+`engine-logic.js` was created as a test-only module. `engine.js` still contains identical copies of `edgeKey`, `buildAdj`, `computeR`. They can silently diverge.
 
-## The Plan — `-logic` File Split
+**Root cause**: `engine.js` is a plain `<script>` tag — can't `import` from a module. Converting to a module breaks Playwright tests which access `tap`, `selectedDot`, `filtered` etc. as globals via `page.evaluate()`.
 
-**Goal:** every file with mixed DOM + logic gets its pure functions extracted to a
-`<name>-logic.js` sibling. Vitest coverage targets only `**/*-logic.js` files.
-This makes 80%+ thresholds achievable and meaningful.
-
-### Pattern for each file
-
-1. Create `<name>-logic.js` — pure functions only, `module.exports = { ... }`
-2. Original file imports from `-logic.js` and uses the functions
-3. Move/update unit test to import from `-logic.js`
-4. Update `vitest.config.js` coverage include to `app/**/*-logic.js`
-
-### Files to split
-
-| File | Pure fns to extract | Status |
-|------|---------------------|--------|
-| `app/shared/shapes.js` | `svg`, `pickCol`, `colours`, `types` | shim added, needs extract |
-| `app/shared/colour-mixing-engine.js` | `mix`, `hex`, `CM_COLOURS`, `CM_MIXES` | shim added, needs extract |
-| `app/shared/filter-bar.js` | `extractTags`, `extractLevels`, `filterItems` | shim added, needs extract |
-| `app/shared/shopping-shared.js` | `flattenCatalogs`, `escHtml`, `byName`, state fns | ES module, needs extract |
-| `app/routine/routine.js` | `toMins`, `getTodayKey`, `buildOrderedDays` | shim added, needs extract |
-
-### Files that stay DOM-only (no `-logic` needed, exclude from coverage)
-
-- `app/shared/colouring-common.js`
-- `app/shared/menu.js`
-- `app/shared/piano-shared.js`
-- `app/shared/trace-engine.js`
-- `app/activities/drawing-dots/engine.js`
-- `app/activities/simulator/engine/engine.js`
-- `app/activities/simulator/engine/loader.js`
-- `app/activities/story-time/player.js`
-
-### Vitest config change
-
-```js
-coverage: {
-  include: ['app/**/*-logic.js'],
-  // remove the broad app/**/*.js include
-}
-```
+**Fix required**:
+1. Convert `engine.js` to ES module (`export` functions + globals via `window.*`)
+2. Update Playwright tests: `page.evaluate(() => tap(0))` → `page.evaluate(() => window.tap(0))`
+3. Delete duplicate code from `engine.js`, import from `engine-logic.js`
 
 ---
 
-## Session Order
+## Remaining Gaps by Priority
 
-1. Extract each file in the table above → create `-logic.js` sibling
-2. Update each unit test to import from `-logic.js`
-3. Update `vitest.config.js` coverage include
-4. Verify thresholds pass
+### Critical — incomplete or disconnected
 
----
+| File | Gap | Action |
+|---|---|---|
+| `drawing-dots/engine.js` | `engine-logic.js` disconnected — duplication risk | Convert to module (see above) |
+| `simulator/engine/engine.js` | `_checkRules` untested — rule engine fires silently | Add unit test (easy, no DOM) |
 
-## Playwright-only (no unit tests possible)
+### High — DOM-coupled, needs extraction first
 
-- `trace-engine.js` — every method uses SVG DOM APIs
-- `simulator/engine.js` — deeply DOM-coupled
-- `drawing-dots/engine.js` — DOM-coupled
-- `story-time/player.js` — DOM-coupled
+| File | Extractable Logic | Blocker |
+|---|---|---|
+| `shared/trace-engine.js` | `_parseStrokes`, `_updateDistance`, completion % | Deeply DOM/SVG coupled |
+| `shared/piano-shared.js` | Audio buffer load, AudioContext state | Web Audio API — needs mocking |
+| `routine.js` | Render/scroll/focus functions | DOM-only, Playwright-only realistic option |
+
+### Medium — missing functions in partially-tested files
+
+| File | Untested Functions |
+|---|---|
+| `dictionary-helpers.js` | `loadConnectDots`, `loadDrawingDots`, `loadImages` |
+| `shopping-shared.js` | `renderTiles`, `renderList`, `startFindPhase`, `resetListItems`, etc. |
+
+### Low
+
+| File | Notes |
+|---|---|
+| `shared/shapes.js` | `pickCol` color avoidance has state dep; rest static |
+| `shared/colouring-common.js` | DOM injection only |
+| `filter-bar.js` | `buildFilterBar` DOM-only |
+| `colouring-pictures/*.js` | Data-only |
+| `connect-the-dots/shapes/*.js` | Data-only (16 files) |
