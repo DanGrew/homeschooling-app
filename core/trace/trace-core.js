@@ -117,7 +117,7 @@ class TraceState {
   }
   stopAnimation() { this._animating = false; }
   animationTick(ts, durationMs) {
-    this._startTime = this._startTime || ts;
+    this._startTime = this._startTime ?? ts;
     const t = Math.min((ts - this._startTime) / durationMs, 1);
     const totalLen = this.strokes.reduce((s, str) => s + str.totalLen, 0);
     const { strokeIdx: si, rem } = animationProgress(t, totalLen, this.strokes);
