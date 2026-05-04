@@ -8,7 +8,6 @@ function buildStrokes(path, svg) {
     return {d: subD, totalLen, samples, sampleStep: totalLen/N, mp};
   });
 }
-
 function buildProgressPath(path, stroke, o) {
   const pp = path.cloneNode(false);
   pp.setAttribute('d', stroke.d); pp.setAttribute('stroke', o.progressStroke);
