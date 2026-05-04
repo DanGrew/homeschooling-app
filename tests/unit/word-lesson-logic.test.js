@@ -1,5 +1,5 @@
 import { test, expect, describe } from 'vitest'
-import { validWord, charFile } from '../../app/activities/word-lesson/word-lesson-utils.js'
+import { validWord, charFile } from '../../app/activities/word-lesson/word-lesson-logic.js'
 
 describe('validWord', () => {
   test('accepts lowercase letters', () => expect(validWord('cat')).toBe(true))
