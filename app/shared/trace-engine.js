@@ -50,7 +50,7 @@ class TraceEngine {
         const p = mp.getPointAtLength(dist);
         samples.push({ d: dist, x: p.x, y: p.y });
       }
-      return { d: subD, totalLen, samples, sampleStep: totalLen / N };
+      return { d: subD, totalLen, samples, sampleStep: totalLen / N, mp };
     });
   }
 
