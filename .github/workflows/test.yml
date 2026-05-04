@@ -23,23 +23,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
+      - run: git fetch origin main
       - run: npm run test:coverage
       - name: Write coverage report
         if: always()
         run: |
           node -e "
           const fs = require('fs');
+          const { execSync } = require('child_process');
           if (!fs.existsSync('coverage/coverage-summary.json')) {
             fs.writeFileSync('coverage-report.md', '### Unit Test Coverage\n⚠️ Coverage data missing — tests may have failed.');
             process.exit(0);
           }
-          const s = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total;
+          const cov = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+          const s = cov.total;
           const row = (label, key) => \`| \${label} | \${s[key].pct}% | \${s[key].covered} / \${s[key].total} |\`;
+          let changedSection = '';
+          try {
+            const changed = execSync('git diff --name-only origin/main...HEAD').toString().trim().split('\n').filter(Boolean);
+            const hits = changed.map(f => {
+              const data = cov[process.cwd() + '/' + f];
+              return data ? \`- \\\`\${f}\\\` — lines: \${data.lines.pct}%, functions: \${data.functions.pct}%\` : null;
+            }).filter(Boolean);
+            if (hits.length) changedSection = '\n\n### Changed Files Coverage\n' + hits.join('\n');
+          } catch(e) {}
           const body = [
             '### Unit Test Coverage',
             '| Metric | % | Covered / Total |',
@@ -48,7 +62,7 @@ jobs:
             row('Statements', 'statements'),
             row('Functions', 'functions'),
             row('Branches', 'branches'),
-          ].join('\n');
+          ].join('\n') + changedSection;
           fs.writeFileSync('coverage-report.md', body);
           "
       - uses: actions/upload-artifact@v4
