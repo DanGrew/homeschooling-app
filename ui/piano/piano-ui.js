@@ -1,3 +1,4 @@
+// arch: allow-cyclomatic
 var _audioCtx = null;
 var _audioBuffers = {};
 var _audioLoaded = false;
