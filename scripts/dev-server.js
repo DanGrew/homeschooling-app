@@ -4,8 +4,9 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 4000;
 const ROOT = path.resolve(__dirname, '..');
+const PREFIX = '/homeschooling-app';
 
 const MIME = {
   '.html': 'text/html',
@@ -19,10 +20,10 @@ const MIME = {
   '.ico':  'image/x-icon',
 };
 
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
   let url = req.url.split('?')[0];
-  if (url.startsWith('/homeschooling-app/')) url = url.slice('/homeschooling-app'.length);
-  else if (url === '/homeschooling-app') url = '/';
+  if (url.startsWith(PREFIX + '/')) url = url.slice(PREFIX.length);
+  else if (url === PREFIX) url = '/';
 
   let filePath = path.join(ROOT, url);
   if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
@@ -32,13 +33,24 @@ http.createServer((req, res) => {
   fs.readFile(filePath, (err, data) => {
     if (err) {
       res.writeHead(404);
-      res.end('Not found: ' + url);
+      res.end('404: ' + url);
       return;
     }
     const ext = path.extname(filePath);
     res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' });
     res.end(data);
   });
-}).listen(PORT, () => {
+});
+
+server.on('error', (e) => {
+  if (e.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} in use. Kill the process or set PORT env var.`);
+  } else {
+    console.error(e);
+  }
+  process.exit(1);
+});
+
+server.listen(PORT, () => {
   console.log(`Dev server: http://localhost:${PORT}/homeschooling-app/app/`);
 });

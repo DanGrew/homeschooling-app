@@ -7,7 +7,8 @@
     "test:unit": "vitest run",
     "test:coverage": "vitest run --coverage",
     "check:untested": "node scripts/check-untested.js",
-    "dev": "node scripts/dev-server.js"
+    "dev": "node scripts/dev-server.js",
+    "dev:kill": "npx kill-port 4000 2>/dev/null; node scripts/dev-server.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.0",
