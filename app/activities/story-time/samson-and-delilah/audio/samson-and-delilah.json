@@ -1,0 +1,615 @@
+{
+  "clipId": "samson-and-delilah",
+  "segments": [
+    {
+      "text": "God made Samson very strong, and gave him long hair.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 0.14
+        },
+        {
+          "w": "made",
+          "normal": "made",
+          "t": 0.44
+        },
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 0.72
+        },
+        {
+          "w": "very",
+          "normal": "very",
+          "t": 1.181
+        },
+        {
+          "w": "strong,",
+          "normal": "strong",
+          "t": 1.501
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 2.221
+        },
+        {
+          "w": "gave",
+          "normal": "gave",
+          "t": 2.401
+        },
+        {
+          "w": "him",
+          "normal": "him",
+          "t": 2.641
+        },
+        {
+          "w": "long",
+          "normal": "long",
+          "t": 2.882
+        },
+        {
+          "w": "hair.",
+          "normal": "hair",
+          "t": 3.242
+        }
+      ]
+    },
+    {
+      "text": "He could do amazing things because God was with him.",
+      "words": [
+        {
+          "w": "He",
+          "normal": "he",
+          "t": 4.002
+        },
+        {
+          "w": "could",
+          "normal": "could",
+          "t": 4.142
+        },
+        {
+          "w": "do",
+          "normal": "do",
+          "t": 4.342
+        },
+        {
+          "w": "amazing",
+          "normal": "amazing",
+          "t": 4.582
+        },
+        {
+          "w": "things",
+          "normal": "things",
+          "t": 5.263
+        },
+        {
+          "w": "because",
+          "normal": "because",
+          "t": 5.563
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 6.043
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 6.363
+        },
+        {
+          "w": "with",
+          "normal": "with",
+          "t": 6.543
+        },
+        {
+          "w": "him.",
+          "normal": "him",
+          "t": 6.784
+        }
+      ]
+    },
+    {
+      "text": "Delilah wanted to know why Samson was strong.",
+      "words": [
+        {
+          "w": "Delilah",
+          "normal": "delilah",
+          "t": 7.644
+        },
+        {
+          "w": "wanted",
+          "normal": "wanted",
+          "t": 8.184
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 8.464
+        },
+        {
+          "w": "know",
+          "normal": "know",
+          "t": 8.585
+        },
+        {
+          "w": "why",
+          "normal": "why",
+          "t": 8.885
+        },
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 9.225
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 9.645
+        },
+        {
+          "w": "strong.",
+          "normal": "strong",
+          "t": 9.785
+        }
+      ]
+    },
+    {
+      "text": "Samson told Delilah the secret of his strength was his long hair.",
+      "words": [
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 10.646
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 11.086
+        },
+        {
+          "w": "Delilah",
+          "normal": "delilah",
+          "t": 11.286
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 11.866
+        },
+        {
+          "w": "secret",
+          "normal": "secret",
+          "t": 12.066
+        },
+        {
+          "w": "of",
+          "normal": "of",
+          "t": 12.487
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 12.587
+        },
+        {
+          "w": "strength",
+          "normal": "strength",
+          "t": 12.707
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 13.567
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 13.807
+        },
+        {
+          "w": "long",
+          "normal": "long",
+          "t": 14.067
+        },
+        {
+          "w": "hair.",
+          "normal": "hair",
+          "t": 14.408
+        }
+      ]
+    },
+    {
+      "text": "Delilah told his enemies.",
+      "words": [
+        {
+          "w": "Delilah",
+          "normal": "delilah",
+          "t": 15.248
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 15.828
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 16.068
+        },
+        {
+          "w": "enemies.",
+          "normal": "enemies",
+          "t": 16.289
+        }
+      ]
+    },
+    {
+      "text": "While Samson slept, they cut his hair.",
+      "words": [
+        {
+          "w": "While",
+          "normal": "while",
+          "t": 17.429
+        },
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 17.729
+        },
+        {
+          "w": "slept,",
+          "normal": "slept",
+          "t": 18.21
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 18.91
+        },
+        {
+          "w": "cut",
+          "normal": "cut",
+          "t": 19.21
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 19.57
+        },
+        {
+          "w": "hair.",
+          "normal": "hair",
+          "t": 19.79
+        }
+      ]
+    },
+    {
+      "text": "When Samson woke up, his strength was gone.",
+      "words": [
+        {
+          "w": "When",
+          "normal": "when",
+          "t": 20.711
+        },
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 21.011
+        },
+        {
+          "w": "woke",
+          "normal": "woke",
+          "t": 21.471
+        },
+        {
+          "w": "up,",
+          "normal": "up",
+          "t": 21.831
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 22.412
+        },
+        {
+          "w": "strength",
+          "normal": "strength",
+          "t": 22.632
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 23.212
+        },
+        {
+          "w": "gone.",
+          "normal": "gone",
+          "t": 23.512
+        }
+      ]
+    },
+    {
+      "text": "Samson was captured and put in prison.",
+      "words": [
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 24.393
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 24.813
+        },
+        {
+          "w": "captured",
+          "normal": "captured",
+          "t": 24.993
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 25.673
+        },
+        {
+          "w": "put",
+          "normal": "put",
+          "t": 25.894
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 26.334
+        },
+        {
+          "w": "prison.",
+          "normal": "prison",
+          "t": 26.494
+        }
+      ]
+    },
+    {
+      "text": "He was sad that he told Delilah.",
+      "words": [
+        {
+          "w": "He",
+          "normal": "he",
+          "t": 27.514
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 27.695
+        },
+        {
+          "w": "sad",
+          "normal": "sad",
+          "t": 27.915
+        },
+        {
+          "w": "that",
+          "normal": "that",
+          "t": 28.195
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 28.355
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 28.495
+        },
+        {
+          "w": "Delilah.",
+          "normal": "delilah",
+          "t": 28.755
+        }
+      ]
+    },
+    {
+      "text": "Over time, his hair began to grow again.",
+      "words": [
+        {
+          "w": "Over",
+          "normal": "over",
+          "t": 29.876
+        },
+        {
+          "w": "time,",
+          "normal": "time",
+          "t": 30.176
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 30.956
+        },
+        {
+          "w": "hair",
+          "normal": "hair",
+          "t": 31.196
+        },
+        {
+          "w": "began",
+          "normal": "began",
+          "t": 31.457
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 31.797
+        },
+        {
+          "w": "grow",
+          "normal": "grow",
+          "t": 31.957
+        },
+        {
+          "w": "again.",
+          "normal": "again",
+          "t": 32.277
+        }
+      ]
+    },
+    {
+      "text": "People laughed at Samson and teased him.",
+      "words": [
+        {
+          "w": "People",
+          "normal": "people",
+          "t": 33.197
+        },
+        {
+          "w": "laughed",
+          "normal": "laughed",
+          "t": 33.578
+        },
+        {
+          "w": "at",
+          "normal": "at",
+          "t": 33.978
+        },
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 34.098
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 34.698
+        },
+        {
+          "w": "teased",
+          "normal": "teased",
+          "t": 34.878
+        },
+        {
+          "w": "him.",
+          "normal": "him",
+          "t": 35.279
+        }
+      ]
+    },
+    {
+      "text": "Samson prayed to God for help.",
+      "words": [
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 35.979
+        },
+        {
+          "w": "prayed",
+          "normal": "prayed",
+          "t": 36.559
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 36.919
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 37.079
+        },
+        {
+          "w": "for",
+          "normal": "for",
+          "t": 37.4
+        },
+        {
+          "w": "help.",
+          "normal": "help",
+          "t": 37.6
+        }
+      ]
+    },
+    {
+      "text": "God made him strong again,",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 38.48
+        },
+        {
+          "w": "made",
+          "normal": "made",
+          "t": 38.78
+        },
+        {
+          "w": "him",
+          "normal": "him",
+          "t": 38.96
+        },
+        {
+          "w": "strong",
+          "normal": "strong",
+          "t": 39.101
+        },
+        {
+          "w": "again,",
+          "normal": "again",
+          "t": 39.441
+        }
+      ]
+    },
+    {
+      "text": "and Samson brought down the pillars of the building.",
+      "words": [
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 40.021
+        },
+        {
+          "w": "Samson",
+          "normal": "samson",
+          "t": 40.201
+        },
+        {
+          "w": "brought",
+          "normal": "brought",
+          "t": 40.681
+        },
+        {
+          "w": "down",
+          "normal": "down",
+          "t": 41.002
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 41.222
+        },
+        {
+          "w": "pillars",
+          "normal": "pillars",
+          "t": 41.342
+        },
+        {
+          "w": "of",
+          "normal": "of",
+          "t": 41.762
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 41.842
+        },
+        {
+          "w": "building.",
+          "normal": "building",
+          "t": 41.962
+        }
+      ]
+    }
+  ]
+}

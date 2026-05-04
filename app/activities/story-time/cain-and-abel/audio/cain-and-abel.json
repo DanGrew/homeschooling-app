@@ -1,0 +1,665 @@
+{
+  "clipId": "cain-and-abel",
+  "segments": [
+    {
+      "text": "Adam and Eve had two sons named Cain and Abel.",
+      "words": [
+        {
+          "w": "Adam",
+          "normal": "adam",
+          "t": 0.16
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 0.42
+        },
+        {
+          "w": "Eve",
+          "normal": "eve",
+          "t": 0.7
+        },
+        {
+          "w": "had",
+          "normal": "had",
+          "t": 1.14
+        },
+        {
+          "w": "two",
+          "normal": "two",
+          "t": 1.401
+        },
+        {
+          "w": "sons",
+          "normal": "sons",
+          "t": 1.681
+        },
+        {
+          "w": "named",
+          "normal": "named",
+          "t": 2.141
+        },
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 2.421
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 2.921
+        },
+        {
+          "w": "Abel.",
+          "normal": "abel",
+          "t": 3.221
+        }
+      ]
+    },
+    {
+      "text": "Cain grew plants, and Abel cared for sheep.",
+      "words": [
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 4.022
+        },
+        {
+          "w": "grew",
+          "normal": "grew",
+          "t": 4.302
+        },
+        {
+          "w": "plants,",
+          "normal": "plants",
+          "t": 4.562
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 5.062
+        },
+        {
+          "w": "Abel",
+          "normal": "abel",
+          "t": 5.382
+        },
+        {
+          "w": "cared",
+          "normal": "cared",
+          "t": 5.742
+        },
+        {
+          "w": "for",
+          "normal": "for",
+          "t": 5.983
+        },
+        {
+          "w": "sheep.",
+          "normal": "sheep",
+          "t": 6.163
+        }
+      ]
+    },
+    {
+      "text": "One day, both brothers brought gifts to God.",
+      "words": [
+        {
+          "w": "One",
+          "normal": "one",
+          "t": 7.023
+        },
+        {
+          "w": "day,",
+          "normal": "day",
+          "t": 7.203
+        },
+        {
+          "w": "both",
+          "normal": "both",
+          "t": 8.063
+        },
+        {
+          "w": "brothers",
+          "normal": "brothers",
+          "t": 8.404
+        },
+        {
+          "w": "brought",
+          "normal": "brought",
+          "t": 8.984
+        },
+        {
+          "w": "gifts",
+          "normal": "gifts",
+          "t": 9.324
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 9.624
+        },
+        {
+          "w": "God.",
+          "normal": "god",
+          "t": 9.744
+        }
+      ]
+    },
+    {
+      "text": "Abel gave his best sheep to God, but Cain kept his best plants.",
+      "words": [
+        {
+          "w": "Abel",
+          "normal": "abel",
+          "t": 11.245
+        },
+        {
+          "w": "gave",
+          "normal": "gave",
+          "t": 11.585
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 11.865
+        },
+        {
+          "w": "best",
+          "normal": "best",
+          "t": 12.105
+        },
+        {
+          "w": "sheep",
+          "normal": "sheep",
+          "t": 12.405
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 12.725
+        },
+        {
+          "w": "God,",
+          "normal": "god",
+          "t": 12.865
+        },
+        {
+          "w": "but",
+          "normal": "but",
+          "t": 13.466
+        },
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 13.686
+        },
+        {
+          "w": "kept",
+          "normal": "kept",
+          "t": 13.986
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 14.246
+        },
+        {
+          "w": "best",
+          "normal": "best",
+          "t": 14.426
+        },
+        {
+          "w": "plants.",
+          "normal": "plants",
+          "t": 14.686
+        }
+      ]
+    },
+    {
+      "text": "When God was pleased with Abel, Cain became angry.",
+      "words": [
+        {
+          "w": "When",
+          "normal": "when",
+          "t": 15.707
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 15.967
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 16.287
+        },
+        {
+          "w": "pleased",
+          "normal": "pleased",
+          "t": 16.527
+        },
+        {
+          "w": "with",
+          "normal": "with",
+          "t": 16.827
+        },
+        {
+          "w": "Abel,",
+          "normal": "abel",
+          "t": 17.147
+        },
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 17.768
+        },
+        {
+          "w": "became",
+          "normal": "became",
+          "t": 18.068
+        },
+        {
+          "w": "angry.",
+          "normal": "angry",
+          "t": 18.568
+        }
+      ]
+    },
+    {
+      "text": "God warned Cain about being angry.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 19.428
+        },
+        {
+          "w": "warned",
+          "normal": "warned",
+          "t": 19.708
+        },
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 20.068
+        },
+        {
+          "w": "about",
+          "normal": "about",
+          "t": 20.529
+        },
+        {
+          "w": "being",
+          "normal": "being",
+          "t": 20.829
+        },
+        {
+          "w": "angry.",
+          "normal": "angry",
+          "t": 21.329
+        }
+      ]
+    },
+    {
+      "text": "Cain asked Abel to come into the field.",
+      "words": [
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 22.63
+        },
+        {
+          "w": "asked",
+          "normal": "asked",
+          "t": 23.11
+        },
+        {
+          "w": "Abel",
+          "normal": "abel",
+          "t": 23.47
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 23.75
+        },
+        {
+          "w": "come",
+          "normal": "come",
+          "t": 23.95
+        },
+        {
+          "w": "into",
+          "normal": "into",
+          "t": 24.21
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 24.43
+        },
+        {
+          "w": "field.",
+          "normal": "field",
+          "t": 24.57
+        }
+      ]
+    },
+    {
+      "text": "Cain struggled to remain calm.",
+      "words": [
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 25.571
+        },
+        {
+          "w": "struggled",
+          "normal": "struggled",
+          "t": 25.951
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 26.451
+        },
+        {
+          "w": "remain",
+          "normal": "remain",
+          "t": 26.631
+        },
+        {
+          "w": "calm.",
+          "normal": "calm",
+          "t": 26.991
+        }
+      ]
+    },
+    {
+      "text": "He hurt Abel, and Abel died.",
+      "words": [
+        {
+          "w": "He",
+          "normal": "he",
+          "t": 27.972
+        },
+        {
+          "w": "hurt",
+          "normal": "hurt",
+          "t": 28.192
+        },
+        {
+          "w": "Abel,",
+          "normal": "abel",
+          "t": 28.572
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 29.192
+        },
+        {
+          "w": "Abel",
+          "normal": "abel",
+          "t": 29.492
+        },
+        {
+          "w": "died.",
+          "normal": "died",
+          "t": 29.793
+        }
+      ]
+    },
+    {
+      "text": "God spoke to Cain, and was deeply upset with Cain.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 30.793
+        },
+        {
+          "w": "spoke",
+          "normal": "spoke",
+          "t": 31.113
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 31.433
+        },
+        {
+          "w": "Cain,",
+          "normal": "cain",
+          "t": 31.613
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 32.414
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 32.574
+        },
+        {
+          "w": "deeply",
+          "normal": "deeply",
+          "t": 32.854
+        },
+        {
+          "w": "upset",
+          "normal": "upset",
+          "t": 33.374
+        },
+        {
+          "w": "with",
+          "normal": "with",
+          "t": 33.754
+        },
+        {
+          "w": "Cain.",
+          "normal": "cain",
+          "t": 33.974
+        }
+      ]
+    },
+    {
+      "text": "Cain was sorry for the wrong thing he had done.",
+      "words": [
+        {
+          "w": "Cain",
+          "normal": "cain",
+          "t": 35.075
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 35.415
+        },
+        {
+          "w": "sorry",
+          "normal": "sorry",
+          "t": 35.595
+        },
+        {
+          "w": "for",
+          "normal": "for",
+          "t": 35.975
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 36.135
+        },
+        {
+          "w": "wrong",
+          "normal": "wrong",
+          "t": 36.315
+        },
+        {
+          "w": "thing",
+          "normal": "thing",
+          "t": 36.635
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 36.996
+        },
+        {
+          "w": "had",
+          "normal": "had",
+          "t": 37.156
+        },
+        {
+          "w": "done.",
+          "normal": "done",
+          "t": 37.336
+        }
+      ]
+    },
+    {
+      "text": "It was a sad day for the family.",
+      "words": [
+        {
+          "w": "It",
+          "normal": "it",
+          "t": 38.736
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 38.856
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 39.016
+        },
+        {
+          "w": "sad",
+          "normal": "sad",
+          "t": 39.137
+        },
+        {
+          "w": "day",
+          "normal": "day",
+          "t": 39.497
+        },
+        {
+          "w": "for",
+          "normal": "for",
+          "t": 39.717
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 39.857
+        },
+        {
+          "w": "family.",
+          "normal": "family",
+          "t": 39.997
+        }
+      ]
+    },
+    {
+      "text": "God sent Adam and Eve another son called Seth.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 40.877
+        },
+        {
+          "w": "sent",
+          "normal": "sent",
+          "t": 41.217
+        },
+        {
+          "w": "Adam",
+          "normal": "adam",
+          "t": 41.618
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 41.878
+        },
+        {
+          "w": "Eve",
+          "normal": "eve",
+          "t": 42.078
+        },
+        {
+          "w": "another",
+          "normal": "another",
+          "t": 42.578
+        },
+        {
+          "w": "son",
+          "normal": "son",
+          "t": 42.958
+        },
+        {
+          "w": "called",
+          "normal": "called",
+          "t": 43.278
+        },
+        {
+          "w": "Seth.",
+          "normal": "seth",
+          "t": 43.618
+        }
+      ]
+    },
+    {
+      "text": "Seth's family would bring us Jesus in time.",
+      "words": [
+        {
+          "w": "Seth's",
+          "normal": "seths",
+          "t": 44.579
+        },
+        {
+          "w": "family",
+          "normal": "family",
+          "t": 44.999
+        },
+        {
+          "w": "would",
+          "normal": "would",
+          "t": 45.419
+        },
+        {
+          "w": "bring",
+          "normal": "bring",
+          "t": 45.579
+        },
+        {
+          "w": "us",
+          "normal": "us",
+          "t": 45.799
+        },
+        {
+          "w": "Jesus",
+          "normal": "jesus",
+          "t": 45.979
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 46.48
+        },
+        {
+          "w": "time.",
+          "normal": "time",
+          "t": 46.62
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,670 @@
+{
+  "clipId": "jacob-and-esau",
+  "segments": [
+    {
+      "text": "Isaac had two sons named Esau and Jacob.",
+      "words": [
+        {
+          "w": "Isaac",
+          "normal": "isaac",
+          "t": 0.16
+        },
+        {
+          "w": "had",
+          "normal": "had",
+          "t": 0.52
+        },
+        {
+          "w": "two",
+          "normal": "two",
+          "t": 0.76
+        },
+        {
+          "w": "sons",
+          "normal": "sons",
+          "t": 0.98
+        },
+        {
+          "w": "named",
+          "normal": "named",
+          "t": 1.38
+        },
+        {
+          "w": "Esau",
+          "normal": "esau",
+          "t": 1.64
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 2.3
+        },
+        {
+          "w": "Jacob.",
+          "normal": "jacob",
+          "t": 2.46
+        }
+      ]
+    },
+    {
+      "text": "Esau was older, hairy and tough.",
+      "words": [
+        {
+          "w": "Esau",
+          "normal": "esau",
+          "t": 3.741
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 4.061
+        },
+        {
+          "w": "older,",
+          "normal": "older",
+          "t": 4.341
+        },
+        {
+          "w": "hairy",
+          "normal": "hairy",
+          "t": 5.121
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 5.661
+        },
+        {
+          "w": "tough.",
+          "normal": "tough",
+          "t": 5.841
+        }
+      ]
+    },
+    {
+      "text": "Jacob was younger, smooth and clever.",
+      "words": [
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 6.741
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 7.121
+        },
+        {
+          "w": "younger,",
+          "normal": "younger",
+          "t": 7.261
+        },
+        {
+          "w": "smooth",
+          "normal": "smooth",
+          "t": 8.141
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 8.581
+        },
+        {
+          "w": "clever.",
+          "normal": "clever",
+          "t": 8.721
+        }
+      ]
+    },
+    {
+      "text": "When Isaac was old, he wanted to bless Esau.",
+      "words": [
+        {
+          "w": "When",
+          "normal": "when",
+          "t": 9.501
+        },
+        {
+          "w": "Isaac",
+          "normal": "isaac",
+          "t": 9.862
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 10.142
+        },
+        {
+          "w": "old,",
+          "normal": "old",
+          "t": 10.462
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 11.002
+        },
+        {
+          "w": "wanted",
+          "normal": "wanted",
+          "t": 11.202
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 11.522
+        },
+        {
+          "w": "bless",
+          "normal": "bless",
+          "t": 11.682
+        },
+        {
+          "w": "Esau.",
+          "normal": "esau",
+          "t": 12.082
+        }
+      ]
+    },
+    {
+      "text": "But Jacob was jealous and decided to trick Isaac.",
+      "words": [
+        {
+          "w": "But",
+          "normal": "but",
+          "t": 12.902
+        },
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 13.102
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 13.482
+        },
+        {
+          "w": "jealous",
+          "normal": "jealous",
+          "t": 13.662
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 14.142
+        },
+        {
+          "w": "decided",
+          "normal": "decided",
+          "t": 14.282
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 14.822
+        },
+        {
+          "w": "trick",
+          "normal": "trick",
+          "t": 15.022
+        },
+        {
+          "w": "Isaac.",
+          "normal": "isaac",
+          "t": 15.422
+        }
+      ]
+    },
+    {
+      "text": "Jacob pretended to be Esau and dressed in Esau's clothes.",
+      "words": [
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 16.983
+        },
+        {
+          "w": "pretended",
+          "normal": "pretended",
+          "t": 17.403
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 17.923
+        },
+        {
+          "w": "be",
+          "normal": "be",
+          "t": 18.043
+        },
+        {
+          "w": "Esau",
+          "normal": "esau",
+          "t": 18.303
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 18.803
+        },
+        {
+          "w": "dressed",
+          "normal": "dressed",
+          "t": 18.963
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 19.283
+        },
+        {
+          "w": "Esau's",
+          "normal": "esaus",
+          "t": 19.483
+        },
+        {
+          "w": "clothes.",
+          "normal": "clothes",
+          "t": 19.863
+        }
+      ]
+    },
+    {
+      "text": "Jacob put hairy goat fur on his arms and hands.",
+      "words": [
+        {
+          "w": "Jacob",
+          "normal": "jacob",
+          "t": 21.383
+        },
+        {
+          "w": "put",
+          "normal": "put",
+          "t": 21.803
+        },
+        {
+          "w": "hairy",
+          "normal": "hairy",
+          "t": 22.083
+        },
+        {
+          "w": "goat",
+          "normal": "goat",
+          "t": 22.484
+        },
+        {
+          "w": "fur",
+          "normal": "fur",
+          "t": 22.764
+        },
+        {
+          "w": "on",
+          "normal": "on",
+          "t": 23.264
+        },
+        {
+          "w": "his",
+          "normal": "his",
+          "t": 23.364
+        },
+        {
+          "w": "arms",
+          "normal": "arms",
+          "t": 23.704
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 23.984
+        },
+        {
+          "w": "hands.",
+          "normal": "hands",
+          "t": 24.124
+        }
+      ]
+    },
+    {
+      "text": "Isaac was blind and could not see.",
+      "words": [
+        {
+          "w": "Isaac",
+          "normal": "isaac",
+          "t": 25.464
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 25.824
+        },
+        {
+          "w": "blind",
+          "normal": "blind",
+          "t": 26.044
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 26.644
+        },
+        {
+          "w": "could",
+          "normal": "could",
+          "t": 26.864
+        },
+        {
+          "w": "not",
+          "normal": "not",
+          "t": 27.124
+        },
+        {
+          "w": "see.",
+          "normal": "see",
+          "t": 27.424
+        }
+      ]
+    },
+    {
+      "text": "When he touched Jacob, he thought it was Esau because of Jacob's hairy arms.",
+      "words": [
+        {
+          "w": "When",
+          "normal": "when",
+          "t": 28.364
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 28.564
+        },
+        {
+          "w": "touched",
+          "normal": "touched",
+          "t": 28.785
+        },
+        {
+          "w": "Jacob,",
+          "normal": "jacob",
+          "t": 29.145
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 30.045
+        },
+        {
+          "w": "thought",
+          "normal": "thought",
+          "t": 30.265
+        },
+        {
+          "w": "it",
+          "normal": "it",
+          "t": 30.605
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 30.705
+        },
+        {
+          "w": "Esau",
+          "normal": "esau",
+          "t": 31.045
+        },
+        {
+          "w": "because",
+          "normal": "because",
+          "t": 31.585
+        },
+        {
+          "w": "of",
+          "normal": "of",
+          "t": 31.945
+        },
+        {
+          "w": "Jacob's",
+          "normal": "jacobs",
+          "t": 32.105
+        },
+        {
+          "w": "hairy",
+          "normal": "hairy",
+          "t": 32.625
+        },
+        {
+          "w": "arms.",
+          "normal": "arms",
+          "t": 33.105
+        }
+      ]
+    },
+    {
+      "text": "Isaac gave the blessing to Jacob.",
+      "words": [
+        {
+          "w": "Isaac",
+          "normal": "isaac",
+          "t": 34.445
+        },
+        {
+          "w": "gave",
+          "normal": "gave",
+          "t": 34.805
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 35.046
+        },
+        {
+          "w": "blessing",
+          "normal": "blessing",
+          "t": 35.186
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 35.626
+        },
+        {
+          "w": "Jacob.",
+          "normal": "jacob",
+          "t": 35.786
+        }
+      ]
+    },
+    {
+      "text": "He did not know it was Jacob, Isaac thought he was blessing Esau.",
+      "words": [
+        {
+          "w": "He",
+          "normal": "he",
+          "t": 36.846
+        },
+        {
+          "w": "did",
+          "normal": "did",
+          "t": 37.046
+        },
+        {
+          "w": "not",
+          "normal": "not",
+          "t": 37.246
+        },
+        {
+          "w": "know",
+          "normal": "know",
+          "t": 37.486
+        },
+        {
+          "w": "it",
+          "normal": "it",
+          "t": 37.706
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 37.826
+        },
+        {
+          "w": "Jacob,",
+          "normal": "jacob",
+          "t": 38.006
+        },
+        {
+          "w": "Isaac",
+          "normal": "isaac",
+          "t": 39.526
+        },
+        {
+          "w": "thought",
+          "normal": "thought",
+          "t": 39.926
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 40.286
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 40.426
+        },
+        {
+          "w": "blessing",
+          "normal": "blessing",
+          "t": 40.666
+        },
+        {
+          "w": "Esau.",
+          "normal": "esau",
+          "t": 41.186
+        }
+      ]
+    },
+    {
+      "text": "Esau found out and was upset.",
+      "words": [
+        {
+          "w": "Esau",
+          "normal": "esau",
+          "t": 42.527
+        },
+        {
+          "w": "found",
+          "normal": "found",
+          "t": 42.967
+        },
+        {
+          "w": "out",
+          "normal": "out",
+          "t": 43.407
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 43.687
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 43.847
+        },
+        {
+          "w": "upset.",
+          "normal": "upset",
+          "t": 44.067
+        }
+      ]
+    },
+    {
+      "text": "After many years apart, the brothers met again.",
+      "words": [
+        {
+          "w": "After",
+          "normal": "after",
+          "t": 45.587
+        },
+        {
+          "w": "many",
+          "normal": "many",
+          "t": 45.927
+        },
+        {
+          "w": "years",
+          "normal": "years",
+          "t": 46.207
+        },
+        {
+          "w": "apart,",
+          "normal": "apart",
+          "t": 46.547
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 47.227
+        },
+        {
+          "w": "brothers",
+          "normal": "brothers",
+          "t": 47.407
+        },
+        {
+          "w": "met",
+          "normal": "met",
+          "t": 47.888
+        },
+        {
+          "w": "again.",
+          "normal": "again",
+          "t": 48.108
+        }
+      ]
+    },
+    {
+      "text": "They forgave each other and became friends.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 49.088
+        },
+        {
+          "w": "forgave",
+          "normal": "forgave",
+          "t": 49.308
+        },
+        {
+          "w": "each",
+          "normal": "each",
+          "t": 49.868
+        },
+        {
+          "w": "other",
+          "normal": "other",
+          "t": 50.128
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 50.548
+        },
+        {
+          "w": "became",
+          "normal": "became",
+          "t": 50.708
+        },
+        {
+          "w": "friends.",
+          "normal": "friends",
+          "t": 51.208
+        }
+      ]
+    }
+  ]
+}

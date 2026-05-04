@@ -1,0 +1,755 @@
+{
+  "clipId": "adam-and-eve",
+  "segments": [
+    {
+      "text": "God made the world, the sky, the land, and the animals.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 0.14
+        },
+        {
+          "w": "made",
+          "normal": "made",
+          "t": 0.44
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 0.68
+        },
+        {
+          "w": "world,",
+          "normal": "world",
+          "t": 0.82
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 1.64
+        },
+        {
+          "w": "sky,",
+          "normal": "sky",
+          "t": 1.881
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 2.781
+        },
+        {
+          "w": "land,",
+          "normal": "land",
+          "t": 3.001
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 3.801
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 3.961
+        },
+        {
+          "w": "animals.",
+          "normal": "animals",
+          "t": 4.181
+        }
+      ]
+    },
+    {
+      "text": "Then God made Adam and Eve.",
+      "words": [
+        {
+          "w": "Then",
+          "normal": "then",
+          "t": 5.122
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 5.402
+        },
+        {
+          "w": "made",
+          "normal": "made",
+          "t": 5.702
+        },
+        {
+          "w": "Adam",
+          "normal": "adam",
+          "t": 6.082
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 6.322
+        },
+        {
+          "w": "Eve.",
+          "normal": "eve",
+          "t": 6.502
+        }
+      ]
+    },
+    {
+      "text": "They lived in a beautiful garden called Eden.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 7.182
+        },
+        {
+          "w": "lived",
+          "normal": "lived",
+          "t": 7.402
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 7.722
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 7.822
+        },
+        {
+          "w": "beautiful",
+          "normal": "beautiful",
+          "t": 7.962
+        },
+        {
+          "w": "garden",
+          "normal": "garden",
+          "t": 8.503
+        },
+        {
+          "w": "called",
+          "normal": "called",
+          "t": 8.903
+        },
+        {
+          "w": "Eden.",
+          "normal": "eden",
+          "t": 9.323
+        }
+      ]
+    },
+    {
+      "text": "There were trees full of fruit and many beautiful things to see.",
+      "words": [
+        {
+          "w": "There",
+          "normal": "there",
+          "t": 10.103
+        },
+        {
+          "w": "were",
+          "normal": "were",
+          "t": 10.283
+        },
+        {
+          "w": "trees",
+          "normal": "trees",
+          "t": 10.523
+        },
+        {
+          "w": "full",
+          "normal": "full",
+          "t": 10.903
+        },
+        {
+          "w": "of",
+          "normal": "of",
+          "t": 11.123
+        },
+        {
+          "w": "fruit",
+          "normal": "fruit",
+          "t": 11.283
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 11.724
+        },
+        {
+          "w": "many",
+          "normal": "many",
+          "t": 11.984
+        },
+        {
+          "w": "beautiful",
+          "normal": "beautiful",
+          "t": 12.324
+        },
+        {
+          "w": "things",
+          "normal": "things",
+          "t": 12.724
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 13.004
+        },
+        {
+          "w": "see.",
+          "normal": "see",
+          "t": 13.184
+        }
+      ]
+    },
+    {
+      "text": "God told them they could enjoy the garden,",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 14.004
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 14.304
+        },
+        {
+          "w": "them",
+          "normal": "them",
+          "t": 14.544
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 14.724
+        },
+        {
+          "w": "could",
+          "normal": "could",
+          "t": 14.844
+        },
+        {
+          "w": "enjoy",
+          "normal": "enjoy",
+          "t": 15.025
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 15.405
+        },
+        {
+          "w": "garden,",
+          "normal": "garden",
+          "t": 15.525
+        }
+      ]
+    },
+    {
+      "text": "but they must not eat from one special tree.",
+      "words": [
+        {
+          "w": "but",
+          "normal": "but",
+          "t": 16.325
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 16.505
+        },
+        {
+          "w": "must",
+          "normal": "must",
+          "t": 16.705
+        },
+        {
+          "w": "not",
+          "normal": "not",
+          "t": 16.965
+        },
+        {
+          "w": "eat",
+          "normal": "eat",
+          "t": 17.305
+        },
+        {
+          "w": "from",
+          "normal": "from",
+          "t": 17.585
+        },
+        {
+          "w": "one",
+          "normal": "one",
+          "t": 17.925
+        },
+        {
+          "w": "special",
+          "normal": "special",
+          "t": 18.105
+        },
+        {
+          "w": "tree.",
+          "normal": "tree",
+          "t": 18.546
+        }
+      ]
+    },
+    {
+      "text": "One day, a sneaky snake spoke to Eve.",
+      "words": [
+        {
+          "w": "One",
+          "normal": "one",
+          "t": 19.986
+        },
+        {
+          "w": "day,",
+          "normal": "day",
+          "t": 20.186
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 20.486
+        },
+        {
+          "w": "sneaky",
+          "normal": "sneaky",
+          "t": 20.826
+        },
+        {
+          "w": "snake",
+          "normal": "snake",
+          "t": 21.346
+        },
+        {
+          "w": "spoke",
+          "normal": "spoke",
+          "t": 21.687
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 22.047
+        },
+        {
+          "w": "Eve.",
+          "normal": "eve",
+          "t": 22.307
+        }
+      ]
+    },
+    {
+      "text": "It told Eve she could be like God.",
+      "words": [
+        {
+          "w": "It",
+          "normal": "it",
+          "t": 23.087
+        },
+        {
+          "w": "told",
+          "normal": "told",
+          "t": 23.227
+        },
+        {
+          "w": "Eve",
+          "normal": "eve",
+          "t": 23.727
+        },
+        {
+          "w": "she",
+          "normal": "she",
+          "t": 24.007
+        },
+        {
+          "w": "could",
+          "normal": "could",
+          "t": 24.147
+        },
+        {
+          "w": "be",
+          "normal": "be",
+          "t": 24.347
+        },
+        {
+          "w": "like",
+          "normal": "like",
+          "t": 24.527
+        },
+        {
+          "w": "God.",
+          "normal": "god",
+          "t": 24.747
+        }
+      ]
+    },
+    {
+      "text": "Eve took the fruit and ate some.",
+      "words": [
+        {
+          "w": "Eve",
+          "normal": "eve",
+          "t": 25.728
+        },
+        {
+          "w": "took",
+          "normal": "took",
+          "t": 25.888
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 26.088
+        },
+        {
+          "w": "fruit",
+          "normal": "fruit",
+          "t": 26.208
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 26.568
+        },
+        {
+          "w": "ate",
+          "normal": "ate",
+          "t": 26.768
+        },
+        {
+          "w": "some.",
+          "normal": "some",
+          "t": 26.988
+        }
+      ]
+    },
+    {
+      "text": "She gave some to Adam, and he ate too.",
+      "words": [
+        {
+          "w": "She",
+          "normal": "she",
+          "t": 27.708
+        },
+        {
+          "w": "gave",
+          "normal": "gave",
+          "t": 27.908
+        },
+        {
+          "w": "some",
+          "normal": "some",
+          "t": 28.168
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 28.389
+        },
+        {
+          "w": "Adam,",
+          "normal": "adam",
+          "t": 28.609
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 29.069
+        },
+        {
+          "w": "he",
+          "normal": "he",
+          "t": 29.229
+        },
+        {
+          "w": "ate",
+          "normal": "ate",
+          "t": 29.489
+        },
+        {
+          "w": "too.",
+          "normal": "too",
+          "t": 29.729
+        }
+      ]
+    },
+    {
+      "text": "Right away, Adam and Eve knew they had disobeyed God.",
+      "words": [
+        {
+          "w": "Right",
+          "normal": "right",
+          "t": 30.689
+        },
+        {
+          "w": "away,",
+          "normal": "away",
+          "t": 30.949
+        },
+        {
+          "w": "Adam",
+          "normal": "adam",
+          "t": 31.81
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 32.05
+        },
+        {
+          "w": "Eve",
+          "normal": "eve",
+          "t": 32.29
+        },
+        {
+          "w": "knew",
+          "normal": "knew",
+          "t": 32.55
+        },
+        {
+          "w": "they",
+          "normal": "they",
+          "t": 33.33
+        },
+        {
+          "w": "had",
+          "normal": "had",
+          "t": 33.51
+        },
+        {
+          "w": "disobeyed",
+          "normal": "disobeyed",
+          "t": 33.73
+        },
+        {
+          "w": "God.",
+          "normal": "god",
+          "t": 34.37
+        }
+      ]
+    },
+    {
+      "text": "They felt sad and hid themselves.",
+      "words": [
+        {
+          "w": "They",
+          "normal": "they",
+          "t": 35.391
+        },
+        {
+          "w": "felt",
+          "normal": "felt",
+          "t": 35.611
+        },
+        {
+          "w": "sad",
+          "normal": "sad",
+          "t": 35.991
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 36.531
+        },
+        {
+          "w": "hid",
+          "normal": "hid",
+          "t": 36.751
+        },
+        {
+          "w": "themselves.",
+          "normal": "themselves",
+          "t": 37.011
+        }
+      ]
+    },
+    {
+      "text": "God was very sad but still loved Adam and Eve.",
+      "words": [
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 38.192
+        },
+        {
+          "w": "was",
+          "normal": "was",
+          "t": 38.512
+        },
+        {
+          "w": "very",
+          "normal": "very",
+          "t": 38.732
+        },
+        {
+          "w": "sad",
+          "normal": "sad",
+          "t": 39.072
+        },
+        {
+          "w": "but",
+          "normal": "but",
+          "t": 39.452
+        },
+        {
+          "w": "still",
+          "normal": "still",
+          "t": 39.672
+        },
+        {
+          "w": "loved",
+          "normal": "loved",
+          "t": 40.012
+        },
+        {
+          "w": "Adam",
+          "normal": "adam",
+          "t": 40.432
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 40.672
+        },
+        {
+          "w": "Eve.",
+          "normal": "eve",
+          "t": 40.912
+        }
+      ]
+    },
+    {
+      "text": "Adam and Eve could not stay in the garden and had to leave.",
+      "words": [
+        {
+          "w": "Adam",
+          "normal": "adam",
+          "t": 41.893
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 42.193
+        },
+        {
+          "w": "Eve",
+          "normal": "eve",
+          "t": 42.493
+        },
+        {
+          "w": "could",
+          "normal": "could",
+          "t": 42.813
+        },
+        {
+          "w": "not",
+          "normal": "not",
+          "t": 43.133
+        },
+        {
+          "w": "stay",
+          "normal": "stay",
+          "t": 43.493
+        },
+        {
+          "w": "in",
+          "normal": "in",
+          "t": 43.973
+        },
+        {
+          "w": "the",
+          "normal": "the",
+          "t": 44.093
+        },
+        {
+          "w": "garden",
+          "normal": "garden",
+          "t": 44.213
+        },
+        {
+          "w": "and",
+          "normal": "and",
+          "t": 44.693
+        },
+        {
+          "w": "had",
+          "normal": "had",
+          "t": 44.854
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 45.114
+        },
+        {
+          "w": "leave.",
+          "normal": "leave",
+          "t": 45.274
+        }
+      ]
+    },
+    {
+      "text": "One day, God would make a way to restore peace.",
+      "words": [
+        {
+          "w": "One",
+          "normal": "one",
+          "t": 46.454
+        },
+        {
+          "w": "day,",
+          "normal": "day",
+          "t": 46.634
+        },
+        {
+          "w": "God",
+          "normal": "god",
+          "t": 47.394
+        },
+        {
+          "w": "would",
+          "normal": "would",
+          "t": 47.674
+        },
+        {
+          "w": "make",
+          "normal": "make",
+          "t": 47.854
+        },
+        {
+          "w": "a",
+          "normal": "a",
+          "t": 48.054
+        },
+        {
+          "w": "way",
+          "normal": "way",
+          "t": 48.235
+        },
+        {
+          "w": "to",
+          "normal": "to",
+          "t": 48.695
+        },
+        {
+          "w": "restore",
+          "normal": "restore",
+          "t": 48.895
+        },
+        {
+          "w": "peace.",
+          "normal": "peace",
+          "t": 49.375
+        }
+      ]
+    }
+  ]
+}
