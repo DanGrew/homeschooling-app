@@ -37,6 +37,6 @@ test('unticking an animal removes it from the sheet', async ({ page }) => {
 
 test('nav link points to worksheets index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/worksheets/colouring-sheets/')
-  const href = await page.locator('#panel-header a').getAttribute('href')
+  const href = await page.locator('#panel-header a').evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/worksheets/')
 })

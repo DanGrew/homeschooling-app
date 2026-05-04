@@ -4,7 +4,7 @@ const URL = '/homeschooling-app/app/activities/colour-wheel/'
 
 test('nav home link points to lessons', async ({ page }) => {
   await page.goto(URL)
-  const href = await page.locator('.nav-bar a').first().getAttribute('href')
+  const href = await page.locator('.nav-bar a').first().evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/lessons/')
 })
 

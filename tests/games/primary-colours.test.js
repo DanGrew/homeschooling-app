@@ -70,6 +70,6 @@ test('wrong mix keeps slot colours without resetting', async ({ page }) => {
 
 test('home nav button points to games index', async ({ page }) => {
   await page.goto(URL)
-  const href = await page.locator('.nav-btn').first().getAttribute('href')
+  const href = await page.locator('.nav-btn').first().evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/games/')
 })
