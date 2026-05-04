@@ -68,6 +68,7 @@
 
 <script src="/homeschooling-app/app/shared/trace.js"></script>
 <script src="/homeschooling-app/app/shared/trace-engine.js"></script>
+<script src="/homeschooling-app/app/activities/word-lesson/word-lesson-utils.js"></script>
 <script>
 const CHAR_BASE = '/homeschooling-app/app/language-characters/';
 const DICT_BASE = '/homeschooling-app/app/dictionary/';
@@ -85,18 +86,6 @@ let charBases = [];
 let charBalls = [];
 let charDots = [];
 let charEngines = [];
-
-function validWord(w) {
-  return w.length > 0 && w.split('').every(c =>
-    (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')
-  );
-}
-
-function charFile(c) {
-  if (c >= 'a' && c <= 'z') return 'lower-' + c + '.svg';
-  if (c >= 'A' && c <= 'Z') return 'upper-' + c.toLowerCase() + '.svg';
-  return c + '.svg';
-}
 
 function stopAllEngines() {
   charEngines.forEach(e => { if (e) { e.done = true; e.stopAnimation(); } });
