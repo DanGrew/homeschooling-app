@@ -66,37 +66,63 @@ These files are too large/complex to move to `/ui` as-is. The `ui-complexity` ch
 
 ```
 /core
-  routine-logic.js
-  drawing-dots-logic.js         ← renamed from engine-logic.js
-  player-logic.js
-  word-lesson-logic.js
-  colour-mixing-logic.js
-  filter-bar-logic.js
-  shapes-logic.js
-  shopping-shared-logic.js
-  dictionary.js
-  dictionary-helpers.js
-  simulator-logic.js            ← to be extracted
-  trace-logic.js                ← to be extracted
-  piano-logic.js                ← to be extracted
-  /data
-    story-time-data.js
-    /connect-the-dots           ← shape definitions
-    /colouring-pictures         ← picture definitions
+  /routine
+    logic.js                    ← from routine-logic.js
+  /drawing-dots
+    logic.js                    ← from engine-logic.js
+  /story-time
+    player-logic.js
+    data.js
+  /word-lesson
+    logic.js
+  /colour-mixing
+    logic.js
+  /filter-bar
+    logic.js
+  /shapes
+    logic.js
+  /shopping
+    logic.js
+  /dictionary
+    dictionary.js
+    helpers.js
+  /simulator
+    logic.js                    ← to be extracted
+  /trace
+    logic.js                    ← to be extracted
+  /piano
+    logic.js                    ← to be extracted
+  /connect-the-dots
+    /shapes                     ← shape definition files
+    /free-svg
+  /colouring
+    /pictures                   ← picture definition files
 
 /ui
-  routine-ui.js                 ← renamed from routine.js
-  drawing-dots-ui.js            ← renamed from engine.js
-  player-ui.js                  ← renamed from player.js
-  colour-mixing-ui.js           ← renamed from colour-mixing-engine.js
-  filter-bar-ui.js              ← renamed from filter-bar.js
-  shapes-ui.js                  ← new, if needed
-  shopping-shared-ui.js         ← renamed from shopping-shared.js
-  piano-ui.js                   ← renamed from piano-shared.js
-  trace-engine.js
-  colouring-common.js
-  menu.js
-  simulator-ui.js               ← to be extracted from engine.js
+  /routine
+    ui.js                       ← from routine.js
+  /drawing-dots
+    ui.js                       ← from engine.js
+  /story-time
+    player.js
+  /colour-mixing
+    ui.js                       ← from colour-mixing-engine.js
+  /filter-bar
+    ui.js                       ← from filter-bar.js
+  /shapes
+    ui.js                       ← if needed
+  /shopping
+    ui.js                       ← from shopping-shared.js
+  /piano
+    ui.js                       ← from piano-shared.js
+  /trace
+    engine.js
+  /colouring
+    common.js
+  /shared
+    menu.js
+  /simulator
+    ui.js                       ← to be extracted from engine.js
 
 /app
   (existing HTML pages and wiring, unchanged)
