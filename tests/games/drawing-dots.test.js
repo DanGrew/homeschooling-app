@@ -46,6 +46,43 @@ test('connecting non-adjacent dots triggers dot-wrong flash', async ({ page }) =
   await expect(page.locator(`#dot${pair.to} circle`)).toHaveClass(/dot-wrong/)
 })
 
+test('tapping same dot twice deselects it', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/drawing-dots/')
+  await expect(page.locator('#dot0')).toBeVisible({ timeout: 5000 })
+  await page.evaluate(() => tap(0))
+  await expect(page.locator('#dot0 circle')).toHaveAttribute('fill', '#F39C12')
+  await page.evaluate(() => tap(0))
+  await expect(page.locator('#dot0 circle')).toHaveAttribute('fill', 'white')
+})
+
+test('tapping already-completed edge resets selection', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/drawing-dots/')
+  await expect(page.locator('#dot0')).toBeVisible({ timeout: 5000 })
+  const edge = await page.evaluate(() => filtered[shapeIdx].edges[0])
+  const [a, b] = edge
+  await page.evaluate((i) => tap(i), a)
+  await page.evaluate((i) => tap(i), b)
+  await page.evaluate((i) => { selectedDot = i }, a)
+  await page.evaluate((i) => tap(i), b)
+  const sel = await page.evaluate(() => selectedDot)
+  expect(sel).toBeNull()
+})
+
+test('taps ignored after completion', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/drawing-dots/')
+  await expect(page.locator('#dot0')).toBeVisible({ timeout: 5000 })
+  const edges = await page.evaluate(() => filtered[shapeIdx].edges)
+  for (const [a, b] of edges) {
+    await page.evaluate((i) => { selectedDot = null; tap(i) }, a)
+    await page.evaluate((i) => tap(i), b)
+  }
+  await expect(page.locator('#dd-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 3000 })
+  const sizeBefore = await page.evaluate(() => completedEdges.size)
+  await page.evaluate(() => tap(0))
+  const sizeAfter = await page.evaluate(() => completedEdges.size)
+  expect(sizeAfter).toBe(sizeBefore)
+})
+
 test('home nav button points to games index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/drawing-dots/')
   const href = await page.locator('.nav-btn').first().evaluate(el => new URL(el.href).pathname)

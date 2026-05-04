@@ -1,3 +1,5 @@
+import { activeIndex } from './player-logic.js';
+
 (function () {
   var storyId = new URLSearchParams(window.location.search).get('story') || 'david-and-goliath';
   var LESSON = LESSONS[storyId] || LESSONS['david-and-goliath'];
@@ -111,18 +113,12 @@
       loadClip(0);
     });
 
-    function activeIndex(t) {
-      var words = clips[currentClip].words;
-      var idx = -1;
-      for (var i = 0; i < words.length; i++) {
-        if (words[i].t <= t) idx = i;
-        else break;
-      }
-      return idx;
+    function activeIdx(t) {
+      return activeIndex(t, clips[currentClip].words);
     }
 
     function tick() {
-      var idx = activeIndex(audio.currentTime);
+      var idx = activeIdx(audio.currentTime);
       if (idx !== lastActive) {
         if (lastActive >= 0) {
           var prev = wordEl(currentClip, lastActive);

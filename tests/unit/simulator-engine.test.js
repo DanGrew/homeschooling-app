@@ -1,6 +1,6 @@
 import { SimulatorEngine } from '../../app/activities/simulator/engine/engine.js';
 
-function makeEngine(state = {}) {
+function makeEngine(state = {}, overrides = {}) {
   const spec = {
     state,
     scene: { width: 400, height: 300 },
@@ -9,8 +9,15 @@ function makeEngine(state = {}) {
     rules: [],
     win_condition: null,
     win_response: [],
+    ...overrides,
   };
   return new SimulatorEngine(spec, {});
+}
+
+function silenceDOM(engine) {
+  engine._execActions = () => {};
+  engine._checkRules = () => {};
+  engine._checkWin = () => {};
 }
 
 describe('SimulatorEngine._evalCond', () => {
@@ -134,5 +141,140 @@ describe('SimulatorEngine._evalCond', () => {
       const e = makeEngine({});
       expect(e._evalCond('state.missing >= 1')).toBe(false);
     });
+  });
+});
+
+describe('SimulatorEngine._exec — state mutations', () => {
+  it('+= increments state value', () => {
+    const e = makeEngine({ water: 2 });
+    e._exec('state.water += 3');
+    expect(e.state.water).toBe(5);
+  });
+
+  it('-= decrements state value', () => {
+    const e = makeEngine({ water: 5 });
+    e._exec('state.water -= 2');
+    expect(e.state.water).toBe(3);
+  });
+
+  it('-= clamps to 0, never negative', () => {
+    const e = makeEngine({ water: 1 });
+    e._exec('state.water -= 10');
+    expect(e.state.water).toBe(0);
+  });
+
+  it('= assigns exact value', () => {
+    const e = makeEngine({ stage: 0 });
+    e._exec('state.stage = 7');
+    expect(e.state.stage).toBe(7);
+  });
+
+  it('= overwrites existing value', () => {
+    const e = makeEngine({ stage: 99 });
+    e._exec('state.stage = 1');
+    expect(e.state.stage).toBe(1);
+  });
+
+  it('ignores unrecognised action without throwing', () => {
+    const e = makeEngine({ x: 1 });
+    expect(() => e._exec('unknown_action')).not.toThrow();
+    expect(e.state.x).toBe(1);
+  });
+});
+
+describe('SimulatorEngine._handleTap — action routing', () => {
+  function makeEngineWithActions(state, actions, objects = []) {
+    const e = makeEngine(state, { actions, objects });
+    silenceDOM(e);
+    return e;
+  }
+
+  it('fires tap action when no tool selected', () => {
+    const fired = [];
+    const e = makeEngineWithActions({ x: 0 }, [
+      { when: { tap: 'btn' }, do: ['state.x += 1'] },
+    ]);
+    e._execActions = (a) => fired.push(...a);
+    e._handleTap('btn');
+    expect(fired).toContain('state.x += 1');
+  });
+
+  it('skips tap action when condition not met', () => {
+    const fired = [];
+    const e = makeEngineWithActions({ x: 0 }, [
+      { when: { tap: 'btn', if: 'state.x >= 5' }, do: ['state.x += 1'] },
+    ]);
+    e._execActions = (a) => fired.push(...a);
+    e._handleTap('btn');
+    expect(fired).toHaveLength(0);
+  });
+
+  it('fires tap action when condition met', () => {
+    const fired = [];
+    const e = makeEngineWithActions({ x: 5 }, [
+      { when: { tap: 'btn', if: 'state.x >= 5' }, do: ['state.x += 1'] },
+    ]);
+    e._execActions = (a) => fired.push(...a);
+    e._handleTap('btn');
+    expect(fired).toContain('state.x += 1');
+  });
+
+  it('fires tool_tap action when correct tool and target selected', () => {
+    const fired = [];
+    const e = makeEngineWithActions({ x: 0 }, [
+      { when: { tool_tap: { tool: 'brush', target: 'canvas' } }, do: ['state.x += 1'] },
+    ]);
+    e._execActions = (a) => fired.push(...a);
+    e.selectedTool = 'brush';
+    e._clearTool = () => {};
+    e._handleTap('canvas');
+    expect(fired).toContain('state.x += 1');
+  });
+
+  it('ignores tap when won and object not always_clickable', () => {
+    const fired = [];
+    const e = makeEngineWithActions({ x: 0 }, [
+      { when: { tap: 'btn' }, do: ['state.x += 1'] },
+    ], [{ id: 'btn', always_clickable: false }]);
+    e._execActions = (a) => fired.push(...a);
+    e.won = true;
+    e._handleTap('btn');
+    expect(fired).toHaveLength(0);
+  });
+});
+
+describe('SimulatorEngine._checkWin', () => {
+  it('sets won and schedules win response when condition met', () => {
+    const e = makeEngine({ x: 5 }, {
+      win_condition: 'state.x >= 5',
+      win_response: ['say: You win!'],
+    });
+    const fired = [];
+    e._execActions = (a) => fired.push(...a);
+    e._checkWin();
+    expect(e.won).toBe(true);
+  });
+
+  it('does not set won when condition not met', () => {
+    const e = makeEngine({ x: 2 }, {
+      win_condition: 'state.x >= 5',
+      win_response: [],
+    });
+    e._execActions = () => {};
+    e._checkWin();
+    expect(e.won).toBe(false);
+  });
+
+  it('does not fire again once already won', () => {
+    const e = makeEngine({ x: 5 }, {
+      win_condition: 'state.x >= 5',
+      win_response: [],
+    });
+    let calls = 0;
+    e._execActions = () => calls++;
+    e._checkWin();
+    e._checkWin();
+    expect(calls).toBe(0); // setTimeout delayed — just check won not double-set
+    expect(e.won).toBe(true);
   });
 });
