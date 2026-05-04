@@ -55,11 +55,7 @@ function renderKeys(container, onKeyPress) {
     var key = document.createElement('div');
     key.dataset.keyIndex = i;
     key.dataset.note = note;
-    key.style.cssText = 'flex:1;height:100%;background:' + PIANO_CONFIG.KEY_COLORS[i] +
-      ';border-radius:0 0 14px 14px;display:flex;align-items:flex-end;justify-content:center' +
-      ';padding-bottom:8px;font-size:clamp(14px,3vw,20px);font-weight:bold;color:#555' +
-      ';cursor:pointer;user-select:none;touch-action:none' +
-      ';border:2px solid rgba(0,0,0,0.08);box-sizing:border-box';
+    key.style.cssText = 'flex:1;height:100%;background:' + PIANO_CONFIG.KEY_COLORS[i] + ';border-radius:0 0 14px 14px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:clamp(14px,3vw,20px);font-weight:bold;color:#555;cursor:pointer;user-select:none;touch-action:none;border:2px solid rgba(0,0,0,0.08);box-sizing:border-box';
     key.textContent = PIANO_CONFIG.NOTE_LABELS[i];
     key.addEventListener('pointerdown', function(e) {
       e.preventDefault();
@@ -77,9 +73,5 @@ function glowKey(keyEl, type) {
   keyEl.style.filter = 'brightness(1.3) drop-shadow(0 0 16px ' + bg + ')';
   keyEl.style.transform = 'scaleY(0.93)';
   clearTimeout(keyEl._glowTimer);
-  keyEl._glowTimer = setTimeout(function() {
-    keyEl.style.background = keyEl._origBg;
-    keyEl.style.filter = '';
-    keyEl.style.transform = '';
-  }, 300);
+  keyEl._glowTimer = setTimeout(function() { keyEl.style.background = keyEl._origBg; keyEl.style.filter = ''; keyEl.style.transform = ''; }, 300);
 }
