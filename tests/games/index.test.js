@@ -38,6 +38,7 @@ test('Puzzles section has puzzle games', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Move the Block' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Connect the Dots' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Drawing Dots' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Image Puzzle' })).toBeVisible()
 })
 
 test('World section has shopping games', async ({ page }) => {
