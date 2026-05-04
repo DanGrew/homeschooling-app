@@ -53,6 +53,7 @@ jobs:
               return data ? \`- \\\`\${f}\\\` — lines: \${data.lines.pct}%, functions: \${data.functions.pct}%\` : null;
             }).filter(Boolean);
             if (hits.length) changedSection = '\n\n### Changed Files Coverage\n' + hits.join('\n');
+            else changedSection = '\n\n### Changed Files Coverage\n_No changed files instrumented by Vitest (ui/ and app/ files are covered by Playwright, not unit tests)_';
           } catch(e) {}
           const body = [
             '### Unit Test Coverage',
