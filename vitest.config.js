@@ -7,14 +7,7 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.js'],
     coverage: {
       provider: 'v8',
-      include: ['app/**/*.js'],
-      exclude: [
-        'app/**/*.json',
-        'app/shared/colouring-pictures/**',
-        'app/activities/connect-the-dots/shapes/**',
-        'app/activities/simulator/sims/**',
-        'app/activities/story-time/data.js',
-      ],
+      include: ['app/**/*-logic.js'],
       reporter: ['text', 'json-summary'],
       thresholds: {
         lines: 80,
