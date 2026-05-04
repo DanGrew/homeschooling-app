@@ -132,36 +132,19 @@ These files are too large/complex to move to `/ui` as-is. The `ui-complexity` ch
 
 ## Phases
 
-### Phase 1 — Move ready files (no code changes)
-
-Move logic files and data files into `/core`. No logic changes, only path updates and import fixes in consuming HTML files.
-
-**Files to move:**
-- All logic files from the "existing splits" table above
-- All pure data files
-- `dictionary.js`, `dictionary-helpers.js`
-
-**Import fix pattern:** Each HTML file loads scripts via `<script src="...">`. Update relative paths. No module bundler — paths must stay valid relative to each HTML file's location.
-
-**Tests to update:** `tests/unit/` imports use relative paths — update each test file to point at `/core/...`.
-
-Deliverable: `/core` exists with all pure-logic files. `arch-check.js no-dom-in-core` and `no-ui-imports` pass cleanly.
-
----
-
 ### Phase 2 — Extract logic from hotspots
 
 For each hotspot, extract pure functions into a new `/core` module. Leave the DOM file in `/app/shared` or `/app/activities` until Phase 3.
 
 **Order:**
 
-1. **`trace-engine.js`** — extract SVG path maths (`samplePath`, `distanceTo`, stroke parsing) into `core/trace-logic.js`. No tests exist yet; write Vitest tests as part of extraction.
+1. ~~**`trace-engine.js`**~~ ✅ Done — `core/trace/trace-core.js` extracted, 18 Vitest tests added.
 
-2. **`simulator/engine/engine.js`** — extract `_evalCond`, state transition logic, win condition checking into `core/simulator-logic.js`. Simulator already has Vitest tests; extend them.
+2. **`simulator/engine/engine.js`** — extract `_evalCond`, state transition logic, win condition checking into `core/simulator/simulator-core.js`. Simulator already has Vitest tests; extend them.
 
-3. **`routine.js`** — extract render helpers (`renderTimeAxis`, `renderSlotLines`, scroll calculations) into `core/routine-render-logic.js`. Keep event binding in UI file.
+3. **`routine.js`** — extract render helpers (`renderTimeAxis`, `renderSlotLines`, scroll calculations) into `core/routine/routine-render-core.js`. Keep event binding in UI file.
 
-4. **`piano-shared.js`** — extract note frequency table and audio context setup into `core/piano-logic.js`. Keep DOM key rendering in UI file.
+4. **`piano-shared.js`** — extract note frequency table and audio context setup into `core/piano/piano-core.js`. Keep DOM key rendering in UI file.
 
 5. **`player.js`**, **`colour-mixing-engine.js`**, **`drawing-dots/engine.js`**, **`shopping-shared.js`** — these already have logic splits. Audit each to confirm the DOM file is clean enough for `/ui` (≤80 lines, ≤5 ifs). Refactor if not.
 
@@ -179,7 +162,8 @@ Do one file at a time. Run `npm run test:unit` and `npm test` after each move.
 
 - Enable arch checks as required in branch protection (upgrade from warn to block) — only once all files pass cleanly.
 - Add Vitest tests for any `/core` file that lacks them.
-- Delete `app/shared/shapes.js` (duplicate of `shapes-logic.js`).
+- Delete `app/shared/shapes.js` (duplicate of `shapes-core.js`).
+- Add `npm run check` script (`test:unit` + all arch rules) for local pre-push verification.
 
 ---
 
@@ -187,7 +171,7 @@ Do one file at a time. Run `npm run test:unit` and `npm test` after each move.
 
 This app has no bundler — HTML files load scripts directly with `<script src="...">`. When files move to `/core` or `/ui`, all `<script>` tags in HTML files referencing them must be updated.
 
-Pattern: `../../core/shapes-logic.js` relative to the HTML file's depth.
+**Depth rule:** files in `app/activities/FOO/` or `app/worksheets/FOO/` are 3 levels deep — use `../../../core/`. Files in `app/routine/` or `app/shared/` are 2 levels deep — use `../../core/`.
 
 For Vitest tests: imports use Node `require()` or ES module `import`. Update paths in `tests/unit/` to match new locations.
 
@@ -212,7 +196,7 @@ Escape hatches should be rare. If a `/core` file needs DOM access it is not a co
 | Phase | Status |
 |-------|--------|
 | Guardrails CI (arch-check.js + workflow) | ✅ Done |
-| Phase 1 — Move ready logic/data files | ⬜ Not started |
-| Phase 2 — Extract logic from hotspots | ⬜ Not started |
+| Phase 1 — Move ready logic/data files | ✅ Done |
+| Phase 2 — Extract logic from hotspots | 🔄 In progress (trace ✅, simulator/routine/piano remaining) |
 | Phase 3 — Move DOM files to /ui | ⬜ Not started |
 | Phase 4 — Enforce and close gaps | ⬜ Not started |
