@@ -24,8 +24,8 @@
 </div>
 <script type="module">
 import { startEngine } from './engine.js';
-import Dictionary from '../../core/dictionary/dictionary-core.js';
-import { loadAllDrawingDots } from '../../core/dictionary/dictionary-helpers-core.js';
+import Dictionary from '../../../core/dictionary/dictionary-core.js';
+import { loadAllDrawingDots } from '../../../core/dictionary/dictionary-helpers-core.js';
 Dictionary.init('../../dictionary/');
 var shapes=[];
 loadAllDrawingDots(shapes,function(){startEngine(shapes);});

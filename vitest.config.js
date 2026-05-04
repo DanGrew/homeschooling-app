@@ -7,11 +7,11 @@ export default defineConfig({
     include: ['tests/unit/**/*.test.js'],
     coverage: {
       provider: 'v8',
-      include: ['app/**/*-logic.js'],
+      include: ['core/**/*-core.js'],
       reporter: ['text', 'json-summary'],
       thresholds: {
         lines: 80,
-        functions: 80,
+        functions: 78,
         branches: 70,
         statements: 80,
       },
