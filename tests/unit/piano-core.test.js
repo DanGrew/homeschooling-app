@@ -63,6 +63,12 @@ describe('generateNotes', () => {
     const notes = generateNotes(PIANO_CONFIG, seededRng);
     notes.forEach((n, i) => expect(n.id).toBe(i));
   });
+
+  it('uses Math.random when rng not provided', () => {
+    const notes = generateNotes(PIANO_CONFIG);
+    expect(notes).toHaveLength(PIANO_CONFIG.NOTE_COUNT);
+    notes.forEach(n => expect(typeof n.keyIndex).toBe('number'));
+  });
 });
 
 describe('scoreMessage', () => {

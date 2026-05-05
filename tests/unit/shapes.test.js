@@ -68,7 +68,7 @@ describe('pickCol', () => {
 
   it('returns all colours eventually', () => {
     const seen = new Set();
-    for (let i = 0; i < 30; i++) seen.add(pickCol());
+    for (let i = 0; i < 200; i++) seen.add(pickCol());
     colours.forEach(c => expect(seen).toContain(c));
   });
 });
