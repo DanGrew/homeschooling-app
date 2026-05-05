@@ -1,4 +1,4 @@
-import { SimulatorEngine } from '../../app/activities/simulator/engine/engine.js';
+import { SimulatorEngine } from '../../ui/simulator/simulator-engine.js';
 
 function makeEngine(state = {}, overrides = {}) {
   const spec = {

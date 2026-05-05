@@ -1,4 +1,4 @@
-import { SimulatorEngine } from './engine.js';
+import { SimulatorEngine } from '../../../../ui/simulator/simulator-engine.js';
 
 async function startSim(simId) {
   const spec = await fetch(`sims/${simId}.json`).then(r => r.json());
