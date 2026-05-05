@@ -21,6 +21,24 @@ export function computeR(shape, dotScale) {
   return Math.max(2, Math.min(baseR, Math.floor(p25 * 0.28)));
 }
 
+export function formatTitle(shape) {
+  return shape.name + (shape.level !== undefined ? ' [Level ' + shape.level + ']' : '');
+}
+
+export function getDotStyleIndex(allDone, isSel) {
+  return allDone ? 2 : isSel ? 1 : 0;
+}
+
+export function isDotDone(adj, i, completedEdges) {
+  return adj[i].length > 0 && adj[i].every(function(n) { return completedEdges.has(edgeKey(i, n)); });
+}
+
+export function getInstruction(selectedDot, completedEdges, dots) {
+  if (selectedDot !== null) return { text: 'Now tap a dot connected to <b>' + dots[selectedDot].id + '</b>!', isHtml: true };
+  if (completedEdges.size > 0) return { text: 'Keep going \u2014 tap any dot!', isHtml: false };
+  return { text: 'Tap any dot to start!', isHtml: false };
+}
+
 export function tapResult(state, tapIdx, adj, totalEdges) {
   var selectedDot = state.selectedDot;
   var completedEdges = state.completedEdges;
