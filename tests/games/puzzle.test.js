@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test')
 
 async function completePuzzle(page) {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
-  await page.waitForSelector('#tray-bar img')
+  await page.waitForSelector('#tray-bar [data-piece-id]')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   for (const p of pieces) {
     await page.locator(`#tray-${p.id}`).click()
@@ -10,6 +10,15 @@ async function completePuzzle(page) {
   }
   return pieces
 }
+
+const bannerShown = (page) =>
+  expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)')
+
+const slotHasPiece = (page) =>
+  expect(page.locator('#selected-slot')).not.toHaveCSS('background-image', 'none')
+
+const slotEmpty = (page) =>
+  expect(page.locator('#selected-slot')).toHaveCSS('background-image', 'none')
 
 test('page loads with grid and tray visible', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
@@ -27,20 +36,22 @@ test('grid has correct number of cells matching piece count', async ({ page }) =
 
 test('tray has all pieces on load', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
-  await page.waitForSelector('#tray-bar img')
+  await page.waitForSelector('#tray-bar [data-piece-id]')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
-  await expect(page.locator('#tray-bar img')).toHaveCount(pieces.length)
+  await expect(page.locator('#tray-bar [data-piece-id]')).toHaveCount(pieces.length)
 })
 
 test('selecting a tray tile shows it in the selected slot', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
-  await page.locator('#tray-bar img').first().click()
-  await expect(page.locator('#selected-slot img')).toBeVisible()
+  await page.waitForSelector('#tray-bar [data-piece-id]')
+  await page.locator('#tray-bar [data-piece-id]').first().click()
+  await slotHasPiece(page)
 })
 
 test('selecting a tray tile highlights it', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
-  const tile = page.locator('#tray-bar img').first()
+  await page.waitForSelector('#tray-bar [data-piece-id]')
+  const tile = page.locator('#tray-bar [data-piece-id]').first()
   await tile.click()
   const border = await tile.evaluate(el => el.style.borderColor)
   expect(border).not.toBe('transparent')
@@ -48,7 +59,8 @@ test('selecting a tray tile highlights it', async ({ page }) => {
 
 test('placing a tile removes it from tray view', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
-  const tile = page.locator('#tray-bar img').first()
+  await page.waitForSelector('#tray-bar [data-piece-id]')
+  const tile = page.locator('#tray-bar [data-piece-id]').first()
   const pieceId = await tile.getAttribute('id')
   await tile.click()
   await page.locator('[data-row="0"][data-col="0"]').click()
@@ -76,7 +88,7 @@ test('wrong placement gives feedback-wrong class', async ({ page }) => {
 test('tapping empty cell with nothing selected does nothing', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
   await page.locator('[data-row="1"][data-col="1"]').click()
-  await expect(page.locator('[data-row="1"][data-col="1"] img')).toHaveCount(0)
+  await expect(page.locator('[data-row="1"][data-col="1"]')).toHaveCSS('background-image', 'none')
 })
 
 test('tapping placed tile lifts it back to selected slot', async ({ page }) => {
@@ -86,12 +98,9 @@ test('tapping placed tile lifts it back to selected slot', async ({ page }) => {
   await page.locator(`#tray-${p.id}`).click()
   await page.locator('[data-row="1"][data-col="1"]').click()
   await page.locator('[data-row="1"][data-col="1"]').click()
-  await expect(page.locator('#selected-slot img')).toBeVisible()
+  await slotHasPiece(page)
   await expect(page.locator(`#tray-${p.id}`)).toBeVisible()
 })
-
-const bannerShown = (page) =>
-  expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)')
 
 test('completing puzzle shows success banner', async ({ page }) => {
   await completePuzzle(page)
@@ -103,7 +112,7 @@ test('cells are locked after completion — placed tile cannot be lifted', async
   await bannerShown(page)
   const p = pieces[0]
   await page.locator(`[data-row="${p.correct.row}"][data-col="${p.correct.col}"]`).click()
-  await expect(page.locator('#selected-slot img')).toHaveCount(0)
+  await slotEmpty(page)
 })
 
 test('guide toggle is disabled after completion', async ({ page }) => {
@@ -121,7 +130,7 @@ test('reset after completion clears grid and restores tray', async ({ page }) =>
   await bannerShown(page)
   await page.locator('#success-banner button').click()
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
-  await expect(page.locator('#tray-bar img')).toHaveCount(pieces.length)
+  await expect(page.locator('#tray-bar [data-piece-id]')).toHaveCount(pieces.length)
   await expect(page.locator('.feedback-correct')).toHaveCount(0)
 })
 
@@ -141,5 +150,5 @@ test('puzzle unlocks after reset — piece can be lifted', async ({ page }) => {
   await page.locator(`#tray-${p.id}`).click()
   await page.locator('[data-row="0"][data-col="0"]').click()
   await page.locator('[data-row="0"][data-col="0"]').click()
-  await expect(page.locator('#selected-slot img')).toBeVisible()
+  await slotHasPiece(page)
 })

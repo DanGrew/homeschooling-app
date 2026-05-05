@@ -14,19 +14,23 @@ export function buildGrid(container, rows, cols, onCellTap) {
   return container;
 }
 
-export function updateSelectedSlot(slot, src) {
-  slot.innerHTML = src ? `<img src="${src}" style="width:100%;height:100%;object-fit:cover;">` : '';
-  slot.style.borderColor = src ? '#F5A623' : '#ccc';
+export function updateSelectedSlot(slot, piece, imageSrc, bgW, bgH, tileW, tileH) {
+  slot.style.borderColor = piece ? '#F5A623' : '#ccc';
+  slot.style.backgroundImage = piece ? `url(${imageSrc})` : '';
+  slot.style.backgroundSize = piece ? `${bgW}px ${bgH}px` : '';
+  slot.style.backgroundPosition = piece ? `-${piece.correct.col * tileW}px -${piece.correct.row * tileH}px` : '';
 }
 
-export function placeInCell(gridEl, row, col, src) {
+export function placeInCell(gridEl, row, col, imageSrc, fullW, fullH, cellW, cellH) {
   const cell = gridEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-  cell.innerHTML = `<img src="${src}" style="width:100%;height:100%;object-fit:cover;pointer-events:none;">`;
+  cell.style.backgroundImage = `url(${imageSrc})`;
+  cell.style.backgroundSize = `${fullW}px ${fullH}px`;
+  cell.style.backgroundPosition = `-${col * cellW}px -${row * cellH}px`;
 }
 
 export function clearCell(gridEl, row, col) {
   const cell = gridEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-  cell.innerHTML = '';
+  cell.style.backgroundImage = '';
   cell.classList.remove('feedback-correct', 'feedback-wrong');
 }
 
