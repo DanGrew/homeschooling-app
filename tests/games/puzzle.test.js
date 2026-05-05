@@ -1,5 +1,15 @@
 const { test, expect } = require('@playwright/test')
 
+async function completePuzzle(page) {
+  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
+  for (const p of pieces) {
+    await page.locator(`#tray-${p.id}`).click()
+    await page.locator(`[data-row="${p.correct.row}"][data-col="${p.correct.col}"]`).click()
+  }
+  return pieces
+}
+
 test('page loads with grid and tray visible', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
   await expect(page.locator('#puzzle-grid')).toBeVisible()
@@ -7,9 +17,10 @@ test('page loads with grid and tray visible', async ({ page }) => {
   await expect(page.locator('#selected-slot')).toBeVisible()
 })
 
-test('grid has correct number of cells', async ({ page }) => {
+test('grid has correct number of cells matching piece count', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
-  await expect(page.locator('[data-row][data-col]')).toHaveCount(9)
+  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
+  await expect(page.locator('[data-row][data-col]')).toHaveCount(pieces.length)
 })
 
 test('tray has all pieces on load', async ({ page }) => {
@@ -77,23 +88,54 @@ test('tapping placed tile lifts it back to selected slot', async ({ page }) => {
 })
 
 test('completing puzzle shows success banner', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
-  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
-  for (const p of pieces) {
-    await page.locator(`#tray-${p.id}`).click()
-    await page.locator(`[data-row="${p.correct.row}"][data-col="${p.correct.col}"]`).click()
-  }
-  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 2000 })
+  await completePuzzle(page)
+  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+})
+
+test('cells are locked after completion — placed tile cannot be lifted', async ({ page }) => {
+  const pieces = await completePuzzle(page)
+  await page.waitForTimeout(1400)
+  const p = pieces[0]
+  await page.locator(`[data-row="${p.correct.row}"][data-col="${p.correct.col}"]`).click()
+  await expect(page.locator('#selected-slot img')).toHaveCount(0)
+})
+
+test('guide toggle is disabled after completion', async ({ page }) => {
+  await completePuzzle(page)
+  await expect(page.locator('#ref-toggle')).toBeDisabled()
+})
+
+test('reference image reaches full opacity after reveal', async ({ page }) => {
+  await completePuzzle(page)
+  await page.waitForTimeout(1500)
+  const opacity = await page.locator('#reference-img').evaluate(el => parseFloat(el.style.opacity))
+  expect(opacity).toBeCloseTo(1, 1)
 })
 
 test('reset after completion clears grid and restores tray', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
-  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
-  for (const p of pieces) {
-    await page.locator(`#tray-${p.id}`).click()
-    await page.locator(`[data-row="${p.correct.row}"][data-col="${p.correct.col}"]`).click()
-  }
+  await completePuzzle(page)
+  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
   await page.locator('#success-banner button').click()
+  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   await expect(page.locator('#tray-bar img')).toHaveCount(pieces.length)
   await expect(page.locator('.feedback-correct')).toHaveCount(0)
+})
+
+test('guide toggle re-enabled after reset', async ({ page }) => {
+  await completePuzzle(page)
+  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+  await page.locator('#success-banner button').click()
+  await expect(page.locator('#ref-toggle')).not.toBeDisabled()
+})
+
+test('puzzle unlocks after reset — piece can be lifted', async ({ page }) => {
+  await completePuzzle(page)
+  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+  await page.locator('#success-banner button').click()
+  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
+  const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
+  await page.locator(`#tray-${p.id}`).click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await expect(page.locator('#selected-slot img')).toBeVisible()
 })
