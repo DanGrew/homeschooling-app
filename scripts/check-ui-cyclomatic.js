@@ -15,16 +15,9 @@ const ROOT = process.cwd();
 
 function getAllFiles(dir, ext) {
   if (!fs.existsSync(dir)) return [];
-  let results = [];
-  fs.readdirSync(dir).forEach(file => {
-    const full = path.join(dir, file);
-    if (fs.statSync(full).isDirectory()) {
-      results = results.concat(getAllFiles(full, ext));
-    } else if (path.extname(full) === ext) {
-      results.push(full);
-    }
-  });
-  return results;
+  return fs.readdirSync(dir, { recursive: true })
+    .filter(f => path.extname(f) === ext)
+    .map(f => path.join(dir, f));
 }
 
 function extractInlineScripts(htmlFile) {
