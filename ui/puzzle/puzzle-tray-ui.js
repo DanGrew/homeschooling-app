@@ -1,30 +1,30 @@
-export function buildTray(container, pieces, onSelect, tileW = 64, tileH = 64) {
+export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, tileW, tileH) {
   container.innerHTML = '';
   container.style.cssText = 'display:flex;gap:8px;padding:10px;align-items:center;justify-content:center;flex-wrap:wrap;';
   pieces.forEach(p => {
-    const img = document.createElement('img');
-    img.id = `tray-${p.id}`;
-    img.src = p.src;
-    img.dataset.pieceId = p.id;
-    img.style.cssText = `height:${tileH}px;width:${tileW}px;object-fit:cover;cursor:pointer;border:3px solid transparent;border-radius:4px;flex-shrink:0;`;
-    img.addEventListener('click', () => onSelect(p.id));
-    container.appendChild(img);
+    const div = document.createElement('div');
+    div.id = `tray-${p.id}`;
+    div.dataset.pieceId = p.id;
+    div.style.cssText = `width:${tileW}px;height:${tileH}px;background-image:url(${imageSrc});background-size:${fullW}px ${fullH}px;background-position:-${p.correct.col * tileW}px -${p.correct.row * tileH}px;cursor:pointer;border:3px solid transparent;border-radius:4px;flex-shrink:0;`;
+    div.addEventListener('click', () => onSelect(p.id));
+    container.appendChild(div);
   });
   return container;
 }
 
 export function highlightTray(tray, id) {
-  tray.querySelectorAll('img').forEach(img => {
-    img.style.borderColor = img.dataset.pieceId === id ? '#F5A623' : 'transparent';
+  const COLORS = { selected: '#F5A623', none: 'transparent' };
+  tray.querySelectorAll('[data-piece-id]').forEach(el => {
+    el.style.borderColor = COLORS[el.dataset.pieceId === id ? 'selected' : 'none'];
   });
 }
 
 export function removeTrayPiece(tray, id) {
-  const img = tray.querySelector(`#tray-${id}`);
-  img && (img.style.visibility = 'hidden');
+  const el = tray.querySelector(`#tray-${id}`);
+  el && (el.style.visibility = 'hidden');
 }
 
 export function restoreTrayPiece(tray, id) {
-  const img = tray.querySelector(`#tray-${id}`);
-  img && (img.style.visibility = 'visible');
+  const el = tray.querySelector(`#tray-${id}`);
+  el && (el.style.visibility = 'visible');
 }

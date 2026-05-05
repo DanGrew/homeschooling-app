@@ -15,9 +15,10 @@
 #puzzle-grid{width:100%;height:100%;}
 #slot-area{display:flex;flex-direction:column;align-items:center;gap:10px;}
 .slot-label{font-size:0.75em;color:#999;text-align:center;}
-#selected-slot{width:min(16vh,16vw);min-width:80px;height:min(16vh,16vw);min-height:80px;border:3px dashed #ccc;border-radius:8px;overflow:hidden;}
+#selected-slot{width:min(16vh,16vw);min-width:80px;height:min(16vh,16vw);min-height:80px;border:3px dashed #ccc;border-radius:8px;overflow:hidden;background-repeat:no-repeat;}
 #tray-bar{flex-shrink:0;display:flex;gap:8px;padding:10px;background:#f5f5f5;border-top:2px solid #ddd;align-items:center;justify-content:center;flex-wrap:wrap;}
 #ref-toggle{font-size:0.75em;padding:4px 10px;border:1px solid #ccc;border-radius:12px;background:#fff;cursor:pointer;color:#555;}
+#error-msg{display:none;padding:20px;color:#E74C3C;text-align:center;font-size:1em;}
 #puzzle-grid .feedback-correct,#puzzle-grid .feedback-wrong{outline:none;}
 #puzzle-grid .feedback-correct::after,#puzzle-grid .feedback-wrong::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;}
 #puzzle-grid .feedback-correct::after{box-shadow:inset 0 0 0 4px #2ECC71;}
@@ -42,7 +43,7 @@
       </div>
     </div>
   </div>
-
+  <div id="error-msg"></div>
   <div id="tray-bar"></div>
 </div>
 
@@ -53,18 +54,22 @@
   import { buildGrid, updateSelectedSlot, placeInCell, clearCell, markCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
 
-  // --- Puzzle config: update folder, grid size, and image extension ---
-  const PUZZLE = { folder: 'files/', grid: { rows: 4, cols: 4 }, ext: 'jpg' };
-  // --------------------------------------------------------------------
+  // --- Puzzle config: update src and grid size ---
+  const PUZZLE = { src: 'files/full.jpg', grid: { rows: 4, cols: 4 } };
+  // ------------------------------------------------
+
+  const MAX_PIXELS = 4_000_000;
 
   const slot = document.getElementById('selected-slot');
   const gridContainer = document.getElementById('puzzle-grid');
   const trayContainer = document.getElementById('tray-bar');
   const refImg = document.getElementById('reference-img');
   const refToggle = document.getElementById('ref-toggle');
+  const errorMsg = document.getElementById('error-msg');
 
   let imgRatio = 1;
-  let cellH = 64;
+  let cellW = 64, cellH = 64;
+  let tileW = 32, tileH = 32;
 
   function sizeGrid() {
     const availW = window.innerWidth * 0.60;
@@ -72,13 +77,14 @@
     const gridH = Math.floor(Math.min(availH, availW / imgRatio));
     const gridW = Math.floor(gridH * imgRatio);
     cellH = Math.floor(gridH / PUZZLE.grid.rows);
+    cellW = Math.floor(gridW / PUZZLE.grid.cols);
     const gridArea = document.getElementById('grid-area');
     gridArea.style.width = `${gridW}px`;
     gridArea.style.height = `${gridH}px`;
   }
   window.addEventListener('resize', sizeGrid);
 
-  let allPieces = derivePieces(PUZZLE.grid, PUZZLE.ext);
+  const allPieces = derivePieces(PUZZLE.grid);
   let placements = {};
   let selectedPiece = null;
   let gridEl, trayEl;
@@ -114,16 +120,17 @@
     refToggle.disabled = false;
     updateSelectedSlot(slot, null);
     gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
-    const tileH = Math.max(20, Math.floor(cellH / 2));
-    const tileW = Math.round(tileH * imgRatio);
-    const display = shufflePieces(allPieces).map(p => ({ ...p, src: PUZZLE.folder + p.src }));
-    trayEl = buildTray(trayContainer, display, onSelect, tileW, tileH);
+    tileH = Math.max(20, Math.floor(cellH / 2));
+    tileW = Math.round(tileH * imgRatio);
+    trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
+      PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
   }
 
   function onSelect(pieceId) {
     selectedPiece = allPieces.find(p => p.id === pieceId);
     highlightTray(trayEl, pieceId);
-    updateSelectedSlot(slot, PUZZLE.folder + selectedPiece.src);
+    updateSelectedSlot(slot, selectedPiece, PUZZLE.src,
+      tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
   }
 
   function onCellTap(row, col) {
@@ -137,7 +144,8 @@
       restoreTrayPiece(trayEl, existing.pieceId);
       selectedPiece = allPieces.find(p => p.id === existing.pieceId);
       highlightTray(trayEl, selectedPiece.id);
-      updateSelectedSlot(slot, PUZZLE.folder + selectedPiece.src);
+      updateSelectedSlot(slot, selectedPiece, PUZZLE.src,
+        tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
       return;
     }
 
@@ -145,7 +153,8 @@
 
     const correct = checkPlacement(selectedPiece, { row, col });
     placements[key] = { pieceId: selectedPiece.id, correct };
-    placeInCell(gridEl, row, col, PUZZLE.folder + selectedPiece.src);
+    placeInCell(gridEl, row, col, PUZZLE.src,
+      cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH);
     markCell(gridEl, row, col, correct);
     removeTrayPiece(trayEl, selectedPiece.id);
     selectedPiece = null;
@@ -162,10 +171,20 @@
   window.__puzzleState = { getPieces: () => allPieces, getPlacements: () => placements };
 
   const fullImage = new Image();
-  fullImage.onload = () => { imgRatio = fullImage.naturalWidth / fullImage.naturalHeight; sizeGrid(); start(); };
+  fullImage.onload = () => {
+    const pixels = fullImage.naturalWidth * fullImage.naturalHeight;
+    if (pixels > MAX_PIXELS) {
+      errorMsg.style.display = 'block';
+      errorMsg.textContent = `Image too large (${fullImage.naturalWidth}×${fullImage.naturalHeight} = ${(pixels / 1_000_000).toFixed(1)}MP). Keep images under 4MP.`;
+      return;
+    }
+    imgRatio = fullImage.naturalWidth / fullImage.naturalHeight;
+    sizeGrid();
+    start();
+  };
   fullImage.onerror = () => { sizeGrid(); start(); };
-  fullImage.src = PUZZLE.folder + 'full.' + PUZZLE.ext;
-  refImg.src = fullImage.src;
+  fullImage.src = PUZZLE.src;
+  refImg.src = PUZZLE.src;
 </script>
 </body>
 </html>

@@ -10,23 +10,17 @@ describe('derivePieces', () => {
     expect(derivePieces({ rows: 3, cols: 3 })).toHaveLength(9)
   })
 
-  it('generates pieces with correct ids, src, and positions', () => {
+  it('generates pieces with correct ids and positions', () => {
     const pieces = derivePieces({ rows: 2, cols: 2 })
-    expect(pieces[0]).toEqual({ id: 'p_r0_c0', src: 'tile_0_0.png', correct: { row: 0, col: 0 } })
-    expect(pieces[1]).toEqual({ id: 'p_r0_c1', src: 'tile_0_1.png', correct: { row: 0, col: 1 } })
-    expect(pieces[2]).toEqual({ id: 'p_r1_c0', src: 'tile_1_0.png', correct: { row: 1, col: 0 } })
-    expect(pieces[3]).toEqual({ id: 'p_r1_c1', src: 'tile_1_1.png', correct: { row: 1, col: 1 } })
+    expect(pieces[0]).toEqual({ id: 'p_r0_c0', correct: { row: 0, col: 0 } })
+    expect(pieces[1]).toEqual({ id: 'p_r0_c1', correct: { row: 0, col: 1 } })
+    expect(pieces[2]).toEqual({ id: 'p_r1_c0', correct: { row: 1, col: 0 } })
+    expect(pieces[3]).toEqual({ id: 'p_r1_c1', correct: { row: 1, col: 1 } })
   })
 
-  it('uses jpg extension when specified', () => {
-    const pieces = derivePieces({ rows: 1, cols: 2 }, 'jpg')
-    expect(pieces[0].src).toBe('tile_0_0.jpg')
-    expect(pieces[1].src).toBe('tile_0_1.jpg')
-  })
-
-  it('defaults to png extension', () => {
+  it('pieces have no src property', () => {
     const pieces = derivePieces({ rows: 1, cols: 1 })
-    expect(pieces[0].src).toBe('tile_0_0.png')
+    expect(pieces[0]).not.toHaveProperty('src')
   })
 
   it('uses row-major order for non-square grid', () => {
@@ -67,21 +61,21 @@ describe('shufflePieces', () => {
 })
 
 describe('checkPlacement', () => {
-  const piece = { id: 'p_r1_c2', src: 'tile_1_2.png', correct: { row: 1, col: 2 } }
+  const piece = { id: 'p_r1_c2', correct: { row: 1, col: 2 } }
 
   it('returns true when row and col both match', () => {
     expect(checkPlacement(piece, { row: 1, col: 2 })).toBe(true)
   })
 
-  it('returns false when row is wrong (short-circuits col check)', () => {
+  it('returns false when row is wrong', () => {
     expect(checkPlacement(piece, { row: 0, col: 2 })).toBe(false)
   })
 
-  it('returns false when col is wrong and row is correct', () => {
+  it('returns false when col is wrong', () => {
     expect(checkPlacement(piece, { row: 1, col: 0 })).toBe(false)
   })
 
-  it('returns false when both row and col are wrong', () => {
+  it('returns false when both wrong', () => {
     expect(checkPlacement(piece, { row: 0, col: 0 })).toBe(false)
   })
 })

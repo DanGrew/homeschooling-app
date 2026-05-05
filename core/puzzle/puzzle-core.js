@@ -1,8 +1,8 @@
-export function derivePieces(grid, ext = 'png') {
+export function derivePieces(grid) {
   const pieces = [];
   for (let r = 0; r < grid.rows; r++) {
     for (let c = 0; c < grid.cols; c++) {
-      pieces.push({ id: `p_r${r}_c${c}`, src: `tile_${r}_${c}.${ext}`, correct: { row: r, col: c } });
+      pieces.push({ id: `p_r${r}_c${c}`, correct: { row: r, col: c } });
     }
   }
   return pieces;
