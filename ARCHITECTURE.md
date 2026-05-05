@@ -113,6 +113,30 @@ Both test suites must pass before merging.
 
 ---
 
+## Playwright test conventions
+
+**Never use `waitForTimeout` or hardcoded timeouts.** Fixed sleeps are flaky in CI — execution speed varies across machines and worker counts.
+
+Wait for DOM state instead:
+
+```js
+// wait for CSS transition to complete (e.g. banner slide-in)
+await expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)')
+
+// wait for animated CSS property
+await expect(page.locator('#reference-img')).toHaveCSS('opacity', '1')
+
+// wait for element to appear
+await page.waitForSelector('#tray-bar img')
+
+// wait for arbitrary JS condition
+await page.waitForFunction(() => document.getElementById('foo')?.dataset.ready === 'true')
+```
+
+`toHaveCSS`, `waitForSelector`, and `waitForFunction` poll until the condition is met — they return as soon as it is true, and they fail only if the default timeout (5 s) elapses without success.
+
+---
+
 ## Current layer contents
 
 ### `/core`

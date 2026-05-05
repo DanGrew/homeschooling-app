@@ -90,14 +90,17 @@ test('tapping placed tile lifts it back to selected slot', async ({ page }) => {
   await expect(page.locator(`#tray-${p.id}`)).toBeVisible()
 })
 
+const bannerShown = (page) =>
+  expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)')
+
 test('completing puzzle shows success banner', async ({ page }) => {
   await completePuzzle(page)
-  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+  await bannerShown(page)
 })
 
 test('cells are locked after completion — placed tile cannot be lifted', async ({ page }) => {
   const pieces = await completePuzzle(page)
-  await page.waitForTimeout(1400)
+  await bannerShown(page)
   const p = pieces[0]
   await page.locator(`[data-row="${p.correct.row}"][data-col="${p.correct.col}"]`).click()
   await expect(page.locator('#selected-slot img')).toHaveCount(0)
@@ -110,14 +113,12 @@ test('guide toggle is disabled after completion', async ({ page }) => {
 
 test('reference image reaches full opacity after reveal', async ({ page }) => {
   await completePuzzle(page)
-  await page.waitForTimeout(1500)
-  const opacity = await page.locator('#reference-img').evaluate(el => parseFloat(el.style.opacity))
-  expect(opacity).toBeCloseTo(1, 1)
+  await expect(page.locator('#reference-img')).toHaveCSS('opacity', '1')
 })
 
 test('reset after completion clears grid and restores tray', async ({ page }) => {
   await completePuzzle(page)
-  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+  await bannerShown(page)
   await page.locator('#success-banner button').click()
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   await expect(page.locator('#tray-bar img')).toHaveCount(pieces.length)
@@ -126,14 +127,14 @@ test('reset after completion clears grid and restores tray', async ({ page }) =>
 
 test('guide toggle re-enabled after reset', async ({ page }) => {
   await completePuzzle(page)
-  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+  await bannerShown(page)
   await page.locator('#success-banner button').click()
   await expect(page.locator('#ref-toggle')).not.toBeDisabled()
 })
 
 test('puzzle unlocks after reset — piece can be lifted', async ({ page }) => {
   await completePuzzle(page)
-  await expect(page.locator('#success-banner')).toBeVisible({ timeout: 3000 })
+  await bannerShown(page)
   await page.locator('#success-banner button').click()
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
