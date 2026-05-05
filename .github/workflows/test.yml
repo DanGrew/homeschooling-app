@@ -132,18 +132,6 @@ jobs:
           name: report-no-ui-imports
           path: reports/no-ui-imports.txt
 
-  ui-complexity:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: mkdir -p reports
-      - run: node scripts/arch-check.js ui-complexity reports/ui-complexity.txt
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: report-ui-complexity
-          path: reports/ui-complexity.txt
-
   ui-cyclomatic:
     runs-on: ubuntu-latest
     steps:
@@ -194,7 +182,6 @@ jobs:
       - check-untested
       - no-dom-in-core
       - no-ui-imports
-      - ui-complexity
       - ui-cyclomatic
       - no-stray-files
       - no-app-exports
@@ -221,8 +208,6 @@ jobs:
             cat reports/no-dom.txt 2>/dev/null || echo "⚠️ no-dom-in-core report missing"
             echo ""
             cat reports/no-ui-imports.txt 2>/dev/null || echo "⚠️ no-ui-imports report missing"
-            echo ""
-            cat reports/ui-complexity.txt 2>/dev/null || echo "⚠️ ui-complexity report missing"
             echo ""
             cat reports/no-stray-files.txt 2>/dev/null || echo "⚠️ no-stray-files report missing"
             echo ""

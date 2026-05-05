@@ -70,24 +70,6 @@ if (rule === 'no-ui-imports') {
   });
 }
 
-if (rule === 'ui-complexity') {
-  const files = getAllFiles(path.join(ROOT, 'ui'));
-  files.forEach(file => {
-    const content = read(file);
-    if (hasAllow(content, 'allow-complexity')) {
-      exceptions.push(file);
-      return;
-    }
-    scanned.push(file);
-    const lines = content.split('\n').length;
-    const ifs = (content.match(/if\s*\(/g) || []).length;
-
-    if (lines > 80 || ifs > 5) {
-      violations.push(`${file} high complexity (lines:${lines}, ifs:${ifs})`);
-    }
-  });
-}
-
 if (rule === 'no-stray-files') {
   const EXCLUDED = new Set(['scripts', 'tests', '.github', 'node_modules', 'coverage', 'reports', '.claude']);
   const LAYERS = new Set(['core', 'ui', 'app']);
