@@ -28,11 +28,6 @@ Scans every `.js` file in `/core`.
 Fails if any file imports from a path containing `/ui/`.
 Core must not depend on UI.
 
-### `ui-complexity`
-Scans every `.js` file in `/ui`.
-Fails if any file exceeds **80 lines** or **5 `if(` occurrences**.
-Keeps UI files as thin rendering layers. Use `&&` short-circuit and ternary instead of `if` blocks to stay within the limit.
-
 ### `no-stray-files`
 Scans all `.js` files in the repo.
 Fails if any file is outside `core/`, `ui/`, `app/`, `scripts/`, `tests/`, `.github/`.
@@ -55,7 +50,7 @@ Add a comment to suppress a specific check for one file:
 ```js
 // arch: allow-dom        — file in /core that legitimately uses DOM
 // arch: allow-import     — file in /core that intentionally imports from /ui
-// arch: allow-complexity — file in /ui whose complexity is justified (suppresses both ui-complexity and ui-cyclomatic checks)
+// arch: allow-complexity — file in /ui whose cyclomatic complexity is justified (suppresses ui-cyclomatic check)
 // arch: allow-export     — file in /app that legitimately exports (rare)
 ```
 
