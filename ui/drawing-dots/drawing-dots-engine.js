@@ -1,7 +1,3 @@
-// arch: allow-complexity
-// Line count exceeds 80 — complex UI component with multiple dispatch tables.
-// Zero cyclomatic violations: all decisions are in core or resolved via lookup.
-
 import { edgeKey, buildAdj, computeR, tapResult, formatTitle, getDotStyleIndex, isDotDone, getInstruction } from '../../core/drawing-dots/drawing-dots-core.js';
 import { buildFilterBar } from '../filter-bar/filter-bar-ui.js';
 
