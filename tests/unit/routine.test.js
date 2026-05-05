@@ -71,6 +71,12 @@ describe('buildOrderedDays', () => {
     const { days } = buildOrderedDays(R, 'wednesday');
     days.forEach(d => expect(['monday', 'wednesday', 'friday']).toContain(d.key));
   });
+
+  it('rolling: focusedIndex falls back to windowRadius when today not in routine data', () => {
+    const R = makeRoutine(true, 2, ['monday', 'tuesday', 'thursday', 'friday']);
+    const { focusedIndex } = buildOrderedDays(R, 'wednesday');
+    expect(focusedIndex).toBe(2); // windowRadius = 2
+  });
 });
 
 describe('pixelsPerMin', () => {

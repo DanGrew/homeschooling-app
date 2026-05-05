@@ -234,6 +234,12 @@ describe('TraceState.pointerUp', () => {
     expect(state.currentDist).toBe(0);
     expect(state.active).toBe(false);
   });
+
+  it('returns noop when pointerId matches but active is false', () => {
+    const state = makeState();
+    state.activePointerId = 1;
+    expect(state.pointerUp(1).type).toBe('noop');
+  });
 });
 
 describe('TraceState.beginAnimation / stopAnimation', () => {

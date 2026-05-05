@@ -96,4 +96,11 @@ describe('filterItems', () => {
     const result = filterItems(ITEMS, 'easy', 'all');
     result.forEach(p => expect(p.tags || []).toContain('easy'));
   });
+
+  it('item missing tags property is excluded by specific tag filter', () => {
+    const noTags = [{ level: 1 }, { tags: ['animals'], level: 1 }];
+    const result = filterItems(noTags, 'animals', 'all');
+    expect(result).toHaveLength(1);
+    expect(result[0].tags).toContain('animals');
+  });
 });

@@ -11,8 +11,7 @@ export function evalCond(state, cond) {
   if (op === '==') return a == b;
   if (op === '<=') return a <= b;
   if (op === '>') return a > b;
-  if (op === '<') return a < b;
-  return false;
+  return a < b;
 }
 
 export function applyStateAction(state, action) {
