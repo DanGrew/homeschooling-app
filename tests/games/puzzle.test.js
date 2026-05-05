@@ -1,7 +1,9 @@
 const { test, expect } = require('@playwright/test')
 
+const PLAY_URL = '/homeschooling-app/app/activities/puzzle/play.html?puzzle=paw-patrol&grid=4x3'
+
 async function completePuzzle(page) {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('#tray-bar [data-piece-id]')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   for (const p of pieces) {
@@ -21,41 +23,41 @@ const slotEmpty = (page) =>
   expect(page.locator('#selected-slot')).toHaveCSS('background-image', 'none')
 
 test('page loads with grid and tray visible', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await expect(page.locator('#puzzle-grid')).toBeVisible()
   await expect(page.locator('#tray-bar')).toBeVisible()
   await expect(page.locator('#selected-slot')).toBeVisible()
 })
 
 test('grid has correct number of cells matching piece count', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('[data-row][data-col]')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   await expect(page.locator('[data-row][data-col]')).toHaveCount(pieces.length)
 })
 
 test('tray has all pieces on load', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('#tray-bar [data-piece-id]')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   await expect(page.locator('#tray-bar [data-piece-id]')).toHaveCount(pieces.length)
 })
 
 test('tray tiles render with background image', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('#tray-bar [data-piece-id]')
   await expect(page.locator('#tray-bar [data-piece-id]').first()).not.toHaveCSS('background-image', 'none')
 })
 
 test('selecting a tray tile shows it in the selected slot', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('#tray-bar [data-piece-id]')
   await page.locator('#tray-bar [data-piece-id]').first().click()
   await slotHasPiece(page)
 })
 
 test('selecting a tray tile highlights it', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('#tray-bar [data-piece-id]')
   const tile = page.locator('#tray-bar [data-piece-id]').first()
   await tile.click()
@@ -64,7 +66,7 @@ test('selecting a tray tile highlights it', async ({ page }) => {
 })
 
 test('placing a tile removes it from tray view', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.waitForSelector('#tray-bar [data-piece-id]')
   const tile = page.locator('#tray-bar [data-piece-id]').first()
   const pieceId = await tile.getAttribute('id')
@@ -74,7 +76,7 @@ test('placing a tile removes it from tray view', async ({ page }) => {
 })
 
 test('placing a tile sets background image on cell', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
   await page.locator(`#tray-${p.id}`).click()
@@ -83,7 +85,7 @@ test('placing a tile sets background image on cell', async ({ page }) => {
 })
 
 test('correct placement gives feedback-correct class', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
   await page.locator(`#tray-${p.id}`).click()
@@ -92,7 +94,7 @@ test('correct placement gives feedback-correct class', async ({ page }) => {
 })
 
 test('wrong placement gives feedback-wrong class', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   const p = pieces.find(p => !(p.correct.row === 0 && p.correct.col === 0))
   await page.locator(`#tray-${p.id}`).click()
@@ -101,13 +103,13 @@ test('wrong placement gives feedback-wrong class', async ({ page }) => {
 })
 
 test('tapping empty cell with nothing selected does nothing', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   await page.locator('[data-row="1"][data-col="1"]').click()
   await expect(page.locator('[data-row="1"][data-col="1"]')).toHaveCSS('background-image', 'none')
 })
 
 test('tapping placed tile lifts it back to selected slot', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.goto(PLAY_URL)
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   const p = pieces.find(p => p.correct.row === 1 && p.correct.col === 1)
   await page.locator(`#tray-${p.id}`).click()
