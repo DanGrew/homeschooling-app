@@ -25,8 +25,9 @@
 </div>
 <script type="module">
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
-import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
-import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
+import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
+import {buildFilterBar} from '../../../ui/filter-bar/filter-bar-ui.js';
+import {speak as speakWord} from '../../../ui/speech/speech-ui.js';
 Dictionary.init('../../dictionary/');
 var filtered=[],idx=0;
 
@@ -44,22 +45,7 @@ function show(){
   document.getElementById('phonetic').textContent=w.phonetic||'';
 }
 
-function bestVoice(){
-  var voices=speechSynthesis.getVoices();
-  return voices.find(function(v){return v.lang==='en-GB'&&v.name.match(/female|woman|girl|karen|serena|moira|kate/i);})
-    ||voices.find(function(v){return v.lang==='en-GB';})
-    ||voices.find(function(v){return v.lang.startsWith('en');})
-    ||null;
-}
-
-function speak(){
-  if(!filtered[idx])return;
-  var u=new SpeechSynthesisUtterance(filtered[idx].name);
-  u.rate=1.0;u.pitch=1.1;
-  var v=bestVoice();if(v)u.voice=v;
-  speechSynthesis.cancel();speechSynthesis.speak(u);
-}
-
+function speak(){if(filtered[idx])speakWord(filtered[idx].name);}
 function prev(){idx=(idx-1+filtered.length)%filtered.length;show();}
 function next(){idx=(idx+1)%filtered.length;show();}
 window.prev=prev;window.next=next;window.speak=speak;

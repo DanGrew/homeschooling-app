@@ -10,13 +10,13 @@
 
 No bundler. Files are served directly. All imports are relative paths.
 
-Enforced by `scripts/arch-check.js` via GitHub Actions on every PR (rules: `no-dom-in-core`, `no-ui-imports`, `ui-complexity`).
+Enforced by `scripts/arch-check.js` and `scripts/check-ui-cyclomatic.js` via GitHub Actions on every PR.
 
 ---
 
 ## Automated checks
 
-Three rules run on every PR.
+These rules run on every PR.
 
 ### `no-dom-in-core`
 Scans every `.js` file in `/core`.
@@ -28,10 +28,21 @@ Scans every `.js` file in `/core`.
 Fails if any file imports from a path containing `/ui/`.
 Core must not depend on UI.
 
-### `ui-complexity`
-Scans every `.js` file in `/ui`.
-Fails if any file exceeds **80 lines** or **5 `if(` occurrences**.
-Keeps UI files as thin rendering layers. Use `&&` short-circuit and ternary instead of `if` blocks to stay within the limit.
+### `no-stray-files`
+Scans all `.js` files in the repo.
+Fails if any file is outside `core/`, `ui/`, `app/`, `scripts/`, `tests/`, `.github/`.
+Forces all new JS into an owned layer.
+
+### `no-app-exports`
+Scans every `.js` file in `/app`.
+Fails if any file contains a top-level `export` statement.
+If a file exports, it's reusable and belongs in `core/` or `ui/`, not `app/`.
+
+### `ui-cyclomatic`
+Scans every `.js` file in `/ui` using ESLint's `complexity` rule (AST-based).
+Fails if any **function** has a cyclomatic complexity above **1** — meaning zero branches per function.
+Threshold 1 means: every UI function must be a pure sequence. No `if`, no `? :`, no `&&`/`||` used for control flow, no loops with break/continue.
+This is intentional: if a UI function needs to make a decision, that decision belongs in `core/` where Vitest can test it. UI = state-in → DOM-out.
 
 ### Escape hatches
 Add a comment to suppress a specific check for one file:
@@ -39,10 +50,62 @@ Add a comment to suppress a specific check for one file:
 ```js
 // arch: allow-dom        — file in /core that legitimately uses DOM
 // arch: allow-import     — file in /core that intentionally imports from /ui
-// arch: allow-complexity — file in /ui whose complexity is justified
+// arch: allow-complexity — file in /ui whose cyclomatic complexity is justified (suppresses ui-cyclomatic check)
+// arch: allow-export     — file in /app that legitimately exports (rare)
 ```
 
 Use sparingly. If a `/core` file needs DOM access it is not a core file.
+
+---
+
+## Check integrity — do not game the rules
+
+The checks exist to enforce architecture, not to be beaten. A passing check should mean the code is better; not that you found a way to satisfy the assertion without fixing the underlying design.
+
+**What gaming looks like:**
+
+```js
+// WRONG — removing a guard to pass the complexity check
+// The guard existed because _audioBuffers[note] can be undefined (network failure).
+// Deleting it makes the check pass but silently breaks the app on bad networks.
+function playNote(noteName, volume) {
+  // if (!_audioBuffers[noteName]) return;  ← deleted just to hit complexity 1
+  var src = _audioCtx.createBufferSource();
+  src.buffer = _audioBuffers[noteName]; // throws if undefined
+  ...
+}
+
+// WRONG — pre-filling with a dummy value to avoid the guard
+// The problem is not the guard. The problem is the function has a decision.
+var _audioBuffers = PIANO_CONFIG.NOTES.reduce((acc, note) => {
+  acc[note] = _audioCtx.createBuffer(1, 1, 22050); // silent decoy
+  return acc;
+}, {});
+```
+
+**What a genuine fix looks like:**
+
+Move the decision to `core/`, or restructure so the decision is never needed:
+
+```js
+// CORRECT — initAudio guarantees _audioBuffers[note] is always a valid buffer
+// before playNote is ever reachable. Guard is structurally unnecessary.
+// If decode fails, note stays as the silent fallback set during init.
+initAudio().then(() => playNote(note, 1.0));
+
+// CORRECT — glowKey uses a lookup table; no decision in UI
+var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
+keyEl.style.background = GLOW_BG[type]; // core config, not a branch
+```
+
+If you genuinely cannot eliminate a branch — because it represents a real browser API constraint or an unavoidable lifecycle decision — use the escape hatch with a comment explaining the specific reason. The comment is the contract: it must name the function and explain why the decision cannot live in core.
+
+```js
+// arch: allow-complexity
+// initAudio: lazy AudioContext creation requires a user gesture (browser spec);
+// _initPromise memoisation prevents re-decoding on every keypress.
+// Both || operators are browser lifecycle constraints, not moveable to core.
+```
 
 ---
 
@@ -88,7 +151,7 @@ export function renderSomething(container) {
 }
 ```
 
-Must stay within **80 lines / 5 ifs**. Use `&&` short-circuit and ternary instead of `if` blocks.
+Must pass `ui-cyclomatic` (complexity 1 per function — zero branches). Move all decisions into core first.
 
 **4. HTML wiring** — `app/activities/<activity>/index.html`
 
@@ -99,13 +162,28 @@ Must stay within **80 lines / 5 ifs**. Use `&&` short-circuit and ternary instea
 </script>
 ```
 
+**5. Playwright tests** — `tests/games/<activity>.test.js`
+
+Cover the user journey, not implementation details. Minimum set:
+
+- Page loads with expected elements visible
+- Correct answer: `feedback-correct` class appears, success banner slides up
+- Wrong answer: `feedback-wrong` class appears, clears after ~500ms (use `timeout: 2000` to avoid flakes)
+- Next button on banner: banner hides, new round renders
+
+If state needs to be inspected (e.g. which answer is correct), expose a getter via `window.__<activity>Target` in the app HTML — not directly in core/ui.
+
+**6. Games hub tile** — `app/games/index.html`
+
+Add a tile linking to the new activity. Update `tests/games/index.test.js` to assert the tile and its section heading are visible.
+
 ---
 
 ## Modifying existing files
 
 **Changing pure logic** — edit `core/<activity>/<activity>-core.js`, run `npm run test:unit`.
 
-**Changing DOM rendering** — edit `ui/<activity>/<activity>-ui.js`, run `npm test`. If the file is already at 5 ifs, use `&&`/ternary for new branches.
+**Changing DOM rendering** — edit `ui/<activity>/<activity>-ui.js`, run `npm test`. Any branching logic must live in core — UI functions must be pure sequences (cyclomatic complexity 1).
 
 **Changing page wiring** — edit the HTML in `app/`. Run `npm test`.
 
@@ -143,12 +221,7 @@ await page.waitForFunction(() => document.getElementById('foo')?.dataset.ready =
 `colour-mixing`, `connect-the-dots`, `colouring`, `dictionary`, `drawing-dots`, `filter-bar`, `piano`, `routine`, `shapes`, `shopping`, `simulator`, `story-time`, `trace`, `word-lesson`
 
 ### `/ui`
-`colour-mixing`, `filter-bar`, `piano`, `shopping`
-
-### `/app/shared` (DOM files not yet moved to `/ui`)
-`colouring-common.js`, `trace-engine.js`
-
-These are candidates for `/ui` once they pass the complexity check (≤80 lines, ≤5 ifs).
+`colour-mixing`, `colouring`, `filter-bar`, `piano`, `shopping`, `trace`
 
 ---
 
@@ -157,7 +230,10 @@ These are candidates for `/ui` once they pass the complexity check (≤80 lines,
 ```sh
 npm run test:unit                                                   # Vitest
 npm test                                                            # Playwright
-node scripts/arch-check.js no-dom-in-core reports/arch.json
-node scripts/arch-check.js no-ui-imports  reports/arch.json
-node scripts/arch-check.js ui-complexity  reports/arch.json
+node scripts/arch-check.js no-dom-in-core    reports/out.txt
+node scripts/arch-check.js no-ui-imports     reports/out.txt
+node scripts/arch-check.js ui-complexity     reports/out.txt
+node scripts/arch-check.js no-stray-files    reports/out.txt
+node scripts/arch-check.js no-app-exports    reports/out.txt
+node scripts/check-ui-cyclomatic.js          reports/out.txt
 ```

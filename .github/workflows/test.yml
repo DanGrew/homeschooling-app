@@ -23,23 +23,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
+      - run: git fetch origin main
       - run: npm run test:coverage
       - name: Write coverage report
         if: always()
         run: |
           node -e "
           const fs = require('fs');
+          const { execSync } = require('child_process');
           if (!fs.existsSync('coverage/coverage-summary.json')) {
             fs.writeFileSync('coverage-report.md', '### Unit Test Coverage\n⚠️ Coverage data missing — tests may have failed.');
             process.exit(0);
           }
-          const s = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8')).total;
+          const cov = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+          const s = cov.total;
           const row = (label, key) => \`| \${label} | \${s[key].pct}% | \${s[key].covered} / \${s[key].total} |\`;
+          let changedSection = '';
+          try {
+            const changed = execSync('git diff --name-only origin/main...HEAD').toString().trim().split('\n').filter(Boolean);
+            const hits = changed.map(f => {
+              const data = cov[process.cwd() + '/' + f];
+              return data ? \`- \\\`\${f}\\\` — lines: \${data.lines.pct}%, functions: \${data.functions.pct}%\` : null;
+            }).filter(Boolean);
+            if (hits.length) changedSection = '\n\n### Changed Files Coverage\n' + hits.join('\n');
+            else changedSection = '\n\n### Changed Files Coverage\n_No changed files instrumented by Vitest (ui/ and app/ files are covered by Playwright, not unit tests)_';
+          } catch(e) {}
           const body = [
             '### Unit Test Coverage',
             '| Metric | % | Covered / Total |',
@@ -48,7 +63,7 @@ jobs:
             row('Statements', 'statements'),
             row('Functions', 'functions'),
             row('Branches', 'branches'),
-          ].join('\n');
+          ].join('\n') + changedSection;
           fs.writeFileSync('coverage-report.md', body);
           "
       - uses: actions/upload-artifact@v4
@@ -117,17 +132,46 @@ jobs:
           name: report-no-ui-imports
           path: reports/no-ui-imports.txt
 
-  ui-complexity:
+  ui-cyclomatic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: mkdir -p reports
+      - run: node scripts/check-ui-cyclomatic.js reports/ui-cyclomatic.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-ui-cyclomatic
+          path: reports/ui-cyclomatic.txt
+
+  no-stray-files:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: mkdir -p reports
-      - run: node scripts/arch-check.js ui-complexity reports/ui-complexity.txt
+      - run: node scripts/arch-check.js no-stray-files reports/no-stray-files.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: report-ui-complexity
-          path: reports/ui-complexity.txt
+          name: report-no-stray-files
+          path: reports/no-stray-files.txt
+
+  no-app-exports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-app-exports reports/no-app-exports.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-app-exports
+          path: reports/no-app-exports.txt
 
   pr-report:
     runs-on: ubuntu-latest
@@ -138,7 +182,9 @@ jobs:
       - check-untested
       - no-dom-in-core
       - no-ui-imports
-      - ui-complexity
+      - ui-cyclomatic
+      - no-stray-files
+      - no-app-exports
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -163,7 +209,11 @@ jobs:
             echo ""
             cat reports/no-ui-imports.txt 2>/dev/null || echo "⚠️ no-ui-imports report missing"
             echo ""
-            cat reports/ui-complexity.txt 2>/dev/null || echo "⚠️ ui-complexity report missing"
+            cat reports/no-stray-files.txt 2>/dev/null || echo "⚠️ no-stray-files report missing"
+            echo ""
+            cat reports/no-app-exports.txt 2>/dev/null || echo "⚠️ no-app-exports report missing"
+            echo ""
+            cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
           } > combined.md
 
       - name: Comment on PR

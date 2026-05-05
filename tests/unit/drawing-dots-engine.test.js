@@ -1,4 +1,4 @@
-import { edgeKey, buildAdj, computeR, tapResult } from '../../core/drawing-dots/drawing-dots-core.js';
+import { edgeKey, buildAdj, computeR, tapResult, formatTitle, getDotStyleIndex, isDotDone, getInstruction } from '../../core/drawing-dots/drawing-dots-core.js';
 
 // triangle: dots 0,1,2 connected 0-1, 1-2, 0-2
 const triangle = {
@@ -169,5 +169,52 @@ describe('tapResult', () => {
       expect(r.action).toBe('reveal');
       expect(r.complete).toBe(true);
     });
+  });
+});
+
+describe('formatTitle', () => {
+  it('name only when no level', () => expect(formatTitle({ name: 'Cat' })).toBe('Cat'));
+  it('includes level when present', () => expect(formatTitle({ name: 'Cat', level: 2 })).toBe('Cat [Level 2]'));
+  it('level 0 included', () => expect(formatTitle({ name: 'X', level: 0 })).toBe('X [Level 0]'));
+});
+
+describe('getDotStyleIndex', () => {
+  it('0 when default', () => expect(getDotStyleIndex(false, false)).toBe(0));
+  it('1 when selected', () => expect(getDotStyleIndex(false, true)).toBe(1));
+  it('2 when done', () => expect(getDotStyleIndex(true, false)).toBe(2));
+  it('done takes priority over selected', () => expect(getDotStyleIndex(true, true)).toBe(2));
+});
+
+describe('isDotDone', () => {
+  it('false when dot has no neighbours', () => {
+    const adj = [[], [0]];
+    expect(isDotDone(adj, 0, new Set())).toBe(false);
+  });
+  it('false when some edges incomplete', () => {
+    const adj = buildAdj(triangle);
+    expect(isDotDone(adj, 0, new Set(['0,1']))).toBe(false);
+  });
+  it('true when all edges complete', () => {
+    const adj = buildAdj(triangle);
+    expect(isDotDone(adj, 0, new Set(['0,1', '0,2']))).toBe(true);
+  });
+});
+
+describe('getInstruction', () => {
+  const dots = [{ id: 1 }, { id: 2 }];
+  it('start prompt when nothing done', () => {
+    const r = getInstruction(null, new Set(), dots);
+    expect(r.text).toContain('Tap any dot');
+    expect(r.isHtml).toBe(false);
+  });
+  it('keep going when in progress', () => {
+    const r = getInstruction(null, new Set(['0,1']), dots);
+    expect(r.text).toContain('Keep going');
+    expect(r.isHtml).toBe(false);
+  });
+  it('html prompt when dot selected', () => {
+    const r = getInstruction(0, new Set(), dots);
+    expect(r.text).toContain('<b>1</b>');
+    expect(r.isHtml).toBe(true);
   });
 });
