@@ -2,6 +2,7 @@ const { test, expect } = require('@playwright/test')
 
 async function completePuzzle(page) {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.waitForSelector('#tray-bar img')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   for (const p of pieces) {
     await page.locator(`#tray-${p.id}`).click()
@@ -19,12 +20,14 @@ test('page loads with grid and tray visible', async ({ page }) => {
 
 test('grid has correct number of cells matching piece count', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.waitForSelector('[data-row][data-col]')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   await expect(page.locator('[data-row][data-col]')).toHaveCount(pieces.length)
 })
 
 test('tray has all pieces on load', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/puzzle/')
+  await page.waitForSelector('#tray-bar img')
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   await expect(page.locator('#tray-bar img')).toHaveCount(pieces.length)
 })
