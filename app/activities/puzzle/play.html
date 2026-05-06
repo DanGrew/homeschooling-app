@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Image Puzzle</title>
+<title>Puzzle</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
@@ -32,7 +32,7 @@
 <div class="nav-bar" data-home="./"></div>
 
 <div class="game-area">
-  <div class="game-title">Image Puzzle</div>
+  <div class="game-title">Puzzle</div>
   <div id="error-msg"></div>
   <div class="puzzle-outer" id="puzzle-outer">
     <div class="puzzle-wrapper">
@@ -143,7 +143,7 @@
     slot.style.height = `${slotH}px`;
     const trayColCount = isPortrait()
       ? PUZZLE.grid.cols
-      : Math.min(allPieces.length, Math.floor((window.innerWidth - 20) / (tileW + 6)));
+      : Math.min(allPieces.length, Math.floor((puzzleOuter.clientWidth - 40) / (tileW + 6)));
     trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
       PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
       trayColCount);
