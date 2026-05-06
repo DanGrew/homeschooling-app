@@ -46,6 +46,11 @@ describe('extractWordTags', () => {
   it('empty words returns ["all", "custom"]', () => {
     expect(extractWordTags([])).toEqual(['all', 'custom']);
   });
+  it('tags sorted a-z between "all" and "custom"', () => {
+    const t = extractWordTags(words);
+    const middle = t.slice(1, -1);
+    expect(middle).toEqual([...middle].sort());
+  });
 });
 
 describe('filterWordsByTag', () => {

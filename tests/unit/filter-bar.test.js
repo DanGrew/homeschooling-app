@@ -34,6 +34,11 @@ describe('extractTags', () => {
   it('items with no tags returns ["all"]', () => {
     expect(extractTags([{ tags: [] }, {}])).toEqual(['all']);
   });
+  it('tags sorted a-z after "all"', () => {
+    const tags = extractTags(ITEMS);
+    const rest = tags.slice(1);
+    expect(rest).toEqual([...rest].sort());
+  });
 });
 
 describe('extractLevels', () => {
