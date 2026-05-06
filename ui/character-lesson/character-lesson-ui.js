@@ -107,10 +107,12 @@ function onStrokeComplete(strokeIdx, cx, cy) {
   hint.setAttribute('r', '14'); hint.setAttribute('fill', '#E74C3C');
   hint.setAttribute('stroke', 'white'); hint.setAttribute('stroke-width', '3');
   hint.classList.add('char-decoration', 'dot-pulse');
+  hint.style.pointerEvents = 'none';
   document.getElementById('svg').appendChild(hint);
+  document.getElementById('svg').addEventListener('pointerdown', function cleanup() {
+    [document.getElementById('next-stroke-hint')].filter(Boolean).forEach(el => el.remove());
+  }, { once: true });
 }
-
-function removeStrokeHint() { [document.getElementById('next-stroke-hint')].filter(Boolean).forEach(el => el.remove()); }
 
 var ON_STROKE_COMPLETE = { 'trace': onStrokeComplete, 'lesson': null };
 
@@ -126,8 +128,7 @@ function initEngine() {
       progressWidth: 20,
       progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
       onComplete: ON_COMPLETE[mode],
-      onStrokeComplete: ON_STROKE_COMPLETE[mode],
-      onStrokeStart: removeStrokeHint
+      onStrokeComplete: ON_STROKE_COMPLETE[mode]
     }
   );
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
