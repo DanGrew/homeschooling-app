@@ -100,6 +100,7 @@ function onDotTapped() { DOT_GUARD1[String(!!dotEl)](); }
 var ON_COMPLETE = { 'trace': onTraceComplete, 'lesson': onLessonComplete };
 
 function onStrokeComplete(strokeIdx, cx, cy) {
+  [engine.progressPaths[strokeIdx - 1]].filter(Boolean).forEach(pp => { pp.style.filter = ''; });
   [document.getElementById('next-stroke-hint')].filter(Boolean).forEach(el => el.remove());
   var hint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
   hint.id = 'next-stroke-hint';
