@@ -55,7 +55,6 @@
 <script src="../../shared/menu.js" defer></script>
 <script src="../../../ui/colouring/colouring-common.js"></script>
 <script type="module">
-  // arch: allow-complexity
   import { derivePieces, shufflePieces, checkPlacement, isComplete } from '../../../core/puzzle/puzzle-core.js';
   import { buildGrid, clearSelectedSlot, fillSelectedSlot, placeInCell, clearCell, markCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
@@ -87,9 +86,9 @@
   function isPortrait() { return imgRatio < 1; }
 
   function sizeGrid() {
-    const portrait = isPortrait();
-    const availW = window.innerWidth * (portrait ? 0.48 : 0.60);
-    const availH = window.innerHeight * (portrait ? 0.80 : 0.65);
+    const p = +isPortrait();
+    const availW = window.innerWidth * [0.60, 0.48][p];
+    const availH = window.innerHeight * [0.65, 0.80][p];
     const gridH = Math.floor(Math.min(availH, availW / imgRatio));
     const gridW = Math.floor(gridH * imgRatio);
     cellH = Math.floor(gridH / PUZZLE.grid.rows);
@@ -109,20 +108,19 @@
 
   refToggle.addEventListener('click', () => {
     refVisible = !refVisible;
-    refImg.style.opacity = refVisible ? '0.25' : '0';
-    refToggle.textContent = refVisible ? 'Hide guide' : 'Show guide';
+    refImg.style.opacity = ['0', '0.25'][+refVisible];
+    refToggle.textContent = ['Show guide', 'Hide guide'][+refVisible];
   });
 
   function revealPicture(onDone) {
-    const from = parseFloat(refImg.style.opacity) || 0;
+    const from = parseFloat(refImg.style.opacity);
     refImg.style.zIndex = '2';
-    let start = null;
+    const startTs = performance.now();
     const dur = 1200;
     function step(ts) {
-      if (!start) start = ts;
-      const t = Math.min((ts - start) / dur, 1);
+      const t = Math.min((ts - startTs) / dur, 1);
       refImg.style.opacity = String(from + (1 - from) * t);
-      if (t < 1) requestAnimationFrame(step); else onDone();
+      [onDone, () => requestAnimationFrame(step)][+(t < 1)]();
     }
     requestAnimationFrame(step);
   }
@@ -132,7 +130,7 @@
     placements = {};
     selectedPiece = null;
     refImg.style.zIndex = '';
-    refImg.style.opacity = refVisible ? '0.25' : '0';
+    refImg.style.opacity = ['0', '0.25'][+refVisible];
     refToggle.disabled = false;
     clearSelectedSlot(slot);
     gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
@@ -142,9 +140,8 @@
     slotW = Math.round(slotH * cellW / cellH);
     slot.style.width = `${slotW}px`;
     slot.style.height = `${slotH}px`;
-    const trayColCount = isPortrait()
-      ? PUZZLE.grid.cols
-      : Math.min(allPieces.length, Math.floor((puzzleOuter.clientWidth - 40) / (tileW + 6)));
+    const landscapeCols = Math.min(allPieces.length, Math.floor((puzzleOuter.clientWidth - 40) / (tileW + 6)));
+    const trayColCount = [landscapeCols, PUZZLE.grid.cols][+isPortrait()];
     trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
       PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
       trayColCount);
@@ -157,26 +154,29 @@
       slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH);
   }
 
-  function onCellTap(row, col) {
-    if (locked) return;
-    const key = `${row}_${col}`;
+  function completionCheck() {
+    locked = true;
+    refToggle.disabled = true;
+    revealPicture(() => {
+      showBanner(() => { location.href = './'; });
+      document.getElementById('success-next').innerHTML = 'Choose another \u2192';
+    });
+  }
+
+  function liftPiece(row, col, key) {
     const existing = placements[key];
+    clearCell(gridEl, row, col);
+    delete placements[key];
+    restoreTrayPiece(trayEl, existing.pieceId);
+    selectedPiece = allPieces.find(p => p.id === existing.pieceId);
+    highlightTray(trayEl, selectedPiece.id);
+    fillSelectedSlot(slot, selectedPiece, PUZZLE.src,
+      slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH);
+  }
 
-    if (existing) {
-      clearCell(gridEl, row, col);
-      delete placements[key];
-      restoreTrayPiece(trayEl, existing.pieceId);
-      selectedPiece = allPieces.find(p => p.id === existing.pieceId);
-      highlightTray(trayEl, selectedPiece.id);
-      fillSelectedSlot(slot, selectedPiece, PUZZLE.src,
-        slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH);
-      return;
-    }
-
-    if (!selectedPiece) return;
-
+  function dropPiece(row, col) {
     const correct = checkPlacement(selectedPiece, { row, col });
-    placements[key] = { pieceId: selectedPiece.id, correct };
+    placements[`${row}_${col}`] = { pieceId: selectedPiece.id, correct };
     placeInCell(gridEl, row, col, PUZZLE.src,
       cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH,
       selectedPiece.correct.row, selectedPiece.correct.col);
@@ -185,32 +185,39 @@
     selectedPiece = null;
     clearSelectedSlot(slot);
     highlightTray(trayEl, null);
+    [() => {}, completionCheck][+(isComplete(placements, allPieces.length))]();
+  }
 
-    if (isComplete(placements, allPieces.length)) {
-      locked = true;
-      refToggle.disabled = true;
-      revealPicture(() => {
-        showBanner(() => { location.href = './'; });
-        document.getElementById('success-next').innerHTML = 'Choose another \u2192';
-      });
-    }
+  function tapUnoccupied(row, col) {
+    [() => {}, () => dropPiece(row, col)][+!!selectedPiece]();
+  }
+
+  function onCellTap(row, col) {
+    const key = `${row}_${col}`;
+    [() => [liftPiece, tapUnoccupied][+!placements[key]](row, col, key), () => {}][+locked]();
   }
 
   window.__puzzleState = { getPieces: () => allPieces, getPlacements: () => placements };
 
-  const fullImage = new Image();
-  fullImage.onload = () => {
-    const pixels = fullImage.naturalWidth * fullImage.naturalHeight;
-    if (pixels > MAX_PIXELS) {
-      errorMsg.style.display = 'block';
-      errorMsg.textContent = `Image too large (${fullImage.naturalWidth}\u00d7${fullImage.naturalHeight} = ${(pixels / 1_000_000).toFixed(1)}MP). Keep images under 4MP.`;
-      return;
-    }
+  function showError(pixels) {
+    errorMsg.style.display = 'block';
+    errorMsg.textContent = `Image too large (${fullImage.naturalWidth}\u00d7${fullImage.naturalHeight} = ${(pixels / 1_000_000).toFixed(1)}MP). Keep images under 4MP.`;
+  }
+
+  function initPuzzle() {
     imgRatio = fullImage.naturalWidth / fullImage.naturalHeight;
     puzzleOuter.classList.toggle('portrait', isPortrait());
     sizeGrid();
     start();
-  };
+  }
+
+  function onImageLoad() {
+    const pixels = fullImage.naturalWidth * fullImage.naturalHeight;
+    [initPuzzle, () => showError(pixels)][+(pixels > MAX_PIXELS)]();
+  }
+
+  const fullImage = new Image();
+  fullImage.onload = onImageLoad;
   fullImage.onerror = () => { sizeGrid(); start(); };
   fullImage.src = PUZZLE.src;
   refImg.src = PUZZLE.src;
