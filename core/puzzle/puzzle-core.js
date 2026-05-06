@@ -24,5 +24,3 @@ export function checkPlacement(piece, cell) {
 export function isComplete(placements, total) {
   return Object.values(placements).filter(p => p.correct).length === total;
 }
-
-if (typeof module !== 'undefined') module.exports = { derivePieces, shufflePieces, checkPlacement, isComplete };

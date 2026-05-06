@@ -63,7 +63,7 @@ fetch('manifest.json')
         const btn = document.createElement('button');
         btn.className = 'grid-btn';
         btn.innerHTML = `<span class="grid-btn-label">${labels[i]}</span><span class="grid-btn-size">${cols}\u00d7${rows}</span>`;
-        btn.addEventListener('click', () => { location.href = `play.html?puzzle=${p.id}&grid=${g}`; });
+        btn.addEventListener('click', () => { location.href = `play?puzzle=${p.id}&grid=${g}`; });
         btnsEl.appendChild(btn);
       });
       picker.classList.add('visible');
