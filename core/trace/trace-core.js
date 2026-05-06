@@ -49,7 +49,8 @@ function resolveOpts(o) {
     tolerance:    r.tolerance    ?? 45,
     maxStep:      r.maxStep      ?? 0.04,
     completionAt: r.completionAt ?? 0.96,
-    onComplete:   r.onComplete   || null,
+    onComplete:         r.onComplete         || null,
+    onStrokeComplete:   r.onStrokeComplete   || null,
     interactive:  r.interactive  !== false,
     progressStroke: r.progressStroke || '#FFD700',
     applyProgressAttrs: pp => {
@@ -96,6 +97,7 @@ class TraceState {
     if (prev < this.strokes.length - 1) {
       this.currentStrokeIdx++; this.currentDist = 0;
       const p = this.strokes[this.currentStrokeIdx].samples[0];
+      this.opts.onStrokeComplete && this.opts.onStrokeComplete(this.currentStrokeIdx, p.x, p.y);
       return { type: 'complete-stroke', prevStrokeIdx: prev, cx: p.x, cy: p.y };
     }
     this.done = true;

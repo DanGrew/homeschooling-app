@@ -99,6 +99,19 @@ function onDotTapped() { DOT_GUARD1[String(!!dotEl)](); }
 
 var ON_COMPLETE = { 'trace': onTraceComplete, 'lesson': onLessonComplete };
 
+function onStrokeComplete(strokeIdx, cx, cy) {
+  [document.getElementById('next-stroke-hint')].filter(Boolean).forEach(el => el.remove());
+  var hint = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  hint.id = 'next-stroke-hint';
+  hint.setAttribute('cx', cx); hint.setAttribute('cy', cy);
+  hint.setAttribute('r', '14'); hint.setAttribute('fill', '#E74C3C');
+  hint.setAttribute('stroke', 'white'); hint.setAttribute('stroke-width', '3');
+  hint.classList.add('char-decoration', 'dot-pulse');
+  document.getElementById('svg').appendChild(hint);
+}
+
+var ON_STROKE_COMPLETE = { 'trace': onStrokeComplete, 'lesson': null };
+
 function initEngine() {
   engine = window.engine = new TraceEngine(
     document.getElementById('svg'),
@@ -110,7 +123,8 @@ function initEngine() {
       progressStroke: '#FFD700',
       progressWidth: 20,
       progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
-      onComplete: ON_COMPLETE[mode]
+      onComplete: ON_COMPLETE[mode],
+      onStrokeComplete: ON_STROKE_COMPLETE[mode]
     }
   );
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));
