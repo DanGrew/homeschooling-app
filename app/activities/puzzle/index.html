@@ -49,6 +49,7 @@ const LABELS = {
 fetch('manifest.json')
   .then(r => r.json())
   .then(puzzles => {
+    puzzles.sort((a, b) => a.name.localeCompare(b.name));
     const cardsEl = document.getElementById('puzzle-cards');
     const picker = document.getElementById('grid-picker');
     const btnsEl = document.getElementById('grid-btns');

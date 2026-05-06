@@ -5,13 +5,13 @@ const CHOOSER_URL = '/homeschooling-app/app/activities/puzzle/'
 test('chooser loads showing all puzzle cards', async ({ page }) => {
   await page.goto(CHOOSER_URL)
   await page.waitForSelector('.puzzle-card')
-  await expect(page.locator('.puzzle-card')).toHaveCount(4)
+  await expect(page.locator('.puzzle-card')).toHaveCount(7)
 })
 
 test('puzzle cards show thumbnails', async ({ page }) => {
   await page.goto(CHOOSER_URL)
   await page.waitForSelector('.puzzle-card')
-  await expect(page.locator('.puzzle-card img').first()).toHaveAttribute('src', /paw-patrol/)
+  await expect(page.locator('.puzzle-card img').first()).toHaveAttribute('src', /bluey-family/)
 })
 
 test('grid picker hidden until card selected', async ({ page }) => {
@@ -55,7 +55,7 @@ test('clicking grid button passes correct params to play page', async ({ page })
   await page.waitForSelector('#tray-bar [data-piece-id]')
   const puzzleId = await page.evaluate(() => sessionStorage.getItem('puzzle-id'))
   const grid = await page.evaluate(() => sessionStorage.getItem('puzzle-grid'))
-  expect(puzzleId).toBe('paw-patrol')
+  expect(puzzleId).toBe('bluey-family')
   expect(grid).toBe('4x3')
 })
 
@@ -77,5 +77,5 @@ test('selecting different card updates grid buttons', async ({ page }) => {
   await page.waitForSelector('.grid-btn')
   await page.locator('.puzzle-card').nth(2).click()
   const sizes = await page.locator('.grid-btn-size').allTextContents()
-  expect(sizes).toEqual(['3\u00d74', '4\u00d75', '5\u00d78'])
+  expect(sizes).toEqual(['3\u00d74', '3\u00d75', '5\u00d78'])
 })

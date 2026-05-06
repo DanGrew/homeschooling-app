@@ -137,13 +137,16 @@
     gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
     tileH = Math.max(20, Math.floor(cellH / 2));
     tileW = Math.round(tileH * cellW / cellH);
-    slotH = Math.max(60, Math.min(cellH, 120));
+    slotH = Math.max(80, Math.min(cellH, Math.floor(window.innerHeight * 0.20)));
     slotW = Math.round(slotH * cellW / cellH);
     slot.style.width = `${slotW}px`;
     slot.style.height = `${slotH}px`;
+    const trayColCount = isPortrait()
+      ? PUZZLE.grid.cols
+      : Math.min(allPieces.length, Math.floor((window.innerWidth - 20) / (tileW + 6)));
     trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
       PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
-      PUZZLE.grid.cols);
+      trayColCount);
   }
 
   function onSelect(pieceId) {
