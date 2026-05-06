@@ -136,11 +136,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
       - run: npm ci
+      - run: git fetch origin main
       - run: mkdir -p reports
       - run: node scripts/check-ui-cyclomatic.js reports/ui-cyclomatic.txt
       - uses: actions/upload-artifact@v4
