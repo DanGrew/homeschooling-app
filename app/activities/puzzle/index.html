@@ -8,183 +8,77 @@
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
 *{box-sizing:border-box;}
-.puzzle-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;}
-.puzzle-row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;}
-#grid-area{position:relative;}
-#reference-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.25;pointer-events:none;transition:opacity 0.3s;}
-#puzzle-grid{width:100%;height:100%;}
-#slot-area{display:flex;flex-direction:column;align-items:center;gap:10px;}
-.slot-label{font-size:0.75em;color:#999;text-align:center;}
-#selected-slot{width:min(16vh,16vw);min-width:80px;height:min(16vh,16vw);min-height:80px;border:3px dashed #ccc;border-radius:8px;overflow:hidden;background-repeat:no-repeat;}
-#tray-bar{flex-shrink:0;display:flex;gap:8px;padding:10px;background:#f5f5f5;border-top:2px solid #ddd;align-items:center;justify-content:center;flex-wrap:wrap;}
-#ref-toggle{font-size:0.75em;padding:4px 10px;border:1px solid #ccc;border-radius:12px;background:#fff;cursor:pointer;color:#555;}
-#error-msg{display:none;padding:20px;color:#E74C3C;text-align:center;font-size:1em;}
-#puzzle-grid .feedback-correct,#puzzle-grid .feedback-wrong{outline:none;}
-#puzzle-grid .feedback-correct::after,#puzzle-grid .feedback-wrong::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;}
-#puzzle-grid .feedback-correct::after{box-shadow:inset 0 0 0 4px #2ECC71;}
-#puzzle-grid .feedback-wrong::after{box-shadow:inset 0 0 0 4px #E74C3C;}
+.chooser-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:28px;padding:20px;overflow:auto;}
+.puzzle-cards{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;}
+.puzzle-card{cursor:pointer;border:4px solid transparent;border-radius:14px;overflow:hidden;background:#f5f5f5;transition:border-color 0.15s;display:flex;flex-direction:column;align-items:center;}
+.puzzle-card.selected{border-color:#F5A623;}
+.puzzle-card img{width:200px;height:150px;object-fit:cover;display:block;}
+.puzzle-card-name{padding:8px 14px;font-size:0.95em;font-weight:bold;color:#444;text-align:center;}
+#grid-picker{display:none;flex-direction:column;align-items:center;gap:14px;}
+#grid-picker.visible{display:flex;}
+.grid-picker-prompt{font-size:0.85em;color:#888;}
+.grid-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.grid-btn{cursor:pointer;padding:14px 28px;border:3px solid #ddd;border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:100px;transition:border-color 0.15s;}
+.grid-btn:hover,.grid-btn:focus{border-color:#F5A623;outline:none;}
+.grid-btn-label{font-size:1.05em;font-weight:bold;color:#444;}
+.grid-btn-size{font-size:0.75em;color:#aaa;}
 </style>
 </head>
 <body>
 <div class="nav-bar" data-home="../../games/"></div>
-
 <div class="game-area">
   <div class="game-title">Image Puzzle</div>
-  <div class="puzzle-wrapper">
-    <div class="puzzle-row">
-      <div id="grid-area">
-        <img id="reference-img" src="" alt="">
-        <div id="puzzle-grid"></div>
-      </div>
-      <div id="slot-area">
-        <div class="slot-label">Holding</div>
-        <div id="selected-slot"></div>
-        <button id="ref-toggle">Hide guide</button>
-      </div>
+  <div class="chooser-wrap">
+    <div class="puzzle-cards" id="puzzle-cards"></div>
+    <div id="grid-picker">
+      <div class="grid-picker-prompt">Choose difficulty</div>
+      <div class="grid-btns" id="grid-btns"></div>
     </div>
   </div>
-  <div id="error-msg"></div>
-  <div id="tray-bar"></div>
 </div>
-
 <script src="../../shared/menu.js" defer></script>
-<script src="../../../ui/colouring/colouring-common.js"></script>
-<script type="module">
-  import { derivePieces, shufflePieces, checkPlacement, isComplete } from '../../../core/puzzle/puzzle-core.js';
-  import { buildGrid, updateSelectedSlot, placeInCell, clearCell, markCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
-  import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
+<script>
+const LABELS = {
+  1: ['Play'],
+  2: ['Easy', 'Hard'],
+  3: ['Easy', 'Medium', 'Hard'],
+  4: ['Easy', 'Medium', 'Hard', 'Expert'],
+  5: ['Easy', 'Medium', 'Hard', 'Expert', 'Master'],
+};
 
-  // --- Puzzle config: update src and grid size ---
-  const PUZZLE = { src: 'files/full.jpg', grid: { rows: 4, cols: 4 } };
-  // ------------------------------------------------
+fetch('manifest.json')
+  .then(r => r.json())
+  .then(puzzles => {
+    const cardsEl = document.getElementById('puzzle-cards');
+    const picker = document.getElementById('grid-picker');
+    const btnsEl = document.getElementById('grid-btns');
 
-  const MAX_PIXELS = 4_000_000;
+    function selectPuzzle(p, card) {
+      document.querySelectorAll('.puzzle-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      btnsEl.innerHTML = '';
+      const labels = LABELS[p.grids.length] || p.grids;
+      p.grids.forEach((g, i) => {
+        const [cols, rows] = g.split('x');
+        const btn = document.createElement('button');
+        btn.className = 'grid-btn';
+        btn.innerHTML = `<span class="grid-btn-label">${labels[i]}</span><span class="grid-btn-size">${cols}\u00d7${rows}</span>`;
+        btn.addEventListener('click', () => { location.href = `play?puzzle=${p.id}&grid=${g}`; });
+        btnsEl.appendChild(btn);
+      });
+      picker.classList.add('visible');
+    }
 
-  const slot = document.getElementById('selected-slot');
-  const gridContainer = document.getElementById('puzzle-grid');
-  const trayContainer = document.getElementById('tray-bar');
-  const refImg = document.getElementById('reference-img');
-  const refToggle = document.getElementById('ref-toggle');
-  const errorMsg = document.getElementById('error-msg');
+    puzzles.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'puzzle-card';
+      card.innerHTML = `<img src="files/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
+      card.addEventListener('click', () => selectPuzzle(p, card));
+      cardsEl.appendChild(card);
+    });
 
-  let imgRatio = 1;
-  let cellW = 64, cellH = 64;
-  let tileW = 32, tileH = 32;
-
-  function sizeGrid() {
-    const availW = window.innerWidth * 0.60;
-    const availH = window.innerHeight * 0.65;
-    const gridH = Math.floor(Math.min(availH, availW / imgRatio));
-    const gridW = Math.floor(gridH * imgRatio);
-    cellH = Math.floor(gridH / PUZZLE.grid.rows);
-    cellW = Math.floor(gridW / PUZZLE.grid.cols);
-    const gridArea = document.getElementById('grid-area');
-    gridArea.style.width = `${gridW}px`;
-    gridArea.style.height = `${gridH}px`;
-  }
-  window.addEventListener('resize', sizeGrid);
-
-  const allPieces = derivePieces(PUZZLE.grid);
-  let placements = {};
-  let selectedPiece = null;
-  let gridEl, trayEl;
-  let refVisible = true;
-  let locked = false;
-
-  refToggle.addEventListener('click', () => {
-    refVisible = !refVisible;
-    refImg.style.opacity = refVisible ? '0.25' : '0';
-    refToggle.textContent = refVisible ? 'Hide guide' : 'Show guide';
+    if (puzzles.length === 1) selectPuzzle(puzzles[0], cardsEl.firstElementChild);
   });
-
-  function revealPicture(onDone) {
-    const from = parseFloat(refImg.style.opacity) || 0;
-    refImg.style.zIndex = '2';
-    let start = null;
-    const dur = 1200;
-    function step(ts) {
-      if (!start) start = ts;
-      const t = Math.min((ts - start) / dur, 1);
-      refImg.style.opacity = String(from + (1 - from) * t);
-      if (t < 1) requestAnimationFrame(step); else onDone();
-    }
-    requestAnimationFrame(step);
-  }
-
-  function start() {
-    locked = false;
-    placements = {};
-    selectedPiece = null;
-    refImg.style.zIndex = '';
-    refImg.style.opacity = refVisible ? '0.25' : '0';
-    refToggle.disabled = false;
-    updateSelectedSlot(slot, null);
-    gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
-    tileH = Math.max(20, Math.floor(cellH / 2));
-    tileW = Math.round(tileH * imgRatio);
-    trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
-      PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
-  }
-
-  function onSelect(pieceId) {
-    selectedPiece = allPieces.find(p => p.id === pieceId);
-    highlightTray(trayEl, pieceId);
-    updateSelectedSlot(slot, selectedPiece, PUZZLE.src,
-      tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
-  }
-
-  function onCellTap(row, col) {
-    if (locked) return;
-    const key = `${row}_${col}`;
-    const existing = placements[key];
-
-    if (existing) {
-      clearCell(gridEl, row, col);
-      delete placements[key];
-      restoreTrayPiece(trayEl, existing.pieceId);
-      selectedPiece = allPieces.find(p => p.id === existing.pieceId);
-      highlightTray(trayEl, selectedPiece.id);
-      updateSelectedSlot(slot, selectedPiece, PUZZLE.src,
-        tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
-      return;
-    }
-
-    if (!selectedPiece) return;
-
-    const correct = checkPlacement(selectedPiece, { row, col });
-    placements[key] = { pieceId: selectedPiece.id, correct };
-    placeInCell(gridEl, row, col, PUZZLE.src,
-      cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH);
-    markCell(gridEl, row, col, correct);
-    removeTrayPiece(trayEl, selectedPiece.id);
-    selectedPiece = null;
-    updateSelectedSlot(slot, null);
-    highlightTray(trayEl, null);
-
-    if (isComplete(placements, allPieces.length)) {
-      locked = true;
-      refToggle.disabled = true;
-      revealPicture(() => showBanner(start));
-    }
-  }
-
-  window.__puzzleState = { getPieces: () => allPieces, getPlacements: () => placements };
-
-  const fullImage = new Image();
-  fullImage.onload = () => {
-    const pixels = fullImage.naturalWidth * fullImage.naturalHeight;
-    if (pixels > MAX_PIXELS) {
-      errorMsg.style.display = 'block';
-      errorMsg.textContent = `Image too large (${fullImage.naturalWidth}×${fullImage.naturalHeight} = ${(pixels / 1_000_000).toFixed(1)}MP). Keep images under 4MP.`;
-      return;
-    }
-    imgRatio = fullImage.naturalWidth / fullImage.naturalHeight;
-    sizeGrid();
-    start();
-  };
-  fullImage.onerror = () => { sizeGrid(); start(); };
-  fullImage.src = PUZZLE.src;
-  refImg.src = PUZZLE.src;
 </script>
 </body>
 </html>
