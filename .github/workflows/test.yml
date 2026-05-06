@@ -176,6 +176,18 @@ jobs:
           name: report-no-app-exports
           path: reports/no-app-exports.txt
 
+  no-guard-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-guard-chain reports/no-guard-chain.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-guard-chain
+          path: reports/no-guard-chain.txt
+
   pr-report:
     runs-on: ubuntu-latest
     permissions:
@@ -188,6 +200,7 @@ jobs:
       - ui-cyclomatic
       - no-stray-files
       - no-app-exports
+      - no-guard-chain
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -215,6 +228,8 @@ jobs:
             cat reports/no-stray-files.txt 2>/dev/null || echo "⚠️ no-stray-files report missing"
             echo ""
             cat reports/no-app-exports.txt 2>/dev/null || echo "⚠️ no-app-exports report missing"
+            echo ""
+            cat reports/no-guard-chain.txt 2>/dev/null || echo "⚠️ no-guard-chain report missing"
             echo ""
             cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
           } > combined.md
