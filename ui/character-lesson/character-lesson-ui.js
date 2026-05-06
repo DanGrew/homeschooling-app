@@ -91,11 +91,12 @@ function dotTappedAction() {
   showBanner();
 }
 
-var DOT_GUARD3 = { 'true': dotTappedAction, 'false': () => {} };
-var DOT_GUARD2 = { 'true': () => DOT_GUARD3[String(!!engine && engine.done)](), 'false': () => {} };
-var DOT_GUARD1 = { 'true': () => DOT_GUARD2[String(!!engine)](), 'false': () => {} };
+var DOT_GUARD4 = { 'true': dotTappedAction, 'false': () => {} };
+var DOT_GUARD3 = { 'true': () => DOT_GUARD4[String(engine.done)](), 'false': () => {} };
+var DOT_GUARD2 = { 'true': () => DOT_GUARD3[String(!!engine)](), 'false': () => {} };
+var DOT_GUARD1 = { 'true': () => DOT_GUARD2[String(!!dotEl)](), 'false': () => {} };
 
-function onDotTapped() { DOT_GUARD1[String(!!dotEl)](); }
+function onDotTapped() { DOT_GUARD1['true'](); }
 
 var ON_COMPLETE = { 'trace': onTraceComplete, 'lesson': onLessonComplete };
 
