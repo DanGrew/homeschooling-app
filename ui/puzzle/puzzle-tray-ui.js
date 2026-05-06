@@ -12,19 +12,18 @@ export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, t
   return container;
 }
 
+var TRAY_BORDER = { 'true': '#F5A623', 'false': 'transparent' };
+
 export function highlightTray(tray, id) {
-  const COLORS = { selected: '#F5A623', none: 'transparent' };
   tray.querySelectorAll('[data-piece-id]').forEach(el => {
-    el.style.borderColor = COLORS[el.dataset.pieceId === id ? 'selected' : 'none'];
+    el.style.borderColor = TRAY_BORDER[String(el.dataset.pieceId === id)];
   });
 }
 
 export function removeTrayPiece(tray, id) {
-  const el = tray.querySelector(`#tray-${id}`);
-  el && (el.style.visibility = 'hidden');
+  [tray.querySelector(`#tray-${id}`)].filter(Boolean).forEach(el => { el.style.visibility = 'hidden'; });
 }
 
 export function restoreTrayPiece(tray, id) {
-  const el = tray.querySelector(`#tray-${id}`);
-  el && (el.style.visibility = 'visible');
+  [tray.querySelector(`#tray-${id}`)].filter(Boolean).forEach(el => { el.style.visibility = 'visible'; });
 }
