@@ -33,6 +33,20 @@
   #player-area{padding:20vh 16px;}
   #words{font-size:min(1.6em,5vw);}
 }
+.dict-word{background:#f0e6fa;color:#6c2fa0;cursor:pointer;}
+.dict-word:hover{background:#e0ccf5;}
+#dict-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;}
+#dict-overlay.open{display:flex;}
+#dict-sheet{background:#fff;border-radius:20px;padding:28px 24px;width:min(340px,90vw);text-align:center;position:relative;}
+#dict-close{position:absolute;top:10px;right:14px;font-size:1.5em;background:none;border:none;cursor:pointer;color:#aaa;line-height:1;}
+#dict-img{width:140px;height:140px;object-fit:contain;margin-bottom:12px;}
+#dict-word-text{font-size:2em;font-weight:700;color:#333;margin-bottom:4px;}
+#dict-phonics{font-size:1em;color:#888;font-style:italic;margin-bottom:16px;}
+#dict-speak{font-size:1.2em;background:#9B59B6;color:#fff;border:none;border-radius:50%;width:48px;height:48px;cursor:pointer;touch-action:manipulation;}
+@media (orientation:portrait){
+  #dict-overlay{align-items:flex-end;}
+  #dict-sheet{border-radius:20px 20px 0 0;width:100%;padding:28px 24px 40px;}
+}
 </style>
 </head>
 <body>
@@ -59,6 +73,15 @@
   </div>
 </div>
 <audio id="aud" preload="auto"></audio>
+<div id="dict-overlay">
+  <div id="dict-sheet">
+    <button id="dict-close">&#215;</button>
+    <img id="dict-img" src="" alt="" style="display:none;">
+    <div id="dict-word-text"></div>
+    <div id="dict-phonics"></div>
+    <button id="dict-speak">&#128266;</button>
+  </div>
+</div>
 <script src="../../../core/story-time/story-time-data.js"></script>
 <script type="module" src="player.js"></script>
 </body>
