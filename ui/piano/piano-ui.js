@@ -1,26 +1,15 @@
 var _audioCtx = null;
 var _audioBuffers = {};
-var _rawBuffers = PIANO_CONFIG.NOTES.reduce(function(acc, note) {
-  acc[note] = new ArrayBuffer(0); return acc;
-}, {});
-
-Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-  return fetch('../../assets/audio/piano/' + note + '.wav')
-    .then(function(r) { return r.arrayBuffer(); })
-    .then(function(buf) { _rawBuffers[note] = buf; })
-    .catch(function() {});
-}));
 
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
 var initAudio = once(function() {
   _audioCtx = new AudioContext();
-  PIANO_CONFIG.NOTES.forEach(function(note) {
-    _audioBuffers[note] = _audioCtx.createBuffer(1, 1, 22050);
-  });
   return _audioCtx.resume().then(function() {
     return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-      return _audioCtx.decodeAudioData(_rawBuffers[note])
+      return fetch('../../assets/audio/piano/' + note + '.wav')
+        .then(function(r) { return r.arrayBuffer(); })
+        .then(function(buf) { return _audioCtx.decodeAudioData(buf); })
         .then(function(decoded) { _audioBuffers[note] = decoded; })
         .catch(function() {});
     }));
