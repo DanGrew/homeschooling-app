@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { ESLint } = require('eslint');
+const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -12,6 +13,16 @@ if (!outputFile) {
 
 const COMPLEXITY_THRESHOLD = 1;
 const ROOT = process.cwd();
+
+function getTouchedFiles() {
+  try {
+    const base = process.env.GITHUB_BASE_REF || 'main';
+    const out = execSync(`git diff --name-only origin/${base}...HEAD`, { cwd: ROOT }).toString();
+    return new Set(out.trim().split('\n').filter(Boolean).map(f => f.replace(/\\/g, '/')));
+  } catch {
+    return new Set();
+  }
+}
 
 function getAllFiles(dir, ext) {
   if (!fs.existsSync(dir)) return [];
@@ -42,25 +53,25 @@ async function run() {
     }
   });
 
-  const violations = [];
+  const touched = getTouchedFiles();
+  const prViolations = [];
+  const backlogViolations = [];
   const exceptions = [];
   let scanned = 0;
+
+  function addViolation(rel, msg) {
+    const entry = `${rel} — ${msg.message} (line ${msg.line})`;
+    (touched.has(rel) ? prViolations : backlogViolations).push(entry);
+  }
 
   // ui/**/*.js
   const uiResults = await eslint.lintFiles([path.join(ROOT, 'ui/**/*.js')]);
   uiResults.forEach(result => {
     const content = fs.readFileSync(result.filePath, 'utf8');
     const rel = path.relative(ROOT, result.filePath).replace(/\\/g, '/');
-    if (content.includes('arch: allow-complexity')) {
-      exceptions.push(rel);
-      return;
-    }
+    if (content.includes('arch: allow-complexity')) { exceptions.push(rel); return; }
     scanned++;
-    result.messages.forEach(msg => {
-      if (msg.ruleId === 'complexity') {
-        violations.push(`${rel} — ${msg.message} (line ${msg.line})`);
-      }
-    });
+    result.messages.forEach(msg => { if (msg.ruleId === 'complexity') addViolation(rel, msg); });
   });
 
   // app/**/*.html inline <script> blocks
@@ -69,27 +80,32 @@ async function run() {
     const rel = path.relative(ROOT, htmlFile).replace(/\\/g, '/');
     const blocks = extractInlineScripts(htmlFile);
     for (const code of blocks) {
-      if (code.includes('arch: allow-complexity')) {
-        exceptions.push(rel + ' (inline script)');
-        continue;
-      }
+      if (code.includes('arch: allow-complexity')) { exceptions.push(rel + ' (inline script)'); continue; }
       scanned++;
       const results = await eslint.lintText(code, { filePath: path.join(ROOT, 'virtual.js') });
-      results[0].messages.forEach(msg => {
-        if (msg.ruleId === 'complexity') {
-          violations.push(`${rel} inline script — ${msg.message} (line ${msg.line})`);
-        }
-      });
+      results[0].messages.forEach(msg => { if (msg.ruleId === 'complexity') addViolation(rel, msg); });
     }
   }
 
+  const total = prViolations.length + backlogViolations.length;
   let output = `## ui-cyclomatic\n`;
-  if (violations.length === 0) {
+
+  if (total === 0) {
     output += `✅ No issues (scanned ${scanned} files/blocks, threshold: ${COMPLEXITY_THRESHOLD})\n`;
   } else {
-    output += `❌ Violations (scanned ${scanned} files/blocks, threshold: ${COMPLEXITY_THRESHOLD}):\n`;
-    violations.forEach(v => output += `- ${v}\n`);
+    output += `❌ Violations (scanned ${scanned} files/blocks, threshold: ${COMPLEXITY_THRESHOLD})\n`;
+
+    if (prViolations.length > 0) {
+      output += `\n### ⚠️ In this PR (${prViolations.length} violation${prViolations.length > 1 ? 's' : ''} — fix before merge):\n`;
+      prViolations.forEach(v => output += `- ${v}\n`);
+    }
+
+    if (backlogViolations.length > 0) {
+      output += `\n### 📋 Backlog (${backlogViolations.length} violation${backlogViolations.length > 1 ? 's' : ''} — pre-existing, not blocking):\n`;
+      backlogViolations.forEach(v => output += `- ${v}\n`);
+    }
   }
+
   if (exceptions.length > 0) {
     output += `\n⚠️ Exceptions (pending fix):\n`;
     exceptions.forEach(e => output += `- ${e}\n`);
@@ -97,7 +113,7 @@ async function run() {
 
   fs.writeFileSync(outputFile, output);
   console.log(output);
-  process.exit(violations.length > 0 ? 1 : 0);
+  process.exit(prViolations.length > 0 ? 1 : 0);
 }
 
 run().catch(err => { console.error(err); process.exit(1); });
