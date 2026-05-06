@@ -23,3 +23,13 @@ test('pause and stop buttons hidden before play', async ({ page }) => {
   await expect(page.locator('#btn-pause')).toBeHidden()
   await expect(page.locator('#btn-stop')).toBeHidden()
 })
+
+test('score overlay hidden on load', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/piano/game.html')
+  await expect(page.locator('#score-overlay')).toBeHidden()
+})
+
+test('play again button exists', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/piano/game.html')
+  await expect(page.locator('#btn-play-again')).toBeAttached()
+})
