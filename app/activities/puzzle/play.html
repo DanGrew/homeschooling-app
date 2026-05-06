@@ -55,8 +55,8 @@
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
 
   const params = new URLSearchParams(location.search);
-  const puzzleId = params.get('puzzle') || 'paw-patrol';
-  const gridParam = params.get('grid') || '4x3';
+  const puzzleId = sessionStorage.getItem('puzzle-id') || params.get('puzzle') || 'paw-patrol';
+  const gridParam = sessionStorage.getItem('puzzle-grid') || params.get('grid') || '4x3';
   const [colsStr, rowsStr] = gridParam.split('x');
   const PUZZLE = {
     src: `files/${puzzleId}/full.jpg`,

@@ -46,16 +46,17 @@ test('grid buttons show correct grid dimensions', async ({ page }) => {
   expect(sizes).toEqual(['4\u00d73', '5\u00d73', '8\u00d75'])
 })
 
-test('clicking grid button navigates to play page with correct params', async ({ page }) => {
+test('clicking grid button passes correct params to play page', async ({ page }) => {
   await page.goto(CHOOSER_URL)
   await page.waitForSelector('.puzzle-card')
   await page.locator('.puzzle-card').first().click()
   await page.waitForSelector('.grid-btn')
   await page.locator('.grid-btn').first().click()
   await page.waitForSelector('#tray-bar [data-piece-id]')
-  const url = page.url()
-  expect(url).toContain('puzzle=paw-patrol')
-  expect(url).toContain('grid=4x3')
+  const puzzleId = await page.evaluate(() => sessionStorage.getItem('puzzle-id'))
+  const grid = await page.evaluate(() => sessionStorage.getItem('puzzle-grid'))
+  expect(puzzleId).toBe('paw-patrol')
+  expect(grid).toBe('4x3')
 })
 
 test('game loads correctly after navigating from chooser', async ({ page }) => {
