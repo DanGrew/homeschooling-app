@@ -117,7 +117,7 @@ function initEngine() {
 }
 
 var SETUP_DOT_TRACE = {
-  'true':  c => { c.style.cursor = 'pointer'; c.addEventListener('pointerdown', onDotTapped); dotEl = c; },
+  'true':  c => { c.style.cursor = 'pointer'; c.addEventListener('pointerdown', onDotTapped); window.dotEl = dotEl = c; },
   'false': () => {}
 };
 
@@ -133,7 +133,7 @@ function loadChar(entry) {
       const svg = document.getElementById('svg');
       svg.querySelectorAll('.char-decoration').forEach(el => el.remove());
 
-      dotEl = null;
+      window.dotEl = dotEl = null;
       [doc.querySelector('circle')].filter(Boolean).forEach(circle => {
         const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         ['cx','cy','r','fill'].forEach(a => c.setAttribute(a, circle.getAttribute(a)));
