@@ -142,30 +142,16 @@ test('reference image reaches full opacity after reveal', async ({ page }) => {
   await expect(page.locator('#reference-img')).toHaveCSS('opacity', '1')
 })
 
-test('reset after completion clears grid and restores tray', async ({ page }) => {
+test('completion banner shows choose another button', async ({ page }) => {
   await completePuzzle(page)
   await bannerShown(page)
-  await page.locator('#success-banner button').click()
-  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
-  await expect(page.locator('#tray-bar [data-piece-id]')).toHaveCount(pieces.length)
-  await expect(page.locator('.feedback-correct')).toHaveCount(0)
+  await expect(page.locator('#success-banner button')).toContainText('Choose another')
 })
 
-test('guide toggle re-enabled after reset', async ({ page }) => {
+test('clicking choose another navigates to chooser', async ({ page }) => {
   await completePuzzle(page)
   await bannerShown(page)
   await page.locator('#success-banner button').click()
-  await expect(page.locator('#ref-toggle')).not.toBeDisabled()
-})
-
-test('puzzle unlocks after reset — piece can be lifted', async ({ page }) => {
-  await completePuzzle(page)
-  await bannerShown(page)
-  await page.locator('#success-banner button').click()
-  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
-  const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
-  await page.locator(`#tray-${p.id}`).click()
-  await page.locator('[data-row="0"][data-col="0"]').click()
-  await page.locator('[data-row="0"][data-col="0"]').click()
-  await slotHasPiece(page)
+  await page.waitForSelector('.puzzle-card')
+  await expect(page.locator('.puzzle-card').first()).toBeVisible()
 })

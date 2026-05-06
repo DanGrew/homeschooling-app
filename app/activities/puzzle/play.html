@@ -188,7 +188,10 @@
     if (isComplete(placements, allPieces.length)) {
       locked = true;
       refToggle.disabled = true;
-      revealPicture(() => showBanner(start));
+      revealPicture(() => {
+        showBanner(() => { location.href = './'; });
+        document.getElementById('success-next').innerHTML = 'Choose another \u2192';
+      });
     }
   }
 
