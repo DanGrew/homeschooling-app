@@ -40,3 +40,28 @@ test('home nav button points to games index', async ({ page }) => {
   const href = await page.locator('.nav-btn').first().evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/games/')
 })
+
+test('not here button crosses an item', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
+  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#btn-scan-it').click()
+  await page.locator('.btn-not-here').first().click()
+  await expect(page.locator('.sc-row.crossed')).toBeVisible()
+})
+
+test('crossing all items shows success banner', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
+  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#btn-scan-it').click()
+  await page.locator('.btn-not-here').first().click()
+  await expect(page.locator('#success-banner')).toBeVisible()
+})
+
+test('enter key in stub input submits barcode', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
+  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#btn-scan-it').click()
+  await page.locator('#stub-input').fill('00348188')
+  await page.locator('#stub-input').press('Enter')
+  await expect(page.locator('.sc-row.found')).toBeVisible()
+})
