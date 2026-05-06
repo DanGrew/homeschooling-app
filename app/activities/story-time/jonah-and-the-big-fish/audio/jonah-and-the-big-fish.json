@@ -482,7 +482,8 @@
         {
           "w": "fish.",
           "normal": "fish",
-          "t": 30.468
+          "t": 30.468,
+          "dict": "fish"
         }
       ]
     },
@@ -497,7 +498,8 @@
         {
           "w": "fish",
           "normal": "fish",
-          "t": 31.468
+          "t": 31.468,
+          "dict": "fish"
         },
         {
           "w": "swallowed",
@@ -537,7 +539,8 @@
         {
           "w": "fish,",
           "normal": "fish",
-          "t": 36.509
+          "t": 36.509,
+          "dict": "fish"
         },
         {
           "w": "Jonah",
@@ -647,7 +650,8 @@
         {
           "w": "fish",
           "normal": "fish",
-          "t": 44.651
+          "t": 44.651,
+          "dict": "fish"
         },
         {
           "w": "went",

@@ -1,4 +1,5 @@
 import { activeIndex } from '../../../core/story-time/story-time-core.js';
+import { speak } from '../../../ui/speech/speech-ui.js';
 
 (function () {
   var storyId = new URLSearchParams(window.location.search).get('story') || 'david-and-goliath';
@@ -31,7 +32,8 @@ import { activeIndex } from '../../../core/story-time/story-time-core.js';
       c.ann.segments.forEach(function (seg, si) {
         if (si > 0) html += '<br>';
         seg.words.forEach(function (w) {
-          html += '<span id="w' + ci + '_' + wi + '" style="display:inline-block;padding:4px 8px;border-radius:10px;transition:background 0.08s,color 0.08s;">' + w.w + '\u00a0</span>';
+          var dictAttrs = w.dict ? ' class="dict-word" data-dict="' + w.dict + '"' : '';
+          html += '<span id="w' + ci + '_' + wi + '"' + dictAttrs + ' style="display:inline-block;padding:4px 8px;border-radius:10px;transition:background 0.08s,color 0.08s;">' + w.w + '\u00a0</span>';
           wi++;
         });
       });
@@ -44,6 +46,9 @@ import { activeIndex } from '../../../core/story-time/story-time-core.js';
     var playing = false;
     var rafId = null;
     var currentSpeed = 1;
+    var pausedForDict = false;
+    var dictSavedTime = 0;
+    var DICT_BASE = '../../dictionary/entries/';
 
     document.querySelectorAll('.speed-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -115,6 +120,63 @@ import { activeIndex } from '../../../core/story-time/story-time-core.js';
 
     function activeIdx(t) {
       return activeIndex(t, clips[currentClip].words);
+    }
+
+    wordsEl.addEventListener('click', function (e) {
+      var span = e.target.closest('.dict-word');
+      if (span) openDict(span.dataset.dict);
+    });
+
+    document.getElementById('dict-close').addEventListener('click', closeDict);
+    document.getElementById('dict-overlay').addEventListener('click', function (e) {
+      if (e.target === this) closeDict();
+    });
+    document.getElementById('dict-speak').addEventListener('click', function () {
+      speak(document.getElementById('dict-word-text').textContent);
+    });
+
+    function openDict(conceptId) {
+      if (playing) {
+        dictSavedTime = audio.currentTime;
+        audio.pause();
+        cancelAnimationFrame(rafId);
+        rafId = null;
+        playing = false;
+        pausedForDict = true;
+        document.getElementById('playbtn').textContent = '\u25b6 Play';
+      }
+      var imgEl = document.getElementById('dict-img');
+      imgEl.style.display = 'none';
+      imgEl.src = '';
+      document.getElementById('dict-word-text').textContent = '';
+      document.getElementById('dict-phonics').textContent = '';
+      document.getElementById('dict-overlay').classList.add('open');
+      fetch(DICT_BASE + conceptId + '/concept.json')
+        .then(function (r) { return r.json(); })
+        .then(function (c) {
+          document.getElementById('dict-word-text').textContent = c.name;
+          document.getElementById('dict-phonics').textContent = c.phonetic;
+        });
+      fetch(DICT_BASE + conceptId + '/image.json')
+        .then(function (r) { return r.json(); })
+        .then(function (img) {
+          imgEl.src = '../../dictionary/' + img.src;
+          imgEl.style.display = '';
+        })
+        .catch(function () {});
+    }
+
+    function closeDict() {
+      document.getElementById('dict-overlay').classList.remove('open');
+      if (pausedForDict) {
+        pausedForDict = false;
+        audio.currentTime = dictSavedTime;
+        audio.playbackRate = currentSpeed;
+        audio.play();
+        playing = true;
+        document.getElementById('playbtn').textContent = '\u23f8 Pause';
+        tick();
+      }
     }
 
     function tick() {
