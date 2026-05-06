@@ -22,13 +22,14 @@ export function renderTiles(items=allItems){
   });
 }
 
+var EMPTY_HTML = { 'true': () => '<div id="empty-list">Tap items to add them</div>', 'false': () => '' };
+
 export function renderList(){
   var wrap=document.getElementById('list-items');
   var empty=listItems.length===0;
-  wrap.innerHTML=empty?'<div id="empty-list">Tap items to add them</div>':'';
+  wrap.innerHTML=EMPTY_HTML[String(empty)]();
   document.getElementById('btn-find').disabled=empty;
-  var scanBtn=document.getElementById('btn-scan-it');
-  scanBtn&&(scanBtn.disabled=empty);
+  [document.getElementById('btn-scan-it')].filter(Boolean).forEach(btn => { btn.disabled=empty; });
   listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='list-row';
@@ -43,8 +44,7 @@ function removeFromList(it){listItems.splice(listItems.indexOf(it),1);renderList
 
 function _setPhase1(v){
   document.getElementById('phase1').style.display=v;
-  var fb=document.getElementById('filter-bar');
-  fb&&(fb.style.display=v);
+  [document.getElementById('filter-bar')].filter(Boolean).forEach(fb => { fb.style.display=v; });
 }
 export function hidePhase1(){_setPhase1('none');}
 export function showPhase1(){_setPhase1('flex');}
@@ -57,7 +57,9 @@ export function startFindPhase(){
   var fl=document.getElementById('find-list');
   fl.innerHTML='';
   var found=0,crossed=0;
-  function checkDone(){found+crossed===listItems.length&&setTimeout(showSuccess,400);}
+  var CHECK_DONE = { 'true': () => setTimeout(showSuccess, 400), 'false': () => {} };
+  function checkDone(){ CHECK_DONE[String(found+crossed===listItems.length)](); }
+  var DEC = { found: () => found--, crossed: () => crossed-- };
   listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='find-row';
@@ -65,8 +67,9 @@ export function startFindPhase(){
     row.querySelector('.btn-got').onclick=function(){row.classList.add('found');row.querySelector('.find-tick').textContent='✅';found++;checkDone();};
     row.querySelector('.btn-cross').onclick=function(){row.classList.add('crossed');row.querySelector('.find-tick').textContent='✕';crossed++;checkDone();};
     row.querySelector('.btn-undo').onclick=function(){
-      row.classList.contains('found')&&(row.classList.remove('found'),found--);
-      row.classList.contains('crossed')&&(row.classList.remove('crossed'),crossed--);
+      ['found','crossed'].forEach(cls => {
+        [cls].filter(c => row.classList.contains(c)).forEach(() => { row.classList.remove(cls); DEC[cls](); });
+      });
       row.querySelector('.find-tick').textContent='';
     };
     fl.appendChild(row);

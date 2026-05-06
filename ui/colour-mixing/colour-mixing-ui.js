@@ -5,41 +5,58 @@ const cfg=window.CM_CONFIG;
 let slotA=null,slotB=null,sel=null,target=null;
 
 function el(id){return document.getElementById(id);}
-function pickTarget(){var pool=cfg.targets.filter(t=>t!==target);return(pool.length?pool:cfg.targets)[Math.floor(Math.random()*(pool.length||cfg.targets.length))];}
+
+var PICK_POOL = { 'true': pool => pool, 'false': () => cfg.targets };
+function pickTarget(){
+  var pool=cfg.targets.filter(t=>t!==target);
+  var src=PICK_POOL[String(pool.length>0)](pool);
+  return src[Math.floor(Math.random()*src.length)];
+}
+
 function slotHtml(id,lbl){return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div id="'+id+'" style="width:76px;height:76px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div><div style="font-size:0.85em;color:#bbb;font-weight:bold;">'+lbl+'</div></div>';}
+
+var SW_OUTLINE = { 'true': () => '4px solid #333', 'false': () => 'none' };
+var SW_TRANSFORM = { 'true': () => 'scale(1.12)', 'false': () => 'scale(1)' };
+function applySwatchStyle(sw,c){ sw.style.outline=SW_OUTLINE[String(sel===c)](); sw.style.transform=SW_TRANSFORM[String(sel===c)](); }
 
 function renderPalette(){
   cfg.palette.forEach(function(c){
-    var sw=el('cm-sw-'+c);
-    sw&&(sw.style.outline=sel===c?'4px solid #333':'none',sw.style.transform=sel===c?'scale(1.12)':'scale(1)');
+    [el('cm-sw-'+c)].filter(Boolean).forEach(sw => applySwatchStyle(sw,c));
   });
 }
 
 function clearFeedback(){
-  ['cm-slot-a','cm-slot-b'].forEach(function(id){var s=el(id);s&&s.classList.remove('feedback-correct','feedback-wrong');});
-  var r=el('cm-result');r&&(r.style.background='#f0f0f0',r.classList.remove('feedback-correct'));
+  ['cm-slot-a','cm-slot-b'].forEach(function(id){[el(id)].filter(Boolean).forEach(s=>s.classList.remove('feedback-correct','feedback-wrong'));});
+  [el('cm-result')].filter(Boolean).forEach(r=>{r.style.background='#f0f0f0';r.classList.remove('feedback-correct');});
 }
 
-function setSlotBg(id,cid){var s=el(id);s&&(s.style.background=cid?hex(cid):'#f0f0f0');}
+var SLOT_BG = { 'true': cid => hex(cid), 'false': () => '#f0f0f0' };
+function setSlotBg(id,cid){[el(id)].filter(Boolean).forEach(s=>{s.style.background=SLOT_BG[String(!!cid)](cid);});}
 
+var EVAL_CLASS = { 'true': 'feedback-correct', 'false': 'feedback-wrong' };
+var EVAL_CORRECT = { 'true': r=>{r.classList.add('feedback-correct');showBanner(function(){slotA=slotB=sel=null;target=pickTarget();buildUI();});}, 'false': ()=>{} };
 function evaluate(){
   var result=mix(slotA,slotB);var r=el('cm-result');
   r.style.background=hex(result);
   var correct=result===target;
-  el('cm-slot-a').classList.add(correct?'feedback-correct':'feedback-wrong');
-  el('cm-slot-b').classList.add(correct?'feedback-correct':'feedback-wrong');
-  correct&&(r.classList.add('feedback-correct'),showBanner(function(){slotA=slotB=sel=null;target=pickTarget();buildUI();}));
+  el('cm-slot-a').classList.add(EVAL_CLASS[String(correct)]);
+  el('cm-slot-b').classList.add(EVAL_CLASS[String(correct)]);
+  EVAL_CORRECT[String(correct)](r);
 }
 
 function handleSwatch(c){sel=c;renderPalette();}
 
-function handleSlot(slot){
-  if(!sel) return;
+var SLOT_ASSIGN = { 'a': ()=>{slotA=sel;}, 'b': ()=>{slotB=sel;} };
+var BOTH_FILLED = { 'true': evaluate, 'false': ()=>{} };
+var SEL_GUARD = { 'true': ()=>{}, 'false': doHandleSlot };
+function doHandleSlot(slot){
   clearFeedback();
-  slot==='a'?slotA=sel:slotB=sel;
+  SLOT_ASSIGN[slot]();
   sel=null;setSlotBg('cm-slot-a',slotA);setSlotBg('cm-slot-b',slotB);
-  renderPalette();slotA&&slotB&&evaluate();
+  renderPalette();
+  BOTH_FILLED[String([slotA,slotB].every(Boolean))]();
 }
+function handleSlot(slot){ SEL_GUARD[String(!sel)](slot); }
 
 function buildUI(){
   var root=el('cm-root');

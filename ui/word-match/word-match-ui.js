@@ -3,13 +3,18 @@ import {buildRound} from '../../core/word-match/word-match-core.js';
 
 var current,locked;
 
-function ensureBanner(){
-  if(document.getElementById('success-banner'))return;
+function createBanner(){
   var b=document.createElement('div');
   b.id='success-banner';
   b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;';
   b.innerHTML='<span style="font-size:1.6em;">&#11088; Well done!</span><button id="success-next" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Next &#8594;</button>';
   document.body.appendChild(b);
+}
+
+var BANNER_EXISTS = { 'true': () => {}, 'false': createBanner };
+
+function ensureBanner(){
+  BANNER_EXISTS[String(!!document.getElementById('success-banner'))]();
 }
 
 function showSuccess(onNext){
@@ -30,16 +35,14 @@ function makeBtn(item,items){
   return btn;
 }
 
+var PICK_CORRECT = {
+  'true': (btn,items) => { locked=true;btn.classList.add('feedback-correct');showSuccess(function(){btn.classList.remove('feedback-correct');renderRound(items);}); },
+  'false': (btn) => { btn.classList.add('feedback-wrong');setTimeout(function(){btn.classList.remove('feedback-wrong');},500); }
+};
+var PICK_LOCKED = { 'true': () => {}, 'false': (btn,item,items) => PICK_CORRECT[String(item.id===current.target.id)](btn,items) };
+
 function pick(btn,item,items){
-  if(locked)return;
-  if(item.id===current.target.id){
-    locked=true;
-    btn.classList.add('feedback-correct');
-    showSuccess(function(){btn.classList.remove('feedback-correct');renderRound(items);});
-  }else{
-    btn.classList.add('feedback-wrong');
-    setTimeout(function(){btn.classList.remove('feedback-wrong');},500);
-  }
+  PICK_LOCKED[String(locked)](btn,item,items);
 }
 
 export function renderRound(items){
@@ -50,7 +53,7 @@ export function renderRound(items){
   current.choices.forEach(function(item){grid.appendChild(makeBtn(item,items));});
 }
 
-export function getCurrentTarget(){return current&&current.target;}
+export function getCurrentTarget(){return current?.target;}
 
 export function init(items){
   ensureBanner();
