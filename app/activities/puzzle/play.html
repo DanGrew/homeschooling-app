@@ -164,7 +164,8 @@
     const correct = checkPlacement(selectedPiece, { row, col });
     placements[key] = { pieceId: selectedPiece.id, correct };
     placeInCell(gridEl, row, col, PUZZLE.src,
-      cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH);
+      cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH,
+      selectedPiece.correct.row, selectedPiece.correct.col);
     markCell(gridEl, row, col, correct);
     removeTrayPiece(trayEl, selectedPiece.id);
     selectedPiece = null;

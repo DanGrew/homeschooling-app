@@ -21,11 +21,11 @@ export function updateSelectedSlot(slot, piece, imageSrc, bgW, bgH, tileW, tileH
   slot.style.backgroundPosition = piece ? `-${piece.correct.col * tileW}px -${piece.correct.row * tileH}px` : '';
 }
 
-export function placeInCell(gridEl, row, col, imageSrc, fullW, fullH, cellW, cellH) {
+export function placeInCell(gridEl, row, col, imageSrc, fullW, fullH, cellW, cellH, pieceRow, pieceCol) {
   const cell = gridEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
   cell.style.backgroundImage = `url(${imageSrc})`;
   cell.style.backgroundSize = `${fullW}px ${fullH}px`;
-  cell.style.backgroundPosition = `-${col * cellW}px -${row * cellH}px`;
+  cell.style.backgroundPosition = `-${pieceCol * cellW}px -${pieceRow * cellH}px`;
 }
 
 export function clearCell(gridEl, row, col) {
