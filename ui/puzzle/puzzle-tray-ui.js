@@ -1,6 +1,8 @@
-export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, tileW, tileH) {
+export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, tileW, tileH, colCount) {
   container.innerHTML = '';
-  container.style.cssText = 'display:flex;gap:8px;padding:10px;align-items:center;justify-content:center;flex-wrap:wrap;';
+  container.style.cssText = colCount
+    ? `display:grid;grid-template-columns:repeat(${colCount},${tileW}px);gap:6px;padding:10px;justify-content:center;`
+    : 'display:flex;gap:6px;padding:10px;align-items:center;justify-content:center;flex-wrap:wrap;';
   pieces.forEach(p => {
     const div = document.createElement('div');
     div.id = `tray-${p.id}`;

@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
 *{box-sizing:border-box;}
+.puzzle-outer{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+.puzzle-outer.portrait{flex-direction:row;align-items:stretch;}
 .puzzle-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;}
 .puzzle-row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;}
 #grid-area{position:relative;}
@@ -17,6 +19,7 @@
 .slot-label{font-size:0.75em;color:#999;text-align:center;}
 #selected-slot{border:3px dashed #ccc;border-radius:8px;overflow:hidden;background-repeat:no-repeat;}
 #tray-bar{flex-shrink:0;display:flex;gap:8px;padding:10px;background:#f5f5f5;border-top:2px solid #ddd;align-items:center;justify-content:center;flex-wrap:wrap;}
+.puzzle-outer.portrait #tray-bar{border-top:none;border-left:2px solid #ddd;overflow-y:auto;align-items:flex-start;justify-content:flex-start;align-self:stretch;}
 #ref-toggle{font-size:0.75em;padding:4px 10px;border:1px solid #ccc;border-radius:12px;background:#fff;cursor:pointer;color:#555;}
 #error-msg{display:none;padding:20px;color:#E74C3C;text-align:center;font-size:1em;}
 #puzzle-grid .feedback-correct,#puzzle-grid .feedback-wrong{outline:none;}
@@ -30,21 +33,23 @@
 
 <div class="game-area">
   <div class="game-title">Image Puzzle</div>
-  <div class="puzzle-wrapper">
-    <div class="puzzle-row">
-      <div id="grid-area">
-        <img id="reference-img" src="" alt="">
-        <div id="puzzle-grid"></div>
-      </div>
-      <div id="slot-area">
-        <div class="slot-label">Holding</div>
-        <div id="selected-slot"></div>
-        <button id="ref-toggle">Hide guide</button>
+  <div id="error-msg"></div>
+  <div class="puzzle-outer" id="puzzle-outer">
+    <div class="puzzle-wrapper">
+      <div class="puzzle-row">
+        <div id="grid-area">
+          <img id="reference-img" src="" alt="">
+          <div id="puzzle-grid"></div>
+        </div>
+        <div id="slot-area">
+          <div class="slot-label">Holding</div>
+          <div id="selected-slot"></div>
+          <button id="ref-toggle">Hide guide</button>
+        </div>
       </div>
     </div>
+    <div id="tray-bar"></div>
   </div>
-  <div id="error-msg"></div>
-  <div id="tray-bar"></div>
 </div>
 
 <script src="../../shared/menu.js" defer></script>
@@ -71,15 +76,19 @@
   const refImg = document.getElementById('reference-img');
   const refToggle = document.getElementById('ref-toggle');
   const errorMsg = document.getElementById('error-msg');
+  const puzzleOuter = document.getElementById('puzzle-outer');
 
   let imgRatio = 1;
   let cellW = 64, cellH = 64;
   let tileW = 32, tileH = 32;
   let slotW = 80, slotH = 80;
 
+  function isPortrait() { return imgRatio < 1; }
+
   function sizeGrid() {
-    const availW = window.innerWidth * 0.60;
-    const availH = window.innerHeight * 0.65;
+    const portrait = isPortrait();
+    const availW = window.innerWidth * (portrait ? 0.48 : 0.60);
+    const availH = window.innerHeight * (portrait ? 0.80 : 0.65);
     const gridH = Math.floor(Math.min(availH, availW / imgRatio));
     const gridW = Math.floor(gridH * imgRatio);
     cellH = Math.floor(gridH / PUZZLE.grid.rows);
@@ -133,7 +142,8 @@
     slot.style.width = `${slotW}px`;
     slot.style.height = `${slotH}px`;
     trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
-      PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
+      PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
+      PUZZLE.grid.cols);
   }
 
   function onSelect(pieceId) {
@@ -190,6 +200,7 @@
       return;
     }
     imgRatio = fullImage.naturalWidth / fullImage.naturalHeight;
+    puzzleOuter.classList.toggle('portrait', isPortrait());
     sizeGrid();
     start();
   };

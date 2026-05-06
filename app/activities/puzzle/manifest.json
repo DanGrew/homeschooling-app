@@ -1,6 +1,6 @@
 [
   { "id": "paw-patrol",       "name": "Paw Patrol",            "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "spiderman",        "name": "Spider-Man",            "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "spiderman-lizard", "name": "Spider-Man vs Lizard",  "grids": ["3x4", "4x5", "5x8"] },
+  { "id": "spiderman",        "name": "Spiderman",            "grids": ["4x3", "5x3", "8x5"] },
+  { "id": "spiderman-lizard", "name": "Spiderman vs Lizard",  "grids": ["3x4", "4x5", "5x8"] },
   { "id": "jurassic-park",    "name": "Jurassic Park",         "grids": ["3x4", "3x5", "5x8"] }
 ]
