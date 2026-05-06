@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Image Puzzle</title>
+<title>Puzzle</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
@@ -27,7 +27,7 @@
 <body>
 <div class="nav-bar" data-home="../../games/"></div>
 <div class="game-area">
-  <div class="game-title">Image Puzzle</div>
+  <div class="game-title">Puzzle</div>
   <div class="chooser-wrap">
     <div class="puzzle-cards" id="puzzle-cards"></div>
     <div id="grid-picker">
@@ -46,39 +46,46 @@ const LABELS = {
   5: ['Easy', 'Medium', 'Hard', 'Expert', 'Master'],
 };
 
+function makeGridBtn(p, g, label) {
+  const [cols, rows] = g.split('x');
+  const btn = document.createElement('button');
+  btn.className = 'grid-btn';
+  btn.innerHTML = `<span class="grid-btn-label">${label}</span><span class="grid-btn-size">${cols}\u00d7${rows}</span>`;
+  btn.addEventListener('click', () => {
+    sessionStorage.setItem('puzzle-id', p.id);
+    sessionStorage.setItem('puzzle-grid', g);
+    location.href = 'play.html';
+  });
+  return btn;
+}
+
+function selectPuzzle(p, card, picker, btnsEl) {
+  document.querySelectorAll('.puzzle-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  btnsEl.innerHTML = '';
+  const labels = LABELS[p.grids.length];
+  p.grids.forEach((g, i) => btnsEl.appendChild(makeGridBtn(p, g, labels[i])));
+  picker.classList.add('visible');
+}
+
+function initChooser(puzzles) {
+  puzzles.sort((a, b) => a.name.localeCompare(b.name));
+  const cardsEl = document.getElementById('puzzle-cards');
+  const picker = document.getElementById('grid-picker');
+  const btnsEl = document.getElementById('grid-btns');
+  puzzles.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'puzzle-card';
+    card.innerHTML = `<img src="files/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
+    card.addEventListener('click', () => selectPuzzle(p, card, picker, btnsEl));
+    cardsEl.appendChild(card);
+  });
+  [() => {}, () => selectPuzzle(puzzles[0], cardsEl.firstElementChild, picker, btnsEl)][+(puzzles.length === 1)]();
+}
+
 fetch('manifest.json')
   .then(r => r.json())
-  .then(puzzles => {
-    const cardsEl = document.getElementById('puzzle-cards');
-    const picker = document.getElementById('grid-picker');
-    const btnsEl = document.getElementById('grid-btns');
-
-    function selectPuzzle(p, card) {
-      document.querySelectorAll('.puzzle-card').forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      btnsEl.innerHTML = '';
-      const labels = LABELS[p.grids.length] || p.grids;
-      p.grids.forEach((g, i) => {
-        const [cols, rows] = g.split('x');
-        const btn = document.createElement('button');
-        btn.className = 'grid-btn';
-        btn.innerHTML = `<span class="grid-btn-label">${labels[i]}</span><span class="grid-btn-size">${cols}\u00d7${rows}</span>`;
-        btn.addEventListener('click', () => { location.href = `play?puzzle=${p.id}&grid=${g}`; });
-        btnsEl.appendChild(btn);
-      });
-      picker.classList.add('visible');
-    }
-
-    puzzles.forEach(p => {
-      const card = document.createElement('div');
-      card.className = 'puzzle-card';
-      card.innerHTML = `<img src="files/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
-      card.addEventListener('click', () => selectPuzzle(p, card));
-      cardsEl.appendChild(card);
-    });
-
-    if (puzzles.length === 1) selectPuzzle(puzzles[0], cardsEl.firstElementChild);
-  });
+  .then(initChooser);
 </script>
 </body>
 </html>

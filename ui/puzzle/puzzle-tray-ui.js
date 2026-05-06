@@ -1,6 +1,6 @@
-export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, tileW, tileH) {
+export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, tileW, tileH, colCount) {
   container.innerHTML = '';
-  container.style.cssText = 'display:flex;gap:8px;padding:10px;align-items:center;justify-content:center;flex-wrap:wrap;';
+  container.style.cssText = `display:grid;grid-template-columns:repeat(${colCount},${tileW}px);gap:6px;padding:10px;justify-content:center;`;
   pieces.forEach(p => {
     const div = document.createElement('div');
     div.id = `tray-${p.id}`;
@@ -13,18 +13,15 @@ export function buildTray(container, pieces, onSelect, imageSrc, fullW, fullH, t
 }
 
 export function highlightTray(tray, id) {
-  const COLORS = { selected: '#F5A623', none: 'transparent' };
   tray.querySelectorAll('[data-piece-id]').forEach(el => {
-    el.style.borderColor = COLORS[el.dataset.pieceId === id ? 'selected' : 'none'];
+    el.style.borderColor = ['transparent', '#F5A623'][+(el.dataset.pieceId === id)];
   });
 }
 
 export function removeTrayPiece(tray, id) {
-  const el = tray.querySelector(`#tray-${id}`);
-  el && (el.style.visibility = 'hidden');
+  tray.querySelector(`#tray-${id}`)?.style.setProperty('visibility', 'hidden');
 }
 
 export function restoreTrayPiece(tray, id) {
-  const el = tray.querySelector(`#tray-${id}`);
-  el && (el.style.visibility = 'visible');
+  tray.querySelector(`#tray-${id}`)?.style.setProperty('visibility', 'visible');
 }

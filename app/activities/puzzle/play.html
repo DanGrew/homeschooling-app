@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Image Puzzle</title>
+<title>Puzzle</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
 *{box-sizing:border-box;}
+.puzzle-outer{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+.puzzle-outer.portrait{flex-direction:row;align-items:stretch;}
 .puzzle-wrapper{flex:1;display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;}
 .puzzle-row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;}
 #grid-area{position:relative;}
@@ -17,6 +19,7 @@
 .slot-label{font-size:0.75em;color:#999;text-align:center;}
 #selected-slot{border:3px dashed #ccc;border-radius:8px;overflow:hidden;background-repeat:no-repeat;}
 #tray-bar{flex-shrink:0;display:flex;gap:8px;padding:10px;background:#f5f5f5;border-top:2px solid #ddd;align-items:center;justify-content:center;flex-wrap:wrap;}
+.puzzle-outer.portrait #tray-bar{border-top:none;border-left:2px solid #ddd;overflow-y:auto;align-items:flex-start;justify-content:flex-start;align-self:stretch;}
 #ref-toggle{font-size:0.75em;padding:4px 10px;border:1px solid #ccc;border-radius:12px;background:#fff;cursor:pointer;color:#555;}
 #error-msg{display:none;padding:20px;color:#E74C3C;text-align:center;font-size:1em;}
 #puzzle-grid .feedback-correct,#puzzle-grid .feedback-wrong{outline:none;}
@@ -29,34 +32,36 @@
 <div class="nav-bar" data-home="./"></div>
 
 <div class="game-area">
-  <div class="game-title">Image Puzzle</div>
-  <div class="puzzle-wrapper">
-    <div class="puzzle-row">
-      <div id="grid-area">
-        <img id="reference-img" src="" alt="">
-        <div id="puzzle-grid"></div>
-      </div>
-      <div id="slot-area">
-        <div class="slot-label">Holding</div>
-        <div id="selected-slot"></div>
-        <button id="ref-toggle">Hide guide</button>
+  <div class="game-title">Puzzle</div>
+  <div id="error-msg"></div>
+  <div class="puzzle-outer" id="puzzle-outer">
+    <div class="puzzle-wrapper">
+      <div class="puzzle-row">
+        <div id="grid-area">
+          <img id="reference-img" src="" alt="">
+          <div id="puzzle-grid"></div>
+        </div>
+        <div id="slot-area">
+          <div class="slot-label">Holding</div>
+          <div id="selected-slot"></div>
+          <button id="ref-toggle">Hide guide</button>
+        </div>
       </div>
     </div>
+    <div id="tray-bar"></div>
   </div>
-  <div id="error-msg"></div>
-  <div id="tray-bar"></div>
 </div>
 
 <script src="../../shared/menu.js" defer></script>
 <script src="../../../ui/colouring/colouring-common.js"></script>
 <script type="module">
   import { derivePieces, shufflePieces, checkPlacement, isComplete } from '../../../core/puzzle/puzzle-core.js';
-  import { buildGrid, updateSelectedSlot, placeInCell, clearCell, markCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
+  import { buildGrid, clearSelectedSlot, fillSelectedSlot, placeInCell, clearCell, markCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
 
   const params = new URLSearchParams(location.search);
-  const puzzleId = params.get('puzzle') || 'paw-patrol';
-  const gridParam = params.get('grid') || '4x3';
+  const puzzleId = sessionStorage.getItem('puzzle-id') || params.get('puzzle') || 'paw-patrol';
+  const gridParam = sessionStorage.getItem('puzzle-grid') || params.get('grid') || '4x3';
   const [colsStr, rowsStr] = gridParam.split('x');
   const PUZZLE = {
     src: `files/${puzzleId}/full.jpg`,
@@ -71,15 +76,19 @@
   const refImg = document.getElementById('reference-img');
   const refToggle = document.getElementById('ref-toggle');
   const errorMsg = document.getElementById('error-msg');
+  const puzzleOuter = document.getElementById('puzzle-outer');
 
   let imgRatio = 1;
   let cellW = 64, cellH = 64;
   let tileW = 32, tileH = 32;
   let slotW = 80, slotH = 80;
 
+  function isPortrait() { return imgRatio < 1; }
+
   function sizeGrid() {
-    const availW = window.innerWidth * 0.60;
-    const availH = window.innerHeight * 0.65;
+    const p = +isPortrait();
+    const availW = window.innerWidth * [0.60, 0.48][p];
+    const availH = window.innerHeight * [0.65, 0.80][p];
     const gridH = Math.floor(Math.min(availH, availW / imgRatio));
     const gridW = Math.floor(gridH * imgRatio);
     cellH = Math.floor(gridH / PUZZLE.grid.rows);
@@ -99,20 +108,19 @@
 
   refToggle.addEventListener('click', () => {
     refVisible = !refVisible;
-    refImg.style.opacity = refVisible ? '0.25' : '0';
-    refToggle.textContent = refVisible ? 'Hide guide' : 'Show guide';
+    refImg.style.opacity = ['0', '0.25'][+refVisible];
+    refToggle.textContent = ['Show guide', 'Hide guide'][+refVisible];
   });
 
   function revealPicture(onDone) {
-    const from = parseFloat(refImg.style.opacity) || 0;
+    const from = parseFloat(refImg.style.opacity);
     refImg.style.zIndex = '2';
-    let start = null;
+    const startTs = performance.now();
     const dur = 1200;
     function step(ts) {
-      if (!start) start = ts;
-      const t = Math.min((ts - start) / dur, 1);
+      const t = Math.min((ts - startTs) / dur, 1);
       refImg.style.opacity = String(from + (1 - from) * t);
-      if (t < 1) requestAnimationFrame(step); else onDone();
+      [onDone, () => requestAnimationFrame(step)][+(t < 1)]();
     }
     requestAnimationFrame(step);
   }
@@ -122,76 +130,94 @@
     placements = {};
     selectedPiece = null;
     refImg.style.zIndex = '';
-    refImg.style.opacity = refVisible ? '0.25' : '0';
+    refImg.style.opacity = ['0', '0.25'][+refVisible];
     refToggle.disabled = false;
-    updateSelectedSlot(slot, null);
+    clearSelectedSlot(slot);
     gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
     tileH = Math.max(20, Math.floor(cellH / 2));
     tileW = Math.round(tileH * cellW / cellH);
-    slotH = Math.max(60, Math.min(cellH, 120));
+    slotH = Math.max(80, Math.min(cellH, Math.floor(window.innerHeight * 0.20)));
     slotW = Math.round(slotH * cellW / cellH);
     slot.style.width = `${slotW}px`;
     slot.style.height = `${slotH}px`;
+    const landscapeCols = Math.min(allPieces.length, Math.floor((puzzleOuter.clientWidth - 40) / (tileW + 6)));
+    const trayColCount = [landscapeCols, PUZZLE.grid.cols][+isPortrait()];
     trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
-      PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH);
+      PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
+      trayColCount);
   }
 
   function onSelect(pieceId) {
     selectedPiece = allPieces.find(p => p.id === pieceId);
     highlightTray(trayEl, pieceId);
-    updateSelectedSlot(slot, selectedPiece, PUZZLE.src,
+    fillSelectedSlot(slot, selectedPiece, PUZZLE.src,
       slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH);
   }
 
-  function onCellTap(row, col) {
-    if (locked) return;
-    const key = `${row}_${col}`;
+  function completionCheck() {
+    locked = true;
+    refToggle.disabled = true;
+    revealPicture(() => {
+      showBanner(() => { location.href = './'; });
+      document.getElementById('success-next').innerHTML = 'Choose another \u2192';
+    });
+  }
+
+  function liftPiece(row, col, key) {
     const existing = placements[key];
+    clearCell(gridEl, row, col);
+    delete placements[key];
+    restoreTrayPiece(trayEl, existing.pieceId);
+    selectedPiece = allPieces.find(p => p.id === existing.pieceId);
+    highlightTray(trayEl, selectedPiece.id);
+    fillSelectedSlot(slot, selectedPiece, PUZZLE.src,
+      slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH);
+  }
 
-    if (existing) {
-      clearCell(gridEl, row, col);
-      delete placements[key];
-      restoreTrayPiece(trayEl, existing.pieceId);
-      selectedPiece = allPieces.find(p => p.id === existing.pieceId);
-      highlightTray(trayEl, selectedPiece.id);
-      updateSelectedSlot(slot, selectedPiece, PUZZLE.src,
-        slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH);
-      return;
-    }
-
-    if (!selectedPiece) return;
-
+  function dropPiece(row, col) {
     const correct = checkPlacement(selectedPiece, { row, col });
-    placements[key] = { pieceId: selectedPiece.id, correct };
+    placements[`${row}_${col}`] = { pieceId: selectedPiece.id, correct };
     placeInCell(gridEl, row, col, PUZZLE.src,
-      cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH);
+      cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH,
+      selectedPiece.correct.row, selectedPiece.correct.col);
     markCell(gridEl, row, col, correct);
     removeTrayPiece(trayEl, selectedPiece.id);
     selectedPiece = null;
-    updateSelectedSlot(slot, null);
+    clearSelectedSlot(slot);
     highlightTray(trayEl, null);
+    [() => {}, completionCheck][+(isComplete(placements, allPieces.length))]();
+  }
 
-    if (isComplete(placements, allPieces.length)) {
-      locked = true;
-      refToggle.disabled = true;
-      revealPicture(() => showBanner(start));
-    }
+  function tapUnoccupied(row, col) {
+    [() => {}, () => dropPiece(row, col)][+!!selectedPiece]();
+  }
+
+  function onCellTap(row, col) {
+    const key = `${row}_${col}`;
+    [() => [liftPiece, tapUnoccupied][+!placements[key]](row, col, key), () => {}][+locked]();
   }
 
   window.__puzzleState = { getPieces: () => allPieces, getPlacements: () => placements };
 
-  const fullImage = new Image();
-  fullImage.onload = () => {
-    const pixels = fullImage.naturalWidth * fullImage.naturalHeight;
-    if (pixels > MAX_PIXELS) {
-      errorMsg.style.display = 'block';
-      errorMsg.textContent = `Image too large (${fullImage.naturalWidth}\u00d7${fullImage.naturalHeight} = ${(pixels / 1_000_000).toFixed(1)}MP). Keep images under 4MP.`;
-      return;
-    }
+  function showError(pixels) {
+    errorMsg.style.display = 'block';
+    errorMsg.textContent = `Image too large (${fullImage.naturalWidth}\u00d7${fullImage.naturalHeight} = ${(pixels / 1_000_000).toFixed(1)}MP). Keep images under 4MP.`;
+  }
+
+  function initPuzzle() {
     imgRatio = fullImage.naturalWidth / fullImage.naturalHeight;
+    puzzleOuter.classList.toggle('portrait', isPortrait());
     sizeGrid();
     start();
-  };
+  }
+
+  function onImageLoad() {
+    const pixels = fullImage.naturalWidth * fullImage.naturalHeight;
+    [initPuzzle, () => showError(pixels)][+(pixels > MAX_PIXELS)]();
+  }
+
+  const fullImage = new Image();
+  fullImage.onload = onImageLoad;
   fullImage.onerror = () => { sizeGrid(); start(); };
   fullImage.src = PUZZLE.src;
   refImg.src = PUZZLE.src;
