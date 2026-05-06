@@ -110,6 +110,8 @@ function onStrokeComplete(strokeIdx, cx, cy) {
   document.getElementById('svg').appendChild(hint);
 }
 
+function removeStrokeHint() { [document.getElementById('next-stroke-hint')].filter(Boolean).forEach(el => el.remove()); }
+
 var ON_STROKE_COMPLETE = { 'trace': onStrokeComplete, 'lesson': null };
 
 function initEngine() {
@@ -124,7 +126,8 @@ function initEngine() {
       progressWidth: 20,
       progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
       onComplete: ON_COMPLETE[mode],
-      onStrokeComplete: ON_STROKE_COMPLETE[mode]
+      onStrokeComplete: ON_STROKE_COMPLETE[mode],
+      onStrokeStart: removeStrokeHint
     }
   );
   engine.progressPaths.forEach(pp => pp.classList.add('progress-path'));

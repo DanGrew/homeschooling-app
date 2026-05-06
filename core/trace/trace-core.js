@@ -51,6 +51,7 @@ function resolveOpts(o) {
     completionAt: r.completionAt ?? 0.96,
     onComplete:         r.onComplete         || null,
     onStrokeComplete:   r.onStrokeComplete   || null,
+    onStrokeStart:      r.onStrokeStart      || null,
     interactive:  r.interactive  !== false,
     progressStroke: r.progressStroke || '#FFD700',
     applyProgressAttrs: pp => {
@@ -79,6 +80,7 @@ class TraceState {
     const s = this.strokes[this.currentStrokeIdx].samples[0];
     if ((svgX - s.x) ** 2 + (svgY - s.y) ** 2 > this.opts.tolerance ** 2) return { activated: false };
     this._strokeJustCompleted = false; this.active = true; this.activePointerId = pointerId;
+    this.opts.onStrokeStart && this.opts.onStrokeStart(this.currentStrokeIdx);
     return { activated: true };
   }
   advance(svgX, svgY, pointerId) {
