@@ -1,9 +1,12 @@
 [
   "entries/bird/image.json",
   "entries/bull/image.json",
+  "entries/bus/image.json",
   "entries/camel/image.json",
   "entries/cat/image.json",
+  "entries/cement-mixer/image.json",
   "entries/cow/image.json",
+  "entries/digger/image.json",
   "entries/dog/image.json",
   "entries/duck/image.json",
   "entries/elephant/image.json",
@@ -15,7 +18,11 @@
   "entries/monkey/image.json",
   "entries/mouse/image.json",
   "entries/rabbit/image.json",
+  "entries/race-car/image.json",
   "entries/tiger/image.json",
+  "entries/tractor/image.json",
+  "entries/train/image.json",
+  "entries/truck/image.json",
   "entries/turtle/image.json",
   "entries/zebra/image.json"
 ]
