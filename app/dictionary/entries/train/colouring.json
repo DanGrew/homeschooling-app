@@ -1,0 +1,245 @@
+{
+  "concept": "train",
+  "type": "colouring",
+  "level": 1,
+  "viewBox": "0 0 806.2 273.3",
+  "shapes": [
+    {
+      "id": "shape_1",
+      "tag": "rect",
+      "attrs": {
+        "x": "106.6",
+        "y": "224",
+        "width": "413",
+        "height": "10",
+        "stroke-width": "2"
+      },
+      "colour": "#E74C3C"
+    },
+    {
+      "id": "shape_2",
+      "tag": "rect",
+      "attrs": {
+        "x": "661.6",
+        "y": "93",
+        "width": "14",
+        "height": "72",
+        "stroke-width": "2"
+      },
+      "colour": "#E74C3C"
+    },
+    {
+      "id": "shape_3",
+      "tag": "rect",
+      "attrs": {
+        "x": "698.6",
+        "y": "67",
+        "width": "32",
+        "height": "103",
+        "stroke-width": "2"
+      },
+      "colour": "#E74C3C"
+    },
+    {
+      "id": "shape_4",
+      "tag": "polygon",
+      "attrs": {
+        "points": "700.4 99 729.1 99 738.7 62.2 690.8 62.7",
+        "stroke-width": "2"
+      },
+      "colour": "#F39C12"
+    },
+    {
+      "id": "shape_5",
+      "tag": "path",
+      "attrs": {
+        "d": "M 683.6 89.8 c 0 -6 -4.8 -10.8 -10.8 -10.8 h -1.5 c -6 0 -10.8 4.8 -10.8 10.8 v 7.5 c 0 6 4.8 10.8 10.8 10.8 h 1.5 c 6 0 10.8 -4.8 10.8 -10.8 V 89.8 z",
+        "stroke-width": "2"
+      },
+      "colour": "#F39C12"
+    },
+    {
+      "id": "shape_6",
+      "tag": "path",
+      "attrs": {
+        "d": "M 501.6 237.4 c 0 6.2 4.5 11.6 10.7 11.6 h 284.5 c 6.2 0 9.4 -4.9 7.2 -10.6 l -38.5 -100.5 c -2.2 -5.7 -9.1 -10.9 -15.2 -10.9 H 512.3 c -6.2 0 -10.7 5.7 -10.7 11.9 V 237.4 z",
+        "stroke-width": "2"
+      },
+      "colour": "#1ABC9C"
+    },
+    {
+      "id": "shape_7",
+      "tag": "rect",
+      "attrs": {
+        "x": "501.6",
+        "y": "24.000000000000004",
+        "width": "132",
+        "height": "167",
+        "stroke-width": "2"
+      },
+      "colour": "#1ABC9C"
+    },
+    {
+      "id": "shape_8",
+      "tag": "rect",
+      "attrs": {
+        "x": "519.6",
+        "y": "123",
+        "width": "98",
+        "height": "112",
+        "stroke-width": "2"
+      },
+      "colour": "#27AE60"
+    },
+    {
+      "id": "shape_9",
+      "tag": "path",
+      "attrs": {
+        "d": "M 486.6 21.4 C 486.6 33 497.7 42 510.5 42 h 117.5 c 12.8 0 23.6 -9 23.6 -20.6 v -0.1 c 0 -11.5 -10.7 -21.3 -23.6 -21.3 H 510.5 c -12.8 0 -23.9 9.8 -23.9 21.3 V 21.4 z",
+        "stroke-width": "2"
+      },
+      "colour": "#E74C3C"
+    },
+    {
+      "id": "shape_10",
+      "tag": "circle",
+      "attrs": {
+        "cx": "734.8000000000001",
+        "cy": "244.3",
+        "r": "26.6",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_11",
+      "tag": "circle",
+      "attrs": {
+        "cx": "654.6",
+        "cy": "244.3",
+        "r": "26.6",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_12",
+      "tag": "circle",
+      "attrs": {
+        "cx": "561.2",
+        "cy": "229.5",
+        "r": "41.5",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_13",
+      "tag": "path",
+      "attrs": {
+        "d": "M 658.6 246.2 c 0 -1.2 -1 -2.2 -2.2 -2.2 h -95.5 c -1.2 0 -2.2 1 -2.2 2.2 v 4.5 c 0 1.2 1 2.2 2.2 2.2 h 95.5 c 1.2 0 2.2 -1 2.2 -2.2 V 246.2 z",
+        "stroke-width": "2"
+      },
+      "colour": "#BDC3C7"
+    },
+    {
+      "id": "shape_14",
+      "tag": "rect",
+      "attrs": {
+        "x": "519.6",
+        "y": "58",
+        "width": "98",
+        "height": "65",
+        "stroke-width": "2"
+      },
+      "colour": "#FFFFFF"
+    },
+    {
+      "id": "shape_15",
+      "tag": "polygon",
+      "attrs": {
+        "points": "247.8 152 457.3 152 451.5 179 253.7 179",
+        "stroke-width": "2"
+      },
+      "colour": "#F39C12"
+    },
+    {
+      "id": "shape_16",
+      "tag": "polygon",
+      "attrs": {
+        "points": "451.5 179 435.8 249 269.4 249 253.7 179",
+        "stroke-width": "2"
+      },
+      "colour": "#F1C40F"
+    },
+    {
+      "id": "shape_17",
+      "tag": "path",
+      "attrs": {
+        "d": "M 368.1 244.3 c 0 14.7 11.9 26.6 26.6 26.6 c 14.7 0 26.6 -11.9 26.6 -26.6 c 0 -14.7 -11.9 -26.6 -26.6 -26.6 C 380.1 217.7 368.1 229.6 368.1 244.3 z",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_18",
+      "tag": "circle",
+      "attrs": {
+        "cx": "312.20000000000005",
+        "cy": "244.3",
+        "r": "26.6",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_19",
+      "tag": "polygon",
+      "attrs": {
+        "points": "0 155 209.5 155 203.7 182 5.9 182",
+        "stroke-width": "2"
+      },
+      "colour": "#F39C12"
+    },
+    {
+      "id": "shape_20",
+      "tag": "polygon",
+      "attrs": {
+        "points": "203.7 182 188 250 21.6 250 5.9 182",
+        "stroke-width": "2"
+      },
+      "colour": "#F1C40F"
+    },
+    {
+      "id": "shape_21",
+      "tag": "circle",
+      "attrs": {
+        "cx": "147",
+        "cy": "246.7",
+        "r": "26.6",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_22",
+      "tag": "circle",
+      "attrs": {
+        "cx": "64.4",
+        "cy": "246.7",
+        "r": "26.6",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
+    },
+    {
+      "id": "shape_23",
+      "tag": "path",
+      "attrs": {
+        "d": "M 770.9 152.3 c 0 0 -23.4 26 21.4 55.6",
+        "stroke-width": "2"
+      },
+      "colour": "#F1C40F"
+    }
+  ]
+}

@@ -1,9 +1,12 @@
 [
   "entries/bird/colouring.json",
   "entries/bull/colouring.json",
+  "entries/bus/colouring.json",
   "entries/camel/colouring.json",
   "entries/cat/colouring.json",
+  "entries/cement-mixer/colouring.json",
   "entries/cow/colouring.json",
+  "entries/digger/colouring.json",
   "entries/dog/colouring.json",
   "entries/duck/colouring.json",
   "entries/elephant/colouring.json",
@@ -15,7 +18,11 @@
   "entries/monkey/colouring.json",
   "entries/mouse/colouring.json",
   "entries/rabbit/colouring.json",
+  "entries/race-car/colouring.json",
   "entries/tiger/colouring.json",
+  "entries/tractor/colouring.json",
+  "entries/train/colouring.json",
+  "entries/truck/colouring.json",
   "entries/turtle/colouring.json",
   "entries/zebra/colouring.json"
 ]
