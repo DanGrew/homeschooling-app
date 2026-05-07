@@ -167,8 +167,10 @@ if (rule === 'no-filter-conditional') {
     const html = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
     if (hasAllow(html, 'allow-filter-conditional')) { exceptions.push(rel); return; }
-    scanned.push(rel);
-    extractInlineScripts(html).forEach(script => checkContent(script, rel));
+    extractInlineScripts(html).forEach((script, i) => {
+      scanned.push(rel + ' (block ' + (i + 1) + ')');
+      checkContent(script, rel);
+    });
   });
 }
 
