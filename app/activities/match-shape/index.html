@@ -22,6 +22,17 @@
 <script>
 var current,locked;
 
+var CHECK_RESULT={
+  'true': function(btn){locked=true;btn.classList.add('feedback-correct');showBanner(newRound);},
+  'false':function(btn){btn.classList.add('feedback-wrong');setTimeout(function(){btn.classList.remove('feedback-wrong');},500);}
+};
+
+function doCheck(btn){CHECK_RESULT[String(btn.dataset.type===current.type)](btn);}
+
+function check(btn){
+  [doCheck].filter(function(){return !locked;}).forEach(function(f){f(btn);});
+}
+
 function newRound(){
   locked=false;
   var col=pickCol();
@@ -31,18 +42,6 @@ function newRound(){
   document.getElementById('options').innerHTML=shuffled.map(function(t){
     return '<button data-type="'+t+'" onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,'clamp(60px,13vmin,96px)')+'</button>';
   }).join('');
-}
-
-function check(btn){
-  if(locked)return;
-  if(btn.dataset.type===current.type){
-    locked=true;
-    btn.classList.add('feedback-correct');
-    showBanner(newRound);
-  }else{
-    btn.classList.add('feedback-wrong');
-    setTimeout(function(){btn.classList.remove('feedback-wrong');},500);
-  }
 }
 
 newRound();

@@ -31,21 +31,19 @@ import {speak as speakWord} from '../../../ui/speech/speech-ui.js';
 Dictionary.init('../../dictionary/');
 var filtered=[],idx=0;
 
-function show(){
-  var w=filtered[idx];
-  if(!w)return;
+function doShow(w){
   var pic=document.getElementById('picture');
   pic.innerHTML=w.svg;
-  var svg=pic.querySelector('svg');
-  if(svg){
+  [pic.querySelector('svg')].filter(Boolean).forEach(function(svg){
     svg.style.cssText='width:clamp(200px,55vmin,420px);height:clamp(200px,55vmin,420px);';
-    if(w.viewBox)svg.setAttribute('viewBox',w.viewBox);
-  }
+    [w.viewBox].filter(Boolean).forEach(function(vb){svg.setAttribute('viewBox',vb);});
+  });
   document.getElementById('label').textContent=w.name;
-  document.getElementById('phonetic').textContent=w.phonetic||'';
+  document.getElementById('phonetic').textContent=[w.phonetic].filter(Boolean).concat([''])[0];
 }
 
-function speak(){if(filtered[idx])speakWord(filtered[idx].name);}
+function show(){[filtered[idx]].filter(Boolean).forEach(doShow);}
+function speak(){[filtered[idx]].filter(Boolean).forEach(function(w){speakWord(w.name);});}
 function prev(){idx=(idx-1+filtered.length)%filtered.length;show();}
 function next(){idx=(idx+1)%filtered.length;show();}
 window.prev=prev;window.next=next;window.speak=speak;

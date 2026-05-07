@@ -43,17 +43,20 @@ function render(){
   pic.shapes.forEach(function(s){
     var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
     var el=ns(s.tag,attrs);
-    if(s.noColour){svg.appendChild(el);return;}
-    el.style.cursor='pointer';
-    var done=false;
-    el.addEventListener('click',function(){
-      if(done)return;
-      done=true;
-      el.setAttribute('fill',s.colour);
-      filled++;
-      if(filled===total)showBanner(nextPicture);
+    [s].filter(function(s){return s.noColour;}).forEach(function(){svg.appendChild(el);});
+    [s].filter(function(s){return !s.noColour;}).forEach(function(){
+      el.style.cursor='pointer';
+      var done=false;
+      el.addEventListener('click',function(){
+        [done].filter(function(d){return !d;}).forEach(function(){
+          done=true;
+          el.setAttribute('fill',s.colour);
+          filled++;
+          [null].filter(function(){return filled===total;}).forEach(function(){showBanner(nextPicture);});
+        });
+      });
+      svg.appendChild(el);
     });
-    svg.appendChild(el);
   });
 }
 

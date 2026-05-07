@@ -66,7 +66,7 @@ function selectColour(c){
 
 function checkComplete(){
   var done=filledEls.every(function(el){return el.getAttribute('fill')===el.dataset.target;});
-  if(done)showBanner(nextPicture);
+  [null].filter(function(){return done;}).forEach(function(){showBanner(nextPicture);});
 }
 
 function render(){
@@ -83,16 +83,19 @@ function render(){
   pic.shapes.forEach(function(s){
     var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
     var el=ns(s.tag,attrs);
-    if(s.noColour){svg.appendChild(el);return;}
-    el.style.cursor='pointer';
-    el.dataset.target=s.colour;
-    filledEls.push(el);
-    el.addEventListener('click',function(){
-      if(!selectedColour)return;
-      el.setAttribute('fill',selectedColour);
-      checkComplete();
+    [s].filter(function(s){return s.noColour;}).forEach(function(){svg.appendChild(el);});
+    [s].filter(function(s){return !s.noColour;}).forEach(function(){
+      el.style.cursor='pointer';
+      el.dataset.target=s.colour;
+      filledEls.push(el);
+      el.addEventListener('click',function(){
+        [selectedColour].filter(Boolean).forEach(function(){
+          el.setAttribute('fill',selectedColour);
+          checkComplete();
+        });
+      });
+      svg.appendChild(el);
     });
-    svg.appendChild(el);
   });
 
   var ref=document.getElementById('ref');
@@ -104,7 +107,9 @@ function render(){
   });
 
   var seen={},cols=[];
-  pic.shapes.forEach(function(s){if(s.noColour)return;if(!seen[s.colour]){seen[s.colour]=1;cols.push(s.colour);}});
+  pic.shapes.filter(function(s){return !s.noColour;}).forEach(function(s){
+    [s.colour].filter(function(c){return !seen[c];}).forEach(function(c){seen[c]=1;cols.push(c);});
+  });
   var palette=document.getElementById('palette');
   palette.innerHTML='';
   cols.forEach(function(c){
