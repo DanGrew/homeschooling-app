@@ -9,7 +9,7 @@ module.exports = defineConfig({
   webServer: {
     command: 'npx serve .. -l 3000 --no-clipboard',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
   projects: [
     { name: 'chromium', use: { browserName: 'chromium' } }
