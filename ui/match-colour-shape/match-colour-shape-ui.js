@@ -5,7 +5,7 @@ function makeDistractors(targetCol, targetType) {
   var pool = [];
   colours.forEach(function(c) {
     types.forEach(function(t) {
-      {'true':function(){pool.push({col:c,type:t});},'false':function(){}}[String((c+'/'+t)!==targetKey)]();
+      ({'true':function(){pool.push({col:c,type:t});},'false':function(){}})[String((c+'/'+t)!==targetKey)]();
     });
   });
   pool.sort(function() { return Math.random() - 0.5; });

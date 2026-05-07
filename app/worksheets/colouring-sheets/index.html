@@ -106,13 +106,13 @@ function addImage(idx){
   item.className='worksheet-item';item.dataset.idx=idx;
   item.appendChild(renderSVG(pictures[idx],idx));
   var after=Array.from(sheet.querySelectorAll('.worksheet-item')).filter(function(el){return parseInt(el.dataset.idx)>idx;})[0];
-  {'true':function(){sheet.insertBefore(item,after);},'false':function(){sheet.appendChild(item);}}[String(!!after)]();
+  ({'true':function(){sheet.insertBefore(item,after);},'false':function(){sheet.appendChild(item);}})[String(!!after)]();
 }
 
 function removeImage(idx){
   var sheet=document.getElementById('sheet');
   [sheet.querySelector('.worksheet-item[data-idx="'+idx+'"]')].filter(Boolean).forEach(function(item){sheet.removeChild(item);});
-  {'true':function(){},'false':function(){document.getElementById('empty-msg').style.display='';}}[String(!!sheet.querySelector('.worksheet-item'))]();
+  ({'true':function(){},'false':function(){document.getElementById('empty-msg').style.display='';}})[String(!!sheet.querySelector('.worksheet-item'))]();
 }
 
 Dictionary.init('../../dictionary/');

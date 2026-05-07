@@ -125,7 +125,7 @@ function doCorrect(n){
     drawLine(f.cx,f.cy,t.cx,t.cy);
   });
   prevDot=n;nextDot++;
-  {'true':function(){
+  ({'true':function(){
     complete=true;
     var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
     drawLine(f.cx,f.cy,t.cx,t.cy);
@@ -133,7 +133,7 @@ function doCorrect(n){
     showBanner(nextShape);
   },'false':function(){
     document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
-  }}[String(nextDot>shape.dots.length)]();
+  }})[String(nextDot>shape.dots.length)]();
 }
 
 var TAP_CASE={
@@ -150,7 +150,7 @@ function tapKey(n){
 function doTap(n){TAP_CASE[tapKey(n)](n);}
 
 function tap(n){
-  {'true':function(){doTap(n);},'false':function(){}}[String(!complete)]();
+  ({'true':function(){doTap(n);},'false':function(){}})[String(!complete)]();
 }
 
 function drawLine(x1,y1,x2,y2){

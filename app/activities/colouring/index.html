@@ -43,17 +43,17 @@ function render(){
   pic.shapes.forEach(function(s){
     var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
     var el=ns(s.tag,attrs);
-    {'true':function(){svg.appendChild(el);},'false':function(){
+    ({'true':function(){svg.appendChild(el);},'false':function(){
       el.style.cursor='pointer';
       var done=false;
       el.addEventListener('click',function(){
-        {'true':function(){},'false':function(){
+        ({'true':function(){},'false':function(){
           done=true;el.setAttribute('fill',s.colour);filled++;
-          {'true':function(){showBanner(nextPicture);},'false':function(){}}[String(filled===total)]();
-        }}[String(done)]();
+          ({'true':function(){showBanner(nextPicture);},'false':function(){}})[String(filled===total)]();
+        }})[String(done)]();
       });
       svg.appendChild(el);
-    }}[String(!!s.noColour)]();
+    }})[String(!!s.noColour)]();
   });
 }
 
