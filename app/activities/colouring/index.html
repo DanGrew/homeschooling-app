@@ -43,20 +43,17 @@ function render(){
   pic.shapes.forEach(function(s){
     var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
     var el=ns(s.tag,attrs);
-    [s].filter(function(s){return s.noColour;}).forEach(function(){svg.appendChild(el);});
-    [s].filter(function(s){return !s.noColour;}).forEach(function(){
+    ({'true':function(){svg.appendChild(el);},'false':function(){
       el.style.cursor='pointer';
       var done=false;
       el.addEventListener('click',function(){
-        [done].filter(function(d){return !d;}).forEach(function(){
-          done=true;
-          el.setAttribute('fill',s.colour);
-          filled++;
-          [null].filter(function(){return filled===total;}).forEach(function(){showBanner(nextPicture);});
-        });
+        ({'true':function(){},'false':function(){
+          done=true;el.setAttribute('fill',s.colour);filled++;
+          ({'true':function(){showBanner(nextPicture);},'false':function(){}})[String(filled===total)]();
+        }})[String(done)]();
       });
       svg.appendChild(el);
-    });
+    }})[String(!!s.noColour)]();
   });
 }
 

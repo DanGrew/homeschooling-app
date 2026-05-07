@@ -23,7 +23,7 @@ function render() {
 function doMove(nx, ny) {
   px = nx; py = ny;
   render();
-  [null].filter(function() { return isTarget(px, py); }).forEach(function() { locked = true; showBanner(newGame); });
+  ({'true':function(){locked=true;showBanner(newGame);},'false':function(){}})[String(isTarget(px,py))]();
 }
 
 function move(dx, dy) {

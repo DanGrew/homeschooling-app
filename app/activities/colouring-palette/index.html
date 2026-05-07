@@ -66,7 +66,7 @@ function selectColour(c){
 
 function checkComplete(){
   var done=filledEls.every(function(el){return el.getAttribute('fill')===el.dataset.target;});
-  [null].filter(function(){return done;}).forEach(function(){showBanner(nextPicture);});
+  ({'true':function(){showBanner(nextPicture);},'false':function(){}})[String(done)]();
 }
 
 function render(){
@@ -83,8 +83,7 @@ function render(){
   pic.shapes.forEach(function(s){
     var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
     var el=ns(s.tag,attrs);
-    [s].filter(function(s){return s.noColour;}).forEach(function(){svg.appendChild(el);});
-    [s].filter(function(s){return !s.noColour;}).forEach(function(){
+    ({'true':function(){svg.appendChild(el);},'false':function(){
       el.style.cursor='pointer';
       el.dataset.target=s.colour;
       filledEls.push(el);
@@ -95,7 +94,7 @@ function render(){
         });
       });
       svg.appendChild(el);
-    });
+    }})[String(!!s.noColour)]();
   });
 
   var ref=document.getElementById('ref');

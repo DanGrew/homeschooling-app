@@ -41,7 +41,7 @@ function doMatch(entry) {
   beep();
   showScanToast(entry.icon, entry.name);
   scanFound++;
-  [null].filter(function() { return scanFound + scanCrossed === scanTotal; }).forEach(function() { stopScan(); setTimeout(showSuccess, 600); });
+  ({'true':function(){stopScan();setTimeout(showSuccess,600);},'false':function(){}})[String(scanFound+scanCrossed===scanTotal)]();
 }
 
 function matchBarcode(value) {
@@ -63,13 +63,12 @@ var CROSS_ACTION = {
     row.querySelector('.sc-tick').textContent = '✕';
     scanCrossed++;
     btn.textContent = 'Undo';
-    [null].filter(function() { return scanFound + scanCrossed === scanTotal; }).forEach(function() { stopScan(); setTimeout(showSuccess, 600); });
+    ({'true':function(){stopScan();setTimeout(showSuccess,600);},'false':function(){}})[String(scanFound+scanCrossed===scanTotal)]();
   }
 };
 
 function onNotHere(row, btn) {
-  [null].filter(function() { return !row.classList.contains('found'); })
-        .forEach(function() { CROSS_ACTION[String(row.classList.contains('crossed'))](row, btn); });
+  ({'true':function(){CROSS_ACTION[String(row.classList.contains('crossed'))](row,btn);},'false':function(){}})[String(!row.classList.contains('found'))]();
 }
 
 function buildChecklist() {
@@ -100,7 +99,7 @@ function setupStubMode() {
     input.focus();
   };
   input.onkeydown = function(e) {
-    [null].filter(function() { return e.key === 'Enter'; }).forEach(function() { document.getElementById('stub-btn').click(); });
+    ({'true':function(){document.getElementById('stub-btn').click();},'false':function(){}})[String(e.key==='Enter')]();
   };
 }
 
@@ -153,9 +152,7 @@ function buildCatalogItems(filtered, catalogs) {
 }
 
 export function init(catalogs) {
-  [null].filter(function() { return !hasDetector; }).forEach(function() {
-    document.getElementById('scan-unavailable').textContent = 'No camera — stub mode active';
-  });
+  ({'true':function(){document.getElementById('scan-unavailable').textContent='No camera — stub mode active';},'false':function(){}})[String(!hasDetector)]();
 
   document.getElementById('btn-find').addEventListener('click', startFindPhase);
   document.getElementById('btn-scan-it').addEventListener('click', startScanPhase);
