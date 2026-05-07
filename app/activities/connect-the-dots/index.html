@@ -79,9 +79,9 @@ window.addEventListener('resize',function(){
 function render(){
   var shape=filtered[filtIdx];
   var svg=document.getElementById('svg');
-  svg.innerHTML=shape.decor||'';
+  svg.innerHTML=[shape.decor].filter(Boolean).concat([''])[0];
   nextDot=1;prevDot=null;complete=false;
-  document.getElementById('title').textContent=shape.name+(shape.level!==undefined?' [Level '+shape.level+']':'');
+  document.getElementById('title').textContent=shape.name+[shape.level].filter(function(v){return v!==undefined;}).map(function(v){return ' [Level '+v+']';}).concat([''])[0];
   hideBanner();
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 
@@ -108,34 +108,50 @@ function render(){
   });
 }
 
-function tap(n){
-  if(complete)return;
+function doWrong(n){
+  var c=document.getElementById('c'+n);
+  c.classList.remove('wrong-flash');
+  void c.offsetWidth;
+  c.classList.add('wrong-flash');
+  setTimeout(function(){c.classList.remove('wrong-flash');},400);
+}
+
+function doCorrect(n){
   var shape=filtered[filtIdx];
-  if(n===nextDot){
-    document.getElementById('c'+n).setAttribute('fill','#2ECC71');
-    document.getElementById('c'+n).setAttribute('stroke','#27AE60');
-    if(prevDot!==null){
-      var f=shape.dots[prevDot-1],t=shape.dots[n-1];
-      drawLine(f.cx,f.cy,t.cx,t.cy);
-    }
-    prevDot=n;
-    nextDot++;
-    if(nextDot>shape.dots.length){
-      complete=true;
-      var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
-      drawLine(f.cx,f.cy,t.cx,t.cy);
-      document.getElementById('instruction').textContent='';
-      showBanner(nextShape);
-    } else {
-      document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
-    }
-  } else if(n>nextDot){
-    var c=document.getElementById('c'+n);
-    c.classList.remove('wrong-flash');
-    void c.offsetWidth;
-    c.classList.add('wrong-flash');
-    setTimeout(function(){c.classList.remove('wrong-flash');},400);
-  }
+  document.getElementById('c'+n).setAttribute('fill','#2ECC71');
+  document.getElementById('c'+n).setAttribute('stroke','#27AE60');
+  [prevDot].filter(function(p){return p!==null;}).forEach(function(p){
+    var f=shape.dots[p-1],t=shape.dots[n-1];
+    drawLine(f.cx,f.cy,t.cx,t.cy);
+  });
+  prevDot=n;nextDot++;
+  [null].filter(function(){return nextDot>shape.dots.length;}).forEach(function(){
+    complete=true;
+    var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
+    drawLine(f.cx,f.cy,t.cx,t.cy);
+    document.getElementById('instruction').textContent='';
+    showBanner(nextShape);
+  });
+  [null].filter(function(){return nextDot<=shape.dots.length;}).forEach(function(){
+    document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
+  });
+}
+
+var TAP_CASE={
+  'correct':function(n){doCorrect(n);},
+  'wrong':  function(n){doWrong(n);},
+  'early':  function(){}
+};
+
+function tapKey(n){
+  return [['correct',n===nextDot],['wrong',n>nextDot],['early',true]]
+    .filter(function(e){return e[1];}).map(function(e){return e[0];})[0];
+}
+
+function doTap(n){TAP_CASE[tapKey(n)](n);}
+
+function tap(n){
+  [null].filter(function(){return !complete;}).forEach(function(){doTap(n);});
 }
 
 function drawLine(x1,y1,x2,y2){

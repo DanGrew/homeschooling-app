@@ -99,15 +99,15 @@ document.getElementById('btn-again').onclick=function(){
 
 function initGame(){
   setAllItems(flattenCatalogs(CATALOGS));
-  buildFilterBar(CATALOGS.map(function(c){return{tags:c.tags||[],name:c.name};}),function(filtered){
+  buildFilterBar(CATALOGS.map(function(c){return{tags:[].concat(c.tags).filter(Boolean),name:c.name};}),function(filtered){
     var items=[];
     filtered.forEach(function(c){
-      CATALOGS.forEach(function(cat){
-        if(cat.name===c.name)items=items.concat(cat.items.map(function(it){return{name:it.name,icon:it.icon,tags:cat.tags||[],catalog:cat.name};}));
+      CATALOGS.filter(function(cat){return cat.name===c.name;}).forEach(function(cat){
+        items=items.concat(cat.items.map(function(it){return{name:it.name,icon:it.icon,tags:[].concat(cat.tags).filter(Boolean),catalog:cat.name};}));
       });
     });
     setAllItems(items);
-    filterListItems(function(li){return items.some(function(i){return i.name===li.name&&i.catalog===li.catalog;});});
+    filterListItems(function(li){return items.some(function(i){return i.name+'/'+i.catalog===li.name+'/'+li.catalog;});});
     renderTiles();
     renderList();
   });

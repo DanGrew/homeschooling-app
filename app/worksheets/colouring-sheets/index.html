@@ -77,7 +77,7 @@ function renderSVG(pic,uid){
   svg.appendChild(defs);
   pic.shapes.forEach(function(s){
     var attrs=Object.assign({},{stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
-    attrs.fill=s.noColour?(attrs.fill||'#fff'):'url(#'+patId+')';
+    attrs.fill=[s.noColour].filter(Boolean).map(function(){return [attrs.fill].filter(Boolean).concat(['#fff'])[0];}).concat(['url(#'+patId+')'])[0];
     svg.appendChild(ns(s.tag,attrs));
   });
   return svg;
@@ -92,7 +92,8 @@ function buildPanel(){
     cb.type='checkbox';cb.id='cb-'+i;
     var lbl=document.createElement('label');
     lbl.htmlFor='cb-'+i;lbl.textContent=pic.name;
-    cb.addEventListener('change',function(){cb.checked?addImage(i):removeImage(i);});
+    var IMG_ACTION={'true':function(){addImage(i);},'false':function(){removeImage(i);}};
+    cb.addEventListener('change',function(){IMG_ACTION[String(cb.checked)]();});
     item.appendChild(cb);item.appendChild(lbl);
     list.appendChild(item);
   });
@@ -104,19 +105,15 @@ function addImage(idx){
   var item=document.createElement('div');
   item.className='worksheet-item';item.dataset.idx=idx;
   item.appendChild(renderSVG(pictures[idx],idx));
-  var items=sheet.querySelectorAll('.worksheet-item');
-  var inserted=false;
-  for(var i=0;i<items.length;i++){
-    if(parseInt(items[i].dataset.idx)>idx){sheet.insertBefore(item,items[i]);inserted=true;break;}
-  }
-  if(!inserted)sheet.appendChild(item);
+  var after=Array.from(sheet.querySelectorAll('.worksheet-item')).filter(function(el){return parseInt(el.dataset.idx)>idx;})[0];
+  [after].filter(Boolean).forEach(function(el){sheet.insertBefore(item,el);});
+  [after].filter(function(x){return !x;}).forEach(function(){sheet.appendChild(item);});
 }
 
 function removeImage(idx){
   var sheet=document.getElementById('sheet');
-  var item=sheet.querySelector('.worksheet-item[data-idx="'+idx+'"]');
-  if(item)sheet.removeChild(item);
-  if(!sheet.querySelector('.worksheet-item'))document.getElementById('empty-msg').style.display='';
+  [sheet.querySelector('.worksheet-item[data-idx="'+idx+'"]')].filter(Boolean).forEach(function(item){sheet.removeChild(item);});
+  [sheet.querySelector('.worksheet-item')].filter(function(x){return !x;}).forEach(function(){document.getElementById('empty-msg').style.display='';});
 }
 
 Dictionary.init('../../dictionary/');
