@@ -1,4 +1,5 @@
 [
+  "entries/apple/image.json",
   "entries/avocado/image.json",
   "entries/banana/image.json",
   "entries/bird/image.json",
@@ -18,7 +19,6 @@
   "entries/fish/image.json",
   "entries/giraffe/image.json",
   "entries/goose/image.json",
-  "entries/green-apple/image.json",
   "entries/horse/image.json",
   "entries/kiwi/image.json",
   "entries/lemon/image.json",
@@ -34,7 +34,6 @@
   "entries/rabbit/image.json",
   "entries/race-car/image.json",
   "entries/raspberry/image.json",
-  "entries/red-apple/image.json",
   "entries/strawberry/image.json",
   "entries/tiger/image.json",
   "entries/tractor/image.json",
