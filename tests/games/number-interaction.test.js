@@ -99,3 +99,9 @@ test('Count button is present in total area', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await expect(page.locator('#area-total').getByRole('button', { name: 'Count' })).toBeVisible()
 })
+
+test('home nav link points to lessons', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  const homeLink = page.locator('.nav-bar a[href*="lessons"]')
+  await expect(homeLink).toBeVisible()
+})
