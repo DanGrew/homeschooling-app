@@ -49,13 +49,20 @@
 </div>
 </div>
 <script type="module">
+import Dictionary from '../../../core/dictionary/dictionary-core.js';
+import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { pickFruitPair } from '../../../core/number-interaction/number-interaction-core.js';
 import { init, change, sayIt, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
 
-const FRUITS = ['apple','avocado','banana','blueberry','cherry','coconut','kiwi','lemon','mango','melon','orange','peach','pear','pineapple','raspberry','strawberry','watermelon'];
+Dictionary.init('../../dictionary/');
 
-const [aKey, bKey] = pickFruitPair(FRUITS);
-init(aKey, bKey, 10);
+const all = [];
+loadImages(all, () => {
+  const fruits = all.filter(w => w.tags.includes('fruit'));
+  const [a, b] = pickFruitPair(fruits);
+  init(a, b, 10);
+  document.body.dataset.ready = 'true';
+});
 
 window.change = change;
 window.sayIt = sayIt;

@@ -12,8 +12,8 @@ export function init(a, b, max) {
   render();
 }
 
-export function makeImg(name, sz) {
-  return `<img src="../../dictionary/entries/${name}/${name}.svg" style="${sz};transition:transform 0.15s,filter 0.15s;" draggable="false">`;
+export function makeImg(item, sz) {
+  return `<img src="${item.url}" style="${sz};transition:transform 0.15s,filter 0.15s;" draggable="false">`;
 }
 
 export function render() {

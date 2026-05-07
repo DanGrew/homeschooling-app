@@ -82,6 +82,7 @@ test('B cannot exceed 10', async ({ page }) => {
 
 test('A and B show different fruit images', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await page.locator('body[data-ready="true"]').waitFor()
   await page.locator('#area-a').getByRole('button', { name: '+' }).click()
   await page.locator('#area-b').getByRole('button', { name: '+' }).click()
   const aSrc = await page.locator('#objects-a img').getAttribute('src')
