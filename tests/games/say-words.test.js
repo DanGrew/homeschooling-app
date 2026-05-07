@@ -1,21 +1,22 @@
 const { test, expect } = require('@playwright/test')
 
-test('page loads with an image and word label', async ({ page }) => {
+test('page loads with tiles showing images and labels', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/say-words/')
-  await expect(page.locator('#label')).not.toBeEmpty({ timeout: 5000 })
-  await expect(page.locator('#picture svg')).toBeVisible()
-  await expect(page.locator('#phonetic')).not.toBeEmpty()
+  await expect(page.locator('.tile').first()).toBeVisible({ timeout: 5000 })
+  await expect(page.locator('.tile-label').first()).not.toBeEmpty()
+  await expect(page.locator('.tile-img img').first()).toBeVisible()
 })
 
-test('next button cycles to the next word', async ({ page }) => {
+test('next page button advances to next page', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/say-words/')
-  await expect(page.locator('#label')).not.toBeEmpty({ timeout: 5000 })
-  const firstLabel = await page.locator('#label').textContent()
-  await page.getByRole('button', { name: '→' }).click()
-  await expect(page.locator('#label')).not.toHaveText(firstLabel)
+  await expect(page.locator('.tile').first()).toBeVisible({ timeout: 5000 })
+  const firstLabel = await page.locator('.tile-label').first().textContent()
+  await page.getByRole('button', { name: /Next/ }).click()
+  await expect(page.locator('.tile-label').first()).not.toHaveText(firstLabel)
 })
 
-test('say it button is visible', async ({ page }) => {
+test('filter bar is visible', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/say-words/')
-  await expect(page.getByRole('button', { name: /Say it/ })).toBeVisible()
+  await expect(page.locator('#filter-bar')).toBeVisible({ timeout: 5000 })
+  await expect(page.locator('#filter-bar button').first()).toBeVisible()
 })
