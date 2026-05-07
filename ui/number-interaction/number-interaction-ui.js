@@ -1,10 +1,3 @@
-// arch: allow-complexity
-// change: routes delta to aCount or bCount by side — unavoidable dispatch between two independent counters
-// sayIt: selects count by side — parallel counter structure requires branch
-// countSpeak: voice assignment conditional on availability — browser SpeechSynthesis API constraint
-// countAll: zero-guard + sequential loop with termination check — speech timing lifecycle, not moveable to core
-// highlight: bounds check before DOM mutation — prevents invalid index access
-
 import { speak } from '../speech/speech-ui.js';
 import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
@@ -52,14 +45,13 @@ function stopCounting() {
 
 export function change(side, delta) {
   stopCounting();
-  if (side === 'a') aCount = clamp(aCount + delta, 0, MAX);
-  else bCount = clamp(bCount + delta, 0, MAX);
+  ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();
   render();
 }
 
 export function sayIt(side) {
   stopCounting();
-  speak(String(side === 'a' ? aCount : bCount));
+  speak(String(({a: () => aCount, b: () => bCount})[side]()));
   setTimeout(() => flashAll('objects-' + side), 100);
 }
 
@@ -67,27 +59,32 @@ function countSpeak(text, onDone) {
   const u = new SpeechSynthesisUtterance(text);
   u.rate = 1.0;
   u.pitch = 1.1;
-  const v = bestVoice(speechSynthesis.getVoices());
-  if (v) u.voice = v;
+  [bestVoice(speechSynthesis.getVoices())].filter(Boolean).forEach(v => { u.voice = v; });
   u.onend = () => setTimeout(onDone, 200);
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
+function highlight(idx, imgs) {
+  imgs.forEach(img => { img.style.transform = ''; img.style.filter = ''; });
+  Array.from(imgs).slice(idx, idx + 1).forEach(img => { img.style.transform = 'scale(1.3)'; img.style.filter = 'drop-shadow(0 0 10px gold)'; });
+}
+
 export function countAll() {
-  if (counting) return;
-  const total = aCount + bCount;
-  if (total === 0) { speak('zero'); return; }
-  counting = true;
-  let i = 0;
-  const imgs = document.querySelectorAll('#objects-total img');
-  function highlight(idx) {
-    imgs.forEach(img => { img.style.transform = ''; img.style.filter = ''; });
-    if (idx >= 0 && idx < imgs.length) { imgs[idx].style.transform = 'scale(1.3)'; imgs[idx].style.filter = 'drop-shadow(0 0 10px gold)'; }
-  }
-  (function next() {
-    if (i >= total) { highlight(-1); counting = false; return; }
-    highlight(i);
-    countSpeak(String(i + 1), () => { i++; next(); });
-  })();
+  [1].filter(() => !counting).forEach(() => {
+    const total = aCount + bCount;
+    [total].filter(t => t === 0).forEach(() => speak('zero'));
+    [total].filter(t => t > 0).forEach(() => {
+      counting = true;
+      let i = 0;
+      const steps = [...Array.from({length: total}, (_, idx) => idx), -1];
+      const imgs = document.querySelectorAll('#objects-total img');
+      (function next() {
+        const idx = steps[i++];
+        highlight(idx, imgs);
+        [countSpeak].filter(() => idx >= 0).forEach(fn => fn(String(idx + 1), next));
+        [1].filter(() => idx < 0).forEach(() => { counting = false; });
+      })();
+    });
+  });
 }
