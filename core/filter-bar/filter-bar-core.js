@@ -1,7 +1,8 @@
 export function extractTags(items){
-  var tags=['all'];
+  var tags=[];
   items.forEach(function(p){(p.tags||[]).forEach(function(t){if(tags.indexOf(t)<0)tags.push(t);});});
-  return tags;
+  tags.sort();
+  return ['all'].concat(tags);
 }
 
 export function extractLevels(items){

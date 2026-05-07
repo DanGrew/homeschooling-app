@@ -21,9 +21,10 @@ export function bestVoice(voices) {
 }
 
 export function extractWordTags(words) {
-  const tags = ['all'];
+  const tags = [];
   words.forEach(w => (w.tags || []).forEach(t => { if (!tags.includes(t)) tags.push(t); }));
-  return [...tags, 'custom'];
+  tags.sort();
+  return ['all', ...tags, 'custom'];
 }
 
 export function filterWordsByTag(words, tag) {
