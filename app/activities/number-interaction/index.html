@@ -10,7 +10,12 @@
 </head>
 <body>
 <div class="nav-bar" data-home="../../games/"></div>
-<div class="game-area" style="flex-direction:row;">
+<div class="game-area">
+<div style="padding:8px 20px 6px;border-bottom:2px solid #EEE;">
+  <div class="game-title" style="padding:0;margin-bottom:2px;">Numbers</div>
+  <div style="font-size:min(1em,2.8vw);color:#888;">Use + and − to change each group. See how the total changes!</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;overflow:hidden;">
 
   <div id="area-a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-right:2px solid #DDD;padding:12px 10px;">
     <div style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;">A</div>
@@ -42,99 +47,19 @@
   </div>
 
 </div>
+</div>
 <script type="module">
-import { speak } from '../../../ui/speech/speech-ui.js';
-import { bestVoice } from '../../../core/word-lesson/word-lesson-core.js';
-import { comparisonColor, pickFruitPair, clamp } from '../../../core/number-interaction/number-interaction-core.js';
+import { pickFruitPair } from '../../../core/number-interaction/number-interaction-core.js';
+import { init, change, sayIt, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
 
 const FRUITS = ['apple','avocado','banana','blueberry','cherry','coconut','kiwi','lemon','mango','melon','orange','peach','pear','pineapple','raspberry','strawberry','watermelon'];
 
 const [aKey, bKey] = pickFruitPair(FRUITS);
-
-let aCount = 0, bCount = 0;
-const MAX = 10;
-const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
-const SZ_SM = 'width:min(48px,6.2vw);height:min(48px,6.2vw)';
-
-function makeImg(name, sz) {
-  return `<img src="../../dictionary/entries/${name}/${name}.svg" style="${sz||SZ};transition:transform 0.15s,filter 0.15s;" draggable="false">`;
-}
-
-function flashAll(containerId) {
-  const imgs = document.querySelectorAll(`#${containerId} img`);
-  imgs.forEach(img => { img.style.transform='scale(1.25)'; img.style.filter='drop-shadow(0 0 8px gold)'; });
-  setTimeout(() => imgs.forEach(img => { img.style.transform=''; img.style.filter=''; }), 400);
-}
-
-function render() {
-  const aFruits = Array.from({length: aCount}, () => makeImg(aKey)).join('');
-  const bFruits = Array.from({length: bCount}, () => makeImg(bKey)).join('');
-  document.getElementById('objects-a').innerHTML = aFruits;
-  document.getElementById('objects-b').innerHTML = bFruits;
-  document.getElementById('objects-total').innerHTML =
-    Array.from({length: aCount}, () => makeImg(aKey, SZ_SM)).join('') +
-    Array.from({length: bCount}, () => makeImg(bKey, SZ_SM)).join('');
-  document.getElementById('num-a').textContent = aCount;
-  document.getElementById('num-b').textContent = bCount;
-  document.getElementById('num-total').textContent = aCount + bCount;
-  document.getElementById('objects-a').style.borderColor = comparisonColor(aCount, bCount);
-  document.getElementById('objects-b').style.borderColor = comparisonColor(bCount, aCount);
-}
-
-function change(side, delta) {
-  stopCounting();
-  if (side === 'a') aCount = clamp(aCount + delta, 0, MAX);
-  else bCount = clamp(bCount + delta, 0, MAX);
-  render();
-}
-
-function stopCounting() {
-  counting = false;
-  speechSynthesis.cancel();
-  document.querySelectorAll('#objects-total img').forEach(img => { img.style.transform=''; img.style.filter=''; });
-}
-
-function sayIt(side) {
-  stopCounting();
-  speak(String(side === 'a' ? aCount : bCount));
-  setTimeout(() => flashAll('objects-' + side), 100);
-}
-
-function countSpeak(text, onDone) {
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = 1.0;
-  u.pitch = 1.1;
-  const v = bestVoice(speechSynthesis.getVoices());
-  if (v) u.voice = v;
-  u.onend = () => setTimeout(onDone, 200);
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
-
-let counting = false;
-function countAll() {
-  if (counting) return;
-  const total = aCount + bCount;
-  if (total === 0) { speak('zero'); return; }
-  counting = true;
-  let i = 0;
-  const imgs = document.querySelectorAll('#objects-total img');
-  function highlight(idx) {
-    imgs.forEach(img => { img.style.transform=''; img.style.filter=''; });
-    if (idx >= 0 && idx < imgs.length) { imgs[idx].style.transform='scale(1.3)'; imgs[idx].style.filter='drop-shadow(0 0 10px gold)'; }
-  }
-  (function next() {
-    if (i >= total) { highlight(-1); counting = false; return; }
-    highlight(i);
-    countSpeak(String(i + 1), () => { i++; next(); });
-  })();
-}
+init(aKey, bKey, 10);
 
 window.change = change;
 window.sayIt = sayIt;
 window.countAll = countAll;
-
-render();
 </script>
 </body>
 </html>
