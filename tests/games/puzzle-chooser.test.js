@@ -5,7 +5,7 @@ const CHOOSER_URL = '/homeschooling-app/app/activities/puzzle/'
 test('chooser loads showing all puzzle cards', async ({ page }) => {
   await page.goto(CHOOSER_URL)
   await page.waitForSelector('.puzzle-card')
-  await expect(page.locator('.puzzle-card')).toHaveCount(7)
+  await expect(page.locator('.puzzle-card')).toHaveCount(8)
 })
 
 test('puzzle cards show thumbnails', async ({ page }) => {
