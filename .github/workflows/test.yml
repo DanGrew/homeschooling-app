@@ -188,6 +188,18 @@ jobs:
           name: report-no-guard-chain
           path: reports/no-guard-chain.txt
 
+  no-filter-conditional:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-filter-conditional reports/no-filter-conditional.txt || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-filter-conditional
+          path: reports/no-filter-conditional.txt
+
   pr-report:
     runs-on: ubuntu-latest
     permissions:
@@ -201,6 +213,7 @@ jobs:
       - no-stray-files
       - no-app-exports
       - no-guard-chain
+      - no-filter-conditional
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -230,6 +243,8 @@ jobs:
             cat reports/no-app-exports.txt 2>/dev/null || echo "⚠️ no-app-exports report missing"
             echo ""
             cat reports/no-guard-chain.txt 2>/dev/null || echo "⚠️ no-guard-chain report missing"
+            echo ""
+            cat reports/no-filter-conditional.txt 2>/dev/null || echo "⚠️ no-filter-conditional report missing"
             echo ""
             cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
           } > combined.md

@@ -32,6 +32,29 @@ function read(file) {
   return fs.readFileSync(file, 'utf8');
 }
 
+function extractInlineScripts(html) {
+  const scripts = [];
+  const re = /<script([^>]*)>([\s\S]*?)<\/script>/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    if (m[1].includes('src=')) continue;
+    const code = m[2].trim();
+    if (code) scripts.push(code);
+  }
+  return scripts;
+}
+
+function findMatches(content, regex) {
+  const re = new RegExp(regex.source, 'g');
+  const results = [];
+  let m;
+  while ((m = re.exec(content)) !== null) {
+    const line = content.slice(0, m.index).split('\n').length;
+    results.push({ line, text: m[0].slice(0, 60).replace(/\s+/g, ' ') });
+  }
+  return results;
+}
+
 let violations = [];
 let exceptions = [];
 let scanned = [];
@@ -123,6 +146,39 @@ if (rule === 'no-app-exports') {
     if (/^export\s/m.test(content)) {
       violations.push(`${path.relative(ROOT, file).replace(/\\/g, '/')} exports from app/ (move to core/ or ui/)`);
     }
+  });
+}
+
+if (rule === 'no-filter-conditional') {
+  // [null] or [undefined] used as a conditional sentinel (use boolean dispatch table instead)
+  const NULL_SENTINEL = /\[\s*(null|undefined)\s*\]\s*\.filter\s*\(/;
+  // negation filter where the callback negates its OWN parameter — the "else" side of an if/else
+  // backreference \1 ensures we only catch: function(x){return !x  not: function(){return !outerVar
+  const NEGATION_FILTER = /\[[^\[\],\n]{1,80}\]\s*\.filter\s*\(\s*function\s*\((\w+)\)\s*\{[^{}]{0,60}return\s*!\1\b/;
+
+  function checkContent(content, label) {
+    findMatches(content, NULL_SENTINEL).forEach(({ line, text }) => {
+      violations.push(`${label} — null/undefined sentinel as conditional at line ${line}: \`${text}\` (use boolean dispatch table)`);
+    });
+    findMatches(content, NEGATION_FILTER).forEach(({ line, text }) => {
+      violations.push(`${label} — negation filter on single-element array at line ${line}: \`${text}\` (use boolean dispatch table)`);
+    });
+  }
+
+  getAllFiles(path.join(ROOT, 'ui'), ['.js']).forEach(file => {
+    const content = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    if (hasAllow(content, 'allow-filter-conditional')) { exceptions.push(rel); return; }
+    scanned.push(rel);
+    checkContent(content, rel);
+  });
+
+  getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
+    const html = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    if (hasAllow(html, 'allow-filter-conditional')) { exceptions.push(rel); return; }
+    scanned.push(rel);
+    extractInlineScripts(html).forEach(script => checkContent(script, rel));
   });
 }
 
