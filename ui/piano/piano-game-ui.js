@@ -29,7 +29,7 @@ function createNoteEl(note, gameArea) {
 }
 
 function getOrMakeNoteEl(note, gameArea) {
-  [null].filter(() => !document.getElementById('note-' + note.id)).forEach(() => createNoteEl(note, gameArea));
+  {'true':()=>createNoteEl(note,gameArea),'false':()=>{}}[String(!document.getElementById('note-'+note.id))]();
   return document.getElementById('note-' + note.id);
 }
 
@@ -65,7 +65,7 @@ function runFrame(elapsed, areaHeight, gameArea) {
   notes.forEach(n => tickNote(n, elapsed, areaHeight, gameArea));
   var active = notes.filter(n => !DONE[n.state]);
   [endGame].filter(() => !active.length).filter(() => notes.length).forEach(f => f());
-  [null].filter(() => active.length).forEach(() => { rafId = requestAnimationFrame(gameLoop); });
+  {'true':()=>{rafId=requestAnimationFrame(gameLoop);},'false':()=>{}}[String(!!active.length)]();
 }
 
 function gameLoop() {
