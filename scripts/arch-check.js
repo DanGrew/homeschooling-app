@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { extractInlineScripts } = require('./html-utils');
 
 const rule = process.argv[2];
 const outputFile = process.argv[3];
@@ -32,17 +33,6 @@ function read(file) {
   return fs.readFileSync(file, 'utf8');
 }
 
-function extractInlineScripts(html) {
-  const scripts = [];
-  const re = /<script([^>]*)>([\s\S]*?)<\/script>/g;
-  let m;
-  while ((m = re.exec(html)) !== null) {
-    if (m[1].includes('src=')) continue;
-    const code = m[2].trim();
-    if (code) scripts.push(code);
-  }
-  return scripts;
-}
 
 function findMatches(content, regex) {
   const re = new RegExp(regex.source, 'g');

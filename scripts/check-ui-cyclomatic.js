@@ -4,6 +4,7 @@ const { ESLint } = require('eslint');
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { extractInlineScripts } = require('./html-utils');
 
 const outputFile = process.argv[2];
 if (!outputFile) {
@@ -31,18 +32,6 @@ function getAllFiles(dir, ext) {
     .map(f => path.join(dir, f));
 }
 
-function extractInlineScripts(htmlFile) {
-  const content = fs.readFileSync(htmlFile, 'utf8');
-  const scripts = [];
-  const re = /<script([^>]*)>([\s\S]*?)<\/script>/g;
-  let m;
-  while ((m = re.exec(content)) !== null) {
-    if (m[1].includes('src=')) continue;
-    const code = m[2].trim();
-    if (code) scripts.push(code);
-  }
-  return scripts;
-}
 
 async function run() {
   const eslint = new ESLint({
@@ -78,7 +67,7 @@ async function run() {
   const htmlFiles = getAllFiles(path.join(ROOT, 'app'), '.html');
   for (const htmlFile of htmlFiles) {
     const rel = path.relative(ROOT, htmlFile).replace(/\\/g, '/');
-    const blocks = extractInlineScripts(htmlFile);
+    const blocks = extractInlineScripts(fs.readFileSync(htmlFile, 'utf8'));
     for (const code of blocks) {
       if (code.includes('arch: allow-complexity')) { exceptions.push(rel + ' (inline script)'); continue; }
       scanned++;

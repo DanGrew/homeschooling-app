@@ -193,7 +193,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: mkdir -p reports
-      - run: node scripts/arch-check.js no-filter-conditional reports/no-filter-conditional.txt || true
+      - run: node scripts/arch-check.js no-filter-conditional reports/no-filter-conditional.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
