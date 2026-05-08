@@ -149,11 +149,12 @@ function fetchCharData(c) {
     });
 }
 
-async function loadWord(word) {
+function loadWord(word) {
   stopAllEngines();
   const chars = word.split('');
-  const charData = await Promise.all(chars.map(fetchCharData));
-  renderWord(chars, charData);
+  return Promise.all(chars.map(fetchCharData))
+    .then(charData => renderWord(chars, charData))
+    .catch(() => { document.getElementById('word-label').textContent = '⚠️ Could not load "' + word + '"'; });
 }
 
 function makeSvgPath(d) {
@@ -406,5 +407,7 @@ export function init() {
     setupFilterBar();
     filtered = words.slice();
     navTo(0);
+  }).catch(() => {
+    document.getElementById('word-label').textContent = '⚠️ Failed to load — check connection';
   });
 }
