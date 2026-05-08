@@ -1,0 +1,9 @@
+{
+  "activity": "match-colour",
+  "prompts": [
+    { "type": "word", "text": "Name the colour clearly before they pick: \"That colour is called [colour].\"" },
+    { "type": "ask",  "text": "Before they tap, ask: \"Which one looks the same colour? How do you know?\"" },
+    { "type": "ask",  "text": "After a correct answer, ask: \"Can you find something [colour] in the room?\"" },
+    { "type": "say",  "text": "If they pick wrong, say: \"Look again — this one is [colour A] and that one is [colour B]. Are they the same?\"" }
+  ]
+}

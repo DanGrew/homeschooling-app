@@ -1,0 +1,9 @@
+{
+  "activity": "piano-lesson",
+  "prompts": [
+    { "type": "word", "text": "\"High\" and \"low\" — tap a high key and a low key. Ask: \"Which sounds higher? Which sounds lower?\"" },
+    { "type": "ask",  "text": "Ask: \"Can you play something quiet? Now something loud? What do you do differently?\"" },
+    { "type": "say",  "text": "When they find a pleasing sound, say: \"That sounds lovely — play it again. Can you remember which key that was?\"" },
+    { "type": "ask",  "text": "Ask: \"Can you play a happy sound? A sad sound? What makes it feel that way?\"" }
+  ]
+}

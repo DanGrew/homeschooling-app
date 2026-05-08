@@ -1,0 +1,9 @@
+{
+  "activity": "story-time",
+  "prompts": [
+    { "type": "word", "text": "Before playing, introduce 1–2 unusual words from the story. Say: \"In this story we'll hear the word '[word]' — it means [meaning].\"" },
+    { "type": "ask",  "text": "Before pressing play, ask: \"What do you think this story might be about? What clues can you see?\"" },
+    { "type": "ask",  "text": "Pause after a key moment and ask: \"What do you think will happen next?\"" },
+    { "type": "say",  "text": "After the story, say: \"Tell me what happened in your own words — start with 'First...'\"" }
+  ]
+}

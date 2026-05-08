@@ -1,0 +1,9 @@
+{
+  "activity": "simulator",
+  "prompts": [
+    { "type": "word", "text": "\"Germinate\" — when a seed starts to grow, we say it germinates. The tiny root pushes down and the shoot pushes up." },
+    { "type": "ask",  "text": "Ask: \"What do you think a plant needs to grow?\" — before they start, let them predict." },
+    { "type": "say",  "text": "Narrate each stage as it happens: \"First the seed, then the shoot appears, now the flower is blooming!\"" },
+    { "type": "ask",  "text": "At each new stage, ask: \"What do you think comes next?\" — builds prediction and sequencing." }
+  ]
+}

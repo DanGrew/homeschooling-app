@@ -1,0 +1,9 @@
+{
+  "activity": "colouring-palette",
+  "prompts": [
+    { "type": "word", "text": "\"Palette\" — artists use a palette to hold the colours they plan to use. Ask: \"Which colours from the palette do you think you'll need?\"" },
+    { "type": "ask",  "text": "Before they pick a colour, ask: \"What colour is that part in real life?\"" },
+    { "type": "say",  "text": "After choosing a colour, say: \"You picked [colour] for [part] — tell me why you chose that.\"" },
+    { "type": "ask",  "text": "Ask: \"Are there colours on the palette you haven't used yet? Where could they go?\"" }
+  ]
+}

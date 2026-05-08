@@ -1,0 +1,9 @@
+{
+  "activity": "shopping-scan",
+  "prompts": [
+    { "type": "word", "text": "\"Barcode\" — the stripy pattern that tells the scanner what the item is. Every product has its own unique barcode." },
+    { "type": "ask",  "text": "Before scanning, ask: \"Do you think this is the right one? How can you tell?\"" },
+    { "type": "say",  "text": "Use sequencing language: \"First we chose the list, then we found the items, now we're scanning them — nearly done!\"" },
+    { "type": "ask",  "text": "Ask: \"How many items do we still need to find? How many have we scanned?\"" }
+  ]
+}

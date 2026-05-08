@@ -1,0 +1,9 @@
+{
+  "activity": "move-blocks",
+  "prompts": [
+    { "type": "word", "text": "Positional language: \"up, down, left, right\" — use these words as they move the block. Point in the direction as you say it." },
+    { "type": "ask",  "text": "Before moving, ask: \"Which direction do you think the block needs to go first?\"" },
+    { "type": "say",  "text": "Narrate each move: \"The block moved right — now it's closer to the green square!\"" },
+    { "type": "ask",  "text": "Ask: \"How many moves do you think it will take to reach the square?\" — builds estimation thinking." }
+  ]
+}

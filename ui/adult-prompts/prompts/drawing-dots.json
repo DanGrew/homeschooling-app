@@ -1,0 +1,9 @@
+{
+  "activity": "drawing-dots",
+  "prompts": [
+    { "type": "word", "text": "\"Guide points\" — these dots show us where to draw. \"Connect\" means to join one thing to another." },
+    { "type": "say",  "text": "Count the dots together before drawing: \"One, two, three — three dots to join up.\"" },
+    { "type": "ask",  "text": "Ask: \"What shape do you think it will make when you join all the dots?\"" },
+    { "type": "say",  "text": "After completing, name the shape and say: \"You drew a [shape]! How many sides does it have?\"" }
+  ]
+}

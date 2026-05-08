@@ -1,0 +1,9 @@
+{
+  "activity": "shopping-play",
+  "prompts": [
+    { "type": "word", "text": "\"Shopping list\" — a list of things we need to find. \"Catalogue\" — a collection of items we can choose from." },
+    { "type": "say",  "text": "As each item is added, say: \"We need [item] — where in the house might we find that?\"" },
+    { "type": "say",  "text": "Use sequencing language: \"First we chose our list. Now we need to find everything. After that we'll be done!\"" },
+    { "type": "ask",  "text": "While hunting, ask: \"What are we looking for next? Can you remember without looking?\"" }
+  ]
+}

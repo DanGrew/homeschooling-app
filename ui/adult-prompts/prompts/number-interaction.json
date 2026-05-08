@@ -1,0 +1,9 @@
+{
+  "activity": "number-interaction",
+  "prompts": [
+    { "type": "word", "text": "Point to numerals and say: \"This symbol is called [number] — it means [number] things.\"" },
+    { "type": "say",  "text": "Count together as you tap or change: \"One, two, three...\" — always point to each item as you count." },
+    { "type": "ask",  "text": "Ask: \"What comes after [number]? What comes before?\"" },
+    { "type": "ask",  "text": "Ask: \"Can you show me [number] fingers? How many fingers are left?\"" }
+  ]
+}
