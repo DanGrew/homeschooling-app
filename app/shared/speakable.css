@@ -1,7 +1,17 @@
+@keyframes speakable-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(150,80,220,0.15); }
+  50%       { box-shadow: 0 0 0 6px rgba(150,80,220,0.35); }
+}
+
 @keyframes speakable-tap {
   0%   { transform: scale(1); }
   40%  { transform: scale(0.92); filter: brightness(1.25); }
   100% { transform: scale(1); filter: brightness(1); }
+}
+
+.speakable {
+  border-radius: 8px;
+  animation: speakable-pulse 3s ease-in-out infinite;
 }
 
 .speakable--tap {

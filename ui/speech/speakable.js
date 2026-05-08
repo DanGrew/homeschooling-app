@@ -3,6 +3,7 @@ import { speak } from './speech-ui.js';
 var DEBOUNCE_MS = 100;
 
 export function makeSpeakable(el, text) {
+  el.classList.add('speakable');
   var lastFired = 0;
   el.addEventListener('pointerdown', function(e) {
     e.preventDefault();
