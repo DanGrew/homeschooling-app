@@ -66,8 +66,10 @@ function tightVB(shape){
   return minX+' '+minY+' '+vbW+' '+(maxY-minY);
 }
 
-function dotR(vbW){
-  return Math.round(vbW*0.055);
+function dotR(vbW,vbH){
+  var rect=document.getElementById('svg').getBoundingClientRect();
+  var scale=Math.min(rect.width/vbW,rect.height/vbH);
+  return Math.round(Math.min(rect.width,rect.height)*0.04/scale);
 }
 
 var resizeTimer;
@@ -87,7 +89,8 @@ function render(){
 
   var vb=tightVB(shape);
   svg.setAttribute('viewBox',vb);
-  var r=dotR(parseInt(vb.split(' ')[2]));
+  var vbParts=vb.split(' ').map(Number);
+  var r=dotR(vbParts[2],vbParts[3]);
   var fontSize=Math.round(r*0.85);
 
   shape.guides.forEach(function(g){
@@ -156,7 +159,8 @@ function tap(n){
 function drawLine(x1,y1,x2,y2){
   var g=document.getElementById('lines');
   var len=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
-  var r=dotR(parseInt(document.getElementById('svg').getAttribute('viewBox').split(' ')[2]));
+  var vbArr=document.getElementById('svg').getAttribute('viewBox').split(' ').map(Number);
+  var r=dotR(vbArr[2],vbArr[3]);
   var line=ns('line',{x1:x1,y1:y1,x2:x2,y2:y2,stroke:'#3498DB','stroke-width':String(Math.max(1,Math.round(r*0.3))),'stroke-linecap':'round','stroke-dasharray':len,'stroke-dashoffset':len});
   g.appendChild(line);
   line.getBoundingClientRect();
