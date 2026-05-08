@@ -1,12 +1,18 @@
 const { test, expect } = require('@playwright/test')
 
-test('page loads with title, instruction, word, say button, and 4 choices', async ({ page }) => {
+test('page loads with title, instruction, word, and 4 choices', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/word-match/')
   await expect(page.getByText('Word Match')).toBeVisible()
   await expect(page.getByText('Find the picture!')).toBeVisible()
   await expect(page.locator('#wm-word')).not.toBeEmpty({ timeout: 5000 })
-  await expect(page.getByRole('button', { name: /Say it/ })).toBeVisible()
   await expect(page.locator('#wm-choices button')).toHaveCount(4)
+})
+
+test('word element is speakable', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/word-match/')
+  await expect(page.locator('#wm-word')).not.toBeEmpty({ timeout: 5000 })
+  await expect(page.locator('#wm-word.speakable')).toBeVisible()
+  await expect(page.locator('#wm-word')).toHaveCSS('cursor', 'pointer')
 })
 
 test('each choice shows an image', async ({ page }) => {
