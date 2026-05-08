@@ -1,8 +1,9 @@
 (function () {
-  var prompts = window.ADULT_PROMPTS || [];
-  if (!prompts.length) return;
+  var activity = window.ADULT_PROMPTS_ACTIVITY;
+  if (!activity) return;
 
   var idx = 0;
+  var prompts = [];
   var pressTimer = null;
   var HOLD_MS = 600;
   var CIRCUMFERENCE = 138;
@@ -42,7 +43,7 @@
           '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
           '<span style="font-size:0.72em;color:#bbb;font-weight:700;letter-spacing:0.07em;">FOR YOU</span>' +
         '</div>' +
-        '<div id="ap-close" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ccc;font-size:1em;border-radius:6px;">✕</div>' +
+        '<div id="ap-close" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ccc;font-size:1em;border-radius:6px;">&#x2715;</div>' +
       '</div>' +
       '<div style="padding:14px 14px 10px;">' +
         '<div style="display:inline-block;background:' + col + '1a;color:' + col + ';font-size:0.68em;font-weight:800;letter-spacing:0.1em;padding:3px 9px;border-radius:6px;margin-bottom:10px;">' + lbl + '</div>' +
@@ -80,6 +81,16 @@
   wrap.addEventListener('pointerleave', resetPress);
   wrap.addEventListener('pointercancel', resetPress);
 
-  document.body.appendChild(wrap);
-  document.body.appendChild(card);
+  var base = document.currentScript
+    ? document.currentScript.src.replace(/adult-prompts-ui\.js$/, '')
+    : '';
+
+  fetch(base + 'prompts/' + activity + '.json')
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      prompts = data.prompts || [];
+      if (!prompts.length) return;
+      document.body.appendChild(wrap);
+      document.body.appendChild(card);
+    });
 })();
