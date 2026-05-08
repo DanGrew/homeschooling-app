@@ -9,7 +9,7 @@ export function makeSpeakable(el, text) {
     var now = Date.now();
     if (now - lastFired < DEBOUNCE_MS) return;
     lastFired = now;
-    speak(text);
+    speak(typeof text === 'function' ? text() : text);
     triggerFeedback(el);
   });
 }
