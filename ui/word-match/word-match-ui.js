@@ -59,6 +59,6 @@ export function init(items){
   ensureBanner();
   var wordEl=document.getElementById('wm-word');
   wordEl.style.cursor='pointer';
-  makeSpeakable(wordEl,function(){return current&&current.target?current.target.name:'';});
+  makeSpeakable(wordEl,() => current?.target?.name);
   renderRound(items);
 }

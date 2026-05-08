@@ -1,17 +1,20 @@
 import { speak } from './speech-ui.js';
 
 var DEBOUNCE_MS = 100;
+var RESOLVE_TEXT = { 'function': t => t, 'string': t => () => t };
+var FIRE = {
+  'true':  (getText, el, setLast) => { setLast(); speak(getText()); triggerFeedback(el); },
+  'false': () => {}
+};
 
 export function makeSpeakable(el, text) {
   el.classList.add('speakable');
+  var getText = RESOLVE_TEXT[typeof text](text);
   var lastFired = 0;
   el.addEventListener('pointerdown', function(e) {
     e.preventDefault();
     var now = Date.now();
-    if (now - lastFired < DEBOUNCE_MS) return;
-    lastFired = now;
-    speak(typeof text === 'function' ? text() : text);
-    triggerFeedback(el);
+    FIRE[String(now - lastFired >= DEBOUNCE_MS)](getText, el, () => { lastFired = now; });
   });
 }
 
