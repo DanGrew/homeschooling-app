@@ -200,17 +200,17 @@ jobs:
           name: report-no-filter-conditional
           path: reports/no-filter-conditional.txt
 
-  check-puzzle-manifest:
+  check-manifest-files:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: mkdir -p reports
-      - run: node scripts/check-puzzle-manifest.js reports/check-puzzle-manifest.txt
+      - run: node scripts/check-manifest-files.js reports/check-manifest-files.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: report-check-puzzle-manifest
-          path: reports/check-puzzle-manifest.txt
+          name: report-check-manifest-files
+          path: reports/check-manifest-files.txt
 
   pr-report:
     runs-on: ubuntu-latest
@@ -226,7 +226,7 @@ jobs:
       - no-app-exports
       - no-guard-chain
       - no-filter-conditional
-      - check-puzzle-manifest
+      - check-manifest-files
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -259,7 +259,7 @@ jobs:
             echo ""
             cat reports/no-filter-conditional.txt 2>/dev/null || echo "⚠️ no-filter-conditional report missing"
             echo ""
-            cat reports/check-puzzle-manifest.txt 2>/dev/null || echo "⚠️ check-puzzle-manifest report missing"
+            cat reports/check-manifest-files.txt 2>/dev/null || echo "⚠️ check-manifest-files report missing"
             echo ""
             cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
           } > combined.md

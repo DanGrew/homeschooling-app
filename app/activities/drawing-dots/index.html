@@ -28,7 +28,7 @@ import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadAllDrawingDots } from '../../../core/dictionary/dictionary-helpers-core.js';
 Dictionary.init('../../dictionary/');
 var shapes=[];
-loadAllDrawingDots(shapes,function(){startEngine(shapes);});
+loadAllDrawingDots(shapes,function(){startEngine(shapes);},function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
 </script>
 </body>
 </html>

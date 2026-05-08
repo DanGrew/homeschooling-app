@@ -1,34 +1,36 @@
 import Dictionary from './dictionary-core.js';
 
-export function loadColouringPictures(pictures,callback){
+function onErr(onError,callback){return function(err){if(onError)onError(err);else callback();};}
+
+export function loadColouringPictures(pictures,callback,onError){
   Dictionary.loadManifest('colouring',1).then(function(items){
     items.forEach(function(item){
       pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.shapes});
     });
     callback();
-  }).catch(function(){callback();});
+  }).catch(onErr(onError,callback));
 }
 
-export function loadConnectDots(shapes,callback){
+export function loadConnectDots(shapes,callback,onError){
   Dictionary.loadManifest('connectDots',1).then(function(items){
     items.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,guides:item.guides,decor:item.decor});
     });
     shapes.sort(function(a,b){var l=a.level-b.level;return l!==0?l:a.name.localeCompare(b.name);});
     callback();
-  }).catch(function(){callback();});
+  }).catch(onErr(onError,callback));
 }
 
-export function loadDrawingDots(shapes,level,callback){
+export function loadDrawingDots(shapes,level,callback,onError){
   Dictionary.loadManifest('drawingDots',level).then(function(items){
     items.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
     });
     callback();
-  }).catch(function(){callback();});
+  }).catch(onErr(onError,callback));
 }
 
-export function loadAllDrawingDots(shapes,callback){
+export function loadAllDrawingDots(shapes,callback,onError){
   Dictionary.loadManifest('drawingDots',1).then(function(l1){
     l1.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,edges:item.edges,decor:item.decor});
@@ -40,12 +42,12 @@ export function loadAllDrawingDots(shapes,callback){
     });
     shapes.sort(function(a,b){var l=a.level-b.level;return l!==0?l:a.name.localeCompare(b.name);});
     callback();
-  }).catch(function(){callback();});
+  }).catch(onErr(onError,callback));
 }
 
-export function loadImages(items,callback){
+export function loadImages(items,callback,onError){
   Dictionary.loadManifest('image',1).then(function(loaded){
     loaded.forEach(function(item){items.push(item);});
     callback();
-  }).catch(function(){callback();});
+  }).catch(onErr(onError,callback));
 }

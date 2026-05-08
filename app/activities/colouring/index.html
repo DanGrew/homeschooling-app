@@ -64,7 +64,7 @@ window.nextPicture=nextPicture;window.prevPicture=prevPicture;
 Dictionary.init('../../dictionary/');
 loadColouringPictures(pictures,function(){
   buildFilterBar(pictures,function(f){filtered=f;filtIdx=0;render();});
-});
+},function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
 </script>
 </body>
 </html>
