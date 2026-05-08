@@ -67,12 +67,9 @@ function tightVB(shape){
 }
 
 function dotR(vbW,vbH){
-  var svg=document.getElementById('svg');
-  var rect=svg.getBoundingClientRect();
-  if(!rect.width||!rect.height) return Math.round(vbW*0.055);
+  var rect=document.getElementById('svg').getBoundingClientRect();
   var scale=Math.min(rect.width/vbW,rect.height/vbH);
-  var targetPx=Math.max(10,Math.min(rect.width,rect.height)*0.04);
-  return Math.round(targetPx/scale);
+  return Math.round(Math.min(rect.width,rect.height)*0.04/scale);
 }
 
 var resizeTimer;
