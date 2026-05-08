@@ -92,7 +92,7 @@
     fetch(base + 'prompts/' + act + '.json')
       .then(function (r) { return r.json(); })
       .then(function (data) {
-        [data.prompts].filter(function (p) { return p && p.length; }).forEach(function (p) {
+        [data.prompts].filter(Boolean).filter(function (p) { return p.length; }).forEach(function (p) {
           prompts = p;
           document.body.appendChild(wrap);
           document.body.appendChild(card);
