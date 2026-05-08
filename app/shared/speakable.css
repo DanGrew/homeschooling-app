@@ -1,0 +1,9 @@
+@keyframes speakable-tap {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.92); filter: brightness(1.25); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.speakable--tap {
+  animation: speakable-tap 180ms ease-out forwards;
+}
