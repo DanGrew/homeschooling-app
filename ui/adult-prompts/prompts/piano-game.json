@@ -1,0 +1,9 @@
+{
+  "activity": "piano-game",
+  "prompts": [
+    { "type": "word", "text": "\"Rhythm\" — a pattern of sounds in time. \"Beat\" — the steady pulse underneath the music, like a heartbeat." },
+    { "type": "say",  "text": "Clap or tap the beat together as notes approach: this builds the physical feel of rhythm before the key press." },
+    { "type": "ask",  "text": "Ask: \"Can you feel when the note is about to arrive? What helps you know?\"" },
+    { "type": "say",  "text": "After a good run, say: \"You kept the beat! That means your timing was right — well done.\"" }
+  ]
+}

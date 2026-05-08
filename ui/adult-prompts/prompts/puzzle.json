@@ -1,0 +1,9 @@
+{
+  "activity": "puzzle",
+  "prompts": [
+    { "type": "word", "text": "\"Edge pieces\" have a flat side — they go around the outside. \"Corner pieces\" have two flat sides." },
+    { "type": "ask",  "text": "Before placing, ask: \"Where do you think that piece goes? What clues can you see — colours, shapes?\"" },
+    { "type": "say",  "text": "Look at piece shapes together: \"This piece has a bump — we need a hole the same shape to fit it in.\"" },
+    { "type": "ask",  "text": "Ask: \"What's the finished picture going to show? Can you guess from what's already there?\"" }
+  ]
+}

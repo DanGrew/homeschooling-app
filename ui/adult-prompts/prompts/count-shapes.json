@@ -1,0 +1,9 @@
+{
+  "activity": "count-shapes",
+  "prompts": [
+    { "type": "word", "text": "\"Subitise\" — seeing how many there are without counting one by one. Ask: \"How many can you see? Can you tell without counting?\"" },
+    { "type": "ask",  "text": "Before they answer, ask: \"How many do you think there are? Can you guess?\"" },
+    { "type": "say",  "text": "Count together, pointing to each shape: \"One, two, three — there are three!\"" },
+    { "type": "ask",  "text": "After each round, ask: \"Was that more or fewer than last time?\"" }
+  ]
+}

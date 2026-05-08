@@ -1,0 +1,9 @@
+{
+  "activity": "colouring",
+  "prompts": [
+    { "type": "ask",  "text": "Before they start, ask: \"What colour will you use for the [part]? Why did you choose that?\"" },
+    { "type": "word", "text": "Name colours as they pick: \"That's [colour] — it's a [warm/cool] colour. Warm colours are red, orange and yellow. Cool colours are blue, green and purple.\"" },
+    { "type": "say",  "text": "Narrate their choices: \"You're making the sun yellow — good thinking, suns are bright and warm.\"" },
+    { "type": "ask",  "text": "Ask: \"What colours can you see on a real [object]? Did you use the same ones?\"" }
+  ]
+}

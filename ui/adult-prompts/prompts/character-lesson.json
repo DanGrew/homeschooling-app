@@ -1,0 +1,9 @@
+{
+  "activity": "character-lesson",
+  "prompts": [
+    { "type": "word", "text": "Name each letter as they trace: \"That's the letter [X] — it makes the '[sound]' sound.\"" },
+    { "type": "say",  "text": "Describe the motion as they trace: \"Start at the top, go down, then across\" — narrating builds letter formation memory." },
+    { "type": "say",  "text": "When a character is complete, say it together: \"That's the letter [X]!\" — name it clearly once more." },
+    { "type": "ask",  "text": "Ask: \"Can you think of a word that starts with [letter]? Where might you see this letter written?\"" }
+  ]
+}

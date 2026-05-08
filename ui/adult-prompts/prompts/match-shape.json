@@ -1,0 +1,9 @@
+{
+  "activity": "match-shape",
+  "prompts": [
+    { "type": "word", "text": "Name the shape and describe it: \"That's a [shape] — it has [n] sides\" or \"it's round with no corners.\"" },
+    { "type": "ask",  "text": "Before they tap, ask: \"Which one is the same shape? What makes you think that?\"" },
+    { "type": "ask",  "text": "After a correct answer, ask: \"Can you find a [shape] somewhere nearby?\"" },
+    { "type": "say",  "text": "If they pick wrong, compare together: \"Count the sides on this one... now count that one. Are they the same?\"" }
+  ]
+}

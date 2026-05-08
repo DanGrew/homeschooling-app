@@ -1,0 +1,9 @@
+{
+  "activity": "match-colour-shape",
+  "prompts": [
+    { "type": "say",  "text": "Set up the challenge: \"We're looking for two things at once — the colour AND the shape.\"" },
+    { "type": "ask",  "text": "Before they pick, ask: \"What colour is it? What shape is it? Now find the one that matches both.\"" },
+    { "type": "say",  "text": "After a correct answer, say together: \"It's a [colour] [shape]!\" — naming both each time builds compound vocabulary." },
+    { "type": "ask",  "text": "Ask: \"Can you find a [colour] [shape] anywhere in the room?\"" }
+  ]
+}

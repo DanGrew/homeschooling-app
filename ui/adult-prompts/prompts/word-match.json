@@ -1,0 +1,9 @@
+{
+  "activity": "word-match",
+  "prompts": [
+    { "type": "ask",  "text": "Before they tap, ask: \"Which picture shows a [word]? What can you see that tells you?\"" },
+    { "type": "say",  "text": "After a correct match, say: \"Yes! That's [word] — can you use it in a sentence?\"" },
+    { "type": "ask",  "text": "Ask: \"What other things belong in the same group as [word]?\" — builds category thinking." },
+    { "type": "word", "text": "Point to the written word and say: \"Look at the letters — it starts with [letter]. Can you find that letter?\"" }
+  ]
+}

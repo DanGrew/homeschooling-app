@@ -1,0 +1,9 @@
+{
+  "activity": "say-words",
+  "prompts": [
+    { "type": "say",  "text": "When a new word appears, say it clearly together: \"[word]\" — then ask them to say it back." },
+    { "type": "ask",  "text": "Ask: \"What does [word] mean? Where might you see one?\"" },
+    { "type": "say",  "text": "Use the word in a sentence together: \"I can see a [word]\" or \"A [word] is used for...\"" },
+    { "type": "ask",  "text": "Ask: \"Can you think of something that goes with a [word]?\" — builds vocabulary connections." }
+  ]
+}
