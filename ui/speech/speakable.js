@@ -10,7 +10,8 @@ var FIRE = {
 function ensureSvgGlowFilter(svg) {
   [1].filter(() => !svg.querySelector('#speakable-glow')).forEach(() => {
     var NS = 'http://www.w3.org/2000/svg';
-    var defs = svg.querySelector('defs') || svg.insertBefore(document.createElementNS(NS, 'defs'), svg.firstChild);
+    [svg.querySelector('defs')].filter(d => !d).forEach(() => svg.insertBefore(document.createElementNS(NS, 'defs'), svg.firstChild));
+    var defs = svg.querySelector('defs');
     var filt = document.createElementNS(NS, 'filter');
     filt.id = 'speakable-glow';
     filt.setAttribute('x', '-50%'); filt.setAttribute('y', '-50%');
