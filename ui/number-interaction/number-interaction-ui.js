@@ -1,4 +1,5 @@
 import { speak } from '../speech/speech-ui.js';
+import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
 import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
@@ -9,6 +10,15 @@ let aCount = 0, bCount = 0, aKey = '', bKey = '', MAX = 10, counting = false;
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
+  var numA = document.getElementById('num-a');
+  var numB = document.getElementById('num-b');
+  var numTotal = document.getElementById('num-total');
+  numA.style.cursor = 'pointer';
+  numB.style.cursor = 'pointer';
+  numTotal.style.cursor = 'pointer';
+  makeSpeakable(numA, () => String(aCount));
+  makeSpeakable(numB, () => String(bCount));
+  makeInteractive(numTotal, countAll);
   render();
 }
 
@@ -16,19 +26,31 @@ export function makeImg(item, sz) {
   return `<img src="${item.url}" style="${sz};transition:transform 0.15s,filter 0.15s;" draggable="false">`;
 }
 
+function makeImgEl(item, sz) {
+  var img = document.createElement('img');
+  img.src = item.url;
+  img.alt = item.name;
+  img.style.cssText = sz + ';transition:transform 0.15s,filter 0.15s;';
+  img.draggable = false;
+  makeSpeakable(img, item.name);
+  return img;
+}
+
 export function render() {
-  const aFruits = Array.from({length: aCount}, () => makeImg(aKey, SZ)).join('');
-  const bFruits = Array.from({length: bCount}, () => makeImg(bKey, SZ)).join('');
-  document.getElementById('objects-a').innerHTML = aFruits;
-  document.getElementById('objects-b').innerHTML = bFruits;
+  var aContainer = document.getElementById('objects-a');
+  var bContainer = document.getElementById('objects-b');
+  aContainer.innerHTML = '';
+  bContainer.innerHTML = '';
+  Array.from({length: aCount}, () => { aContainer.appendChild(makeImgEl(aKey, SZ)); });
+  Array.from({length: bCount}, () => { bContainer.appendChild(makeImgEl(bKey, SZ)); });
   document.getElementById('objects-total').innerHTML =
     Array.from({length: aCount}, () => makeImg(aKey, SZ_SM)).join('') +
     Array.from({length: bCount}, () => makeImg(bKey, SZ_SM)).join('');
   document.getElementById('num-a').textContent = aCount;
   document.getElementById('num-b').textContent = bCount;
   document.getElementById('num-total').textContent = aCount + bCount;
-  document.getElementById('objects-a').style.borderColor = comparisonColor(aCount, bCount);
-  document.getElementById('objects-b').style.borderColor = comparisonColor(bCount, aCount);
+  aContainer.style.borderColor = comparisonColor(aCount, bCount);
+  bContainer.style.borderColor = comparisonColor(bCount, aCount);
 }
 
 export function flashAll(containerId) {
@@ -47,12 +69,6 @@ export function change(side, delta) {
   stopCounting();
   ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();
   render();
-}
-
-export function sayIt(side) {
-  stopCounting();
-  speak(String(({a: () => aCount, b: () => bCount})[side]()));
-  setTimeout(() => flashAll('objects-' + side), 100);
 }
 
 function countSpeak(text, onDone) {

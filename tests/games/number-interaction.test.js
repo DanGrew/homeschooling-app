@@ -90,15 +90,17 @@ test('A and B show different fruit images', async ({ page }) => {
   expect(aSrc).not.toBe(bSrc)
 })
 
-test('Say it button is present in A and B areas', async ({ page }) => {
+test('number displays are speakable', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
-  await expect(page.locator('#area-a').getByRole('button', { name: 'Say it' })).toBeVisible()
-  await expect(page.locator('#area-b').getByRole('button', { name: 'Say it' })).toBeVisible()
+  await expect(page.locator('#num-a.speakable')).toBeVisible()
+  await expect(page.locator('#num-b.speakable')).toBeVisible()
+  await expect(page.locator('#num-total.speakable')).toBeVisible()
 })
 
-test('Count button is present in total area', async ({ page }) => {
+test('fruit images are speakable after adding', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
-  await expect(page.locator('#area-total').getByRole('button', { name: 'Count' })).toBeVisible()
+  await page.locator('#area-a').getByRole('button', { name: '+' }).click()
+  await expect(page.locator('#objects-a img.speakable')).toHaveCount(1)
 })
 
 test('home nav link points to lessons', async ({ page }) => {
