@@ -23,6 +23,7 @@ var SPEAK_ACTION = {
 };
 
 export function warmUp() {
+  speechSynthesis.resume();
   speechSynthesis.speak(new SpeechSynthesisUtterance(' '));
 }
 
