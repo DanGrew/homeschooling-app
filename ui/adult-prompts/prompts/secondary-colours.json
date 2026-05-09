@@ -1,7 +1,7 @@
 {
   "activity": "secondary-colours",
   "prompts": [
-    { "type": "word", "text": "\"Tertiary colours\" — made by mixing a primary colour with a secondary colour next to it on the wheel. Red + orange = red-orange." },
+    { "type": "word", "text": "\"Tertiary colours\" — made by mixing a primary colour with a secondary colour next to it on the wheel. Red + orange = Vermillion." },
     { "type": "ask",  "text": "Before mixing, ask: \"I wonder what [colour A] and [colour B] will make?\" — let them predict first." },
     { "type": "say",  "text": "After a correct result, say together: \"[A] and [B] made [result]!\" — say it slowly once more." },
     { "type": "ask",  "text": "Ask: \"Can you find that colour on the wheel? Is it closer to [A] or [B]?\"" }

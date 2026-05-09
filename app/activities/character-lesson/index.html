@@ -22,6 +22,7 @@
   #btn-speak{background:#3498DB;color:white;}
   #btn-tryit{background:#2ECC71;color:white;}
   #btn-watch{background:#9B59B6;color:white;}
+  #btn-stop{background:#E74C3C;color:white;}
   .trace-hint{text-align:center;font-size:1em;color:#888;padding:4px 16px;display:none;}
   #success-banner{position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;}
   #success-banner.visible{transform:translateY(0);}
@@ -48,10 +49,11 @@
     <button class="nav-btn" id="btn-next">&#8594;</button>
   </div>
   <div class="mode-btns">
-    <button class="mode-btn" id="btn-trace">&#9654; Trace</button>
+    <button class="mode-btn" id="btn-trace" style="display:none">&#9654; Trace</button>
+    <button class="mode-btn" id="btn-watch">&#128218; Watch</button>
     <button class="mode-btn" id="btn-speak">&#128264; Speak</button>
     <button class="mode-btn" id="btn-tryit">Try It &#8594;</button>
-    <button class="mode-btn" id="btn-watch" style="display:none">&#128218; Watch</button>
+    <button class="mode-btn" id="btn-stop" style="display:none">&#9632; Reset</button>
   </div>
   <div class="trace-hint" id="trace-hint">Hold the red ball and trace!</div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">

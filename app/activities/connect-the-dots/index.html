@@ -81,7 +81,8 @@ window.addEventListener('resize',function(){
 function render(){
   var shape=filtered[filtIdx];
   var svg=document.getElementById('svg');
-  svg.innerHTML=[shape.decor].filter(Boolean).concat([''])[0];
+  svg.innerHTML='';
+  [shape.decor].filter(Boolean).forEach(function(decor){var bg=document.createElementNS('http://www.w3.org/2000/svg','g');bg.id='bg';bg.setAttribute('opacity','0.4');bg.innerHTML=decor;Array.from(bg.children).forEach(function(el){el.removeAttribute('opacity');});svg.appendChild(bg);});
   nextDot=1;prevDot=null;complete=false;
   document.getElementById('title').textContent=shape.name+[shape.level].filter(function(v){return v!==undefined;}).map(function(v){return ' [Level '+v+']';}).concat([''])[0];
   hideBanner();
@@ -93,12 +94,15 @@ function render(){
   var r=dotR(vbParts[2],vbParts[3]);
   var fontSize=Math.round(r*0.85);
 
+  var guidesG=ns('g',{id:'guides'});
   shape.guides.forEach(function(g){
-    svg.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':String(Math.max(1,Math.round(r*0.12))),'stroke-dasharray':'10 6'}));
+    guidesG.appendChild(ns('line',{x1:g.x1,y1:g.y1,x2:g.x2,y2:g.y2,stroke:'#ddd','stroke-width':String(Math.max(1,Math.round(r*0.12))),'stroke-dasharray':'10 6'}));
   });
+  svg.appendChild(guidesG);
 
   svg.appendChild(ns('g',{id:'lines'}));
 
+  var dotsG=ns('g',{id:'dots'});
   shape.dots.forEach(function(d){
     var g=ns('g',{});
     g.style.cursor='pointer';
@@ -107,8 +111,9 @@ function render(){
     t.textContent=d.n;
     g.appendChild(c);g.appendChild(t);
     g.addEventListener('click',function(){tap(d.n);});
-    svg.appendChild(g);
+    dotsG.appendChild(g);
   });
+  svg.appendChild(dotsG);
 }
 
 function doWrong(n){
@@ -133,7 +138,7 @@ function doCorrect(n){
     var f=shape.dots[shape.dots.length-1],t=shape.dots[0];
     drawLine(f.cx,f.cy,t.cx,t.cy);
     document.getElementById('instruction').textContent='';
-    showBanner(nextShape);
+    revealImage();
   },'false':function(){
     document.getElementById('instruction').innerHTML='Now tap dot <b>'+nextDot+'</b>!';
   }})[String(nextDot>shape.dots.length)]();
@@ -166,6 +171,28 @@ function drawLine(x1,y1,x2,y2){
   line.getBoundingClientRect();
   line.style.transition='stroke-dashoffset 0.35s ease';
   line.setAttribute('stroke-dashoffset','0');
+}
+
+function revealImage(){
+  var bg=document.getElementById('bg');
+  var guides=document.getElementById('guides');
+  var lines=document.getElementById('lines');
+  var dots=document.getElementById('dots');
+  var start=null;
+  var ANIM_END={
+    'true':function(){[bg].filter(Boolean).forEach(function(el){el.setAttribute('opacity','1');});showBanner(nextShape);},
+    'false':function(){requestAnimationFrame(animFrame);}
+  };
+  function animFrame(ts){
+    start=[start,ts].filter(Boolean)[0];
+    var t=Math.min((ts-start)/900,1);
+    [bg].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(0.4+0.6*t));});
+    [guides].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(1.0-0.8*t));});
+    [lines].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(1.0-0.8*t));});
+    [dots].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(1.0-0.8*t));});
+    ANIM_END[String(t>=1)]();
+  }
+  requestAnimationFrame(animFrame);
 }
 
 function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}

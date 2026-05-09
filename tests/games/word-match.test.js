@@ -80,3 +80,9 @@ test('locked after correct — extra clicks ignored', async ({ page }) => {
 
   await expect(wrongBtn).not.toHaveClass(/feedback-wrong/)
 })
+
+test('nav bar has link to say-words', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/word-match/')
+  const href = await page.locator('.nav-link').first().evaluate(el => new URL(el.href).pathname)
+  expect(href).toBe('/homeschooling-app/app/activities/say-words/')
+})
