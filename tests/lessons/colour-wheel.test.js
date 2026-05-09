@@ -27,7 +27,7 @@ test('page loads with colour wheel and palette', async ({ page }) => {
 test('clicking a swatch selects it', async ({ page }) => {
   await page.goto(URL)
   await page.locator('#lsn-sw-red').click()
-  await expect(page.locator('#lsn-sw-red')).toHaveCSS('box-shadow', /0px 0px 0px 7px/)
+  await expect(page.locator('#lsn-sw-red')).toHaveCSS('border-color', 'rgb(51, 51, 51)')
 })
 
 test('assigning a colour to a slot fills it', async ({ page }) => {

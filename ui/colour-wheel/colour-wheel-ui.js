@@ -77,8 +77,8 @@ function lsnMix(a,b){
 }
 
 var SWATCH_STATE={
-  'true': function(sw){sw.style.boxShadow='0 0 0 3px #fff8f0, 0 0 0 7px #333';sw.style.transform='scale(1.12)';},
-  'false':function(sw){sw.style.boxShadow='0 2px 6px rgba(0,0,0,0.15)';sw.style.transform='scale(1)';}
+  'true': function(sw){sw.style.borderColor='#333';sw.style.transform='scale(1.12)';},
+  'false':function(sw){sw.style.borderColor='transparent';sw.style.transform='scale(1)';}
 };
 
 function renderPalette(){
@@ -145,7 +145,7 @@ function handleSlot(slot){
   PALETTE.forEach(function(c){
     var sw=document.createElement('div');
     sw.id='lsn-sw-'+c;
-    sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c)+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:transform 0.1s;';
+    sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c)+';cursor:pointer;border:4px solid transparent;transition:transform 0.1s;';
     makeInteractive(sw,function(){handleSwatch(c);speak(LSN_COLOURS[c].label);});
     pal.appendChild(sw);
   });
