@@ -17,15 +17,12 @@ var SPEAK_ACTION = {
     var u = new SpeechSynthesisUtterance(text);
     u.rate = 1.0; u.pitch = 1.1;
     [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
-    speechSynthesis.cancel();
     speechSynthesis.speak(u);
   }
 };
 
 export function warmUp() {
-  var u = new SpeechSynthesisUtterance('');
-  u.volume = 0;
-  speechSynthesis.speak(u);
+  speechSynthesis.speak(new SpeechSynthesisUtterance(' '));
 }
 
 export function setMode(mode) { _mode = mode; }
