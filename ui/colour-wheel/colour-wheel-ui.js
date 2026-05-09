@@ -1,3 +1,6 @@
+import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
+import { speak } from '../speech/speech-ui.js';
+
 var LSN_COLOURS={
   red:            {hex:'#E74C3C',label:'Red'},
   yellow:         {hex:'#F1C40F',label:'Yellow'},
@@ -121,14 +124,16 @@ function handleSlot(slot){
   var cx=150,cy=150;
   var rPi=55,rSiIn=60,rSiOut=100,rToIn=105,rToOut=140;
   var gap=1.5;
-  function addPath(d,fill){
+  function addPath(d,fill,colourId){
     var p=document.createElementNS('http://www.w3.org/2000/svg','path');
     p.setAttribute('d',d);p.setAttribute('fill',fill);
+    p.style.cursor='pointer';
     svg.appendChild(p);
+    [colourId].filter(Boolean).forEach(function(id){makeSpeakable(p,LSN_COLOURS[id].label);});
   }
-  PRIMARIES.forEach(function(s){addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c));});
-  SECONDARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rSiOut,rSiIn,s.start,s.start+120,gap),hex(s.c));});
-  TERTIARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rToOut,rToIn,s.start,s.start+60,gap),hex(s.c));});
+  PRIMARIES.forEach(function(s){addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c),s.c);});
+  SECONDARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rSiOut,rSiIn,s.start,s.start+120,gap),hex(s.c),s.c);});
+  TERTIARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rToOut,rToIn,s.start,s.start+60,gap),hex(s.c),s.c);});
   var cc=document.createElementNS('http://www.w3.org/2000/svg','circle');
   cc.setAttribute('cx','150');cc.setAttribute('cy','150');cc.setAttribute('r','16');
   cc.setAttribute('fill','#fff8f0');
@@ -141,7 +146,7 @@ function handleSlot(slot){
     var sw=document.createElement('div');
     sw.id='lsn-sw-'+c;
     sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c)+';cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:transform 0.1s;outline-offset:3px;';
-    sw.addEventListener('click',function(){handleSwatch(c);});
+    makeInteractive(sw,function(){handleSwatch(c);speak(LSN_COLOURS[c].label);});
     pal.appendChild(sw);
   });
 })();
