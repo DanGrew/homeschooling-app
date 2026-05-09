@@ -1,30 +1,9 @@
-import { setGuidancePriority } from '../speech/speech-ui.js';
-
-var _voices = typeof speechSynthesis !== 'undefined' ? speechSynthesis.getVoices() : [];
-if (typeof speechSynthesis !== 'undefined') {
-  speechSynthesis.addEventListener('voiceschanged', function() { _voices = speechSynthesis.getVoices(); });
-}
-
-function _isLocal(v)  { return v.localService; }
-function _isEnGB(v)   { return v.lang === 'en-GB'; }
-function _isEn(v)     { return v.lang.startsWith('en'); }
-function _isFemale(v) { return /female|woman|girl|samantha|karen|serena|moira|kate|nicky/i.test(v.name); }
-
-var VOICE_STRATEGIES = [
-  function(vs) { return vs.filter(_isLocal).filter(_isEnGB).filter(_isFemale)[0]; },
-  function(vs) { return vs.filter(_isLocal).filter(_isEn).filter(_isFemale)[0]; },
-  function(vs) { return vs.filter(_isLocal).filter(_isEn)[0]; },
-  function(vs) { return vs.filter(_isEn)[0]; }
-];
-
-function _guidanceVoice() {
-  return VOICE_STRATEGIES.map(function(f) { return f(_voices); }).filter(Boolean)[0];
-}
+import { setGuidancePriority, cachedBestVoice } from '../speech/speech-ui.js';
 
 function _utt(text) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 0.9; u.pitch = 1.0;
-  [_guidanceVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
+  [cachedBestVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
   return u;
 }
 
