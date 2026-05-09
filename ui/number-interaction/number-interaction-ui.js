@@ -55,8 +55,8 @@ export function render() {
 
 export function flashAll(containerId) {
   const imgs = document.querySelectorAll(`#${containerId} img`);
-  imgs.forEach(img => { img.style.animation = 'none'; img.style.transform = 'scale(1.25)'; img.style.filter = 'drop-shadow(0 0 8px gold)'; });
-  setTimeout(() => imgs.forEach(img => { img.style.animation = ''; img.style.transform = ''; img.style.filter = ''; }), 400);
+  imgs.forEach(img => { img.style.transform = 'scale(1.25)'; img.style.filter = 'drop-shadow(0 0 8px gold)'; });
+  setTimeout(() => imgs.forEach(img => { img.style.transform = ''; img.style.filter = ''; }), 400);
 }
 
 function stopCounting() {
