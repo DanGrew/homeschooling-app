@@ -6,6 +6,7 @@
 <title>Number Play</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
+<link rel="stylesheet" href="../../shared/speakable.css">
 <script src="../../shared/menu.js" defer></script>
 </head>
 <body>
@@ -13,37 +14,35 @@
 <div class="game-area">
 <div style="padding:8px 20px 6px;border-bottom:2px solid #EEE;">
   <div class="game-title" style="padding:0;margin-bottom:2px;">Numbers</div>
-  <div style="font-size:min(1em,2.8vw);color:#888;">Use + and − to change each group. See how the total changes!</div>
+  <div id="ni-instruction" style="font-size:min(1em,2.8vw);color:#888;touch-action:manipulation;user-select:none;">Use + and − to change each group. See how the total changes!</div>
 </div>
 <div style="flex:1;display:flex;flex-direction:row;overflow:hidden;">
 
   <div id="area-a" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-right:2px solid #DDD;padding:12px 10px;">
-    <div style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;">A</div>
+    <div id="lbl-a" style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;touch-action:manipulation;user-select:none;">A</div>
     <div id="objects-a" style="background:#EBEBEB;border:6px solid transparent;border-radius:20px;height:min(240px,33vh);width:calc(100% - 16px);display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:6px;overflow:hidden;padding:10px;box-sizing:border-box;transition:border-color 0.3s;"></div>
     <div id="num-a" style="font-size:min(3.2em,8vw);font-weight:bold;line-height:1;color:#333;">0</div>
     <div style="display:flex;gap:8px;">
-      <button onclick="change('a',1)" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">+</button>
-      <button onclick="change('a',-1)" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">−</button>
-      <button onclick="sayIt('a')" style="height:min(58px,7.5vw);padding:0 min(12px,1.8vw);font-size:min(1em,2.6vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">Say it</button>
+      <button id="btn-a-plus" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">+</button>
+      <button id="btn-a-minus" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">−</button>
     </div>
   </div>
 
   <div id="area-b" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;border-right:2px solid #DDD;padding:12px 10px;">
-    <div style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;">B</div>
+    <div id="lbl-b" style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;touch-action:manipulation;user-select:none;">B</div>
     <div id="objects-b" style="background:#EBEBEB;border:6px solid transparent;border-radius:20px;height:min(240px,33vh);width:calc(100% - 16px);display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:6px;overflow:hidden;padding:10px;box-sizing:border-box;transition:border-color 0.3s;"></div>
     <div id="num-b" style="font-size:min(3.2em,8vw);font-weight:bold;line-height:1;color:#333;">0</div>
     <div style="display:flex;gap:8px;">
-      <button onclick="change('b',1)" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">+</button>
-      <button onclick="change('b',-1)" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">−</button>
-      <button onclick="sayIt('b')" style="height:min(58px,7.5vw);padding:0 min(12px,1.8vw);font-size:min(1em,2.6vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">Say it</button>
+      <button id="btn-b-plus" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">+</button>
+      <button id="btn-b-minus" style="width:min(58px,7.5vw);height:min(58px,7.5vw);font-size:min(1.9em,4.8vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">−</button>
     </div>
   </div>
 
   <div id="area-total" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px 10px;">
-    <div style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;">Total</div>
+    <div id="lbl-total" style="font-size:0.9em;font-weight:bold;color:#AAA;letter-spacing:3px;touch-action:manipulation;user-select:none;">Total</div>
     <div id="objects-total" style="background:#EBEBEB;border-radius:20px;height:min(240px,33vh);width:calc(100% - 16px);display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:5px;overflow:hidden;padding:10px;box-sizing:border-box;"></div>
     <div id="num-total" style="font-size:min(3.2em,8vw);font-weight:bold;line-height:1;color:#333;">0</div>
-    <button onclick="countAll()" style="height:min(58px,7.5vw);padding:0 min(18px,2.5vw);font-size:min(1em,2.6vw);border:none;border-radius:14px;background:#E8E8E8;font-family:inherit;cursor:pointer;touch-action:manipulation;">Count</button>
+    <div style="height:min(58px,7.5vw);"></div>
   </div>
 
 </div>
@@ -52,7 +51,7 @@
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { pickFruitPair } from '../../../core/number-interaction/number-interaction-core.js';
-import { init, change, sayIt, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
+import { init, change, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
 
 Dictionary.init('../../dictionary/');
 
@@ -65,7 +64,6 @@ loadImages(all, () => {
 });
 
 window.change = change;
-window.sayIt = sayIt;
 window.countAll = countAll;
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='number-interaction';</script>

@@ -9,10 +9,28 @@
   100% { transform: scale(1); }
 }
 
+@keyframes speakable-flash {
+  0%   { filter: drop-shadow(0 0 16px gold); transform: scale(1.25); }
+  100% { filter: drop-shadow(0 0 4px gold);  transform: scale(1); }
+}
+
 .speakable {
-  animation: speakable-pulse 3s ease-in-out infinite;
+  animation: speakable-pulse 2s ease-in-out infinite;
 }
 
 .speakable--tap {
   animation: speakable-tap 180ms ease-out forwards;
+}
+
+.speakable--flash {
+  animation: speakable-flash 400ms ease-out forwards;
+}
+
+@keyframes speakable-highlight {
+  0%, 100% { filter: drop-shadow(0 0 10px gold); transform: scale(1.15); }
+  50%       { filter: drop-shadow(0 0 20px gold); transform: scale(1.25); }
+}
+
+.speakable--highlight {
+  animation: speakable-highlight 0.8s ease-in-out infinite;
 }

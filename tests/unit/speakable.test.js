@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 vi.mock('../../ui/speech/speech-ui.js', () => ({ speak: vi.fn() }));
 
-import { makeSpeakable, makeSpeakableButton } from '../../ui/speech/speakable.js';
+import { makeSpeakable, makeSpeakableButton, makeInteractive } from '../../ui/speech/speakable.js';
 import { speak } from '../../ui/speech/speech-ui.js';
 
 beforeEach(() => { vi.clearAllMocks(); });
@@ -53,6 +53,31 @@ describe('makeSpeakable', () => {
     el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
     expect(el.classList.contains('speakable--tap')).toBe(true);
     document.body.removeChild(el);
+  });
+});
+
+describe('makeInteractive', () => {
+  it('adds speakable class', () => {
+    const el = document.createElement('div');
+    makeInteractive(el, vi.fn());
+    expect(el.classList.contains('speakable')).toBe(true);
+  });
+
+  it('calls onTap on pointerdown', () => {
+    const el = document.createElement('div');
+    const onTap = vi.fn();
+    makeInteractive(el, onTap);
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    expect(onTap).toHaveBeenCalledTimes(1);
+  });
+
+  it('debounces rapid taps', () => {
+    const el = document.createElement('div');
+    const onTap = vi.fn();
+    makeInteractive(el, onTap);
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    expect(onTap).toHaveBeenCalledTimes(1);
   });
 });
 
