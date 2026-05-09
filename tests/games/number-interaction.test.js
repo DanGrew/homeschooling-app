@@ -103,6 +103,31 @@ test('fruit images are speakable after adding', async ({ page }) => {
   await expect(page.locator('#objects-a img.speakable')).toHaveCount(1)
 })
 
+test('labels and instruction are speakable', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await page.locator('body[data-ready="true"]').waitFor()
+  await expect(page.locator('#lbl-a.speakable')).toBeVisible()
+  await expect(page.locator('#lbl-b.speakable')).toBeVisible()
+  await expect(page.locator('#lbl-total.speakable')).toBeVisible()
+  await expect(page.locator('#ni-instruction.speakable')).toBeVisible()
+})
+
+test('plus and minus buttons are speakable', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await page.locator('body[data-ready="true"]').waitFor()
+  await expect(page.locator('#btn-a-plus.speakable')).toBeVisible()
+  await expect(page.locator('#btn-a-minus.speakable')).toBeVisible()
+  await expect(page.locator('#btn-b-plus.speakable')).toBeVisible()
+  await expect(page.locator('#btn-b-minus.speakable')).toBeVisible()
+})
+
+test('total fruit images are speakable after adding', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await page.locator('#area-a').getByRole('button', { name: '+' }).click()
+  await page.locator('#area-b').getByRole('button', { name: '+' }).click()
+  await expect(page.locator('#objects-total img.speakable')).toHaveCount(2)
+})
+
 test('home nav link points to lessons', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   const homeLink = page.locator('.nav-bar a[href*="lessons"]')
