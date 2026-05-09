@@ -2,7 +2,6 @@ var _audioCtx = null;
 var _audioBuffers = {};
 var _rawBuffers = {};
 var _initDone = false;
-var AudioCtx = window.AudioContext || window.webkitAudioContext;
 
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
@@ -13,19 +12,12 @@ PIANO_CONFIG.NOTES.forEach(function(note) {
     .catch(function() {});
 });
 
-function _decodeBuffer(ctx, buf) {
-  // Callback form covers iOS <14.5 where decodeAudioData returns undefined (no promise)
-  return new Promise(function(resolve, reject) {
-    ctx.decodeAudioData(buf, resolve, reject);
-  });
-}
-
 function _decodeNote(ctx, note) {
   return [_rawBuffers[note]]
     .filter(Boolean)
     .filter(function(r) { return r.byteLength; })
     .map(function(r) {
-      return _decodeBuffer(ctx, r.slice(0))
+      return decodeAudioBuffer(ctx, r.slice(0))
         .then(function(decoded) { _audioBuffers[note] = decoded; })
         .catch(function() {});
     })
@@ -44,15 +36,6 @@ function _onCtxStateChange() {
     .forEach(function(c) { _decodeAll(c); });
 }
 
-function _unlock(ctx) {
-  // Plays a silent 1-sample buffer — primes the iOS audio pipeline after resume()
-  var buf = ctx.createBuffer(1, 1, 22050);
-  var src = ctx.createBufferSource();
-  src.buffer = buf;
-  src.connect(ctx.destination);
-  src.start(0);
-}
-
 function _resumeOnTouch() {
   // touchstart fires before pointerdown — resume here so context is running by play time
   [_audioCtx]
@@ -62,11 +45,11 @@ function _resumeOnTouch() {
 }
 
 var initAudio = once(function() {
-  _audioCtx = new AudioCtx();
+  _audioCtx = createAudioCtx();
   _audioCtx.addEventListener('statechange', _onCtxStateChange);
   document.addEventListener('touchstart', _resumeOnTouch, { passive: true });
   return _audioCtx.resume()
-    .then(function() { _unlock(_audioCtx); return _decodeAll(_audioCtx); })
+    .then(function() { unlockAudioCtx(_audioCtx); return _decodeAll(_audioCtx); })
     .then(function() { _initDone = true; })
     .catch(function() {});
 });
@@ -86,7 +69,7 @@ function _playFromRaw(noteName, volume) {
     .filter(Boolean)
     .filter(function(r) { return r.byteLength; })
     .map(function(r) {
-      return _decodeBuffer(_audioCtx, r.slice(0))
+      return decodeAudioBuffer(_audioCtx, r.slice(0))
         .then(function(d) { _audioBuffers[noteName] = d; _play(d, volume); })
         .catch(function() {});
     })
