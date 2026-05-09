@@ -1,5 +1,5 @@
 import { speak, cachedBestVoice } from '../speech/speech-ui.js';
-import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
+import { makeSpeakable, makeSpeakableQuiet, makeInteractive } from '../speech/speakable.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
 const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
@@ -41,6 +41,7 @@ function makeImgEl(item, sz) {
   img.alt = item.name;
   img.style.cssText = sz + ';transition:transform 0.15s,filter 0.15s;';
   img.draggable = false;
+  makeSpeakableQuiet(img, item.name);
   return img;
 }
 
