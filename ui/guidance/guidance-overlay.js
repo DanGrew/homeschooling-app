@@ -1,4 +1,5 @@
 var AUTO_DISPLAY = { 'true': '', 'false': 'none' };
+var BUILD_ACTION = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
 
 export function GuidanceOverlay() {
   this._el = null;
@@ -69,8 +70,7 @@ GuidanceOverlay.prototype._build = function(onStop) {
 };
 
 GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, onReplay, onStop) {
-  var self = this;
-  [this].filter(function(o) { return !o._el; }).forEach(function(o) { o._build(onStop); });
+  BUILD_ACTION[String(!!this._el)](this, onStop);
   this._charEl.src = guideSrc;
   this._onNext = onNext;
   this._onReplay = onReplay;
