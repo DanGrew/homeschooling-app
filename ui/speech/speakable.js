@@ -22,15 +22,6 @@ export function makeSpeakable(el, text) {
   makeInteractive(el, () => speak(getText()));
 }
 
-export function makeSpeakableQuiet(el, text) {
-  var getText = RESOLVE_TEXT[typeof text](text);
-  var lastFired = 0;
-  el.addEventListener('pointerdown', function(e) {
-    e.preventDefault();
-    var now = Date.now();
-    FIRE[String(now - lastFired >= DEBOUNCE_MS)](() => speak(getText()), el, () => { lastFired = now; });
-  });
-}
 
 export function makeSpeakableButton(text) {
   var btn = document.createElement('button');
