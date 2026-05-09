@@ -1,6 +1,5 @@
-import { speak } from '../speech/speech-ui.js';
+import { speak, cachedBestVoice } from '../speech/speech-ui.js';
 import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
-import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
 const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
@@ -86,7 +85,7 @@ function countSpeak(text, onDone) {
   const u = new SpeechSynthesisUtterance(text);
   u.rate = 1.0;
   u.pitch = 1.1;
-  [bestVoice(speechSynthesis.getVoices())].filter(Boolean).forEach(v => { u.voice = v; });
+  [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
   u.onend = () => setTimeout(onDone, 200);
   speechSynthesis.cancel();
   speechSynthesis.speak(u);

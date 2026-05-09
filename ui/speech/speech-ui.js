@@ -1,6 +1,10 @@
 import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 
 var _mode = 'full';
+var _voices = speechSynthesis.getVoices();
+speechSynthesis.addEventListener('voiceschanged', () => { _voices = speechSynthesis.getVoices(); });
+
+export function cachedBestVoice() { return bestVoice(_voices); }
 
 var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
 
@@ -10,7 +14,7 @@ var SPEAK_ACTION = {
   'full':  (text) => {
     var u = new SpeechSynthesisUtterance(text);
     u.rate = 1.0; u.pitch = 1.1;
-    [bestVoice(speechSynthesis.getVoices())].filter(Boolean).forEach(v => { u.voice = v; });
+    [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
   }

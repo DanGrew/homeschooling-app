@@ -4,7 +4,7 @@ var _audioBuffers = {};
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
 var initAudio = once(function() {
-  _audioCtx = new AudioContext();
+  _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   return _audioCtx.resume().then(function() {
     return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
       return fetch('../../assets/audio/piano/' + note + '.wav')

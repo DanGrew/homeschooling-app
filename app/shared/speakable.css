@@ -26,11 +26,7 @@
   animation: speakable-flash 400ms ease-out forwards;
 }
 
-@keyframes speakable-highlight {
-  0%, 100% { filter: drop-shadow(0 0 10px gold); transform: scale(1.15); }
-  50%       { filter: drop-shadow(0 0 20px gold); transform: scale(1.25); }
-}
-
 .speakable--highlight {
-  animation: speakable-highlight 0.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px gold);
+  transform: scale(1.2);
 }
