@@ -287,7 +287,8 @@
         {
           "w": "asleep!",
           "normal": "asleep",
-          "t": 16.984
+          "t": 16.984,
+          "dict": "sleep"
         }
       ]
     },

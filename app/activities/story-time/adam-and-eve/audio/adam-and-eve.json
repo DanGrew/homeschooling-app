@@ -552,7 +552,8 @@
         {
           "w": "sad",
           "normal": "sad",
-          "t": 35.991
+          "t": 35.991,
+          "dict": "sad"
         },
         {
           "w": "and",
@@ -592,7 +593,8 @@
         {
           "w": "sad",
           "normal": "sad",
-          "t": 39.072
+          "t": 39.072,
+          "dict": "sad"
         },
         {
           "w": "but",
@@ -607,7 +609,8 @@
         {
           "w": "loved",
           "normal": "loved",
-          "t": 40.012
+          "t": 40.012,
+          "dict": "love-struck"
         },
         {
           "w": "Adam",
