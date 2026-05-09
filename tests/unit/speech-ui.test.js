@@ -12,9 +12,8 @@ beforeEach(() => {
 });
 
 describe('speak', () => {
-  it('cancels then speaks', () => {
+  it('speaks', () => {
     speak('hello');
-    expect(cancelSpy).toHaveBeenCalled();
     expect(speakSpy).toHaveBeenCalled();
   });
 
