@@ -13,6 +13,9 @@ export function init(a, b, max) {
   var numA = document.getElementById('num-a');
   var numB = document.getElementById('num-b');
   var numTotal = document.getElementById('num-total');
+  var instruction = document.getElementById('ni-instruction');
+  instruction.style.cursor = 'pointer';
+  makeSpeakable(instruction, 'Use the plus and minus buttons to change each group. See how the total changes!');
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
