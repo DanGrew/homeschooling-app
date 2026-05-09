@@ -8,8 +8,9 @@ if (typeof speechSynthesis !== 'undefined') {
 var _isIOS = typeof navigator !== 'undefined' && /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 var VOICE_RESOLVE = {
-  'true':  function() { return null; },
-  'false': function() { return bestVoice(_voices); }
+  'true':  function(vs) { return null; },
+  'false': function(vs) { return bestVoice(vs); }
 };
 
-export function getVoice() { return VOICE_RESOLVE[String(_isIOS)](); }
+export function resolveVoice(isIOS, voices) { return VOICE_RESOLVE[String(isIOS)](voices); }
+export function getVoice() { return resolveVoice(_isIOS, _voices); }
