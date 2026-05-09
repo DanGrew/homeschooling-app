@@ -1,9 +1,10 @@
-import { setGuidancePriority, cachedBestVoice } from '../speech/speech-ui.js';
+import { setGuidancePriority } from '../speech/speech-ui.js';
+import { getVoice } from '../speech/voice-service.js';
 
 function _utt(text) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 0.9; u.pitch = 1.0;
-  [cachedBestVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
+  [getVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
   return u;
 }
 

@@ -1,13 +1,8 @@
-import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
+import { getVoice } from './voice-service.js';
 
 var _mode = 'full';
 var _guidancePriority = false;
-var _voices = typeof speechSynthesis !== 'undefined' ? speechSynthesis.getVoices() : [];
-if (typeof speechSynthesis !== 'undefined') {
-  speechSynthesis.addEventListener('voiceschanged', () => { _voices = speechSynthesis.getVoices(); });
-}
 
-export function cachedBestVoice() { return bestVoice(_voices); }
 export function setGuidancePriority(on) { _guidancePriority = on; }
 
 var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
@@ -15,7 +10,7 @@ var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
 function _doSpeak(text) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
-  [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
+  [getVoice()].filter(Boolean).forEach(v => { u.voice = v; });
   speechSynthesis.resume();
   speechSynthesis.speak(u);
 }
