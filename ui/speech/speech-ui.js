@@ -20,6 +20,12 @@ var SPEAK_ACTION = {
   }
 };
 
+export function warmUp() {
+  var u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  speechSynthesis.speak(u);
+}
+
 export function setMode(mode) { _mode = mode; }
 export function setEnabled(on) { _mode = MODE_ENABLED[String(!!on)]; }
 export function stop() { speechSynthesis.cancel(); }
