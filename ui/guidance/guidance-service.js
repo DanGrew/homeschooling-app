@@ -1,6 +1,11 @@
 import { GuidanceSpeech } from './guidance-speech.js';
 import { GuidanceOverlay } from './guidance-overlay.js';
 
+function _resolveText(text) {
+  var arr = [].concat(text);
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
 var STEP_REACTION = {
   'true':  function(svc, step) { svc._showFeedback(step.feedback); },
   'false': function(svc)       { svc._advance(); }
@@ -58,21 +63,26 @@ GuidanceService.prototype._guideSrc = function() {
 GuidanceService.prototype._showStep = function() {
   var self = this;
   var step = this._lesson.steps[this._stepIdx];
+  var text = _resolveText(step.text);
   var total = this._lesson.steps.length;
   this._overlay.show(
-    this._guideSrc(), step, this._stepIdx + 1, total,
+    this._guideSrc(),
+    { text: text, auto: step.auto, success: step.success },
+    this._stepIdx + 1, total,
     function() { self._advance(); },
-    function() { self._speech.speak(step.text); },
+    function() { self._speech.speak(text); },
     function() { self.stop(); }
   );
-  this._speech.speak(step.text);
+  this._speech.speak(text);
 };
 
 GuidanceService.prototype._showFeedback = function(text) {
   var self = this;
   var total = this._lesson.steps.length;
   this._overlay.show(
-    this._guideSrc(), { text: text, auto: true }, this._stepIdx + 1, total,
+    this._guideSrc(),
+    { text: text, auto: true },
+    this._stepIdx + 1, total,
     function() { self._advance(); },
     function() { self._speech.speak(text); },
     function() { self.stop(); }

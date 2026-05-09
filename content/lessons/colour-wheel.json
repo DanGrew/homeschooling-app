@@ -7,11 +7,15 @@
       "title": "Make Orange",
       "guide": "cat",
       "steps": [
-        { "text": "We're going to make orange!", "auto": true },
-        { "text": "Can you find red?",           "expect": "RED_TAPPED",    "feedback": "You found red!" },
-        { "text": "Can you find yellow?",         "expect": "YELLOW_TAPPED", "feedback": "You found yellow!" },
-        { "text": "Now can you find orange?",     "expect": "ORANGE_TAPPED", "feedback": "You found orange!" },
-        { "text": "Well done!", "auto": true }
+        { "text": "Let's go on a colour hunt! We're going to make orange!", "auto": true },
+        { "text": "Can you spot red on the colour wheel?", "expect": "RED_TAPPED", "feedback": "Yes! You found red! Brilliant!" },
+        { "text": "Now find yellow — where is it hiding?", "expect": "YELLOW_TAPPED", "feedback": "Amazing! There's yellow!" },
+        { "text": "Nearly there! Can you find orange?", "expect": "ORANGE_TAPPED", "feedback": "Incredible! You found orange!" },
+        {
+          "text": ["Well done!", "Amazing work!", "You're a star!", "Brilliant!", "Superstar!", "Fantastic!"],
+          "auto": true,
+          "success": true
+        }
       ]
     }
   ]
