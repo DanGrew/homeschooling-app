@@ -7,8 +7,30 @@ var FIRE = {
   'false': () => {}
 };
 
+function ensureSvgGlowFilter(svg) {
+  [1].filter(() => !svg.querySelector('#speakable-glow')).forEach(() => {
+    var NS = 'http://www.w3.org/2000/svg';
+    var defs = svg.querySelector('defs') || svg.insertBefore(document.createElementNS(NS, 'defs'), svg.firstChild);
+    var filt = document.createElementNS(NS, 'filter');
+    filt.id = 'speakable-glow';
+    filt.setAttribute('x', '-50%'); filt.setAttribute('y', '-50%');
+    filt.setAttribute('width', '200%'); filt.setAttribute('height', '200%');
+    var fds = document.createElementNS(NS, 'feDropShadow');
+    fds.setAttribute('dx', '0'); fds.setAttribute('dy', '0');
+    fds.setAttribute('stdDeviation', '4');
+    fds.setAttribute('flood-color', 'rgb(150,80,220)');
+    fds.setAttribute('flood-opacity', '0.5');
+    filt.appendChild(fds); defs.appendChild(filt);
+  });
+}
+
 export function makeInteractive(el, onTap) {
   el.classList.add('speakable');
+  [el.ownerSVGElement].filter(Boolean).forEach(svg => {
+    ensureSvgGlowFilter(svg);
+    el.setAttribute('filter', 'url(#speakable-glow)');
+    el.classList.remove('speakable');
+  });
   var lastFired = 0;
   el.addEventListener('click', function(e) {
     var now = Date.now();

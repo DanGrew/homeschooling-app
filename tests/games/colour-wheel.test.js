@@ -15,8 +15,8 @@ test('palette swatches are speakable', async ({ page }) => {
 
 test('wheel segments are speakable', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/colour-wheel/')
-  await expect(page.locator('#wheel-svg path.speakable').first()).toBeVisible()
-  const count = await page.locator('#wheel-svg path.speakable').count()
+  await expect(page.locator('#wheel-svg path[filter]').first()).toBeVisible()
+  const count = await page.locator('#wheel-svg path[filter]').count()
   expect(count).toBe(12)
 })
 
