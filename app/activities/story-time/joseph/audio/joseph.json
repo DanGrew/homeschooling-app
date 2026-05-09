@@ -37,7 +37,8 @@
         {
           "w": "loved",
           "normal": "loved",
-          "t": 2.34
+          "t": 2.34,
+          "dict": "love-struck"
         },
         {
           "w": "his",
@@ -182,7 +183,8 @@
         {
           "w": "annoyed",
           "normal": "annoyed",
-          "t": 11.742
+          "t": 11.742,
+          "dict": "annoyed"
         },
         {
           "w": "by",

@@ -262,7 +262,8 @@
         {
           "w": "angry.",
           "normal": "angry",
-          "t": 18.568
+          "t": 18.568,
+          "dict": "angry"
         }
       ]
     },
@@ -297,7 +298,8 @@
         {
           "w": "angry.",
           "normal": "angry",
-          "t": 21.329
+          "t": 21.329,
+          "dict": "angry"
         }
       ]
     },
@@ -542,7 +544,8 @@
         {
           "w": "sad",
           "normal": "sad",
-          "t": 39.137
+          "t": 39.137,
+          "dict": "sad"
         },
         {
           "w": "day",

@@ -262,7 +262,8 @@
         {
           "w": "slept,",
           "normal": "slept",
-          "t": 18.21
+          "t": 18.21,
+          "dict": "sleep"
         },
         {
           "w": "they",
@@ -387,7 +388,8 @@
         {
           "w": "sad",
           "normal": "sad",
-          "t": 27.915
+          "t": 27.915,
+          "dict": "sad"
         },
         {
           "w": "that",
@@ -467,7 +469,8 @@
         {
           "w": "laughed",
           "normal": "laughed",
-          "t": 33.578
+          "t": 33.578,
+          "dict": "laugh"
         },
         {
           "w": "at",
