@@ -9,6 +9,14 @@
   bar.insertAdjacentHTML('afterbegin',h);
 
   var POPOUT_TOGGLE={'':'none','none':''};
+  var VERT_POS={
+    'true': {top:'calc(100% + 8px)',bottom:''},
+    'false':{top:'',bottom:'calc(100% + 8px)'}
+  };
+  var HORIZ_POS={
+    'true': {left:'0',right:''},
+    'false':{left:'',right:'0'}
+  };
 
   if(window.LESSONS&&window.LESSONS.length){
     var wrap=document.createElement('div');
@@ -18,13 +26,13 @@
       container.style.cssText='position:relative;';
 
       var btn=document.createElement('button');
-      btn.textContent=l.number;
+      btn.innerHTML='&#128218;';
       btn.className='nav-lesson-btn';
-      btn.style.cssText='width:32px;height:32px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:transparent;font-weight:700;font-size:0.9em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+      btn.style.cssText='width:32px;height:32px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:transparent;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
 
       var popout=document.createElement('div');
       popout.className='nav-lesson-popout';
-      popout.style.cssText='display:none;position:absolute;bottom:calc(100% + 8px);right:0;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
+      popout.style.cssText='display:none;position:absolute;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
 
       var item=document.createElement('button');
       item.textContent='Lesson '+l.number+': '+l.title;
@@ -33,6 +41,11 @@
 
       btn.addEventListener('click',function(e){
         e.stopPropagation();
+        var r=btn.getBoundingClientRect();
+        var vert=VERT_POS[String(r.top<window.innerHeight/2)];
+        var horiz=HORIZ_POS[String(r.left<window.innerWidth/2)];
+        popout.style.top=vert.top;popout.style.bottom=vert.bottom;
+        popout.style.left=horiz.left;popout.style.right=horiz.right;
         popout.style.display=POPOUT_TOGGLE[popout.style.display];
       });
 

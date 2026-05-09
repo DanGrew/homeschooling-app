@@ -1,5 +1,10 @@
 import { setGuidancePriority } from '../speech/speech-ui.js';
 
+var _voices = typeof speechSynthesis !== 'undefined' ? speechSynthesis.getVoices() : [];
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.addEventListener('voiceschanged', function() { _voices = speechSynthesis.getVoices(); });
+}
+
 function _isLocal(v)  { return v.localService; }
 function _isEnGB(v)   { return v.lang === 'en-GB'; }
 function _isEn(v)     { return v.lang.startsWith('en'); }
@@ -13,13 +18,12 @@ var VOICE_STRATEGIES = [
 ];
 
 function _guidanceVoice() {
-  var vs = speechSynthesis.getVoices();
-  return VOICE_STRATEGIES.map(function(f) { return f(vs); }).filter(Boolean)[0];
+  return VOICE_STRATEGIES.map(function(f) { return f(_voices); }).filter(Boolean)[0];
 }
 
 function _utt(text) {
   var u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
+  u.lang = 'en-GB'; u.rate = 0.9; u.pitch = 1.0;
   [_guidanceVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
   return u;
 }

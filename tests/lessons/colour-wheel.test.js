@@ -70,7 +70,7 @@ test('same colour in both slots shows that colour', async ({ page }) => {
 test('lesson 1 button is visible in nav', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('.nav-lesson-btn')).toBeVisible()
-  await expect(page.locator('.nav-lesson-btn')).toHaveText('1')
+  await expect(page.locator('.nav-lesson-btn')).toHaveText('\uD83D\uDCDA')
 })
 
 test('lesson button opens popout with lesson title', async ({ page }) => {
