@@ -88,6 +88,7 @@ function countSpeak(text, onDone) {
   u.pitch = 1.1;
   [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
   u.onend = () => setTimeout(onDone, 200);
+  speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
