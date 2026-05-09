@@ -6,7 +6,7 @@ var cancelSpy, speakSpy;
 beforeEach(() => {
   cancelSpy = vi.fn();
   speakSpy = vi.fn();
-  global.speechSynthesis = { cancel: cancelSpy, speak: speakSpy, getVoices: vi.fn().mockReturnValue([]) };
+  global.speechSynthesis = { cancel: cancelSpy, speak: speakSpy, resume: vi.fn(), getVoices: vi.fn().mockReturnValue([]) };
   global.SpeechSynthesisUtterance = vi.fn().mockImplementation(function(text) { this.text = text; });
   setMode('full');
 });
