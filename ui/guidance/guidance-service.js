@@ -1,6 +1,16 @@
 import { GuidanceSpeech } from './guidance-speech.js';
 import { GuidanceOverlay } from './guidance-overlay.js';
 
+var STEP_REACTION = {
+  'true':  function(svc, step) { svc._showFeedback(step.feedback); },
+  'false': function(svc)       { svc._advance(); }
+};
+
+var ADVANCE_ACTION = {
+  'true':  function(svc) { svc.stop(); },
+  'false': function(svc) { svc._showStep(); }
+};
+
 export function GuidanceService() {
   this._speech = GuidanceSpeech;
   this._overlay = new GuidanceOverlay();
@@ -11,10 +21,11 @@ export function GuidanceService() {
 }
 
 GuidanceService.prototype.start = function(lesson) {
-  if (this._lesson) this.stop();
+  var self = this;
+  [this._lesson].filter(Boolean).forEach(function() { self.stop(); });
   this._lesson = lesson;
   this._stepIdx = 0;
-  this._showStep(true);
+  this._showStep();
 };
 
 GuidanceService.prototype.stop = function() {
@@ -24,52 +35,47 @@ GuidanceService.prototype.stop = function() {
 };
 
 GuidanceService.prototype._handle = function(type) {
-  if (!this._lesson) return;
+  var self = this;
+  [this._lesson].filter(Boolean)
+    .map(function(l) { return l.steps[self._stepIdx]; })
+    .filter(Boolean)
+    .filter(function(step) { return step.expect === type; })
+    .forEach(function(step) { STEP_REACTION[String(!!step.feedback)](self, step); });
+};
+
+GuidanceService.prototype._advance = function() {
+  var self = this;
+  [this._lesson].filter(Boolean).forEach(function(l) {
+    self._stepIdx++;
+    ADVANCE_ACTION[String(self._stepIdx >= l.steps.length)](self);
+  });
+};
+
+GuidanceService.prototype._guideSrc = function() {
+  return window.DICT_BASE + this._lesson.guide + '/' + this._lesson.guide + '.svg';
+};
+
+GuidanceService.prototype._showStep = function() {
+  var self = this;
   var step = this._lesson.steps[this._stepIdx];
-  if (!step || step.expect !== type) return;
-  if (step.feedback) this._showFeedback(step.feedback);
-  else this._advance();
+  var total = this._lesson.steps.length;
+  this._overlay.show(
+    this._guideSrc(), step, this._stepIdx + 1, total,
+    function() { self._advance(); },
+    function() { self._speech.speak(step.text); },
+    function() { self.stop(); }
+  );
+  this._speech.speak(step.text);
 };
 
 GuidanceService.prototype._showFeedback = function(text) {
   var self = this;
   var total = this._lesson.steps.length;
   this._overlay.show(
-    this._guideSrc(),
-    { text: text, auto: true },
-    this._stepIdx + 1,
-    total,
+    this._guideSrc(), { text: text, auto: true }, this._stepIdx + 1, total,
     function() { self._advance(); },
-    function() { self._speech.speak(text, 'lesson'); },
+    function() { self._speech.speak(text); },
     function() { self.stop(); }
   );
-  this._speech.speak(text, 'lesson');
-};
-
-GuidanceService.prototype._advance = function() {
-  if (!this._lesson) return;
-  this._stepIdx++;
-  if (this._stepIdx >= this._lesson.steps.length) { this.stop(); return; }
-  this._showStep(true);
-};
-
-GuidanceService.prototype._guideSrc = function() {
-  return (window.DICT_BASE || '../../dictionary/entries/') +
-    this._lesson.guide + '/' + this._lesson.guide + '.svg';
-};
-
-GuidanceService.prototype._showStep = function(speak) {
-  var self = this;
-  var step = this._lesson.steps[this._stepIdx];
-  var total = this._lesson.steps.length;
-  this._overlay.show(
-    this._guideSrc(),
-    step,
-    this._stepIdx + 1,
-    total,
-    function() { self._advance(); },
-    function() { self._speech.speak(step.text, 'lesson'); },
-    function() { self.stop(); }
-  );
-  if (speak) this._speech.speak(step.text, 'lesson');
+  this._speech.speak(text);
 };

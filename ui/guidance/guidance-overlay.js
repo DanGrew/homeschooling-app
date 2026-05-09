@@ -1,14 +1,16 @@
+var AUTO_DISPLAY = { 'true': '', 'false': 'none' };
+
 export function GuidanceOverlay() {
   this._el = null;
   this._textEl = null;
   this._progressEl = null;
   this._nextBtn = null;
+  this._charEl = null;
   this._onNext = null;
   this._onReplay = null;
 }
 
 GuidanceOverlay.prototype._build = function(onStop) {
-  if (this._el) return;
   var self = this;
 
   var el = document.createElement('div');
@@ -39,12 +41,12 @@ GuidanceOverlay.prototype._build = function(onStop) {
   replay.innerHTML = '&#9654;';
   replay.title = 'Replay';
   replay.style.cssText = 'width:30px;height:30px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:none;cursor:pointer;font-size:0.7em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-  replay.addEventListener('click', function() { if (self._onReplay) self._onReplay(); });
+  replay.addEventListener('click', function() { [self._onReplay].filter(Boolean).forEach(function(fn) { fn(); }); });
 
   var next = document.createElement('button');
   next.textContent = 'Next \u2192';
   next.style.cssText = 'background:#2563EB;color:#fff;border:none;border-radius:20px;padding:5px 16px;font-size:0.85em;font-weight:700;cursor:pointer;flex-shrink:0;';
-  next.addEventListener('click', function() { if (self._onNext) self._onNext(); });
+  next.addEventListener('click', function() { [self._onNext].filter(Boolean).forEach(function(fn) { fn(); }); });
   this._nextBtn = next;
 
   var close = document.createElement('button');
@@ -67,16 +69,17 @@ GuidanceOverlay.prototype._build = function(onStop) {
 };
 
 GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, onReplay, onStop) {
-  this._build(onStop);
+  var self = this;
+  [this].filter(function(o) { return !o._el; }).forEach(function(o) { o._build(onStop); });
   this._charEl.src = guideSrc;
   this._onNext = onNext;
   this._onReplay = onReplay;
   this._textEl.textContent = step.text;
   this._progressEl.textContent = idx + ' / ' + total;
-  this._nextBtn.style.display = step.auto ? '' : 'none';
+  this._nextBtn.style.display = AUTO_DISPLAY[String(!!step.auto)];
   this._el.style.display = '';
 };
 
 GuidanceOverlay.prototype.hide = function() {
-  if (this._el) this._el.style.display = 'none';
+  [this._el].filter(Boolean).forEach(function(el) { el.style.display = 'none'; });
 };

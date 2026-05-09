@@ -1,42 +1,30 @@
-import { cachedBestVoice } from '../speech/speech-ui.js';
-
-var _mode = 'full';
-var _lessonActive = false;
+import { cachedBestVoice, setGuidancePriority } from '../speech/speech-ui.js';
 
 function _utt(text) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
-  var v = cachedBestVoice();
-  if (v) u.voice = v;
+  [cachedBestVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
   return u;
 }
 
-function _clearLesson() {
-  _lessonActive = false;
-  window._GUIDANCE_LESSON_SPEAKING = false;
+function _clearPriority() { setGuidancePriority(false); }
+
+function _doSpeak(text) {
+  setGuidancePriority(true);
+  var u = _utt(text);
+  u.onend = _clearPriority;
+  u.onerror = _clearPriority;
+  speechSynthesis.resume();
+  speechSynthesis.speak(u);
 }
 
 export var GuidanceSpeech = {
-  speak: function(text, source) {
-    if (_mode === 'off' || !text) return;
-    if (source === 'interaction' && _lessonActive) return;
+  speak: function(text) {
     speechSynthesis.cancel();
-    var u = _utt(text);
-    if (source === 'lesson') {
-      _lessonActive = true;
-      window._GUIDANCE_LESSON_SPEAKING = true;
-      u.onend = _clearLesson;
-      u.onerror = _clearLesson;
-    } else {
-      _lessonActive = false;
-      window._GUIDANCE_LESSON_SPEAKING = false;
-    }
-    speechSynthesis.resume();
-    speechSynthesis.speak(u);
+    [text].filter(Boolean).forEach(_doSpeak);
   },
   stop: function() {
     speechSynthesis.cancel();
-    _clearLesson();
-  },
-  setMode: function(mode) { _mode = mode; }
+    _clearPriority();
+  }
 };
