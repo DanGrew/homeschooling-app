@@ -15,6 +15,7 @@ GuidanceOverlay.prototype._build = function(onStop) {
   var self = this;
 
   var el = document.createElement('div');
+  el.id = 'guidance-overlay';
   el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:9500;display:none;padding:12px;box-sizing:border-box;';
 
   var bubble = document.createElement('div');
