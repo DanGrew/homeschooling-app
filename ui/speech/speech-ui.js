@@ -22,11 +22,6 @@ var SPEAK_ACTION = {
   }
 };
 
-export function warmUp() {
-  speechSynthesis.resume();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(' '));
-}
-
 export function setMode(mode) { _mode = mode; }
 export function setEnabled(on) { _mode = MODE_ENABLED[String(!!on)]; }
 export function stop() { speechSynthesis.cancel(); }

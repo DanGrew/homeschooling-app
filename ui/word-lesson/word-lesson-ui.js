@@ -1,4 +1,5 @@
 import { validWord, charFile, bestVoice, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
+import { speak, stop } from '../speech/speech-ui.js';
 
 const CHAR_BASE = '../../language-characters/';
 const DICT_BASE = '../../dictionary/';
@@ -66,13 +67,6 @@ function setTraceUI() {
   document.getElementById('btn-stop').style.display = 'none';
 }
 
-function speak(text) {
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = 1.0; u.pitch = 1.1;
-  [bestVoice(speechSynthesis.getVoices())].filter(Boolean).forEach(v => { u.voice = v; });
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
-}
 
 function doNav(idx) {
   currentIdx = wrapIdx(idx, filtered.length);
@@ -395,7 +389,7 @@ export function init() {
   document.getElementById('btn-watch').addEventListener('click', startWatch);
   document.getElementById('btn-tryit').addEventListener('click', startTrace);
   document.getElementById('btn-stop').addEventListener('click', () => { stopAllEngines(); clearProgress(); setLessonUI(); });
-  document.getElementById('btn-sayit').addEventListener('click', () => { [currentWord].filter(Boolean).forEach(speak); });
+  document.getElementById('btn-sayit').addEventListener('click', () => { if (currentWord) { stop(); speak(currentWord); } });
   document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
   document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
