@@ -50,7 +50,7 @@ export function objectRenderType(obj) {
   return 'sprite';
 }
 
-var KNOWN_ANIMS = new Set(['grow', 'splash', 'glow', 'dirt', 'celebrate', 'shine']);
+var KNOWN_ANIMS = new Set(['grow', 'splash', 'glow', 'dirt', 'celebrate', 'shine', 'shake']);
 
 export function resolveAnimName(name) {
   return KNOWN_ANIMS.has(name) ? name : '_default';
@@ -86,6 +86,8 @@ export function parseAction(action) {
   if (adv) return { type: 'advance_sprite', args: [adv[1]] };
   var mv = action.match(/^move:\s*(\S+)\s+(\d+)\s+(\d+)$/);
   if (mv) return { type: 'move', args: [mv[1], mv[2], mv[3]] };
+  var dl = action.match(/^delay:\s*(\d+)\s+(.+)$/);
+  if (dl) return { type: 'delay', args: [parseInt(dl[1]), dl[2].trim()] };
   return { type: 'noop', args: [] };
 }
 

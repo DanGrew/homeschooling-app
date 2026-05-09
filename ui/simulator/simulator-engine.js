@@ -176,6 +176,14 @@ var ANIMATORS = {
     el.style.transform = 'rotate(20deg) scale(1.15)';
     setTimeout(function() { el.style.transform = ''; }, 350);
   },
+  shake: function(el, engine) {
+    el.style.transition = 'none';
+    el.style.outline = '3px solid #e53935';
+    ['translateX(-6px)', 'translateX(6px)', 'translateX(-5px)', 'translateX(5px)', 'translateX(0)'].forEach(function(t, i) {
+      setTimeout(function() { el.style.transform = t; }, i * 70);
+    });
+    setTimeout(function() { el.style.outline = ''; el.style.transition = ''; }, 420);
+  },
   _default: function(el, engine) {
     el.style.transform = 'translateY(-8px)';
     setTimeout(function() { el.style.transform = ''; }, 350);
@@ -243,6 +251,9 @@ var EXEC_HANDLERS = {
       el.style.left = args[1] + 'px';
       el.style.top = args[2] + 'px';
     });
+  },
+  delay: function(args, engine) {
+    setTimeout(function() { engine._exec(args[1]); }, args[0]);
   },
 };
 
