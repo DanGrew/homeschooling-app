@@ -389,7 +389,7 @@ export function init() {
   document.getElementById('btn-watch').addEventListener('click', startWatch);
   document.getElementById('btn-tryit').addEventListener('click', startTrace);
   document.getElementById('btn-stop').addEventListener('click', () => { stopAllEngines(); clearProgress(); setLessonUI(); });
-  document.getElementById('btn-sayit').addEventListener('click', () => { if (currentWord) { stop(); speak(currentWord); } });
+  document.getElementById('btn-sayit').addEventListener('click', () => { [currentWord].filter(Boolean).forEach(w => { stop(); speak(w); }); });
   document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
   document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
