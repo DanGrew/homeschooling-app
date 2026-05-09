@@ -10,8 +10,7 @@ var FIRE = {
 export function makeInteractive(el, onTap) {
   el.classList.add('speakable');
   var lastFired = 0;
-  el.addEventListener('pointerdown', function(e) {
-    e.preventDefault();
+  el.addEventListener('click', function(e) {
     var now = Date.now();
     FIRE[String(now - lastFired >= DEBOUNCE_MS)](onTap, el, () => { lastFired = now; });
   });

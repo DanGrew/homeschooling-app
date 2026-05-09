@@ -15,17 +15,17 @@ describe('makeSpeakable', () => {
     expect(el.classList.contains('speakable')).toBe(true);
   });
 
-  it('calls speak with string text on pointerdown', () => {
+  it('calls speak with string text on click', () => {
     const el = document.createElement('div');
     makeSpeakable(el, 'cat');
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(speak).toHaveBeenCalledWith('cat');
   });
 
   it('accepts function as text', () => {
     const el = document.createElement('div');
     makeSpeakable(el, () => 'dog');
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(speak).toHaveBeenCalledWith('dog');
   });
 
@@ -34,15 +34,15 @@ describe('makeSpeakable', () => {
     var label = 'dog';
     makeSpeakable(el, () => label);
     label = 'cat';
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(speak).toHaveBeenCalledWith('cat');
   });
 
   it('debounces rapid taps', () => {
     const el = document.createElement('div');
     makeSpeakable(el, 'cat');
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(speak).toHaveBeenCalledTimes(1);
   });
 
@@ -50,7 +50,7 @@ describe('makeSpeakable', () => {
     const el = document.createElement('div');
     document.body.appendChild(el);
     makeSpeakable(el, 'cat');
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(el.classList.contains('speakable--tap')).toBe(true);
     document.body.removeChild(el);
   });
@@ -63,11 +63,11 @@ describe('makeInteractive', () => {
     expect(el.classList.contains('speakable')).toBe(true);
   });
 
-  it('calls onTap on pointerdown', () => {
+  it('calls onTap on click', () => {
     const el = document.createElement('div');
     const onTap = vi.fn();
     makeInteractive(el, onTap);
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(onTap).toHaveBeenCalledTimes(1);
   });
 
@@ -75,8 +75,8 @@ describe('makeInteractive', () => {
     const el = document.createElement('div');
     const onTap = vi.fn();
     makeInteractive(el, onTap);
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(onTap).toHaveBeenCalledTimes(1);
   });
 });
@@ -97,7 +97,7 @@ describe('makeSpeakableButton', () => {
 
   it('button speaks on tap', () => {
     const btn = makeSpeakableButton('cow');
-    btn.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     expect(speak).toHaveBeenCalledWith('cow');
   });
 });
