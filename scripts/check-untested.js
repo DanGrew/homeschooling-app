@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Scans core/**/*.js and reports files with no reference in any tests/unit test.
-// Data files live in resources/ and are excluded from scope.
+// Data files live in assets/ and are excluded from scope.
 // Exits 1 if any core file is untested.
 
 const fs = require('fs');
