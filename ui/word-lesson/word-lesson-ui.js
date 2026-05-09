@@ -1,4 +1,4 @@
-import { validWord, charFile, bestVoice, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
+import { validWord, charFile, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 import { speak, stop } from '../speech/speech-ui.js';
 
 const CHAR_BASE = '../../language-characters/';
