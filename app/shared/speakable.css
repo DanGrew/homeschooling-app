@@ -1,0 +1,18 @@
+@keyframes speakable-pulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(150,80,220,0.35)); }
+  50%       { filter: drop-shadow(0 0 22px rgba(150,80,220,0.85)); }
+}
+
+@keyframes speakable-tap {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.92); }
+  100% { transform: scale(1); }
+}
+
+.speakable {
+  animation: speakable-pulse 3s ease-in-out infinite;
+}
+
+.speakable--tap {
+  animation: speakable-tap 180ms ease-out forwards;
+}

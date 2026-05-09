@@ -1,4 +1,4 @@
-import {speak} from '../speech/speech-ui.js';
+import {makeSpeakable} from '../speech/speakable.js';
 import {buildRound} from '../../core/word-match/word-match-core.js';
 
 var current,locked;
@@ -57,6 +57,8 @@ export function getCurrentTarget(){return current?.target;}
 
 export function init(items){
   ensureBanner();
-  document.getElementById('wm-say').onclick=function(){speak(current.target.name);};
+  var wordEl=document.getElementById('wm-word');
+  wordEl.style.cursor='pointer';
+  makeSpeakable(wordEl,() => current?.target?.name);
   renderRound(items);
 }
