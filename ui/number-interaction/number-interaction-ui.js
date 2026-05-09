@@ -1,4 +1,4 @@
-import { speak, cachedBestVoice, warmUp } from '../speech/speech-ui.js';
+import { speak, cachedBestVoice } from '../speech/speech-ui.js';
 import { makeInteractive } from '../speech/speakable.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
@@ -15,8 +15,7 @@ function stopAndSpeak(wasCounting, doSpeak) {
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
-  document.addEventListener('click', warmUp, { once: true });
-  var numA = document.getElementById('num-a');
+var numA = document.getElementById('num-a');
   var numB = document.getElementById('num-b');
   var numTotal = document.getElementById('num-total');
   var instruction = document.getElementById('ni-instruction');
