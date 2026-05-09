@@ -16,8 +16,8 @@ export function init(a, b, max) {
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
-  makeSpeakable(numA, () => String(aCount));
-  makeSpeakable(numB, () => String(bCount));
+  makeInteractive(numA, () => { speak(String(aCount)); setTimeout(() => flashAll('objects-a'), 100); });
+  makeInteractive(numB, () => { speak(String(bCount)); setTimeout(() => flashAll('objects-b'), 100); });
   makeInteractive(numTotal, countAll);
   render();
 }
