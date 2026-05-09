@@ -22,6 +22,7 @@ export function makeSpeakable(el, text) {
   makeInteractive(el, () => speak(getText()));
 }
 
+
 export function makeSpeakableButton(text) {
   var btn = document.createElement('button');
   btn.textContent = text;

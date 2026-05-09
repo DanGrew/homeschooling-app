@@ -1,6 +1,5 @@
-import { speak } from '../speech/speech-ui.js';
+import { speak, cachedBestVoice, warmUp } from '../speech/speech-ui.js';
 import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
-import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
 const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
@@ -10,6 +9,7 @@ let aCount = 0, bCount = 0, aKey = '', bKey = '', MAX = 10, counting = false;
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
+  document.addEventListener('pointerdown', warmUp, { once: true });
   var numA = document.getElementById('num-a');
   var numB = document.getElementById('num-b');
   var numTotal = document.getElementById('num-total');
@@ -86,7 +86,7 @@ function countSpeak(text, onDone) {
   const u = new SpeechSynthesisUtterance(text);
   u.rate = 1.0;
   u.pitch = 1.1;
-  [bestVoice(speechSynthesis.getVoices())].filter(Boolean).forEach(v => { u.voice = v; });
+  [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
   u.onend = () => setTimeout(onDone, 200);
   speechSynthesis.cancel();
   speechSynthesis.speak(u);

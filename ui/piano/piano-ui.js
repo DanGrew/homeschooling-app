@@ -1,17 +1,26 @@
 var _audioCtx = null;
 var _audioBuffers = {};
+var _rawBuffers = {};
+var AudioCtx = window.AudioContext || window.webkitAudioContext;
 
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
+PIANO_CONFIG.NOTES.forEach(function(note) {
+  fetch('../../assets/audio/piano/' + note + '.wav')
+    .then(function(r) { return r.arrayBuffer(); })
+    .then(function(buf) { _rawBuffers[note] = buf; })
+    .catch(function() {});
+});
+
 var initAudio = once(function() {
-  _audioCtx = new AudioContext();
+  _audioCtx = new AudioCtx();
   return _audioCtx.resume().then(function() {
-    return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-      return fetch('../../assets/audio/piano/' + note + '.wav')
-        .then(function(r) { return r.arrayBuffer(); })
-        .then(function(buf) { return _audioCtx.decodeAudioData(buf); })
-        .then(function(decoded) { _audioBuffers[note] = decoded; })
-        .catch(function() {});
+    return Promise.all(PIANO_CONFIG.NOTES.flatMap(function(note) {
+      return [_rawBuffers[note]].filter(Boolean).map(function(buf) {
+        return _audioCtx.decodeAudioData(buf)
+          .then(function(decoded) { _audioBuffers[note] = decoded; })
+          .catch(function() {});
+      });
     }));
   });
 });

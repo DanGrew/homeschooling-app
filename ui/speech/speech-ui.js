@@ -1,6 +1,12 @@
 import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 
 var _mode = 'full';
+var _voices = typeof speechSynthesis !== 'undefined' ? speechSynthesis.getVoices() : [];
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.addEventListener('voiceschanged', () => { _voices = speechSynthesis.getVoices(); });
+}
+
+export function cachedBestVoice() { return bestVoice(_voices); }
 
 var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
 
@@ -10,11 +16,17 @@ var SPEAK_ACTION = {
   'full':  (text) => {
     var u = new SpeechSynthesisUtterance(text);
     u.rate = 1.0; u.pitch = 1.1;
-    [bestVoice(speechSynthesis.getVoices())].filter(Boolean).forEach(v => { u.voice = v; });
+    [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
     speechSynthesis.cancel();
     speechSynthesis.speak(u);
   }
 };
+
+export function warmUp() {
+  var u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  speechSynthesis.speak(u);
+}
 
 export function setMode(mode) { _mode = mode; }
 export function setEnabled(on) { _mode = MODE_ENABLED[String(!!on)]; }
