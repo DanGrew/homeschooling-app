@@ -39,7 +39,7 @@ function makeImgEl(item, sz) {
   var img = document.createElement('img');
   img.src = item.url;
   img.alt = item.name;
-  img.style.cssText = sz + ';transition:transform 0.15s,filter 0.15s;animation:none;';
+  img.style.cssText = sz + ';transition:transform 0.15s,filter 0.15s;';
   img.draggable = false;
   makeSpeakable(img, item.name);
   return img;

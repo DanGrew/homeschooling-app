@@ -15,7 +15,6 @@
 }
 
 .speakable {
-  animation: speakable-pulse 2s ease-in-out infinite;
 }
 
 .speakable--tap {
