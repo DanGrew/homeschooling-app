@@ -124,9 +124,22 @@ function handleSlot(slot){
   var cx=150,cy=150;
   var rPi=55,rSiIn=60,rSiOut=100,rToIn=105,rToOut=140;
   var gap=1.5;
+  var NS='http://www.w3.org/2000/svg';
+  var defs=document.createElementNS(NS,'defs');
+  var filt=document.createElementNS(NS,'filter');
+  filt.id='wheel-glow';
+  filt.setAttribute('x','-50%');filt.setAttribute('y','-50%');
+  filt.setAttribute('width','200%');filt.setAttribute('height','200%');
+  var fds=document.createElementNS(NS,'feDropShadow');
+  fds.setAttribute('dx','0');fds.setAttribute('dy','0');
+  fds.setAttribute('stdDeviation','4');
+  fds.setAttribute('flood-color','rgb(150,80,220)');
+  fds.setAttribute('flood-opacity','0.5');
+  filt.appendChild(fds);defs.appendChild(filt);svg.appendChild(defs);
   function addPath(d,fill,colourId){
-    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    var p=document.createElementNS(NS,'path');
     p.setAttribute('d',d);p.setAttribute('fill',fill);
+    p.setAttribute('filter','url(#wheel-glow)');
     p.style.cursor='pointer';
     svg.appendChild(p);
     [colourId].filter(Boolean).forEach(function(id){makeSpeakable(p,LSN_COLOURS[id].label);});
