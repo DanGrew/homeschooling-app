@@ -12,6 +12,7 @@
 #panel-header a{color:#27AE60;}
 #panel-header h2{font-size:1.2em;}
 #panel-header p{font-size:0.8em;color:#888;margin-top:6px;line-height:1.4;}
+#filter-bar{flex-shrink:0;}
 #panel-list{overflow-y:auto;flex:1;padding:8px 0;}
 #btn-print{background:#2ECC71;color:white;border:none;border-radius:12px;padding:14px;font-size:1.1em;font-family:inherit;font-weight:bold;cursor:pointer;margin:12px 16px 16px;flex-shrink:0;}
 #btn-print:hover{background:#27AE60;}
@@ -40,8 +41,9 @@
   <div id="panel-header">
     <a href="../../worksheets/">&#127968; Worksheets</a>
     <h2>Choose images</h2>
-    <p>Tick the animals you want. Then use your device's print button to print the sheet.</p>
+    <p>Tick the images you want. Then use your device's print button to print the sheet.</p>
   </div>
+  <div id="filter-bar"></div>
   <div id="panel-list"></div>
   <button id="btn-print" onclick="window.print()">&#128438; Print</button>
 </div>
@@ -54,6 +56,7 @@
 <script type="module">
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
+import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
@@ -83,17 +86,22 @@ function renderSVG(pic,uid){
   return svg;
 }
 
-function buildPanel(){
+var checked=new Set();
+
+function buildPanel(items){
   var list=document.getElementById('panel-list');
-  pictures.forEach(function(pic,i){
+  list.innerHTML='';
+  items.forEach(function(pic){
+    var idx=pictures.indexOf(pic);
     var item=document.createElement('div');
     item.className='panel-item';
     var cb=document.createElement('input');
-    cb.type='checkbox';cb.id='cb-'+i;
+    cb.type='checkbox';cb.id='cb-'+idx;cb.checked=checked.has(pic);
     var lbl=document.createElement('label');
-    lbl.htmlFor='cb-'+i;lbl.textContent=pic.name;
-    var IMG_ACTION={'true':function(){addImage(i);},'false':function(){removeImage(i);}};
-    cb.addEventListener('change',function(){IMG_ACTION[String(cb.checked)]();});
+    lbl.htmlFor='cb-'+idx;lbl.textContent=pic.name;
+    cb.addEventListener('change',function(){
+      ({'true':function(){checked.add(pic);addImage(idx);},'false':function(){checked.delete(pic);removeImage(idx);}})[String(cb.checked)]();
+    });
     item.appendChild(cb);item.appendChild(lbl);
     list.appendChild(item);
   });
@@ -118,7 +126,7 @@ function removeImage(idx){
 Dictionary.init('../../dictionary/');
 loadColouringPictures(pictures,function(){
   pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
-  buildPanel();
+  buildFilterBar(pictures,function(filtered){buildPanel(filtered);});
 },function(){document.getElementById('panel-list').textContent='⚠️ Failed to load — check connection';
 });
 </script>
