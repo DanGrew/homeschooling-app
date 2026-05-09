@@ -49,44 +49,56 @@ test('speak button is visible in both modes', async ({ page }) => {
 
 // --- lesson mode ---
 
-test('defaults to lesson mode', async ({ page }) => {
+test('defaults to lesson mode with watch visible', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/')
-  await expect(page.locator('#btn-trace')).toBeVisible()
+  await expect(page.locator('#btn-trace')).not.toBeVisible()
   await expect(page.locator('#btn-tryit')).toBeVisible()
-  await expect(page.locator('#btn-watch')).not.toBeVisible()
+  await expect(page.locator('#btn-watch')).toBeVisible()
 })
 
-test('trace button is enabled on load', async ({ page }) => {
+test('watch button is enabled on load', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
-  await expect(page.locator('#btn-trace')).not.toBeDisabled()
+  await expect(page.locator('#btn-watch')).not.toBeDisabled()
 })
 
-test('trace button disables during animation', async ({ page }) => {
+test('watch button disables during animation', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
-  await page.locator('#btn-trace').click()
-  await expect(page.locator('#btn-trace')).toBeDisabled()
+  await page.locator('#btn-watch').click()
+  await expect(page.locator('#btn-watch')).toBeDisabled()
 })
 
 test('try-it button disables during animation', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
-  await page.locator('#btn-trace').click()
+  await page.locator('#btn-watch').click()
   await expect(page.locator('#btn-tryit')).toBeDisabled()
+})
+
+test('stop button hidden on load', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
+  await expect(page.locator('#btn-stop')).not.toBeVisible()
+})
+
+test('stop button visible during animation', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
+  await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
+  await page.locator('#btn-watch').click()
+  await expect(page.locator('#btn-stop')).toBeVisible()
 })
 
 test('try-it button re-enables after animation completes', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=l&filter=lower')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
-  await page.locator('#btn-trace').click()
+  await page.locator('#btn-watch').click()
   await expect(page.locator('#btn-tryit')).not.toBeDisabled({ timeout: 5000 })
 })
 
-test('trace button re-enables after animation completes', async ({ page }) => {
+test('watch button re-enables after animation completes', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=l&filter=lower')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
-  await page.locator('#btn-trace').click()
-  await expect(page.locator('#btn-trace')).not.toBeDisabled({ timeout: 5000 })
+  await page.locator('#btn-watch').click()
+  await expect(page.locator('#btn-watch')).not.toBeDisabled({ timeout: 5000 })
 })
 
 // --- mode switching ---
@@ -95,18 +107,17 @@ test('try-it button switches to trace mode', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
   await page.locator('#btn-tryit').click()
-  await expect(page.locator('#btn-watch')).toBeVisible()
-  await expect(page.locator('#btn-trace')).not.toBeVisible()
   await expect(page.locator('#btn-tryit')).not.toBeVisible()
+  await expect(page.locator('#btn-watch')).toBeVisible()
+  await expect(page.locator('#btn-stop')).not.toBeVisible()
 })
 
-test('watch button switches back to lesson mode', async ({ page }) => {
+test('watch from trace mode auto-plays animation', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower&mode=trace')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
   await page.locator('#btn-watch').click()
-  await expect(page.locator('#btn-trace')).toBeVisible()
-  await expect(page.locator('#btn-tryit')).toBeVisible()
-  await expect(page.locator('#btn-watch')).not.toBeVisible()
+  await expect(page.locator('#btn-stop')).toBeVisible()
+  await expect(page.locator('#btn-watch')).toBeDisabled()
 })
 
 test('mode=trace param starts in trace mode', async ({ page }) => {

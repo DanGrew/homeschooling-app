@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
 
 test('page loads with target label and 6-colour palette', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('#cm-target-label')).toHaveText('Red-Orange')
+  await expect(page.locator('#cm-target-label')).toHaveText('Vermillion')
   for (const c of ['red', 'yellow', 'blue', 'orange', 'green', 'purple']) {
     await expect(page.locator(`#cm-sw-${c}`)).toBeVisible()
   }

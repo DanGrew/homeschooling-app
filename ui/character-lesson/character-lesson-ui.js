@@ -15,6 +15,7 @@ let currentIdx = 0;
 let engine = null;
 let currentEntry = null;
 let dotEl = null;
+let autoPlay = false;
 
 function getParam(key) { return new URLSearchParams(location.search).get(key); }
 
@@ -38,8 +39,8 @@ function showBanner() { document.getElementById('success-banner').classList.add(
 function hideBanner() { document.getElementById('success-banner').classList.remove('visible'); }
 
 var MODE_UI = {
-  'trace':  { trace: 'none', tryit: 'none', watch: '',     hint: '' },
-  'lesson': { trace: '',     tryit: '',     watch: 'none', hint: 'none' }
+  'trace':  { trace: 'none', tryit: 'none', watch: '', hint: '' },
+  'lesson': { trace: 'none', tryit: '',     watch: '', hint: 'none' }
 };
 
 function applyModeUI() {
@@ -48,6 +49,7 @@ function applyModeUI() {
   document.getElementById('btn-tryit').style.display = s.tryit;
   document.getElementById('btn-watch').style.display = s.watch;
   document.getElementById('trace-hint').style.display = s.hint;
+  document.getElementById('btn-stop').style.display = 'none';
 }
 
 function switchMode(newMode) {
@@ -71,6 +73,8 @@ function navTo(idx) {
 function onLessonComplete() {
   document.getElementById('btn-trace').disabled = false;
   document.getElementById('btn-tryit').disabled = false;
+  document.getElementById('btn-watch').disabled = false;
+  document.getElementById('btn-stop').style.display = 'none';
   [document.querySelector('.char-decoration')].filter(Boolean).forEach(dot => {
     dot.setAttribute('fill', '#FFD700');
     dot.style.filter = 'drop-shadow(0 0 8px #FFD700)';
@@ -165,6 +169,7 @@ function loadChar(entry) {
       engine = window.engine = null;
       SET_TRACE_BTN_ENABLED[String(mode === 'trace')]();
       initEngine();
+      [autoPlay].filter(Boolean).forEach(() => { autoPlay=false; BTN_TRACE_CLICK[String(!engine)](); });
     });
 }
 
@@ -175,12 +180,19 @@ var BTN_TRACE_CLICK = {
     engine.done = false;
     document.getElementById('btn-trace').disabled = true;
     document.getElementById('btn-tryit').disabled = true;
+    document.getElementById('btn-watch').disabled = true;
+    document.getElementById('btn-stop').style.display = '';
     [document.querySelector('.char-decoration')].filter(Boolean).forEach(dot => {
       dot.setAttribute('fill', [dot.dataset.origFill, '#ccc'].filter(Boolean)[0]);
       dot.style.filter = '';
     });
     engine.startAnimation(2500);
   }
+};
+
+var WATCH_CLICK = {
+  'trace':  () => { autoPlay=true; switchMode('lesson'); },
+  'lesson': () => BTN_TRACE_CLICK[String(!engine)]()
 };
 
 var MODE_PARAM = { 'true': 'trace', 'false': 'lesson' };
@@ -196,7 +208,14 @@ export function init() {
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
   document.getElementById('btn-speak').addEventListener('click', () => { [currentEntry].filter(Boolean).forEach(e => speak(e.speak)); });
   document.getElementById('btn-tryit').addEventListener('click', () => switchMode('trace'));
-  document.getElementById('btn-watch').addEventListener('click', () => switchMode('lesson'));
+  document.getElementById('btn-watch').addEventListener('click', () => WATCH_CLICK[mode]());
+  document.getElementById('btn-stop').addEventListener('click', () => {
+    engine?.stopAnimation();
+    document.getElementById('btn-stop').style.display = 'none';
+    document.getElementById('btn-tryit').disabled = false;
+    document.getElementById('btn-watch').disabled = false;
+    [currentEntry].filter(Boolean).forEach(loadChar);
+  });
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => { applyFilter(btn.dataset.filter); navTo(0); });
   });
