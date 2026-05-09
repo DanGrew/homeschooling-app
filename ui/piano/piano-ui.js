@@ -6,7 +6,7 @@ var _initDone = false;
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
 PIANO_CONFIG.NOTES.forEach(function(note) {
-  fetch('../../assets/audio/piano/' + note + '.wav')
+  fetch('../../../assets/audio/piano/' + note + '.wav')
     .then(function(r) { return r.arrayBuffer(); })
     .then(function(buf) { _rawBuffers[note] = buf; })
     .catch(function() {});

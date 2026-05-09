@@ -1,7 +1,7 @@
 import { validWord, charFile, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 import { speak, stop } from '../speech/speech-ui.js';
 
-const CHAR_BASE = '../../language-characters/';
+const CHAR_BASE = '../../../assets/language-characters/';
 const DICT_BASE = '../../dictionary/';
 const NS = 'http://www.w3.org/2000/svg';
 

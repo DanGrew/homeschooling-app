@@ -145,7 +145,7 @@ var SETUP_DOT_TRACE = {
 var SET_TRACE_BTN_ENABLED = { 'true': () => {}, 'false': () => { document.getElementById('btn-trace').disabled = false; } };
 
 function loadChar(entry) {
-  fetch('../../language-characters/' + entry.file)
+  fetch('../../../assets/language-characters/' + entry.file)
     .then(r => r.text())
     .then(svgText => {
       const parser = new DOMParser();
