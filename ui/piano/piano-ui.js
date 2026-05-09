@@ -26,13 +26,15 @@ var initAudio = once(function() {
 });
 
 function playNote(noteName, volume) {
-  var src = _audioCtx.createBufferSource();
-  src.buffer = _audioBuffers[noteName];
-  var gain = _audioCtx.createGain();
-  gain.gain.value = volume;
-  src.connect(gain);
-  gain.connect(_audioCtx.destination);
-  src.start();
+  return _audioCtx.resume().then(function() {
+    var src = _audioCtx.createBufferSource();
+    src.buffer = _audioBuffers[noteName];
+    var gain = _audioCtx.createGain();
+    gain.gain.value = volume;
+    src.connect(gain);
+    gain.connect(_audioCtx.destination);
+    src.start();
+  });
 }
 
 function renderKeys(container, onKeyPress) {
