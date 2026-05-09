@@ -1,9 +1,26 @@
-import { cachedBestVoice, setGuidancePriority } from '../speech/speech-ui.js';
+import { setGuidancePriority } from '../speech/speech-ui.js';
+
+function _isLocal(v)  { return v.localService; }
+function _isEnGB(v)   { return v.lang === 'en-GB'; }
+function _isEn(v)     { return v.lang.startsWith('en'); }
+function _isFemale(v) { return /female|woman|girl|samantha|karen|serena|moira|kate|nicky/i.test(v.name); }
+
+var VOICE_STRATEGIES = [
+  function(vs) { return vs.filter(_isLocal).filter(_isEnGB).filter(_isFemale)[0]; },
+  function(vs) { return vs.filter(_isLocal).filter(_isEn).filter(_isFemale)[0]; },
+  function(vs) { return vs.filter(_isLocal).filter(_isEn)[0]; },
+  function(vs) { return vs.filter(_isEn)[0]; }
+];
+
+function _guidanceVoice() {
+  var vs = speechSynthesis.getVoices();
+  return VOICE_STRATEGIES.map(function(f) { return f(vs); }).filter(Boolean)[0];
+}
 
 function _utt(text) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
-  [cachedBestVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
+  [_guidanceVoice()].filter(Boolean).forEach(function(v) { u.voice = v; });
   return u;
 }
 

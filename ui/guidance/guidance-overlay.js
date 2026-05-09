@@ -1,8 +1,12 @@
-var AUTO_DISPLAY = { 'true': '', 'false': 'none' };
-var BUILD_ACTION = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
+var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
+var SUCCESS_BG    = { 'true': '#2ECC71', 'false': '#fff'  };
+var SUCCESS_COLOR = { 'true': '#fff',    'false': '#222'  };
+var SUCCESS_TEXT  = { 'true': function(t) { return '\u2B50 ' + t; }, 'false': function(t) { return t; } };
+var BUILD_ACTION  = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
 
 export function GuidanceOverlay() {
   this._el = null;
+  this._bubbleEl = null;
   this._textEl = null;
   this._progressEl = null;
   this._nextBtn = null;
@@ -19,7 +23,8 @@ GuidanceOverlay.prototype._build = function(onStop) {
   el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:9500;display:none;padding:12px;box-sizing:border-box;';
 
   var bubble = document.createElement('div');
-  bubble.style.cssText = 'background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,0.12);padding:14px 16px;display:flex;align-items:center;gap:14px;';
+  bubble.style.cssText = 'background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,0.12);padding:14px 16px;display:flex;align-items:center;gap:14px;transition:background 0.3s;';
+  this._bubbleEl = bubble;
 
   var char = document.createElement('img');
   char.style.cssText = 'width:52px;height:52px;object-fit:contain;flex-shrink:0;border-radius:50%;background:#f5f5f5;';
@@ -29,7 +34,7 @@ GuidanceOverlay.prototype._build = function(onStop) {
   body.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;';
 
   var text = document.createElement('div');
-  text.style.cssText = 'font-size:1.05em;font-weight:600;color:#222;line-height:1.3;';
+  text.style.cssText = 'font-size:1.05em;font-weight:600;line-height:1.3;';
   this._textEl = text;
 
   var footer = document.createElement('div');
@@ -75,7 +80,10 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._charEl.src = guideSrc;
   this._onNext = onNext;
   this._onReplay = onReplay;
-  this._textEl.textContent = step.text;
+  var key = String(!!step.success);
+  this._bubbleEl.style.background = SUCCESS_BG[key];
+  this._textEl.style.color = SUCCESS_COLOR[key];
+  this._textEl.textContent = SUCCESS_TEXT[key](step.text);
   this._progressEl.textContent = idx + ' / ' + total;
   this._nextBtn.style.display = AUTO_DISPLAY[String(!!step.auto)];
   this._el.style.display = '';

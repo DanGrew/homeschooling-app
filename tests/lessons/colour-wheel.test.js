@@ -73,44 +73,88 @@ test('lesson 1 button is visible in nav', async ({ page }) => {
   await expect(page.locator('.nav-lesson-btn')).toHaveText('1')
 })
 
-test('clicking lesson button shows guidance overlay', async ({ page }) => {
+test('lesson button opens popout with lesson title', async ({ page }) => {
   await page.goto(URL)
+  await page.locator('.nav-lesson-btn').click()
+  await expect(page.locator('.nav-lesson-popout')).toBeVisible()
+  await expect(page.locator('.nav-lesson-item')).toContainText('Lesson 1: Make Orange')
+})
+
+test('clicking outside closes popout', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.nav-lesson-btn').click()
+  await expect(page.locator('.nav-lesson-popout')).toBeVisible()
+  await page.locator('.game-area').click()
+  await expect(page.locator('.nav-lesson-popout')).not.toBeVisible()
+})
+
+async function startLesson(page) {
   await page.waitForFunction(() => window.guidanceService)
   await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').click()
+}
+
+test('clicking lesson item shows guidance overlay', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
   await expect(page.locator('#guidance-overlay')).toBeVisible()
 })
 
 test('first step shows intro text and Next button', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => window.guidanceService)
-  await page.locator('.nav-lesson-btn').click()
-  await expect(page.locator('#guidance-overlay')).toContainText("We're going to make orange!")
+  await startLesson(page)
+  await expect(page.locator('#guidance-overlay')).toContainText("Let's go on a colour hunt!")
   await expect(page.locator('#guidance-overlay button').filter({ hasText: 'Next' })).toBeVisible()
 })
 
 test('Next on intro step advances to find-red instruction', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => window.guidanceService)
-  await page.locator('.nav-lesson-btn').click()
+  await startLesson(page)
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
-  await expect(page.locator('#guidance-overlay')).toContainText('Can you find red?')
+  await expect(page.locator('#guidance-overlay')).toContainText('Can you spot red')
   await expect(page.locator('#guidance-overlay button').filter({ hasText: 'Next' })).not.toBeVisible()
 })
 
 test('tapping red wheel segment shows feedback', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => window.guidanceService)
-  await page.locator('.nav-lesson-btn').click()
+  await startLesson(page)
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
   await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
   await expect(page.locator('#guidance-overlay')).toContainText('You found red!')
   await expect(page.locator('#guidance-overlay button').filter({ hasText: 'Next' })).toBeVisible()
 })
 
+async function completeLesson(page) {
+  await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
+  await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
+  await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
+  await page.locator('#wheel-svg path[fill="#F1C40F"]').click()
+  await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
+  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('pointerdown')
+  await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
+}
+
+test('success step has green background', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await completeLesson(page)
+  const bg = await page.locator('#guidance-overlay').evaluate(el => {
+    const bubble = el.querySelector('div')
+    return bubble ? bubble.style.background : ''
+  })
+  expect(bg).toBe('rgb(46, 204, 113)')
+})
+
+test('success step shows star prefix', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await completeLesson(page)
+  await expect(page.locator('#guidance-overlay')).toContainText('\u2B50')
+})
+
 test('close button stops lesson and hides overlay', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => window.guidanceService)
-  await page.locator('.nav-lesson-btn').click()
+  await startLesson(page)
   await expect(page.locator('#guidance-overlay')).toBeVisible()
   await page.locator('#guidance-overlay button[title="Stop lesson"]').click()
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
