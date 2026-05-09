@@ -19,10 +19,10 @@ export function init(a, b, max) {
   makeSpeakable(document.getElementById('lbl-a'), 'A');
   makeSpeakable(document.getElementById('lbl-b'), 'B');
   makeSpeakable(document.getElementById('lbl-total'), 'Total');
-  makeInteractive(document.getElementById('btn-a-plus'),  () => { change('a',  1); speak('plus');  });
-  makeInteractive(document.getElementById('btn-a-minus'), () => { change('a', -1); speak('minus'); });
-  makeInteractive(document.getElementById('btn-b-plus'),  () => { change('b',  1); speak('plus');  });
-  makeInteractive(document.getElementById('btn-b-minus'), () => { change('b', -1); speak('minus'); });
+  makeInteractive(document.getElementById('btn-a-plus'),  () => { speak('plus');  change('a',  1); });
+  makeInteractive(document.getElementById('btn-a-minus'), () => { speak('minus'); change('a', -1); });
+  makeInteractive(document.getElementById('btn-b-plus'),  () => { speak('plus');  change('b',  1); });
+  makeInteractive(document.getElementById('btn-b-minus'), () => { speak('minus'); change('b', -1); });
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
