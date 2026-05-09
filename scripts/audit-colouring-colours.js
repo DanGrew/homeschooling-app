@@ -5,6 +5,7 @@
 //   (default)     Cluster by RGB distance, flag near-identical shades
 //   --by-family   Group by hue family, enforce max 2 shades per family
 //                 True blacks (L<12%) and whites (L>88%) are always exempt.
+//   --palette     Snap every colour to nearest entry in the curated palette
 //
 // Flags:
 //   --threshold N   RGB distance threshold for default mode (default: 50)
@@ -14,18 +15,50 @@
 //   node scripts/audit-colouring-colours.js
 //   node scripts/audit-colouring-colours.js --by-family
 //   node scripts/audit-colouring-colours.js --by-family --apply
+//   node scripts/audit-colouring-colours.js --palette
+//   node scripts/audit-colouring-colours.js --palette --apply
 
 const fs = require('fs');
 const path = require('path');
+
+const PALETTE = [
+  '#111111', // 1  near-black
+  '#555555', // 2  dark grey
+  '#9E9E9E', // 3  mid grey
+  '#BDC3C7', // 4  light grey
+  '#FFFFFF', // 5  white
+  '#FDEBD0', // 6  skin/peach
+  '#795548', // 7  brown
+  '#CD853F', // 8  golden tan
+  '#922B21', // 9  dark red
+  '#E74C3C', // 10 red
+  '#FF69B4', // 11 hot pink
+  '#F8BBD0', // 12 pale pink
+  '#CE93D8', // 13 light purple
+  '#9B59B6', // 14 purple
+  '#1F3A93', // 15 dark blue
+  '#3498DB', // 16 blue
+  '#5DADE2', // 17 light blue
+  '#1ABC9C', // 18 teal
+  '#27AE60', // 19 dark green
+  '#7CB342', // 20 mid green
+  '#C0CA33', // 21 olive/yellow-green
+  '#FFF9C4', // 22 pale yellow
+  '#F1C40F', // 23 yellow
+  '#F39C12', // 24 amber
+  '#E67E22', // 25 orange
+];
 
 const args = process.argv.slice(2);
 let threshold = 50;
 let apply = false;
 let byFamily = false;
+let byPalette = false;
 for (let i = 0; i < args.length; i++) {
   if (args[i] === '--threshold' && args[i + 1]) threshold = parseFloat(args[++i]);
   if (args[i] === '--apply') apply = true;
   if (args[i] === '--by-family') byFamily = true;
+  if (args[i] === '--palette') byPalette = true;
 }
 
 const entriesDir = path.join(__dirname, '..', 'app', 'dictionary', 'entries');
@@ -82,6 +115,10 @@ function clusterByDistance(colourCounts, thresh) {
   return clusters.filter(c => c.members.length > 1);
 }
 
+function snapToPalette(hex) {
+  return nearestOf(hex, PALETTE);
+}
+
 function clusterByFamily(colourCounts) {
   const families = {};
   for (const [hex, count] of colourCounts.entries()) {
@@ -116,7 +153,23 @@ concepts.forEach(concept => {
 
   const replaceMap = new Map();
 
-  if (byFamily) {
+  if (byPalette) {
+    let hasChanges = false;
+    for (const [hex] of colourCounts.entries()) {
+      const snapped = snapToPalette(hex);
+      if (snapped !== hex.toUpperCase() && snapped !== hex) {
+        replaceMap.set(hex, snapped);
+      }
+    }
+    if (!replaceMap.size) return;
+    console.log(`\n${concept.toUpperCase()}`);
+    for (const [from, to] of replaceMap.entries()) {
+      const d = dist(hexToRgb(from), hexToRgb(to));
+      console.log(`  ${from} → ${to} (dist ${d.toFixed(0)})`);
+      totalDropped++;
+    }
+
+  } else if (byFamily) {
     const groups = clusterByFamily(colourCounts);
     if (!groups.length) return;
 
@@ -159,7 +212,7 @@ concepts.forEach(concept => {
   }
 });
 
-const mode = byFamily ? `by-family (max 2 per hue, black/white exempt)` : `distance threshold: ${threshold}`;
+const mode = byPalette ? `palette snap (${PALETTE.length} colours)` : byFamily ? `by-family (max 2 per hue, black/white exempt)` : `distance threshold: ${threshold}`;
 console.log(`\n─────────────────────────────────`);
 console.log(`mode: ${mode}  |  colours to drop: ${totalDropped}`);
 if (apply) console.log(`applied: ${totalApplied} replacement(s)`);
