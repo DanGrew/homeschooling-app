@@ -44,11 +44,29 @@ function _onCtxStateChange() {
     .forEach(function(c) { _decodeAll(c); });
 }
 
+function _unlock(ctx) {
+  // Plays a silent 1-sample buffer — primes the iOS audio pipeline after resume()
+  var buf = ctx.createBuffer(1, 1, 22050);
+  var src = ctx.createBufferSource();
+  src.buffer = buf;
+  src.connect(ctx.destination);
+  src.start(0);
+}
+
+function _resumeOnTouch() {
+  // touchstart fires before pointerdown — resume here so context is running by play time
+  [_audioCtx]
+    .filter(Boolean)
+    .filter(function(c) { return c.state !== 'running'; })
+    .forEach(function(c) { c.resume(); });
+}
+
 var initAudio = once(function() {
   _audioCtx = new AudioCtx();
   _audioCtx.addEventListener('statechange', _onCtxStateChange);
+  document.addEventListener('touchstart', _resumeOnTouch, { passive: true });
   return _audioCtx.resume()
-    .then(function() { return _decodeAll(_audioCtx); })
+    .then(function() { _unlock(_audioCtx); return _decodeAll(_audioCtx); })
     .then(function() { _initDone = true; })
     .catch(function() {});
 });
