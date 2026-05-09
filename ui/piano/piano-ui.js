@@ -20,24 +20,33 @@ function _decodeBuffer(ctx, buf) {
   });
 }
 
+function _decodeNote(ctx, note) {
+  return [_rawBuffers[note]]
+    .filter(Boolean)
+    .filter(function(r) { return r.byteLength; })
+    .map(function(r) {
+      return _decodeBuffer(ctx, r.slice(0))
+        .then(function(decoded) { _audioBuffers[note] = decoded; })
+        .catch(function() {});
+    })
+    .concat([Promise.resolve()])[0];
+}
+
 function _decodeAll(ctx) {
-  return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-    var raw = _rawBuffers[note];
-    if (!raw || !raw.byteLength) return Promise.resolve();
-    // slice(0) passes a copy — original stays intact for future context recreations
-    return _decodeBuffer(ctx, raw.slice(0))
-      .then(function(decoded) { _audioBuffers[note] = decoded; })
-      .catch(function() {});
-  }));
+  return Promise.all(PIANO_CONFIG.NOTES.map(function(note) { return _decodeNote(ctx, note); }));
+}
+
+function _onCtxStateChange() {
+  [_audioCtx]
+    .filter(Boolean)
+    .filter(function(c) { return c.state === 'running'; })
+    .filter(function() { return _initDone; })
+    .forEach(function(c) { _decodeAll(c); });
 }
 
 var initAudio = once(function() {
-  try { _audioCtx = new AudioCtx(); } catch(e) { return Promise.reject(e); }
-  _audioCtx.addEventListener('statechange', function() {
-    // iOS: fires running after interrupted (phone call ended, Siri dismissed, app foregrounded)
-    // _initDone guard avoids double-decode on the initial resume
-    if (_audioCtx && _audioCtx.state === 'running' && _initDone) _decodeAll(_audioCtx);
-  });
+  _audioCtx = new AudioCtx();
+  _audioCtx.addEventListener('statechange', _onCtxStateChange);
   return _audioCtx.resume()
     .then(function() { return _decodeAll(_audioCtx); })
     .then(function() { _initDone = true; })
@@ -45,29 +54,42 @@ var initAudio = once(function() {
 });
 
 function _play(decoded, volume) {
-  try {
-    var src = _audioCtx.createBufferSource();
-    src.buffer = decoded;
-    var gain = _audioCtx.createGain();
-    gain.gain.value = volume;
-    src.connect(gain);
-    gain.connect(_audioCtx.destination);
-    src.start();
-  } catch(e) {}
+  var src = _audioCtx.createBufferSource();
+  src.buffer = decoded;
+  var gain = _audioCtx.createGain();
+  gain.gain.value = volume;
+  src.connect(gain);
+  gain.connect(_audioCtx.destination);
+  src.start();
+}
+
+function _playFromRaw(noteName, volume) {
+  return [_rawBuffers[noteName]]
+    .filter(Boolean)
+    .filter(function(r) { return r.byteLength; })
+    .map(function(r) {
+      return _decodeBuffer(_audioCtx, r.slice(0))
+        .then(function(d) { _audioBuffers[noteName] = d; _play(d, volume); })
+        .catch(function() {});
+    })
+    .concat([Promise.resolve()])[0];
+}
+
+var _PLAY_READY = {
+  'true':  function(noteName, volume) { _play(_audioBuffers[noteName], volume); return Promise.resolve(); },
+  'false': _playFromRaw
+};
+
+function _playWhenReady(noteName, volume) {
+  return _PLAY_READY[String(!!_audioBuffers[noteName])](noteName, volume);
 }
 
 function playNote(noteName, volume) {
-  if (!_audioCtx) return Promise.resolve();
-  return _audioCtx.resume().then(function() {
-    var decoded = _audioBuffers[noteName];
-    if (decoded) { _play(decoded, volume); return; }
-    // Lazy decode: raw buffer arrived after initAudio already ran
-    var raw = _rawBuffers[noteName];
-    if (!raw || !raw.byteLength) return;
-    return _decodeBuffer(_audioCtx, raw.slice(0))
-      .then(function(d) { _audioBuffers[noteName] = d; _play(d, volume); })
-      .catch(function() {});
-  }).catch(function() {});
+  return [_audioCtx].filter(Boolean)
+    .map(function(ctx) {
+      return ctx.resume().then(function() { return _playWhenReady(noteName, volume); }).catch(function() {});
+    })
+    .concat([Promise.resolve()])[0];
 }
 
 function renderKeys(container, onKeyPress) {
