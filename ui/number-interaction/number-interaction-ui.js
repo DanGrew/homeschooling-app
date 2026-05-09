@@ -19,10 +19,10 @@ export function init(a, b, max) {
   makeSpeakable(document.getElementById('lbl-a'), 'A');
   makeSpeakable(document.getElementById('lbl-b'), 'B');
   makeSpeakable(document.getElementById('lbl-total'), 'Total');
-  makeInteractive(document.getElementById('btn-a-plus'),  () => { change('a',  1); speak('plus');  });
-  makeInteractive(document.getElementById('btn-a-minus'), () => { change('a', -1); speak('minus'); });
-  makeInteractive(document.getElementById('btn-b-plus'),  () => { change('b',  1); speak('plus');  });
-  makeInteractive(document.getElementById('btn-b-minus'), () => { change('b', -1); speak('minus'); });
+  makeInteractive(document.getElementById('btn-a-plus'),  () => { change('a',  1) ? setTimeout(() => speak('plus'),  50) : speak('plus');  });
+  makeInteractive(document.getElementById('btn-a-minus'), () => { change('a', -1) ? setTimeout(() => speak('minus'), 50) : speak('minus'); });
+  makeInteractive(document.getElementById('btn-b-plus'),  () => { change('b',  1) ? setTimeout(() => speak('plus'),  50) : speak('plus');  });
+  makeInteractive(document.getElementById('btn-b-minus'), () => { change('b', -1) ? setTimeout(() => speak('minus'), 50) : speak('minus'); });
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
@@ -71,16 +71,18 @@ export function flashAll(containerId) {
 }
 
 function stopCounting() {
-  if (!counting) return;
+  if (!counting) return false;
   counting = false;
   speechSynthesis.cancel();
   document.querySelectorAll('#objects-total img').forEach(img => { img.classList.remove('speakable--highlight'); });
+  return true;
 }
 
 export function change(side, delta) {
-  stopCounting();
+  var wasCounting = stopCounting();
   ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();
   render();
+  return wasCounting;
 }
 
 function countSpeak(text, onDone) {
