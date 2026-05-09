@@ -15,7 +15,7 @@ function stopAndSpeak(wasCounting, doSpeak) {
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
-  document.addEventListener('pointerdown', warmUp, { once: true });
+  document.addEventListener('click', warmUp, { once: true });
   var numA = document.getElementById('num-a');
   var numB = document.getElementById('num-b');
   var numTotal = document.getElementById('num-total');
