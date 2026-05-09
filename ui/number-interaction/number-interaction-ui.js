@@ -16,6 +16,13 @@ export function init(a, b, max) {
   var instruction = document.getElementById('ni-instruction');
   instruction.style.cursor = 'pointer';
   makeSpeakable(instruction, 'Use the plus and minus buttons to change each group. See how the total changes!');
+  makeSpeakable(document.getElementById('lbl-a'), 'A');
+  makeSpeakable(document.getElementById('lbl-b'), 'B');
+  makeSpeakable(document.getElementById('lbl-total'), 'Total');
+  makeInteractive(document.getElementById('btn-a-plus'),  () => { speak('plus');  change('a',  1); });
+  makeInteractive(document.getElementById('btn-a-minus'), () => { speak('minus'); change('a', -1); });
+  makeInteractive(document.getElementById('btn-b-plus'),  () => { speak('plus');  change('b',  1); });
+  makeInteractive(document.getElementById('btn-b-minus'), () => { speak('minus'); change('b', -1); });
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
