@@ -71,6 +71,7 @@ export function flashAll(containerId) {
 }
 
 function stopCounting() {
+  if (!counting) return;
   counting = false;
   speechSynthesis.cancel();
   document.querySelectorAll('#objects-total img').forEach(img => { img.classList.remove('speakable--highlight'); });
