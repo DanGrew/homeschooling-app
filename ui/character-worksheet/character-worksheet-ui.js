@@ -1,7 +1,7 @@
 import { charToFile, clamp, buildPattern } from '../../core/character-worksheet/character-worksheet-core.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const CHARS_BASE = '../../language-characters/';
+const CHARS_BASE = '../../../assets/language-characters/';
 
 var state = { cols: 4, rows: 3, cellSize: 120 };
 var svgCache = {};
