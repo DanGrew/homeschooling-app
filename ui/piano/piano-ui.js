@@ -1,6 +1,7 @@
 var _audioCtx = null;
 var _audioBuffers = {};
 var _rawBuffers = {};
+var AudioCtx = window.AudioContext || window.webkitAudioContext;
 
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
@@ -12,14 +13,14 @@ PIANO_CONFIG.NOTES.forEach(function(note) {
 });
 
 var initAudio = once(function() {
-  _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  _audioCtx = new AudioCtx();
   return _audioCtx.resume().then(function() {
-    return Promise.all(PIANO_CONFIG.NOTES.map(function(note) {
-      var buf = _rawBuffers[note];
-      if (!buf) return Promise.resolve();
-      return _audioCtx.decodeAudioData(buf)
-        .then(function(decoded) { _audioBuffers[note] = decoded; })
-        .catch(function() {});
+    return Promise.all(PIANO_CONFIG.NOTES.flatMap(function(note) {
+      return [_rawBuffers[note]].filter(Boolean).map(function(buf) {
+        return _audioCtx.decodeAudioData(buf)
+          .then(function(decoded) { _audioBuffers[note] = decoded; })
+          .catch(function() {});
+      });
     }));
   });
 });

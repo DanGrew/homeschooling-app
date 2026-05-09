@@ -1,8 +1,10 @@
 import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 
 var _mode = 'full';
-var _voices = speechSynthesis.getVoices();
-speechSynthesis.addEventListener('voiceschanged', () => { _voices = speechSynthesis.getVoices(); });
+var _voices = typeof speechSynthesis !== 'undefined' ? speechSynthesis.getVoices() : [];
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.addEventListener('voiceschanged', () => { _voices = speechSynthesis.getVoices(); });
+}
 
 export function cachedBestVoice() { return bestVoice(_voices); }
 
