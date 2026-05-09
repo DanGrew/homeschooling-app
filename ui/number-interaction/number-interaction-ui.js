@@ -63,7 +63,7 @@ export function flashAll(containerId) {
 function stopCounting() {
   counting = false;
   speechSynthesis.cancel();
-  document.querySelectorAll('#objects-total img').forEach(img => { img.style.transform = ''; img.style.filter = ''; });
+  document.querySelectorAll('#objects-total img').forEach(img => { img.classList.remove('speakable--highlight'); });
 }
 
 export function change(side, delta) {
@@ -83,8 +83,8 @@ function countSpeak(text, onDone) {
 }
 
 function highlight(idx, imgs) {
-  imgs.forEach(img => { img.style.transform = ''; img.style.filter = ''; });
-  Array.from(imgs).slice(idx, idx + 1).forEach(img => { img.style.transform = 'scale(1.3)'; img.style.filter = 'drop-shadow(0 0 10px gold)'; });
+  imgs.forEach(img => { img.classList.remove('speakable--highlight'); });
+  Array.from(imgs).slice(idx, idx + 1).forEach(img => { img.classList.add('speakable--highlight'); });
 }
 
 export function countAll() {
