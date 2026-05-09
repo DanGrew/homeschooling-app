@@ -8,9 +8,10 @@ const SZ_SM = 'width:min(48px,6.2vw);height:min(48px,6.2vw)';
 let aCount = 0, bCount = 0, aKey = '', bKey = '', MAX = 10, counting = false;
 
 function stopAndSpeak(wasCounting, doSpeak) {
-  var wasSpeaking = !wasCounting && speechSynthesis.speaking;
-  if (wasSpeaking) speechSynthesis.cancel();
-  (wasCounting || wasSpeaking) ? setTimeout(doSpeak, 50) : doSpeak();
+  var wasSpeaking = [speechSynthesis.speaking].filter(() => !wasCounting)[0];
+  [1].filter(() => wasSpeaking).forEach(() => speechSynthesis.cancel());
+  var needsDelay = [wasCounting, wasSpeaking].some(Boolean);
+  ({true: () => setTimeout(doSpeak, 50), false: doSpeak})[String(needsDelay)]();
 }
 
 export function init(a, b, max) {
@@ -76,11 +77,13 @@ export function flashAll(containerId) {
 }
 
 function stopCounting() {
-  if (!counting) return false;
-  counting = false;
-  speechSynthesis.cancel();
-  document.querySelectorAll('#objects-total img').forEach(img => { img.classList.remove('speakable--highlight'); });
-  return true;
+  var was = counting;
+  [1].filter(() => was).forEach(() => {
+    counting = false;
+    speechSynthesis.cancel();
+    document.querySelectorAll('#objects-total img').forEach(img => img.classList.remove('speakable--highlight'));
+  });
+  return was;
 }
 
 export function change(side, delta) {
@@ -94,7 +97,7 @@ function countSpeak(text, onDone) {
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
   [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
-  u.onend = () => { if (counting) setTimeout(onDone, 200); };
+  u.onend = () => { [1].filter(() => counting).forEach(() => setTimeout(onDone, 200)); };
   speechSynthesis.resume();
   speechSynthesis.speak(u);
 }

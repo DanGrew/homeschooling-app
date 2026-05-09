@@ -23,8 +23,8 @@ test('wheel segments are speakable', async ({ page }) => {
 test('selecting a swatch highlights it', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/colour-wheel/')
   await page.locator('#lsn-sw-red').click()
-  const outline = await page.locator('#lsn-sw-red').evaluate(el => el.style.outline)
-  expect(outline).toContain('solid')
+  const shadow = await page.locator('#lsn-sw-red').evaluate(el => el.style.boxShadow)
+  expect(shadow).toContain('0px 0px 0px 7px')
 })
 
 test('assigning colours to slots updates result', async ({ page }) => {
