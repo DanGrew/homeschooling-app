@@ -17,10 +17,8 @@ var SPEAK_ACTION = {
     var u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
     [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
-    var wasSpeaking = speechSynthesis.speaking;
-    speechSynthesis.cancel();
-    var doSpeak = () => { speechSynthesis.resume(); speechSynthesis.speak(u); };
-    wasSpeaking ? setTimeout(doSpeak, 50) : doSpeak();
+    speechSynthesis.resume();
+    speechSynthesis.speak(u);
   }
 };
 

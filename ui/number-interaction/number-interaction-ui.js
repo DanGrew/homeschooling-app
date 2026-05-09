@@ -1,11 +1,17 @@
 import { speak, cachedBestVoice, warmUp } from '../speech/speech-ui.js';
-import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
+import { makeInteractive } from '../speech/speakable.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
 const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
 const SZ_SM = 'width:min(48px,6.2vw);height:min(48px,6.2vw)';
 
 let aCount = 0, bCount = 0, aKey = '', bKey = '', MAX = 10, counting = false;
+
+function stopAndSpeak(wasCounting, doSpeak) {
+  var wasSpeaking = !wasCounting && speechSynthesis.speaking;
+  if (wasSpeaking) speechSynthesis.cancel();
+  (wasCounting || wasSpeaking) ? setTimeout(doSpeak, 50) : doSpeak();
+}
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
@@ -15,20 +21,20 @@ export function init(a, b, max) {
   var numTotal = document.getElementById('num-total');
   var instruction = document.getElementById('ni-instruction');
   instruction.style.cursor = 'pointer';
-  makeSpeakable(instruction, 'Use the plus and minus buttons to change each group. See how the total changes!');
-  makeSpeakable(document.getElementById('lbl-a'), 'A');
-  makeSpeakable(document.getElementById('lbl-b'), 'B');
-  makeSpeakable(document.getElementById('lbl-total'), 'Total');
-  makeInteractive(document.getElementById('btn-a-plus'),  () => { change('a',  1) ? setTimeout(() => speak('plus'),  50) : speak('plus');  });
-  makeInteractive(document.getElementById('btn-a-minus'), () => { change('a', -1) ? setTimeout(() => speak('minus'), 50) : speak('minus'); });
-  makeInteractive(document.getElementById('btn-b-plus'),  () => { change('b',  1) ? setTimeout(() => speak('plus'),  50) : speak('plus');  });
-  makeInteractive(document.getElementById('btn-b-minus'), () => { change('b', -1) ? setTimeout(() => speak('minus'), 50) : speak('minus'); });
+  makeInteractive(instruction, () => stopAndSpeak(stopCounting(), () => speak('Use the plus and minus buttons to change each group. See how the total changes!')));
+  makeInteractive(document.getElementById('lbl-a'),     () => stopAndSpeak(stopCounting(), () => speak('A')));
+  makeInteractive(document.getElementById('lbl-b'),     () => stopAndSpeak(stopCounting(), () => speak('B')));
+  makeInteractive(document.getElementById('lbl-total'), () => stopAndSpeak(stopCounting(), () => speak('Total')));
+  makeInteractive(document.getElementById('btn-a-plus'),  () => stopAndSpeak(change('a',  1), () => speak('plus')));
+  makeInteractive(document.getElementById('btn-a-minus'), () => stopAndSpeak(change('a', -1), () => speak('minus')));
+  makeInteractive(document.getElementById('btn-b-plus'),  () => stopAndSpeak(change('b',  1), () => speak('plus')));
+  makeInteractive(document.getElementById('btn-b-minus'), () => stopAndSpeak(change('b', -1), () => speak('minus')));
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
-  makeInteractive(numA, () => { speak(String(aCount)); setTimeout(() => flashAll('objects-a'), 100); });
-  makeInteractive(numB, () => { speak(String(bCount)); setTimeout(() => flashAll('objects-b'), 100); });
-  makeInteractive(numTotal, countAll);
+  makeInteractive(numA,     () => stopAndSpeak(stopCounting(), () => { speak(String(aCount)); setTimeout(() => flashAll('objects-a'), 100); }));
+  makeInteractive(numB,     () => stopAndSpeak(stopCounting(), () => { speak(String(bCount)); setTimeout(() => flashAll('objects-b'), 100); }));
+  makeInteractive(numTotal, () => stopAndSpeak(stopCounting(), countAll));
   render();
 }
 
@@ -42,7 +48,7 @@ function makeImgEl(item, sz) {
   img.alt = item.name;
   img.style.cssText = sz + ';transition:transform 0.15s,filter 0.15s;';
   img.draggable = false;
-  makeSpeakable(img, item.name);
+  makeInteractive(img, () => stopAndSpeak(stopCounting(), () => speak(item.name)));
   return img;
 }
 
@@ -89,7 +95,7 @@ function countSpeak(text, onDone) {
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
   [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
-  u.onend = () => setTimeout(onDone, 200);
+  u.onend = () => { if (counting) setTimeout(onDone, 200); };
   speechSynthesis.resume();
   speechSynthesis.speak(u);
 }
