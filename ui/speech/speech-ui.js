@@ -1,25 +1,34 @@
 import { bestVoice } from '../../core/word-lesson/word-lesson-core.js';
 
 var _mode = 'full';
+var _guidancePriority = false;
 var _voices = typeof speechSynthesis !== 'undefined' ? speechSynthesis.getVoices() : [];
 if (typeof speechSynthesis !== 'undefined') {
   speechSynthesis.addEventListener('voiceschanged', () => { _voices = speechSynthesis.getVoices(); });
 }
 
 export function cachedBestVoice() { return bestVoice(_voices); }
+export function setGuidancePriority(on) { _guidancePriority = on; }
 
 var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
+
+function _doSpeak(text) {
+  var u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
+  [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
+  speechSynthesis.resume();
+  speechSynthesis.speak(u);
+}
+
+var PRIORITY_SPEAK = {
+  'true':  () => {},
+  'false': _doSpeak
+};
 
 var SPEAK_ACTION = {
   'off':   () => {},
   'quiet': () => {},
-  'full':  (text) => {
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
-    [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
-    speechSynthesis.resume();
-    speechSynthesis.speak(u);
-  }
+  'full':  (text) => PRIORITY_SPEAK[String(_guidancePriority)](text)
 };
 
 export function setMode(mode) { _mode = mode; }
