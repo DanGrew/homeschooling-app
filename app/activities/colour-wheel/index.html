@@ -38,9 +38,23 @@ body{background:#fff8f0;flex-direction:column;}
   <div id="lsn-palette" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
 </div>
 
+<script>
+  window.ADULT_PROMPTS_ACTIVITY='colour-wheel';
+  window.DICT_BASE='../../dictionary/entries/';
+  window.LESSONS=[{id:'make_orange',number:1,title:'Make Orange'}];
+</script>
 <script src="../../shared/menu.js" defer></script>
 <script type="module" src="../../../ui/colour-wheel/colour-wheel-ui.js"></script>
-<script>window.ADULT_PROMPTS_ACTIVITY='colour-wheel';</script>
+<script type="module">
+  import{GuidanceService}from'../../../ui/guidance/guidance-service.js';
+  fetch('../../../content/lessons/colour-wheel.json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      window.LESSON_MAP={};
+      data.lessons.forEach(function(l){window.LESSON_MAP[l.id]=l;});
+      window.guidanceService=new GuidanceService();
+    });
+</script>
 <script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>

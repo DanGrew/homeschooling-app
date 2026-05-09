@@ -1,0 +1,18 @@
+{
+  "activity": "colour-wheel",
+  "lessons": [
+    {
+      "id": "make_orange",
+      "number": 1,
+      "title": "Make Orange",
+      "guide": "cat",
+      "steps": [
+        { "text": "We're going to make orange!", "auto": true },
+        { "text": "Can you find red?",           "expect": "RED_TAPPED",    "feedback": "You found red!" },
+        { "text": "Can you find yellow?",         "expect": "YELLOW_TAPPED", "feedback": "You found yellow!" },
+        { "text": "Now can you find orange?",     "expect": "ORANGE_TAPPED", "feedback": "You found orange!" },
+        { "text": "Well done!", "auto": true }
+      ]
+    }
+  ]
+}

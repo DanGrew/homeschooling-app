@@ -129,7 +129,12 @@ function handleSlot(slot){
     p.setAttribute('d',d);p.setAttribute('fill',fill);
     p.style.cursor='pointer';
     svg.appendChild(p);
-    [colourId].filter(Boolean).forEach(function(id){makeSpeakable(p,LSN_COLOURS[id].label);});
+    [colourId].filter(Boolean).forEach(function(id){
+      makeSpeakable(p,LSN_COLOURS[id].label);
+      p.addEventListener('pointerdown',function(){
+        window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:id.replace(/-/g,'_').toUpperCase()+'_TAPPED'}}));
+      });
+    });
   }
   PRIMARIES.forEach(function(s){addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c),s.c);});
   SECONDARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rSiOut,rSiIn,s.start,s.start+120,gap),hex(s.c),s.c);});

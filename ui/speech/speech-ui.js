@@ -14,6 +14,7 @@ var SPEAK_ACTION = {
   'off':   () => {},
   'quiet': () => {},
   'full':  (text) => {
+    if (window._GUIDANCE_LESSON_SPEAKING) return;
     var u = new SpeechSynthesisUtterance(text);
     u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
     [cachedBestVoice()].filter(Boolean).forEach(v => { u.voice = v; });
