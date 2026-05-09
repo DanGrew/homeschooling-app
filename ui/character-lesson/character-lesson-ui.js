@@ -169,7 +169,7 @@ function loadChar(entry) {
       engine = window.engine = null;
       SET_TRACE_BTN_ENABLED[String(mode === 'trace')]();
       initEngine();
-      if(autoPlay){ autoPlay=false; BTN_TRACE_CLICK[String(!engine)](); }
+      [autoPlay].filter(Boolean).forEach(() => { autoPlay=false; BTN_TRACE_CLICK[String(!engine)](); });
     });
 }
 
@@ -190,6 +190,11 @@ var BTN_TRACE_CLICK = {
   }
 };
 
+var WATCH_CLICK = {
+  'trace':  () => { autoPlay=true; switchMode('lesson'); },
+  'lesson': () => BTN_TRACE_CLICK[String(!engine)]()
+};
+
 var MODE_PARAM = { 'true': 'trace', 'false': 'lesson' };
 
 export function init() {
@@ -203,10 +208,7 @@ export function init() {
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
   document.getElementById('btn-speak').addEventListener('click', () => { [currentEntry].filter(Boolean).forEach(e => speak(e.speak)); });
   document.getElementById('btn-tryit').addEventListener('click', () => switchMode('trace'));
-  document.getElementById('btn-watch').addEventListener('click', () => {
-    if(mode === 'trace'){ autoPlay=true; switchMode('lesson'); }
-    else { BTN_TRACE_CLICK[String(!engine)](); }
-  });
+  document.getElementById('btn-watch').addEventListener('click', () => WATCH_CLICK[mode]());
   document.getElementById('btn-stop').addEventListener('click', () => {
     engine?.stopAnimation();
     document.getElementById('btn-stop').style.display = 'none';

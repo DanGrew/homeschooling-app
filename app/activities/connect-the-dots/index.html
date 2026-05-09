@@ -82,7 +82,7 @@ function render(){
   var shape=filtered[filtIdx];
   var svg=document.getElementById('svg');
   svg.innerHTML='';
-  if(shape.decor){var bg=document.createElementNS('http://www.w3.org/2000/svg','g');bg.id='bg';bg.setAttribute('opacity','0.4');bg.innerHTML=shape.decor;Array.from(bg.children).forEach(function(el){el.removeAttribute('opacity');});svg.appendChild(bg);}
+  [shape.decor].filter(Boolean).forEach(function(decor){var bg=document.createElementNS('http://www.w3.org/2000/svg','g');bg.id='bg';bg.setAttribute('opacity','0.4');bg.innerHTML=decor;Array.from(bg.children).forEach(function(el){el.removeAttribute('opacity');});svg.appendChild(bg);});
   nextDot=1;prevDot=null;complete=false;
   document.getElementById('title').textContent=shape.name+[shape.level].filter(function(v){return v!==undefined;}).map(function(v){return ' [Level '+v+']';}).concat([''])[0];
   hideBanner();
@@ -179,15 +179,18 @@ function revealImage(){
   var lines=document.getElementById('lines');
   var dots=document.getElementById('dots');
   var start=null;
+  var ANIM_END={
+    'true':function(){[bg].filter(Boolean).forEach(function(el){el.setAttribute('opacity','1');});showBanner(nextShape);},
+    'false':function(){requestAnimationFrame(animFrame);}
+  };
   function animFrame(ts){
-    if(!start)start=ts;
+    start=[start,ts].filter(Boolean)[0];
     var t=Math.min((ts-start)/900,1);
-    if(bg)bg.setAttribute('opacity',String(0.4+0.6*t));
-    if(guides)guides.setAttribute('opacity',String(1.0-0.8*t));
-    if(lines)lines.setAttribute('opacity',String(1.0-0.8*t));
-    if(dots)dots.setAttribute('opacity',String(1.0-0.8*t));
-    if(t>=1){if(bg)bg.setAttribute('opacity','1');showBanner(nextShape);}
-    else{requestAnimationFrame(animFrame);}
+    [bg].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(0.4+0.6*t));});
+    [guides].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(1.0-0.8*t));});
+    [lines].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(1.0-0.8*t));});
+    [dots].filter(Boolean).forEach(function(el){el.setAttribute('opacity',String(1.0-0.8*t));});
+    ANIM_END[String(t>=1)]();
   }
   requestAnimationFrame(animFrame);
 }
