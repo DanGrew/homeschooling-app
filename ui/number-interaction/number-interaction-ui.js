@@ -43,9 +43,10 @@ export function render() {
   bContainer.innerHTML = '';
   Array.from({length: aCount}, () => { aContainer.appendChild(makeImgEl(aKey, SZ)); });
   Array.from({length: bCount}, () => { bContainer.appendChild(makeImgEl(bKey, SZ)); });
-  document.getElementById('objects-total').innerHTML =
-    Array.from({length: aCount}, () => makeImg(aKey, SZ_SM)).join('') +
-    Array.from({length: bCount}, () => makeImg(bKey, SZ_SM)).join('');
+  var totalContainer = document.getElementById('objects-total');
+  totalContainer.innerHTML = '';
+  Array.from({length: aCount}, () => { totalContainer.appendChild(makeImgEl(aKey, SZ_SM)); });
+  Array.from({length: bCount}, () => { totalContainer.appendChild(makeImgEl(bKey, SZ_SM)); });
   document.getElementById('num-a').textContent = aCount;
   document.getElementById('num-b').textContent = bCount;
   document.getElementById('num-total').textContent = aCount + bCount;
