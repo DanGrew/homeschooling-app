@@ -76,6 +76,7 @@ test('A cannot exceed 10', async ({ page }) => {
   await ready(page)
   for (let i = 0; i < 12; i++) {
     await page.locator('#btn-a-plus').click()
+    await page.waitForTimeout(120)
   }
   await expect(page.locator('#num-a')).toHaveText('10')
   await expect(page.locator('#objects-a img')).toHaveCount(10)
@@ -86,6 +87,7 @@ test('B cannot exceed 10', async ({ page }) => {
   await ready(page)
   for (let i = 0; i < 12; i++) {
     await page.locator('#btn-b-plus').click()
+    await page.waitForTimeout(120)
   }
   await expect(page.locator('#num-b')).toHaveText('10')
 })
