@@ -1,4 +1,5 @@
 const { test, expect } = require('@playwright/test')
+const { clickInteractive } = require('../helpers.js')
 
 const ready = page => page.locator('body[data-ready="true"]').waitFor()
 
@@ -36,8 +37,8 @@ test('+ button on B adds a fruit and increments count', async ({ page }) => {
 test('total reflects sum of A and B', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  await page.locator('#btn-a-plus').click()
-  await page.locator('#btn-a-plus').click()
+  await clickInteractive(page, '#btn-a-plus')
+  await clickInteractive(page, '#btn-a-plus')
   await page.locator('#btn-b-plus').click()
   await expect(page.locator('#num-a')).toHaveText('2')
   await expect(page.locator('#num-b')).toHaveText('1')
@@ -47,8 +48,8 @@ test('total reflects sum of A and B', async ({ page }) => {
 test('total area shows combined fruits from A and B', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  await page.locator('#btn-a-plus').click()
-  await page.locator('#btn-a-plus').click()
+  await clickInteractive(page, '#btn-a-plus')
+  await clickInteractive(page, '#btn-a-plus')
   await page.locator('#btn-b-plus').click()
   await expect(page.locator('#objects-total img')).toHaveCount(3)
 })
@@ -56,18 +57,16 @@ test('total area shows combined fruits from A and B', async ({ page }) => {
 test('− button does not go below 0', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  await page.locator('#btn-a-minus').click()
-  await page.locator('#btn-a-minus').click()
+  await clickInteractive(page, '#btn-a-minus')
+  await clickInteractive(page, '#btn-a-minus')
   await expect(page.locator('#num-a')).toHaveText('0')
 })
 
 test('− button decrements count and removes fruit', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  await page.locator('#btn-a-plus').click()
-  await page.waitForTimeout(120)
-  await page.locator('#btn-a-plus').click()
-  await page.waitForTimeout(120)
+  await clickInteractive(page, '#btn-a-plus')
+  await clickInteractive(page, '#btn-a-plus')
   await page.locator('#btn-a-minus').click()
   await expect(page.locator('#num-a')).toHaveText('1')
   await expect(page.locator('#objects-a img')).toHaveCount(1)
