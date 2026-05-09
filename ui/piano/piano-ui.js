@@ -1,6 +1,7 @@
 var _audioCtx = null;
 var _audioBuffers = {};
 var _rawBuffers = {};
+var _initDone = false;
 var AudioCtx = window.AudioContext || window.webkitAudioContext;
 
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
@@ -12,29 +13,83 @@ PIANO_CONFIG.NOTES.forEach(function(note) {
     .catch(function() {});
 });
 
+function _decodeBuffer(ctx, buf) {
+  // Callback form covers iOS <14.5 where decodeAudioData returns undefined (no promise)
+  return new Promise(function(resolve, reject) {
+    ctx.decodeAudioData(buf, resolve, reject);
+  });
+}
+
+function _decodeNote(ctx, note) {
+  return [_rawBuffers[note]]
+    .filter(Boolean)
+    .filter(function(r) { return r.byteLength; })
+    .map(function(r) {
+      return _decodeBuffer(ctx, r.slice(0))
+        .then(function(decoded) { _audioBuffers[note] = decoded; })
+        .catch(function() {});
+    })
+    .concat([Promise.resolve()])[0];
+}
+
+function _decodeAll(ctx) {
+  return Promise.all(PIANO_CONFIG.NOTES.map(function(note) { return _decodeNote(ctx, note); }));
+}
+
+function _onCtxStateChange() {
+  [_audioCtx]
+    .filter(Boolean)
+    .filter(function(c) { return c.state === 'running'; })
+    .filter(function() { return _initDone; })
+    .forEach(function(c) { _decodeAll(c); });
+}
+
 var initAudio = once(function() {
   _audioCtx = new AudioCtx();
-  return _audioCtx.resume().then(function() {
-    return Promise.all(PIANO_CONFIG.NOTES.flatMap(function(note) {
-      return [_rawBuffers[note]].filter(Boolean).map(function(buf) {
-        return _audioCtx.decodeAudioData(buf)
-          .then(function(decoded) { _audioBuffers[note] = decoded; })
-          .catch(function() {});
-      });
-    }));
-  });
+  _audioCtx.addEventListener('statechange', _onCtxStateChange);
+  return _audioCtx.resume()
+    .then(function() { return _decodeAll(_audioCtx); })
+    .then(function() { _initDone = true; })
+    .catch(function() {});
 });
 
+function _play(decoded, volume) {
+  var src = _audioCtx.createBufferSource();
+  src.buffer = decoded;
+  var gain = _audioCtx.createGain();
+  gain.gain.value = volume;
+  src.connect(gain);
+  gain.connect(_audioCtx.destination);
+  src.start();
+}
+
+function _playFromRaw(noteName, volume) {
+  return [_rawBuffers[noteName]]
+    .filter(Boolean)
+    .filter(function(r) { return r.byteLength; })
+    .map(function(r) {
+      return _decodeBuffer(_audioCtx, r.slice(0))
+        .then(function(d) { _audioBuffers[noteName] = d; _play(d, volume); })
+        .catch(function() {});
+    })
+    .concat([Promise.resolve()])[0];
+}
+
+var _PLAY_READY = {
+  'true':  function(noteName, volume) { _play(_audioBuffers[noteName], volume); return Promise.resolve(); },
+  'false': _playFromRaw
+};
+
+function _playWhenReady(noteName, volume) {
+  return _PLAY_READY[String(!!_audioBuffers[noteName])](noteName, volume);
+}
+
 function playNote(noteName, volume) {
-  return _audioCtx.resume().then(function() {
-    var src = _audioCtx.createBufferSource();
-    src.buffer = _audioBuffers[noteName];
-    var gain = _audioCtx.createGain();
-    gain.gain.value = volume;
-    src.connect(gain);
-    gain.connect(_audioCtx.destination);
-    src.start();
-  });
+  return [_audioCtx].filter(Boolean)
+    .map(function(ctx) {
+      return ctx.resume().then(function() { return _playWhenReady(noteName, volume); }).catch(function() {});
+    })
+    .concat([Promise.resolve()])[0];
 }
 
 function renderKeys(container, onKeyPress) {

@@ -38,7 +38,13 @@ function scoreMessage(hitCount) {
 
 function once(fn) {
   var called = false, result;
-  return function() { if (!called) { called = true; result = fn(); } return result; };
+  return function() {
+    if (!called) {
+      called = true;
+      try { result = fn(); } catch(e) { result = Promise.reject(e); }
+    }
+    return result;
+  };
 }
 
 if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, once };
