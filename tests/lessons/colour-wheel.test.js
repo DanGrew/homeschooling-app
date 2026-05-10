@@ -130,7 +130,7 @@ async function completeLesson(page) {
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
   await page.locator('#wheel-svg path[fill="#F1C40F"]').click()
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
-  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('pointerdown')
+  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('click')
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
 }
 

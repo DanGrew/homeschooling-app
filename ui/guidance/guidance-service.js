@@ -86,5 +86,5 @@ GuidanceService.prototype._showFeedback = function(text) {
     function() { stop(); speak(text); },
     function() { self.stop(); }
   );
-  stop(); speak(text);
+  speak(text);
 };
