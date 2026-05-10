@@ -1,4 +1,4 @@
-import { GuidanceSpeech } from './guidance-speech.js';
+import { speak, stop } from '../speech/speech-ui.js';
 import { GuidanceOverlay } from './guidance-overlay.js';
 
 function _resolveText(text) {
@@ -17,7 +17,6 @@ var ADVANCE_ACTION = {
 };
 
 export function GuidanceService() {
-  this._speech = GuidanceSpeech;
   this._overlay = new GuidanceOverlay();
   this._lesson = null;
   this._stepIdx = 0;
@@ -36,7 +35,7 @@ GuidanceService.prototype.start = function(lesson) {
 GuidanceService.prototype.stop = function() {
   this._lesson = null;
   this._overlay.hide();
-  this._speech.stop();
+  stop();
 };
 
 GuidanceService.prototype._handle = function(type) {
@@ -70,10 +69,10 @@ GuidanceService.prototype._showStep = function() {
     { text: text, auto: step.auto, success: step.success },
     this._stepIdx + 1, total,
     function() { self._advance(); },
-    function() { self._speech.speak(text); },
+    function() { stop(); speak(text); },
     function() { self.stop(); }
   );
-  this._speech.speak(text);
+  stop(); speak(text);
 };
 
 GuidanceService.prototype._showFeedback = function(text) {
@@ -84,8 +83,8 @@ GuidanceService.prototype._showFeedback = function(text) {
     { text: text, auto: true },
     this._stepIdx + 1, total,
     function() { self._advance(); },
-    function() { self._speech.speak(text); },
+    function() { stop(); speak(text); },
     function() { self.stop(); }
   );
-  this._speech.speak(text);
+  stop(); speak(text);
 };

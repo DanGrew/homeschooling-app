@@ -58,19 +58,37 @@ GuidanceOverlay.prototype._build = function(onStop) {
   next.addEventListener('click', function() { [self._onNext].filter(Boolean).forEach(function(fn) { fn(); }); });
   this._nextBtn = next;
 
+  var closeWrap = document.createElement('div');
+  closeWrap.style.cssText = 'position:relative;width:30px;height:30px;flex-shrink:0;';
+
   var close = document.createElement('button');
   close.innerHTML = '&times;';
   close.title = 'Stop lesson';
-  close.style.cssText = 'width:30px;height:30px;border-radius:50%;border:none;background:#f0f0f0;color:#888;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-  makeLongPress(close, onStop, 600,
-    function() { close.style.cssText += 'transition:transform 0.6s;transform:scale(0.85);'; },
-    function() { close.style.transform = ''; close.style.transition = ''; }
+  close.style.cssText = 'position:absolute;top:0;left:0;width:30px;height:30px;border-radius:50%;border:none;background:#f0f0f0;color:#888;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;';
+
+  var ARC_NS = 'http://www.w3.org/2000/svg';
+  var ARC_C = 94;
+  var arcSvg = document.createElementNS(ARC_NS, 'svg');
+  arcSvg.style.cssText = 'position:absolute;top:-4px;left:-4px;width:38px;height:38px;pointer-events:none;transform:rotate(-90deg);';
+  arcSvg.setAttribute('viewBox', '0 0 38 38');
+  var closeArc = document.createElementNS(ARC_NS, 'circle');
+  closeArc.setAttribute('cx', '19'); closeArc.setAttribute('cy', '19'); closeArc.setAttribute('r', '15');
+  closeArc.setAttribute('fill', 'none'); closeArc.setAttribute('stroke', '#888'); closeArc.setAttribute('stroke-width', '2.5');
+  closeArc.setAttribute('stroke-dasharray', ARC_C); closeArc.setAttribute('stroke-dashoffset', ARC_C);
+  arcSvg.appendChild(closeArc);
+
+  makeLongPress(closeWrap, onStop, 600,
+    function() { closeArc.style.transition = 'stroke-dashoffset 600ms linear'; closeArc.setAttribute('stroke-dashoffset', '0'); },
+    function() { closeArc.style.transition = 'none'; closeArc.setAttribute('stroke-dashoffset', ARC_C); }
   );
+
+  closeWrap.appendChild(close);
+  closeWrap.appendChild(arcSvg);
 
   footer.appendChild(progress);
   footer.appendChild(replay);
   footer.appendChild(next);
-  footer.appendChild(close);
+  footer.appendChild(closeWrap);
   body.appendChild(text);
   body.appendChild(footer);
   bubble.appendChild(char);

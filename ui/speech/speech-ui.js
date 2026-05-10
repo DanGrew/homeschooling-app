@@ -4,9 +4,6 @@ var _LS = { 'true': function() { return localStorage.getItem('parental.audio'); 
 var _VALID_MODE = { full: 1, off: 1, quiet: 1 };
 var _stored = _LS[String(typeof localStorage !== 'undefined')]();
 var _mode = [_stored].filter(function(m) { return _VALID_MODE[m]; }).concat(['full'])[0];
-var _guidancePriority = false;
-
-export function setGuidancePriority(on) { _guidancePriority = on; }
 
 var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
 
@@ -18,15 +15,10 @@ function _doSpeak(text) {
   speechSynthesis.speak(u);
 }
 
-var PRIORITY_SPEAK = {
-  'true':  () => {},
-  'false': _doSpeak
-};
-
 var SPEAK_ACTION = {
   'off':   () => {},
   'quiet': () => {},
-  'full':  (text) => PRIORITY_SPEAK[String(_guidancePriority)](text)
+  'full':  _doSpeak
 };
 
 export function setMode(mode) { _mode = mode; }
