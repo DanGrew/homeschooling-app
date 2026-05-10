@@ -17,10 +17,13 @@ var RULE_EXEC = {
   'false': function() {},
 };
 
+var WIN_BANNER_DELAY = 3000;
+
 var TRIGGER_WIN = {
   'true': function(engine) {
     engine.won = true;
     setTimeout(function() { engine._execActions(engine.spec.win_response); }, 300);
+    setTimeout(function() { engine._showRestartBanner(); }, WIN_BANNER_DELAY);
   },
   'false': function() {},
 };
@@ -545,8 +548,24 @@ export class SimulatorEngine {
     });
   }
 
+  _showRestartBanner() {
+    [document.getElementById('sim-restart-banner')].filter(Boolean).forEach(b => b.remove());
+    var b = document.createElement('div');
+    b.id = 'sim-restart-banner';
+    b.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:1000;box-sizing:border-box;';
+    b.innerHTML = '<span style="font-size:1.6em;">&#11088; Well done!</span><button id="sim-restart-btn" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Again &#8594;</button>';
+    document.body.appendChild(b);
+    requestAnimationFrame(() => requestAnimationFrame(() => { b.style.transform = 'translateY(0)'; }));
+    document.getElementById('sim-restart-btn').addEventListener('click', () => {
+      b.style.transform = 'translateY(100%)';
+      setTimeout(() => b.remove(), 350);
+      this._reset();
+    });
+  }
+
   _reset() {
     this._hideTray(true);
+    [document.getElementById('sim-restart-banner')].filter(Boolean).forEach(b => b.remove());
     this.won = false;
     this.state = Object.assign({}, this.spec.state);
     this.actorIndices = {};
