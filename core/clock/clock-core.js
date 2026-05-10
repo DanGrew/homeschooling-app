@@ -1,14 +1,30 @@
+function hourColors(hour) {
+  if (hour < 6)  return ['#0D1458', '#1A237E'];
+  if (hour < 9)  return ['#FF7043', '#FFB74D'];
+  if (hour < 11) return ['#81D4FA', '#E1F5FE'];
+  if (hour < 17) return ['#039BE5', '#B3E5FC'];
+  if (hour < 19) return ['#EF6C00', '#FFA726'];
+  if (hour < 20) return ['#4527A0', '#7E57C2'];
+  return               ['#1A237E', '#3949AB'];
+}
+
 export function hourToAngles(hour) {
   return { hourDeg: (hour % 12) / 12 * 360, minuteDeg: 0 };
 }
 
 export function hourToSky(hour) {
-  if (hour < 9)  return { topColor: '#FF7043', bottomColor: '#FFB74D', sun: true,  moon: false, celestialX: 14, celestialY: 30 };
-  if (hour < 14) return { topColor: '#039BE5', bottomColor: '#B3E5FC', sun: true,  moon: false, celestialX: 50, celestialY: 5  };
-  if (hour < 17) return { topColor: '#1565C0', bottomColor: '#90CAF9', sun: true,  moon: false, celestialX: 74, celestialY: 14 };
-  if (hour < 20) return { topColor: '#BF360C', bottomColor: '#FF8F00', sun: true,  moon: false, celestialX: 84, celestialY: 32 };
-  if (hour < 22) return { topColor: '#1A237E', bottomColor: '#3949AB', sun: false, moon: true,  celestialX: 35, celestialY: 18 };
-  return           { topColor: '#0D1458', bottomColor: '#1A237E', sun: false, moon: true,  celestialX: 56, celestialY: 8  };
+  var isSun = hour >= 6 && hour < 20;
+  var a = isSun
+    ? (hour - 6) / 14 * Math.PI
+    : (hour >= 20 ? hour - 20 : hour + 4) / 12 * Math.PI;
+  var cx = (1 - Math.cos(a)) / 2 * 86 + 7;
+  var cy = (1 - Math.sin(a)) * 32 + 4;
+  var colors = hourColors(hour);
+  return {
+    topColor: colors[0], bottomColor: colors[1],
+    sun: isSun, moon: !isSun,
+    celestialX: cx, celestialY: cy
+  };
 }
 
 export function nextDegrees(fromHour, toHour) {
