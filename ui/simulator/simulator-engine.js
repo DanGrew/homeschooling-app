@@ -258,6 +258,13 @@ var EXEC_HANDLERS = {
       el.style.top = args[2] + 'px';
     });
   },
+  flip_x: function(args, engine) {
+    var el = document.getElementById('obj-' + args[0]);
+    if (!el) return;
+    var flipped = el.dataset.flipped === '1';
+    el.dataset.flipped = flipped ? '0' : '1';
+    el.style.transform = flipped ? '' : 'scaleX(-1)';
+  },
   delay: function(args, engine) {
     setTimeout(function() { engine._exec(args[1]); }, args[0]);
   },
@@ -377,6 +384,21 @@ export class SimulatorEngine {
         svg.appendChild(t);
       }
     }
+    this.spec.objects.forEach(obj => {
+      var el = document.getElementById('obj-' + obj.id);
+      if (!el) return;
+      var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', obj.x); rect.setAttribute('y', obj.y);
+      rect.setAttribute('width', obj.w); rect.setAttribute('height', obj.h);
+      rect.setAttribute('fill', 'none');
+      rect.setAttribute('stroke', '#00cc44'); rect.setAttribute('stroke-width', '1.5');
+      var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', obj.x + 2); label.setAttribute('y', obj.y + 11);
+      label.setAttribute('fill', '#00cc44'); label.setAttribute('font-size', '10'); label.setAttribute('font-family', 'monospace');
+      label.textContent = obj.id;
+      svg.appendChild(rect);
+      svg.appendChild(label);
+    });
     this.container.appendChild(svg);
   }
 
