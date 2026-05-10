@@ -42,7 +42,7 @@
 .find-row.crossed .btn-got{display:none;}
 .find-row.crossed .btn-cross{display:none;}
 .find-row.crossed .btn-undo{display:inline-block;}
-#success-banner{display:none;position:fixed;inset:0;background:rgba(39,174,96,0.95);flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:2.8em;font-weight:bold;text-align:center;}
+#success-banner{display:none;position:fixed;inset:0;background:rgba(39,174,96,0.95);flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:2.8em;font-weight:bold;text-align:center;z-index:9100;}
 #btn-again{margin-top:24px;padding:14px 32px;border:3px solid #fff;border-radius:16px;background:transparent;color:#fff;font-family:inherit;font-size:0.55em;cursor:pointer;}
 @media(orientation:portrait){
   .nav-bar{flex-wrap:wrap;}
