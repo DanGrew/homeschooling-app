@@ -361,8 +361,9 @@ export class SimulatorEngine {
       tile.appendChild(img);
       tile.appendChild(label);
       var handler = () => {
-        tile.style.borderColor = '#4CAF50';
-        setTimeout(() => { this._handleTap(id); }, 500);
+        tile.style.transform = 'scale(0.93)';
+        setTimeout(() => { tile.style.transform = ''; }, 150);
+        setTimeout(() => { this._handleTap(id); }, 400);
       };
       tile.addEventListener('click', handler);
       tile.addEventListener('touchend', function(e) { e.preventDefault(); handler(); }, { passive: false });
