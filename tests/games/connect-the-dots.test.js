@@ -28,7 +28,7 @@ test('clicking all dots in order shows Well done', async ({ page }) => {
   for (let n = 1; n <= dotCount; n++) {
     await page.locator('#c' + n).click({ force: true })
   }
-  await expect(page.locator('#success-banner')).toBeVisible()
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('tapping a dot out of order triggers wrong-flash', async ({ page }) => {

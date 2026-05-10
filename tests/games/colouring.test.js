@@ -21,7 +21,7 @@ test('banner slides up when all shapes coloured', async ({ page }) => {
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
   for (let i = 0; i < count; i++) await shapes.nth(i).click()
-  await expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('next button on banner advances to next picture and hides banner', async ({ page }) => {
@@ -31,8 +31,8 @@ test('next button on banner advances to next picture and hides banner', async ({
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
   for (let i = 0; i < count; i++) await shapes.nth(i).click()
-  await expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
-  await page.locator('#success-next').click()
-  await expect(page.locator('#success-banner')).not.toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
+  await page.getByRole('button', { name: /Next/ }).click()
+  await expect(page.getByTestId('success-banner')).not.toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
   expect(await page.locator('#title').textContent()).not.toBe(titleBefore)
 })

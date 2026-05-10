@@ -31,6 +31,7 @@ var _CREATE = {
     _type = type;
     _el = document.createElement('div');
     _el.style.cssText = BASE_STYLE[type];
+    _el.dataset.testid = 'success-banner';
     document.body.appendChild(_el);
   }
 };

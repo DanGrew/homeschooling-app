@@ -130,7 +130,7 @@ test('mode=trace param starts in trace mode', async ({ page }) => {
 
 test('success banner hidden on load in trace mode', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?mode=trace')
-  await expect(page.locator('#success-banner')).not.toHaveClass(/visible/)
+  await expect(page.getByTestId('success-banner')).toBeHidden()
 })
 
 test('ball positioned at path start in trace mode', async ({ page }) => {
@@ -172,7 +172,7 @@ test('completing trace shows success banner directly for chars without a dot', a
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower&mode=trace')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
   await page.evaluate(() => { engine.done = true; engine.onComplete() })
-  await expect(page.locator('#success-banner')).toHaveClass(/visible/)
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('completing trace pulses the dot for chars with a dot', async ({ page }) => {
@@ -188,5 +188,5 @@ test('tapping pulsing dot after trace shows success banner', async ({ page }) =>
   await page.evaluate(() => { engine.done = true; engine.onComplete() })
   await page.waitForSelector('.dot-pulse')
   await page.evaluate(() => dotEl.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })))
-  await expect(page.locator('#success-banner')).toHaveClass(/visible/)
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })

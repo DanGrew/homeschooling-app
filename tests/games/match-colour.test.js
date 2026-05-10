@@ -14,7 +14,7 @@ test('correct swatch shows success banner', async ({ page }) => {
   await page.locator(`#swatches button[data-col="${correctColour}"]`).click()
 
   await expect(page.locator(`#swatches button[data-col="${correctColour}"]`)).toHaveClass(/feedback-correct/)
-  await expect(page.locator('#success-banner')).toBeVisible()
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('tapping Next on banner starts a new round', async ({ page }) => {
@@ -22,7 +22,7 @@ test('tapping Next on banner starts a new round', async ({ page }) => {
 
   const correctColour = await page.evaluate(() => current.col)
   await page.locator(`#swatches button[data-col="${correctColour}"]`).click()
-  await page.locator('#success-next').click()
+  await page.getByRole('button', { name: /Next/ }).click()
 
   await expect(page.locator('#swatches button').first()).toBeVisible()
 })

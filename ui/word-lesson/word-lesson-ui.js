@@ -392,6 +392,7 @@ export function init() {
   document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
+  window.__wlShowBanner = showBanner;
   loadDictionary().then(() => {
     setupFilterBar();
     filtered = words.slice();

@@ -21,7 +21,7 @@ test('correct answer shows green outline and success banner', async ({ page }) =
 
   await correctButton.click()
   await expect(correctButton).toHaveClass(/feedback-correct/)
-  await expect(page.locator('#success-banner')).toBeVisible()
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('tapping Next on banner starts a new round', async ({ page }) => {
@@ -29,7 +29,7 @@ test('tapping Next on banner starts a new round', async ({ page }) => {
 
   const shapeCount = await page.evaluate(() => count)
   await page.getByRole('button', { name: String(shapeCount) }).click()
-  await page.locator('#success-next').click()
+  await page.getByRole('button', { name: /Next/ }).click()
 
   await expect(page.locator('#shapes svg').first()).toBeVisible()
 })

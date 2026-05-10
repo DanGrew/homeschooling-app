@@ -34,7 +34,7 @@ test('Reset hidden on load', async ({ page }) => {
 
 test('success banner hidden on load', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('#success-banner')).not.toHaveClass(/visible/)
+  await expect(page.getByTestId('success-banner')).toBeHidden()
 })
 
 // --- navigation ---
@@ -166,20 +166,18 @@ test('invalid custom word flashes input border red', async ({ page }) => {
 test('banner Again button hides banner', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
-  await page.evaluate(() => {
-    document.getElementById('success-banner').classList.add('visible')
-  })
-  await expect(page.locator('#success-banner')).toHaveClass(/visible/)
-  await page.locator('#btn-banner-again').click()
-  await expect(page.locator('#success-banner')).not.toHaveClass(/visible/)
+  await page.evaluate(() => window.__wlShowBanner())
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
+  await page.getByRole('button', { name: /Again/ }).click()
+  await expect(page.getByTestId('success-banner')).not.toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('banner Next button advances word', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
   const first = await page.locator('#word-label').textContent()
-  await page.evaluate(() => document.getElementById('success-banner').classList.add('visible'))
-  await page.locator('#btn-banner-next').click()
+  await page.evaluate(() => window.__wlShowBanner())
+  await page.getByRole('button', { name: /Next/ }).click()
   await page.waitForFunction(
     w => document.getElementById('word-label').textContent !== w, first
   )

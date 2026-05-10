@@ -54,7 +54,7 @@ test('crossing all items shows success banner', async ({ page }) => {
   await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
   await page.locator('#btn-scan-it').click()
   await page.locator('.btn-not-here').first().click()
-  await expect(page.locator('#success-banner')).toBeVisible()
+  await expect(page.getByTestId('success-banner')).toBeVisible()
 })
 
 test('enter key in stub input submits barcode', async ({ page }) => {

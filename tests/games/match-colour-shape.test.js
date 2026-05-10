@@ -12,14 +12,14 @@ test('correct option shows success banner', async ({ page }) => {
   const { col, type } = await page.evaluate(() => ({ col: current.col, type: current.type }))
   await page.locator(`#options button[data-col="${col}"][data-type="${type}"]`).click()
   await expect(page.locator(`#options button[data-col="${col}"][data-type="${type}"]`)).toHaveClass(/feedback-correct/)
-  await expect(page.locator('#success-banner')).toBeVisible()
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('tapping Next on banner starts a new round', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/match-colour-shape/')
   const { col, type } = await page.evaluate(() => ({ col: current.col, type: current.type }))
   await page.locator(`#options button[data-col="${col}"][data-type="${type}"]`).click()
-  await page.locator('#success-next').click()
+  await page.getByRole('button', { name: /Next/ }).click()
   await expect(page.locator('#options button').first()).toBeVisible()
 })
 
