@@ -279,6 +279,7 @@ export class SimulatorEngine {
     this._renderToolbar();
     this._renderObjects();
     this._renderSpeechBubble();
+    document.addEventListener('keydown', (e) => { if (e.key === 'g' || e.key === 'G') this._toggleGrid(); });
   }
 
   _renderBackground() {
@@ -337,6 +338,40 @@ export class SimulatorEngine {
   _exec(action) {
     var parsed = parseAction(action);
     EXEC_HANDLERS[parsed.type](parsed.args, this);
+  }
+
+  _toggleGrid() {
+    var existing = document.getElementById('debug-grid');
+    if (existing) { existing.remove(); return; }
+    var w = this.spec.scene.width, h = this.spec.scene.height, step = 50;
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id = 'debug-grid';
+    svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    for (var x = 0; x <= w; x += step) {
+      var vl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      vl.setAttribute('x1', x); vl.setAttribute('y1', 0); vl.setAttribute('x2', x); vl.setAttribute('y2', h);
+      vl.setAttribute('stroke', x % 100 === 0 ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.2)');
+      vl.setAttribute('stroke-width', x % 100 === 0 ? '1' : '0.5');
+      svg.appendChild(vl);
+    }
+    for (var y = 0; y <= h; y += step) {
+      var hl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      hl.setAttribute('x1', 0); hl.setAttribute('y1', y); hl.setAttribute('x2', w); hl.setAttribute('y2', y);
+      hl.setAttribute('stroke', y % 100 === 0 ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.2)');
+      hl.setAttribute('stroke-width', y % 100 === 0 ? '1' : '0.5');
+      svg.appendChild(hl);
+    }
+    for (var lx = 0; lx <= w; lx += 100) {
+      for (var ly = 0; ly <= h; ly += 100) {
+        var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', lx + 2); t.setAttribute('y', ly + 10);
+        t.setAttribute('fill', 'rgba(200,0,0,0.85)'); t.setAttribute('font-size', '11'); t.setAttribute('font-family', 'monospace');
+        t.textContent = lx + ',' + ly;
+        svg.appendChild(t);
+      }
+    }
+    this.container.appendChild(svg);
   }
 
   _showTray(objectIds) {
