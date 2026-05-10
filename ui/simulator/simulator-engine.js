@@ -306,7 +306,7 @@ var ZINDEX = {
 };
 
 var ADD_PULSE = {
-  'true': function(el) { el.classList.add('speakable--pulse'); },
+  'true': function(el) { el.classList.add('speakable'); },
   'false': function() {},
 };
 

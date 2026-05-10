@@ -19,36 +19,23 @@
   };
 
   if(window.LESSONS&&window.LESSONS.length){
-    var wrap=document.createElement('div');
-    wrap.style.cssText='display:flex;gap:6px;align-items:center;margin-left:4px;';
-    window.LESSONS.forEach(function(l){
-      var container=document.createElement('div');
-      container.style.cssText='position:relative;';
+    var container=document.createElement('div');
+    container.style.cssText='position:relative;margin-left:4px;';
 
-      var btn=document.createElement('button');
-      btn.innerHTML='&#128218;';
-      btn.className='nav-lesson-btn';
-      btn.style.cssText='width:32px;height:32px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:transparent;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+    var btn=document.createElement('button');
+    btn.innerHTML='&#128218;';
+    btn.className='nav-lesson-btn';
+    btn.style.cssText='width:32px;height:32px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:transparent;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
 
-      var popout=document.createElement('div');
-      popout.className='nav-lesson-popout';
-      popout.style.cssText='display:none;position:absolute;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
+    var popout=document.createElement('div');
+    popout.className='nav-lesson-popout';
+    popout.style.cssText='display:none;position:absolute;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
 
+    window.LESSONS.forEach(function(l,i){
       var item=document.createElement('button');
       item.textContent='Lesson '+l.number+': '+l.title;
       item.className='nav-lesson-item';
-      item.style.cssText='display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;';
-
-      btn.addEventListener('click',function(e){
-        e.stopPropagation();
-        var r=btn.getBoundingClientRect();
-        var vert=VERT_POS[String(r.top<window.innerHeight/2)];
-        var horiz=HORIZ_POS[String(r.left<window.innerWidth/2)];
-        popout.style.top=vert.top;popout.style.bottom=vert.bottom;
-        popout.style.left=horiz.left;popout.style.right=horiz.right;
-        popout.style.display=POPOUT_TOGGLE[popout.style.display];
-      });
-
+      item.style.cssText='display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;'+(i>0?'border-top:1px solid #f0f0f0;':'');
       item.addEventListener('click',function(e){
         e.stopPropagation();
         popout.style.display='none';
@@ -58,16 +45,26 @@
           });
         });
       });
-
       popout.appendChild(item);
-      container.appendChild(btn);
-      container.appendChild(popout);
-      wrap.appendChild(container);
     });
+
+    btn.addEventListener('click',function(e){
+      e.stopPropagation();
+      var r=btn.getBoundingClientRect();
+      var vert=VERT_POS[String(r.top<window.innerHeight/2)];
+      var horiz=HORIZ_POS[String(r.left<window.innerWidth/2)];
+      popout.style.top=vert.top;popout.style.bottom=vert.bottom;
+      popout.style.left=horiz.left;popout.style.right=horiz.right;
+      popout.style.display=POPOUT_TOGGLE[popout.style.display];
+    });
+
     document.addEventListener('click',function(){
       document.querySelectorAll('.nav-lesson-popout').forEach(function(p){p.style.display='none';});
     });
-    bar.appendChild(wrap);
+
+    container.appendChild(btn);
+    container.appendChild(popout);
+    bar.appendChild(container);
   }
 
   document.addEventListener('touchstart',function(e){if(e.touches.length>=3)e.preventDefault();},{passive:false});

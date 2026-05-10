@@ -1,8 +1,9 @@
 import { makeLongPress } from '../shared/long-press.js';
 
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
-var SUCCESS_BG    = { 'true': '#2ECC71', 'false': '#fff'  };
-var SUCCESS_COLOR = { 'true': '#fff',    'false': '#222'  };
+var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };
+var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222'    };
+var BUBBLE_KEY    = { 'true-true': 'success', 'true-false': 'success', 'false-true': 'auto', 'false-false': 'expect' };
 var SUCCESS_TEXT  = { 'true': function(t) { return '\u2B50 ' + t; }, 'false': function(t) { return t; } };
 var BUILD_ACTION  = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
 
@@ -46,17 +47,18 @@ GuidanceOverlay.prototype._build = function(onStop) {
   progress.style.cssText = 'font-size:0.75em;color:#aaa;margin-right:auto;';
   this._progressEl = progress;
 
-  var replay = document.createElement('button');
-  replay.innerHTML = '&#9654;';
-  replay.title = 'Replay';
-  replay.style.cssText = 'width:30px;height:30px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:none;cursor:pointer;font-size:0.7em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-  replay.addEventListener('click', function() { [self._onReplay].filter(Boolean).forEach(function(fn) { fn(); }); });
-
   var next = document.createElement('button');
-  next.textContent = 'Next \u2192';
-  next.style.cssText = 'background:#2563EB;color:#fff;border:none;border-radius:20px;padding:5px 16px;font-size:0.85em;font-weight:700;cursor:pointer;flex-shrink:0;';
+  next.innerHTML = '&#9654;';
+  next.dataset.action = 'next';
+  next.style.cssText = 'width:44px;height:44px;border-radius:50%;background:#2ECC71;color:#fff;border:none;font-size:1.3em;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;';
   next.addEventListener('click', function() { [self._onNext].filter(Boolean).forEach(function(fn) { fn(); }); });
   this._nextBtn = next;
+
+  var replay = document.createElement('button');
+  replay.innerHTML = '&#8635;';
+  replay.title = 'Replay';
+  replay.style.cssText = 'width:30px;height:30px;border-radius:50%;border:2px solid #aaa;color:#aaa;background:none;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+  replay.addEventListener('click', function() { [self._onReplay].filter(Boolean).forEach(function(fn) { fn(); }); });
 
   var closeWrap = document.createElement('div');
   closeWrap.style.cssText = 'position:relative;width:30px;height:30px;flex-shrink:0;';
@@ -85,10 +87,14 @@ GuidanceOverlay.prototype._build = function(onStop) {
   closeWrap.appendChild(close);
   closeWrap.appendChild(arcSvg);
 
+  var controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;';
+  controls.appendChild(replay);
+  controls.appendChild(closeWrap);
+
   footer.appendChild(progress);
-  footer.appendChild(replay);
   footer.appendChild(next);
-  footer.appendChild(closeWrap);
+  footer.appendChild(controls);
   body.appendChild(text);
   body.appendChild(footer);
   bubble.appendChild(char);
@@ -103,12 +109,14 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._charEl.src = guideSrc;
   this._onNext = onNext;
   this._onReplay = onReplay;
-  var key = String(!!step.success);
-  this._bubbleEl.style.background = SUCCESS_BG[key];
-  this._textEl.style.color = SUCCESS_COLOR[key];
-  this._textEl.textContent = SUCCESS_TEXT[key](step.text);
+  var bgKey = BUBBLE_KEY[String(!!step.success) + '-' + String(!!step.auto)];
+  this._bubbleEl.style.background = BUBBLE_BG[bgKey];
+  this._textEl.style.color = BUBBLE_COLOR[bgKey];
+  this._textEl.textContent = SUCCESS_TEXT[String(!!step.success)](step.text);
   this._progressEl.textContent = idx + ' / ' + total;
-  this._nextBtn.style.display = AUTO_DISPLAY[String(!!step.auto)];
+  var showNext = !!step.auto;
+  this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
+  this._nextBtn.classList.toggle('speakable', showNext);
   this._el.style.display = '';
 };
 
