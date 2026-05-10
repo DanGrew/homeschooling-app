@@ -130,7 +130,7 @@
 
     { "_": "step 14 ✓ — choose toilet → move to toilet, wait for sensation",
       "when": { "tap": "card_toilet", "if": "state.step == 14" },
-      "do": ["state.step = 15", "hide_tray", "set_sprite: character 9", "move: character 0 40", "move: icon_toile 50 150","show: icon_toilet", "say: Flush time!"] },
+      "do": ["state.step = 15", "hide_tray", "set_sprite: character 9", "move: character 0 40", "move: icon_toilet 50 150","show: icon_toilet", "say: Flush time!"] },
     { "_": "step 14 ✗ — wrong: sink",
       "when": { "tap": "card_sink", "if": "state.step == 14" },
       "do": ["animate: shake card_sink", "say: Toilet first!"] },

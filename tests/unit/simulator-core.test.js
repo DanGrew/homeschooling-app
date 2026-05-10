@@ -117,7 +117,17 @@ describe('parseAction', () => {
   it('hide_tool', () => expect(parseAction('hide_tool: brush')).toEqual({ type: 'hide_tool', args: ['brush'] }));
   it('set_sprite', () => expect(parseAction('set_sprite: actor 2')).toEqual({ type: 'set_sprite', args: ['actor', 2] }));
   it('advance_sprite', () => expect(parseAction('advance_sprite: actor')).toEqual({ type: 'advance_sprite', args: ['actor'] }));
-  it('move', () => expect(parseAction('move: obj1 100 200')).toEqual({ type: 'move', args: ['obj1', '100', '200'] }));
+  it('move positive coords', () => expect(parseAction('move: obj1 100 200')).toEqual({ type: 'move', args: ['obj1', '100', '200'] }));
+  it('move negative coords', () => expect(parseAction('move: obj1 -90 -60')).toEqual({ type: 'move', args: ['obj1', '-90', '-60'] }));
+  it('move mixed sign coords', () => expect(parseAction('move: obj1 -90 60')).toEqual({ type: 'move', args: ['obj1', '-90', '60'] }));
+  it('delay', () => expect(parseAction('delay: 750 show: obj1')).toEqual({ type: 'delay', args: [750, 'show: obj1'] }));
+  it('delay with complex action', () => expect(parseAction('delay: 1500 set_sprite: character 2')).toEqual({ type: 'delay', args: [1500, 'set_sprite: character 2'] }));
+  it('show_tray single', () => expect(parseAction('show_tray: card_a')).toEqual({ type: 'show_tray', args: ['card_a'] }));
+  it('show_tray multiple', () => expect(parseAction('show_tray: card_a card_b card_c')).toEqual({ type: 'show_tray', args: ['card_a', 'card_b', 'card_c'] }));
+  it('hide_tray', () => expect(parseAction('hide_tray')).toEqual({ type: 'hide_tray', args: [] }));
+  it('splash_at', () => expect(parseAction('splash_at: 100 250')).toEqual({ type: 'splash_at', args: [100, 250] }));
+  it('splash_at negative coords', () => expect(parseAction('splash_at: -10 300')).toEqual({ type: 'splash_at', args: [-10, 300] }));
+  it('flip_x', () => expect(parseAction('flip_x: character')).toEqual({ type: 'flip_x', args: ['character'] }));
   it('unknown returns noop', () => expect(parseAction('gobbledygook')).toEqual({ type: 'noop', args: [] }));
 });
 
