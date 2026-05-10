@@ -1,3 +1,6 @@
+function showBanner(){}
+function hideBanner(){}
+
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
