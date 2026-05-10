@@ -199,6 +199,7 @@ var ANIMATORS = {
 var FLIP_NEXT = {
   '1': { data: '0', transform: '' },
   '0': { data: '1', transform: 'scaleX(-1)' },
+  'undefined': { data: '1', transform: 'scaleX(-1)' },
 };
 
 var EXEC_HANDLERS = {
@@ -265,7 +266,7 @@ var EXEC_HANDLERS = {
   },
   flip_x: function(args, engine) {
     [document.getElementById('obj-' + args[0])].filter(Boolean).forEach(function(el) {
-      var next = FLIP_NEXT[el.dataset.flipped || '0'];
+      var next = FLIP_NEXT[String(el.dataset.flipped)];
       el.dataset.flipped = next.data;
       el.style.transform = next.transform;
     });
