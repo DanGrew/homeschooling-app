@@ -1,7 +1,7 @@
 var DISPLAY = ['none', 'block'];
 
 export function render(sky) {
-  document.getElementById('sky-bg').style.background =
+  document.getElementById('sky-area').style.background =
     'linear-gradient(to bottom, ' + sky.topColor + ', ' + sky.bottomColor + ')';
   var sun  = document.getElementById('sky-sun');
   var moon = document.getElementById('sky-moon');
