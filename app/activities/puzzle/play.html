@@ -59,6 +59,7 @@
   import { derivePieces, shufflePieces, checkPlacement, isComplete } from '../../../core/puzzle/puzzle-core.js';
   import { buildGrid, clearSelectedSlot, fillSelectedSlot, placeInCell, clearCell, markCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
+  import { showBanner, hideBanner } from '../../../ui/shared/success-banner.js';
 
   const params = new URLSearchParams(location.search);
   const puzzleId = sessionStorage.getItem('puzzle-id') || params.get('puzzle') || 'paw-patrol';
@@ -159,8 +160,7 @@
     locked = true;
     refToggle.disabled = true;
     revealPicture(() => {
-      showBanner(() => { location.href = './'; });
-      document.getElementById('success-next').innerHTML = 'Choose another \u2192';
+      showBanner({ buttons: [{ label: 'Choose another \u2192', onClick: function() { hideBanner(); location.href = './'; } }] });
     });
   }
 
