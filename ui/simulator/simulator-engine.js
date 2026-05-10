@@ -178,11 +178,11 @@ var ANIMATORS = {
   },
   shake: function(el, engine) {
     el.style.transition = 'none';
-    el.style.outline = '3px solid #e53935';
+    el.style.boxShadow = '0 0 0 3px #e53935';
     ['translateX(-6px)', 'translateX(6px)', 'translateX(-5px)', 'translateX(5px)', 'translateX(0)'].forEach(function(t, i) {
       setTimeout(function() { el.style.transform = t; }, i * 70);
     });
-    setTimeout(function() { el.style.outline = ''; el.style.transition = ''; }, 420);
+    setTimeout(function() { el.style.boxShadow = ''; el.style.transition = ''; }, 420);
   },
   _default: function(el, engine) {
     el.style.transform = 'translateY(-8px)';
