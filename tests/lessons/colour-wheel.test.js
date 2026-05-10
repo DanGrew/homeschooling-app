@@ -156,6 +156,6 @@ test('close button stops lesson and hides overlay', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await expect(page.locator('#guidance-overlay')).toBeVisible()
-  await page.locator('#guidance-overlay button[title="Stop lesson"]').click()
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
 })

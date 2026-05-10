@@ -1,6 +1,9 @@
 import { getVoice } from './voice-service.js';
 
-var _mode = 'full';
+var _LS = { 'true': function() { return localStorage.getItem('parental.audio'); }, 'false': function() { return ''; } };
+var _VALID_MODE = { full: 1, off: 1, quiet: 1 };
+var _stored = _LS[String(typeof localStorage !== 'undefined')]();
+var _mode = [_stored].filter(function(m) { return _VALID_MODE[m]; }).concat(['full'])[0];
 var _guidancePriority = false;
 
 export function setGuidancePriority(on) { _guidancePriority = on; }

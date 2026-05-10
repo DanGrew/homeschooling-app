@@ -1,3 +1,5 @@
+import { makeLongPress } from '../shared/long-press.js';
+
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
 var SUCCESS_BG    = { 'true': '#2ECC71', 'false': '#fff'  };
 var SUCCESS_COLOR = { 'true': '#fff',    'false': '#222'  };
@@ -60,7 +62,10 @@ GuidanceOverlay.prototype._build = function(onStop) {
   close.innerHTML = '&times;';
   close.title = 'Stop lesson';
   close.style.cssText = 'width:30px;height:30px;border-radius:50%;border:none;background:#f0f0f0;color:#888;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-  close.addEventListener('click', onStop);
+  makeLongPress(close, onStop, 600,
+    function() { close.style.cssText += 'transition:transform 0.6s;transform:scale(0.85);'; },
+    function() { close.style.transform = ''; close.style.transition = ''; }
+  );
 
   footer.appendChild(progress);
   footer.appendChild(replay);
