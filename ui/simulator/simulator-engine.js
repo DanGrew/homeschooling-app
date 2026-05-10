@@ -20,7 +20,7 @@ var RULE_EXEC = {
 var TRIGGER_WIN = {
   'true': function(engine) {
     engine.won = true;
-    setTimeout(function() { engine._execActions(engine.spec.win_response); }, 2500);
+    setTimeout(function() { engine._execActions(engine.spec.win_response); }, 300);
   },
   'false': function() {},
 };
@@ -176,6 +176,20 @@ var ANIMATORS = {
     el.style.transform = 'rotate(20deg) scale(1.15)';
     setTimeout(function() { el.style.transform = ''; }, 350);
   },
+  shake: function(el, engine) {
+    var origBorder = el.style.border;
+    el.style.transition = 'none';
+    el.style.border = '3px solid #e53935';
+    el.style.boxShadow = '0 0 0 4px rgba(229,57,53,0.35)';
+    ['translateX(-7px)', 'translateX(7px)', 'translateX(-6px)', 'translateX(6px)', 'translateX(0)'].forEach(function(t, i) {
+      setTimeout(function() { el.style.transform = t; }, i * 80);
+    });
+    setTimeout(function() {
+      el.style.border = origBorder;
+      el.style.boxShadow = '';
+      el.style.transition = '';
+    }, 700);
+  },
   _default: function(el, engine) {
     el.style.transform = 'translateY(-8px)';
     setTimeout(function() { el.style.transform = ''; }, 350);
@@ -244,6 +258,31 @@ var EXEC_HANDLERS = {
       el.style.top = args[2] + 'px';
     });
   },
+  flip_x: function(args, engine) {
+    var el = document.getElementById('obj-' + args[0]);
+    if (!el) return;
+    var flipped = el.dataset.flipped === '1';
+    el.dataset.flipped = flipped ? '0' : '1';
+    el.style.transform = flipped ? '' : 'scaleX(-1)';
+  },
+  splash_at: function(args, engine) {
+    var cx = parseInt(args[0]), cy = parseInt(args[1]), sw = 80, sh = 80;
+    [[-35, -45, 0], [30, 40, 320]].forEach(function(offset) {
+      setTimeout(function() {
+        var img = document.createElement('img');
+        img.src = resolveImgSrc(engine.spritesPath, 'splash.png');
+        img.style.cssText = 'position:absolute;left:' + (cx + offset[0] - sw/2) + 'px;top:' + (cy + offset[1] - sh/2) + 'px;width:' + sw + 'px;height:' + sh + 'px;object-fit:contain;pointer-events:none;z-index:50;transition:opacity 0.25s;';
+        engine.container.appendChild(img);
+        setTimeout(function() { img.style.opacity = '0'; }, 280);
+        setTimeout(function() { img.remove(); }, 550);
+      }, offset[2]);
+    });
+  },
+  delay: function(args, engine) {
+    setTimeout(function() { engine._exec(args[1]); }, args[0]);
+  },
+  show_tray: function(args, engine) { engine._showTray(args); },
+  hide_tray: function(args, engine) { engine._hideTray(); },
 };
 
 export class SimulatorEngine {
@@ -266,6 +305,7 @@ export class SimulatorEngine {
     this._renderToolbar();
     this._renderObjects();
     this._renderSpeechBubble();
+    document.addEventListener('keydown', (e) => { if (e.key === 'g' || e.key === 'G') this._toggleGrid(); });
   }
 
   _renderBackground() {
@@ -298,10 +338,11 @@ export class SimulatorEngine {
       var robj = resolveObject(obj);
       var el = document.createElement('div');
       el.id = 'obj-' + obj.id;
-      el.style.cssText = 'position:absolute;left:' + obj.x + 'px;top:' + obj.y + 'px;width:' + obj.w + 'px;height:' + obj.h + 'px;transition:transform 0.25s;z-index:' + (i + 1) + ';';
+      el.style.cssText = 'position:absolute;left:' + obj.x + 'px;top:' + obj.y + 'px;width:' + obj.w + 'px;height:' + obj.h + 'px;transition:transform 0.25s;z-index:' + (robj.clickable ? 50 + i : i + 1) + ';';
       el.style.display = DISPLAY[String(robj.visible)];
       OBJ_RENDERERS[objectRenderType(obj)](el, robj, this);
       MAKE_CLICKABLE[String(robj.clickable)](el, robj, this);
+      if (obj.pulse) el.classList.add('speakable--pulse');
       this.container.appendChild(el);
     });
   }
@@ -325,7 +366,105 @@ export class SimulatorEngine {
     EXEC_HANDLERS[parsed.type](parsed.args, this);
   }
 
+  _toggleGrid() {
+    var existing = document.getElementById('debug-grid');
+    if (existing) { existing.remove(); return; }
+    var w = this.spec.scene.width, h = this.spec.scene.height, step = 50;
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.id = 'debug-grid';
+    svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    for (var x = 0; x <= w; x += step) {
+      var vl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      vl.setAttribute('x1', x); vl.setAttribute('y1', 0); vl.setAttribute('x2', x); vl.setAttribute('y2', h);
+      vl.setAttribute('stroke', x % 100 === 0 ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.2)');
+      vl.setAttribute('stroke-width', x % 100 === 0 ? '1' : '0.5');
+      svg.appendChild(vl);
+    }
+    for (var y = 0; y <= h; y += step) {
+      var hl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      hl.setAttribute('x1', 0); hl.setAttribute('y1', y); hl.setAttribute('x2', w); hl.setAttribute('y2', y);
+      hl.setAttribute('stroke', y % 100 === 0 ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.2)');
+      hl.setAttribute('stroke-width', y % 100 === 0 ? '1' : '0.5');
+      svg.appendChild(hl);
+    }
+    for (var lx = 0; lx <= w; lx += 100) {
+      for (var ly = 0; ly <= h; ly += 100) {
+        var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        t.setAttribute('x', lx + 2); t.setAttribute('y', ly + 10);
+        t.setAttribute('fill', 'rgba(200,0,0,0.85)'); t.setAttribute('font-size', '11'); t.setAttribute('font-family', 'monospace');
+        t.textContent = lx + ',' + ly;
+        svg.appendChild(t);
+      }
+    }
+    this.spec.objects.forEach(obj => {
+      var el = document.getElementById('obj-' + obj.id);
+      if (!el) return;
+      var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', obj.x); rect.setAttribute('y', obj.y);
+      rect.setAttribute('width', obj.w); rect.setAttribute('height', obj.h);
+      rect.setAttribute('fill', 'none');
+      rect.setAttribute('stroke', '#00cc44'); rect.setAttribute('stroke-width', '1.5');
+      var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      label.setAttribute('x', obj.x + 2); label.setAttribute('y', obj.y + 11);
+      label.setAttribute('fill', '#00cc44'); label.setAttribute('font-size', '10'); label.setAttribute('font-family', 'monospace');
+      label.textContent = obj.id;
+      svg.appendChild(rect);
+      svg.appendChild(label);
+    });
+    this.container.appendChild(svg);
+  }
+
+  _showTray(objectIds) {
+    this._hideTray(true);
+    var tray = document.createElement('div');
+    tray.id = 'choice-tray';
+    tray.style.cssText = 'position:absolute;bottom:0;left:0;width:100%;background:#fff;border-radius:20px 20px 0 0;padding:16px 12px 20px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);transform:translateY(100%);transition:transform 0.3s ease-out;z-index:200;box-sizing:border-box;';
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:16px;justify-content:center;';
+    objectIds.forEach(id => {
+      var obj = this.spec.objects.find(o => o.id === id);
+      if (!obj) return;
+      var tile = document.createElement('div');
+      tile.id = 'obj-' + id;
+      tile.style.cssText = 'border:2px solid #ddd;border-radius:16px;padding:10px 8px 8px;width:150px;text-align:center;cursor:pointer;box-sizing:border-box;flex-shrink:0;transition:border-color 0.15s;';
+      var img = document.createElement('img');
+      img.src = resolveImgSrc(this.spritesPath, obj.sprite);
+      img.style.cssText = 'width:100%;height:110px;object-fit:contain;display:block;';
+      var label = document.createElement('div');
+      label.textContent = obj.label || '';
+      label.style.cssText = 'font-size:16px;font-weight:bold;color:#444;margin-top:6px;font-family:inherit;';
+      tile.appendChild(img);
+      tile.appendChild(label);
+      var handler = () => {
+        tile.style.transform = 'scale(0.93)';
+        setTimeout(() => { tile.style.transform = ''; }, 150);
+        var peek = findAction(this.spec, this.state, id, this.selectedTool, this.won);
+        if (peek.type === 'exec') {
+          var isWrong = peek.actions.some(a => a.startsWith('animate: shake'));
+          tile.style.border = isWrong ? '4px solid #e53935' : '4px solid #4CAF50';
+        }
+        setTimeout(() => { this._handleTap(id); }, 400);
+      };
+      tile.addEventListener('click', handler);
+      tile.addEventListener('touchend', function(e) { e.preventDefault(); handler(); }, { passive: false });
+      row.appendChild(tile);
+    });
+    tray.appendChild(row);
+    this.container.appendChild(tray);
+    requestAnimationFrame(() => requestAnimationFrame(() => { tray.style.transform = 'translateY(0)'; }));
+  }
+
+  _hideTray(immediate) {
+    var tray = document.getElementById('choice-tray');
+    if (!tray) return;
+    if (immediate) { tray.remove(); return; }
+    tray.style.transform = 'translateY(100%)';
+    setTimeout(() => tray.remove(), 350);
+  }
+
   _reset() {
+    this._hideTray(true);
     this.won = false;
     this.state = Object.assign({}, this.spec.state);
     this.actorIndices = {};
