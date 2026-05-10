@@ -1,8 +1,8 @@
 import { makeLongPress } from '../shared/long-press.js';
 
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
-var SUCCESS_BG    = { 'true': '#2ECC71', 'false': '#fff'  };
-var SUCCESS_COLOR = { 'true': '#fff',    'false': '#222'  };
+var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };
+var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222'    };
 var SUCCESS_TEXT  = { 'true': function(t) { return '\u2B50 ' + t; }, 'false': function(t) { return t; } };
 var BUILD_ACTION  = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
 
@@ -108,14 +108,14 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._charEl.src = guideSrc;
   this._onNext = onNext;
   this._onReplay = onReplay;
-  var key = String(!!step.success);
-  this._bubbleEl.style.background = SUCCESS_BG[key];
-  this._textEl.style.color = SUCCESS_COLOR[key];
-  this._textEl.textContent = SUCCESS_TEXT[key](step.text);
+  var bgKey = step.success ? 'success' : step.auto ? 'auto' : 'expect';
+  this._bubbleEl.style.background = BUBBLE_BG[bgKey];
+  this._textEl.style.color = BUBBLE_COLOR[bgKey];
+  this._textEl.textContent = SUCCESS_TEXT[String(!!step.success)](step.text);
   this._progressEl.textContent = idx + ' / ' + total;
   var showNext = !!step.auto;
   this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
-  this._nextBtn.classList.toggle('speakable--pulse', showNext);
+  this._nextBtn.classList.toggle('speakable', showNext);
   this._el.style.display = '';
 };
 
