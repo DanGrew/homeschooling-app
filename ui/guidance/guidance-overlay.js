@@ -3,6 +3,7 @@ import { makeLongPress } from '../shared/long-press.js';
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
 var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };
 var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222'    };
+var BUBBLE_KEY    = { 'true-true': 'success', 'true-false': 'success', 'false-true': 'auto', 'false-false': 'expect' };
 var SUCCESS_TEXT  = { 'true': function(t) { return '\u2B50 ' + t; }, 'false': function(t) { return t; } };
 var BUILD_ACTION  = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
 
@@ -108,7 +109,7 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._charEl.src = guideSrc;
   this._onNext = onNext;
   this._onReplay = onReplay;
-  var bgKey = step.success ? 'success' : step.auto ? 'auto' : 'expect';
+  var bgKey = BUBBLE_KEY[String(!!step.success) + '-' + String(!!step.auto)];
   this._bubbleEl.style.background = BUBBLE_BG[bgKey];
   this._textEl.style.color = BUBBLE_COLOR[bgKey];
   this._textEl.textContent = SUCCESS_TEXT[String(!!step.success)](step.text);

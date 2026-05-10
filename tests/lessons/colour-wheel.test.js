@@ -77,7 +77,7 @@ test('lesson button opens popout with lesson title', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.nav-lesson-btn').click()
   await expect(page.locator('.nav-lesson-popout')).toBeVisible()
-  await expect(page.locator('.nav-lesson-item')).toContainText('Lesson 1: Make Orange')
+  await expect(page.locator('.nav-lesson-item').first()).toContainText('Lesson 1: Make Orange')
 })
 
 test('clicking outside closes popout', async ({ page }) => {
@@ -91,7 +91,7 @@ test('clicking outside closes popout', async ({ page }) => {
 async function startLesson(page) {
   await page.waitForFunction(() => window.guidanceService)
   await page.locator('.nav-lesson-btn').click()
-  await page.locator('.nav-lesson-item').click()
+  await page.locator('.nav-lesson-item').first().click()
 }
 
 test('clicking lesson item shows guidance overlay', async ({ page }) => {
