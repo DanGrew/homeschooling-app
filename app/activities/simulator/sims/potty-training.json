@@ -21,7 +21,7 @@
     { "id": "icon_sink",           "sprite": "card-sink.png",           "x": 220, "y": 60,  "w": 80,  "h": 80,  "visible": false, "clickable": true, "pulse": true },
     { "id": "icon_play",           "sprite": "card-toys.png",           "x": 220, "y": 60,  "w": 80,  "h": 80,  "visible": false, "clickable": true, "pulse": true },
     { "id": "nappy_floor",    "sprite": "card-nappy.png",   "x": 400, "y": 540, "w": 160, "h": 120, "visible": false },
-    { "id": "toilet_effect", "sprite": "toilet-sound.png", "x": 200, "y": 250, "w": 120, "h": 120, "visible": false },
+    { "id": "toilet_effect", "sprite": "toilet-sound.png", "x": 200, "y": 250, "w": 120, "h": 120, "visible": false, "clickable": true, "pulse": true },
     { "id": "card_toilet", "label": "Toilet", "sprite": "card-toilet.png", "x": 0, "y": 0, "w": 1, "h": 1, "visible": false, "clickable": true },
     { "id": "card_nappy",  "label": "Nappy",  "sprite": "card-nappy.png",  "x": 0, "y": 0, "w": 1, "h": 1, "visible": false, "clickable": true },
     { "id": "card_toys",   "label": "Toys",   "sprite": "card-toys.png",   "x": 0, "y": 0, "w": 1, "h": 1, "visible": false, "clickable": true },
@@ -60,16 +60,19 @@
       "do": ["state.step = 7", "hide: icon_sensation", "show_tray: card_toilet card_nappy card_toys", "say: Sit on the toilet!"] },
 
     { "when": { "tap": "card_toilet", "if": "state.step == 7" },
-      "do": ["state.step = 8", "hide_tray", "set_sprite: character 2", "move: character -90 -50", "show: icon_awareness", "say: Good sitting!"] },
+      "do": ["state.step = 8", "hide_tray", "set_sprite: character 2", "move: character -90 -60","move: icon_awareness 125 75", "show: icon_awareness", "say: Good sitting!"] },
     { "when": { "tap": "card_nappy", "if": "state.step == 7" },
       "do": ["animate: shake card_nappy", "say: Sit on the toilet!"] },
     { "when": { "tap": "card_toys", "if": "state.step == 7" },
       "do": ["animate: shake card_toys", "say: Sit on the toilet!"] },
 
     { "when": { "tap": "icon_awareness", "if": { "all": ["state.step == 8", "state.loop_a == 0"] } },
-      "do": ["state.loop_a = 1", "hide: icon_awareness", "show: icon_sensation"] },
+      "do": ["state.loop_a = 1", "hide: icon_awareness", "move: icon_awareness 75 375","show: icon_sensation"] },
     { "when": { "tap": "icon_sensation", "if": { "all": ["state.step == 8", "state.loop_a == 1"] } },
       "do": ["state.loop_a = 2", "hide: icon_sensation"] },
+
+    { "when": { "tap": "toilet_effect" },
+      "do": ["hide: toilet_effect", "show: icon_awareness"] },
 
     { "when": { "tap": "icon_awareness", "if": { "all": ["state.step == 9", "state.loop_b == 0"] } },
       "do": ["state.loop_b = 1", "hide: icon_awareness", "show: icon_sensation"] },
@@ -134,7 +137,7 @@
   ],
   "rules": [
     { "if": { "all": ["state.step == 8", "state.loop_a == 2"] },
-      "do": ["show: toilet_effect", "delay: 1000 hide: toilet_effect", "state.step = 9", "state.loop_b = 0", "show: icon_awareness", "say: Well done!"] },
+      "do": ["state.step = 9", "state.loop_b = 0", "show: toilet_effect", "say: Well done!"] },
     { "if": { "all": ["state.step == 9", "state.loop_b == 2"] },
       "do": ["animate: splash character", "state.step = 10", "show: icon_sensation_calm", "say: All done!"] }
   ],
