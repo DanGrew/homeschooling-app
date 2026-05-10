@@ -255,6 +255,8 @@ var EXEC_HANDLERS = {
   delay: function(args, engine) {
     setTimeout(function() { engine._exec(args[1]); }, args[0]);
   },
+  show_tray: function(args, engine) { engine._showTray(args); },
+  hide_tray: function(args, engine) { engine._hideTray(); },
 };
 
 export class SimulatorEngine {
@@ -337,7 +339,50 @@ export class SimulatorEngine {
     EXEC_HANDLERS[parsed.type](parsed.args, this);
   }
 
+  _showTray(objectIds) {
+    this._hideTray(true);
+    var tray = document.createElement('div');
+    tray.id = 'choice-tray';
+    tray.style.cssText = 'position:absolute;bottom:0;left:0;width:100%;background:#fff;border-radius:20px 20px 0 0;padding:16px 12px 20px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);transform:translateY(100%);transition:transform 0.3s ease-out;z-index:200;box-sizing:border-box;';
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:16px;justify-content:center;';
+    objectIds.forEach(id => {
+      var obj = this.spec.objects.find(o => o.id === id);
+      if (!obj) return;
+      var tile = document.createElement('div');
+      tile.id = 'obj-' + id;
+      tile.style.cssText = 'border:2px solid #ddd;border-radius:16px;padding:10px 8px 8px;width:150px;text-align:center;cursor:pointer;box-sizing:border-box;flex-shrink:0;transition:border-color 0.15s;';
+      var img = document.createElement('img');
+      img.src = resolveImgSrc(this.spritesPath, obj.sprite);
+      img.style.cssText = 'width:100%;height:110px;object-fit:contain;display:block;';
+      var label = document.createElement('div');
+      label.textContent = obj.label || '';
+      label.style.cssText = 'font-size:16px;font-weight:bold;color:#444;margin-top:6px;font-family:inherit;';
+      tile.appendChild(img);
+      tile.appendChild(label);
+      var handler = () => {
+        tile.style.borderColor = '#4CAF50';
+        setTimeout(() => { this._handleTap(id); }, 500);
+      };
+      tile.addEventListener('click', handler);
+      tile.addEventListener('touchend', function(e) { e.preventDefault(); handler(); }, { passive: false });
+      row.appendChild(tile);
+    });
+    tray.appendChild(row);
+    this.container.appendChild(tray);
+    requestAnimationFrame(() => requestAnimationFrame(() => { tray.style.transform = 'translateY(0)'; }));
+  }
+
+  _hideTray(immediate) {
+    var tray = document.getElementById('choice-tray');
+    if (!tray) return;
+    if (immediate) { tray.remove(); return; }
+    tray.style.transform = 'translateY(100%)';
+    setTimeout(() => tray.remove(), 350);
+  }
+
   _reset() {
+    this._hideTray(true);
     this.won = false;
     this.state = Object.assign({}, this.spec.state);
     this.actorIndices = {};
