@@ -13,17 +13,25 @@
 body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:#222;}
 .nav-bar{flex-shrink:0;z-index:10;width:100%;background:#fff;border-bottom:2px solid #eee;}
 #sky-area{flex:1;position:relative;overflow:hidden;background:linear-gradient(to bottom,#78909C,#CFD8DC);display:flex;flex-direction:column;align-items:center;}
-#arc-zone{flex:0 0 36%;width:100%;}
+#arc-zone{flex:0 0 30%;width:100%;}
 #sky-sun{position:absolute;display:none;width:clamp(44px,10vw,70px);height:clamp(44px,10vw,70px);border-radius:50%;background:radial-gradient(circle,#FFF176 30%,#FFD54F);box-shadow:0 0 clamp(20px,5vw,40px) #FFD54F;transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
 #sky-moon{position:absolute;display:none;width:clamp(36px,8vw,56px);height:clamp(36px,8vw,56px);border-radius:50%;background:radial-gradient(circle,#FFFDE7 40%,#B0BEC5);box-shadow:0 0 clamp(12px,3vw,24px) rgba(255,255,255,0.5);transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
-#clock-zone{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,2vh,18px);padding:0 16px 16px;width:100%;}
+#clock-zone{flex:1;display:flex;flex-direction:row;align-items:stretch;width:100%;overflow:hidden;}
+#clock-panel{flex:0 0 55%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(6px,1.5vh,14px);padding:8px 8px 16px;}
 #clock-container{cursor:pointer;border-radius:50%;}
-#digital{display:flex;gap:20px;align-items:center;}
-#digital-12h,#digital-24h{font-size:clamp(1.2em,5vw,2em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
-#digital-sep{color:rgba(255,255,255,0.5);font-size:1.2em;}
-#preset-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:10px 12px;background:rgba(0,0,0,0.18);border-radius:20px;}
-.preset-btn{padding:10px 14px;font-size:clamp(0.85em,3.2vw,1.05em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;}
+#digital{display:flex;gap:16px;align-items:center;}
+#digital-12h,#digital-24h{font-size:clamp(1.1em,4.5vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
+#digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
+#preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:8px 12px 16px 4px;}
+.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.6vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
+@media (max-width:500px){
+  #arc-zone{flex:0 0 22%;}
+  #clock-zone{flex-direction:column;align-items:center;gap:clamp(8px,2vh,14px);padding:0 16px 12px;}
+  #clock-panel{flex:0 0 auto;width:100%;padding:0;}
+  #preset-buttons{flex:0 0 auto;width:100%;padding:0;}
+  .preset-btn{width:auto;padding:10px 12px;}
+}
 </style>
 </head>
 <body>
@@ -33,11 +41,13 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
   <div id="sky-sun"></div>
   <div id="sky-moon"></div>
   <div id="clock-zone">
-    <div id="clock-container"></div>
-    <div id="digital">
-      <span id="digital-12h">--:-- --</span>
-      <span id="digital-sep">|</span>
-      <span id="digital-24h">--:--</span>
+    <div id="clock-panel">
+      <div id="clock-container"></div>
+      <div id="digital">
+        <span id="digital-12h">--:-- --</span>
+        <span id="digital-sep">|</span>
+        <span id="digital-24h">--:--</span>
+      </div>
     </div>
     <div id="preset-buttons"></div>
   </div>
@@ -59,9 +69,9 @@ clockInit(document.getElementById('clock-container'));
 
 makeSpeakable(document.getElementById('sky-sun'),  'Sun');
 makeSpeakable(document.getElementById('sky-moon'), 'Moon');
-makeInteractive(document.getElementById('digital-12h'),      function() { speak(currentSpoken); });
-makeInteractive(document.getElementById('digital-24h'),      function() { speak(currentSpoken24); });
-makeInteractive(document.getElementById('clock-container'),  function() { speak(currentSpoken); });
+makeInteractive(document.getElementById('digital-12h'),     function() { speak(currentSpoken); });
+makeInteractive(document.getElementById('digital-24h'),     function() { speak(currentSpoken24); });
+makeInteractive(document.getElementById('clock-container'), function() { speak(currentSpoken); });
 
 function pressPreset(preset) {
   totalDeg += nextDegrees(currentHour, preset.hour);
