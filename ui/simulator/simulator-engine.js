@@ -313,6 +313,7 @@ export class SimulatorEngine {
       el.style.display = DISPLAY[String(robj.visible)];
       OBJ_RENDERERS[objectRenderType(obj)](el, robj, this);
       MAKE_CLICKABLE[String(robj.clickable)](el, robj, this);
+      if (obj.pulse) el.classList.add('speakable--pulse');
       this.container.appendChild(el);
     });
   }

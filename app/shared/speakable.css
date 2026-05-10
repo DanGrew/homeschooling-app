@@ -30,3 +30,7 @@
   filter: drop-shadow(0 0 18px gold);
   transform: scale(1.2);
 }
+
+.speakable--pulse {
+  animation: speakable-pulse 1.8s ease-in-out infinite;
+}
