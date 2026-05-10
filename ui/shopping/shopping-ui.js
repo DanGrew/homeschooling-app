@@ -8,6 +8,7 @@ export function filterListItems(fn){listItems=listItems.filter(fn);}
 
 import { flattenCatalogs, escHtml, byName } from '../../core/shopping/shopping-core.js';
 export { flattenCatalogs, escHtml, byName };
+import { showBanner, hideBanner } from '../shared/success-banner.js';
 
 export function renderTiles(items=allItems){
   var wrap=document.getElementById('tiles');
@@ -48,16 +49,22 @@ function _setPhase1(v){
 }
 export function hidePhase1(){_setPhase1('none');}
 export function showPhase1(){_setPhase1('flex');}
-export function showSuccess(){document.getElementById('success-banner').style.display='flex';}
 
-export function startFindPhase(){
+export function showSuccess(onReset) {
+  showBanner({ fullscreen: true, icon: '\u2705', text: 'Well done!', buttons: [{
+    label: 'Play Again!',
+    onClick: function() { hideBanner(); onReset(); }
+  }]});
+}
+
+export function startFindPhase(onReset){
   hidePhase1();
   var p2=document.getElementById('phase2');
   p2.style.display='flex';
   var fl=document.getElementById('find-list');
   fl.innerHTML='';
   var found=0,crossed=0;
-  var CHECK_DONE = { 'true': () => setTimeout(showSuccess, 400), 'false': () => {} };
+  var CHECK_DONE = { 'true': () => setTimeout(function(){showSuccess(onReset);}, 400), 'false': () => {} };
   function checkDone(){ CHECK_DONE[String(found+crossed===listItems.length)](); }
   var DEC = { found: () => found--, crossed: () => crossed-- };
   listItems.slice().sort(byName).forEach(function(it){

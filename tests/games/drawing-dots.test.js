@@ -28,7 +28,7 @@ test('connecting all edges shows Well done', async ({ page }) => {
     await page.evaluate((i) => { selectedDot = null; tap(i) }, a)
     await page.evaluate((i) => tap(i), b)
   }
-  await expect(page.locator('#dd-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 3000 })
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 3000 })
 })
 
 test('connecting non-adjacent dots triggers dot-wrong flash', async ({ page }) => {
@@ -76,7 +76,7 @@ test('taps ignored after completion', async ({ page }) => {
     await page.evaluate((i) => { selectedDot = null; tap(i) }, a)
     await page.evaluate((i) => tap(i), b)
   }
-  await expect(page.locator('#dd-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 3000 })
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 3000 })
   const sizeBefore = await page.evaluate(() => completedEdges.size)
   await page.evaluate(() => tap(0))
   const sizeAfter = await page.evaluate(() => completedEdges.size)

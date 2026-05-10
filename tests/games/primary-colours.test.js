@@ -34,7 +34,7 @@ test('correct mix shows success banner', async ({ page }) => {
   await page.locator('#cm-slot-a').click()
   await page.locator('#cm-sw-yellow').click()
   await page.locator('#cm-slot-b').click()
-  await expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('wrong mix shows red outline on both slots', async ({ page }) => {

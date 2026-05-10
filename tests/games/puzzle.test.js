@@ -14,7 +14,7 @@ async function completePuzzle(page) {
 }
 
 const bannerShown = (page) =>
-  expect(page.locator('#success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)')
+  expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)')
 
 const slotHasPiece = (page) =>
   expect(page.locator('#selected-slot')).not.toHaveCSS('background-image', 'none')
@@ -145,13 +145,13 @@ test('reference image reaches full opacity after reveal', async ({ page }) => {
 test('completion banner shows choose another button', async ({ page }) => {
   await completePuzzle(page)
   await bannerShown(page)
-  await expect(page.locator('#success-banner button')).toContainText('Choose another')
+  await expect(page.getByTestId('success-banner').locator('button')).toContainText('Choose another')
 })
 
 test('clicking choose another navigates to chooser', async ({ page }) => {
   await completePuzzle(page)
   await bannerShown(page)
-  await page.locator('#success-banner button').click()
+  await page.getByTestId('success-banner').locator('button').click()
   await page.waitForSelector('.puzzle-card')
   await expect(page.locator('.puzzle-card').first()).toBeVisible()
 })

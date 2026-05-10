@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('../../ui/speech/speech-ui.js', () => ({ speak: vi.fn() }));
+vi.mock('../../ui/speech/speech-ui.js', () => ({ speakInterrupt: vi.fn(), stop: vi.fn() }));
 
 import { makeSpeakable, makeSpeakableButton, makeInteractive } from '../../ui/speech/speakable.js';
-import { speak } from '../../ui/speech/speech-ui.js';
+import { speakInterrupt } from '../../ui/speech/speech-ui.js';
 
 beforeEach(() => { vi.clearAllMocks(); });
 
@@ -19,14 +19,14 @@ describe('makeSpeakable', () => {
     const el = document.createElement('div');
     makeSpeakable(el, 'cat');
     el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(speak).toHaveBeenCalledWith('cat');
+    expect(speakInterrupt).toHaveBeenCalledWith('cat');
   });
 
   it('accepts function as text', () => {
     const el = document.createElement('div');
     makeSpeakable(el, () => 'dog');
     el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(speak).toHaveBeenCalledWith('dog');
+    expect(speakInterrupt).toHaveBeenCalledWith('dog');
   });
 
   it('reads function text at tap time not bind time', () => {
@@ -35,7 +35,7 @@ describe('makeSpeakable', () => {
     makeSpeakable(el, () => label);
     label = 'cat';
     el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(speak).toHaveBeenCalledWith('cat');
+    expect(speakInterrupt).toHaveBeenCalledWith('cat');
   });
 
   it('debounces rapid taps', () => {
@@ -43,7 +43,7 @@ describe('makeSpeakable', () => {
     makeSpeakable(el, 'cat');
     el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(speak).toHaveBeenCalledTimes(1);
+    expect(speakInterrupt).toHaveBeenCalledTimes(1);
   });
 
   it('adds speakable--tap class on tap', () => {
@@ -98,6 +98,6 @@ describe('makeSpeakableButton', () => {
   it('button speaks on tap', () => {
     const btn = makeSpeakableButton('cow');
     btn.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    expect(speak).toHaveBeenCalledWith('cow');
+    expect(speakInterrupt).toHaveBeenCalledWith('cow');
   });
 });

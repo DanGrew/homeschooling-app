@@ -29,7 +29,7 @@ test('correct choice shows success banner', async ({ page }) => {
   await page.locator(`#wm-choices button[data-id="${targetId}"]`).click()
 
   await expect(page.locator(`#wm-choices button[data-id="${targetId}"]`)).toHaveClass(/feedback-correct/)
-  await expect(page.locator('#success-banner')).toBeVisible()
+  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('next on banner starts a new round', async ({ page }) => {
@@ -38,11 +38,10 @@ test('next on banner starts a new round', async ({ page }) => {
 
   const targetId = await page.evaluate(() => window.__wmTarget().id)
   await page.locator(`#wm-choices button[data-id="${targetId}"]`).click()
-  await page.locator('#success-next').click()
+  await page.getByRole('button', { name: /Next/ }).click()
 
   await expect(page.locator('#wm-choices button')).toHaveCount(4)
-  const bannerHidden = await page.evaluate(() => document.getElementById('success-banner').style.transform)
-  expect(bannerHidden).toBe('translateY(100%)')
+  await expect(page.getByTestId('success-banner')).not.toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
 })
 
 test('wrong choice shows red outline then clears', async ({ page }) => {
@@ -65,8 +64,7 @@ test('wrong choice does not trigger success', async ({ page }) => {
   await page.locator(`#wm-choices button:not([data-id="${targetId}"])`).first().click()
 
   await expect(page.locator(`#wm-choices button[data-id="${targetId}"]`)).not.toHaveClass(/feedback-correct/)
-  const bannerHidden = await page.evaluate(() => document.getElementById('success-banner').style.transform)
-  expect(bannerHidden).toBe('translateY(100%)')
+  await expect(page.getByTestId('success-banner')).toBeHidden()
 })
 
 test('locked after correct — extra clicks ignored', async ({ page }) => {

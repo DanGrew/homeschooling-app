@@ -1,4 +1,5 @@
 import { speak } from '../speech/speech-ui.js';
+import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
 
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
@@ -35,8 +36,14 @@ function applyFilter(filter) {
   });
 }
 
-function showBanner() { document.getElementById('success-banner').classList.add('visible'); }
-function hideBanner() { document.getElementById('success-banner').classList.remove('visible'); }
+function hideBanner() { _hideBanner(); }
+
+function showBanner() {
+  _showBanner({ buttons: [
+    { label: '\u21BA Again', bg: 'white', color: '#E74C3C', onClick: function() { hideBanner(); [engine].filter(Boolean).forEach(function(e) { e.restart(); }); } },
+    { label: 'Next \u2192',  bg: 'white', color: '#2ECC71', onClick: function() { navTo(currentIdx + 1); } }
+  ]});
+}
 
 var MODE_UI = {
   'trace':  { trace: 'none', tryit: 'none', watch: '', hint: '' },
@@ -221,6 +228,4 @@ export function init() {
   });
   document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
   document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
-  document.getElementById('btn-banner-reset').addEventListener('click', () => { hideBanner(); [engine].filter(Boolean).forEach(e => e.restart()); });
-  document.getElementById('btn-banner-next').addEventListener('click', () => navTo(currentIdx + 1));
 }

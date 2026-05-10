@@ -33,11 +33,6 @@
     <div id="find-list"></div>
   </div>
 </div>
-<div id="success-banner">
-  ✅
-  <span style="font-size:0.65em;margin-top:8px;">Well done!</span>
-  <button id="btn-again">Play Again!</button>
-</div>
 <script type="module">
 import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
 import { flattenCatalogs, setAllItems, resetListItems, filterListItems, renderTiles, renderList, showPhase1, startFindPhase } from '../../../ui/shopping/shopping-ui.js';
@@ -86,15 +81,14 @@ var CATALOGS=[
   ]}
 ];
 
-document.getElementById('btn-find').onclick=startFindPhase;
-
-document.getElementById('btn-again').onclick=function(){
-  document.getElementById('success-banner').style.display='none';
-  document.getElementById('phase2').style.display='none';
-  resetListItems();
-  showPhase1();
-  renderList();
-  renderTiles();
+document.getElementById('btn-find').onclick=function(){
+  startFindPhase(function(){
+    document.getElementById('phase2').style.display='none';
+    resetListItems();
+    showPhase1();
+    renderList();
+    renderTiles();
+  });
 };
 
 function initGame(){

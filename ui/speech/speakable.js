@@ -1,4 +1,4 @@
-import { speak } from './speech-ui.js';
+import { speakInterrupt } from './speech-ui.js';
 
 var DEBOUNCE_MS = 100;
 var RESOLVE_TEXT = { 'function': t => t, 'string': t => () => t };
@@ -41,7 +41,7 @@ export function makeInteractive(el, onTap) {
 
 export function makeSpeakable(el, text) {
   var getText = RESOLVE_TEXT[typeof text](text);
-  makeInteractive(el, () => speak(getText()));
+  makeInteractive(el, () => speakInterrupt(getText()));
 }
 
 
