@@ -20,7 +20,7 @@ var RULE_EXEC = {
 var TRIGGER_WIN = {
   'true': function(engine) {
     engine.won = true;
-    setTimeout(function() { engine._execActions(engine.spec.win_response); }, 2500);
+    setTimeout(function() { engine._execActions(engine.spec.win_response); }, 300);
   },
   'false': function() {},
 };
@@ -265,6 +265,19 @@ var EXEC_HANDLERS = {
     el.dataset.flipped = flipped ? '0' : '1';
     el.style.transform = flipped ? '' : 'scaleX(-1)';
   },
+  splash_at: function(args, engine) {
+    var cx = parseInt(args[0]), cy = parseInt(args[1]), sw = 80, sh = 80;
+    [[-35, -45, 0], [30, 40, 320]].forEach(function(offset) {
+      setTimeout(function() {
+        var img = document.createElement('img');
+        img.src = resolveImgSrc(engine.spritesPath, 'splash.png');
+        img.style.cssText = 'position:absolute;left:' + (cx + offset[0] - sw/2) + 'px;top:' + (cy + offset[1] - sh/2) + 'px;width:' + sw + 'px;height:' + sh + 'px;object-fit:contain;pointer-events:none;z-index:50;transition:opacity 0.25s;';
+        engine.container.appendChild(img);
+        setTimeout(function() { img.style.opacity = '0'; }, 280);
+        setTimeout(function() { img.remove(); }, 550);
+      }, offset[2]);
+    });
+  },
   delay: function(args, engine) {
     setTimeout(function() { engine._exec(args[1]); }, args[0]);
   },
@@ -325,7 +338,7 @@ export class SimulatorEngine {
       var robj = resolveObject(obj);
       var el = document.createElement('div');
       el.id = 'obj-' + obj.id;
-      el.style.cssText = 'position:absolute;left:' + obj.x + 'px;top:' + obj.y + 'px;width:' + obj.w + 'px;height:' + obj.h + 'px;transition:transform 0.25s;z-index:' + (i + 1) + ';';
+      el.style.cssText = 'position:absolute;left:' + obj.x + 'px;top:' + obj.y + 'px;width:' + obj.w + 'px;height:' + obj.h + 'px;transition:transform 0.25s;z-index:' + (robj.clickable ? 50 + i : i + 1) + ';';
       el.style.display = DISPLAY[String(robj.visible)];
       OBJ_RENDERERS[objectRenderType(obj)](el, robj, this);
       MAKE_CLICKABLE[String(robj.clickable)](el, robj, this);
@@ -426,6 +439,11 @@ export class SimulatorEngine {
       var handler = () => {
         tile.style.transform = 'scale(0.93)';
         setTimeout(() => { tile.style.transform = ''; }, 150);
+        var peek = findAction(this.spec, this.state, id, this.selectedTool, this.won);
+        if (peek.type === 'exec') {
+          var isWrong = peek.actions.some(a => a.startsWith('animate: shake'));
+          tile.style.border = isWrong ? '4px solid #e53935' : '4px solid #4CAF50';
+        }
         setTimeout(() => { this._handleTap(id); }, 400);
       };
       tile.addEventListener('click', handler);

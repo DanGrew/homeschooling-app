@@ -84,6 +84,8 @@ export function parseAction(action) {
   if (ss) return { type: 'set_sprite', args: [ss[1], parseInt(ss[2])] };
   var adv = action.match(/^advance_sprite:\s*(\S+)$/);
   if (adv) return { type: 'advance_sprite', args: [adv[1]] };
+  var sa = action.match(/^splash_at:\s*(-?\d+)\s+(-?\d+)$/);
+  if (sa) return { type: 'splash_at', args: [parseInt(sa[1]), parseInt(sa[2])] };
   var fx = action.match(/^flip_x:\s*(\S+)$/);
   if (fx) return { type: 'flip_x', args: [fx[1]] };
   var mv = action.match(/^move:\s*(\S+)\s+(-?\d+)\s+(-?\d+)$/);
