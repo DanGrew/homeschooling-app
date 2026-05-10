@@ -1,0 +1,9 @@
+[
+  { "label": "Morning",   "hour": 7  },
+  { "label": "School",    "hour": 8  },
+  { "label": "Lunch",     "hour": 12 },
+  { "label": "Afternoon", "hour": 15 },
+  { "label": "Dinner",    "hour": 18 },
+  { "label": "Night",     "hour": 21 },
+  { "label": "Late",      "hour": 22 }
+]

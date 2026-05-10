@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Clocks — Lesson</title>
+<link rel="stylesheet" href="../../shared/theme.css">
+<link rel="stylesheet" href="../../shared/style.css">
+<script src="../../shared/menu.js" defer></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{height:100dvh;display:flex;flex-direction:column;align-items:center;overflow:hidden;}
+#sky-bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(to bottom,#78909C,#CFD8DC);}
+#sky-sun{position:fixed;display:none;z-index:0;width:clamp(44px,10vw,70px);height:clamp(44px,10vw,70px);border-radius:50%;background:radial-gradient(circle,#FFF176 30%,#FFD54F);box-shadow:0 0 clamp(20px,5vw,40px) #FFD54F;transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;}
+#sky-moon{position:fixed;display:none;z-index:0;width:clamp(36px,8vw,56px);height:clamp(36px,8vw,56px);border-radius:50%;background:radial-gradient(circle,#FFFDE7 40%,#B0BEC5);box-shadow:0 0 clamp(12px,3vw,24px) rgba(255,255,255,0.5);transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;}
+.nav-bar{z-index:10;width:100%;}
+#main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;width:100%;gap:clamp(8px,2vh,20px);padding:8px 16px 16px;}
+#digital{display:flex;gap:20px;align-items:center;}
+#digital-12h,#digital-24h{font-size:clamp(1.2em,5vw,2em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);}
+#digital-sep{color:rgba(255,255,255,0.5);font-size:1.2em;}
+#preset-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:10px 12px;background:rgba(0,0,0,0.18);border-radius:20px;}
+.preset-btn{padding:10px 14px;font-size:clamp(0.85em,3.2vw,1.05em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;}
+.preset-btn:active{transform:scale(0.95);}
+</style>
+</head>
+<body>
+<div id="sky-bg"></div>
+<div id="sky-sun"></div>
+<div id="sky-moon"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Clocks"></div>
+<div id="main">
+  <div id="clock-container"></div>
+  <div id="digital">
+    <span id="digital-12h">--:-- --</span>
+    <span id="digital-sep">|</span>
+    <span id="digital-24h">--:--</span>
+  </div>
+  <div id="preset-buttons"></div>
+</div>
+<script type="module">
+import {hourToSky, nextDegrees} from '../../../core/clock/clock-core.js';
+import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
+import {render as skyRender} from '../../../ui/clock/sky-ui.js';
+import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
+
+var currentHour = 0;
+var totalDeg = 0;
+
+clockInit(document.getElementById('clock-container'));
+
+function pressPreset(preset) {
+  totalDeg += nextDegrees(currentHour, preset.hour);
+  currentHour = preset.hour;
+  setHandDeg(totalDeg, 0);
+  skyRender(hourToSky(preset.hour));
+  digitalRender(preset.hour);
+}
+
+fetch('../../../assets/clock/presets.json')
+  .then(function(r) { return r.json(); })
+  .then(function(presets) {
+    var btns = document.getElementById('preset-buttons');
+    presets.forEach(function(preset) {
+      var btn = document.createElement('button');
+      btn.className = 'preset-btn';
+      btn.textContent = preset.label;
+      btn.onclick = function() { pressPreset(preset); };
+      btns.appendChild(btn);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+var NUMS = [
+  [140,32,'12'],[194,47,'1'],[234,86,'2'],[248,140,'3'],
+  [234,194,'4'],[194,234,'5'],[140,248,'6'],[86,234,'7'],
+  [46,194,'8'],[32,140,'9'],[46,86,'10'],[86,47,'11']
+];
+
+var FACE = [
+  '<svg viewBox="0 0 280 280" style="width:min(260px,58vw);height:min(260px,58vw)">',
+  '<circle cx="140" cy="140" r="135" fill="#FFFDE7" stroke="#795548" stroke-width="4"/>',
+  '<circle cx="140" cy="140" r="2" fill="none" stroke="#D7CCC8" stroke-width="1"/>'
+].concat(
+  NUMS.map(function(n) {
+    return '<text x="' + n[0] + '" y="' + n[1] + '" text-anchor="middle" dominant-baseline="central" font-size="22" font-weight="bold" fill="#4E342E" font-family="sans-serif">' + n[2] + '</text>';
+  })
+).concat([
+  '<rect id="clock-minute" x="137.5" y="28" width="5" height="112" rx="2.5" fill="#546E7A" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out"/>',
+  '<rect id="clock-hour"   x="136"   y="60" width="8" height="80"  rx="4"   fill="#2E7D32" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out"/>',
+  '<circle cx="140" cy="140" r="9" fill="#4E342E"/>',
+  '</svg>'
+]);
+
+var SVG = FACE.join('');
+
+export function init(container) {
+  container.innerHTML = SVG;
+}
+
+export function setHandDeg(hourDeg, minuteDeg) {
+  document.getElementById('clock-hour').style.transform   = 'rotate(' + hourDeg   + 'deg)';
+  document.getElementById('clock-minute').style.transform = 'rotate(' + minuteDeg + 'deg)';
+}
