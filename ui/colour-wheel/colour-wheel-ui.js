@@ -132,7 +132,7 @@ function handleSlot(slot){
     svg.appendChild(p);
     [colourId].filter(Boolean).forEach(function(id){
       makeSpeakable(p,LSN_COLOURS[id].label);
-      p.addEventListener('pointerdown',function(){
+      p.addEventListener('click',function(){
         window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:id.replace(/-/g,'_').toUpperCase()+'_TAPPED'}}));
       });
     });

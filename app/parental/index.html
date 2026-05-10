@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Parental Controls</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;min-height:100vh;padding:32px 16px;}
+.page-title{font-size:1.8em;color:#333;font-weight:700;margin-bottom:32px;}
+.section{background:#fff;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:20px 24px;margin-bottom:20px;max-width:480px;}
+.section-label{font-size:0.75em;font-weight:700;letter-spacing:0.08em;color:#aaa;text-transform:uppercase;margin-bottom:16px;}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.setting-name{font-size:1em;font-weight:600;color:#333;}
+.setting-desc{font-size:0.82em;color:#aaa;margin-top:2px;}
+.toggle-group{display:flex;border-radius:10px;overflow:hidden;border:2px solid #e5e7eb;}
+.toggle-btn{padding:8px 20px;font-size:0.88em;font-weight:700;border:none;cursor:pointer;background:#f5f5f5;color:#aaa;transition:background 0.15s,color 0.15s;font-family:inherit;}
+.toggle-btn.active{background:#2563EB;color:#fff;}
+.back{display:inline-flex;align-items:center;gap:6px;color:#2563EB;font-weight:600;font-size:0.9em;text-decoration:none;margin-bottom:24px;}
+</style>
+</head>
+<body>
+<a class="back" href="../">&larr; Home</a>
+<div class="page-title">Parental Controls</div>
+
+<div class="section">
+  <div class="section-label">Audio</div>
+  <div class="setting-row">
+    <div>
+      <div class="setting-name">Sound</div>
+      <div class="setting-desc">Controls all spoken audio in activities</div>
+    </div>
+    <div class="toggle-group">
+      <button class="toggle-btn" id="btn-sound" onclick="setAudio('full')">Sound</button>
+      <button class="toggle-btn" id="btn-muted" onclick="setAudio('off')">Muted</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var KEY = 'parental.audio';
+var ACTIVE = { 'full': 'btn-sound', 'off': 'btn-muted' };
+
+function render(mode) {
+  document.querySelectorAll('.toggle-btn').forEach(function(b) { b.classList.remove('active'); });
+  var activeId = ACTIVE[mode];
+  [activeId].filter(Boolean).forEach(function(id) {
+    var el = document.getElementById(id);
+    [el].filter(Boolean).forEach(function(b) { b.classList.add('active'); });
+  });
+}
+
+function setAudio(mode) {
+  localStorage.setItem(KEY, mode);
+  render(mode);
+}
+
+render(localStorage.getItem(KEY) || 'full');
+</script>
+</body>
+</html>

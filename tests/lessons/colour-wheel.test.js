@@ -130,7 +130,7 @@ async function completeLesson(page) {
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
   await page.locator('#wheel-svg path[fill="#F1C40F"]').click()
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
-  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('pointerdown')
+  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('click')
   await page.locator('#guidance-overlay button').filter({ hasText: 'Next' }).click()
 }
 
@@ -156,6 +156,6 @@ test('close button stops lesson and hides overlay', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await expect(page.locator('#guidance-overlay')).toBeVisible()
-  await page.locator('#guidance-overlay button[title="Stop lesson"]').click()
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
 })
