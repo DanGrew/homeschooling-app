@@ -196,6 +196,12 @@ var ANIMATORS = {
   },
 };
 
+var FLIP_NEXT = {
+  '1': { data: '0', transform: '' },
+  '0': { data: '1', transform: 'scaleX(-1)' },
+  'undefined': { data: '1', transform: 'scaleX(-1)' },
+};
+
 var EXEC_HANDLERS = {
   noop: function() {},
   reset: function(args, engine) { engine._reset(); },
@@ -259,11 +265,11 @@ var EXEC_HANDLERS = {
     });
   },
   flip_x: function(args, engine) {
-    var el = document.getElementById('obj-' + args[0]);
-    if (!el) return;
-    var flipped = el.dataset.flipped === '1';
-    el.dataset.flipped = flipped ? '0' : '1';
-    el.style.transform = flipped ? '' : 'scaleX(-1)';
+    [document.getElementById('obj-' + args[0])].filter(Boolean).forEach(function(el) {
+      var next = FLIP_NEXT[String(el.dataset.flipped)];
+      el.dataset.flipped = next.data;
+      el.style.transform = next.transform;
+    });
   },
   splash_at: function(args, engine) {
     var cx = parseInt(args[0]), cy = parseInt(args[1]), sw = 80, sh = 80;
@@ -283,6 +289,40 @@ var EXEC_HANDLERS = {
   },
   show_tray: function(args, engine) { engine._showTray(args); },
   hide_tray: function(args, engine) { engine._hideTray(); },
+};
+
+var GRID_KEYS = new Set(['g', 'G']);
+var GRID_STROKE_COLOR = { '0': 'rgba(255,0,0,0.5)', '1': 'rgba(255,0,0,0.2)' };
+var GRID_STROKE_WIDTH = { '0': '1', '1': '0.5' };
+
+function gridMajorKey(n) { return String(+(n % 100 !== 0)); }
+
+var ZINDEX = {
+  'true': function(i) { return 50 + i; },
+  'false': function(i) { return i + 1; },
+};
+
+var ADD_PULSE = {
+  'true': function(el) { el.classList.add('speakable--pulse'); },
+  'false': function() {},
+};
+
+var TILE_BORDER = {
+  'true': '4px solid #e53935',
+  'false': '4px solid #4CAF50',
+};
+
+var HIDE_TRAY_NOW = {
+  'true': function(tray) { tray.remove(); },
+  'false': function(tray) {
+    tray.style.transform = 'translateY(100%)';
+    setTimeout(function() { tray.remove(); }, 350);
+  },
+};
+
+var TOGGLE_GRID = {
+  'true': function(existing) { existing.remove(); },
+  'false': function(_, engine) { engine._buildGrid(); },
 };
 
 export class SimulatorEngine {
@@ -305,7 +345,11 @@ export class SimulatorEngine {
     this._renderToolbar();
     this._renderObjects();
     this._renderSpeechBubble();
-    document.addEventListener('keydown', (e) => { if (e.key === 'g' || e.key === 'G') this._toggleGrid(); });
+    document.addEventListener('keydown', (e) => this._onKeyDown(e));
+  }
+
+  _onKeyDown(e) {
+    [GRID_KEYS.has(e.key)].filter(Boolean).forEach(() => this._toggleGrid());
   }
 
   _renderBackground() {
@@ -333,18 +377,20 @@ export class SimulatorEngine {
     this.selectedTool = null;
   }
 
+  _renderObject(obj, i) {
+    var robj = resolveObject(obj);
+    var el = document.createElement('div');
+    el.id = 'obj-' + obj.id;
+    el.style.cssText = 'position:absolute;left:' + obj.x + 'px;top:' + obj.y + 'px;width:' + obj.w + 'px;height:' + obj.h + 'px;transition:transform 0.25s;z-index:' + ZINDEX[String(robj.clickable)](i) + ';';
+    el.style.display = DISPLAY[String(robj.visible)];
+    OBJ_RENDERERS[objectRenderType(obj)](el, robj, this);
+    MAKE_CLICKABLE[String(robj.clickable)](el, robj, this);
+    ADD_PULSE[String(!!obj.pulse)](el);
+    this.container.appendChild(el);
+  }
+
   _renderObjects() {
-    this.spec.objects.forEach((obj, i) => {
-      var robj = resolveObject(obj);
-      var el = document.createElement('div');
-      el.id = 'obj-' + obj.id;
-      el.style.cssText = 'position:absolute;left:' + obj.x + 'px;top:' + obj.y + 'px;width:' + obj.w + 'px;height:' + obj.h + 'px;transition:transform 0.25s;z-index:' + (robj.clickable ? 50 + i : i + 1) + ';';
-      el.style.display = DISPLAY[String(robj.visible)];
-      OBJ_RENDERERS[objectRenderType(obj)](el, robj, this);
-      MAKE_CLICKABLE[String(robj.clickable)](el, robj, this);
-      if (obj.pulse) el.classList.add('speakable--pulse');
-      this.container.appendChild(el);
-    });
+    this.spec.objects.forEach((obj, i) => this._renderObject(obj, i));
   }
 
   _renderSpeechBubble() {
@@ -368,51 +414,76 @@ export class SimulatorEngine {
 
   _toggleGrid() {
     var existing = document.getElementById('debug-grid');
-    if (existing) { existing.remove(); return; }
+    TOGGLE_GRID[String(!!existing)](existing, this);
+  }
+
+  _buildGrid() {
     var w = this.spec.scene.width, h = this.spec.scene.height, step = 50;
+    var svg = this._createGridSvg(w, h);
+    this._addGridLines(svg, w, h, step);
+    this._addGridLabels(svg, w, h);
+    this._addBoundingBoxes(svg);
+    this.container.appendChild(svg);
+  }
+
+  _createGridSvg(w, h) {
     var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.id = 'debug-grid';
     svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
     svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-    for (var x = 0; x <= w; x += step) {
-      var vl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      vl.setAttribute('x1', x); vl.setAttribute('y1', 0); vl.setAttribute('x2', x); vl.setAttribute('y2', h);
-      vl.setAttribute('stroke', x % 100 === 0 ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.2)');
-      vl.setAttribute('stroke-width', x % 100 === 0 ? '1' : '0.5');
-      svg.appendChild(vl);
-    }
-    for (var y = 0; y <= h; y += step) {
-      var hl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      hl.setAttribute('x1', 0); hl.setAttribute('y1', y); hl.setAttribute('x2', w); hl.setAttribute('y2', y);
-      hl.setAttribute('stroke', y % 100 === 0 ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.2)');
-      hl.setAttribute('stroke-width', y % 100 === 0 ? '1' : '0.5');
-      svg.appendChild(hl);
-    }
-    for (var lx = 0; lx <= w; lx += 100) {
-      for (var ly = 0; ly <= h; ly += 100) {
-        var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        t.setAttribute('x', lx + 2); t.setAttribute('y', ly + 10);
-        t.setAttribute('fill', 'rgba(200,0,0,0.85)'); t.setAttribute('font-size', '11'); t.setAttribute('font-family', 'monospace');
-        t.textContent = lx + ',' + ly;
-        svg.appendChild(t);
-      }
-    }
-    this.spec.objects.forEach(obj => {
-      var el = document.getElementById('obj-' + obj.id);
-      if (!el) return;
-      var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      rect.setAttribute('x', obj.x); rect.setAttribute('y', obj.y);
-      rect.setAttribute('width', obj.w); rect.setAttribute('height', obj.h);
-      rect.setAttribute('fill', 'none');
-      rect.setAttribute('stroke', '#00cc44'); rect.setAttribute('stroke-width', '1.5');
-      var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      label.setAttribute('x', obj.x + 2); label.setAttribute('y', obj.y + 11);
-      label.setAttribute('fill', '#00cc44'); label.setAttribute('font-size', '10'); label.setAttribute('font-family', 'monospace');
-      label.textContent = obj.id;
-      svg.appendChild(rect);
-      svg.appendChild(label);
+    return svg;
+  }
+
+  _addGridLine(svg, x1, y1, x2, y2, key) {
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+    line.setAttribute('stroke', GRID_STROKE_COLOR[key]);
+    line.setAttribute('stroke-width', GRID_STROKE_WIDTH[key]);
+    svg.appendChild(line);
+  }
+
+  _addGridLines(svg, w, h, step) {
+    Array.from({ length: Math.floor(w / step) + 1 }, (_, i) => i * step)
+      .forEach(x => this._addGridLine(svg, x, 0, x, h, gridMajorKey(x)));
+    Array.from({ length: Math.floor(h / step) + 1 }, (_, i) => i * step)
+      .forEach(y => this._addGridLine(svg, 0, y, w, y, gridMajorKey(y)));
+  }
+
+  _addGridLabel(svg, lx, ly) {
+    var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    t.setAttribute('x', lx + 2); t.setAttribute('y', ly + 10);
+    t.setAttribute('fill', 'rgba(200,0,0,0.85)'); t.setAttribute('font-size', '11'); t.setAttribute('font-family', 'monospace');
+    t.textContent = lx + ',' + ly;
+    svg.appendChild(t);
+  }
+
+  _addGridLabels(svg, w, h) {
+    Array.from({ length: Math.floor(w / 100) + 1 }, (_, i) => i * 100).forEach(lx => {
+      Array.from({ length: Math.floor(h / 100) + 1 }, (_, i) => i * 100)
+        .forEach(ly => this._addGridLabel(svg, lx, ly));
     });
-    this.container.appendChild(svg);
+  }
+
+  _addBoundingBox(svg, obj) {
+    var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', obj.x); rect.setAttribute('y', obj.y);
+    rect.setAttribute('width', obj.w); rect.setAttribute('height', obj.h);
+    rect.setAttribute('fill', 'none');
+    rect.setAttribute('stroke', '#00cc44'); rect.setAttribute('stroke-width', '1.5');
+    var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', obj.x + 2); label.setAttribute('y', obj.y + 11);
+    label.setAttribute('fill', '#00cc44'); label.setAttribute('font-size', '10'); label.setAttribute('font-family', 'monospace');
+    label.textContent = obj.id;
+    svg.appendChild(rect);
+    svg.appendChild(label);
+  }
+
+  _addBoundingBoxes(svg) {
+    this.spec.objects
+      .map(obj => ({ obj, el: document.getElementById('obj-' + obj.id) }))
+      .filter(({ el }) => el)
+      .forEach(({ obj }) => this._addBoundingBox(svg, obj));
   }
 
   _showTray(objectIds) {
@@ -422,45 +493,56 @@ export class SimulatorEngine {
     tray.style.cssText = 'position:absolute;bottom:0;left:0;width:100%;background:#fff;border-radius:20px 20px 0 0;padding:16px 12px 20px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);transform:translateY(100%);transition:transform 0.3s ease-out;z-index:200;box-sizing:border-box;';
     var row = document.createElement('div');
     row.style.cssText = 'display:flex;gap:16px;justify-content:center;';
-    objectIds.forEach(id => {
-      var obj = this.spec.objects.find(o => o.id === id);
-      if (!obj) return;
-      var tile = document.createElement('div');
-      tile.id = 'obj-' + id;
-      tile.style.cssText = 'border:2px solid #ddd;border-radius:16px;padding:10px 8px 8px;width:150px;text-align:center;cursor:pointer;box-sizing:border-box;flex-shrink:0;transition:border-color 0.15s;';
-      var img = document.createElement('img');
-      img.src = resolveImgSrc(this.spritesPath, obj.sprite);
-      img.style.cssText = 'width:100%;height:110px;object-fit:contain;display:block;';
-      var label = document.createElement('div');
-      label.textContent = obj.label || '';
-      label.style.cssText = 'font-size:16px;font-weight:bold;color:#444;margin-top:6px;font-family:inherit;';
-      tile.appendChild(img);
-      tile.appendChild(label);
-      var handler = () => {
-        tile.style.transform = 'scale(0.93)';
-        setTimeout(() => { tile.style.transform = ''; }, 150);
-        var peek = findAction(this.spec, this.state, id, this.selectedTool, this.won);
-        if (peek.type === 'exec') {
-          var isWrong = peek.actions.some(a => a.startsWith('animate: shake'));
-          tile.style.border = isWrong ? '4px solid #e53935' : '4px solid #4CAF50';
-        }
-        setTimeout(() => { this._handleTap(id); }, 400);
-      };
-      tile.addEventListener('click', handler);
-      tile.addEventListener('touchend', function(e) { e.preventDefault(); handler(); }, { passive: false });
-      row.appendChild(tile);
-    });
+    objectIds.forEach(id => this._renderTile(id, row));
     tray.appendChild(row);
     this.container.appendChild(tray);
     requestAnimationFrame(() => requestAnimationFrame(() => { tray.style.transform = 'translateY(0)'; }));
   }
 
+  _renderTile(id, row) {
+    [this.spec.objects.find(o => o.id === id)].filter(Boolean).forEach(obj => {
+      row.appendChild(this._createTile(id, obj));
+    });
+  }
+
+  _createTile(id, obj) {
+    var tile = document.createElement('div');
+    tile.id = 'obj-' + id;
+    tile.style.cssText = 'border:2px solid #ddd;border-radius:16px;padding:10px 8px 8px;width:150px;text-align:center;cursor:pointer;box-sizing:border-box;flex-shrink:0;transition:border-color 0.15s;';
+    var img = document.createElement('img');
+    img.src = resolveImgSrc(this.spritesPath, obj.sprite);
+    img.style.cssText = 'width:100%;height:110px;object-fit:contain;display:block;';
+    var label = document.createElement('div');
+    label.textContent = resolveObject(obj).label;
+    label.style.cssText = 'font-size:16px;font-weight:bold;color:#444;margin-top:6px;font-family:inherit;';
+    tile.appendChild(img);
+    tile.appendChild(label);
+    this._attachTileHandler(tile, id);
+    return tile;
+  }
+
+  _applyTileFeedback(tile, id) {
+    var peek = findAction(this.spec, this.state, id, this.selectedTool, this.won);
+    [peek.type === 'exec'].filter(Boolean).forEach(() => {
+      tile.style.border = TILE_BORDER[String(peek.actions.some(a => a.startsWith('animate: shake')))];
+    });
+  }
+
+  _attachTileHandler(tile, id) {
+    var handler = () => {
+      tile.style.transform = 'scale(0.93)';
+      setTimeout(() => { tile.style.transform = ''; }, 150);
+      this._applyTileFeedback(tile, id);
+      setTimeout(() => { this._handleTap(id); }, 400);
+    };
+    tile.addEventListener('click', handler);
+    tile.addEventListener('touchend', function(e) { e.preventDefault(); handler(); }, { passive: false });
+  }
+
   _hideTray(immediate) {
-    var tray = document.getElementById('choice-tray');
-    if (!tray) return;
-    if (immediate) { tray.remove(); return; }
-    tray.style.transform = 'translateY(100%)';
-    setTimeout(() => tray.remove(), 350);
+    [document.getElementById('choice-tray')].filter(Boolean).forEach(tray => {
+      HIDE_TRAY_NOW[String(!!immediate)](tray);
+    });
   }
 
   _reset() {
