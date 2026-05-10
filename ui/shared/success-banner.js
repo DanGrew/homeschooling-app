@@ -78,5 +78,5 @@ export function hideBanner() {
   [_el].filter(Boolean).forEach(function(el) { HIDE_FN[_type](el); });
 }
 
-window.showBanner = function(onNext) { showBanner({ buttons: [{ label: 'Next \u2192', onClick: onNext }] }); };
+window.showBanner = function(onNext) { showBanner({ buttons: [{ label: 'Next \u2192', onClick: function() { hideBanner(); onNext(); } }] }); };
 window.hideBanner = hideBanner;
