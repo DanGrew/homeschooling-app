@@ -13,6 +13,7 @@
   "objects": [
     { "id": "bg_living",           "sprite": "bg-living-room.png",       "x": 0,   "y": 0,   "w": 680, "h": 680, "fit": "cover"              },
     { "id": "bg_bathroom",         "sprite": "bg-bathroom.png",          "x": 0,   "y": 0,   "w": 680, "h": 680, "fit": "cover", "visible": false },
+    { "id": "scene_toys",          "sprite": "card-toys.png",            "x": 400, "y": 450, "w": 150, "h": 150 },
     { "id": "character",           "sprite_states": ["character-standing.png", "character-awareness.png", "character-sensation.png", "character-nappy-down.png", "character-nappy-down-awareness.png", "character-nappy-down-sensation.png", "character-sitting.png", "character-toilet-awareness.png", "character-toilet-sensation.png", "character-washing.png"], "x": 150, "y": 100, "w": 350, "h": 680 },
     { "id": "icon_awareness",      "sprite": "icon-awareness.png",      "x": 370, "y": 260, "w": 80,  "h": 80,  "clickable": true, "pulse": true           },
     { "id": "icon_sensation",      "sprite": "icon-sensation.png",      "x": 375, "y": 500, "w": 80,  "h": 80,  "visible": false, "clickable": true, "pulse": true },
@@ -40,7 +41,7 @@
 
     { "_": "step 2 ✓ — choose toilet → go to bathroom",
       "when": { "tap": "card_toilet", "if": "state.step == 2" },
-      "do": ["state.step = 3", "set_sprite: character 0", "hide_tray", "hide: bg_living", "show: bg_bathroom", "show: icon_awareness", "say: Let's go to the bathroom!"] },
+      "do": ["state.step = 3", "set_sprite: character 0", "hide_tray", "hide: bg_living", "hide: scene_toys", "show: bg_bathroom", "show: icon_awareness", "say: Let's go to the bathroom!"] },
     { "_": "step 2 ✗ — wrong: nappy",
       "when": { "tap": "card_nappy", "if": "state.step == 2" },
       "do": ["animate: shake card_nappy", "say: Let's try the toilet!"] },
@@ -166,7 +167,7 @@
 
     { "_": "step 18 — tap play icon → back to living room (win)",
       "when": { "tap": "icon_play", "if": "state.step == 18" },
-      "do": ["state.step = 19", "hide: icon_play", "hide: bg_bathroom", "show: bg_living", "set_sprite: character 0", "move: character 80 100", "say: Back to play!"] }
+      "do": ["state.step = 19", "hide: icon_play", "hide: bg_bathroom", "show: bg_living", "show: scene_toys", "set_sprite: character 0", "move: character 80 100", "say: Back to play!"] }
   ],
   "rules": [
     { "_": "rule: loop_a done → show first plop, advance to step 9",
