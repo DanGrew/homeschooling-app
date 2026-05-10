@@ -41,7 +41,7 @@ function doMatch(entry) {
   beep();
   showScanToast(entry.icon, entry.name);
   scanFound++;
-  ({'true':function(){stopScan();setTimeout(showSuccess,600);},'false':function(){}})[String(scanFound+scanCrossed===scanTotal)]();
+  ({'true':function(){stopScan();setTimeout(function(){showSuccess(resetScan);},600);},'false':function(){}})[String(scanFound+scanCrossed===scanTotal)]();
 }
 
 function matchBarcode(value) {
@@ -63,7 +63,7 @@ var CROSS_ACTION = {
     row.querySelector('.sc-tick').textContent = '✕';
     scanCrossed++;
     btn.textContent = 'Undo';
-    ({'true':function(){stopScan();setTimeout(showSuccess,600);},'false':function(){}})[String(scanFound+scanCrossed===scanTotal)]();
+    ({'true':function(){stopScan();setTimeout(function(){showSuccess(resetScan);},600);},'false':function(){}})[String(scanFound+scanCrossed===scanTotal)]();
   }
 };
 
@@ -130,7 +130,6 @@ function startScanPhase() {
 
 function resetScan() {
   stopScan();
-  document.getElementById('success-banner').style.display = 'none';
   document.getElementById('phase2').style.display = 'none';
   document.getElementById('phase-scan').style.display = 'none';
   document.getElementById('scan-stub').style.display = 'none';
@@ -154,9 +153,8 @@ function buildCatalogItems(filtered, catalogs) {
 export function init(catalogs) {
   ({'true':function(){document.getElementById('scan-unavailable').textContent='No camera — stub mode active';},'false':function(){}})[String(!hasDetector)]();
 
-  document.getElementById('btn-find').addEventListener('click', startFindPhase);
+  document.getElementById('btn-find').addEventListener('click', function() { startFindPhase(resetScan); });
   document.getElementById('btn-scan-it').addEventListener('click', startScanPhase);
-  document.getElementById('btn-again').addEventListener('click', resetScan);
 
   setAllItems(flattenCatalogs(catalogs));
   buildFilterBar(

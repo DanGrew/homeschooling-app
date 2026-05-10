@@ -1,15 +1,8 @@
 import { edgeKey, buildAdj, computeR, tapResult, formatTitle, getDotStyleIndex, isDotDone, getInstruction } from '../../core/drawing-dots/drawing-dots-core.js';
 import { buildFilterBar } from '../filter-bar/filter-bar-ui.js';
+import { showBanner, hideBanner } from '../shared/success-banner.js';
 
 var shapeIdx = 0, selectedDot = null, completedEdges, adj, complete, filtered = [];
-
-(function() {
-  var b = document.createElement('div');
-  b.id = 'dd-banner';
-  b.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:100;box-sizing:border-box;font-family:inherit;';
-  b.innerHTML = '<span style="font-size:1.6em;">&#11088; Well done!</span><button id="dd-next" style="background:white;color:#2ECC71;border:none;font-size:1.2em;padding:10px 24px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;">Next &#8594;</button>';
-  document.body.appendChild(b);
-})();
 
 var DOT_STYLES = [
   { fill: 'white',   stroke: '#444',    tFill: '#333'  },
@@ -44,11 +37,7 @@ var TAP_ACTIONS = {
 };
 
 function showBannerDone() {
-  document.getElementById('dd-banner')?.style.setProperty('transform', 'translateY(0)');
-  document.getElementById('dd-next').onclick = function() {
-    document.getElementById('dd-banner')?.style.setProperty('transform', 'translateY(100%)');
-    nextShape();
-  };
+  showBanner({ buttons: [{ label: 'Next \u2192', onClick: function() { hideBanner(); nextShape(); } }] });
 }
 
 function ns(tag, attrs) {
@@ -68,7 +57,7 @@ function render() {
   completedEdges = new Set();
   complete = false;
   selectedDot = null;
-  document.getElementById('dd-banner')?.style.setProperty('transform', 'translateY(100%)');
+  hideBanner();
   document.getElementById('title').textContent = formatTitle(shape);
   var r = computeR(shape, window.ddDotScale);
   var svg = document.getElementById('svg');

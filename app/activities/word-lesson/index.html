@@ -27,12 +27,6 @@
   #custom-word-input:focus{border-color:#3498DB;}
   #btn-generate{background:#E74C3C;color:white;border:none;border-radius:12px;padding:10px 20px;font-size:1.1em;font-family:inherit;cursor:pointer;font-weight:bold;}
   #word-container{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:8px;}
-  #success-banner{position:fixed;bottom:0;left:0;right:0;background:#2ECC71;color:white;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;transform:translateY(100%);transition:transform 0.3s ease;z-index:9100;box-sizing:border-box;}
-  #success-banner.visible{transform:translateY(0);}
-  #banner-btns{display:flex;gap:12px;}
-  #banner-btns button{background:white;border:none;font-size:1.1em;padding:10px 20px;border-radius:12px;font-family:inherit;cursor:pointer;font-weight:bold;}
-  #btn-banner-again{color:#E74C3C;}
-  #btn-banner-next{color:#2ECC71;}
 </style>
 </head>
 <body>
@@ -56,14 +50,6 @@
     <button class="mode-btn" id="btn-stop" style="display:none;">&#9632; Reset</button>
   </div>
   <div id="word-container"></div>
-</div>
-
-<div id="success-banner">
-  <span style="font-size:1.6em;">&#11088; Well done!</span>
-  <div id="banner-btns">
-    <button id="btn-banner-again">&#8635; Again</button>
-    <button id="btn-banner-next">Next &#8594;</button>
-  </div>
 </div>
 
 <script src="../../../core/trace/trace-core.js"></script>

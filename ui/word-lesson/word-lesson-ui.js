@@ -1,5 +1,6 @@
 import { validWord, charFile, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 import { speak, stop } from '../speech/speech-ui.js';
+import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
 const DICT_BASE = '../../dictionary/';
@@ -41,15 +42,12 @@ function setActiveFilter(tag) {
   );
 }
 
-function hideBanner() {
-  document.getElementById('success-banner').classList.remove('visible');
-}
+var BANNER_NEXT = { 'true': [], 'false': [{ label: 'Next \u2192', color: '#2ECC71', onClick: function() { navTo(currentIdx + 1); } }] };
 
-var BANNER_NEXT_DISPLAY = { 'true': 'none', 'false': '' };
+function hideBanner() { _hideBanner(); }
 
 function showBanner() {
-  document.getElementById('btn-banner-next').style.display = BANNER_NEXT_DISPLAY[String(isCustom)];
-  document.getElementById('success-banner').classList.add('visible');
+  _showBanner({ buttons: [{ label: '\u21BA Again', bg: 'white', color: '#E74C3C', onClick: function() { hideBanner(); startTrace(); } }].concat(BANNER_NEXT[String(isCustom)]) });
 }
 
 function setLessonUI() {
@@ -394,9 +392,6 @@ export function init() {
   document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
-  document.getElementById('btn-banner-again').addEventListener('click', () => { hideBanner(); startTrace(); });
-  document.getElementById('btn-banner-next').addEventListener('click', () => navTo(currentIdx + 1));
-
   loadDictionary().then(() => {
     setupFilterBar();
     filtered = words.slice();
