@@ -177,12 +177,18 @@ var ANIMATORS = {
     setTimeout(function() { el.style.transform = ''; }, 350);
   },
   shake: function(el, engine) {
+    var origBorder = el.style.border;
     el.style.transition = 'none';
-    el.style.boxShadow = '0 0 0 3px #e53935';
-    ['translateX(-6px)', 'translateX(6px)', 'translateX(-5px)', 'translateX(5px)', 'translateX(0)'].forEach(function(t, i) {
-      setTimeout(function() { el.style.transform = t; }, i * 70);
+    el.style.border = '3px solid #e53935';
+    el.style.boxShadow = '0 0 0 4px rgba(229,57,53,0.35)';
+    ['translateX(-7px)', 'translateX(7px)', 'translateX(-6px)', 'translateX(6px)', 'translateX(0)'].forEach(function(t, i) {
+      setTimeout(function() { el.style.transform = t; }, i * 80);
     });
-    setTimeout(function() { el.style.boxShadow = ''; el.style.transition = ''; }, 420);
+    setTimeout(function() {
+      el.style.border = origBorder;
+      el.style.boxShadow = '';
+      el.style.transition = '';
+    }, 700);
   },
   _default: function(el, engine) {
     el.style.transform = 'translateY(-8px)';
