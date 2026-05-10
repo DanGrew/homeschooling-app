@@ -46,17 +46,18 @@ GuidanceOverlay.prototype._build = function(onStop) {
   progress.style.cssText = 'font-size:0.75em;color:#aaa;margin-right:auto;';
   this._progressEl = progress;
 
-  var replay = document.createElement('button');
-  replay.innerHTML = '&#9654;';
-  replay.title = 'Replay';
-  replay.style.cssText = 'width:30px;height:30px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:none;cursor:pointer;font-size:0.7em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-  replay.addEventListener('click', function() { [self._onReplay].filter(Boolean).forEach(function(fn) { fn(); }); });
-
   var next = document.createElement('button');
-  next.textContent = 'Next \u2192';
-  next.style.cssText = 'background:#2563EB;color:#fff;border:none;border-radius:20px;padding:5px 16px;font-size:0.85em;font-weight:700;cursor:pointer;flex-shrink:0;';
+  next.innerHTML = '&#9654;';
+  next.dataset.action = 'next';
+  next.style.cssText = 'width:44px;height:44px;border-radius:50%;background:#2ECC71;color:#fff;border:none;font-size:1.3em;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;';
   next.addEventListener('click', function() { [self._onNext].filter(Boolean).forEach(function(fn) { fn(); }); });
   this._nextBtn = next;
+
+  var replay = document.createElement('button');
+  replay.innerHTML = '&#8635;';
+  replay.title = 'Replay';
+  replay.style.cssText = 'width:30px;height:30px;border-radius:50%;border:2px solid #aaa;color:#aaa;background:none;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+  replay.addEventListener('click', function() { [self._onReplay].filter(Boolean).forEach(function(fn) { fn(); }); });
 
   var closeWrap = document.createElement('div');
   closeWrap.style.cssText = 'position:relative;width:30px;height:30px;flex-shrink:0;';
@@ -85,10 +86,14 @@ GuidanceOverlay.prototype._build = function(onStop) {
   closeWrap.appendChild(close);
   closeWrap.appendChild(arcSvg);
 
+  var controls = document.createElement('div');
+  controls.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;';
+  controls.appendChild(replay);
+  controls.appendChild(closeWrap);
+
   footer.appendChild(progress);
-  footer.appendChild(replay);
   footer.appendChild(next);
-  footer.appendChild(closeWrap);
+  footer.appendChild(controls);
   body.appendChild(text);
   body.appendChild(footer);
   bubble.appendChild(char);
@@ -108,7 +113,9 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._textEl.style.color = SUCCESS_COLOR[key];
   this._textEl.textContent = SUCCESS_TEXT[key](step.text);
   this._progressEl.textContent = idx + ' / ' + total;
-  this._nextBtn.style.display = AUTO_DISPLAY[String(!!step.auto)];
+  var showNext = !!step.auto;
+  this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
+  this._nextBtn.classList.toggle('speakable--pulse', showNext);
   this._el.style.display = '';
 };
 
