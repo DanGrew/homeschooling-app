@@ -10,19 +10,39 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;flex-direction:column;}
 .nav-bar{flex-direction:row;justify-content:space-between;border-right:none;border-bottom:2px solid #ddd;padding:8px 16px;}
-#stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
-#note-display{font-size:clamp(3em,15vw,7em);line-height:1;transition:color 0.15s;}
-#note-hint{font-size:clamp(1em,3vw,1.4em);color:#bbb;}
+#stage{flex:1;display:flex;flex-direction:row;align-items:stretch;overflow:hidden;}
+.nav-arrow{flex-shrink:0;width:44px;display:flex;align-items:center;justify-content:center;font-size:1.8em;color:#bbb;cursor:pointer;user-select:none;touch-action:manipulation;transition:color 0.15s;}
+.nav-arrow:active{color:#888;}
+.nav-arrow.hidden{visibility:hidden;}
+#section-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:8px 0;overflow:hidden;}
+.song-line{display:flex;flex-wrap:wrap;gap:4px 8px;justify-content:center;align-items:flex-end;}
+.word-group{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.note-chips{display:flex;gap:2px;}
+.note-chip{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:clamp(22px,5vw,30px);height:clamp(20px,4.5vw,26px);
+  border-radius:6px;font-size:clamp(9px,2.2vw,12px);font-weight:bold;color:#333;
+  border:1.5px solid rgba(0,0,0,0.12);padding:0 3px;white-space:nowrap;
+  transition:transform 0.1s,filter 0.1s;
+}
+.note-chip.playable{cursor:pointer;touch-action:none;}
+.note-chip.no-audio{opacity:0.35;cursor:default;}
+.lyric{font-size:clamp(12px,3vw,16px);color:#444;text-align:center;white-space:nowrap;}
+#verse-indicator{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+.verse-dot{width:8px;height:8px;border-radius:50%;background:#ddd;transition:background 0.2s;}
+.verse-dot.active{background:#aaa;}
 #keys-wrap{height:min(220px,30vh);flex-shrink:0;padding:0 4px 4px;gap:3px;}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Piano" data-links='[{"label":"Game &#9654;","href":"./game.html"}]'></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Piano" data-links='[{"label":"Songs &#9834;","href":"./songs.html"},{"label":"Game &#9654;","href":"./game.html"}]'></div>
 <div class="game-area">
   <div id="stage">
-    <div id="note-display">&#9834;</div>
-    <div id="note-hint">Tap a key!</div>
+    <div class="nav-arrow" id="btn-prev">&#9664;</div>
+    <div id="section-display"></div>
+    <div class="nav-arrow" id="btn-next">&#9654;</div>
   </div>
+  <div id="verse-indicator"></div>
   <div id="keys-wrap"></div>
 </div>
 <script src="../../shared/menu.js" defer></script>
@@ -31,14 +51,122 @@ body{background:#fff8f0;flex-direction:column;}
 <script src="../../../ui/shared/audio-ctx.js"></script>
 <script src="../../../ui/piano/piano-ui.js"></script>
 <script>
-var display = document.getElementById('note-display');
-var hint = document.getElementById('note-hint');
+var NOTE_MAP = {
+  'C':  {note:'C4', color:'#FFB3B3'},
+  'D':  {note:'D4', color:'#FFCBA4'},
+  'E':  {note:'E4', color:'#FFF0A3'},
+  'F':  {note:'F4', color:'#B3FFB3'},
+  'G':  {note:'G4', color:'#A3D9FF'},
+  'A':  {note:'A4', color:'#B3C6FF'},
+  'B':  {note:'B4', color:'#E0B3FF'},
+  '^C': {note:'C5', color:'#FFB3E6'},
+  '^D': {note:'D5', color:'#B3FFEE'},
+  '^E': {note:'E5', color:'#D4FFB3'},
+  '^F': {note:null, color:'#ccc'},
+  '^G': {note:null, color:'#ccc'},
+  '^A': {note:null, color:'#ccc'},
+  'Bb': {note:null, color:'#ccc'}
+};
+
+var SONG_VERSES = [
+  [
+    [{n:['A','^C','^D'], t:'Pok\u00e9mon!'}]
+  ],
+  [
+    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^C'],t:'all'}],
+    [{n:['^C'],t:"It\u2019s"},{n:['^C'],t:'you'},{n:['^D'],t:'and'},{n:['^D','^C'],t:'me'}],
+    [{n:['^C'],t:'I'},{n:['^D'],t:'know'},{n:['^E'],t:"it\u2019s"},{n:['^F'],t:'my'},{n:['^E','^D','^C'],t:'destiny...'}]
+  ],
+  [
+    [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}],
+    [{n:['^D'],t:'Oh,'},{n:['^D'],t:"you\u2019re"},{n:['^C'],t:'my'},{n:['A'],t:'best'},{n:['F'],t:'friend'}],
+    [{n:['F'],t:'In'},{n:['G'],t:'a'},{n:['A'],t:'world'},{n:['A'],t:'we'},{n:['G'],t:'must'},{n:['F','A'],t:'defend...'}]
+  ],
+  [
+    [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}],
+    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^C'],t:'all!'}],
+    [{n:['^C'],t:'A'},{n:['^C'],t:'heart'},{n:['^D'],t:'so'},{n:['^D','^C'],t:'true'}],
+    [{n:['^D'],t:'Our'},{n:['^D','^E'],t:'courage'},{n:['^F'],t:'will'},{n:['^E'],t:'pull'},{n:['^D'],t:'us'},{n:['^C'],t:'through...'}],
+    [{n:['Bb'],t:'You'},{n:['^F'],t:'teach'},{n:['^F'],t:'me,'},{n:['^F'],t:'and'},{n:['^C'],t:"I\u2019ll"},{n:['^F'],t:'teach'},{n:['^F'],t:'you'}],
+    [{n:['^F','^F','^F','^E'],t:'Pok\u00e9mon!'}]
+  ],
+  [
+    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^D'],t:'all,'}],
+    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^F','^D'],t:'all'}],
+    [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}]
+  ]
+];
+
+var currentVerse = 0;
+
+function makeChip(token) {
+  var info = NOTE_MAP[token] || {note:null, color:'#ccc'};
+  var chip = document.createElement('span');
+  chip.className = 'note-chip ' + (info.note ? 'playable' : 'no-audio');
+  chip.textContent = token.replace('^', '\u2191');
+  chip.style.background = info.color;
+  if (info.note) {
+    chip.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      initAudio().then(function() { playNote(info.note, 1.0); }).catch(function(){});
+      chip.style.transform = 'scale(1.2)';
+      chip.style.filter = 'brightness(1.35) drop-shadow(0 0 6px ' + info.color + ')';
+      clearTimeout(chip._t);
+      chip._t = setTimeout(function() { chip.style.transform = ''; chip.style.filter = ''; }, 220);
+    });
+  }
+  return chip;
+}
+
+function renderVerse(verse) {
+  var display = document.getElementById('section-display');
+  display.innerHTML = '';
+  verse.forEach(function(line) {
+    var lineEl = document.createElement('div');
+    lineEl.className = 'song-line';
+    line.forEach(function(group) {
+      var groupEl = document.createElement('div');
+      groupEl.className = 'word-group';
+      var chipsEl = document.createElement('div');
+      chipsEl.className = 'note-chips';
+      group.n.forEach(function(token) { chipsEl.appendChild(makeChip(token)); });
+      var lyricEl = document.createElement('div');
+      lyricEl.className = 'lyric';
+      lyricEl.textContent = group.t;
+      groupEl.appendChild(chipsEl);
+      groupEl.appendChild(lyricEl);
+      lineEl.appendChild(groupEl);
+    });
+    display.appendChild(lineEl);
+  });
+}
+
+function renderDots() {
+  var ind = document.getElementById('verse-indicator');
+  ind.innerHTML = '';
+  SONG_VERSES.forEach(function(_, i) {
+    var dot = document.createElement('div');
+    dot.className = 'verse-dot' + (i === currentVerse ? ' active' : '');
+    ind.appendChild(dot);
+  });
+}
+
+function goTo(i) {
+  currentVerse = i;
+  renderVerse(SONG_VERSES[currentVerse]);
+  renderDots();
+  document.getElementById('btn-prev').className = 'nav-arrow' + (currentVerse === 0 ? ' hidden' : '');
+  document.getElementById('btn-next').className = 'nav-arrow' + (currentVerse === SONG_VERSES.length - 1 ? ' hidden' : '');
+}
+
+document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse > 0) goTo(currentVerse - 1); });
+document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse < SONG_VERSES.length - 1) goTo(currentVerse + 1); });
+
+goTo(0);
+
 renderKeys(document.getElementById('keys-wrap'), function(i, note, keyEl) {
   initAudio().then(function() { playNote(note, 1.0); }).catch(function(){});
   glowKey(keyEl, 'hit');
-  display.textContent = PIANO_CONFIG.NOTE_LABELS[i] + ' \u266a';
-  display.style.color = PIANO_CONFIG.KEY_COLORS[i];
-  hint.style.display = 'none';
 });
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='piano-lesson';</script>
