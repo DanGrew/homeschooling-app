@@ -20,8 +20,8 @@
     lsnContainer.style.cssText='position:relative;';
     var lsnBtn=document.createElement('button');
     lsnBtn.innerHTML='&#128218;';
-    lsnBtn.className='nav-lesson-btn';
-    lsnBtn.style.cssText='width:40px;height:40px;border-radius:50%;border:2px solid #2563EB;color:#2563EB;background:transparent;font-size:1.1em;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+    lsnBtn.className='nav-btn nav-lesson-btn';
+    lsnBtn.style.cssText='flex-shrink:0;';
     var lsnPopout=document.createElement('div');
     lsnPopout.className='nav-lesson-popout';
     lsnPopout.style.cssText='display:none;position:absolute;top:0;left:calc(100% + 8px);background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
