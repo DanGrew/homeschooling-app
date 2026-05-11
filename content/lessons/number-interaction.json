@@ -1,0 +1,66 @@
+{
+  "activity": "number-interaction",
+  "lessons": [
+    {
+      "id": "make_three",
+      "number": 1,
+      "title": "Make Three",
+      "guide": "cat",
+      "steps": [
+        { "text": "Let's make the number three! Press + on group A to add fruit.", "auto": true },
+        { "text": "Keep pressing + until the total shows 3!", "expect": "TOTAL_3", "feedback": "Three! Count them — one, two, three." },
+        { "text": "Tap the big number on the right to count them all!", "expect": "COUNT_ALL", "feedback": "One, two, three — three altogether!" },
+        { "text": ["Well done!", "Brilliant!", "Amazing!", "Superstar!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "make_five",
+      "number": 2,
+      "title": "Make Five",
+      "guide": "cat",
+      "steps": [
+        { "text": "Can you make the number five? Use groups A and B — they add together to make the total!", "auto": true },
+        { "text": "Press + on A or B until the total shows 5!", "expect": "TOTAL_5", "feedback": "Five! How did you split them between A and B?" },
+        { "text": "Now tap the big number to count all five!", "expect": "COUNT_ALL", "feedback": "Five altogether!" },
+        { "text": ["Brilliant!", "Amazing!", "Superstar!", "Well done!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "equal_groups",
+      "number": 3,
+      "title": "Equal Groups",
+      "guide": "dog",
+      "steps": [
+        { "text": "Can you make group A and group B the same? When they match, they're equal!", "auto": true },
+        { "text": "Use + and − to make A and B equal!", "expect": "GROUPS_EQUAL", "feedback": "They match! When two groups are the same we say they're equal." },
+        { "text": "Tap the big number to count them all!", "expect": "COUNT_ALL", "feedback": "Equal groups — and you counted them too!" },
+        { "text": ["Brilliant thinking!", "Amazing!", "Superstar!", "Well done!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "count_to_ten",
+      "number": 4,
+      "title": "Count to Ten",
+      "guide": "cat",
+      "steps": [
+        { "text": "Ten is a special number! Can you fill both groups to make ten altogether?", "auto": true },
+        { "text": "Press + on A and B until the total shows 10!", "expect": "TOTAL_10", "feedback": "Ten! That's a full set." },
+        { "text": "Now tap the big number and count all the way to ten!", "expect": "COUNT_ALL", "feedback": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10 — a perfect ten!" },
+        { "text": ["Fantastic!", "Amazing!", "You did it!", "Superstar!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "more_and_fewer",
+      "number": 5,
+      "title": "More and Fewer",
+      "guide": "dog",
+      "steps": [
+        { "text": "Let's explore! The + button adds one, the − button takes one away. Let's try them out!", "auto": true },
+        { "text": "Press + on group A to add one!", "expect": "A_PLUS", "feedback": "A grew bigger! + adds one each time." },
+        { "text": "Now press + on group B!", "expect": "B_PLUS", "feedback": "B grew too! Now press − to take one away." },
+        { "text": "Press − on A to take one away!", "expect": "A_MINUS", "feedback": "A got smaller! When a group has less we say it has fewer." },
+        { "text": ["You explored adding and taking away. Brilliant!", "Amazing explorer!", "Superstar!"], "auto": true, "success": true }
+      ]
+    }
+  ]
+}

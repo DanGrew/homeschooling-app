@@ -63,7 +63,26 @@ loadImages(all, () => {
 window.change = change;
 window.countAll = countAll;
 </script>
-<script>window.ADULT_PROMPTS_ACTIVITY='number-interaction';</script>
+<script>
+  window.ADULT_PROMPTS_ACTIVITY='number-interaction';
+  window.LESSONS=[
+    {id:'make_three',number:1,title:'Make Three'},
+    {id:'make_five',number:2,title:'Make Five'},
+    {id:'equal_groups',number:3,title:'Equal Groups'},
+    {id:'count_to_ten',number:4,title:'Count to Ten'},
+    {id:'more_and_fewer',number:5,title:'More and Fewer'}
+  ];
+</script>
+<script type="module">
+  import{GuidanceService}from'../../../ui/guidance/guidance-service.js';
+  fetch('../../../content/lessons/number-interaction.json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      window.LESSON_MAP={};
+      data.lessons.forEach(function(l){window.LESSON_MAP[l.id]=l;});
+      window.guidanceService=new GuidanceService();
+    });
+</script>
 <script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>

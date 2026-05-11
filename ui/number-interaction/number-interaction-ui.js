@@ -3,6 +3,13 @@ import { getVoice } from '../speech/voice-service.js';
 import { makeInteractive } from '../speech/speakable.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
+var SIDE_EVT = { a: 'A', b: 'B' };
+var DELTA_EVT = { 'true': '_PLUS', 'false': '_MINUS' };
+var DISPATCH_EQUAL = { 'true': function() { guidanceEvent('GROUPS_EQUAL'); }, 'false': function() {} };
+var DISPATCH_NONZERO = { 'true': function() { DISPATCH_EQUAL[String(aCount === bCount)](); }, 'false': function() {} };
+
+function guidanceEvent(type) { window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: type } })); }
+
 const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
 const SZ_SM = 'width:min(48px,6.2vw);height:min(48px,6.2vw)';
 
@@ -84,6 +91,8 @@ export function render() {
   bContainer.style.borderColor = comparisonColor(bCount, aCount);
   document.getElementById('lbl-a').textContent = LABEL_TEXT[labelState(aCount, bCount)];
   document.getElementById('lbl-b').textContent = LABEL_TEXT[labelState(bCount, aCount)];
+  guidanceEvent('TOTAL_' + (aCount + bCount));
+  DISPATCH_NONZERO[String(aCount > 0)]();
 }
 
 export function flashAll(containerId) {
@@ -108,6 +117,7 @@ export function change(side, delta) {
   ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();
   render();
   var changed = [aCount !== prevA, bCount !== prevB].some(Boolean);
+  [1].filter(() => changed).forEach(() => { guidanceEvent(SIDE_EVT[side] + DELTA_EVT[String(delta > 0)]); });
   return {wasCounting, changed};
 }
 
@@ -138,7 +148,7 @@ export function countAll() {
         const idx = steps[i++];
         highlight(idx, imgs);
         [countSpeak].filter(() => idx >= 0).forEach(fn => fn(String(idx + 1), next));
-        [1].filter(() => idx < 0).forEach(() => { counting = false; });
+        [1].filter(() => idx < 0).forEach(() => { counting = false; guidanceEvent('COUNT_ALL'); });
       })();
     });
   });
