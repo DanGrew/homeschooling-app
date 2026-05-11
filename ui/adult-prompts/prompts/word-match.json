@@ -1,9 +1,9 @@
 {
   "activity": "word-match",
   "prompts": [
-    { "type": "ask",  "text": "Before they tap, ask: \"Which picture shows a [word]? What can you see that tells you?\"" },
-    { "type": "say",  "text": "After a correct match, say: \"Yes! That's [word] — can you use it in a sentence?\"" },
-    { "type": "ask",  "text": "Ask: \"What other things belong in the same group as [word]?\" — builds category thinking." },
-    { "type": "word", "text": "Point to the written word and say: \"Look at the letters — it starts with [letter]. Can you find that letter?\"" }
+    { "type": "say",  "text": "Before they tap: read the word together, then press 'Say it' to hear it spoken, then find the picture. This read → hear → find sequence reinforces word recognition deliberately." },
+    { "type": "ask",  "text": "Core question after a correct match: 'What is a [word]? Where might you see one?' — moves from recognition to meaning to real-world connection." },
+    { "type": "ask",  "text": "'What other things are similar to [word]?' — builds vocabulary clusters and category thinking. E.g. dog → cat, rabbit → other animals. Grouping deepens word knowledge." },
+    { "type": "word", "text": "Point to the first letter: 'This word starts with [letter] — it says /sound/. Can you find that letter?' — bridges word recognition to phonics awareness." }
   ]
 }

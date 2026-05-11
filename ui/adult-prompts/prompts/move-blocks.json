@@ -1,9 +1,9 @@
 {
   "activity": "move-blocks",
   "prompts": [
-    { "type": "word", "text": "Positional language: \"up, down, left, right\" — use these words as they move the block. Point in the direction as you say it." },
-    { "type": "ask",  "text": "Before moving, ask: \"Which direction do you think the block needs to go first?\"" },
-    { "type": "say",  "text": "Narrate each move: \"The block moved right — now it's closer to the green square!\"" },
-    { "type": "ask",  "text": "Ask: \"How many moves do you think it will take to reach the square?\" — builds estimation thinking." }
+    { "type": "word", "text": "Vocabulary to use throughout: 'left', 'right', 'up', 'down', 'towards', 'away from', 'around', 'past'. Point in the direction as you say the word every time — the gesture reinforces the language." },
+    { "type": "say",  "text": "Model thinking-aloud route planning: 'I can see the target is to the right, but there's a block in the way — I'll have to go around it.' Narrate the reasoning, not just the moves." },
+    { "type": "ask",  "text": "Core question to return to: 'Which direction does the block need to go first? What's in the way?' — slows down impulse tapping and builds planning habit." },
+    { "type": "say",  "text": "Resilience framing to give before starting: 'If we get stuck, that's fine — we back up and try a different way. That's what problem-solving looks like.'" }
   ]
 }

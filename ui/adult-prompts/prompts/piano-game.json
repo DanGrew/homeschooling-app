@@ -1,9 +1,9 @@
 {
   "activity": "piano-game",
   "prompts": [
-    { "type": "word", "text": "\"Rhythm\" — a pattern of sounds in time. \"Beat\" — the steady pulse underneath the music, like a heartbeat." },
-    { "type": "say",  "text": "Clap or tap the beat together as notes approach: this builds the physical feel of rhythm before the key press." },
-    { "type": "ask",  "text": "Ask: \"Can you feel when the note is about to arrive? What helps you know?\"" },
-    { "type": "say",  "text": "After a good run, say: \"You kept the beat! That means your timing was right — well done.\"" }
+    { "type": "word", "text": "'Rhythm' — a pattern of sounds in time. 'Beat' — the steady pulse underneath, like a heartbeat. 'Timing' — pressing at exactly the right moment. Introduce all three before starting." },
+    { "type": "say",  "text": "Clap or tap the beat together as notes approach — build the physical feel of the rhythm before the key press. The body knowing the beat is the foundation." },
+    { "type": "ask",  "text": "Core question: 'Can you feel when the note is about to arrive? What helps you know?' — makes the internal timing process conscious and discussable." },
+    { "type": "ask",  "text": "Extension: 'Can you clap just the beat — the steady pulse — while the music plays, without pressing any keys?' — isolates pulse from melody." }
   ]
 }

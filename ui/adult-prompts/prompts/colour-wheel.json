@@ -1,10 +1,9 @@
 {
   "activity": "colour-wheel",
   "prompts": [
-    { "type": "word", "text": "\"Primary colours\" — red, yellow and blue. We call them primary because we can't make them by mixing; they're the starting colours." },
-    { "type": "word", "text": "\"Secondary colours\" — orange, green and purple. Each one is made by mixing two primary colours together." },
-    { "type": "ask",  "text": "Before mixing, ask: \"I wonder what red and yellow will make?\" — let them predict before touching the slots." },
-    { "type": "say",  "text": "After a mix, say together: \"[colour A] and [colour B] made [result]!\" — then say it once more slowly." },
-    { "type": "ask",  "text": "Point to a colour on the wheel and ask: \"Is this one closer to red or yellow?\" — builds the idea that colours are related." }
+    { "type": "word", "text": "'Primary colours' — red, yellow, blue — cannot be made by mixing. 'Secondary colours' — orange, green, purple — each made from two primaries. Use both terms naturally throughout." },
+    { "type": "ask",  "text": "Before every mix, ask: 'I wonder what [A] and [B] will make?' Never tell them first. The discovery is the learning — give them time to predict." },
+    { "type": "say",  "text": "Model the cause-and-effect sentence: '[A] and [B] make [result].' Say it together after each mix. Repeat the pattern every time — this is the language of cause and effect." },
+    { "type": "ask",  "text": "Point to a colour on the wheel: 'Is this one closer to red or yellow? Why?' — builds understanding that colours exist on a spectrum, not just in fixed categories." }
   ]
 }
