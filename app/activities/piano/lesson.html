@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#fff8f0;flex-direction:column;}
+body{background:#fff8f0;}
 #song-selector-wrap{display:flex;align-items:center;justify-content:center;padding:6px 12px;flex-shrink:0;border-bottom:1px solid #eee;background:#fff8f0;}
 #song-select{font-size:clamp(13px,3.5vw,16px);font-family:inherit;padding:4px 8px;border:2px solid #ddd;border-radius:8px;background:#fff;color:#333;cursor:pointer;}
 #stage{flex:1;display:flex;flex-direction:row;align-items:stretch;overflow:hidden;}
@@ -32,8 +32,8 @@ body{background:#fff8f0;flex-direction:column;}
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="Piano" data-links='[{"label":"Game","href":"./game.html"}]'></div>
-<div id="song-selector-wrap"><select id="song-select"></select></div>
 <div class="game-area">
+  <div id="song-selector-wrap"><select id="song-select"></select></div>
   <div id="stage">
     <div class="nav-arrow" id="btn-prev">&#9664;</div>
     <div id="section-display"></div>
