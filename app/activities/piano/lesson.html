@@ -49,6 +49,7 @@ body{background:#fff8f0;}
 <script src="../../../ui/piano/piano-song-ui.js"></script>
 <script>
 loadPianoSongs('../../../assets/audio/songs/', function(songs) {
+  songs.sort(function(a, b) { return a.title.localeCompare(b.title); });
   initSongLesson(songs, {
     display: document.getElementById('section-display'),
     prev:    document.getElementById('btn-prev'),
@@ -81,7 +82,7 @@ loadPianoSongs('../../../assets/audio/songs/', function(songs) {
   document.addEventListener('click', function() { popout.style.display = 'none'; });
   container.appendChild(btn);
   container.appendChild(popout);
-  bar.appendChild(container);
+  bar.insertBefore(container, bar.lastElementChild);
 });
 document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonPrev(); });
 document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonNext(); });
