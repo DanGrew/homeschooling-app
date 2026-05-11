@@ -9,33 +9,33 @@
 <link rel="stylesheet" href="../../shared/speakable.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#fff8f0;flex-direction:column;}
-.nav-bar{flex-direction:row;justify-content:space-between;border-right:none;border-bottom:2px solid #ddd;padding:8px 16px;}
 </style>
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="Colour Wheel" data-links='[{"label":"Primary Colours","href":"../../activities/primary-colours/"},{"label":"Secondary Colours","href":"../../activities/secondary-colours/"}]'></div>
-<div class="game-area" style="align-items:center;justify-content:center;padding:12px;">
-  <svg id="wheel-svg" viewBox="0 0 300 300" style="width:100%;height:100%;max-width:320px;max-height:320px;"></svg>
-</div>
-<div style="flex-shrink:0;background:#fff;border-top:2px solid #eee;padding:14px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
-  <div style="display:flex;align-items:center;gap:10px;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <div id="lsn-slot-a" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
-      <span style="font-size:0.8em;color:#bbb;font-weight:bold;">A</span>
-    </div>
-    <span style="font-size:1.5em;color:#ccc;font-weight:bold;">+</span>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <div id="lsn-slot-b" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
-      <span style="font-size:0.8em;color:#bbb;font-weight:bold;">B</span>
-    </div>
-    <span style="font-size:1.5em;color:#ccc;font-weight:bold;">=</span>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
-      <div id="lsn-result" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;"></div>
-      <span id="lsn-result-label" style="font-size:0.8em;color:#bbb;">Result</span>
-    </div>
+<div class="game-area">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:12px;min-height:0;">
+    <svg id="wheel-svg" viewBox="0 0 300 300" style="width:100%;height:100%;max-width:320px;max-height:320px;"></svg>
   </div>
-  <div id="lsn-palette" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+  <div style="flex-shrink:0;background:#fff;border-top:2px solid #eee;padding:14px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div id="lsn-slot-a" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
+        <span style="font-size:0.8em;color:#bbb;font-weight:bold;">A</span>
+      </div>
+      <span style="font-size:1.5em;color:#ccc;font-weight:bold;">+</span>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div id="lsn-slot-b" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
+        <span style="font-size:0.8em;color:#bbb;font-weight:bold;">B</span>
+      </div>
+      <span style="font-size:1.5em;color:#ccc;font-weight:bold;">=</span>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
+        <div id="lsn-result" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;"></div>
+        <span id="lsn-result-label" style="font-size:0.8em;color:#bbb;">Result</span>
+      </div>
+    </div>
+    <div id="lsn-palette" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;"></div>
+  </div>
 </div>
 
 <script>

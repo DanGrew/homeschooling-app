@@ -8,12 +8,9 @@
 <link rel="stylesheet" href="../../shared/style.css">
 <script src="../../shared/menu.js" defer></script>
 <style>
-  .filter-bar{display:flex;gap:8px;justify-content:center;padding:8px 16px 0;flex-wrap:wrap;}
-  .filter-btn{background:#f0f0f0;border:2px solid #ddd;border-radius:20px;padding:6px 18px;font-size:1em;font-family:inherit;cursor:pointer;color:#555;}
-  .filter-btn.active{background:#3498DB;border-color:#3498DB;color:white;}
   .nav-row{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 0;}
-  .nav-btn{background:#eee;border:none;border-radius:14px;font-size:1.6em;padding:8px 22px;cursor:pointer;font-family:inherit;color:#333;}
-  .nav-btn:disabled{opacity:0.3;cursor:default;}
+  .page-nav-btn{background:#eee;border:none;border-radius:14px;font-size:1.6em;padding:8px 22px;cursor:pointer;font-family:inherit;color:#333;}
+  .page-nav-btn:disabled{opacity:0.3;cursor:default;}
   .char-label{font-size:2em;font-weight:bold;color:#333;}
   .mode-btns{display:flex;gap:12px;justify-content:center;padding:10px 16px 0;flex-wrap:wrap;}
   .mode-btn{border:none;border-radius:16px;padding:12px 28px;font-size:1.1em;font-family:inherit;font-weight:bold;cursor:pointer;}
@@ -29,18 +26,13 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Trace Letters"></div>
 <div class="game-area">
-  <div class="filter-bar">
-    <button class="filter-btn" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="lower">a&#8211;z</button>
-    <button class="filter-btn" data-filter="upper">A&#8211;Z</button>
-    <button class="filter-btn" data-filter="digit">0&#8211;9</button>
-  </div>
+  <div id="filter-bar"></div>
   <div class="nav-row">
-    <button class="nav-btn" id="btn-prev">&#8592;</button>
+    <button class="page-nav-btn" id="btn-prev">&#8592;</button>
     <span class="char-label" id="char-label"></span>
-    <button class="nav-btn" id="btn-next">&#8594;</button>
+    <button class="page-nav-btn" id="btn-next">&#8594;</button>
   </div>
   <div class="mode-btns">
     <button class="mode-btn" id="btn-trace" style="display:none">&#9654; Trace</button>

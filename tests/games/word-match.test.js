@@ -79,8 +79,23 @@ test('locked after correct — extra clicks ignored', async ({ page }) => {
   await expect(wrongBtn).not.toHaveClass(/feedback-wrong/)
 })
 
-test('nav bar has link to say-words', async ({ page }) => {
+test('books button links to say-words', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/word-match/')
-  const href = await page.locator('.nav-link').first().evaluate(el => new URL(el.href).pathname)
-  expect(href).toBe('/homeschooling-app/app/activities/say-words/')
+  const link = page.locator('.nav-bar a[href*="say-words"]')
+  await expect(link).toBeVisible()
+  const text = await link.textContent()
+  expect(text).toContain('\uD83D\uDCDA')
+})
+
+test('title is first child of game-area', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/word-match/')
+  const firstClass = await page.locator('.game-area > *').first().getAttribute('class')
+  expect(firstClass).toMatch(/activity-title/)
+})
+
+test('filter bar appears after title', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/word-match/')
+  await expect(page.locator('#filter-bar')).toBeVisible({ timeout: 3000 })
+  const secondId = await page.locator('.game-area > *').nth(1).getAttribute('id')
+  expect(secondId).toBe('filter-bar')
 })
