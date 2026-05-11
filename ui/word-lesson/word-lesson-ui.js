@@ -81,12 +81,14 @@ function navTo(idx) {
   NAV_CUSTOM_GUARD[String(isCustom)](idx);
 }
 
+var TAG_LABEL = {
+  'true':  function()    { return 'All'; },
+  'false': function(tag) { return tag.charAt(0).toUpperCase() + tag.slice(1); }
+};
+
 function setupFilterBar() {
   var options = extractWordTags(words).map(function(tag) {
-    return {
-      label: tag === 'all' ? 'All' : tag.charAt(0).toUpperCase() + tag.slice(1),
-      value: tag
-    };
+    return { label: TAG_LABEL[String(tag === 'all')](tag), value: tag };
   });
   buildSimpleFilterBar(options, onFilterClick, 'all');
 }

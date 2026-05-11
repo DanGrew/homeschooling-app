@@ -70,12 +70,17 @@ export function buildFilterBar(items, onChange) {
   apply();
 }
 
+var SIMPLE_INITIAL = {
+  'true':  function(iv)       { return String(iv); },
+  'false': function(iv, opts) { return String(opts[0].value); }
+};
+
 export function buildSimpleFilterBar(options, onChange, initialValue) {
   var bar = document.getElementById('filter-bar');
   bar.innerHTML = '';
   bar.style.cssText = 'display:flex;flex-direction:column;border-bottom:1px solid #eee;';
 
-  var activeValue = initialValue !== undefined ? String(initialValue) : String(options[0].value);
+  var activeValue = SIMPLE_INITIAL[String(initialValue !== undefined)](initialValue, options);
   var r = row();
 
   options.forEach(function(opt) {
