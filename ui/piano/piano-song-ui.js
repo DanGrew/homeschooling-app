@@ -12,7 +12,8 @@ var SONG_NOTE_MAP = {
   '^F': {note:'F5', color:'#FFCCF2'},
   '^G': {note:'G5', color:'#C5F2CC'},
   '^A': {note:null, color:'#ccc'},
-  'Bb': {note:null, color:'#ccc'}
+  'Bb': {note:null, color:'#ccc'},
+  'F#': {note:null, color:'#ccc'}
 };
 
 var _NO_NOTE_INFO = {note: null, color: '#ccc'};
