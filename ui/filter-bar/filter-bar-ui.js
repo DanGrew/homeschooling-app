@@ -1,6 +1,9 @@
 import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/filter-bar-core.js';
 export { extractTags, extractLevels, filterItems };
 
+var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E ', fruit: '\uD83C\uDF4E ', emotions: '\uD83D\uDE0A ', vehicles: '\uD83D\uDE97 ' };
+var GET_TAG_EMOJI = { 'true': function(t) { return TAG_EMOJI[t]; }, 'false': function() { return ''; } };
+
 var ACTIVE_STYLES = {
   'true': colour => ({ border: colour, bg: colour, color: 'white' }),
   'false': () => ({ border: '#ddd', bg: '#fff', color: '#333' })
@@ -58,7 +61,7 @@ export function buildFilterBar(items, onChange) {
   var tagRow = row();
   tags.forEach(function(t) {
     var b = document.createElement('button');
-    b.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+    b.textContent = GET_TAG_EMOJI[String(t in TAG_EMOJI)](t) + t.charAt(0).toUpperCase() + t.slice(1);
     b.setAttribute('data-tag', t);
     b.onclick = function() { activeTag = t; apply(); };
     tagRow.appendChild(b);

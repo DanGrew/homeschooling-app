@@ -91,6 +91,9 @@ function render(){
     var tile=document.createElement('div');
     tile.className='tile';
     makeSpeakable(tile, w.name);
+    tile.addEventListener('click', function() {
+      window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: w.id.replace(/-/g, '_').toUpperCase() + '_SPOKEN' } }));
+    });
     var imgDiv=document.createElement('div');
     imgDiv.className='tile-img';
     var img=document.createElement('img');
@@ -120,7 +123,27 @@ loadImages(all,function(){
   buildFilterBar(all,function(f){filtered=f;page=0;render();});
 });
 </script>
-<script>window.ADULT_PROMPTS_ACTIVITY='say-words';</script>
+<script>
+  window.ADULT_PROMPTS_ACTIVITY='say-words';
+  window.LESSONS=[
+    {id:'farm_animals',number:1,title:'Farm Animals'},
+    {id:'safari_animals',number:2,title:'Safari Animals'},
+    {id:'core_emotions',number:3,title:'How Are You Feeling?'},
+    {id:'fruit_shop',number:4,title:'Fruit Shop'},
+    {id:'vehicles',number:5,title:'Things That Go'},
+    {id:'exotic_fruit',number:6,title:'Exotic Fruits'}
+  ];
+</script>
+<script type="module">
+  import{GuidanceService}from'../../../ui/guidance/guidance-service.js';
+  fetch('../../../content/lessons/say-words.json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      window.LESSON_MAP={};
+      data.lessons.forEach(function(l){window.LESSON_MAP[l.id]=l;});
+      window.guidanceService=new GuidanceService();
+    });
+</script>
 <script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>

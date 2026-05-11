@@ -28,3 +28,92 @@ test('gamepad button links to word-match', async ({ page }) => {
   const text = await link.textContent()
   expect(text).toContain('\uD83C\uDFAE')
 })
+
+test('filter bar animals button has paw emoji', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#tile-grid .tile').first().waitFor()
+  const btn = page.locator('#filter-bar button[data-tag="animals"]')
+  await expect(btn).toContainText('\uD83D\uDC3E')
+})
+
+test('filter bar fruit button has apple emoji', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#tile-grid .tile').first().waitFor()
+  const btn = page.locator('#filter-bar button[data-tag="fruit"]')
+  await expect(btn).toContainText('\uD83C\uDF4E')
+})
+
+test('filter bar emotions button has face emoji', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#tile-grid .tile').first().waitFor()
+  const btn = page.locator('#filter-bar button[data-tag="emotions"]')
+  await expect(btn).toContainText('\uD83D\uDE0A')
+})
+
+test('filter bar vehicles button has car emoji', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#tile-grid .tile').first().waitFor()
+  const btn = page.locator('#filter-bar button[data-tag="vehicles"]')
+  await expect(btn).toContainText('\uD83D\uDE97')
+})
+
+test('lesson nav button is visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.nav-lesson-btn')).toBeVisible()
+  await expect(page.locator('.nav-lesson-btn')).toHaveText('\uD83D\uDCDA')
+})
+
+test('lesson popout shows all 6 lessons', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.nav-lesson-btn').click()
+  await expect(page.locator('.nav-lesson-popout')).toBeVisible()
+  await expect(page.locator('.nav-lesson-item')).toHaveCount(6)
+  await expect(page.locator('.nav-lesson-item').first()).toContainText('Lesson 1: Farm Animals')
+  await expect(page.locator('.nav-lesson-item').last()).toContainText('Lesson 6: Exotic Fruits')
+})
+
+async function startLesson(page) {
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').first().click()
+}
+
+test('clicking lesson item shows guidance overlay', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+})
+
+test('first step shows farm intro text and Next button', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await expect(page.locator('#guidance-overlay')).toContainText("Let's visit the farm!")
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
+})
+
+test('Next on intro step advances to find-cow instruction', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await page.locator('#guidance-overlay [data-action="next"]').click()
+  await expect(page.locator('#guidance-overlay')).toContainText('Find the cow')
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
+})
+
+test('tapping cow tile shows feedback', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#filter-bar button[data-tag="animals"]').click()
+  await page.locator('#tile-grid .tile').first().waitFor()
+  await startLesson(page)
+  await page.locator('#guidance-overlay [data-action="next"]').click()
+  await page.locator('.tile').filter({ hasText: 'Cow' }).click()
+  await expect(page.locator('#guidance-overlay')).toContainText('Moo!')
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
+})
+
+test('close button stops lesson and hides overlay', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
+  await expect(page.locator('#guidance-overlay')).not.toBeVisible()
+})
