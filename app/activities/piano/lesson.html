@@ -10,6 +10,8 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;flex-direction:column;}
 .nav-bar{flex-direction:row;justify-content:space-between;border-right:none;border-bottom:2px solid #ddd;padding:8px 16px;}
+#song-selector-wrap{display:flex;align-items:center;justify-content:center;padding:6px 12px;flex-shrink:0;border-bottom:1px solid #eee;background:#fff8f0;}
+#song-select{font-size:clamp(13px,3.5vw,16px);font-family:inherit;padding:4px 8px;border:2px solid #ddd;border-radius:8px;background:#fff;color:#333;cursor:pointer;}
 #stage{flex:1;display:flex;flex-direction:row;align-items:stretch;overflow:hidden;}
 .nav-arrow{flex-shrink:0;width:44px;display:flex;align-items:center;justify-content:center;font-size:1.8em;color:#bbb;cursor:pointer;user-select:none;touch-action:manipulation;transition:color 0.15s;}
 .nav-arrow:active{color:#888;}
@@ -28,7 +30,7 @@ body{background:#fff8f0;flex-direction:column;}
 .note-chip.playable{cursor:pointer;touch-action:none;}
 .note-chip.no-audio{opacity:0.35;cursor:default;}
 .lyric{font-size:clamp(12px,3vw,16px);color:#444;text-align:center;white-space:nowrap;}
-#verse-indicator{display:flex;gap:6px;align-items:center;flex-shrink:0;}
+#verse-indicator{display:flex;gap:6px;align-items:center;justify-content:center;padding:4px;flex-shrink:0;}
 .verse-dot{width:8px;height:8px;border-radius:50%;background:#ddd;transition:background 0.2s;}
 .verse-dot.active{background:#aaa;}
 #keys-wrap{height:min(220px,30vh);flex-shrink:0;padding:0 4px 4px;gap:3px;}
@@ -36,6 +38,9 @@ body{background:#fff8f0;flex-direction:column;}
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Piano" data-links='[{"label":"Songs &#9834;","href":"./songs.html"},{"label":"Game &#9654;","href":"./game.html"}]'></div>
+<div id="song-selector-wrap">
+  <select id="song-select"></select>
+</div>
 <div class="game-area">
   <div id="stage">
     <div class="nav-arrow" id="btn-prev">&#9664;</div>
@@ -62,41 +67,55 @@ var NOTE_MAP = {
   '^C': {note:'C5', color:'#FFB3E6'},
   '^D': {note:'D5', color:'#B3FFEE'},
   '^E': {note:'E5', color:'#D4FFB3'},
-  '^F': {note:null, color:'#ccc'},
-  '^G': {note:null, color:'#ccc'},
+  '^F': {note:'F5', color:'#FFCCF2'},
+  '^G': {note:'G5', color:'#C5F2CC'},
   '^A': {note:null, color:'#ccc'},
   'Bb': {note:null, color:'#ccc'}
 };
 
-var SONG_VERSES = [
-  [
-    [{n:['A','^C','^D'], t:'Pok\u00e9mon!'}]
-  ],
-  [
-    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^C'],t:'all'}],
-    [{n:['^C'],t:"It\u2019s"},{n:['^C'],t:'you'},{n:['^D'],t:'and'},{n:['^D','^C'],t:'me'}],
-    [{n:['^C'],t:'I'},{n:['^D'],t:'know'},{n:['^E'],t:"it\u2019s"},{n:['^F'],t:'my'},{n:['^E','^D','^C'],t:'destiny...'}]
-  ],
-  [
-    [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}],
-    [{n:['^D'],t:'Oh,'},{n:['^D'],t:"you\u2019re"},{n:['^C'],t:'my'},{n:['A'],t:'best'},{n:['F'],t:'friend'}],
-    [{n:['F'],t:'In'},{n:['G'],t:'a'},{n:['A'],t:'world'},{n:['A'],t:'we'},{n:['G'],t:'must'},{n:['F','A'],t:'defend...'}]
-  ],
-  [
-    [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}],
-    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^C'],t:'all!'}],
-    [{n:['^C'],t:'A'},{n:['^C'],t:'heart'},{n:['^D'],t:'so'},{n:['^D','^C'],t:'true'}],
-    [{n:['^D'],t:'Our'},{n:['^D','^E'],t:'courage'},{n:['^F'],t:'will'},{n:['^E'],t:'pull'},{n:['^D'],t:'us'},{n:['^C'],t:'through...'}],
-    [{n:['Bb'],t:'You'},{n:['^F'],t:'teach'},{n:['^F'],t:'me,'},{n:['^F'],t:'and'},{n:['^C'],t:"I\u2019ll"},{n:['^F'],t:'teach'},{n:['^F'],t:'you'}],
-    [{n:['^F','^F','^F','^E'],t:'Pok\u00e9mon!'}]
-  ],
-  [
-    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^D'],t:'all,'}],
-    [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^F','^D'],t:'all'}],
-    [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}]
-  ]
+var SONGS = [
+  {
+    title: 'Twinkle Twinkle Little Star',
+    verses: [
+      [
+        [{n:['C','C'],t:'Twinkle,'},{n:['G','G'],t:'twinkle,'},{n:['A','A'],t:'little'},{n:['G'],t:'star'}],
+        [{n:['F'],t:'How'},{n:['F'],t:'I'},{n:['E','E'],t:'wonder'},{n:['D'],t:'what'},{n:['D'],t:'you'},{n:['C'],t:'are!'}]
+      ],
+      [
+        [{n:['G'],t:'Up'},{n:['G','F'],t:'above'},{n:['F'],t:'the'},{n:['E'],t:'world'},{n:['E'],t:'so'},{n:['D'],t:'high,'}],
+        [{n:['G'],t:'Like'},{n:['G'],t:'a'},{n:['F','F'],t:'diamond'},{n:['E'],t:'in'},{n:['E'],t:'the'},{n:['D'],t:'sky...'}]
+      ],
+      [
+        [{n:['C','C'],t:'Twinkle,'},{n:['G','G'],t:'twinkle,'},{n:['A','A'],t:'little'},{n:['G'],t:'star'}],
+        [{n:['F'],t:'How'},{n:['F'],t:'I'},{n:['E','E'],t:'wonder'},{n:['D'],t:'what'},{n:['D'],t:'you'},{n:['C'],t:'are!'}]
+      ]
+    ]
+  },
+  {
+    title: 'Old MacDonald Had a Farm',
+    verses: [
+      [
+        [{n:['G'],t:'Old'},{n:['G','G','D'],t:'MacDonald'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'farm'}],
+        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}],
+        [{n:['D'],t:'And'},{n:['G'],t:'on'},{n:['G'],t:'that'},{n:['G'],t:'farm'},{n:['D'],t:'he'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'cow'}],
+        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}]
+      ],
+      [
+        [{n:['D'],t:'With'},{n:['D'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'},{n:['G'],t:'here'}],
+        [{n:['D'],t:'And'},{n:['D'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'},{n:['G'],t:'there'}],
+        [{n:['G'],t:'Here'},{n:['G'],t:'a'},{n:['G'],t:'moo'}],
+        [{n:['G'],t:'There'},{n:['G'],t:'a'},{n:['G'],t:'moo'}],
+        [{n:['G','G','G'],t:'Everywhere'},{n:['G'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'}]
+      ],
+      [
+        [{n:['G'],t:'Old'},{n:['G','G','D'],t:'MacDonald'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'farm'}],
+        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}]
+      ]
+    ]
+  }
 ];
 
+var currentSong = 0;
 var currentVerse = 0;
 
 function makeChip(token) {
@@ -142,9 +161,10 @@ function renderVerse(verse) {
 }
 
 function renderDots() {
+  var verses = SONGS[currentSong].verses;
   var ind = document.getElementById('verse-indicator');
   ind.innerHTML = '';
-  SONG_VERSES.forEach(function(_, i) {
+  verses.forEach(function(_, i) {
     var dot = document.createElement('div');
     dot.className = 'verse-dot' + (i === currentVerse ? ' active' : '');
     ind.appendChild(dot);
@@ -152,17 +172,35 @@ function renderDots() {
 }
 
 function goTo(i) {
+  var verses = SONGS[currentSong].verses;
   currentVerse = i;
-  renderVerse(SONG_VERSES[currentVerse]);
+  renderVerse(verses[currentVerse]);
   renderDots();
   document.getElementById('btn-prev').className = 'nav-arrow' + (currentVerse === 0 ? ' hidden' : '');
-  document.getElementById('btn-next').className = 'nav-arrow' + (currentVerse === SONG_VERSES.length - 1 ? ' hidden' : '');
+  document.getElementById('btn-next').className = 'nav-arrow' + (currentVerse === verses.length - 1 ? ' hidden' : '');
+}
+
+function loadSong(idx) {
+  currentSong = idx;
+  goTo(0);
+}
+
+function buildSelector() {
+  var sel = document.getElementById('song-select');
+  SONGS.forEach(function(song, i) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = song.title;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', function() { loadSong(Number(sel.value)); });
 }
 
 document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse > 0) goTo(currentVerse - 1); });
-document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse < SONG_VERSES.length - 1) goTo(currentVerse + 1); });
+document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse < SONGS[currentSong].verses.length - 1) goTo(currentVerse + 1); });
 
-goTo(0);
+buildSelector();
+loadSong(0);
 
 renderKeys(document.getElementById('keys-wrap'), function(i, note, keyEl) {
   initAudio().then(function() { playNote(note, 1.0); }).catch(function(){});

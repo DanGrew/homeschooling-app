@@ -1,7 +1,7 @@
 var PIANO_CONFIG = {
-  NOTES: ['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5'],
-  NOTE_LABELS: ['C','D','E','F','G','A','B','C','D','E'],
-  KEY_COLORS: ['#FFB3B3','#FFCBA4','#FFF0A3','#B3FFB3','#A3D9FF','#B3C6FF','#E0B3FF','#FFB3E6','#B3FFEE','#D4FFB3'],
+  NOTES: ['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5'],
+  NOTE_LABELS: ['C','D','E','F','G','A','B','C','D','E','F','G'],
+  KEY_COLORS: ['#FFB3B3','#FFCBA4','#FFF0A3','#B3FFB3','#A3D9FF','#B3C6FF','#E0B3FF','#FFB3E6','#B3FFEE','#D4FFB3','#FFCCF2','#C5F2CC'],
   HIT_WINDOW_MS: 400,
   LOOKAHEAD_MS: 4000,
   MIN_NOTE_GAP_MS: 1000,

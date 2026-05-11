@@ -10,8 +10,9 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;flex-direction:column;}
 .nav-bar{flex-direction:row;justify-content:space-between;border-right:none;border-bottom:2px solid #ddd;padding:8px 16px;}
+#song-selector-wrap{display:flex;align-items:center;justify-content:center;padding:6px 12px;flex-shrink:0;border-bottom:1px solid #eee;background:#fff8f0;}
+#song-select{font-size:clamp(13px,3.5vw,16px);font-family:inherit;padding:4px 8px;border:2px solid #ddd;border-radius:8px;background:#fff;color:#333;cursor:pointer;}
 #song-sheet{flex:1;overflow-y:auto;padding:16px 12px 32px;}
-.song-title{font-size:clamp(1.1em,4vw,1.5em);font-weight:bold;text-align:center;margin-bottom:20px;color:#333;}
 .verse{margin-bottom:24px;}
 .verse+.verse{border-top:1px dashed #ddd;padding-top:20px;}
 .song-line{display:flex;flex-wrap:wrap;gap:4px 8px;margin-bottom:10px;align-items:flex-end;justify-content:center;}
@@ -32,6 +33,9 @@ body{background:#fff8f0;flex-direction:column;}
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Songs" data-links='[{"label":"Lesson","href":"./lesson.html"},{"label":"Game &#9654;","href":"./game.html"}]'></div>
+<div id="song-selector-wrap">
+  <select id="song-select"></select>
+</div>
 <div id="song-sheet"></div>
 <script src="../../shared/menu.js" defer></script>
 <script src="../../../core/shared/utils.js"></script>
@@ -50,53 +54,59 @@ var NOTE_MAP = {
   '^C': {note:'C5', color:'#FFB3E6'},
   '^D': {note:'D5', color:'#B3FFEE'},
   '^E': {note:'E5', color:'#D4FFB3'},
-  '^F': {note:null,  color:'#ccc'},
-  '^G': {note:null,  color:'#ccc'},
-  '^A': {note:null,  color:'#ccc'},
-  'Bb': {note:null,  color:'#ccc'}
+  '^F': {note:'F5', color:'#FFCCF2'},
+  '^G': {note:'G5', color:'#C5F2CC'},
+  '^A': {note:null, color:'#ccc'},
+  'Bb': {note:null, color:'#ccc'}
 };
 
-var SONGS = [{
-  title: 'Pokémon Theme',
-  verses: [
-    [
-      [{n:['A','^C','^D'], t:'Pokémon!'}]
-    ],
-    [
-      [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^C'],t:'all'}],
-      [{n:['^C'],t:"It\u2019s"},{n:['^C'],t:'you'},{n:['^D'],t:'and'},{n:['^D','^C'],t:'me'}],
-      [{n:['^C'],t:'I'},{n:['^D'],t:'know'},{n:['^E'],t:"it\u2019s"},{n:['^F'],t:'my'},{n:['^E','^D','^C'],t:'destiny...'}]
-    ],
-    [
-      [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}],
-      [{n:['^D'],t:'Oh,'},{n:['^D'],t:"you\u2019re"},{n:['^C'],t:'my'},{n:['A'],t:'best'},{n:['F'],t:'friend'}],
-      [{n:['F'],t:'In'},{n:['G'],t:'a'},{n:['A'],t:'world'},{n:['A'],t:'we'},{n:['G'],t:'must'},{n:['F','A'],t:'defend...'}]
-    ],
-    [
-      [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}],
-      [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^C'],t:'all!'}],
-      [{n:['^C'],t:'A'},{n:['^C'],t:'heart'},{n:['^D'],t:'so'},{n:['^D','^C'],t:'true'}],
-      [{n:['^D'],t:'Our'},{n:['^D','^E'],t:'courage'},{n:['^F'],t:'will'},{n:['^E'],t:'pull'},{n:['^D'],t:'us'},{n:['^C'],t:'through...'}],
-      [{n:['Bb'],t:'You'},{n:['^F'],t:'teach'},{n:['^F'],t:'me,'},{n:['^F'],t:'and'},{n:['^C'],t:"I\u2019ll"},{n:['^F'],t:'teach'},{n:['^F'],t:'you'}],
-      [{n:['^F','^F','^F','^E'],t:'Pok\u00e9mon!'}]
-    ],
-    [
-      [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^D','^D'],t:'all,'}],
-      [{n:['A','A'],t:'Gotta'},{n:['^C'],t:'catch'},{n:['^D'],t:"\u2019em"},{n:['^F','^D'],t:'all'}],
-      [{n:['A','^C','^D'],t:'Pok\u00e9mon!'}]
+var SONGS = [
+  {
+    title: 'Twinkle Twinkle Little Star',
+    verses: [
+      [
+        [{n:['C','C'],t:'Twinkle,'},{n:['G','G'],t:'twinkle,'},{n:['A','A'],t:'little'},{n:['G'],t:'star'}],
+        [{n:['F'],t:'How'},{n:['F'],t:'I'},{n:['E','E'],t:'wonder'},{n:['D'],t:'what'},{n:['D'],t:'you'},{n:['C'],t:'are!'}]
+      ],
+      [
+        [{n:['G'],t:'Up'},{n:['G','F'],t:'above'},{n:['F'],t:'the'},{n:['E'],t:'world'},{n:['E'],t:'so'},{n:['D'],t:'high,'}],
+        [{n:['G'],t:'Like'},{n:['G'],t:'a'},{n:['F','F'],t:'diamond'},{n:['E'],t:'in'},{n:['E'],t:'the'},{n:['D'],t:'sky...'}]
+      ],
+      [
+        [{n:['C','C'],t:'Twinkle,'},{n:['G','G'],t:'twinkle,'},{n:['A','A'],t:'little'},{n:['G'],t:'star'}],
+        [{n:['F'],t:'How'},{n:['F'],t:'I'},{n:['E','E'],t:'wonder'},{n:['D'],t:'what'},{n:['D'],t:'you'},{n:['C'],t:'are!'}]
+      ]
     ]
-  ]
-}];
-
-function chipLabel(token) {
-  return token.replace('^', '\u2191');
-}
+  },
+  {
+    title: 'Old MacDonald Had a Farm',
+    verses: [
+      [
+        [{n:['G'],t:'Old'},{n:['G','G','D'],t:'MacDonald'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'farm'}],
+        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}],
+        [{n:['D'],t:'And'},{n:['G'],t:'on'},{n:['G'],t:'that'},{n:['G'],t:'farm'},{n:['D'],t:'he'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'cow'}],
+        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}]
+      ],
+      [
+        [{n:['D'],t:'With'},{n:['D'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'},{n:['G'],t:'here'}],
+        [{n:['D'],t:'And'},{n:['D'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'},{n:['G'],t:'there'}],
+        [{n:['G'],t:'Here'},{n:['G'],t:'a'},{n:['G'],t:'moo'}],
+        [{n:['G'],t:'There'},{n:['G'],t:'a'},{n:['G'],t:'moo'}],
+        [{n:['G','G','G'],t:'Everywhere'},{n:['G'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'}]
+      ],
+      [
+        [{n:['G'],t:'Old'},{n:['G','G','D'],t:'MacDonald'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'farm'}],
+        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}]
+      ]
+    ]
+  }
+];
 
 function makeChip(token) {
   var info = NOTE_MAP[token] || {note:null, color:'#ccc'};
   var chip = document.createElement('span');
   chip.className = 'note-chip ' + (info.note ? 'playable' : 'no-audio');
-  chip.textContent = chipLabel(token);
+  chip.textContent = token.replace('^', '\u2191');
   chip.style.background = info.color;
   if (info.note) {
     chip.addEventListener('pointerdown', function(e) {
@@ -116,11 +126,7 @@ function makeChip(token) {
 
 function renderSong(song) {
   var sheet = document.getElementById('song-sheet');
-  var title = document.createElement('div');
-  title.className = 'song-title';
-  title.textContent = song.title;
-  sheet.appendChild(title);
-
+  sheet.innerHTML = '';
   song.verses.forEach(function(verse) {
     var verseEl = document.createElement('div');
     verseEl.className = 'verse';
@@ -146,6 +152,21 @@ function renderSong(song) {
   });
 }
 
+function buildSelector() {
+  var sel = document.getElementById('song-select');
+  SONGS.forEach(function(song, i) {
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = song.title;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', function() {
+    renderSong(SONGS[Number(sel.value)]);
+    document.getElementById('song-sheet').scrollTop = 0;
+  });
+}
+
+buildSelector();
 renderSong(SONGS[0]);
 </script>
 </body>
