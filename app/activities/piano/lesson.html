@@ -49,53 +49,14 @@ body{background:#fff8f0;flex-direction:column;}
 <script src="../../../ui/piano/piano-ui.js"></script>
 <script src="../../../ui/piano/piano-song-ui.js"></script>
 <script>
-var SONGS = [
-  {
-    title: 'Twinkle Twinkle Little Star',
-    verses: [
-      [
-        [{n:['C','C'],t:'Twinkle,'},{n:['G','G'],t:'twinkle,'},{n:['A','A'],t:'little'},{n:['G'],t:'star'}],
-        [{n:['F'],t:'How'},{n:['F'],t:'I'},{n:['E','E'],t:'wonder'},{n:['D'],t:'what'},{n:['D'],t:'you'},{n:['C'],t:'are!'}]
-      ],
-      [
-        [{n:['G'],t:'Up'},{n:['G','F'],t:'above'},{n:['F'],t:'the'},{n:['E'],t:'world'},{n:['E'],t:'so'},{n:['D'],t:'high,'}],
-        [{n:['G'],t:'Like'},{n:['G'],t:'a'},{n:['F','F'],t:'diamond'},{n:['E'],t:'in'},{n:['E'],t:'the'},{n:['D'],t:'sky...'}]
-      ],
-      [
-        [{n:['C','C'],t:'Twinkle,'},{n:['G','G'],t:'twinkle,'},{n:['A','A'],t:'little'},{n:['G'],t:'star'}],
-        [{n:['F'],t:'How'},{n:['F'],t:'I'},{n:['E','E'],t:'wonder'},{n:['D'],t:'what'},{n:['D'],t:'you'},{n:['C'],t:'are!'}]
-      ]
-    ]
-  },
-  {
-    title: 'Old MacDonald Had a Farm',
-    verses: [
-      [
-        [{n:['G'],t:'Old'},{n:['G','G','D'],t:'MacDonald'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'farm'}],
-        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}],
-        [{n:['D'],t:'And'},{n:['G'],t:'on'},{n:['G'],t:'that'},{n:['G'],t:'farm'},{n:['D'],t:'he'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'cow'}],
-        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}]
-      ],
-      [
-        [{n:['D'],t:'With'},{n:['D'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'},{n:['G'],t:'here'}],
-        [{n:['D'],t:'And'},{n:['D'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'},{n:['G'],t:'there'}],
-        [{n:['G'],t:'Here'},{n:['G'],t:'a'},{n:['G'],t:'moo'}],
-        [{n:['G'],t:'There'},{n:['G'],t:'a'},{n:['G'],t:'moo'}],
-        [{n:['G','G','G'],t:'Everywhere'},{n:['G'],t:'a'},{n:['G'],t:'moo'},{n:['G'],t:'moo'}]
-      ],
-      [
-        [{n:['G'],t:'Old'},{n:['G','G','D'],t:'MacDonald'},{n:['E'],t:'had'},{n:['E'],t:'a'},{n:['D'],t:'farm'}],
-        [{n:['B','B','A','A','G'],t:'E-I-E-I-O!'}]
-      ]
-    ]
-  }
-];
-initSongLesson(SONGS, {
-  selector: document.getElementById('song-select'),
-  display:  document.getElementById('section-display'),
-  prev:     document.getElementById('btn-prev'),
-  next:     document.getElementById('btn-next'),
-  dots:     document.getElementById('verse-indicator')
+loadPianoSongs('../../../assets/audio/songs/', function(songs) {
+  initSongLesson(songs, {
+    selector: document.getElementById('song-select'),
+    display:  document.getElementById('section-display'),
+    prev:     document.getElementById('btn-prev'),
+    next:     document.getElementById('btn-next'),
+    dots:     document.getElementById('verse-indicator')
+  });
 });
 document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonPrev(); });
 document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonNext(); });

@@ -154,3 +154,15 @@ function initSongSheet(songs, selectorEl, sheetEl) {
   });
   renderFullSong(songs[0], sheetEl);
 }
+
+function loadPianoSongs(basePath, onLoaded) {
+  fetch(basePath + 'index.json')
+    .then(function(r) { return r.json(); })
+    .then(function(files) {
+      return Promise.all(files.map(function(f) {
+        return fetch(basePath + f).then(function(r) { return r.json(); });
+      }));
+    })
+    .then(onLoaded)
+    .catch(function() {});
+}
