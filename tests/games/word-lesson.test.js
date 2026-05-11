@@ -11,7 +11,7 @@ test('page loads and shows word label', async ({ page }) => {
 
 test('filter bar renders with at least All and Custom buttons', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar .filter-btn').length > 0)
+  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
   await expect(page.getByRole('button', { name: 'All', exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Custom', exact: true })).toBeVisible()
 })
@@ -88,7 +88,7 @@ test('Reset stops Watch animation and hides Reset', async ({ page }) => {
 
 test('Watch animation completes and hides Reset', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar .filter-btn').length > 0)
+  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
   await page.getByRole('button', { name: 'Custom', exact: true }).click()
   await page.locator('#custom-word-input').fill('ab')
   await page.locator('#btn-generate').click()
@@ -129,14 +129,14 @@ test('SVGs rendered equal to word length', async ({ page }) => {
 
 test('Custom filter shows text input', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar .filter-btn').length > 0)
+  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
   await page.getByRole('button', { name: 'Custom', exact: true }).click()
   await expect(page.locator('#custom-word-input')).toBeVisible()
 })
 
 test('custom word loads correct number of SVGs', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar .filter-btn').length > 0)
+  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
   await page.getByRole('button', { name: 'Custom', exact: true }).click()
   await page.locator('#custom-word-input').fill('dog')
   await page.locator('#btn-generate').click()
@@ -151,7 +151,7 @@ test('custom word loads correct number of SVGs', async ({ page }) => {
 
 test('invalid custom word flashes input border red', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar .filter-btn').length > 0)
+  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
   await page.getByRole('button', { name: 'Custom', exact: true }).click()
   await page.locator('#custom-word-input').fill('bad word!')
   await page.locator('#btn-generate').click()

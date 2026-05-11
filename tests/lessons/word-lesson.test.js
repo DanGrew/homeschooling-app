@@ -18,8 +18,8 @@ test('filter bar has All option active by default', async ({ page }) => {
   await page.goto(URL)
   const allBtn = page.locator('#filter-bar button[data-value="all"]')
   await expect(allBtn).toBeVisible({ timeout: 3000 })
-  const bg = await allBtn.evaluate(el => el.style.background)
-  expect(bg).toMatch(/#3498DB/i)
+  const bg = await allBtn.evaluate(el => getComputedStyle(el).backgroundColor)
+  expect(bg).toBe('rgb(52, 152, 219)')
 })
 
 test('filter bar appears after title', async ({ page }) => {

@@ -23,6 +23,6 @@ test('filter bar is visible', async ({ page }) => {
 
 test('nav bar has link to word-match', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/say-words/')
-  const href = await page.locator('.nav-link').first().evaluate(el => new URL(el.href).pathname)
+  const href = await page.locator('.nav-bar a[href*="word-match"]').first().evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/activities/word-match/')
 })
