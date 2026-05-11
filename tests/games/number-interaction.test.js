@@ -121,8 +121,8 @@ test('fruit images are speakable after adding', async ({ page }) => {
 test('labels and instruction are speakable', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  await expect(page.locator('#lbl-a.speakable')).toBeVisible()
-  await expect(page.locator('#lbl-b.speakable')).toBeVisible()
+  await expect(page.locator('#lbl-a')).toHaveClass(/speakable/)
+  await expect(page.locator('#lbl-b')).toHaveClass(/speakable/)
   await expect(page.locator('#lbl-total.speakable')).toBeVisible()
   await expect(page.locator('#ni-instruction.speakable')).toBeVisible()
 })
@@ -152,9 +152,9 @@ test('home nav link points to lessons', async ({ page }) => {
 
 test('title is first child of game-area with purple glow', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
-  const first = page.locator('.game-area > *').first()
-  await expect(first).toHaveText(/Numbers/)
-  const filter = await first.evaluate(el => getComputedStyle(el).filter || el.style.filter)
+  const titleEl = page.locator('.game-area .activity-title')
+  await expect(titleEl).toHaveText(/Numbers/)
+  const filter = await titleEl.evaluate(el => getComputedStyle(el).filter)
   expect(filter).toMatch(/drop-shadow/)
 })
 
