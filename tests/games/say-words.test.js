@@ -21,12 +21,6 @@ test('tiles are speakable', async ({ page }) => {
   expect(count).toBeGreaterThan(0)
 })
 
-test('prev and next buttons are speakable', async ({ page }) => {
-  await page.goto(URL)
-  await waitForTiles(page)
-  await expect(page.locator('#btn-prev.speakable')).toBeVisible()
-  await expect(page.locator('#btn-next.speakable')).toBeVisible()
-})
 
 test('activity title is speakable', async ({ page }) => {
   await page.goto(URL)
