@@ -26,3 +26,4 @@ export function setEnabled(on) { _mode = MODE_ENABLED[String(!!on)]; }
 export function stop() { speechSynthesis.cancel(); }
 export function speak(text) { [text].filter(Boolean).forEach(t => SPEAK_ACTION[_mode](t)); }
 export function speakInterrupt(text) { stop(); speak(text); }
+window.__speak = speak;

@@ -9,10 +9,7 @@
     titleEl.className='activity-title speakable';
     titleEl.textContent=bar.dataset.title;
     titleEl.onclick=function(){
-      if(window.speechSynthesis){
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(bar.dataset.title));
-      }
+      if(typeof window.__speak==='function'){window.__speak(bar.dataset.title);}
     };
     var gameArea=document.querySelector('.game-area');
     if(gameArea) gameArea.insertAdjacentElement('afterbegin',titleEl);
