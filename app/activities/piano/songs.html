@@ -18,14 +18,7 @@ body{background:#fff8f0;flex-direction:column;}
 .song-line{display:flex;flex-wrap:wrap;gap:4px 8px;margin-bottom:10px;align-items:flex-end;justify-content:center;}
 .word-group{display:flex;flex-direction:column;align-items:center;gap:4px;}
 .note-chips{display:flex;gap:2px;}
-.note-chip{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:26px;height:22px;border-radius:6px;
-  font-size:10px;font-weight:bold;color:#333;
-  border:1.5px solid rgba(0,0,0,0.12);
-  padding:0 4px;white-space:nowrap;
-  transition:transform 0.1s,filter 0.1s;
-}
+.note-chip{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;border-radius:6px;font-size:10px;font-weight:bold;color:#333;border:1.5px solid rgba(0,0,0,0.12);padding:0 4px;white-space:nowrap;transition:transform 0.1s,filter 0.1s;}
 .note-chip.playable{cursor:pointer;touch-action:none;}
 .note-chip.no-audio{opacity:0.35;cursor:default;}
 .lyric{font-size:clamp(13px,3.5vw,16px);color:#444;text-align:center;white-space:nowrap;}
@@ -33,33 +26,15 @@ body{background:#fff8f0;flex-direction:column;}
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Songs" data-links='[{"label":"Lesson","href":"./lesson.html"},{"label":"Game &#9654;","href":"./game.html"}]'></div>
-<div id="song-selector-wrap">
-  <select id="song-select"></select>
-</div>
+<div id="song-selector-wrap"><select id="song-select"></select></div>
 <div id="song-sheet"></div>
 <script src="../../shared/menu.js" defer></script>
 <script src="../../../core/shared/utils.js"></script>
 <script src="../../../core/piano/piano-core.js"></script>
 <script src="../../../ui/shared/audio-ctx.js"></script>
 <script src="../../../ui/piano/piano-ui.js"></script>
+<script src="../../../ui/piano/piano-song-ui.js"></script>
 <script>
-var NOTE_MAP = {
-  'C':  {note:'C4', color:'#FFB3B3'},
-  'D':  {note:'D4', color:'#FFCBA4'},
-  'E':  {note:'E4', color:'#FFF0A3'},
-  'F':  {note:'F4', color:'#B3FFB3'},
-  'G':  {note:'G4', color:'#A3D9FF'},
-  'A':  {note:'A4', color:'#B3C6FF'},
-  'B':  {note:'B4', color:'#E0B3FF'},
-  '^C': {note:'C5', color:'#FFB3E6'},
-  '^D': {note:'D5', color:'#B3FFEE'},
-  '^E': {note:'E5', color:'#D4FFB3'},
-  '^F': {note:'F5', color:'#FFCCF2'},
-  '^G': {note:'G5', color:'#C5F2CC'},
-  '^A': {note:null, color:'#ccc'},
-  'Bb': {note:null, color:'#ccc'}
-};
-
 var SONGS = [
   {
     title: 'Twinkle Twinkle Little Star',
@@ -101,73 +76,7 @@ var SONGS = [
     ]
   }
 ];
-
-function makeChip(token) {
-  var info = NOTE_MAP[token] || {note:null, color:'#ccc'};
-  var chip = document.createElement('span');
-  chip.className = 'note-chip ' + (info.note ? 'playable' : 'no-audio');
-  chip.textContent = token.replace('^', '\u2191');
-  chip.style.background = info.color;
-  if (info.note) {
-    chip.addEventListener('pointerdown', function(e) {
-      e.preventDefault();
-      initAudio().then(function() { playNote(info.note, 1.0); }).catch(function(){});
-      chip.style.transform = 'scale(1.2)';
-      chip.style.filter = 'brightness(1.35) drop-shadow(0 0 6px ' + info.color + ')';
-      clearTimeout(chip._t);
-      chip._t = setTimeout(function() {
-        chip.style.transform = '';
-        chip.style.filter = '';
-      }, 220);
-    });
-  }
-  return chip;
-}
-
-function renderSong(song) {
-  var sheet = document.getElementById('song-sheet');
-  sheet.innerHTML = '';
-  song.verses.forEach(function(verse) {
-    var verseEl = document.createElement('div');
-    verseEl.className = 'verse';
-    verse.forEach(function(line) {
-      var lineEl = document.createElement('div');
-      lineEl.className = 'song-line';
-      line.forEach(function(group) {
-        var groupEl = document.createElement('div');
-        groupEl.className = 'word-group';
-        var chipsEl = document.createElement('div');
-        chipsEl.className = 'note-chips';
-        group.n.forEach(function(token) { chipsEl.appendChild(makeChip(token)); });
-        var lyricEl = document.createElement('div');
-        lyricEl.className = 'lyric';
-        lyricEl.textContent = group.t;
-        groupEl.appendChild(chipsEl);
-        groupEl.appendChild(lyricEl);
-        lineEl.appendChild(groupEl);
-      });
-      verseEl.appendChild(lineEl);
-    });
-    sheet.appendChild(verseEl);
-  });
-}
-
-function buildSelector() {
-  var sel = document.getElementById('song-select');
-  SONGS.forEach(function(song, i) {
-    var opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = song.title;
-    sel.appendChild(opt);
-  });
-  sel.addEventListener('change', function() {
-    renderSong(SONGS[Number(sel.value)]);
-    document.getElementById('song-sheet').scrollTop = 0;
-  });
-}
-
-buildSelector();
-renderSong(SONGS[0]);
+initSongSheet(SONGS, document.getElementById('song-select'), document.getElementById('song-sheet'));
 </script>
 </body>
 </html>

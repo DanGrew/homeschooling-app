@@ -20,13 +20,7 @@ body{background:#fff8f0;flex-direction:column;}
 .song-line{display:flex;flex-wrap:wrap;gap:4px 8px;justify-content:center;align-items:flex-end;}
 .word-group{display:flex;flex-direction:column;align-items:center;gap:4px;}
 .note-chips{display:flex;gap:2px;}
-.note-chip{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-width:clamp(22px,5vw,30px);height:clamp(20px,4.5vw,26px);
-  border-radius:6px;font-size:clamp(9px,2.2vw,12px);font-weight:bold;color:#333;
-  border:1.5px solid rgba(0,0,0,0.12);padding:0 3px;white-space:nowrap;
-  transition:transform 0.1s,filter 0.1s;
-}
+.note-chip{display:inline-flex;align-items:center;justify-content:center;min-width:clamp(22px,5vw,30px);height:clamp(20px,4.5vw,26px);border-radius:6px;font-size:clamp(9px,2.2vw,12px);font-weight:bold;color:#333;border:1.5px solid rgba(0,0,0,0.12);padding:0 3px;white-space:nowrap;transition:transform 0.1s,filter 0.1s;}
 .note-chip.playable{cursor:pointer;touch-action:none;}
 .note-chip.no-audio{opacity:0.35;cursor:default;}
 .lyric{font-size:clamp(12px,3vw,16px);color:#444;text-align:center;white-space:nowrap;}
@@ -38,9 +32,7 @@ body{background:#fff8f0;flex-direction:column;}
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Piano" data-links='[{"label":"Game &#9654;","href":"./game.html"}]'></div>
-<div id="song-selector-wrap">
-  <select id="song-select"></select>
-</div>
+<div id="song-selector-wrap"><select id="song-select"></select></div>
 <div class="game-area">
   <div id="stage">
     <div class="nav-arrow" id="btn-prev">&#9664;</div>
@@ -55,24 +47,8 @@ body{background:#fff8f0;flex-direction:column;}
 <script src="../../../core/piano/piano-core.js"></script>
 <script src="../../../ui/shared/audio-ctx.js"></script>
 <script src="../../../ui/piano/piano-ui.js"></script>
+<script src="../../../ui/piano/piano-song-ui.js"></script>
 <script>
-var NOTE_MAP = {
-  'C':  {note:'C4', color:'#FFB3B3'},
-  'D':  {note:'D4', color:'#FFCBA4'},
-  'E':  {note:'E4', color:'#FFF0A3'},
-  'F':  {note:'F4', color:'#B3FFB3'},
-  'G':  {note:'G4', color:'#A3D9FF'},
-  'A':  {note:'A4', color:'#B3C6FF'},
-  'B':  {note:'B4', color:'#E0B3FF'},
-  '^C': {note:'C5', color:'#FFB3E6'},
-  '^D': {note:'D5', color:'#B3FFEE'},
-  '^E': {note:'E5', color:'#D4FFB3'},
-  '^F': {note:'F5', color:'#FFCCF2'},
-  '^G': {note:'G5', color:'#C5F2CC'},
-  '^A': {note:null, color:'#ccc'},
-  'Bb': {note:null, color:'#ccc'}
-};
-
 var SONGS = [
   {
     title: 'Twinkle Twinkle Little Star',
@@ -114,96 +90,17 @@ var SONGS = [
     ]
   }
 ];
-
-var currentSong = 0;
-var currentVerse = 0;
-
-function makeChip(token) {
-  var info = NOTE_MAP[token] || {note:null, color:'#ccc'};
-  var chip = document.createElement('span');
-  chip.className = 'note-chip ' + (info.note ? 'playable' : 'no-audio');
-  chip.textContent = token.replace('^', '\u2191');
-  chip.style.background = info.color;
-  if (info.note) {
-    chip.addEventListener('pointerdown', function(e) {
-      e.preventDefault();
-      initAudio().then(function() { playNote(info.note, 1.0); }).catch(function(){});
-      chip.style.transform = 'scale(1.2)';
-      chip.style.filter = 'brightness(1.35) drop-shadow(0 0 6px ' + info.color + ')';
-      clearTimeout(chip._t);
-      chip._t = setTimeout(function() { chip.style.transform = ''; chip.style.filter = ''; }, 220);
-    });
-  }
-  return chip;
-}
-
-function renderVerse(verse) {
-  var display = document.getElementById('section-display');
-  display.innerHTML = '';
-  verse.forEach(function(line) {
-    var lineEl = document.createElement('div');
-    lineEl.className = 'song-line';
-    line.forEach(function(group) {
-      var groupEl = document.createElement('div');
-      groupEl.className = 'word-group';
-      var chipsEl = document.createElement('div');
-      chipsEl.className = 'note-chips';
-      group.n.forEach(function(token) { chipsEl.appendChild(makeChip(token)); });
-      var lyricEl = document.createElement('div');
-      lyricEl.className = 'lyric';
-      lyricEl.textContent = group.t;
-      groupEl.appendChild(chipsEl);
-      groupEl.appendChild(lyricEl);
-      lineEl.appendChild(groupEl);
-    });
-    display.appendChild(lineEl);
-  });
-}
-
-function renderDots() {
-  var verses = SONGS[currentSong].verses;
-  var ind = document.getElementById('verse-indicator');
-  ind.innerHTML = '';
-  verses.forEach(function(_, i) {
-    var dot = document.createElement('div');
-    dot.className = 'verse-dot' + (i === currentVerse ? ' active' : '');
-    ind.appendChild(dot);
-  });
-}
-
-function goTo(i) {
-  var verses = SONGS[currentSong].verses;
-  currentVerse = i;
-  renderVerse(verses[currentVerse]);
-  renderDots();
-  document.getElementById('btn-prev').className = 'nav-arrow' + (currentVerse === 0 ? ' hidden' : '');
-  document.getElementById('btn-next').className = 'nav-arrow' + (currentVerse === verses.length - 1 ? ' hidden' : '');
-}
-
-function loadSong(idx) {
-  currentSong = idx;
-  goTo(0);
-}
-
-function buildSelector() {
-  var sel = document.getElementById('song-select');
-  SONGS.forEach(function(song, i) {
-    var opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = song.title;
-    sel.appendChild(opt);
-  });
-  sel.addEventListener('change', function() { loadSong(Number(sel.value)); });
-}
-
-document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse > 0) goTo(currentVerse - 1); });
-document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); if (currentVerse < SONGS[currentSong].verses.length - 1) goTo(currentVerse + 1); });
-
-buildSelector();
-loadSong(0);
-
+initSongLesson(SONGS, {
+  selector: document.getElementById('song-select'),
+  display:  document.getElementById('section-display'),
+  prev:     document.getElementById('btn-prev'),
+  next:     document.getElementById('btn-next'),
+  dots:     document.getElementById('verse-indicator')
+});
+document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonPrev(); });
+document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonNext(); });
 renderKeys(document.getElementById('keys-wrap'), function(i, note, keyEl) {
-  initAudio().then(function() { playNote(note, 1.0); }).catch(function(){});
+  initAudio().then(function() { playNote(note, 1.0); }).catch(function() {});
   glowKey(keyEl, 'hit');
 });
 </script>

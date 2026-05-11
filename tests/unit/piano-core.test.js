@@ -3,7 +3,13 @@ const require = createRequire(import.meta.url);
 const { PIANO_CONFIG, generateNotes, scoreMessage } = require('../../core/piano/piano-core.js');
 
 describe('PIANO_CONFIG', () => {
-  it('has 10 notes', () => expect(PIANO_CONFIG.NOTES).toHaveLength(10));
+  it('has 12 notes', () => expect(PIANO_CONFIG.NOTES).toHaveLength(12));
+  it('includes F5', () => expect(PIANO_CONFIG.NOTES).toContain('F5'));
+  it('includes G5', () => expect(PIANO_CONFIG.NOTES).toContain('G5'));
+  it('upper octave labels marked with ↑', () => {
+    const upper = PIANO_CONFIG.NOTE_LABELS.filter(l => l.startsWith('\u2191'));
+    expect(upper.length).toBe(5);
+  });
   it('KEY_COUNT matches NOTES length', () => expect(PIANO_CONFIG.KEY_COUNT).toBe(PIANO_CONFIG.NOTES.length));
   it('NOTE_LABELS same length as NOTES', () => expect(PIANO_CONFIG.NOTE_LABELS).toHaveLength(PIANO_CONFIG.NOTES.length));
   it('KEY_COLORS same length as NOTES', () => expect(PIANO_CONFIG.KEY_COLORS).toHaveLength(PIANO_CONFIG.NOTES.length));
