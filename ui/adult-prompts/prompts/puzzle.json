@@ -1,9 +1,9 @@
 {
   "activity": "puzzle",
   "prompts": [
-    { "type": "word", "text": "\"Edge pieces\" have a flat side — they go around the outside. \"Corner pieces\" have two flat sides." },
-    { "type": "ask",  "text": "Before placing, ask: \"Where do you think that piece goes? What clues can you see — colours, shapes?\"" },
-    { "type": "say",  "text": "Look at piece shapes together: \"This piece has a bump — we need a hole the same shape to fit it in.\"" },
-    { "type": "ask",  "text": "Ask: \"What's the finished picture going to show? Can you guess from what's already there?\"" }
+    { "type": "say",  "text": "Before starting, look at the complete image together: 'What does the picture show? What colours can you see? What shapes?' — gives the child a mental target to work toward." },
+    { "type": "ask",  "text": "Core spatial question: 'Where do you think this piece goes? What clues can you see — the colours, the shapes, where it sits in the picture?' — trains spatial reasoning." },
+    { "type": "say",  "text": "Resilience framing to give before starting: 'It's fine to try and be wrong — that's how puzzles work. We try, we check, we try again.' Normalises trial and error." },
+    { "type": "ask",  "text": "As the picture emerges: 'What's it becoming? Can you guess the rest from what's there?' — prediction and part-to-whole thinking." }
   ]
 }

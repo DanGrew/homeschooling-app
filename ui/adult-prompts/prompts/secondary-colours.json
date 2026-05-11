@@ -1,9 +1,9 @@
 {
   "activity": "secondary-colours",
   "prompts": [
-    { "type": "word", "text": "\"Tertiary colours\" — made by mixing a primary colour with a secondary colour next to it on the wheel. Red + orange = Vermillion." },
-    { "type": "ask",  "text": "Before mixing, ask: \"I wonder what [colour A] and [colour B] will make?\" — let them predict first." },
-    { "type": "say",  "text": "After a correct result, say together: \"[A] and [B] made [result]!\" — say it slowly once more." },
-    { "type": "ask",  "text": "Ask: \"Can you find that colour on the wheel? Is it closer to [A] or [B]?\"" }
+    { "type": "word", "text": "'Tertiary colours' — made by mixing a primary and a secondary colour. Keep the term light: 'We're mixing even more colours together now — let's see what happens.' The concept matters more than the word at this age." },
+    { "type": "ask",  "text": "Before every mix, ask: 'I wonder what [A] and [B] will make?' Never tell them first — even for harder combinations, prediction comes before discovery." },
+    { "type": "say",  "text": "Model the cause-and-effect sentence: '[A] and [B] make [result].' Say it together after each mix. Same pattern as primary colours — repetition builds the language." },
+    { "type": "ask",  "text": "After a result appears: 'Is that colour closer to [A] or [B]? Where do you think it sits on the colour wheel?' — builds understanding that mixed colours relate to their parent colours." }
   ]
 }

@@ -1,9 +1,9 @@
 {
   "activity": "colouring",
   "prompts": [
-    { "type": "ask",  "text": "Before they start, ask: \"What colour will you use for the [part]? Why did you choose that?\"" },
-    { "type": "word", "text": "Name colours as they pick: \"That's [colour] — it's a [warm/cool] colour. Warm colours are red, orange and yellow. Cool colours are blue, green and purple.\"" },
-    { "type": "say",  "text": "Narrate their choices: \"You're making the sun yellow — good thinking, suns are bright and warm.\"" },
-    { "type": "ask",  "text": "Ask: \"What colours can you see on a real [object]? Did you use the same ones?\"" }
+    { "type": "word", "text": "Warm colours — red, orange, yellow — feel bright and energetic. Cool colours — blue, green, purple — feel calm and peaceful. Introduce these families before starting; use them as colours are chosen." },
+    { "type": "say",  "text": "Affirm all colour choices without directing: 'You chose [colour] — what made you pick that?' Avoid 'good' or 'right'. Colouring is creative; every choice is valid." },
+    { "type": "ask",  "text": "Core question to return to: 'What colour is that in real life? Does it matter if we use a different colour?' — opens up creative vs. realistic thinking." },
+    { "type": "ask",  "text": "Use the image as a vocabulary springboard: 'What animal is this? What can you tell me about it?' — extends beyond colour into world knowledge." }
   ]
 }

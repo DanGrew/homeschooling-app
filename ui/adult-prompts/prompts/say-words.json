@@ -1,9 +1,9 @@
 {
   "activity": "say-words",
   "prompts": [
-    { "type": "say",  "text": "When a new word appears, say it clearly together: \"[word]\" — then ask them to say it back." },
-    { "type": "ask",  "text": "Ask: \"What does [word] mean? Where might you see one?\"" },
-    { "type": "say",  "text": "Use the word in a sentence together: \"I can see a [word]\" or \"A [word] is used for...\"" },
-    { "type": "ask",  "text": "Ask: \"Can you think of something that goes with a [word]?\" — builds vocabulary connections." }
+    { "type": "word", "text": "This game covers three shape names: circle, square, triangle. Know the properties: circle (round, no corners), square (4 equal sides, 4 corners), triangle (3 sides, 3 corners). Use them each time." },
+    { "type": "say",  "text": "When a shape appears, name it then describe it before pressing the TTS button: 'That's a square — four equal sides and four corners.' Model the word before the app speaks it." },
+    { "type": "ask",  "text": "Core question: 'What shape is it called? How many sides does it have?' — links the name to a property. Knowing the name alone isn't enough; knowing why it has that name builds understanding." },
+    { "type": "ask",  "text": "Environmental print: 'Can you find a [shape] in this room? Can you spot the written word anywhere near us?' — connects screen vocabulary to the real world." }
   ]
 }

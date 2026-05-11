@@ -1,9 +1,9 @@
 {
   "activity": "character-lesson",
   "prompts": [
-    { "type": "word", "text": "Name each letter as they trace: \"That's the letter [X] — it makes the '[sound]' sound.\"" },
-    { "type": "say",  "text": "Describe the motion as they trace: \"Start at the top, go down, then across\" — narrating builds letter formation memory." },
-    { "type": "say",  "text": "When a character is complete, say it together: \"That's the letter [X]!\" — name it clearly once more." },
-    { "type": "ask",  "text": "Ask: \"Can you think of a word that starts with [letter]? Where might you see this letter written?\"" }
+    { "type": "word", "text": "Distinguish letter name from letter sound: the letter is called 'ay' but makes the /a/ sound (as in apple). Name both each time: 'That's the letter A — it says /a/.'" },
+    { "type": "say",  "text": "When a letter appears, say it together — name, then sound — then find it nearby: 'That's B, it says /b/. Can you spot a B anywhere around us?'" },
+    { "type": "ask",  "text": "Core question to return to: 'What sound does this letter make?' Knowing the sound is what leads to reading, not just the name." },
+    { "type": "ask",  "text": "Build connections: 'What word starts with [letter]?' Use familiar words first — their name, family names, favourite foods." }
   ]
 }

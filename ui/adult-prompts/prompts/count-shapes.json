@@ -1,9 +1,9 @@
 {
   "activity": "count-shapes",
   "prompts": [
-    { "type": "word", "text": "\"Subitise\" — seeing how many there are without counting one by one. Ask: \"How many can you see? Can you tell without counting?\"" },
-    { "type": "ask",  "text": "Before they answer, ask: \"How many do you think there are? Can you guess?\"" },
-    { "type": "say",  "text": "Count together, pointing to each shape: \"One, two, three — there are three!\"" },
-    { "type": "ask",  "text": "After each round, ask: \"Was that more or fewer than last time?\"" }
+    { "type": "word", "text": "'Subitise' — seeing how many there are at a glance, without counting one by one. Small groups (1–3) can often be subitised. Train the habit: 'Don't count — just look. How many can you see?'" },
+    { "type": "say",  "text": "Model the cardinality principle: when counting together, always end with '...and that means there are [N] altogether.' The last number IS the total — many children don't know this yet." },
+    { "type": "ask",  "text": "Before they answer: 'How many do you think there are — without counting? Can you just see it?' — distinguishes subitising from counting. Both are valid; name the difference." },
+    { "type": "ask",  "text": "Core comparison question: 'Is that more or fewer than before? How do you know?' — builds quantity comparison vocabulary and encourages reasoning not just answering." }
   ]
 }
