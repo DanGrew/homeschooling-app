@@ -1,11 +1,11 @@
 const { test, expect } = require('@playwright/test')
 
-test('page loads with keys and note display', async ({ page }) => {
+test('page loads with keys and song display', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/piano/lesson.html')
   await expect(page.locator('#keys-wrap')).toBeVisible()
-  await expect(page.locator('#note-display')).toBeVisible()
+  await expect(page.locator('#section-display')).toBeVisible()
   const keys = page.locator('#keys-wrap [data-note]')
-  expect(await keys.count()).toBe(10)
+  expect(await keys.count()).toBe(12)
 })
 
 test('nav link points to lessons index', async ({ page }) => {

@@ -9,9 +9,22 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;}
-#stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
-#note-display{font-size:clamp(3em,15vw,7em);line-height:1;transition:color 0.15s;}
-#note-hint{font-size:clamp(1em,3vw,1.4em);color:#bbb;}
+#stage{flex:1;display:flex;flex-direction:row;align-items:stretch;overflow:hidden;}
+.nav-arrow{flex-shrink:0;width:44px;display:flex;align-items:center;justify-content:center;font-size:1.8em;color:#bbb;cursor:pointer;user-select:none;touch-action:manipulation;transition:color 0.15s;}
+.nav-arrow:active{color:#888;}
+.nav-arrow.hidden{visibility:hidden;}
+#section-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:8px 0;overflow:hidden;}
+.song-line{display:flex;flex-wrap:wrap;gap:4px 8px;justify-content:center;align-items:flex-end;}
+.word-group{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.note-chips{display:flex;gap:2px;}
+.note-chip{display:inline-flex;align-items:center;justify-content:center;min-width:clamp(22px,5vw,30px);height:clamp(20px,4.5vw,26px);border-radius:6px;font-size:clamp(9px,2.2vw,12px);font-weight:bold;color:#333;border:1.5px solid rgba(0,0,0,0.12);padding:0 3px;white-space:nowrap;transition:transform 0.1s,filter 0.1s;}
+.note-chip.playable{cursor:pointer;touch-action:none;}
+.note-chip.no-audio{opacity:0.35;cursor:default;}
+.lyric{font-size:clamp(12px,3vw,16px);color:#444;text-align:center;white-space:nowrap;}
+#verse-indicator{display:flex;gap:6px;align-items:center;justify-content:center;padding:4px;flex-shrink:0;}
+.verse-dot{width:8px;height:8px;border-radius:50%;background:#ddd;transition:background 0.2s;}
+.verse-dot.active{background:#aaa;}
+#black-keys-wrap{height:80px;flex-shrink:0;padding:0 4px;}
 #keys-wrap{height:min(220px,30vh);flex-shrink:0;padding:0 4px 4px;gap:3px;}
 </style>
 </head>
@@ -19,9 +32,12 @@ body{background:#fff8f0;}
 <div class="nav-bar" data-home="../../lessons/" data-title="Piano" data-links='[{"label":"Game","href":"./game.html"}]'></div>
 <div class="game-area">
   <div id="stage">
-    <div id="note-display">&#9834;</div>
-    <div id="note-hint">Tap a key!</div>
+    <div class="nav-arrow" id="btn-prev">&#9664;</div>
+    <div id="section-display"></div>
+    <div class="nav-arrow" id="btn-next">&#9654;</div>
   </div>
+  <div id="verse-indicator"></div>
+  <div id="black-keys-wrap"></div>
   <div id="keys-wrap"></div>
 </div>
 <script type="module">import '../../../ui/speech/speech-ui.js';</script>
@@ -30,15 +46,53 @@ body{background:#fff8f0;}
 <script src="../../../core/piano/piano-core.js"></script>
 <script src="../../../ui/shared/audio-ctx.js"></script>
 <script src="../../../ui/piano/piano-ui.js"></script>
+<script src="../../../ui/piano/piano-song-ui.js"></script>
 <script>
-var display = document.getElementById('note-display');
-var hint = document.getElementById('note-hint');
-renderKeys(document.getElementById('keys-wrap'), function(i, note, keyEl) {
-  initAudio().then(function() { playNote(note, 1.0); }).catch(function(){});
+loadPianoSongs('../../../assets/audio/songs/', function(songs) {
+  songs.sort(function(a, b) { return a.title.localeCompare(b.title); });
+  initSongLesson(songs, {
+    display: document.getElementById('section-display'),
+    prev:    document.getElementById('btn-prev'),
+    next:    document.getElementById('btn-next'),
+    dots:    document.getElementById('verse-indicator')
+  });
+  var bar = document.querySelector('.nav-bar');
+  var container = document.createElement('div');
+  container.style.cssText = 'position:relative;';
+  var btn = document.createElement('button');
+  btn.innerHTML = '&#128218;';
+  btn.className = 'nav-btn';
+  var popout = document.createElement('div');
+  popout.style.cssText = 'display:none;position:absolute;top:0;left:calc(100% + 8px);background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
+  songs.forEach(function(song, i) {
+    var item = document.createElement('button');
+    item.textContent = song.title;
+    item.style.cssText = 'display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;' + (i > 0 ? 'border-top:1px solid #f0f0f0;' : '');
+    item.addEventListener('click', function(e) {
+      e.stopPropagation();
+      popout.style.display = 'none';
+      lessonLoadSong(i);
+    });
+    popout.appendChild(item);
+  });
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    popout.style.display = popout.style.display === 'none' ? '' : 'none';
+  });
+  document.addEventListener('click', function() { popout.style.display = 'none'; });
+  container.appendChild(btn);
+  container.appendChild(popout);
+  bar.insertBefore(container, bar.lastElementChild);
+});
+document.getElementById('btn-prev').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonPrev(); });
+document.getElementById('btn-next').addEventListener('pointerdown', function(e) { e.preventDefault(); lessonNext(); });
+renderBlackKeys(document.getElementById('black-keys-wrap'), function(bk, keyEl) {
+  initAudio().then(function() { playNote(bk.note, 1.0); }).catch(function() {});
   glowKey(keyEl, 'hit');
-  display.textContent = PIANO_CONFIG.NOTE_LABELS[i] + ' \u266a';
-  display.style.color = PIANO_CONFIG.KEY_COLORS[i];
-  hint.style.display = 'none';
+});
+renderKeys(document.getElementById('keys-wrap'), function(i, note, keyEl) {
+  initAudio().then(function() { playNote(note, 1.0); }).catch(function() {});
+  glowKey(keyEl, 'hit');
 });
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='piano-lesson';</script>

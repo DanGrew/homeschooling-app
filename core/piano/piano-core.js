@@ -1,7 +1,7 @@
 var PIANO_CONFIG = {
-  NOTES: ['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5'],
-  NOTE_LABELS: ['C','D','E','F','G','A','B','C','D','E'],
-  KEY_COLORS: ['#FFB3B3','#FFCBA4','#FFF0A3','#B3FFB3','#A3D9FF','#B3C6FF','#E0B3FF','#FFB3E6','#B3FFEE','#D4FFB3'],
+  NOTES: ['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5'],
+  NOTE_LABELS: ['C','D','E','F','G','A','B','\u2191C','\u2191D','\u2191E','\u2191F','\u2191G'],
+  KEY_COLORS: ['#FFB3B3','#FFCBA4','#FFF0A3','#B3FFB3','#A3D9FF','#B3C6FF','#E0B3FF','#FFB3E6','#B3FFEE','#D4FFB3','#FFCCF2','#C5F2CC'],
   HIT_WINDOW_MS: 400,
   LOOKAHEAD_MS: 4000,
   MIN_NOTE_GAP_MS: 1000,
@@ -9,6 +9,12 @@ var PIANO_CONFIG = {
   NOTE_COUNT: 10
 };
 PIANO_CONFIG.KEY_COUNT = PIANO_CONFIG.NOTES.length;
+PIANO_CONFIG.WHITE_KEY_COUNT = PIANO_CONFIG.NOTES.length;
+PIANO_CONFIG.BLACK_KEYS = [
+  {note: 'Gb4', label: 'F#',         color: '#D4D4FF', position: 4.0, sourceNote: 'F4', semitones: 1},
+  {note: 'Bb4', label: 'Bb',         color: '#CCBBFF', position: 6.0, sourceNote: 'A4', semitones: 1},
+  {note: 'Cs5', label: '\u2191C#',   color: '#D4FFEE', position: 8.0, sourceNote: 'C5', semitones: 1}
+];
 
 function generateNotes(config, rng) {
   rng = rng || Math.random;
@@ -37,3 +43,4 @@ function scoreMessage(hitCount) {
 }
 
 if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage };
+

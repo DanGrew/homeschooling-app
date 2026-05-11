@@ -5,7 +5,7 @@ test('page loads with keys and play button', async ({ page }) => {
   await expect(page.locator('#keys-wrap')).toBeVisible()
   await expect(page.locator('#btn-play')).toBeVisible()
   const keys = page.locator('#keys-wrap [data-note]')
-  expect(await keys.count()).toBe(10)
+  expect(await keys.count()).toBe(12)
 })
 
 test('nav link points to games index', async ({ page }) => {

@@ -1,0 +1,31 @@
+{
+  "title": "Happy Birthday",
+  "verses": [
+    [
+      [
+        {"n":["D","D"],"t":"Happy"},
+        {"n":["E","D"],"t":"birthday"},
+        {"n":["G"],"t":"to"},
+        {"n":["F#"],"t":"you"}
+      ],
+      [
+        {"n":["D","D"],"t":"Happy"},
+        {"n":["E","D"],"t":"birthday"},
+        {"n":["A"],"t":"to"},
+        {"n":["G"],"t":"you"}
+      ],
+      [
+        {"n":["D","D"],"t":"Happy"},
+        {"n":["^D","B"],"t":"birthday"},
+        {"n":["G"],"t":"dear"},
+        {"n":["F#","E"],"t":"person"}
+      ],
+      [
+        {"n":["^C","^C"],"t":"Happy"},
+        {"n":["B","G"],"t":"birthday"},
+        {"n":["A"],"t":"to"},
+        {"n":["G"],"t":"you"}
+      ]
+    ]
+  ]
+}

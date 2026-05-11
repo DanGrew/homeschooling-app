@@ -6,10 +6,14 @@ var _initDone = false;
 var GLOW_BG = { hit: '#FFD700', miss: '#FF4444' };
 
 PIANO_CONFIG.NOTES.forEach(function(note) {
-  fetch('../../../assets/audio/piano/' + note + '.wav')
+  fetch('../../../assets/audio/piano/' + note + '.ogg')
     .then(function(r) { return r.arrayBuffer(); })
     .then(function(buf) { _rawBuffers[note] = buf; })
     .catch(function() {});
+});
+var _PITCH_RATE = {};
+PIANO_CONFIG.BLACK_KEYS.forEach(function(bk) {
+  _PITCH_RATE[bk.note] = {source: bk.sourceNote, rate: Math.pow(2, bk.semitones / 12)};
 });
 
 function _decodeNote(ctx, note) {
@@ -54,9 +58,10 @@ var initAudio = once(function() {
     .catch(function() {});
 });
 
-function _play(decoded, volume) {
+function _play(decoded, volume, rate) {
   var src = _audioCtx.createBufferSource();
   src.buffer = decoded;
+  src.playbackRate.value = rate || 1;
   var gain = _audioCtx.createGain();
   gain.gain.value = volume;
   src.connect(gain);
@@ -64,31 +69,34 @@ function _play(decoded, volume) {
   src.start();
 }
 
-function _playFromRaw(noteName, volume) {
+function _playFromRaw(noteName, volume, rate) {
   return [_rawBuffers[noteName]]
     .filter(Boolean)
     .filter(function(r) { return r.byteLength; })
     .map(function(r) {
       return decodeAudioBuffer(_audioCtx, r.slice(0))
-        .then(function(d) { _audioBuffers[noteName] = d; _play(d, volume); })
+        .then(function(d) { _audioBuffers[noteName] = d; _play(d, volume, rate); })
         .catch(function() {});
     })
     .concat([Promise.resolve()])[0];
 }
 
 var _PLAY_READY = {
-  'true':  function(noteName, volume) { _play(_audioBuffers[noteName], volume); return Promise.resolve(); },
+  'true':  function(noteName, volume, rate) { _play(_audioBuffers[noteName], volume, rate); return Promise.resolve(); },
   'false': _playFromRaw
 };
 
-function _playWhenReady(noteName, volume) {
-  return _PLAY_READY[String(!!_audioBuffers[noteName])](noteName, volume);
+function _playWhenReady(noteName, volume, rate) {
+  return _PLAY_READY[String(!!_audioBuffers[noteName])](noteName, volume, rate);
 }
 
 function playNote(noteName, volume) {
+  var pitch = _PITCH_RATE[noteName];
+  var srcNote = pitch ? pitch.source : noteName;
+  var rate    = pitch ? pitch.rate   : 1;
   return [_audioCtx].filter(Boolean)
     .map(function(ctx) {
-      return ctx.resume().then(function() { return _playWhenReady(noteName, volume); }).catch(function() {});
+      return ctx.resume().then(function() { return _playWhenReady(srcNote, volume, rate); }).catch(function() {});
     })
     .concat([Promise.resolve()])[0];
 }
@@ -109,6 +117,30 @@ function renderKeys(container, onKeyPress) {
     });
     container.appendChild(key);
   });
+}
+
+function renderBlackKeys(container, onKeyPress) {
+  container.style.display = 'flex';
+  var pos = 0;
+  PIANO_CONFIG.BLACK_KEYS.forEach(function(bk) {
+    var gap = document.createElement('div');
+    gap.style.flex = String(bk.position - 0.5 - pos);
+    container.appendChild(gap);
+    var key = document.createElement('div');
+    key.dataset.note = bk.note;
+    key._origBg = bk.color;
+    key.style.cssText = 'flex:1;height:100%;background:' + bk.color + ';border-radius:0 0 8px 8px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:clamp(10px,2.5vw,14px);font-weight:bold;color:#444;cursor:pointer;user-select:none;touch-action:none;border:1.5px solid rgba(0,0,0,0.15);box-sizing:border-box;';
+    key.textContent = bk.label;
+    key.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      onKeyPress(bk, key);
+    });
+    container.appendChild(key);
+    pos = bk.position + 0.5;
+  });
+  var trailingGap = document.createElement('div');
+  trailingGap.style.flex = String(PIANO_CONFIG.WHITE_KEY_COUNT - pos);
+  container.appendChild(trailingGap);
 }
 
 function glowKey(keyEl, type) {
