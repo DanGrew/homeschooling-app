@@ -6,6 +6,7 @@
 <title>Say Words</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
+<link rel="stylesheet" href="../../shared/speakable.css">
 <script src="../../shared/menu.js" defer></script>
 <style>
 #tile-grid {
@@ -37,7 +38,6 @@
   overflow: hidden;
   min-height: 0;
 }
-.tile:active { background: #e8f8ef; border-color: #2ECC71; }
 .tile-img {
   flex: 1;
   width: 100%;
@@ -75,7 +75,7 @@
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
 import {buildFilterBar} from '../../../ui/filter-bar/filter-bar-ui.js';
-import {speak as speakWord} from '../../../ui/speech/speech-ui.js';
+import {makeSpeakable} from '../../../ui/speech/speakable.js';
 Dictionary.init('../../dictionary/');
 
 var all=[], filtered=[], page=0;
@@ -90,7 +90,7 @@ function render(){
   slice.forEach(function(w){
     var tile=document.createElement('div');
     tile.className='tile';
-    tile.onclick=function(){speakWord(w.name);};
+    makeSpeakable(tile, w.name);
     var imgDiv=document.createElement('div');
     imgDiv.className='tile-img';
     var img=document.createElement('img');
