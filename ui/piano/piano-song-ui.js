@@ -169,6 +169,38 @@ function initSongSheet(songs, selectorEl, sheetEl) {
   renderFullSong(songs[0], sheetEl);
 }
 
+var _POPOUT_TOGGLE = {'none': '', '': 'none'};
+
+function buildSongNavButton(songs, barEl, onSelect) {
+  var container = document.createElement('div');
+  container.style.cssText = 'position:relative;';
+  var btn = document.createElement('button');
+  btn.innerHTML = '&#128218;';
+  btn.className = 'nav-btn';
+  var popout = document.createElement('div');
+  popout.className = 'song-nav-popout';
+  popout.style.cssText = 'display:none;position:absolute;top:0;left:calc(100% + 8px);background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;max-height:calc(100vh - 80px);overflow-y:auto;z-index:9600;';
+  songs.forEach(function(song, i) {
+    var item = document.createElement('button');
+    item.textContent = song.title;
+    item.style.cssText = 'display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;';
+    item.addEventListener('click', function(e) {
+      e.stopPropagation();
+      popout.style.display = 'none';
+      onSelect(i);
+    });
+    popout.appendChild(item);
+  });
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    popout.style.display = _POPOUT_TOGGLE[popout.style.display];
+  });
+  document.addEventListener('click', function() { popout.style.display = 'none'; });
+  container.appendChild(btn);
+  container.appendChild(popout);
+  barEl.insertBefore(container, barEl.lastElementChild);
+}
+
 function loadPianoSongs(basePath, onLoaded) {
   fetch(basePath + 'simplifications.json')
     .then(function(r) { return r.json(); })

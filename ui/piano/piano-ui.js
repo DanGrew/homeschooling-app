@@ -12,6 +12,7 @@ PIANO_CONFIG.NOTES.forEach(function(note) {
     .catch(function() {});
 });
 var _PITCH_RATE = {};
+PIANO_CONFIG.NOTES.forEach(function(n) { _PITCH_RATE[n] = {source: n, rate: 1}; });
 PIANO_CONFIG.BLACK_KEYS.forEach(function(bk) {
   _PITCH_RATE[bk.note] = {source: bk.sourceNote, rate: Math.pow(2, bk.semitones / 12)};
 });
@@ -61,7 +62,7 @@ var initAudio = once(function() {
 function _play(decoded, volume, rate) {
   var src = _audioCtx.createBufferSource();
   src.buffer = decoded;
-  src.playbackRate.value = rate || 1;
+  src.playbackRate.value = rate;
   var gain = _audioCtx.createGain();
   gain.gain.value = volume;
   src.connect(gain);
@@ -91,12 +92,10 @@ function _playWhenReady(noteName, volume, rate) {
 }
 
 function playNote(noteName, volume) {
-  var pitch = _PITCH_RATE[noteName];
-  var srcNote = pitch ? pitch.source : noteName;
-  var rate    = pitch ? pitch.rate   : 1;
+  var p = _PITCH_RATE[noteName];
   return [_audioCtx].filter(Boolean)
     .map(function(ctx) {
-      return ctx.resume().then(function() { return _playWhenReady(srcNote, volume, rate); }).catch(function() {});
+      return ctx.resume().then(function() { return _playWhenReady(p.source, volume, p.rate); }).catch(function() {});
     })
     .concat([Promise.resolve()])[0];
 }
