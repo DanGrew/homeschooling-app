@@ -10,8 +10,8 @@
 <script src="../../shared/menu.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background:#222;}
-.nav-bar{flex-shrink:0;z-index:10;width:100%;background:#fff;border-bottom:2px solid #eee;}
+body{background:#222;}
+.game-area{background:#222;}
 #sky-area{flex:1;display:flex;flex-direction:row;overflow:hidden;background:linear-gradient(to bottom,#78909C,#CFD8DC);}
 #clock-panel{flex:0 0 55%;position:relative;display:flex;flex-direction:column;align-items:center;overflow:hidden;}
 #sky-sun{position:absolute;display:none;width:clamp(44px,8vw,70px);height:clamp(44px,8vw,70px);border-radius:50%;background:radial-gradient(circle,#FFF176 30%,#FFD54F);box-shadow:0 0 clamp(20px,4vw,40px) #FFD54F;transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
@@ -22,9 +22,10 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 #digital{display:flex;gap:16px;align-items:center;}
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
 #digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
-#preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
+#preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
+.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
-@media (max-width:500px){
+@media (max-width:560px){
   #sky-area{flex-direction:column;}
   #clock-panel{flex:0 0 auto;width:100%;}
   #arc-zone{flex:0 0 22%;}
@@ -36,21 +37,23 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="Clocks" data-links='[{"href":"game-mc.html","label":"What Time Is It?"}]'></div>
-<div id="sky-area">
-  <div id="clock-panel">
-    <div id="sky-sun"></div>
-    <div id="sky-moon"></div>
-    <div id="arc-zone"></div>
-    <div id="clock-content">
-      <div id="clock-container"></div>
-      <div id="digital">
-        <span id="digital-12h">--:-- --</span>
-        <span id="digital-sep">|</span>
-        <span id="digital-24h">--:--</span>
+<div class="game-area">
+  <div id="sky-area">
+    <div id="clock-panel">
+      <div id="sky-sun"></div>
+      <div id="sky-moon"></div>
+      <div id="arc-zone"></div>
+      <div id="clock-content">
+        <div id="clock-container"></div>
+        <div id="digital">
+          <span id="digital-12h">--:-- --</span>
+          <span id="digital-sep">|</span>
+          <span id="digital-24h">--:--</span>
+        </div>
       </div>
     </div>
+    <div id="preset-buttons"></div>
   </div>
-  <div id="preset-buttons"></div>
 </div>
 <script type="module">
 import {hourToSky, nextDegrees} from '../../../core/clock/clock-core.js';
