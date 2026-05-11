@@ -11,15 +11,11 @@ var SONG_NOTE_MAP = {
   '^E': {note:'E5', color:'#D4FFB3'},
   '^F': {note:'F5', color:'#FFCCF2'},
   '^G': {note:'G5', color:'#C5F2CC'},
-  '^A': {note:null, color:'#ccc'},
-  'Bb': {note:null, color:'#ccc'},
-  'F#': {note:'Gb4', color:'#D4D4FF'}
+  '^A': {note:null,  color:'#ccc'},
+  'Bb': {note:'Bb4', color:'#CCBBFF'},
+  'F#': {note:'Gb4', color:'#D4D4FF'},
+  '^C#':{note:'Cs5', color:'#D4FFEE'}
 };
-
-fetch('../../../assets/audio/piano/Gb4.ogg')
-  .then(function(r) { return r.arrayBuffer(); })
-  .then(function(buf) { _rawBuffers['Gb4'] = buf; })
-  .catch(function() {});
 
 var _NO_NOTE_INFO = {note: null, color: '#ccc'};
 var _CHIP_CLASS = {'true': 'note-chip playable', 'false': 'note-chip no-audio'};
@@ -30,9 +26,19 @@ var _lessonSongs = [];
 var _lessonSong = 0;
 var _lessonVerse = 0;
 var _lessonEl = {};
+var _simplifications = {};
+
+function _simpleInfo(token) {
+  return [SONG_NOTE_MAP[_simplifications[token]]].filter(Boolean)
+    .map(function(i) { return {note: i.note, color: i.color, simplified: true, displayToken: _simplifications[token]}; })[0];
+}
 
 function _noteInfo(token) {
-  return ([SONG_NOTE_MAP[token]].filter(Boolean).concat([_NO_NOTE_INFO]))[0];
+  return (
+    [SONG_NOTE_MAP[token]].filter(Boolean).filter(function(i) { return i.note; })
+    .concat([_simpleInfo(token)].filter(Boolean))
+    .concat([_NO_NOTE_INFO])
+  )[0];
 }
 
 function _chipGlow(chip, color) {
@@ -52,9 +58,11 @@ function _addChipListener(chip, info) {
 
 function makeSongChip(token) {
   var info = _noteInfo(token);
+  var suffix = ['*'].filter(function() { return info.simplified; }).join('');
   var chip = document.createElement('span');
   chip.className = _CHIP_CLASS[String(!!info.note)];
-  chip.textContent = token.replace('^', '\u2191');
+  var label = ([info.displayToken].filter(Boolean).concat([token]))[0];
+  chip.textContent = label.replace('^', '\u2191') + suffix;
   chip.style.background = info.color;
   [info].filter(function(i) { return i.note; }).forEach(function() { _addChipListener(chip, info); });
   return chip;
@@ -162,7 +170,9 @@ function initSongSheet(songs, selectorEl, sheetEl) {
 }
 
 function loadPianoSongs(basePath, onLoaded) {
-  fetch(basePath + 'index.json')
+  fetch(basePath + 'simplifications.json')
+    .then(function(r) { return r.json(); })
+    .then(function(s) { _simplifications = s; return fetch(basePath + 'index.json'); })
     .then(function(r) { return r.json(); })
     .then(function(files) {
       return Promise.all(files.map(function(f) {

@@ -3,8 +3,7 @@ const require = createRequire(import.meta.url);
 const { PIANO_CONFIG, generateNotes, scoreMessage } = require('../../core/piano/piano-core.js');
 
 describe('PIANO_CONFIG', () => {
-  it('has 13 notes', () => expect(PIANO_CONFIG.NOTES).toHaveLength(13));
-  it('includes Gb4 (F#)', () => expect(PIANO_CONFIG.NOTES).toContain('Gb4'));
+  it('has 12 notes', () => expect(PIANO_CONFIG.NOTES).toHaveLength(12));
   it('includes F5', () => expect(PIANO_CONFIG.NOTES).toContain('F5'));
   it('includes G5', () => expect(PIANO_CONFIG.NOTES).toContain('G5'));
   it('upper octave labels marked with ↑', () => {
@@ -75,6 +74,41 @@ describe('generateNotes', () => {
     const notes = generateNotes(PIANO_CONFIG);
     expect(notes).toHaveLength(PIANO_CONFIG.NOTE_COUNT);
     notes.forEach(n => expect(typeof n.keyIndex).toBe('number'));
+  });
+});
+
+describe('PIANO_CONFIG BLACK_KEYS', () => {
+  it('has 3 black keys', () => expect(PIANO_CONFIG.BLACK_KEYS).toHaveLength(3));
+  it('includes Gb4 (F#)', () => expect(PIANO_CONFIG.BLACK_KEYS.map(b => b.note)).toContain('Gb4'));
+  it('includes Bb4', () => expect(PIANO_CONFIG.BLACK_KEYS.map(b => b.note)).toContain('Bb4'));
+  it('includes Cs5 (C#)', () => expect(PIANO_CONFIG.BLACK_KEYS.map(b => b.note)).toContain('Cs5'));
+  it('WHITE_KEY_COUNT equals NOTES length', () => expect(PIANO_CONFIG.WHITE_KEY_COUNT).toBe(PIANO_CONFIG.NOTES.length));
+  it('each has required fields', () => {
+    PIANO_CONFIG.BLACK_KEYS.forEach(bk => {
+      expect(bk).toHaveProperty('note');
+      expect(bk).toHaveProperty('label');
+      expect(bk).toHaveProperty('color');
+      expect(bk).toHaveProperty('position');
+      expect(bk).toHaveProperty('sourceNote');
+      expect(bk).toHaveProperty('semitones');
+    });
+  });
+  it('all sourceNotes are in NOTES', () => {
+    PIANO_CONFIG.BLACK_KEYS.forEach(bk => expect(PIANO_CONFIG.NOTES).toContain(bk.sourceNote));
+  });
+  it('all semitones are positive', () => {
+    PIANO_CONFIG.BLACK_KEYS.forEach(bk => expect(bk.semitones).toBeGreaterThan(0));
+  });
+  it('positions within WHITE_KEY_COUNT range', () => {
+    PIANO_CONFIG.BLACK_KEYS.forEach(bk => {
+      expect(bk.position).toBeGreaterThan(0);
+      expect(bk.position).toBeLessThan(PIANO_CONFIG.WHITE_KEY_COUNT);
+    });
+  });
+  it('positions are strictly increasing', () => {
+    for (let i = 1; i < PIANO_CONFIG.BLACK_KEYS.length; i++) {
+      expect(PIANO_CONFIG.BLACK_KEYS[i].position).toBeGreaterThan(PIANO_CONFIG.BLACK_KEYS[i - 1].position);
+    }
   });
 });
 
