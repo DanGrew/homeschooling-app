@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Clocks — Lesson</title>
+<title>Clocks — Set the Time</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
 <link rel="stylesheet" href="../../shared/speakable.css">
@@ -14,19 +14,20 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 .nav-bar{flex-shrink:0;z-index:10;width:100%;background:#fff;border-bottom:2px solid #eee;}
 #sky-area{flex:1;display:flex;flex-direction:row;overflow:hidden;background:linear-gradient(to bottom,#78909C,#CFD8DC);}
 #clock-panel{flex:0 0 55%;position:relative;display:flex;flex-direction:column;align-items:center;overflow:hidden;}
-#sky-sun{position:absolute;display:none;width:clamp(44px,8vw,70px);height:clamp(44px,8vw,70px);border-radius:50%;background:radial-gradient(circle,#FFF176 30%,#FFD54F);box-shadow:0 0 clamp(20px,4vw,40px) #FFD54F;transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
-#sky-moon{position:absolute;display:none;width:clamp(36px,6vw,56px);height:clamp(36px,6vw,56px);border-radius:50%;background:radial-gradient(circle,#FFFDE7 40%,#B0BEC5);box-shadow:0 0 clamp(12px,2.5vw,24px) rgba(255,255,255,0.5);transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
+#sky-sun{position:absolute;display:none;width:clamp(44px,8vw,70px);height:clamp(44px,8vw,70px);border-radius:50%;background:radial-gradient(circle,#FFF176 30%,#FFD54F);box-shadow:0 0 clamp(20px,4vw,40px) #FFD54F;transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;}
+#sky-moon{position:absolute;display:none;width:clamp(36px,6vw,56px);height:clamp(36px,6vw,56px);border-radius:50%;background:radial-gradient(circle,#FFFDE7 40%,#B0BEC5);box-shadow:0 0 clamp(12px,2.5vw,24px) rgba(255,255,255,0.5);transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;}
 #arc-zone{flex:0 0 32%;width:100%;}
 #clock-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(6px,1.5vh,14px);padding:0 8px 16px;}
-#clock-container{cursor:pointer;border-radius:50%;}
+#clock-container{border-radius:50%;}
 #digital{display:flex;gap:16px;align-items:center;}
-#digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
+#digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);border-radius:8px;padding:2px 8px;}
 #digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
+#target-label{font-size:clamp(1em,3.5vw,1.4em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.6);text-align:center;padding:6px 12px;background:rgba(0,0,0,0.25);border-radius:10px;margin-top:4px;}
 #preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
-#game-nav{display:flex;gap:8px;justify-content:center;padding:6px 8px 0;}
-.game-link{padding:8px 14px;font-size:clamp(0.75em,2.5vw,0.9em);font-family:inherit;font-weight:bold;border:none;border-radius:12px;background:rgba(255,255,255,0.75);color:#333;cursor:pointer;text-decoration:none;touch-action:manipulation;}
-.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
+.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;user-select:none;text-align:center;transition:transform 0.1s;}
 .preset-btn:active{transform:scale(0.95);}
+.btn-wrong{animation:shake 0.35s ease-in-out;}
+@keyframes shake{0%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}100%{transform:translateX(0)}}
 @media (max-width:500px){
   #sky-area{flex-direction:column;}
   #clock-panel{flex:0 0 auto;width:100%;}
@@ -38,7 +39,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Clocks"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Set the Time"></div>
 <div id="sky-area">
   <div id="clock-panel">
     <div id="sky-sun"></div>
@@ -51,10 +52,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
         <span id="digital-sep">|</span>
         <span id="digital-24h">--:--</span>
       </div>
-      <div id="game-nav">
-        <a class="game-link" href="game-set.html">🎯 Set the Time</a>
-        <a class="game-link" href="game-mc.html">❓ What Time Is It?</a>
-      </div>
+      <div id="target-label">Loading…</div>
     </div>
   </div>
   <div id="preset-buttons"></div>
@@ -64,44 +62,66 @@ import {hourToSky, nextDegrees} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
-import {makeSpeakable, makeInteractive} from '../../../ui/speech/speakable.js';
-import {speak} from '../../../ui/speech/speech-ui.js';
+import {speakInterrupt} from '../../../ui/speech/speech-ui.js';
+import {showBanner, hideBanner} from '../../../ui/shared/success-banner.js';
 
 var currentHour = 0;
 var totalDeg = 0;
-var currentSpoken = 'Twelve o\'clock';
-var currentSpoken24 = 'Twelve hundred';
+var targetIdx = 0;
+var locked = false;
+var presets = [];
 
 clockInit(document.getElementById('clock-container'));
 
-makeSpeakable(document.getElementById('sky-sun'),  'Sun');
-makeSpeakable(document.getElementById('sky-moon'), 'Moon');
-makeInteractive(document.getElementById('digital-12h'),     function() { speak(currentSpoken); });
-makeInteractive(document.getElementById('digital-24h'),     function() { speak(currentSpoken24); });
-makeInteractive(document.getElementById('clock-container'), function() { speak(currentSpoken); });
+var LOCK = {
+  'true':  function() {},
+  'false': function(btn, preset) { CORRECT[String(presets.indexOf(preset) === targetIdx)](btn, preset); }
+};
 
-function pressPreset(preset) {
+var CORRECT = {
+  'true':  function(btn, preset) {
+    locked = true;
+    applyPreset(preset);
+    speakInterrupt(preset.spoken);
+    showBanner({ buttons: [{ label: 'Next →', onClick: function() { hideBanner(); nextRound(); } }] });
+  },
+  'false': function(btn) {
+    btn.classList.remove('btn-wrong');
+    void btn.offsetWidth;
+    btn.classList.add('btn-wrong');
+    btn.addEventListener('animationend', function h() { btn.classList.remove('btn-wrong'); btn.removeEventListener('animationend', h); });
+  }
+};
+
+function applyPreset(preset) {
   totalDeg += nextDegrees(currentHour, preset.hour);
   currentHour = preset.hour;
-  currentSpoken = preset.spoken;
-  currentSpoken24 = preset.spoken24;
   setHandDeg(totalDeg, 0);
   skyRender(hourToSky(preset.hour));
   digitalRender(preset.hour);
 }
 
+function nextRound() {
+  locked = false;
+  targetIdx = Math.floor(Math.random() * presets.length);
+  var p = presets[targetIdx];
+  document.getElementById('target-label').textContent = p.emoji + ' ' + p.label;
+  speakInterrupt('Can you set the clock to ' + p.spoken + '?');
+}
+
 fetch('../../../assets/clock/presets.json')
   .then(function(r) { return r.json(); })
-  .then(function(presets) {
+  .then(function(data) {
+    presets = data;
     var btns = document.getElementById('preset-buttons');
     presets.forEach(function(preset) {
       var btn = document.createElement('button');
       btn.className = 'preset-btn';
       btn.textContent = preset.emoji + ' ' + preset.label;
-      makeSpeakable(btn, preset.label);
-      btn.addEventListener('click', function() { pressPreset(preset); });
+      btn.addEventListener('click', function() { LOCK[String(locked)](btn, preset); });
       btns.appendChild(btn);
     });
+    nextRound();
   });
 </script>
 </body>
