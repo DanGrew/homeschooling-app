@@ -13,8 +13,12 @@
     };
     if(bar.dataset.instruction){
       var instrEl=document.createElement('div');
-      instrEl.style.cssText='font-size:0.8em;color:#aaa;padding:0 16px 6px;margin-top:-4px;';
+      instrEl.className='speakable';
+      instrEl.style.cssText='font-size:0.8em;color:#aaa;padding:2px 16px 8px;';
       instrEl.textContent=bar.dataset.instruction;
+      instrEl.onclick=function(){
+        if(typeof window.__speak==='function'){window.__speak(bar.dataset.instruction);}
+      };
       titleEl.style.borderBottom='none';
       titleEl.style.paddingBottom='2px';
       var wrapper=document.createElement('div');
