@@ -22,10 +22,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 #digital{display:flex;gap:16px;align-items:center;}
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
 #digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
-#preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
-#game-nav{display:flex;gap:8px;justify-content:center;padding:6px 8px 0;}
-.game-link{padding:8px 14px;font-size:clamp(0.75em,2.5vw,0.9em);font-family:inherit;font-weight:bold;border:none;border-radius:12px;background:rgba(255,255,255,0.75);color:#333;cursor:pointer;text-decoration:none;touch-action:manipulation;}
-.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
+#preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
 @media (max-width:500px){
   #sky-area{flex-direction:column;}
@@ -38,7 +35,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Clocks"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Clocks" data-links='[{"href":"game-mc.html","label":"What Time Is It?"}]'></div>
 <div id="sky-area">
   <div id="clock-panel">
     <div id="sky-sun"></div>
@@ -50,9 +47,6 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
         <span id="digital-12h">--:-- --</span>
         <span id="digital-sep">|</span>
         <span id="digital-24h">--:--</span>
-      </div>
-      <div id="game-nav">
-        <a class="game-link" href="game-mc.html">❓ What Time Is It?</a>
       </div>
     </div>
   </div>

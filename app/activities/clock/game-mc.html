@@ -22,6 +22,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 #digital{display:flex;gap:16px;align-items:center;}
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);border-radius:8px;padding:2px 8px;}
 #digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
+#prompt{font-size:clamp(1em,3.5vw,1.4em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.6);text-align:center;padding:6px 12px;background:rgba(0,0,0,0.25);border-radius:10px;margin-top:4px;}
 #choice-panel{flex:1;display:flex;flex-direction:column;padding:12px 12px 12px 4px;gap:8px;justify-content:center;}
 #choice-grid{display:flex;flex-wrap:wrap;gap:8px;flex:1;align-content:center;}
 .btn-wrong{animation:shake 0.35s ease-in-out;}
@@ -37,7 +38,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="What Time Is It?"></div>
+<div class="nav-bar" data-home="../../games/" data-title="What Time Is It?" data-links='[{"href":"./","label":"Clocks Lesson"}]' data-links-icon="lesson"></div>
 <div id="sky-area">
   <div id="clock-panel">
     <div id="sky-sun"></div>
@@ -50,6 +51,7 @@ body{height:100dvh;display:flex;flex-direction:column;overflow:hidden;background
         <span id="digital-sep">|</span>
         <span id="digital-24h">--:--</span>
       </div>
+      <div id="prompt">Choose the right time</div>
     </div>
   </div>
   <div id="choice-panel">
@@ -62,7 +64,6 @@ import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
 import {renderChoices} from '../../../ui/clock/choice-ui.js';
-import {speakInterrupt} from '../../../ui/speech/speech-ui.js';
 import {showBanner, hideBanner} from '../../../ui/shared/success-banner.js';
 
 var currentHour = 0;
@@ -103,7 +104,6 @@ function nextRound() {
   var correctIdx = Math.floor(Math.random() * presets.length);
   var indices = generateChoices(presets, correctIdx, 4);
   showPreset(presets[correctIdx]);
-  speakInterrupt('What time is it?');
   renderChoices(
     document.getElementById('choice-grid'),
     presets, indices, correctIdx,
