@@ -10,9 +10,7 @@
 <script src="../../shared/menu.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#222;}
-.game-area{background:#222;}
-#sky-area{flex:1;display:flex;flex-direction:row;overflow:hidden;background:linear-gradient(to bottom,#78909C,#CFD8DC);}
+#sky-area{flex:1;min-height:0;display:flex;flex-direction:row;overflow:hidden;background:linear-gradient(to bottom,#78909C,#CFD8DC);}
 #clock-panel{flex:0 0 55%;position:relative;display:flex;flex-direction:column;align-items:center;overflow:hidden;}
 #sky-sun{position:absolute;display:none;width:clamp(44px,8vw,70px);height:clamp(44px,8vw,70px);border-radius:50%;background:radial-gradient(circle,#FFF176 30%,#FFD54F);box-shadow:0 0 clamp(20px,4vw,40px) #FFD54F;transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
 #sky-moon{position:absolute;display:none;width:clamp(36px,6vw,56px);height:clamp(36px,6vw,56px);border-radius:50%;background:radial-gradient(circle,#FFFDE7 40%,#B0BEC5);box-shadow:0 0 clamp(12px,2.5vw,24px) rgba(255,255,255,0.5);transform:translate(-50%,-50%);transition:left 0.8s ease-in-out,top 0.8s ease-in-out;cursor:pointer;}
