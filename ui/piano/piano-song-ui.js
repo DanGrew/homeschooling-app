@@ -157,7 +157,7 @@ function buildSongSelector(songs, selectorEl, onChangeFn) {
 function initSongLesson(songs, els) {
   _lessonSongs = songs;
   _lessonEl = els;
-  buildSongSelector(songs, els.selector, lessonLoadSong);
+  [els.selector].filter(Boolean).forEach(function(sel) { buildSongSelector(songs, sel, lessonLoadSong); });
   lessonLoadSong(0);
 }
 
