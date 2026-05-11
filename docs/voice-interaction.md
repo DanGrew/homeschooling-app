@@ -30,7 +30,7 @@ The system has two layers:
 ### API
 
 ```js
-import { speak, speakInterrupt, stop, setMode, setEnabled, warmUp } from '../speech/speech-ui.js';
+import { speak, speakInterrupt, stop, setMode, setEnabled } from '../speech/speech-ui.js';
 ```
 
 | Function | Description |
@@ -40,7 +40,6 @@ import { speak, speakInterrupt, stop, setMode, setEnabled, warmUp } from '../spe
 | `stop()` | Cancels current speech immediately. |
 | `setMode(mode)` | `'full'` (speak), `'quiet'` (suppress), `'off'` (suppress). Persisted to `localStorage`. |
 | `setEnabled(bool)` | Convenience — maps `true` → `'full'`, `false` → `'off'`. |
-| `warmUp()` | Speaks a silent utterance to unblock the audio context on mobile. |
 
 ### Mode behaviour
 
@@ -52,13 +51,9 @@ import { speak, speakInterrupt, stop, setMode, setEnabled, warmUp } from '../spe
 
 Mode is read from `localStorage` on load and persisted on change. Default is `'full'`.
 
-### When to call `warmUp()`
+### Mobile audio
 
-Mobile browsers require a user gesture before audio will play. Call `warmUp()` on the first `pointerdown` in each activity:
-
-```js
-document.addEventListener('pointerdown', warmUp, { once: true });
-```
+`_doSpeak` calls `speechSynthesis.resume()` internally — no manual warmUp needed. Speech works on first tap without extra wiring.
 
 ### `speak` vs `speakInterrupt`
 
@@ -182,16 +177,9 @@ function clearHighlight(imgs) {
 
 ## `window.__speak` — activity title integration
 
-`menu.js` auto-injects an `activity-title` element into `.game-area` when the nav-bar has `data-title`. It speaks the title text via `window.__speak`. This is a bridge because `menu.js` is a plain script that cannot import ES modules.
+`menu.js` auto-injects an `activity-title` element into `.game-area` when the nav-bar has `data-title`. It speaks the title text via `window.__speak`.
 
-**Every activity that uses `speakable.css` must wire this:**
-
-```js
-import { speakInterrupt } from '../speech/speech-ui.js';
-window.__speak = speakInterrupt;
-```
-
-Do this at the top of the module script, before any other setup. If omitted, the title has the purple glow but tapping it does nothing.
+`speech-ui.js` sets `window.__speak = speak` automatically when it loads. Any activity that imports from `speech-ui.js` gets this for free — no manual wiring needed.
 
 ---
 
@@ -219,13 +207,12 @@ makeInteractive(btn, () => {
 
 1. Include `speakable.css` in the activity's `index.html`.
 2. The script tag must be `type="module"` — imports require ES modules.
-3. Import `speakInterrupt` and set `window.__speak = speakInterrupt` at the top of the module.
-4. Call `document.addEventListener('pointerdown', warmUp, { once: true })`.
-5. Use `makeSpeakable(el, text)` for speak-on-tap elements.
-6. Use `makeInteractive(el, cb)` when the tap does something other than (or in addition to) speaking.
-7. Put `speakInterrupt()` **after** any action that might cancel speech.
-8. Use class toggles (`.speakable--flash`, `.speakable--highlight`) — never inline `filter` style.
-9. Do not manually apply `.speakable` to SVG elements.
+3. Import `speakInterrupt` from `speech-ui.js` — this also auto-wires `window.__speak` for the title.
+4. Use `makeSpeakable(el, text)` for speak-on-tap elements.
+5. Use `makeInteractive(el, cb)` when the tap does something other than (or in addition to) speaking.
+6. Put `speakInterrupt()` **after** any action that might cancel speech.
+7. Use class toggles (`.speakable--flash`, `.speakable--highlight`) — never inline `filter` style.
+8. Do not manually apply `.speakable` to SVG elements.
 
 ---
 
@@ -233,8 +220,7 @@ makeInteractive(btn, () => {
 
 1. Add `<link rel="stylesheet" href="../../shared/speakable.css">` to `index.html`.
 2. Ensure the script tag is `type="module"`.
-3. Import `speakInterrupt`, `warmUp`, `makeSpeakable`, `makeInteractive` from their modules.
-4. Set `window.__speak = speakInterrupt` and register `warmUp` on `pointerdown`.
+3. Import `speakInterrupt`, `makeSpeakable`, `makeInteractive` from their modules.
 5. Remove any "Say it" / "Speak" buttons — the elements themselves become speakable.
 6. Replace `element.onclick = fn` with `makeInteractive(element, fn)`.
 7. Replace `speakWord(x)` calls inside onclick with `makeSpeakable(element, x)`.
