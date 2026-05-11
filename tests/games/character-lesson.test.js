@@ -37,7 +37,9 @@ test('prev button goes back', async ({ page }) => {
 test('URL params set initial character and filter', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=m&filter=lower')
   await expect(page.locator('#char-label')).toHaveText('m')
-  await expect(page.getByRole('button', { name: 'a–z', exact: true })).toHaveClass(/active/)
+  const lowerBtn = page.getByRole('button', { name: 'a–z', exact: true })
+  const lowerBg = await lowerBtn.evaluate(el => getComputedStyle(el).backgroundColor)
+  expect(lowerBg).toBe('rgb(52, 152, 219)')
 })
 
 test('speak button is visible in both modes', async ({ page }) => {

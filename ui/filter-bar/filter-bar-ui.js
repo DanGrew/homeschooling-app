@@ -15,7 +15,7 @@ var ROW_EXTRA = { 'true': extra => extra, 'false': () => '' };
 
 function row(extra) {
   var d = document.createElement('div');
-  d.style.cssText = 'display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;' + ROW_EXTRA[String(!!extra)](extra);
+  d.style.cssText = 'display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;justify-content:center;' + ROW_EXTRA[String(!!extra)](extra);
   return d;
 }
 
@@ -68,4 +68,35 @@ export function buildFilterBar(items, onChange) {
   ADD_LEVEL_ROW[String(levels.length > 0)](bar, levels, () => activeLevel, l => { activeLevel = l; }, apply);
 
   apply();
+}
+
+var SIMPLE_INITIAL = {
+  'true':  function(iv)       { return String(iv); },
+  'false': function(iv, opts) { return String(opts[0].value); }
+};
+
+export function buildSimpleFilterBar(options, onChange, initialValue) {
+  var bar = document.getElementById('filter-bar');
+  bar.innerHTML = '';
+  bar.style.cssText = 'display:flex;flex-direction:column;border-bottom:1px solid #eee;';
+
+  var activeValue = SIMPLE_INITIAL[String(initialValue !== undefined)](initialValue, options);
+  var r = row();
+
+  options.forEach(function(opt) {
+    var b = document.createElement('button');
+    b.textContent = opt.label;
+    b.setAttribute('data-value', String(opt.value));
+    b.style.cssText = active(String(opt.value) === activeValue, '#3498DB');
+    b.onclick = function() {
+      activeValue = String(opt.value);
+      r.querySelectorAll('button[data-value]').forEach(function(btn) {
+        btn.style.cssText = active(btn.getAttribute('data-value') === activeValue, '#3498DB');
+      });
+      onChange(opt.value);
+    };
+    r.appendChild(b);
+  });
+
+  bar.appendChild(r);
 }

@@ -1,6 +1,7 @@
 import { validWord, charFile, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 import { speak, stop } from '../speech/speech-ui.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
+import { buildSimpleFilterBar } from '../filter-bar/filter-bar-ui.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
 const DICT_BASE = '../../dictionary/';
@@ -36,11 +37,6 @@ function loadDictionary() {
     });
 }
 
-function setActiveFilter(tag) {
-  document.querySelectorAll('#filter-bar .filter-btn').forEach(b =>
-    b.classList.toggle('active', b.dataset.tag === tag)
-  );
-}
 
 var BANNER_NEXT = { 'true': [], 'false': [{ label: 'Next \u2192', color: '#2ECC71', onClick: function() { navTo(currentIdx + 1); } }] };
 
@@ -85,19 +81,16 @@ function navTo(idx) {
   NAV_CUSTOM_GUARD[String(isCustom)](idx);
 }
 
+var TAG_LABEL = {
+  'true':  function()    { return 'All'; },
+  'false': function(tag) { return tag.charAt(0).toUpperCase() + tag.slice(1); }
+};
+
 function setupFilterBar() {
-  const bar = document.getElementById('filter-bar');
-  bar.innerHTML = '';
-  extractWordTags(words).forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.dataset.tag = tag;
-    var TAG_LABEL = { 'true': 'All', 'false': tag.charAt(0).toUpperCase() + tag.slice(1) };
-    btn.textContent = TAG_LABEL[String(tag === 'all')];
-    btn.addEventListener('click', () => onFilterClick(tag));
-    bar.appendChild(btn);
+  var options = extractWordTags(words).map(function(tag) {
+    return { label: TAG_LABEL[String(tag === 'all')](tag), value: tag };
   });
-  setActiveFilter('all');
+  buildSimpleFilterBar(options, onFilterClick, 'all');
 }
 
 function showCustomMode() {
@@ -122,7 +115,6 @@ function showTagMode(tag) {
 var FILTER_HANDLERS = { 'true': showCustomMode, 'false': showTagMode };
 
 function onFilterClick(tag) {
-  setActiveFilter(tag);
   hideBanner();
   FILTER_HANDLERS[String(tag === 'custom')](tag);
 }
