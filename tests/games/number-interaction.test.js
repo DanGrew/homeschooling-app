@@ -149,3 +149,17 @@ test('home nav link points to lessons', async ({ page }) => {
   const homeLink = page.locator('.nav-bar a[href*="lessons"]')
   await expect(homeLink).toBeVisible()
 })
+
+test('title is first child of game-area with purple glow', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  const first = page.locator('.game-area > *').first()
+  await expect(first).toHaveText(/Numbers/)
+  const filter = await first.evaluate(el => getComputedStyle(el).filter || el.style.filter)
+  expect(filter).toMatch(/drop-shadow/)
+})
+
+test('instruction rendered below title with speakable class', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await expect(page.locator('#ni-instruction.speakable')).toBeVisible()
+  await expect(page.locator('#ni-instruction')).toContainText('Use + and −')
+})
