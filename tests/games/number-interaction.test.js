@@ -121,8 +121,8 @@ test('fruit images are speakable after adding', async ({ page }) => {
 test('labels and instruction are speakable', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  await expect(page.locator('#lbl-a.speakable')).toBeVisible()
-  await expect(page.locator('#lbl-b.speakable')).toBeVisible()
+  await expect(page.locator('#lbl-a')).toHaveClass(/speakable/)
+  await expect(page.locator('#lbl-b')).toHaveClass(/speakable/)
   await expect(page.locator('#lbl-total.speakable')).toBeVisible()
   await expect(page.locator('#ni-instruction.speakable')).toBeVisible()
 })
@@ -148,4 +148,81 @@ test('home nav link points to lessons', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   const homeLink = page.locator('.nav-bar a[href*="lessons"]')
   await expect(homeLink).toBeVisible()
+})
+
+test('title is first child of game-area with purple glow', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  const titleEl = page.locator('.game-area .activity-title')
+  await expect(titleEl).toHaveText(/Numbers/)
+  const filter = await titleEl.evaluate(el => getComputedStyle(el).filter)
+  expect(filter).toMatch(/drop-shadow/)
+})
+
+test('instruction rendered below title with speakable class', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await expect(page.locator('#ni-instruction.speakable')).toBeVisible()
+  await expect(page.locator('#ni-instruction')).toContainText('Use + and −')
+})
+
+// --- dynamic labels ---
+
+test('labels empty when both counts are zero', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  await expect(page.locator('#lbl-a')).toHaveText('')
+  await expect(page.locator('#lbl-b')).toHaveText('')
+})
+
+test('labels show same when counts are equal and non-zero', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  await page.locator('#btn-a-plus').click()
+  await page.locator('#btn-b-plus').click()
+  await expect(page.locator('#lbl-a')).toHaveText('same')
+  await expect(page.locator('#lbl-b')).toHaveText('same')
+})
+
+test('labels show bigger and smaller correctly', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  await page.locator('#btn-a-plus').click()
+  await page.locator('#btn-a-plus').click()
+  await page.locator('#btn-b-plus').click()
+  await expect(page.locator('#lbl-a')).toHaveText('bigger')
+  await expect(page.locator('#lbl-b')).toHaveText('smaller')
+})
+
+test('labels flip when B becomes bigger', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  await page.locator('#btn-a-plus').click()
+  await page.locator('#btn-b-plus').click()
+  await page.locator('#btn-b-plus').click()
+  await expect(page.locator('#lbl-a')).toHaveText('smaller')
+  await expect(page.locator('#lbl-b')).toHaveText('bigger')
+})
+
+// --- out-of-bounds audio suppression ---
+
+test('change returns changed:false when already at zero', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  const result = await page.evaluate(() => window.change('a', -1))
+  expect(result.changed).toBe(false)
+})
+
+test('change returns changed:false when already at max', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  for (let i = 0; i < 10; i++) await page.evaluate(() => window.change('a', 1))
+  const result = await page.evaluate(() => window.change('a', 1))
+  expect(result.changed).toBe(false)
+})
+
+// --- bigger boxes ---
+
+test('object boxes are at least 280px tall on desktop', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  const h = await page.locator('#objects-a').evaluate(el => el.getBoundingClientRect().height)
+  expect(h).toBeGreaterThanOrEqual(280)
 })

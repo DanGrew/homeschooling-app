@@ -11,8 +11,27 @@
     titleEl.onclick=function(){
       if(typeof window.__speak==='function'){window.__speak(bar.dataset.title);}
     };
-    var gameArea=document.querySelector('.game-area');
-    if(gameArea) gameArea.insertAdjacentElement('afterbegin',titleEl);
+    if(bar.dataset.instruction){
+      var instrEl=document.createElement('div');
+      instrEl.id=bar.dataset.instructionId||'';
+      instrEl.className='speakable';
+      instrEl.style.cssText='font-size:0.8em;color:#aaa;padding:2px 16px 8px;';
+      instrEl.textContent=bar.dataset.instruction;
+      instrEl.onclick=function(){
+        if(typeof window.__speak==='function'){window.__speak(bar.dataset.instruction);}
+      };
+      titleEl.style.borderBottom='none';
+      titleEl.style.paddingBottom='2px';
+      var wrapper=document.createElement('div');
+      wrapper.style.cssText='flex-shrink:0;border-bottom:2px solid #eee;';
+      wrapper.appendChild(titleEl);
+      wrapper.appendChild(instrEl);
+      var gameArea=document.querySelector('.game-area');
+      if(gameArea) gameArea.insertAdjacentElement('afterbegin',wrapper);
+    } else {
+      var gameArea=document.querySelector('.game-area');
+      if(gameArea) gameArea.insertAdjacentElement('afterbegin',titleEl);
+    }
   }
 
   if(window.LESSONS&&window.LESSONS.length){

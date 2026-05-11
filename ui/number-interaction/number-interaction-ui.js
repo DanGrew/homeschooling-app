@@ -23,13 +23,15 @@ var numA = document.getElementById('num-a');
   var instruction = document.getElementById('ni-instruction');
   instruction.style.cursor = 'pointer';
   makeInteractive(instruction, () => stopAndSpeak(stopCounting(), () => speak('Use the plus and minus buttons to change each group. See how the total changes!')));
-  makeInteractive(document.getElementById('lbl-a'),     () => stopAndSpeak(stopCounting(), () => speak('A')));
-  makeInteractive(document.getElementById('lbl-b'),     () => stopAndSpeak(stopCounting(), () => speak('B')));
+  var lblA = document.getElementById('lbl-a');
+  var lblB = document.getElementById('lbl-b');
+  makeInteractive(lblA, () => { var t=lblA.textContent; [t].filter(Boolean).forEach(() => stopAndSpeak(stopCounting(), () => speak(t))); });
+  makeInteractive(lblB, () => { var t=lblB.textContent; [t].filter(Boolean).forEach(() => stopAndSpeak(stopCounting(), () => speak(t))); });
   makeInteractive(document.getElementById('lbl-total'), () => stopAndSpeak(stopCounting(), () => speak('Total')));
-  makeInteractive(document.getElementById('btn-a-plus'),  () => stopAndSpeak(change('a',  1), () => speak('plus')));
-  makeInteractive(document.getElementById('btn-a-minus'), () => stopAndSpeak(change('a', -1), () => speak('minus')));
-  makeInteractive(document.getElementById('btn-b-plus'),  () => stopAndSpeak(change('b',  1), () => speak('plus')));
-  makeInteractive(document.getElementById('btn-b-minus'), () => stopAndSpeak(change('b', -1), () => speak('minus')));
+  makeInteractive(document.getElementById('btn-a-plus'),  () => { var r=change('a',  1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('plus'))); });
+  makeInteractive(document.getElementById('btn-a-minus'), () => { var r=change('a', -1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('minus'))); });
+  makeInteractive(document.getElementById('btn-b-plus'),  () => { var r=change('b',  1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('plus'))); });
+  makeInteractive(document.getElementById('btn-b-minus'), () => { var r=change('b', -1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('minus'))); });
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
@@ -53,6 +55,17 @@ function makeImgEl(item, sz) {
   return img;
 }
 
+var LABEL_TEXT = { empty: '', same: 'same', bigger: 'bigger', smaller: 'smaller' };
+function labelState(self, other) {
+  return (
+    ['empty'].filter(() => self + other === 0)
+    .concat(['same'].filter(() => self === other))
+    .concat(['bigger'].filter(() => self > other))
+    .concat(['smaller'].filter(() => self < other))
+    .concat(['empty'])
+  )[0];
+}
+
 export function render() {
   var aContainer = document.getElementById('objects-a');
   var bContainer = document.getElementById('objects-b');
@@ -69,6 +82,8 @@ export function render() {
   document.getElementById('num-total').textContent = aCount + bCount;
   aContainer.style.borderColor = comparisonColor(aCount, bCount);
   bContainer.style.borderColor = comparisonColor(bCount, aCount);
+  document.getElementById('lbl-a').textContent = LABEL_TEXT[labelState(aCount, bCount)];
+  document.getElementById('lbl-b').textContent = LABEL_TEXT[labelState(bCount, aCount)];
 }
 
 export function flashAll(containerId) {
@@ -89,9 +104,11 @@ function stopCounting() {
 
 export function change(side, delta) {
   var wasCounting = stopCounting();
+  var prevA = aCount, prevB = bCount;
   ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();
   render();
-  return wasCounting;
+  var changed = [aCount !== prevA, bCount !== prevB].some(Boolean);
+  return {wasCounting, changed};
 }
 
 function countSpeak(text, onDone) {
