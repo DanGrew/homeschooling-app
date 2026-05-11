@@ -1,5 +1,6 @@
 import { speak } from '../speech/speech-ui.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
+import { buildSimpleFilterBar } from '../filter-bar/filter-bar-ui.js';
 
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
@@ -31,9 +32,6 @@ function setParam(char, filter) {
 function applyFilter(filter) {
   currentFilter = filter;
   filteredChars = CHARS.filter(FILTERS[filter]);
-  document.querySelectorAll('.filter-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.filter === filter);
-  });
 }
 
 function hideBanner() { _hideBanner(); }
@@ -210,6 +208,18 @@ export function init() {
   mode = MODE_PARAM[String(getParam('mode') === 'trace')];
   applyFilter(paramFilter);
   applyModeUI();
+
+  buildSimpleFilterBar(
+    [
+      {label: 'All',  value: 'all'},
+      {label: 'a\u2013z', value: 'lower'},
+      {label: 'A\u2013Z', value: 'upper'},
+      {label: '0\u20139', value: 'digit'}
+    ],
+    function(val) { applyFilter(val); navTo(0); },
+    paramFilter
+  );
+
   navTo(Math.max(0, filteredChars.findIndex(e => e.char === paramChar)));
 
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
@@ -222,9 +232,6 @@ export function init() {
     document.getElementById('btn-tryit').disabled = false;
     document.getElementById('btn-watch').disabled = false;
     [currentEntry].filter(Boolean).forEach(loadChar);
-  });
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => { applyFilter(btn.dataset.filter); navTo(0); });
   });
   document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
   document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));

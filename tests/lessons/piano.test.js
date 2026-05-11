@@ -15,5 +15,5 @@ test('nav link points to lessons index', async ({ page }) => {
 
 test('game link is visible', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/piano/lesson.html')
-  await expect(page.getByRole('link', { name: /Game/ })).toBeVisible()
+  await expect(page.locator('.nav-bar a[href*="game.html"]')).toBeVisible()
 })

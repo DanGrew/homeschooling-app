@@ -8,11 +8,10 @@
 <link rel="stylesheet" href="../../shared/style.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:#1a1a2e;flex-direction:column;}
-.nav-bar{flex-direction:row;justify-content:space-between;border-right:none;background:#16213e;border-bottom:2px solid #333;padding:8px 16px;}
+body{background:#1a1a2e;}
+.nav-bar{background:#16213e;border-right-color:#333;}
 .nav-btn{background:#2a2a3e;color:#ccc;}
-.nav-title{color:#eee;}
-.nav-link{color:#B3C6FF;}
+.activity-title{color:#eee;}
 #controls{display:flex;gap:10px;align-items:center;justify-content:center;padding:6px 16px;flex-shrink:0;}
 .ctrl-btn{font-size:1.3em;padding:8px 18px;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:bold;touch-action:manipulation;-webkit-touch-callout:none;}
 #game-area{flex:1;position:relative;overflow:hidden;border-radius:12px;background:#16213e;margin:0 4px;min-height:80px;}
@@ -22,7 +21,7 @@ body{background:#1a1a2e;flex-direction:column;}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/" data-title="&#127929; Piano Game" data-links='[{"label":"&#9664; Lesson","href":"./lesson.html"}]'></div>
+<div class="nav-bar" data-home="../../games/" data-title="Piano Game" data-links='[{"label":"Lesson","href":"./lesson.html"}]' data-links-icon="lesson"></div>
 <div class="game-area">
   <div id="controls">
     <button class="ctrl-btn" id="btn-play" style="background:#2ECC71;color:#fff;">&#9654; Play</button>
@@ -47,6 +46,7 @@ body{background:#1a1a2e;flex-direction:column;}
 <script src="../../../ui/shared/audio-ctx.js"></script>
 <script src="../../../ui/piano/piano-ui.js"></script>
 <script type="module">
+import '../../../ui/speech/speech-ui.js';
 import { init } from '../../../ui/piano/piano-game-ui.js';
 window.addEventListener('load', init);
 </script>

@@ -9,7 +9,6 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;flex-direction:column;}
-.nav-bar{flex-direction:row;justify-content:space-between;border-right:none;border-bottom:2px solid #ddd;padding:8px 16px;}
 #song-selector-wrap{display:flex;align-items:center;justify-content:center;padding:6px 12px;flex-shrink:0;border-bottom:1px solid #eee;background:#fff8f0;}
 #song-select{font-size:clamp(13px,3.5vw,16px);font-family:inherit;padding:4px 8px;border:2px solid #ddd;border-radius:8px;background:#fff;color:#333;cursor:pointer;}
 #stage{flex:1;display:flex;flex-direction:row;align-items:stretch;overflow:hidden;}
@@ -32,7 +31,7 @@ body{background:#fff8f0;flex-direction:column;}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="&#127929; Piano" data-links='[{"label":"Game &#9654;","href":"./game.html"}]'></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Piano" data-links='[{"label":"Game","href":"./game.html"}]'></div>
 <div id="song-selector-wrap"><select id="song-select"></select></div>
 <div class="game-area">
   <div id="stage">
@@ -44,6 +43,7 @@ body{background:#fff8f0;flex-direction:column;}
   <div id="black-keys-wrap"></div>
   <div id="keys-wrap"></div>
 </div>
+<script type="module">import '../../../ui/speech/speech-ui.js';</script>
 <script src="../../shared/menu.js" defer></script>
 <script src="../../../core/shared/utils.js"></script>
 <script src="../../../core/piano/piano-core.js"></script>

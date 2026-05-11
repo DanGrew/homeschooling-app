@@ -8,13 +8,16 @@ test('nav home link points to lessons', async ({ page }) => {
   expect(href).toBe('/homeschooling-app/app/lessons/')
 })
 
-test('nav shows Primary Colours link', async ({ page }) => {
+test('games popout button shows gamepad icon', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.getByRole('link', { name: 'Primary Colours' })).toBeVisible()
+  const gamesBtn = page.locator('.nav-bar button').filter({ hasText: '\uD83C\uDFAE' })
+  await expect(gamesBtn).toBeVisible()
 })
 
-test('nav shows Secondary Colours link', async ({ page }) => {
+test('games popout shows Primary and Secondary Colours links', async ({ page }) => {
   await page.goto(URL)
+  await page.locator('.nav-bar button').filter({ hasText: '\uD83C\uDFAE' }).click()
+  await expect(page.getByRole('link', { name: 'Primary Colours' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Secondary Colours' })).toBeVisible()
 })
 
