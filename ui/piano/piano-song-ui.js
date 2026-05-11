@@ -13,8 +13,13 @@ var SONG_NOTE_MAP = {
   '^G': {note:'G5', color:'#C5F2CC'},
   '^A': {note:null, color:'#ccc'},
   'Bb': {note:null, color:'#ccc'},
-  'F#': {note:null, color:'#ccc'}
+  'F#': {note:'F#4', color:'#D4D4FF'}
 };
+
+fetch('../../../assets/audio/piano/F#4.ogg')
+  .then(function(r) { return r.arrayBuffer(); })
+  .then(function(buf) { _rawBuffers['F#4'] = buf; })
+  .catch(function() {});
 
 var _NO_NOTE_INFO = {note: null, color: '#ccc'};
 var _CHIP_CLASS = {'true': 'note-chip playable', 'false': 'note-chip no-audio'};
