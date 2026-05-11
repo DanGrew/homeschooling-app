@@ -13,6 +13,7 @@
     };
     if(bar.dataset.instruction){
       var instrEl=document.createElement('div');
+      instrEl.id=bar.dataset.instructionId||'';
       instrEl.className='speakable';
       instrEl.style.cssText='font-size:0.8em;color:#aaa;padding:2px 16px 8px;';
       instrEl.textContent=bar.dataset.instruction;
