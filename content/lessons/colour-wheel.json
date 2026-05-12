@@ -108,6 +108,71 @@
         { "text": "Blue and green make a colour called teal. Can you spot it on the wheel?", "expect": "BLUE_GREEN_TAPPED", "feedback": "Blue and green make it — teal!" },
         { "text": ["Incredible!", "Amazing!", "You mixed a tricky one!", "Brilliant!", "Superstar!"], "auto": true, "success": true }
       ]
+    },
+    {
+      "id": "make_vermillion",
+      "number": 9,
+      "title": "Make Vermillion",
+      "guide": "cat",
+      "steps": [
+        { "text": "Let's mix red and orange to make a colour called Vermillion!", "auto": true },
+        { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it!" },
+        { "text": "Now find orange.", "expect": "ORANGE_TAPPED", "feedback": "Now find the colour they make together." },
+        { "text": "Red and orange make Vermillion! Can you spot it on the wheel?", "expect": "RED_ORANGE_TAPPED", "feedback": "Red and orange make it — Vermillion!" },
+        { "text": ["Incredible!", "Amazing!", "Brilliant!", "Superstar!", "You did it!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "make_amber",
+      "number": 10,
+      "title": "Make Amber",
+      "guide": "cat",
+      "steps": [
+        { "text": "Time to mix! Yellow and orange make a warm colour called Amber.", "auto": true },
+        { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Bright as sunshine!" },
+        { "text": "Now find orange.", "expect": "ORANGE_TAPPED", "feedback": "Now find the colour they make together." },
+        { "text": "Yellow and orange make Amber! Can you find it on the wheel?", "expect": "YELLOW_ORANGE_TAPPED", "feedback": "Yellow and orange make it — Amber!" },
+        { "text": ["Brilliant!", "Amazing work!", "You're a star!", "Superstar!", "Fantastic!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "make_chartreuse",
+      "number": 11,
+      "title": "Make Chartreuse",
+      "guide": "cat",
+      "steps": [
+        { "text": "Ready? We're going to mix yellow and green to make a colour called Chartreuse!", "auto": true },
+        { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Got it!" },
+        { "text": "Now find green.", "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make together." },
+        { "text": "Yellow and green make Chartreuse! Can you spot it on the wheel?", "expect": "YELLOW_GREEN_TAPPED", "feedback": "Yellow and green make it — Chartreuse!" },
+        { "text": ["Incredible!", "Well done!", "You're a star!", "Brilliant!", "Amazing!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "make_indigo",
+      "number": 12,
+      "title": "Make Indigo",
+      "guide": "cat",
+      "steps": [
+        { "text": "Let's mix blue and purple to make a deep colour called Indigo!", "auto": true },
+        { "text": "Find blue on the colour wheel.", "expect": "BLUE_TAPPED", "feedback": "Cool and calm!" },
+        { "text": "Now find purple.", "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make together." },
+        { "text": "Blue and purple make Indigo! Can you find it on the wheel?", "expect": "BLUE_PURPLE_TAPPED", "feedback": "Blue and purple make it — Indigo!" },
+        { "text": ["Fantastic!", "Amazing work!", "Brilliant!", "Superstar!", "You did it!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "make_magenta",
+      "number": 13,
+      "title": "Make Magenta",
+      "guide": "cat",
+      "steps": [
+        { "text": "Ready for a bright one? Red and purple make a colour called Magenta!", "auto": true },
+        { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it!" },
+        { "text": "Now find purple.", "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make together." },
+        { "text": "Red and purple make Magenta! Can you find it on the wheel?", "expect": "RED_PURPLE_TAPPED", "feedback": "Red and purple make it — Magenta!" },
+        { "text": ["Incredible!", "Amazing!", "You're a star!", "Brilliant!", "Superstar!"], "auto": true, "success": true }
+      ]
     }
   ]
 }
