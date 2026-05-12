@@ -65,7 +65,7 @@ function setTraceUI() {
 function doNav(idx) {
   currentIdx = wrapIdx(idx, filtered.length);
   currentWord = filtered[currentIdx].word;
-  document.getElementById('word-label').textContent = filtered[currentIdx].displayName || currentWord;
+  document.getElementById('word-label').textContent = filtered[currentIdx].displayName;
   const multi = filtered.length > 1;
   document.getElementById('btn-prev').disabled = !multi;
   document.getElementById('btn-next').disabled = !multi;
