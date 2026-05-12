@@ -1,0 +1,7 @@
+{
+  "default": {
+    "full": { "minLessons": 1 },
+    "partial": null
+  },
+  "overrides": []
+}

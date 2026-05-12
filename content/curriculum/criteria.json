@@ -9,9 +9,13 @@
         { "id": "ead.colour-mixing",       "label": "Colour mixing" },
         { "id": "ead.colour-recognition",  "label": "Colour recognition" },
         { "id": "ead.colour-families",     "label": "Colour families" },
+        { "id": "ead.mark-making",         "label": "Mark-making & drawing" },
         { "id": "ead.music-exploration",   "label": "Music & sound exploration" },
         { "id": "ead.note-names",          "label": "Note names" },
-        { "id": "ead.pitch",               "label": "High/low pitch" }
+        { "id": "ead.pitch",               "label": "High/low pitch" },
+        { "id": "ead.rhythm",              "label": "Rhythm & tempo" },
+        { "id": "ead.pretend-play",        "label": "Pretend play & role play" },
+        { "id": "ead.making-modelling",    "label": "Making & modelling" }
       ]
     },
     {
@@ -22,11 +26,17 @@
       "criteria": [
         { "id": "maths.counting-5",          "label": "Counting within 5" },
         { "id": "maths.counting-10",         "label": "Counting beyond 5" },
+        { "id": "maths.subitising",          "label": "Subitising" },
         { "id": "maths.composition",         "label": "Number composition" },
         { "id": "maths.equivalence",         "label": "Equivalence & comparing" },
-        { "id": "maths.subitising",          "label": "Subitising" },
         { "id": "maths.numeral-recognition", "label": "Numeral recognition" },
-        { "id": "maths.sequencing",          "label": "Ordering & sequencing" }
+        { "id": "maths.number-order",        "label": "Number ordering & sequence" },
+        { "id": "maths.shape-2d",            "label": "2D shape recognition" },
+        { "id": "maths.shape-3d",            "label": "3D shape recognition" },
+        { "id": "maths.spatial",             "label": "Spatial reasoning & position" },
+        { "id": "maths.pattern",             "label": "Repeating patterns" },
+        { "id": "maths.size-measure",        "label": "Size & measurement ordering" },
+        { "id": "maths.ten-frame",           "label": "Five-frame & ten-frame" }
       ]
     },
     {
@@ -35,11 +45,13 @@
       "shortLabel": "C&L",
       "covers": "Speaking, listening, vocabulary, language understanding",
       "criteria": [
-        { "id": "cl.vocabulary",         "label": "Vocabulary" },
+        { "id": "cl.topic-vocabulary",   "label": "Topic vocabulary" },
         { "id": "cl.feeling-vocabulary", "label": "Feeling vocabulary" },
         { "id": "cl.descriptive-vocab",  "label": "Descriptive vocabulary" },
         { "id": "cl.technical-vocab",    "label": "Technical vocabulary" },
-        { "id": "cl.listening",          "label": "Attention & listening" }
+        { "id": "cl.listening",          "label": "Attention & listening" },
+        { "id": "cl.sequencing-language","label": "Sequencing language" },
+        { "id": "cl.prediction",         "label": "Prediction & wondering" }
       ]
     },
     {
@@ -48,10 +60,13 @@
       "shortLabel": "UW",
       "covers": "People, places, nature, cause & effect, the wider world",
       "criteria": [
-        { "id": "uw.cause-effect",    "label": "Cause & effect" },
-        { "id": "uw.animals-nature",  "label": "Animals & nature" },
-        { "id": "uw.community",       "label": "People & community" },
-        { "id": "uw.world-awareness", "label": "World awareness" }
+        { "id": "uw.cause-effect",          "label": "Cause & effect" },
+        { "id": "uw.animals-nature",        "label": "Animals & nature" },
+        { "id": "uw.community",             "label": "People & community" },
+        { "id": "uw.world-awareness",       "label": "World awareness" },
+        { "id": "uw.materials-properties",  "label": "Materials & properties" },
+        { "id": "uw.seasonal-change",       "label": "Seasonal & natural change" },
+        { "id": "uw.technology",            "label": "Technology & digital world" }
       ]
     },
     {
@@ -60,8 +75,11 @@
       "shortLabel": "PSED",
       "covers": "Feelings, self-regulation, relationships, identity",
       "criteria": [
-        { "id": "psed.emotion-vocab", "label": "Emotion vocabulary" },
-        { "id": "psed.identity",      "label": "Sense of identity" }
+        { "id": "psed.emotion-vocab",    "label": "Emotion vocabulary" },
+        { "id": "psed.identity",         "label": "Sense of identity" },
+        { "id": "psed.self-regulation",  "label": "Self-regulation" },
+        { "id": "psed.relationships",    "label": "Relationships & turn-taking" },
+        { "id": "psed.independence",     "label": "Independence & choice-making" }
       ]
     },
     {
@@ -70,11 +88,13 @@
       "shortLabel": "Literacy",
       "covers": "Reading, writing, phonics, letter & word recognition",
       "criteria": [
-        { "id": "literacy.phonics",            "label": "Phonological awareness" },
-        { "id": "literacy.letter-formation",   "label": "Letter formation" },
-        { "id": "literacy.word-recognition",   "label": "Word recognition" },
-        { "id": "literacy.numeral-formation",  "label": "Numeral formation" },
-        { "id": "literacy.name-recognition",   "label": "Name recognition" }
+        { "id": "literacy.rhyme-awareness",     "label": "Rhyme & phonological awareness" },
+        { "id": "literacy.phonics",             "label": "Phonological awareness & phonics" },
+        { "id": "literacy.word-recognition",    "label": "Word recognition" },
+        { "id": "literacy.letter-formation",    "label": "Letter formation" },
+        { "id": "literacy.name-recognition",    "label": "Name recognition" },
+        { "id": "literacy.print-concepts",      "label": "Print concepts & book handling" },
+        { "id": "literacy.story-comprehension", "label": "Story comprehension & narrative" }
       ]
     },
     {
@@ -84,7 +104,10 @@
       "covers": "Fine and gross motor skills, physical control",
       "criteria": [
         { "id": "pd.fine-motor",          "label": "Fine motor" },
-        { "id": "pd.fine-motor-circular", "label": "Fine motor (circular)" }
+        { "id": "pd.fine-motor-circular", "label": "Fine motor (circular)" },
+        { "id": "pd.numeral-formation",   "label": "Numeral formation" },
+        { "id": "pd.tool-use",            "label": "Tool use (pencils, scissors, brushes)" },
+        { "id": "pd.gross-motor",         "label": "Gross motor & physical play" }
       ]
     }
   ]
