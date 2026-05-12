@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 289 401.3" style="enable-background:new 0 0 1400 980;" xml:space="preserve" width="289" height="401.3">
+<style type="text/css">
+	.st0{fill:#C9D1D0;}
+	.st1{opacity:0.3;}
+	.st2{fill:#3F3F3F;}
+	.st3{fill:#FF1E46;}
+	.st4{fill:#6D0F05;}
+	.st5{fill:#FFFFFF;}
+	.st6{fill:#3F3F3F;stroke:#3F3F3F;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st7{fill:none;stroke:#3F3F3F;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st8{fill:#FFFFFF;stroke:#6D0F05;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st9{fill:none;stroke:#6D0F05;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st10{fill:#FF1E46;stroke:#6D0F05;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st11{fill:none;stroke:#3F3F3F;stroke-width:5;stroke-miterlimit:10;}
+	.st12{fill:#ECBD6B;}
+	.st13{fill:none;stroke:#E29367;stroke-width:5;stroke-miterlimit:10;}
+	.st14{fill:#E29367;}
+	.st15{fill:none;stroke:#3F3F3F;stroke-width:13;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st16{fill:#3F3F3F;stroke:#3F3F3F;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st17{fill:none;stroke:#6D0F05;stroke-width:13;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st18{fill:#9B8579;stroke:#6D0F05;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st19{fill:#C5E9EF;stroke:#6D0F05;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st20{fill:#C5E9EF;}
+	.st21{fill:#3CE1E5;}
+	.st22{fill:#AA092B;}
+	.st23{fill:none;stroke:#3F3F3F;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st24{fill:#C5E9EF;stroke:#6D0F05;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st25{fill:#9B8579;}
+	.st26{fill:none;stroke:#6D0F05;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+</style>
+
+<g id="medical_2">
+	
+	
+	
+	
+	
+	
+	<g>
+		<g class="st1">
+			<path class="st2" d="M 40 397.3 c -14.9 0 -27 -12.1 -27 -27 v -292 c 0 -14.9 12.1 -27 27 -27 h 218 c 14.9 0 27 12.1 27 27 v 292 c 0 14.9 -12.1 27 -27 27 H 40 z"/>
+			<path class="st2" d="M 258 55.3 c 12.7 0 23 10.3 23 23 v 292 c 0 12.7 -10.3 23 -23 23 h -218 c -12.7 0 -23 -10.3 -23 -23 v -292 c 0 -12.7 10.3 -23 23 -23 H 258 M 258 47.3 h -218 c -17.1 0 -31 13.9 -31 31 v 292 c 0 17.1 13.9 31 31 31 h 218 c 17.1 0 31 -13.9 31 -31 v -292 C 289 61.2 275.1 47.3 258 47.3 L 258 47.3 z"/>
+			<path class="st16" d="M 245 370.3 H 53.1 c -5.5 0 -10 -4.5 -10 -10 V 83.5 c 0 -5.5 4.5 -10 10 -10 h 191.9 c 5.5 0 10 4.5 10 10 v 276.8 C 255 365.9 250.5 370.3 245 370.3 z"/>
+			<path class="st2" d="M 108.7 99 c -8.3 0 -15.1 -6.2 -15.1 -13.8 v -26 c 0 -0.9 0.4 -1.8 1 -2.4 l 37.5 -38.4 c 4.3 -4.4 10.4 -6.9 16.9 -6.9 c 6.4 0 12.6 2.5 16.9 6.9 l 37.5 38.4 c 0.6 0.7 1 1.5 1 2.4 v 26 c 0 7.6 -6.8 13.8 -15.1 13.8 H 108.7 z M 149 32.5 c -3.8 0 -6.9 2.6 -6.9 5.8 c 0 3.2 3.1 5.8 6.9 5.8 c 3.8 0 6.9 -2.6 6.9 -5.8 C 156 35.1 152.9 32.5 149 32.5 z"/>
+			<path class="st2" d="M 149 15 c 5.3 0 10.6 1.9 14.4 5.8 l 37.5 38.4 v 26 c 0 5.7 -5.2 10.3 -11.6 10.3 h -80.6 c -6.4 0 -11.6 -4.6 -11.6 -10.3 v -26 l 37.5 -38.4 C 138.5 17 143.8 15 149 15 M 149 47.6 c 5.8 0 10.4 -4.2 10.4 -9.3 c 0 -5.1 -4.7 -9.3 -10.4 -9.3 c -5.8 0 -10.4 4.2 -10.4 9.3 C 138.6 43.4 143.3 47.6 149 47.6 M 149 8 c -7.4 0 -14.4 2.9 -19.4 7.9 l -37.5 38.4 c -1.3 1.3 -2 3.1 -2 4.9 v 26 c 0 9.5 8.3 17.3 18.6 17.3 h 80.6 c 10.2 0 18.6 -7.8 18.6 -17.3 v -26 c 0 -1.8 -0.7 -3.6 -2 -4.9 l -37.5 -38.4 C 163.5 10.9 156.4 8 149 8 L 149 8 z M 149 40.6 c -2 0 -3.4 -1.2 -3.4 -2.3 c 0 -1.1 1.5 -2.3 3.4 -2.3 c 2 0 3.4 1.2 3.4 2.3 C 152.5 39.4 151 40.6 149 40.6 L 149 40.6 z"/>
+			<line class="st23" x1="69" y1="196.39999999999998" x2="229" y2="196.39999999999998"/>
+			<line class="st23" x1="69" y1="225" x2="229" y2="225"/>
+			<line class="st23" x1="69" y1="253.60000000000002" x2="229" y2="253.60000000000002"/>
+			<line class="st23" x1="69" y1="282.29999999999995" x2="229" y2="282.29999999999995"/>
+			<path class="st2" d="M 229 231"/>
+			<path class="st2" d="M 229 288.3"/>
+			<polygon class="st16" points="255 327.4 217.8 327.4 217.8 370.3"/>
+			<path class="st2" d="M 157.8 135.1 v -11 c 0 -1.5 -1.3 -2.6 -2.8 -2.6 H 143.1 c -1.6 0 -2.8 1.2 -2.8 2.6 v 11 c 0 1.5 -1.3 2.6 -2.8 2.6 h -11.7 c -1.6 0 -2.8 1.2 -2.8 2.6 V 151.5 c 0 1.5 1.3 2.6 2.8 2.6 h 11.7 c 1.6 0 2.8 1.2 2.8 2.6 v 11 c 0 1.5 1.3 2.6 2.8 2.6 h 11.8 c 1.6 0 2.8 -1.2 2.8 -2.6 v -11 c 0 -1.5 1.3 -2.6 2.8 -2.6 h 11.7 c 1.6 0 2.8 -1.2 2.8 -2.6 v -11.1 c 0 -1.5 -1.3 -2.6 -2.8 -2.6 h -11.7 C 159 137.7 157.8 136.6 157.8 135.1 z"/>
+		</g>
+		<g>
+			<g>
+				<g>
+					<path class="st12" d="M 31 389.3 c -14.9 0 -27 -12.1 -27 -27 v -292 c 0 -14.9 12.1 -27 27 -27 h 218 c 14.9 0 27 12.1 27 27 v 292 c 0 14.9 -12.1 27 -27 27 H 31 z"/>
+					<path class="st4" d="M 249 47.3 c 12.7 0 23 10.3 23 23 v 292 c 0 12.7 -10.3 23 -23 23 h -218 c -12.7 0 -23 -10.3 -23 -23 v -292 c 0 -12.7 10.3 -23 23 -23 H 249 M 249 39.3 h -218 c -17.1 0 -31 13.9 -31 31 v 292 c 0 17.1 13.9 31 31 31 h 218 c 17.1 0 31 -13.9 31 -31 v -292 C 280 53.2 266.1 39.3 249 39.3 L 249 39.3 z"/>
+				</g>
+				<path class="st24" d="M 236 362.3 H 44.1 c -5.5 0 -10 -4.5 -10 -10 V 75.5 c 0 -5.5 4.5 -10 10 -10 h 191.9 c 5.5 0 10 4.5 10 10 v 276.8 C 246 357.9 241.5 362.3 236 362.3 z"/>
+				<g>
+					<path class="st25" d="M 99.7 91 c -8.3 0 -15.1 -6.2 -15.1 -13.8 v -26 c 0 -0.9 0.4 -1.8 1 -2.4 l 37.5 -38.4 c 4.3 -4.4 10.4 -6.9 16.9 -6.9 c 6.4 0 12.6 2.5 16.9 6.9 l 37.5 38.4 c 0.6 0.7 1 1.5 1 2.4 v 26 c 0 7.6 -6.8 13.8 -15.1 13.8 H 99.7 z M 140 24.5 c -3.8 0 -6.9 2.6 -6.9 5.8 c 0 3.2 3.1 5.8 6.9 5.8 c 3.8 0 6.9 -2.6 6.9 -5.8 C 147 27.1 143.9 24.5 140 24.5 z"/>
+					<path class="st4" d="M 140 7 c 5.3 0 10.6 1.9 14.4 5.8 l 37.5 38.4 v 26 c 0 5.7 -5.2 10.3 -11.6 10.3 h -80.6 c -6.4 0 -11.6 -4.6 -11.6 -10.3 v -26 l 37.5 -38.4 C 129.5 9 134.8 7 140 7 M 140 39.6 c 5.8 0 10.4 -4.2 10.4 -9.3 c 0 -5.1 -4.7 -9.3 -10.4 -9.3 c -5.8 0 -10.4 4.2 -10.4 9.3 C 129.6 35.4 134.3 39.6 140 39.6 M 140 0 c -7.4 0 -14.4 2.9 -19.4 7.9 l -37.5 38.4 c -1.3 1.3 -2 3.1 -2 4.9 v 26 c 0 9.5 8.3 17.3 18.6 17.3 h 80.6 c 10.2 0 18.6 -7.8 18.6 -17.3 v -26 c 0 -1.8 -0.7 -3.6 -2 -4.9 l -37.5 -38.4 C 154.5 2.9 147.4 0 140 0 L 140 0 z M 140 32.6 c -2 0 -3.4 -1.2 -3.4 -2.3 c 0 -1.1 1.5 -2.3 3.4 -2.3 c 2 0 3.4 1.2 3.4 2.3 C 143.5 31.4 142 32.6 140 32.6 L 140 32.6 z"/>
+				</g>
+				<line class="st26" x1="60" y1="188.39999999999998" x2="220" y2="188.39999999999998"/>
+				<line class="st26" x1="60" y1="217" x2="220" y2="217"/>
+				<line class="st26" x1="60" y1="245.60000000000002" x2="220" y2="245.60000000000002"/>
+				<line class="st26" x1="60" y1="274.29999999999995" x2="220" y2="274.29999999999995"/>
+				<path class="st3" d="M 220 223"/>
+				<path class="st3" d="M 220 280.3"/>
+				<polygon class="st24" points="246 319.4 208.8 319.4 208.8 362.3"/>
+				<path class="st3" d="M 148.8 127.1 v -11 c 0 -1.5 -1.3 -2.6 -2.8 -2.6 H 134.1 c -1.6 0 -2.8 1.2 -2.8 2.6 v 11 c 0 1.5 -1.3 2.6 -2.8 2.6 h -11.7 c -1.6 0 -2.8 1.2 -2.8 2.6 V 143.5 c 0 1.5 1.3 2.6 2.8 2.6 h 11.7 c 1.6 0 2.8 1.2 2.8 2.6 v 11 c 0 1.5 1.3 2.6 2.8 2.6 h 11.8 c 1.6 0 2.8 -1.2 2.8 -2.6 v -11 c 0 -1.5 1.3 -2.6 2.8 -2.6 h 11.7 c 1.6 0 2.8 -1.2 2.8 -2.6 v -11.1 c 0 -1.5 -1.3 -2.6 -2.8 -2.6 h -11.7 C 150 129.7 148.8 128.6 148.8 127.1 z"/>
+			</g>
+		</g>
+	</g>
+	
+</g>
+</svg>

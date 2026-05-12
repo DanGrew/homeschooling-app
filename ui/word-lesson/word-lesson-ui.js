@@ -65,7 +65,7 @@ function setTraceUI() {
 
 function renderWordEntry(entry) {
   currentWord = entry.word;
-  document.getElementById('word-label').textContent = currentWord;
+  document.getElementById('word-label').textContent = entry.displayName;
   hideBanner();
   setLessonUI();
   loadWord(currentWord);

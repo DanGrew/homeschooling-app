@@ -37,7 +37,9 @@ export function wrapIdx(idx, total) {
 }
 
 export function resolveWordEntry(concept) {
-  return { word: concept.name.toLowerCase(), tags: concept.tags || [], id: concept.id };
+  const display = concept.name;
+  const word = display.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return { word, displayName: display, tags: concept.tags || [], id: concept.id };
 }
 
 if (typeof module !== 'undefined') module.exports = { validWord, charFile, bestVoice, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry };
