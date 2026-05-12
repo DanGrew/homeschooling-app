@@ -36,7 +36,7 @@ tr:nth-child(even) td{background:#fafafa;}
 <h2>EYFS Areas</h2>
 <div class="table-wrap">
 <table class="glossary">
-  <thead><tr><th>Full Name</th><th>Abbrev</th><th>Covers</th></tr></thead>
+  <thead><tr><th>Full Name</th><th>Abbrev</th><th>Covers</th><th>Criteria</th></tr></thead>
   <tbody id="glossary-body"></tbody>
 </table>
 </div>
@@ -142,7 +142,8 @@ function buildColKeyFns() {
 
 function renderGlossaryRow(area) {
   var tr = document.createElement('tr');
-  tr.innerHTML = '<td>' + area.label + '</td><td>' + area.shortLabel + '</td><td>' + area.covers + '</td>';
+  var criteriaHtml = area.criteria.map(function(c) { return c.label; }).join('<br>');
+  tr.innerHTML = '<td>' + area.label + '</td><td>' + area.shortLabel + '</td><td>' + area.covers + '</td><td>' + criteriaHtml + '</td>';
   return tr;
 }
 
