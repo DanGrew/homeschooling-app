@@ -47,6 +47,22 @@ test('tapping dot 1 does not wrong-flash', async ({ page }) => {
   expect(cls || '').not.toMatch(/wrong-flash/)
 })
 
+test('paginator bar is visible with prev and next buttons', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
+  await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
+  await expect(page.locator('#paginator-bar button', { hasText: 'Next' })).toBeVisible()
+  await expect(page.locator('#paginator-bar button', { hasText: 'Prev' })).toBeVisible()
+  await expect(page.locator('#paginator-bar span')).toContainText('Page 1 of')
+})
+
+test('next paginator button advances to next shape', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
+  await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
+  const titleBefore = await page.locator('#title').textContent()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
+  await expect(page.locator('#title')).not.toHaveText(titleBefore)
+})
+
 test('home nav button points to games index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
   const href = await page.locator('.nav-btn').first().evaluate(el => new URL(el.href).pathname)
