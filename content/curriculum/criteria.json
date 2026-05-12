@@ -1,0 +1,91 @@
+{
+  "areas": [
+    {
+      "id": "ead",
+      "label": "Expressive Arts & Design",
+      "shortLabel": "EAD",
+      "covers": "Creativity, art, colour, music, imagination",
+      "criteria": [
+        { "id": "ead.colour-mixing",       "label": "Colour mixing" },
+        { "id": "ead.colour-recognition",  "label": "Colour recognition" },
+        { "id": "ead.colour-families",     "label": "Colour families" },
+        { "id": "ead.music-exploration",   "label": "Music & sound exploration" },
+        { "id": "ead.note-names",          "label": "Note names" },
+        { "id": "ead.pitch",               "label": "High/low pitch" }
+      ]
+    },
+    {
+      "id": "maths",
+      "label": "Mathematics",
+      "shortLabel": "Maths",
+      "covers": "Numbers, counting, shape, comparing quantities",
+      "criteria": [
+        { "id": "maths.counting-5",          "label": "Counting within 5" },
+        { "id": "maths.counting-10",         "label": "Counting beyond 5" },
+        { "id": "maths.composition",         "label": "Number composition" },
+        { "id": "maths.equivalence",         "label": "Equivalence & comparing" },
+        { "id": "maths.subitising",          "label": "Subitising" },
+        { "id": "maths.numeral-recognition", "label": "Numeral recognition" },
+        { "id": "maths.sequencing",          "label": "Ordering & sequencing" }
+      ]
+    },
+    {
+      "id": "cl",
+      "label": "Communication & Language",
+      "shortLabel": "C&L",
+      "covers": "Speaking, listening, vocabulary, language understanding",
+      "criteria": [
+        { "id": "cl.vocabulary",         "label": "Vocabulary" },
+        { "id": "cl.feeling-vocabulary", "label": "Feeling vocabulary" },
+        { "id": "cl.descriptive-vocab",  "label": "Descriptive vocabulary" },
+        { "id": "cl.technical-vocab",    "label": "Technical vocabulary" },
+        { "id": "cl.listening",          "label": "Attention & listening" }
+      ]
+    },
+    {
+      "id": "uw",
+      "label": "Understanding the World",
+      "shortLabel": "UW",
+      "covers": "People, places, nature, cause & effect, the wider world",
+      "criteria": [
+        { "id": "uw.cause-effect",    "label": "Cause & effect" },
+        { "id": "uw.animals-nature",  "label": "Animals & nature" },
+        { "id": "uw.community",       "label": "People & community" },
+        { "id": "uw.world-awareness", "label": "World awareness" }
+      ]
+    },
+    {
+      "id": "psed",
+      "label": "Personal, Social & Emotional",
+      "shortLabel": "PSED",
+      "covers": "Feelings, self-regulation, relationships, identity",
+      "criteria": [
+        { "id": "psed.emotion-vocab", "label": "Emotion vocabulary" },
+        { "id": "psed.identity",      "label": "Sense of identity" }
+      ]
+    },
+    {
+      "id": "literacy",
+      "label": "Literacy",
+      "shortLabel": "Literacy",
+      "covers": "Reading, writing, phonics, letter & word recognition",
+      "criteria": [
+        { "id": "literacy.phonics",            "label": "Phonological awareness" },
+        { "id": "literacy.letter-formation",   "label": "Letter formation" },
+        { "id": "literacy.word-recognition",   "label": "Word recognition" },
+        { "id": "literacy.numeral-formation",  "label": "Numeral formation" },
+        { "id": "literacy.name-recognition",   "label": "Name recognition" }
+      ]
+    },
+    {
+      "id": "pd",
+      "label": "Physical Development",
+      "shortLabel": "PD",
+      "covers": "Fine and gross motor skills, physical control",
+      "criteria": [
+        { "id": "pd.fine-motor",          "label": "Fine motor" },
+        { "id": "pd.fine-motor-circular", "label": "Fine motor (circular)" }
+      ]
+    }
+  ]
+}

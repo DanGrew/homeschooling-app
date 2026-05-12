@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Curriculum Coverage</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;font-family:inherit;padding:24px 16px 48px;}
+a.back{display:inline-block;margin-bottom:20px;color:#7c6fcd;text-decoration:none;font-size:0.95em;}
+a.back:hover{text-decoration:underline;}
+h1{font-size:2em;color:#333;margin-bottom:28px;}
+h2{font-size:1.1em;color:#555;margin:32px 0 12px;}
+.table-wrap{overflow-x:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+table{border-collapse:collapse;width:100%;font-size:0.88em;background:#fff;}
+th{background:#f0e8ff;color:#444;padding:9px 12px;text-align:left;border:1px solid #e0d4f5;white-space:nowrap;}
+td{padding:8px 12px;border:1px solid #e5e7eb;vertical-align:top;line-height:1.5;}
+tr:nth-child(even) td{background:#fafafa;}
+.col-lesson{font-weight:600;color:#333;white-space:nowrap;}
+.col-activity{color:#888;white-space:nowrap;font-size:0.9em;}
+.glossary th:first-child{width:200px;}
+.glossary th:nth-child(2){width:80px;}
+.coverage th:first-child{width:160px;}
+.coverage th:nth-child(2){width:110px;}
+.coverage th{cursor:pointer;user-select:none;}
+.coverage th:hover{background:#e4d5ff;}
+.coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
+.coverage th.sort-desc::after{content:' ▼';font-size:0.75em;color:#7c6fcd;}
+</style>
+</head>
+<body>
+<a class="back" href="../">← Home</a>
+<h1>Curriculum Coverage</h1>
+
+<h2>EYFS Areas</h2>
+<div class="table-wrap">
+<table class="glossary">
+  <thead><tr><th>Full Name</th><th>Abbrev</th><th>Covers</th></tr></thead>
+  <tbody id="glossary-body"></tbody>
+</table>
+</div>
+
+<h2>Lesson Coverage</h2>
+<div class="table-wrap">
+<table class="coverage">
+  <thead id="coverage-head"></thead>
+  <tbody id="coverage-body"></tbody>
+</table>
+</div>
+
+<script>
+async function init() {
+  const [criteriaData, manifest] = await Promise.all([
+    fetch('../../content/curriculum/criteria.json').then(r => r.json()),
+    fetch('../../content/lessons/index.json').then(r => r.json())
+  ]);
+
+  const criterionMap = {};
+  for (const area of criteriaData.areas) {
+    for (const c of area.criteria) {
+      criterionMap[c.id] = { label: c.label, areaId: area.id };
+    }
+  }
+
+  const gb = document.getElementById('glossary-body');
+  for (const area of criteriaData.areas) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + area.label + '</td><td>' + area.shortLabel + '</td><td>' + area.covers + '</td>';
+    gb.appendChild(tr);
+  }
+
+  const files = await Promise.all(
+    manifest.map(entry =>
+      fetch('../../content/lessons/' + entry.file)
+        .then(r => r.json())
+        .then(data => ({ lessons: data.lessons, activityLabel: entry.activity }))
+    )
+  );
+
+  const rows = [];
+  for (const f of files) {
+    for (const lesson of f.lessons) {
+      const byArea = {};
+      for (const cid of lesson.criteria || []) {
+        const c = criterionMap[cid];
+        if (!c) continue;
+        if (!byArea[c.areaId]) byArea[c.areaId] = [];
+        byArea[c.areaId].push(c.label);
+      }
+      for (const aid in byArea) byArea[aid].sort();
+      rows.push({ title: lesson.title, activity: f.activityLabel, byArea });
+    }
+  }
+
+  const areas = criteriaData.areas;
+  let sortCol = -1;
+  let sortAsc = true;
+
+  function sortKey(row, col) {
+    if (col === 0) return row.title;
+    if (col === 1) return row.activity;
+    const area = areas[col - 2];
+    return (row.byArea[area.id] || []).join(', ');
+  }
+
+  function applySort() {
+    if (sortCol === -1) {
+      rows.sort((a, b) => {
+        const ac = a.activity.localeCompare(b.activity);
+        return ac !== 0 ? ac : a.title.localeCompare(b.title);
+      });
+    } else {
+      rows.sort((a, b) => {
+        const ka = sortKey(a, sortCol);
+        const kb = sortKey(b, sortCol);
+        return sortAsc ? ka.localeCompare(kb) : kb.localeCompare(ka);
+      });
+    }
+  }
+
+  function renderBody() {
+    const tbody = document.getElementById('coverage-body');
+    tbody.innerHTML = '';
+    for (const row of rows) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td class="col-lesson">' + row.title + '</td><td class="col-activity">' + row.activity + '</td>' +
+        areas.map(area => {
+          const labels = row.byArea[area.id] || [];
+          return '<td>' + labels.join('<br>') + '</td>';
+        }).join('');
+      tbody.appendChild(tr);
+    }
+  }
+
+  function renderHeaders() {
+    const ths = document.querySelectorAll('.coverage th');
+    ths.forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === sortCol) th.classList.add(sortAsc ? 'sort-asc' : 'sort-desc');
+    });
+  }
+
+  const head = document.getElementById('coverage-head');
+  const hr = document.createElement('tr');
+  const colHeaders = ['Lesson', 'Activity', ...areas.map(a => a.shortLabel)];
+  colHeaders.forEach((label, i) => {
+    const th = document.createElement('th');
+    th.textContent = label;
+    th.addEventListener('click', () => {
+      if (sortCol === i) {
+        sortAsc = !sortAsc;
+      } else {
+        sortCol = i;
+        sortAsc = true;
+      }
+      applySort();
+      renderBody();
+      renderHeaders();
+    });
+    hr.appendChild(th);
+  });
+  head.appendChild(hr);
+
+  applySort();
+  renderBody();
+}
+init();
+</script>
+</body>
+</html>

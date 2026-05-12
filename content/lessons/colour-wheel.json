@@ -6,6 +6,7 @@
       "number": 1,
       "title": "Make Orange",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Let's go on a colour hunt! We're going to make orange!", "auto": true },
         { "text": "Can you spot red on the colour wheel?", "expect": "RED_TAPPED", "feedback": "Warm and bright!" },
@@ -23,6 +24,7 @@
       "number": 2,
       "title": "Make Green",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Time to mix colours! We're going to make green.", "auto": true },
         { "text": "Can you find blue on the colour wheel?", "expect": "BLUE_TAPPED", "feedback": "Cool and calm!" },
@@ -36,6 +38,7 @@
       "number": 3,
       "title": "Make Purple",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Ready to mix? We're going to make purple!", "auto": true },
         { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it!" },
@@ -49,6 +52,7 @@
       "number": 4,
       "title": "Primary Colours",
       "guide": "cat",
+      "criteria": ["cl.technical-vocab", "ead.colour-recognition"],
       "steps": [
         { "text": "Some colours are special — we call them PRIMARY colours. Red, yellow, and blue. We can't make them by mixing. Can you find all three?", "auto": true },
         { "text": "Find red — it's a primary colour.", "expect": "RED_TAPPED", "feedback": "Primary colour number one!" },
@@ -62,6 +66,7 @@
       "number": 5,
       "title": "Secondary Colours",
       "guide": "cat",
+      "criteria": ["cl.technical-vocab", "ead.colour-recognition"],
       "steps": [
         { "text": "Secondary colours are made by mixing two primary colours. Orange, green, and purple are the three secondary colours — can you find them all?", "auto": true },
         { "text": "Find orange — made from red and yellow!", "expect": "ORANGE_TAPPED", "feedback": "Secondary colour number one!" },
@@ -75,6 +80,7 @@
       "number": 6,
       "title": "Warm Colours",
       "guide": "cat",
+      "criteria": ["cl.descriptive-vocab", "ead.colour-families"],
       "steps": [
         { "text": "Some colours feel warm and sunny — like fire and sunshine. Red, orange, and yellow are warm colours. Let's find them!", "auto": true },
         { "text": "Find red — a warm colour.", "expect": "RED_TAPPED", "feedback": "Warm like fire!" },
@@ -88,6 +94,7 @@
       "number": 7,
       "title": "Cool Colours",
       "guide": "cat",
+      "criteria": ["cl.descriptive-vocab", "ead.colour-families"],
       "steps": [
         { "text": "Some colours feel cool and calm — like water and sky. Blue, green, and purple are cool colours. Find them!", "auto": true },
         { "text": "Find blue — cool like the ocean.", "expect": "BLUE_TAPPED", "feedback": "Cool like the sea!" },
@@ -101,6 +108,7 @@
       "number": 8,
       "title": "Make Teal",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Ready for a tricky one? We're going to mix two colours that are already mixed — and make something new! Let's make teal!", "auto": true },
         { "text": "Find blue.", "expect": "BLUE_TAPPED", "feedback": "Got it!" },
@@ -114,6 +122,7 @@
       "number": 9,
       "title": "Make Vermillion",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Let's mix red and orange to make a colour called Vermillion!", "auto": true },
         { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it!" },
@@ -127,6 +136,7 @@
       "number": 10,
       "title": "Make Amber",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Time to mix! Yellow and orange make a warm colour called Amber.", "auto": true },
         { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Bright as sunshine!" },
@@ -140,6 +150,7 @@
       "number": 11,
       "title": "Make Chartreuse",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Ready? We're going to mix yellow and green to make a colour called Chartreuse!", "auto": true },
         { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Got it!" },
@@ -153,6 +164,7 @@
       "number": 12,
       "title": "Make Indigo",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Let's mix blue and purple to make a deep colour called Indigo!", "auto": true },
         { "text": "Find blue on the colour wheel.", "expect": "BLUE_TAPPED", "feedback": "Cool and calm!" },
@@ -166,6 +178,7 @@
       "number": 13,
       "title": "Make Magenta",
       "guide": "cat",
+      "criteria": ["ead.colour-mixing", "uw.cause-effect"],
       "steps": [
         { "text": "Ready for a bright one? Red and purple make a colour called Magenta!", "auto": true },
         { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it!" },

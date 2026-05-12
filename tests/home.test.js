@@ -12,3 +12,8 @@ test('home page has links to all four sections', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Games' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Stories' })).toBeVisible()
 })
+
+test('home page info section has Curriculum link', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/')
+  await expect(page.getByRole('link', { name: 'Curriculum' })).toBeVisible()
+})
