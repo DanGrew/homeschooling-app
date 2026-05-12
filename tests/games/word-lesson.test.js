@@ -191,7 +191,7 @@ test('banner Next button advances word', async ({ page }) => {
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
   const first = await page.locator('#word-label').textContent()
   await page.evaluate(() => window.__wlShowBanner())
-  await page.getByRole('button', { name: /Next/ }).click()
+  await page.getByTestId('success-banner').getByRole('button', { name: /Next/ }).click()
   await page.waitForFunction(
     w => document.getElementById('word-label').textContent !== w, first
   )

@@ -48,7 +48,7 @@ test('next button on banner advances to next picture and hides banner', async ({
   const count = await shapes.count()
   for (let i = 0; i < count; i++) await shapes.nth(i).click()
   await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
-  await page.getByRole('button', { name: /Next/ }).click()
+  await page.getByTestId('success-banner').getByRole('button', { name: /Next/ }).click()
   await expect(page.getByTestId('success-banner')).not.toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
   expect(await page.locator('#title').textContent()).not.toBe(titleBefore)
 })

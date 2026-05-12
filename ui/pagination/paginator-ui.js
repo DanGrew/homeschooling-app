@@ -22,12 +22,14 @@ export function createPaginator({ container, items, perPage = 1, onRender, wrap 
   bar.appendChild(btnNext);
   container.appendChild(bar);
 
+  var _applyDisabled = {
+    'true':  function() {},
+    'false': function() { btnPrev.disabled = state.isAtStart(); btnNext.disabled = state.isAtEnd(); }
+  }[String(wrap)];
+
   function _update() {
     indicator.textContent = 'Page ' + (state.getPage() + 1) + ' of ' + state.getPageCount();
-    if (!wrap) {
-      btnPrev.disabled = state.isAtStart();
-      btnNext.disabled = state.isAtEnd();
-    }
+    _applyDisabled();
     onRender(state.getSlice(), state.getPage());
   }
 
