@@ -3,7 +3,10 @@ import { GuidanceOverlay } from './guidance-overlay.js';
 
 function _resolveText(text) {
   var arr = [].concat(text);
-  return arr[Math.floor(Math.random() * arr.length)];
+  var str = arr[Math.floor(Math.random() * arr.length)];
+  var vars = Object.assign({}, window.LESSON_VARS);
+  Object.keys(vars).forEach(function(k) { str = str.split('{' + k + '}').join(vars[k]); });
+  return str;
 }
 
 var STEP_REACTION = {
@@ -29,6 +32,7 @@ GuidanceService.prototype.start = function(lesson) {
   [this._lesson].filter(Boolean).forEach(function() { self.stop(); });
   this._lesson = lesson;
   this._stepIdx = 0;
+  window.dispatchEvent(new CustomEvent('guidance:start'));
   this._showStep();
 };
 
@@ -75,8 +79,9 @@ GuidanceService.prototype._showStep = function() {
   stop(); speak(text);
 };
 
-GuidanceService.prototype._showFeedback = function(text) {
+GuidanceService.prototype._showFeedback = function(rawText) {
   var self = this;
+  var text = _resolveText(rawText);
   var total = this._lesson.steps.length;
   this._overlay.show(
     this._guideSrc(),
@@ -86,5 +91,5 @@ GuidanceService.prototype._showFeedback = function(text) {
     function() { stop(); speak(text); },
     function() { self.stop(); }
   );
-  speak(text);
+  setTimeout(function() { stop(); speak(text); }, 400);
 };

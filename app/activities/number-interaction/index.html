@@ -52,18 +52,53 @@ import { init, change, countAll } from '../../../ui/number-interaction/number-in
 
 Dictionary.init('../../dictionary/');
 
+var PLURAL_SUFFIX = { y: 'ies', h: 'es' };
+var GET_SUFFIX = { 'true': function(l) { return PLURAL_SUFFIX[l]; }, 'false': function() { return 's'; } };
+var GET_BASE   = { 'true': function(n) { return n.slice(0,-1); },   'false': function(n) { return n; } };
+function pluralize(name) {
+  var last = name.slice(-1);
+  var has = String(last in PLURAL_SUFFIX);
+  return GET_BASE[has](name) + GET_SUFFIX[has](last);
+}
+
 const all = [];
 loadImages(all, () => {
   const fruits = all.filter(w => w.tags.includes('fruit'));
   const [a, b] = pickFruitPair(fruits);
   init(a, b, 10);
+  window.LESSON_VARS = {
+    fruit_a: a.name.toLowerCase(),
+    fruit_b: b.name.toLowerCase(),
+    fruit_a_p: pluralize(a.name.toLowerCase()),
+    fruit_b_p: pluralize(b.name.toLowerCase())
+  };
   document.body.dataset.ready = 'true';
 });
 
 window.change = change;
 window.countAll = countAll;
 </script>
-<script>window.ADULT_PROMPTS_ACTIVITY='number-interaction';</script>
+<script>
+  window.DICT_BASE='../../dictionary/entries/';
+  window.ADULT_PROMPTS_ACTIVITY='number-interaction';
+  window.LESSONS=[
+    {id:'make_three',number:1,title:'Make Three'},
+    {id:'make_five',number:2,title:'Make Five'},
+    {id:'equal_groups',number:3,title:'Equal Groups'},
+    {id:'count_to_ten',number:4,title:'Count to Ten'},
+    {id:'more_and_fewer',number:5,title:'More and Fewer'}
+  ];
+</script>
+<script type="module">
+  import{GuidanceService}from'../../../ui/guidance/guidance-service.js';
+  fetch('../../../content/lessons/number-interaction.json')
+    .then(function(r){return r.json();})
+    .then(function(data){
+      window.LESSON_MAP={};
+      data.lessons.forEach(function(l){window.LESSON_MAP[l.id]=l;});
+      window.guidanceService=new GuidanceService();
+    });
+</script>
 <script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>
