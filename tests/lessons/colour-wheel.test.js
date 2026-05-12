@@ -83,6 +83,20 @@ test('lesson button opens popout with lesson title', async ({ page }) => {
   await expect(page.locator('.nav-lesson-item').first()).toContainText('Lesson 1: Make Orange')
 })
 
+test('lesson popout shows all 13 lessons', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.nav-lesson-btn').click()
+  await expect(page.locator('.nav-lesson-item')).toHaveCount(13)
+})
+
+test('lesson 9 make vermillion starts with correct intro', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').nth(8).click()
+  await expect(page.locator('#guidance-overlay')).toContainText('Vermillion')
+})
+
 test('clicking outside closes popout', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.nav-lesson-btn').click()

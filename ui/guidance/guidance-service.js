@@ -1,4 +1,4 @@
-import { speak, stop } from '../speech/speech-ui.js';
+import { queue, interrupt, stop } from '../speech/speech-ui.js';
 import { GuidanceOverlay } from './guidance-overlay.js';
 
 function _resolveText(text) {
@@ -73,10 +73,10 @@ GuidanceService.prototype._showStep = function() {
     { text: text, auto: step.auto, success: step.success },
     this._stepIdx + 1, total,
     function() { self._advance(); },
-    function() { stop(); speak(text); },
+    function() { interrupt(text); },
     function() { self.stop(); }
   );
-  stop(); speak(text);
+  interrupt(text);
 };
 
 GuidanceService.prototype._showFeedback = function(rawText) {
@@ -88,8 +88,8 @@ GuidanceService.prototype._showFeedback = function(rawText) {
     { text: text, auto: true },
     this._stepIdx + 1, total,
     function() { self._advance(); },
-    function() { stop(); speak(text); },
+    function() { interrupt(text); },
     function() { self.stop(); }
   );
-  setTimeout(function() { stop(); speak(text); }, 400);
+  queue(text);
 };
