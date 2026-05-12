@@ -43,11 +43,21 @@ function generateFromTemplate(template, rng) {
   return validate(config) !== null ? config : null;
 }
 
+function shuffled(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
 function generate(templates, maxAttempts) {
   maxAttempts = maxAttempts || 50;
-  for (let i = 0; i < maxAttempts; i++) {
-    const template = templates[Math.floor(Math.random() * templates.length)];
-    const result = generateFromTemplate(template);
+  var order = shuffled(templates);
+  for (var i = 0; i < maxAttempts; i++) {
+    var template = order[i % order.length];
+    var result = generateFromTemplate(template);
     if (result) return result;
   }
   return null;

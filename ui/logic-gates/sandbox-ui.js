@@ -2,7 +2,7 @@ function init() {
   const container = document.getElementById('stations-container');
   if (!container) return;
 
-  fetch('../../../content/logic-gates/sandbox.json')
+  fetch('../../../content/logic-gates/sandbox.json?v=2')
     .then(function(r) { return r.json(); })
     .then(function(stations) {
       stations.forEach(function(config, idx) {

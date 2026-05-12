@@ -39,7 +39,7 @@ function init() {
   }
 
   function loadNewPuzzle() {
-    fetch('../../../content/logic-gates/templates.json')
+    fetch('../../../content/logic-gates/templates.json?v=2')
       .then(function(r) { return r.json(); })
       .then(function(templates) {
         const config = window.PuzzleGenerator.generate(templates);
