@@ -7,7 +7,7 @@
       "title": "Make Three",
       "guide": "cat",
       "steps": [
-        { "text": "Keep pressing + until the Total shows 3!", "expect": "TOTAL_3", "feedback": "Three {fruit_a_p}! Count them — one, two, three." },
+        { "text": "Keep pressing + until the Total shows 3!", "expect": "TOTAL_3", "feedback": "Three {fruit_a_p}!" },
         { "text": "Tap the Total number to count them all!", "expect": "COUNT_ALL", "feedback": "You counted them all!" },
         { "text": ["Well done!", "Brilliant!", "Amazing!", "Superstar!"], "auto": true, "success": true }
       ]
@@ -18,7 +18,7 @@
       "title": "Make Five",
       "guide": "cat",
       "steps": [
-        { "text": "Use + on A and B — they add together to make the Total. Can you make five?", "expect": "TOTAL_5", "feedback": "Five! How did you split them between A and B?" },
+        { "text": "Use + on the {fruit_a_p} and {fruit_b_p} — they add together to make the Total. Can you make five?", "expect": "TOTAL_5", "feedback": "Five! How did you split them between the {fruit_a_p} and {fruit_b_p}?" },
         { "text": "Tap the Total to count all five!", "expect": "COUNT_ALL", "feedback": "You counted them all!" },
         { "text": ["Brilliant!", "Amazing!", "Superstar!", "Well done!"], "auto": true, "success": true }
       ]
@@ -29,7 +29,7 @@
       "title": "Equal Groups",
       "guide": "dog",
       "steps": [
-        { "text": "Use + and − to make A and B equal — the same number in each!", "expect": "GROUPS_EQUAL", "feedback": "They match! When two groups are the same we say they're equal." },
+        { "text": "Use + and − to make the {fruit_a_p} and {fruit_b_p} equal — the same number in each!", "expect": "GROUPS_EQUAL", "feedback": "They match! When two groups are the same we say they're equal." },
         { "text": "Tap the Total to count them all!", "expect": "COUNT_ALL", "feedback": "You counted them all!" },
         { "text": ["Brilliant thinking!", "Amazing!", "Superstar!", "Well done!"], "auto": true, "success": true }
       ]
@@ -40,7 +40,7 @@
       "title": "Count to Ten",
       "guide": "cat",
       "steps": [
-        { "text": "Ten is a special number! Press + on A and B until the Total shows 10!", "expect": "TOTAL_10", "feedback": "Ten! That's a full set." },
+        { "text": "Ten is a special number! Press + on both groups until the Total shows 10!", "expect": "TOTAL_10", "feedback": "Ten! That's a full set." },
         { "text": "Tap the Total and count all the way to ten!", "expect": "COUNT_ALL", "feedback": "You counted them all!" },
         { "text": ["Fantastic!", "Amazing!", "You did it!", "Superstar!"], "auto": true, "success": true }
       ]
@@ -51,9 +51,9 @@
       "title": "More and Fewer",
       "guide": "dog",
       "steps": [
-        { "text": "Press + on group A to add one!", "expect": "A_PLUS", "feedback": "A grew bigger! + adds one each time." },
-        { "text": "Now press + on group B!", "expect": "B_PLUS", "feedback": "B grew too! Now press − to take one away." },
-        { "text": "Press − on A to take one away!", "expect": "A_MINUS", "feedback": "A got smaller! When a group has less we say it has fewer." },
+        { "text": "Press + on the {fruit_a_p} to add one!", "expect": "A_PLUS", "feedback": "The {fruit_a_p} grew bigger! + adds one each time." },
+        { "text": "Now press + on the {fruit_b_p}!", "expect": "B_PLUS", "feedback": "The {fruit_b_p} grew too! Now press − to take one away." },
+        { "text": "Press − on the {fruit_a_p} to take one away!", "expect": "A_MINUS", "feedback": "The {fruit_a_p} got smaller! When a group has less we say it has fewer." },
         { "text": ["You explored adding and taking away. Brilliant!", "Amazing explorer!", "Superstar!"], "auto": true, "success": true }
       ]
     }

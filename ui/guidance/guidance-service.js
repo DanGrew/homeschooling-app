@@ -32,6 +32,7 @@ GuidanceService.prototype.start = function(lesson) {
   [this._lesson].filter(Boolean).forEach(function() { self.stop(); });
   this._lesson = lesson;
   this._stepIdx = 0;
+  window.dispatchEvent(new CustomEvent('guidance:start'));
   this._showStep();
 };
 

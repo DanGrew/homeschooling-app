@@ -24,6 +24,7 @@ function stopAndSpeak(wasCounting, doSpeak) {
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
+  window.addEventListener('guidance:start', function() { aCount = 0; bCount = 0; render(); });
 var numA = document.getElementById('num-a');
   var numB = document.getElementById('num-b');
   var numTotal = document.getElementById('num-total');
@@ -66,8 +67,9 @@ var SHOW_GHOST = {
   'true': function(container, key, sz) {
     var img = document.createElement('img');
     img.src = key.url; img.alt = key.name;
-    img.style.cssText = sz + ';opacity:0.15;pointer-events:none;';
+    img.style.cssText = sz + ';opacity:0.4;';
     img.draggable = false;
+    makeInteractive(img, () => stopAndSpeak(stopCounting(), () => speak(key.name)));
     container.appendChild(img);
   },
   'false': function() {}
