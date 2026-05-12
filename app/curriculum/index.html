@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Curriculum Coverage</title>
+<link rel="stylesheet" href="../shared/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;font-family:inherit;padding:24px 16px 48px;}
+a.back{display:inline-block;margin-bottom:20px;color:#7c6fcd;text-decoration:none;font-size:0.95em;}
+a.back:hover{text-decoration:underline;}
+h1{font-size:2em;color:#333;margin-bottom:28px;}
+h2{font-size:1.1em;color:#555;margin:32px 0 12px;}
+.table-wrap{overflow-x:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+table{border-collapse:collapse;width:100%;font-size:0.88em;background:#fff;}
+th{background:#f0e8ff;color:#444;padding:9px 12px;text-align:left;border:1px solid #e0d4f5;white-space:nowrap;}
+td{padding:8px 12px;border:1px solid #e5e7eb;vertical-align:top;line-height:1.5;}
+tr:nth-child(even) td{background:#fafafa;}
+.col-lesson{font-weight:600;color:#333;white-space:nowrap;}
+.col-activity{color:#888;white-space:nowrap;font-size:0.9em;}
+.glossary th:first-child{width:200px;}
+.glossary th:nth-child(2){width:80px;}
+.coverage th:first-child{width:160px;}
+.coverage th:nth-child(2){width:110px;}
+.coverage th{cursor:pointer;user-select:none;}
+.coverage th:hover{background:#e4d5ff;}
+.coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
+.coverage th.sort-desc::after{content:' ▼';font-size:0.75em;color:#7c6fcd;}
+</style>
+</head>
+<body>
+<a class="back" href="../">← Home</a>
+<h1>Curriculum Coverage</h1>
+
+<h2>EYFS Areas</h2>
+<div class="table-wrap">
+<table class="glossary">
+  <thead><tr><th>Full Name</th><th>Abbrev</th><th>Covers</th></tr></thead>
+  <tbody id="glossary-body"></tbody>
+</table>
+</div>
+
+<h2>Lesson Coverage</h2>
+<div class="table-wrap">
+<table class="coverage">
+  <thead id="coverage-head"></thead>
+  <tbody id="coverage-body"></tbody>
+</table>
+</div>
+
+<script>
+var areas = [];
+var rows = [];
+var colKeyFns = [];
+var sortCol = -1;
+var sortAsc = true;
+
+var SORT_CLASS   = { 'true': 'sort-asc', 'false': 'sort-desc' };
+var COMPARE_DIR  = {
+  'true':  function(ka, kb) { return ka.localeCompare(kb); },
+  'false': function(ka, kb) { return kb.localeCompare(ka); }
+};
+var SORT_DEFAULT = { '-1': true };
+var SORT_FN      = {
+  'true':  function() { rows.sort(defaultCompare); },
+  'false': function() { rows.sort(colCompare); }
+};
+var ADD_HEADER_CLASS = {
+  'true':  function(th) { th.classList.add(SORT_CLASS[String(sortAsc)]); },
+  'false': function() {}
+};
+var CLICK_ACTION = {
+  'true':  function() { sortAsc = !sortAsc; },
+  'false': function(i) { sortCol = i; sortAsc = true; }
+};
+
+function buildCriterionMap(criteriaData) {
+  var map = {};
+  criteriaData.areas.forEach(function(area) {
+    area.criteria.forEach(function(c) { map[c.id] = { label: c.label, areaId: area.id }; });
+  });
+  return map;
+}
+
+function initByArea() {
+  var byArea = {};
+  areas.forEach(function(a) { byArea[a.id] = []; });
+  return byArea;
+}
+
+function pushCriterion(byArea, cid, criterionMap) {
+  byArea[criterionMap[cid].areaId].push(criterionMap[cid].label);
+}
+
+function buildByArea(criteria, criterionMap) {
+  var byArea = initByArea();
+  criteria.filter(function(cid) { return criterionMap[cid]; })
+    .forEach(function(cid) { pushCriterion(byArea, cid, criterionMap); });
+  Object.keys(byArea).forEach(function(aid) { byArea[aid].sort(); });
+  return byArea;
+}
+
+var GET_CRITERIA = {
+  'true':  function(lesson) { return lesson.criteria; },
+  'false': function() { return []; }
+};
+function lessonCriteria(lesson) { return GET_CRITERIA[String(Array.isArray(lesson.criteria))](lesson); }
+function lessonToRow(lesson, activityLabel, criterionMap) {
+  return { title: lesson.title, activity: activityLabel, byArea: buildByArea(lessonCriteria(lesson), criterionMap) };
+}
+
+function flattenLessons(files, criterionMap) {
+  var result = [];
+  files.forEach(function(f) {
+    f.lessons.forEach(function(lesson) { result.push(lessonToRow(lesson, f.activityLabel, criterionMap)); });
+  });
+  return result;
+}
+
+function defaultCompare(a, b) {
+  return (a.activity + '\x00' + a.title).localeCompare(b.activity + '\x00' + b.title);
+}
+
+function colCompare(a, b) {
+  return COMPARE_DIR[String(sortAsc)](colKeyFns[sortCol](a), colKeyFns[sortCol](b));
+}
+
+function applySort() {
+  SORT_FN[String(!!SORT_DEFAULT[String(sortCol)])]();
+}
+
+function buildColKeyFns() {
+  colKeyFns = [
+    function(row) { return row.title; },
+    function(row) { return row.activity; }
+  ];
+  areas.forEach(function(area) {
+    colKeyFns.push(function(row) { return row.byArea[area.id].join(', '); });
+  });
+}
+
+function renderGlossaryRow(area) {
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + area.label + '</td><td>' + area.shortLabel + '</td><td>' + area.covers + '</td>';
+  return tr;
+}
+
+function renderGlossary() {
+  var gb = document.getElementById('glossary-body');
+  areas.forEach(function(area) { gb.appendChild(renderGlossaryRow(area)); });
+}
+
+function buildCoverageRow(row) {
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td class="col-lesson">' + row.title + '</td><td class="col-activity">' + row.activity + '</td>' +
+    areas.map(function(area) { return '<td>' + row.byArea[area.id].join('<br>') + '</td>'; }).join('');
+  return tr;
+}
+
+function renderBody() {
+  var tbody = document.getElementById('coverage-body');
+  tbody.innerHTML = '';
+  rows.forEach(function(row) { tbody.appendChild(buildCoverageRow(row)); });
+}
+
+function updateHeaderTh(th, i) {
+  th.classList.remove('sort-asc', 'sort-desc');
+  ADD_HEADER_CLASS[String(i === sortCol)](th);
+}
+
+function renderHeaders() {
+  document.querySelectorAll('.coverage th').forEach(function(th, i) { updateHeaderTh(th, i); });
+}
+
+function handleHeaderClick(i) {
+  CLICK_ACTION[String(sortCol === i)](i);
+  applySort();
+  renderBody();
+  renderHeaders();
+}
+
+function buildHeaderTh(label, i) {
+  var th = document.createElement('th');
+  th.textContent = label;
+  th.addEventListener('click', function() { handleHeaderClick(i); });
+  return th;
+}
+
+function renderCoverageHeader() {
+  var head = document.getElementById('coverage-head');
+  var hr = document.createElement('tr');
+  ['Lesson', 'Activity'].concat(areas.map(function(a) { return a.shortLabel; }))
+    .forEach(function(label, i) { hr.appendChild(buildHeaderTh(label, i)); });
+  head.appendChild(hr);
+}
+
+function attachActivity(entry) {
+  return fetch('../../content/lessons/' + entry.file)
+    .then(function(r) { return r.json(); })
+    .then(function(data) { return { lessons: data.lessons, activityLabel: entry.activity }; });
+}
+
+async function init() {
+  var criteriaData = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
+  var manifest     = await fetch('../../content/lessons/index.json').then(function(r) { return r.json(); });
+  areas = criteriaData.areas;
+  var criterionMap = buildCriterionMap(criteriaData);
+  buildColKeyFns();
+  renderGlossary();
+  var files = await Promise.all(manifest.map(attachActivity));
+  rows = flattenLessons(files, criterionMap);
+  applySort();
+  renderCoverageHeader();
+  renderBody();
+}
+
+init();
+</script>
+</body>
+</html>
