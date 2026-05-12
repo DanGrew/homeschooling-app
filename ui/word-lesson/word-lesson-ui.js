@@ -63,7 +63,7 @@ function setTraceUI() {
 }
 
 
-function renderWord(entry) {
+function renderWordEntry(entry) {
   currentWord = entry.word;
   document.getElementById('word-label').textContent = currentWord;
   hideBanner();
@@ -378,7 +378,7 @@ export function init() {
     items: [],
     perPage: 1,
     wrap: true,
-    onRender: function(entry) { renderWord(entry); }
+    onRender: function(entry) { renderWordEntry(entry); }
   });
 
   document.getElementById('btn-watch').addEventListener('click', startWatch);
