@@ -25,6 +25,16 @@ test('glossary table has correct column headings', async ({ page }) => {
   await expect(ths.nth(0)).toHaveText('Full Name')
   await expect(ths.nth(1)).toHaveText('Abbrev')
   await expect(ths.nth(2)).toHaveText('Covers')
+  await expect(ths.nth(3)).toHaveText('Criteria')
+})
+
+test('glossary criteria column lists criteria for each area', async ({ page }) => {
+  await page.goto(URL)
+  const rows = page.locator('.glossary tbody tr')
+  const eadRow = rows.filter({ hasText: 'Expressive Arts & Design' })
+  await expect(eadRow.locator('td').nth(3)).toContainText('Colour mixing')
+  const mathsRow = rows.filter({ hasText: 'Mathematics' })
+  await expect(mathsRow.locator('td').nth(3)).toContainText('Counting within 5')
 })
 
 test('glossary contains EAD and PSED rows', async ({ page }) => {
