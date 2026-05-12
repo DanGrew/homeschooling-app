@@ -108,6 +108,22 @@ const notOrTemplate = {
   goal: []
 };
 
+const notAndAndTemplate = {
+  id: 'tpl_not_and_and',
+  inputs: [
+    { id: 'S0', state: false, label: 'A' },
+    { id: 'S1', state: false, label: 'B' },
+    { id: 'S2', state: false, label: 'C' }
+  ],
+  nodes: [
+    { id: 'G1', type: 'AND', inputs: ['S0', 'S1'] },
+    { id: 'G2', type: 'AND', inputs: ['G1', 'S2'] },
+    { id: 'G3', type: 'NOT', inputs: ['G2'] }
+  ],
+  outputs: [{ id: 'O1', type: 'lamp', source: 'G3' }],
+  goal: []
+};
+
 describe('validate — compound gates', () => {
   test('NOT(OR): goal=ON has unique solution (both false)', () => {
     const config = JSON.parse(JSON.stringify(notOrTemplate));
@@ -118,6 +134,18 @@ describe('validate — compound gates', () => {
   test('NOT(OR): goal=OFF has multiple solutions', () => {
     const config = JSON.parse(JSON.stringify(notOrTemplate));
     config.goal = [{ id: 'O1', value: false }];
+    expect(validate(config)).toBeNull();
+  });
+
+  test('NOT(AND(AND)): goal=OFF has unique solution (all true)', () => {
+    const config = JSON.parse(JSON.stringify(notAndAndTemplate));
+    config.goal = [{ id: 'O1', value: false }];
+    expect(validate(config)).toEqual({ S0: true, S1: true, S2: true });
+  });
+
+  test('NOT(AND(AND)): goal=ON has multiple solutions', () => {
+    const config = JSON.parse(JSON.stringify(notAndAndTemplate));
+    config.goal = [{ id: 'O1', value: true }];
     expect(validate(config)).toBeNull();
   });
 });
