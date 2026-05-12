@@ -97,6 +97,31 @@ describe('generateFromTemplate', () => {
   });
 });
 
+const notOrTemplate = {
+  id: 'tpl_not_or',
+  inputs: [{ id: 'S0', state: false, label: 'A' }, { id: 'S1', state: false, label: 'B' }],
+  nodes: [
+    { id: 'G1', type: 'OR',  inputs: ['S0', 'S1'] },
+    { id: 'G2', type: 'NOT', inputs: ['G1'] }
+  ],
+  outputs: [{ id: 'O1', type: 'lamp', source: 'G2' }],
+  goal: []
+};
+
+describe('validate — compound gates', () => {
+  test('NOT(OR): goal=ON has unique solution (both false)', () => {
+    const config = JSON.parse(JSON.stringify(notOrTemplate));
+    config.goal = [{ id: 'O1', value: true }];
+    expect(validate(config)).toEqual({ S0: false, S1: false });
+  });
+
+  test('NOT(OR): goal=OFF has multiple solutions', () => {
+    const config = JSON.parse(JSON.stringify(notOrTemplate));
+    config.goal = [{ id: 'O1', value: false }];
+    expect(validate(config)).toBeNull();
+  });
+});
+
 describe('generate', () => {
   const templates = [andTemplate, notTemplate, orTemplate];
 

@@ -80,5 +80,35 @@
       { "id": "O1", "type": "fountain", "source": "G1" }
     ],
     "goal": []
+  },
+  {
+    "id": "tpl_not_or",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "OR",  "inputs": ["S0", "S1"] },
+      { "id": "G2", "type": "NOT", "inputs": ["G1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G2" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_not_and",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "AND", "inputs": ["S0", "S1"] },
+      { "id": "G2", "type": "NOT", "inputs": ["G1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fan", "source": "G2" }
+    ],
+    "goal": []
   }
 ]
