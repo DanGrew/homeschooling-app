@@ -62,6 +62,17 @@ function makeImgEl(item, sz) {
   return img;
 }
 
+var SHOW_GHOST = {
+  'true': function(container, key, sz) {
+    var img = document.createElement('img');
+    img.src = key.url; img.alt = key.name;
+    img.style.cssText = sz + ';opacity:0.15;pointer-events:none;';
+    img.draggable = false;
+    container.appendChild(img);
+  },
+  'false': function() {}
+};
+
 var LABEL_TEXT = { empty: '', same: 'same', bigger: 'bigger', smaller: 'smaller' };
 function labelState(self, other) {
   return (
@@ -79,7 +90,9 @@ export function render() {
   aContainer.innerHTML = '';
   bContainer.innerHTML = '';
   Array.from({length: aCount}, () => { aContainer.appendChild(makeImgEl(aKey, SZ)); });
+  SHOW_GHOST[String(aCount === 0)](aContainer, aKey, SZ);
   Array.from({length: bCount}, () => { bContainer.appendChild(makeImgEl(bKey, SZ)); });
+  SHOW_GHOST[String(bCount === 0)](bContainer, bKey, SZ);
   var totalContainer = document.getElementById('objects-total');
   totalContainer.innerHTML = '';
   Array.from({length: aCount}, () => { totalContainer.appendChild(makeImgEl(aKey, SZ_SM)); });

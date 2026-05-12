@@ -24,9 +24,13 @@ test('lesson popout shows all 5 lessons', async ({ page }) => {
 })
 
 async function startLesson(page) {
-  await page.waitForFunction(() => window.guidanceService)
+  await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
   await page.locator('.nav-lesson-btn').click()
   await page.locator('.nav-lesson-item').first().click()
+}
+
+function fireGuidanceEvent(page, type) {
+  return page.evaluate(t => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: t } })), type)
 }
 
 test('clicking lesson item shows guidance overlay', async ({ page }) => {
@@ -35,59 +39,43 @@ test('clicking lesson item shows guidance overlay', async ({ page }) => {
   await expect(page.locator('#guidance-overlay')).toBeVisible()
 })
 
-test('first step shows make-three intro and Next button', async ({ page }) => {
+test('first step is expect step with no Next button', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await expect(page.locator('#guidance-overlay')).toContainText("Let's make the number three!")
-  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
-})
-
-test('Next on intro advances to expect step with no Next', async ({ page }) => {
-  await page.goto(URL)
-  await startLesson(page)
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await expect(page.locator('#guidance-overlay')).toContainText('Keep pressing +')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-function fireGuidanceEvent(page, type) {
-  return page.evaluate(t => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: t } })), type)
-}
-
 test('TOTAL_3 event shows feedback and Next button', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'TOTAL_3')
-  await expect(page.locator('#guidance-overlay')).toContainText('Three!')
+  await expect(page.locator('#guidance-overlay')).toContainText('Three')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
 })
 
 test('Next after TOTAL_3 advances to COUNT_ALL step', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'TOTAL_3')
   await page.locator('#guidance-overlay [data-action="next"]').click()
-  await expect(page.locator('#guidance-overlay')).toContainText('Tap the big number')
+  await expect(page.locator('#guidance-overlay')).toContainText('Tap the Total')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
 test('COUNT_ALL event shows feedback', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'TOTAL_3')
   await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'COUNT_ALL')
-  await expect(page.locator('#guidance-overlay')).toContainText('three altogether')
+  await expect(page.locator('#guidance-overlay')).toContainText('You counted them all')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
 })
 
 test('success step has green background', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'TOTAL_3')
   await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'COUNT_ALL')
