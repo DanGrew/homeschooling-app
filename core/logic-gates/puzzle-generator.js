@@ -1,6 +1,7 @@
-const { evalGraph } = typeof require !== 'undefined'
-  ? require('./logic-engine.js')
-  : window.LogicEngine;
+function _getEvalGraph() {
+  if (typeof require !== 'undefined') return require('./logic-engine.js').evalGraph;
+  return window.LogicEngine.evalGraph;
+}
 
 function allCombinations(n) {
   const combos = [];
@@ -18,7 +19,7 @@ function validate(config) {
   const solutions = combos.filter(combo => {
     const inputStates = {};
     inputs.forEach(id => { inputStates[id] = combo[id]; });
-    const out = evalGraph(config, inputStates);
+    const out = _getEvalGraph()(config, inputStates);
     return config.goal.every(g => out[g.id] === g.value);
   });
   return solutions.length === 1 ? solutions[0] : null;
@@ -35,7 +36,7 @@ function generateFromTemplate(template, rng) {
 
   const inputStates = {};
   config.inputs.forEach(i => { inputStates[i.id] = i.state; });
-  const results = evalGraph(config, inputStates);
+  const results = _getEvalGraph()(config, inputStates);
   const outId = config.outputs[0].id;
   config.goal = [{ id: outId, value: !results[outId] }];
 
