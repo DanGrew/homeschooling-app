@@ -89,4 +89,10 @@ describe('resolveWordEntry', () => {
   it('preserves id', () => {
     expect(resolveWordEntry({ name: 'cat', id: 'cat-1', tags: [] }).id).toBe('cat-1');
   });
+  it('strips spaces from multi-word names for tracing', () => {
+    expect(resolveWordEntry({ name: 'First Aid', tags: [] }).word).toBe('firstaid');
+  });
+  it('preserves displayName as original name', () => {
+    expect(resolveWordEntry({ name: 'First Aid', tags: [] }).displayName).toBe('First Aid');
+  });
 });
