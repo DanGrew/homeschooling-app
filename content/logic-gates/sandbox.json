@@ -1,0 +1,61 @@
+[
+  {
+    "id": "and_station",
+    "label": "AND",
+    "colour": "#3498DB",
+    "inputs": [
+      { "id": "A", "state": false, "label": "A" },
+      { "id": "B", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "AND", "inputs": ["A", "B"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G1" }
+    ]
+  },
+  {
+    "id": "or_station",
+    "label": "OR",
+    "colour": "#2ECC71",
+    "inputs": [
+      { "id": "A", "state": false, "label": "A" },
+      { "id": "B", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "OR", "inputs": ["A", "B"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fan", "source": "G1" }
+    ]
+  },
+  {
+    "id": "xor_station",
+    "label": "XOR",
+    "colour": "#9B59B6",
+    "inputs": [
+      { "id": "A", "state": false, "label": "A" },
+      { "id": "B", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "XOR", "inputs": ["A", "B"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fountain", "source": "G1" }
+    ]
+  },
+  {
+    "id": "not_station",
+    "label": "NOT",
+    "colour": "#F39C12",
+    "inputs": [
+      { "id": "A", "state": false, "label": "A" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "NOT", "inputs": ["A"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G1" }
+    ]
+  }
+]

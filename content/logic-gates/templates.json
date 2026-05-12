@@ -1,0 +1,119 @@
+[
+  {
+    "id": "tpl_and",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "AND", "inputs": ["S0", "S1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G1" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_or",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "OR", "inputs": ["S0", "S1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fan", "source": "G1" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_xor",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "XOR", "inputs": ["S0", "S1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fountain", "source": "G1" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_not",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "NOT", "inputs": ["S0"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G1" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_and_or",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" },
+      { "id": "S2", "state": false, "label": "C" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "AND", "inputs": ["S0", "S1"] },
+      { "id": "G2", "type": "OR",  "inputs": ["G1", "S2"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G2" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_or_not",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "OR",  "inputs": ["S0", "S1"] },
+      { "id": "G2", "type": "NOT", "inputs": ["G1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fan", "source": "G2" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_xor_and",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" },
+      { "id": "S2", "state": false, "label": "C" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "XOR", "inputs": ["S0", "S1"] },
+      { "id": "G2", "type": "AND", "inputs": ["G1", "S2"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "fountain", "source": "G2" }
+    ],
+    "goal": []
+  },
+  {
+    "id": "tpl_and_not",
+    "inputs": [
+      { "id": "S0", "state": false, "label": "A" },
+      { "id": "S1", "state": false, "label": "B" }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "AND", "inputs": ["S0", "S1"] },
+      { "id": "G2", "type": "NOT", "inputs": ["G1"] }
+    ],
+    "outputs": [
+      { "id": "O1", "type": "lamp", "source": "G2" }
+    ],
+    "goal": []
+  }
+]
