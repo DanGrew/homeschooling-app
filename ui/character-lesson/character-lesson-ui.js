@@ -1,6 +1,7 @@
 import { speak } from '../speech/speech-ui.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
 import { buildSimpleFilterBar } from '../filter-bar/filter-bar-ui.js';
+import { createPaginator } from '../pagination/paginator-ui.js';
 
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
@@ -13,11 +14,11 @@ const FILTERS = {all: () => true, lower: e => e.group === 'lower', upper: e => e
 let mode = 'lesson';
 let currentFilter = 'all';
 let filteredChars = CHARS.slice();
-let currentIdx = 0;
 let engine = null;
 let currentEntry = null;
 let dotEl = null;
 let autoPlay = false;
+let paginator = null;
 
 function getParam(key) { return new URLSearchParams(location.search).get(key); }
 
@@ -39,7 +40,7 @@ function hideBanner() { _hideBanner(); }
 function showBanner() {
   _showBanner({ buttons: [
     { label: '\u21BA Again', bg: 'white', color: '#E74C3C', onClick: function() { hideBanner(); [engine].filter(Boolean).forEach(function(e) { e.restart(); }); } },
-    { label: 'Next \u2192',  bg: 'white', color: '#2ECC71', onClick: function() { navTo(currentIdx + 1); } }
+    { label: 'Next \u2192',  bg: 'white', color: '#2ECC71', onClick: function() { paginator.next(); } }
   ]});
 }
 
@@ -64,16 +65,15 @@ function switchMode(newMode) {
   [currentEntry].filter(Boolean).forEach(loadChar);
 }
 
-function navTo(idx) {
-  currentIdx = ((idx % filteredChars.length) + filteredChars.length) % filteredChars.length;
-  currentEntry = filteredChars[currentIdx];
-  document.getElementById('char-label').textContent = currentEntry.char;
-  document.getElementById('btn-prev').disabled = false;
-  document.getElementById('btn-next').disabled = false;
+function renderChar(entry) {
+  currentEntry = entry;
+  document.getElementById('char-label').textContent = entry.char;
   hideBanner();
-  setParam(currentEntry.char, currentFilter);
-  loadChar(currentEntry);
+  setParam(entry.char, currentFilter);
+  loadChar(entry);
 }
+
+function navTo(idx) { paginator.goTo(idx); }
 
 function onLessonComplete() {
   document.getElementById('btn-trace').disabled = false;
@@ -209,6 +209,14 @@ export function init() {
   applyFilter(paramFilter);
   applyModeUI();
 
+  paginator = createPaginator({
+    container: document.getElementById('paginator-bar'),
+    items: filteredChars,
+    perPage: 1,
+    wrap: true,
+    onRender: function(entry) { renderChar(entry); }
+  });
+
   buildSimpleFilterBar(
     [
       {label: 'All',  value: 'all'},
@@ -216,11 +224,11 @@ export function init() {
       {label: 'A\u2013Z', value: 'upper'},
       {label: '0\u20139', value: 'digit'}
     ],
-    function(val) { applyFilter(val); navTo(0); },
+    function(val) { applyFilter(val); paginator.reset(filteredChars); },
     paramFilter
   );
 
-  navTo(Math.max(0, filteredChars.findIndex(e => e.char === paramChar)));
+  paginator.goTo(Math.max(0, filteredChars.findIndex(e => e.char === paramChar)));
 
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
   document.getElementById('btn-speak').addEventListener('click', () => { [currentEntry].filter(Boolean).forEach(e => speak(e.speak)); });
@@ -233,6 +241,4 @@ export function init() {
     document.getElementById('btn-watch').disabled = false;
     [currentEntry].filter(Boolean).forEach(loadChar);
   });
-  document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
-  document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
 }

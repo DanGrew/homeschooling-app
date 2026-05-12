@@ -9,13 +9,14 @@
 <script src="../../shared/menu.js" defer></script>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/" data-prev="prevPicture" data-next="nextPicture"></div>
+<div class="nav-bar" data-home="../../games/"></div>
 <div class="game-area">
   <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
     <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
+  <div id="paginator-bar"></div>
 </div>
 <script src="../../../ui/colouring/colouring-common.js"></script>
 <script>var pictures=[];</script>
@@ -29,10 +30,10 @@
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
-var filtIdx=0,filled,total,filtered=[];
+import { createPaginator } from '../../../ui/pagination/paginator-ui.js';
+var filled,total,paginator;
 
-function render(){
-  var pic=filtered[filtIdx];
+function renderPicture(pic){
   var svg=document.getElementById('svg');
   svg.innerHTML='';
   hideBanner();
@@ -50,7 +51,7 @@ function render(){
       el.addEventListener('click',function(){
         ({'true':function(){},'false':function(){
           done=true;el.setAttribute('fill',s.colour);filled++;
-          ({'true':function(){showBanner(nextPicture);},'false':function(){}})[String(filled===total)]();
+          ({'true':function(){showBanner(function(){paginator.next();});},'false':function(){}})[String(filled===total)]();
         }})[String(done)]();
       });
       svg.appendChild(el);
@@ -58,13 +59,17 @@ function render(){
   });
 }
 
-function nextPicture(){filtIdx=(filtIdx+1)%filtered.length;render();}
-function prevPicture(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
-window.nextPicture=nextPicture;window.prevPicture=prevPicture;
+paginator=createPaginator({
+  container: document.getElementById('paginator-bar'),
+  items: [],
+  perPage: 1,
+  wrap: true,
+  onRender: function(pic){ renderPicture(pic); }
+});
 
 Dictionary.init('../../dictionary/');
 loadColouringPictures(pictures,function(){
-  buildFilterBar(pictures,function(f){filtered=f;filtIdx=0;render();});
+  buildFilterBar(pictures,function(f){paginator.reset(f);});
 },function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='colouring';</script>

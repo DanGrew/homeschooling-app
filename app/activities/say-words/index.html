@@ -65,62 +65,52 @@
 <div class="game-area" style="display:flex;flex-direction:column;overflow:hidden;">
   <div id="filter-bar"></div>
   <div id="tile-grid"></div>
-  <div style="display:flex;justify-content:center;align-items:center;gap:16px;padding:6px 16px 44px;">
-    <button id="btn-prev" onclick="prevPage()" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(6px,1.2vmin,12px) clamp(14px,2.5vw,24px);border:none;border-radius:14px;background:#2ECC71;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;user-select:none;">&#8592; Prev</button>
-    <span id="page-indicator" style="font-size:clamp(0.85em,2.5vmin,1.2em);color:#555;min-width:90px;text-align:center;"></span>
-    <button id="btn-next" onclick="nextPage()" style="font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(6px,1.2vmin,12px) clamp(14px,2.5vw,24px);border:none;border-radius:14px;background:#2ECC71;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;user-select:none;">Next &#8594;</button>
-  </div>
+  <div id="paginator-bar"></div>
 </div>
 <script type="module">
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
 import {buildFilterBar} from '../../../ui/filter-bar/filter-bar-ui.js';
 import {makeSpeakable} from '../../../ui/speech/speakable.js';
+import {createPaginator} from '../../../ui/pagination/paginator-ui.js';
 Dictionary.init('../../dictionary/');
 
-var all=[], filtered=[], page=0;
-var PER_PAGE=20;
+var all=[];
 
-function pageCount(){return Math.max(1,Math.ceil(filtered.length/PER_PAGE));}
-
-function render(){
-  var grid=document.getElementById('tile-grid');
-  grid.innerHTML='';
-  var slice=filtered.slice(page*PER_PAGE,(page+1)*PER_PAGE);
-  slice.forEach(function(w){
-    var tile=document.createElement('div');
-    tile.className='tile';
-    makeSpeakable(tile, w.name);
-    tile.addEventListener('click', function() {
-      window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: w.id.replace(/-/g, '_').toUpperCase() + '_SPOKEN' } }));
+var paginator=createPaginator({
+  container: document.getElementById('paginator-bar'),
+  items: [],
+  perPage: 20,
+  wrap: false,
+  onRender: function(slice){
+    var grid=document.getElementById('tile-grid');
+    grid.innerHTML='';
+    slice.forEach(function(w){
+      var tile=document.createElement('div');
+      tile.className='tile';
+      makeSpeakable(tile, w.name);
+      tile.addEventListener('click', function() {
+        window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: w.id.replace(/-/g, '_').toUpperCase() + '_SPOKEN' } }));
+      });
+      var imgDiv=document.createElement('div');
+      imgDiv.className='tile-img';
+      var img=document.createElement('img');
+      img.src=w.url;
+      img.alt=w.name;
+      img.style.cssText='width:100%;height:100%;object-fit:contain;';
+      imgDiv.appendChild(img);
+      var label=document.createElement('div');
+      label.className='tile-label';
+      label.textContent=w.name;
+      tile.appendChild(imgDiv);
+      tile.appendChild(label);
+      grid.appendChild(tile);
     });
-    var imgDiv=document.createElement('div');
-    imgDiv.className='tile-img';
-    var img=document.createElement('img');
-    img.src=w.url;
-    img.alt=w.name;
-    img.style.cssText='width:100%;height:100%;object-fit:contain;';
-    imgDiv.appendChild(img);
-    var label=document.createElement('div');
-    label.className='tile-label';
-    label.textContent=w.name;
-    tile.appendChild(imgDiv);
-    tile.appendChild(label);
-    grid.appendChild(tile);
-  });
-  var pc=pageCount();
-  document.getElementById('page-indicator').textContent='Page '+(page+1)+' of '+pc;
-  document.getElementById('btn-prev').disabled=page===0;
-  document.getElementById('btn-next').disabled=page>=pc-1;
-}
-
-function prevPage(){page=Math.max(0,page-1);render();}
-function nextPage(){page=Math.min(pageCount()-1,page+1);render();}
-window.prevPage=prevPage;
-window.nextPage=nextPage;
+  }
+});
 
 loadImages(all,function(){
-  buildFilterBar(all,function(f){filtered=f;page=0;render();});
+  buildFilterBar(all,function(f){paginator.reset(f);});
 });
 </script>
 <script>

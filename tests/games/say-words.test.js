@@ -31,8 +31,20 @@ test('next page button advances to next page', async ({ page }) => {
   await page.goto(URL)
   await waitForTiles(page)
   const firstLabel = await page.locator('.tile-label').first().textContent()
-  await page.locator('#btn-next').click()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
   await expect(page.locator('.tile-label').first()).not.toHaveText(firstLabel)
+})
+
+test('page indicator shows current page', async ({ page }) => {
+  await page.goto(URL)
+  await waitForTiles(page)
+  await expect(page.locator('#paginator-bar span')).toContainText('Page 1 of')
+})
+
+test('prev button disabled on first page', async ({ page }) => {
+  await page.goto(URL)
+  await waitForTiles(page)
+  await expect(page.locator('#paginator-bar button', { hasText: 'Prev' })).toBeDisabled()
 })
 
 test('filter bar is visible', async ({ page }) => {

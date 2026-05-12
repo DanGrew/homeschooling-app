@@ -8,10 +8,7 @@
 <link rel="stylesheet" href="../../shared/style.css">
 <script src="../../shared/menu.js" defer></script>
 <style>
-  .nav-row{display:flex;align-items:center;justify-content:space-between;padding:8px 20px 0;}
-  .page-nav-btn{background:#eee;border:none;border-radius:14px;font-size:1.6em;padding:8px 22px;cursor:pointer;font-family:inherit;color:#333;}
-  .page-nav-btn:disabled{opacity:0.3;cursor:default;}
-  .word-label{font-size:2em;font-weight:bold;color:#333;letter-spacing:0.05em;}
+  .word-label{font-size:2em;font-weight:bold;color:#333;letter-spacing:0.05em;text-align:center;padding:8px 0;}
   .mode-btns{display:flex;gap:12px;justify-content:center;padding:10px 16px 0;flex-wrap:wrap;}
   .mode-btn{border:none;border-radius:16px;padding:12px 28px;font-size:1.1em;font-family:inherit;font-weight:bold;cursor:pointer;}
   .mode-btn:disabled{opacity:0.35;cursor:default;}
@@ -35,11 +32,7 @@
            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <button id="btn-generate">&#8635; Go</button>
   </div>
-  <div class="nav-row">
-    <button class="page-nav-btn" id="btn-prev">&#8592;</button>
-    <span class="word-label" id="word-label"></span>
-    <button class="page-nav-btn" id="btn-next">&#8594;</button>
-  </div>
+  <div class="word-label" id="word-label"></div>
   <div class="mode-btns">
     <button class="mode-btn" id="btn-watch">&#128218; Watch</button>
     <button class="mode-btn" id="btn-sayit">&#128264; Say It</button>
@@ -47,6 +40,7 @@
     <button class="mode-btn" id="btn-stop" style="display:none;">&#9632; Reset</button>
   </div>
   <div id="word-container"></div>
+  <div id="paginator-bar"></div>
 </div>
 
 <script src="../../../core/trace/trace-core.js"></script>

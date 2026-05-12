@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/" data-prev="prevShape" data-next="nextShape"></div>
+<div class="nav-bar" data-home="../../games/"></div>
 <div class="game-area">
   <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
   <div class="game-title"><span id="title"></span></div>
@@ -22,6 +22,7 @@
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
     <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
+  <div id="paginator-bar"></div>
 </div>
 <script>var shapes=[];</script>
 <script src="../../../assets/connect-the-dots/shapes/triangle.js"></script>
@@ -45,7 +46,8 @@
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadConnectDots } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
-var filtIdx=0,nextDot,prevDot,complete,filtered=[];
+import { createPaginator } from '../../../ui/pagination/paginator-ui.js';
+var nextDot,prevDot,complete,paginator,currentShape;
 
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
@@ -76,11 +78,11 @@ function dotR(vbW,vbH){
 var resizeTimer;
 window.addEventListener('resize',function(){
   clearTimeout(resizeTimer);
-  resizeTimer=setTimeout(render,150);
+  resizeTimer=setTimeout(function(){render(currentShape);},150);
 });
 
-function render(){
-  var shape=filtered[filtIdx];
+function render(shape){
+  currentShape=shape;
   var svg=document.getElementById('svg');
   svg.innerHTML='';
   [shape.decor].filter(Boolean).forEach(function(decor){var bg=document.createElementNS('http://www.w3.org/2000/svg','g');bg.id='bg';bg.setAttribute('opacity','0.4');bg.innerHTML=decor;Array.from(bg.children).forEach(function(el){el.removeAttribute('opacity');});svg.appendChild(bg);});
@@ -126,7 +128,7 @@ function doWrong(n){
 }
 
 function doCorrect(n){
-  var shape=filtered[filtIdx];
+  var shape=currentShape;
   document.getElementById('c'+n).setAttribute('fill','#2ECC71');
   document.getElementById('c'+n).setAttribute('stroke','#27AE60');
   [prevDot].filter(function(p){return p!==null;}).forEach(function(p){
@@ -181,7 +183,7 @@ function revealImage(){
   var dots=document.getElementById('dots');
   var start=null;
   var ANIM_END={
-    'true':function(){[bg].filter(Boolean).forEach(function(el){el.setAttribute('opacity','1');});showBanner(nextShape);},
+    'true':function(){[bg].filter(Boolean).forEach(function(el){el.setAttribute('opacity','1');});showBanner(function(){paginator.next();});},
     'false':function(){requestAnimationFrame(animFrame);}
   };
   function animFrame(ts){
@@ -196,13 +198,17 @@ function revealImage(){
   requestAnimationFrame(animFrame);
 }
 
-function nextShape(){filtIdx=(filtIdx+1)%filtered.length;render();}
-function prevShape(){filtIdx=(filtIdx+filtered.length-1)%filtered.length;render();}
-window.nextShape=nextShape;window.prevShape=prevShape;
+paginator=createPaginator({
+  container: document.getElementById('paginator-bar'),
+  items: [],
+  perPage: 1,
+  wrap: true,
+  onRender: function(shape){ render(shape); }
+});
 
 Dictionary.init('../../dictionary/');
 loadConnectDots(shapes,function(){
-  buildFilterBar(shapes,function(f){filtered=f;filtIdx=0;render();});
+  buildFilterBar(shapes,function(f){paginator.reset(f);});
 },function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='connect-the-dots';</script>
