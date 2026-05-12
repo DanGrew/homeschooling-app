@@ -6,6 +6,7 @@ function init() {
     .then(function(r) { return r.json(); })
     .then(function(stations) {
       stations.forEach(function(config, idx) {
+
         if (idx > 0) {
           const hr = document.createElement('hr');
           hr.style.cssText = 'border:none;border-top:3px solid #ddd;margin:32px 0;';
@@ -33,6 +34,10 @@ function init() {
         section.appendChild(svg);
         container.appendChild(section);
       });
+    })
+    .catch(function(err) {
+      container.textContent = 'Failed to load stations';
+      console.error('sandbox load error:', err);
     });
 }
 

@@ -95,9 +95,10 @@ function buildStation(config, onToggle) {
   const gateX = W / 2;
   const outputX = W - 80;
 
-  const switchYPositions = isSingleInput
-    ? [H / 2]
-    : [H / 3, (2 * H) / 3];
+  const switchCount = config.inputs.length;
+  const switchYPositions = config.inputs.map(function(_, i) {
+    return (H / (switchCount + 1)) * (i + 1);
+  });
 
   config.inputs.forEach(function(input, idx) {
     const cy = switchYPositions[idx];

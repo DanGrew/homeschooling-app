@@ -48,6 +48,10 @@ function init() {
         } else {
           goalBanner.textContent = 'Could not generate puzzle — try again';
         }
+      })
+      .catch(function(err) {
+        goalBanner.textContent = 'Failed to load puzzle';
+        console.error('puzzle load error:', err);
       });
   }
 
