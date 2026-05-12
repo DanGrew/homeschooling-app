@@ -34,5 +34,10 @@ export function createPaginatorState({ items = [], perPage = 1, wrap = false } =
 
   function isAtEnd() { return _current >= pageCount() - 1; }
 
-  return { next, prev, reset, getPage, getPageCount, getSlice, isAtStart, isAtEnd };
+  function goTo(idx) {
+    var pc = pageCount();
+    _current = wrap ? ((idx % pc) + pc) % pc : Math.max(0, Math.min(pc - 1, idx));
+  }
+
+  return { next, prev, reset, goTo, getPage, getPageCount, getSlice, isAtStart, isAtEnd };
 }

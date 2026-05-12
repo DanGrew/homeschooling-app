@@ -1,7 +1,8 @@
-import { validWord, charFile, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
+import { validWord, charFile, extractWordTags, filterWordsByTag, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 import { speak, stop } from '../speech/speech-ui.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
 import { buildSimpleFilterBar } from '../filter-bar/filter-bar-ui.js';
+import { createPaginator } from '../pagination/paginator-ui.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
 const DICT_BASE = '../../dictionary/';
@@ -9,7 +10,7 @@ const NS = 'http://www.w3.org/2000/svg';
 
 var words = [];
 var filtered = [];
-var currentIdx = 0;
+var paginator = null;
 var isCustom = false;
 var currentWord = '';
 var isTracing = false;
@@ -38,7 +39,7 @@ function loadDictionary() {
 }
 
 
-var BANNER_NEXT = { 'true': [], 'false': [{ label: 'Next \u2192', color: '#2ECC71', onClick: function() { navTo(currentIdx + 1); } }] };
+var BANNER_NEXT = { 'true': [], 'false': [{ label: 'Next \u2192', color: '#2ECC71', onClick: function() { paginator.next(); } }] };
 
 function hideBanner() { _hideBanner(); }
 
@@ -62,19 +63,15 @@ function setTraceUI() {
 }
 
 
-function doNav(idx) {
-  currentIdx = wrapIdx(idx, filtered.length);
-  currentWord = filtered[currentIdx].word;
+function renderWord(entry) {
+  currentWord = entry.word;
   document.getElementById('word-label').textContent = currentWord;
-  const multi = filtered.length > 1;
-  document.getElementById('btn-prev').disabled = !multi;
-  document.getElementById('btn-next').disabled = !multi;
   hideBanner();
   setLessonUI();
   loadWord(currentWord);
 }
 
-var NAV_EMPTY_GUARD = { 'true': () => {}, 'false': doNav };
+var NAV_EMPTY_GUARD = { 'true': () => {}, 'false': idx => paginator.goTo(idx) };
 var NAV_CUSTOM_GUARD = { 'true': () => {}, 'false': idx => NAV_EMPTY_GUARD[String(!filtered.length)](idx) };
 
 function navTo(idx) {
@@ -98,8 +95,7 @@ function showCustomMode() {
   stopAllEngines();
   document.getElementById('custom-input').style.display = 'flex';
   document.getElementById('word-label').textContent = '';
-  document.getElementById('btn-prev').disabled = true;
-  document.getElementById('btn-next').disabled = true;
+  paginator.disable();
   document.getElementById('word-container').innerHTML = '';
   charSvgs = []; charBases = []; charBalls = []; charDots = [];
   setLessonUI();
@@ -109,7 +105,8 @@ function showTagMode(tag) {
   isCustom = false;
   document.getElementById('custom-input').style.display = 'none';
   filtered = filterWordsByTag(words, tag);
-  navTo(0);
+  paginator.reset(filtered);
+  paginator.enable();
 }
 
 var FILTER_HANDLERS = { 'true': showCustomMode, 'false': showTagMode };
@@ -376,19 +373,25 @@ function handleGenerate() {
 }
 
 export function init() {
+  paginator = createPaginator({
+    container: document.getElementById('paginator-bar'),
+    items: [],
+    perPage: 1,
+    wrap: true,
+    onRender: function(entry) { renderWord(entry); }
+  });
+
   document.getElementById('btn-watch').addEventListener('click', startWatch);
   document.getElementById('btn-tryit').addEventListener('click', startTrace);
   document.getElementById('btn-stop').addEventListener('click', () => { stopAllEngines(); clearProgress(); setLessonUI(); });
   document.getElementById('btn-sayit').addEventListener('click', () => { [currentWord].filter(Boolean).forEach(w => { stop(); speak(w); }); });
-  document.getElementById('btn-prev').addEventListener('click', () => navTo(currentIdx - 1));
-  document.getElementById('btn-next').addEventListener('click', () => navTo(currentIdx + 1));
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
   window.__wlShowBanner = showBanner;
   loadDictionary().then(() => {
     setupFilterBar();
     filtered = words.slice();
-    navTo(0);
+    paginator.reset(filtered);
   }).catch(() => {
     document.getElementById('word-label').textContent = '⚠️ Failed to load — check connection';
   });

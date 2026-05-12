@@ -22,7 +22,7 @@ test('filter buttons switch character set', async ({ page }) => {
 test('next button advances character', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
   const first = await page.locator('#char-label').textContent()
-  await page.locator('#btn-next').click()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
   const second = await page.locator('#char-label').textContent()
   expect(second).not.toBe(first)
 })
@@ -30,8 +30,14 @@ test('next button advances character', async ({ page }) => {
 test('prev button goes back', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=b&filter=lower')
   await expect(page.locator('#char-label')).toHaveText('b')
-  await page.locator('#btn-prev').click()
+  await page.locator('#paginator-bar button', { hasText: 'Prev' }).click()
   await expect(page.locator('#char-label')).toHaveText('a')
+})
+
+test('paginator bar shows page indicator', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/character-lesson/')
+  await expect(page.locator('#ball')).toBeVisible()
+  await expect(page.locator('#paginator-bar span')).toContainText('Page 1 of')
 })
 
 test('URL params set initial character and filter', async ({ page }) => {
@@ -156,7 +162,7 @@ test('ball positioned at path start in trace mode', async ({ page }) => {
 test('navigating to new char resets engine in trace mode', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower&mode=trace')
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
-  await page.locator('#btn-next').click()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
   await page.waitForFunction(() => window.engine && engine.strokes && engine.strokes.length > 0)
   const dist = await page.evaluate(() => engine.currentDist)
   expect(dist).toBe(0)

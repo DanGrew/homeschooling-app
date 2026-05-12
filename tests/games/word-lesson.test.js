@@ -43,7 +43,7 @@ test('next button changes word', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
   const first = await page.locator('#word-label').textContent()
-  await page.locator('#btn-next').click()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
   await page.waitForFunction(
     w => document.getElementById('word-label').textContent !== w, first
   )
@@ -54,13 +54,27 @@ test('next button changes word', async ({ page }) => {
 test('prev button changes word', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
-  await page.locator('#btn-next').click()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
   await page.waitForTimeout(200)
   const second = await page.locator('#word-label').textContent()
-  await page.locator('#btn-prev').click()
+  await page.locator('#paginator-bar button', { hasText: 'Prev' }).click()
   await page.waitForTimeout(200)
   const first = await page.locator('#word-label').textContent()
   expect(first).not.toBe(second)
+})
+
+test('paginator bar shows page indicator', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
+  await expect(page.locator('#paginator-bar span')).toContainText('Page 1 of')
+})
+
+test('custom mode disables paginator buttons', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
+  await page.getByRole('button', { name: 'Custom', exact: true }).click()
+  await expect(page.locator('#paginator-bar button', { hasText: 'Next' })).toBeDisabled()
+  await expect(page.locator('#paginator-bar button', { hasText: 'Prev' })).toBeDisabled()
 })
 
 // --- watch mode ---

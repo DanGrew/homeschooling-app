@@ -71,6 +71,32 @@ describe('createPaginatorState — single item, wrap', () => {
   });
 });
 
+describe('createPaginatorState — goTo', () => {
+  it('goTo jumps to given page (clamp)', () => {
+    var state = createPaginatorState({ items: items(10), perPage: 2, wrap: false });
+    state.goTo(3);
+    expect(state.getPage()).toBe(3);
+  });
+
+  it('goTo clamps to last page when beyond range (clamp mode)', () => {
+    var state = createPaginatorState({ items: items(10), perPage: 2, wrap: false });
+    state.goTo(99);
+    expect(state.getPage()).toBe(4);
+  });
+
+  it('goTo wraps negative index (wrap mode)', () => {
+    var state = createPaginatorState({ items: items(6), perPage: 1, wrap: true });
+    state.goTo(-1);
+    expect(state.getPage()).toBe(5);
+  });
+
+  it('goTo wraps beyond last (wrap mode)', () => {
+    var state = createPaginatorState({ items: items(6), perPage: 1, wrap: true });
+    state.goTo(7);
+    expect(state.getPage()).toBe(1);
+  });
+});
+
 describe('createPaginatorState — reset', () => {
   it('reset resets to page 0 with new items', () => {
     var state = createPaginatorState({ items: items(10), perPage: 5 });

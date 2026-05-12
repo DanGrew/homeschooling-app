@@ -34,9 +34,12 @@ export function createPaginator({ container, items, perPage = 1, onRender, wrap 
   function next() { state.next(); _update(); }
   function prev() { state.prev(); _update(); }
   function reset(newItems) { state.reset(newItems); _update(); }
+  function goTo(idx) { state.goTo(idx); _update(); }
+  function disable() { btnPrev.disabled = true; btnNext.disabled = true; }
+  function enable() { btnPrev.disabled = false; btnNext.disabled = false; }
 
   btnPrev.addEventListener('click', prev);
   btnNext.addEventListener('click', next);
 
-  return { next, prev, reset };
+  return { next, prev, reset, goTo, disable, enable };
 }
