@@ -15,6 +15,22 @@ test('clicking a palette swatch selects it', async ({ page }) => {
   await expect(swatch).toHaveClass(/selected/)
 })
 
+test('paginator bar is visible with prev and next buttons', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/colouring-palette/')
+  await page.locator('#palette .swatch').first().waitFor({ timeout: 5000 })
+  await expect(page.locator('#paginator-bar button', { hasText: 'Next' })).toBeVisible()
+  await expect(page.locator('#paginator-bar button', { hasText: 'Prev' })).toBeVisible()
+  await expect(page.locator('#paginator-bar span')).toContainText('Page 1 of')
+})
+
+test('next button advances to next picture', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/colouring-palette/')
+  await page.locator('#palette .swatch').first().waitFor({ timeout: 5000 })
+  const firstTitle = await page.locator('.game-title span').textContent()
+  await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
+  await expect(page.locator('.game-title span')).not.toHaveText(firstTitle)
+})
+
 test('selecting a colour then clicking a shape applies that colour', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/colouring-palette/')
   const swatch = page.locator('#palette .swatch').first()
