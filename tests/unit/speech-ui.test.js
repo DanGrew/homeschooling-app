@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { speak, stop, setMode, setEnabled } from '../../ui/speech/speech-ui.js';
+import { speak, speakInterrupt, queue, interrupt, stop, setMode, setEnabled } from '../../ui/speech/speech-ui.js';
 
 var cancelSpy, speakSpy;
 
@@ -68,5 +68,34 @@ describe('stop', () => {
   it('calls cancel', () => {
     stop();
     expect(cancelSpy).toHaveBeenCalled();
+  });
+});
+
+describe('queue', () => {
+  it('speaks without cancelling', () => {
+    queue('hello');
+    expect(speakSpy).toHaveBeenCalled();
+    expect(cancelSpy).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when text is empty', () => {
+    queue('');
+    expect(speakSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('interrupt', () => {
+  it('cancels then speaks', () => {
+    interrupt('hello');
+    expect(cancelSpy).toHaveBeenCalled();
+    expect(speakSpy).toHaveBeenCalled();
+  });
+});
+
+describe('speakInterrupt', () => {
+  it('cancels then speaks', () => {
+    speakInterrupt('hello');
+    expect(cancelSpy).toHaveBeenCalled();
+    expect(speakSpy).toHaveBeenCalled();
   });
 });
