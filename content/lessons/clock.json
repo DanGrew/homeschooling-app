@@ -1,0 +1,88 @@
+{
+  "activity": "clock",
+  "lessons": [
+    {
+      "id": "count_the_clock",
+      "number": 1,
+      "title": "Count the Clock",
+      "guide": "cat",
+      "criteria": ["maths.counting-10", "maths.number-order"],
+      "numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "steps": [
+        { "text": "This is a clock! Clocks have numbers all the way around. Let's count them together!", "auto": true },
+        { "text": "Can you tap the number 1?", "expect": "NUMBER_1_TAPPED", "feedback": "One! That's where we start." },
+        { "text": "Now tap 2!", "expect": "NUMBER_2_TAPPED", "feedback": "Two!" },
+        { "text": "Tap 3!", "expect": "NUMBER_3_TAPPED", "feedback": "Three!" },
+        { "text": "Tap 4!", "expect": "NUMBER_4_TAPPED", "feedback": "Four!" },
+        { "text": "Tap 5!", "expect": "NUMBER_5_TAPPED", "feedback": "Five!" },
+        { "text": "Tap 6 — it's at the very bottom!", "expect": "NUMBER_6_TAPPED", "feedback": "Six! Halfway around." },
+        { "text": "Tap 7!", "expect": "NUMBER_7_TAPPED", "feedback": "Seven!" },
+        { "text": "Tap 8!", "expect": "NUMBER_8_TAPPED", "feedback": "Eight!" },
+        { "text": "Tap 9!", "expect": "NUMBER_9_TAPPED", "feedback": "Nine!" },
+        { "text": "Tap 10!", "expect": "NUMBER_10_TAPPED", "feedback": "Ten!" },
+        { "text": "Tap 11!", "expect": "NUMBER_11_TAPPED", "feedback": "Nearly there — eleven!" },
+        { "text": "Last one — tap 12 at the very top!", "expect": "NUMBER_12_TAPPED", "feedback": "Twelve! You counted all the way around!" },
+        { "text": ["You counted all twelve numbers! Brilliant!", "Amazing — all the way round!", "Superstar counter!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "find_the_number",
+      "number": 2,
+      "title": "Find the Number",
+      "guide": "dog",
+      "criteria": ["maths.number-order", "maths.spatial"],
+      "numbers": [12, 3, 6, 9],
+      "steps": [
+        { "text": "Some numbers on the clock have special jobs — they point in every direction. Let's find them!", "auto": true },
+        { "text": "The 12 lives at the very top. Can you tap it?", "expect": "NUMBER_12_TAPPED", "feedback": "12 at the top — the clock always starts here!" },
+        { "text": "Now find the 6 — it's at the bottom!", "expect": "NUMBER_6_TAPPED", "feedback": "6 at the bottom, right opposite 12." },
+        { "text": "Can you find the 3?", "expect": "NUMBER_3_TAPPED", "feedback": "3 on the right side!" },
+        { "text": "Last one — find the 9!", "expect": "NUMBER_9_TAPPED", "feedback": "9 on the left. These four numbers point in every direction!" },
+        { "text": ["You found all four special numbers!", "Brilliant navigator!", "Amazing — you know your way around!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "long_and_short",
+      "number": 3,
+      "title": "Long Hand, Short Hand",
+      "guide": "cat",
+      "criteria": ["maths.size-measure", "cl.descriptive-vocab"],
+      "steps": [
+        { "text": "The clock has two hands — one long, one short. They tell us the time!", "auto": true },
+        { "text": "Can you tap the long hand?", "expect": "MINUTE_HAND_TAPPED", "feedback": "That's the long hand — it counts the minutes." },
+        { "text": "Now tap the short hand!", "expect": "HOUR_HAND_TAPPED", "feedback": "The short hand tells us the hour — like 1 o'clock or 3 o'clock." },
+        { "text": ["Long hand, short hand — you know them both!", "Brilliant!", "Amazing clock expert!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "times_of_day",
+      "number": 4,
+      "title": "Times of Day",
+      "guide": "dog",
+      "criteria": ["uw.seasonal-change", "cl.sequencing-language"],
+      "steps": [
+        { "text": "Different times of day have different names. Let's explore them!", "auto": true },
+        { "text": "Press Breakfast — what time do you eat breakfast?", "expect": "PRESET_BREAKFAST_SELECTED", "feedback": "Breakfast time! The short hand is near the 10." },
+        { "text": "Now press Lunch!", "expect": "PRESET_LUNCH_SELECTED", "feedback": "Lunchtime! The short hand has moved around to the 1." },
+        { "text": "Press Dinner!", "expect": "PRESET_DINNER_SELECTED", "feedback": "Dinner time — it's getting dark outside!" },
+        { "text": "Last one — press Bedtime!", "expect": "PRESET_BEDTIME_SELECTED", "feedback": "Bedtime! Time to sleep." },
+        { "text": ["Breakfast, lunch, dinner, bedtime — you know your whole day!", "Brilliant!", "Superstar time-keeper!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "morning_to_night",
+      "number": 5,
+      "title": "Morning to Night",
+      "guide": "cat",
+      "criteria": ["uw.seasonal-change", "cl.sequencing-language", "maths.number-order"],
+      "steps": [
+        { "text": "Let's watch the day go by — from the moment you wake up to when the stars come out!", "auto": true },
+        { "text": "Start the day — press Morning!", "expect": "PRESET_MORNING_SELECTED", "feedback": "Morning! The sun is just coming up." },
+        { "text": "Press Noon!", "expect": "PRESET_NOON_SELECTED", "feedback": "Noon — the sun is right at the top of the sky!" },
+        { "text": "Press Afternoon!", "expect": "PRESET_AFTERNOON_SELECTED", "feedback": "Afternoon — the sun starts moving down." },
+        { "text": "Press Nighttime!", "expect": "PRESET_NIGHTTIME_SELECTED", "feedback": "Night! The moon comes out and the stars appear." },
+        { "text": ["Morning, noon, afternoon, night — you followed the whole day!", "Brilliant day-explorer!", "Amazing!"], "auto": true, "success": true }
+      ]
+    }
+  ]
+}

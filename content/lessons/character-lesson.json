@@ -1,0 +1,90 @@
+{
+  "activity": "character-lesson",
+  "lessons": [
+    {
+      "id": "vowels",
+      "number": 1,
+      "title": "Vowels",
+      "guide": "cat",
+      "criteria": ["literacy.phonics", "pd.fine-motor", "literacy.word-recognition"],
+      "characters": ["a", "e", "i", "o", "u"],
+      "steps": [
+        { "text": "Some letters are extra special — they're called vowels. Every word needs at least one! Let's trace them.", "auto": true },
+        { "text": "Find a and trace it!", "expect": "CHAR_a_TRACED", "feedback": "a! You'll find this in almost every word." },
+        { "text": "Now find e!", "expect": "CHAR_e_TRACED", "feedback": "e! The most common letter in English." },
+        { "text": "Find i and trace it!", "expect": "CHAR_i_TRACED", "feedback": "i! Don't forget the dot on top." },
+        { "text": "Now find o!", "expect": "CHAR_o_TRACED", "feedback": "o! A perfect circle." },
+        { "text": "Last one — find u!", "expect": "CHAR_u_TRACED", "feedback": "u! Like a little cup." },
+        { "text": ["a, e, i, o, u — you traced all five vowels! Brilliant!", "Amazing — every vowel!", "Superstar!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "round_letters",
+      "number": 2,
+      "title": "Round Letters",
+      "guide": "dog",
+      "criteria": ["pd.fine-motor-circular", "literacy.phonics"],
+      "characters": ["c", "o", "a", "d", "g"],
+      "steps": [
+        { "text": "These letters all start the same way — with a round curve going anti-clockwise. Watch carefully!", "auto": true },
+        { "text": "Find c and trace it — start at the top and go round!", "expect": "CHAR_c_TRACED", "feedback": "c! That curving stroke is the key." },
+        { "text": "Now find o — all the way round this time!", "expect": "CHAR_o_TRACED", "feedback": "o! A full circle, anti-clockwise." },
+        { "text": "Find a — it starts just like c!", "expect": "CHAR_a_TRACED", "feedback": "a! Round first, then the straight bit down." },
+        { "text": "Now find d — round first, then tall!", "expect": "CHAR_d_TRACED", "feedback": "d! Same round start, but the line goes up high." },
+        { "text": "Last one — find g!", "expect": "CHAR_g_TRACED", "feedback": "g! Round like the others, then the tail dips below." },
+        { "text": ["c, o, a, d, g — you mastered the round letters! Brilliant!", "Amazing curves!", "Superstar!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "first_five",
+      "number": 3,
+      "title": "First Five Letters",
+      "guide": "cat",
+      "criteria": ["literacy.phonics", "maths.number-order", "pd.fine-motor"],
+      "characters": ["a", "b", "c", "d", "e"],
+      "steps": [
+        { "text": "The alphabet has a special order. Let's trace the very first five letters!", "auto": true },
+        { "text": "Find a — the first letter of the alphabet!", "expect": "CHAR_a_TRACED", "feedback": "a! Right at the start." },
+        { "text": "Now find b!", "expect": "CHAR_b_TRACED", "feedback": "b! A tall letter — the line goes up high." },
+        { "text": "Find c!", "expect": "CHAR_c_TRACED", "feedback": "c! The round one." },
+        { "text": "Now find d!", "expect": "CHAR_d_TRACED", "feedback": "d! Tall again, but faces the other way to b." },
+        { "text": "Last one — find e!", "expect": "CHAR_e_TRACED", "feedback": "e! a, b, c, d, e — five in a row!" },
+        { "text": ["a, b, c, d, e — the first five letters! Brilliant!", "Amazing alphabet explorer!", "Superstar!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "digits_one_to_five",
+      "number": 4,
+      "title": "Count and Write 1 to 5",
+      "guide": "dog",
+      "criteria": ["maths.counting-5", "maths.numeral-recognition", "pd.fine-motor"],
+      "characters": ["1", "2", "3", "4", "5"],
+      "steps": [
+        { "text": "Numbers have shapes too — let's trace them in order!", "auto": true },
+        { "text": "Find 1 and trace it!", "expect": "CHAR_1_TRACED", "feedback": "1! One straight line." },
+        { "text": "Now find 2!", "expect": "CHAR_2_TRACED", "feedback": "2! A curve and a slide." },
+        { "text": "Find 3 and trace it!", "expect": "CHAR_3_TRACED", "feedback": "3! Two bumps facing right." },
+        { "text": "Now find 4!", "expect": "CHAR_4_TRACED", "feedback": "4! Down, across, then tall." },
+        { "text": "Last one — find 5!", "expect": "CHAR_5_TRACED", "feedback": "5! Straight down, belly out, hat on top." },
+        { "text": ["1, 2, 3, 4, 5 — you wrote them all! Brilliant!", "Amazing number writer!", "Superstar!"], "auto": true, "success": true }
+      ]
+    },
+    {
+      "id": "digits_six_to_ten",
+      "number": 5,
+      "title": "Count and Write 6 to 10",
+      "guide": "cat",
+      "criteria": ["maths.counting-10", "maths.numeral-recognition", "pd.fine-motor"],
+      "characters": ["6", "7", "8", "9", "0"],
+      "steps": [
+        { "text": "You know 1 to 5 — now let's trace 6 all the way to 10! We use 0 for the zero in 10.", "auto": true },
+        { "text": "Find 6 and trace it!", "expect": "CHAR_6_TRACED", "feedback": "6! Curves round and closes at the bottom." },
+        { "text": "Now find 7!", "expect": "CHAR_7_TRACED", "feedback": "7! Across the top, then a diagonal line down." },
+        { "text": "Find 8 and trace it!", "expect": "CHAR_8_TRACED", "feedback": "8! Two loops on top of each other." },
+        { "text": "Now find 9!", "expect": "CHAR_9_TRACED", "feedback": "9! A circle on top, then a tail going down." },
+        { "text": "Last one — find 0!", "expect": "CHAR_0_TRACED", "feedback": "0! A full oval — the zero that makes 10!" },
+        { "text": ["6, 7, 8, 9, 0 — you can write all ten digits! Brilliant!", "Amazing!", "Superstar number writer!"], "auto": true, "success": true }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,8 @@
 [
+  { "file": "clock.json",              "activity": "Clock" },
   { "file": "colour-wheel.json",       "activity": "Colour Wheel" },
   { "file": "number-interaction.json", "activity": "Numbers" },
-  { "file": "say-words.json",          "activity": "Say Words" }
+  { "file": "say-words.json",          "activity": "Say Words" },
+  { "file": "word-lesson.json",        "activity": "Word Lesson" },
+  { "file": "character-lesson.json",   "activity": "Character Lesson" }
 ]
