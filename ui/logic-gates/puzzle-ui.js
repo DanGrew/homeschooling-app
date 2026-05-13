@@ -1,4 +1,4 @@
-const OUTPUT_LABELS = { lamp: 'light', fan: 'fan', fountain: 'fountain' };
+const OUTPUT_LABELS = { lamp: 'light', fan: 'fan' };
 
 function goalText(goal, outputs) {
   const out = outputs.find(function(o) { return o.id === goal[0].id; });
@@ -11,18 +11,18 @@ function init() {
   const goalBanner  = document.getElementById('goal-text');
   const puzzleNum   = document.getElementById('puzzle-num');
   const resetBtn    = document.getElementById('btn-reset');
-  const successOver = document.getElementById('success-overlay');
   const newPuzzleBtn = document.getElementById('btn-new-puzzle');
-  const successNextBtn = document.getElementById('btn-next-success');
 
   let puzzles = [];
   let puzzleIndex = 0;
   let currentConfig = null;
   let currentSvg    = null;
   let originalStates = [];
+  let solved = false;
 
   function loadPuzzle(config) {
     currentConfig = config;
+    solved = false;
     originalStates = config.inputs.map(function(i) { return i.state; });
     goalBanner.textContent = goalText(config.goal, config.outputs);
 
@@ -32,16 +32,18 @@ function init() {
       checkGoal();
     });
     puzzleArea.appendChild(currentSvg);
-    successOver.style.display = 'none';
+    if (window.hideBanner) window.hideBanner();
     checkGoal();
   }
 
   function checkGoal() {
-    if (!currentConfig) return;
+    if (!currentConfig || solved) return;
     const states = currentSvg._getInputStates();
     const out = window.LogicEngine.evalGraph(currentConfig, states);
-    const solved = currentConfig.goal.every(function(g) { return out[g.id] === g.value; });
-    if (solved) successOver.style.display = 'flex';
+    solved = currentConfig.goal.every(function(g) { return out[g.id] === g.value; });
+    if (solved && window.showBanner) {
+      window.showBanner(function() { loadNext(); });
+    }
   }
 
   function loadNext() {
@@ -60,9 +62,8 @@ function init() {
   });
 
   newPuzzleBtn.addEventListener('click', loadNext);
-  if (successNextBtn) successNextBtn.addEventListener('click', loadNext);
 
-  fetch('../../../content/logic-gates/puzzles.json?v=1')
+  fetch('../../../content/logic-gates/puzzles.json?v=2')
     .then(function(r) { return r.json(); })
     .then(function(data) {
       puzzles = data;

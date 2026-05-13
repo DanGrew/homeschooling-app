@@ -14,16 +14,11 @@
 #puzzle-controls{display:flex;justify-content:center;padding:16px;flex-shrink:0;}
 #btn-reset{font-size:1em;padding:10px 28px;border:none;border-radius:12px;background:#eee;color:#555;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;}
 #btn-reset:active{transform:scale(0.96);}
-#success-overlay{display:none;position:absolute;inset:0;background:rgba(255,255,255,0.92);flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:10;}
-#success-overlay div:first-child{font-size:4em;}
-#success-msg{font-size:1.8em;font-weight:bold;color:#2ECC71;}
-#btn-new-puzzle{font-size:1.1em;padding:12px 32px;border:none;border-radius:14px;background:#2ECC71;color:#fff;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;}
-.game-area{position:relative;}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/" data-title="Logic Puzzle" data-links='[{"href":"sandbox.html","label":"Explore"}]'></div>
+<div class="nav-bar" data-home="../../games/" data-title="Logic Puzzle" data-links='[{"href":"sandbox.html","label":"Explore"}]' data-links-icon="lesson"></div>
 <div class="game-area">
   <div id="goal-banner">
     <span style="font-size:1.4em;">🎯</span>
@@ -35,13 +30,9 @@
     <button id="btn-reset">Reset</button>
     <button id="btn-new-puzzle" style="font-size:1em;padding:10px 28px;border:none;border-radius:12px;background:#2ECC71;color:#fff;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;">Next</button>
   </div>
-  <div id="success-overlay">
-    <div>⭐</div>
-    <div id="success-msg">You did it!</div>
-    <button id="btn-next-success">Next Puzzle</button>
-  </div>
 </div>
 <script src="../../shared/menu.js" defer></script>
+<script type="module" src="../../../ui/shared/success-banner.js"></script>
 <script src="../../../core/logic-gates/logic-engine.js"></script>
 <script src="../../../ui/logic-gates/output-ui.js"></script>
 <script src="../../../ui/logic-gates/station-ui.js"></script>
