@@ -85,11 +85,15 @@ GuidanceService.prototype._showFeedback = function(rawText) {
   var self = this;
   var text = _resolveText(rawText);
   var total = this._lesson.steps.length;
+  var displayIdx = this._stepIdx + 1;
+  var nextStep = this._lesson.steps[this._stepIdx + 1];
+  var nextSilent = !!(nextStep && nextStep.silent);
+  if (nextSilent) { this._stepIdx++; }
   this._overlay.show(
     this._guideSrc(),
-    { text: text, auto: true },
-    this._stepIdx + 1, total,
-    function() { self._advance(); },
+    { text: text, auto: !nextSilent },
+    displayIdx, total,
+    nextSilent ? null : function() { self._advance(); },
     function() { interrupt(text); },
     function() { self.stop(); }
   );

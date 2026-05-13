@@ -84,11 +84,11 @@ function emit(type) {
 clockInit(document.getElementById('clock-container'));
 
 document.querySelectorAll('[data-num]').forEach(function(el) {
-  makeSpeakable(el, el.dataset.num);
-  el.addEventListener('click', function(e) {
-    e.stopPropagation();
+  makeInteractive(el, function() {
+    if (!window.guidanceService || !window.guidanceService._lesson) speak(el.dataset.num);
     emit('NUMBER_' + el.dataset.num + '_TAPPED');
   });
+  el.addEventListener('click', function(e) { e.stopPropagation(); });
 });
 
 document.querySelector('[data-hand="minute"]').addEventListener('click', function(e) {
