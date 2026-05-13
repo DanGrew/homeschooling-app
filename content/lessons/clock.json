@@ -9,20 +9,19 @@
       "criteria": ["maths.counting-10", "maths.number-order"],
       "numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       "steps": [
-        { "text": "This is a clock! Clocks have numbers all the way around. Let's count them together!", "auto": true },
-        { "text": "Can you tap the number 1?", "expect": "NUMBER_1_TAPPED", "feedback": "One! That's where we start." },
-        { "text": "Now tap 2!", "expect": "NUMBER_2_TAPPED", "feedback": "Two!" },
-        { "text": "Tap 3!", "expect": "NUMBER_3_TAPPED", "feedback": "Three!" },
-        { "text": "Tap 4!", "expect": "NUMBER_4_TAPPED", "feedback": "Four!" },
-        { "text": "Tap 5!", "expect": "NUMBER_5_TAPPED", "feedback": "Five!" },
-        { "text": "Tap 6 — it's at the very bottom!", "expect": "NUMBER_6_TAPPED", "feedback": "Six! Halfway around." },
-        { "text": "Tap 7!", "expect": "NUMBER_7_TAPPED", "feedback": "Seven!" },
-        { "text": "Tap 8!", "expect": "NUMBER_8_TAPPED", "feedback": "Eight!" },
-        { "text": "Tap 9!", "expect": "NUMBER_9_TAPPED", "feedback": "Nine!" },
-        { "text": "Tap 10!", "expect": "NUMBER_10_TAPPED", "feedback": "Ten!" },
-        { "text": "Tap 11!", "expect": "NUMBER_11_TAPPED", "feedback": "Nearly there — eleven!" },
-        { "text": "Last one — tap 12 at the very top!", "expect": "NUMBER_12_TAPPED", "feedback": "Twelve! You counted all the way around!" },
-        { "text": ["You counted all twelve numbers! Brilliant!", "Amazing — all the way round!", "Superstar counter!"], "auto": true, "success": true }
+        { "text": "This is a clock! Clocks have numbers all the way around. Can you tap the number 1?", "expect": "NUMBER_1_TAPPED", "feedback": "One! Now tap 2!" },
+        { "silent": true, "expect": "NUMBER_2_TAPPED", "feedback": "Two! Now tap 3!" },
+        { "silent": true, "expect": "NUMBER_3_TAPPED", "feedback": "Three! Now tap 4!" },
+        { "silent": true, "expect": "NUMBER_4_TAPPED", "feedback": "Four! Now tap 5!" },
+        { "silent": true, "expect": "NUMBER_5_TAPPED", "feedback": "Five! Now tap 6 — it's at the very bottom!" },
+        { "silent": true, "expect": "NUMBER_6_TAPPED", "feedback": "Six! Halfway around. Now tap 7!" },
+        { "silent": true, "expect": "NUMBER_7_TAPPED", "feedback": "Seven! Now tap 8!" },
+        { "silent": true, "expect": "NUMBER_8_TAPPED", "feedback": "Eight! Now tap 9!" },
+        { "silent": true, "expect": "NUMBER_9_TAPPED", "feedback": "Nine! Now tap 10!" },
+        { "silent": true, "expect": "NUMBER_10_TAPPED", "feedback": "Ten! Now tap 11!" },
+        { "silent": true, "expect": "NUMBER_11_TAPPED", "feedback": "Eleven! Last one — tap 12 at the very top!" },
+        { "silent": true, "expect": "NUMBER_12_TAPPED", "feedback": "Twelve! You counted all the way around!" },
+        { "text": ["Amazing — all the way round!", "Brilliant counter!", "Superstar!"], "auto": true, "success": true }
       ]
     },
     {

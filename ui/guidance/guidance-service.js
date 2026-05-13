@@ -67,6 +67,7 @@ GuidanceService.prototype._guideSrc = function() {
 GuidanceService.prototype._showStep = function() {
   var self = this;
   var step = this._lesson.steps[this._stepIdx];
+  if (step.silent) return;
   var text = _resolveText(step.text);
   var total = this._lesson.steps.length;
   this._overlay.show(

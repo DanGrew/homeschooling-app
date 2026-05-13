@@ -10,8 +10,10 @@ var FACE = [
   '<circle cx="140" cy="140" r="2" fill="none" stroke="#D7CCC8" stroke-width="1"/>'
 ].concat(
   NUMS.map(function(n) {
-    return '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="18" fill="transparent" data-num="' + n[2] + '" style="cursor:pointer"/>' +
-           '<text x="' + n[0] + '" y="' + n[1] + '" text-anchor="middle" dominant-baseline="central" font-size="22" font-weight="bold" fill="#4E342E" font-family="sans-serif" style="pointer-events:none">' + n[2] + '</text>';
+    return '<g data-num="' + n[2] + '" style="cursor:pointer">' +
+           '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="18" fill="transparent"/>' +
+           '<text x="' + n[0] + '" y="' + n[1] + '" text-anchor="middle" dominant-baseline="central" font-size="22" font-weight="bold" fill="#4E342E" font-family="sans-serif" style="pointer-events:none">' + n[2] + '</text>' +
+           '</g>';
   })
 ).concat([
   '<g id="clock-minute-hand" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out">',
