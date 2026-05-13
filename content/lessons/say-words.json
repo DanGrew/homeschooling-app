@@ -8,12 +8,11 @@
       "guide": "dog",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.animals-nature"],
       "steps": [
-        { "text": "Let's visit the farm! Farms are home to lots of animals. Can you find them all?", "auto": true },
-        { "text": "Find the cow and tap it!", "expect": "COW_SPOKEN", "feedback": "Moo! Cows give us milk." },
-        { "text": "Now find the horse!", "expect": "HORSE_SPOKEN", "feedback": "Horses are strong — farmers use them to help with work." },
-        { "text": "Can you find the duck?", "expect": "DUCK_SPOKEN", "feedback": "Quack! Ducks love splashing in water." },
-        { "text": "Find the rabbit!", "expect": "RABBIT_SPOKEN", "feedback": "Rabbits love to hop and eat vegetables!" },
-        { "text": "Last one — find the dog!", "expect": "DOG_SPOKEN", "feedback": "Dogs help farmers look after the other animals." },
+        { "text": "Let's visit the farm! Farms are home to lots of animals. Find the cow and tap it!", "expect": "COW_SPOKEN", "feedback": "Moo! Cows give us milk. Now find the horse!" },
+        { "silent": true, "expect": "HORSE_SPOKEN", "feedback": "Horses are strong — farmers use them to help with work. Now find the duck!" },
+        { "silent": true, "expect": "DUCK_SPOKEN", "feedback": "Quack! Ducks love splashing in water. Now find the rabbit!" },
+        { "silent": true, "expect": "RABBIT_SPOKEN", "feedback": "Rabbits love to hop and eat vegetables! Last one — find the dog!" },
+        { "silent": true, "expect": "DOG_SPOKEN", "feedback": "Dogs help farmers look after the other animals. You found them all!" },
         { "text": ["You know all the farm animals! Brilliant!", "Amazing — every single one!", "Superstar farmer!"], "auto": true, "success": true }
       ]
     },
@@ -24,12 +23,11 @@
       "guide": "cat",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.animals-nature", "uw.world-awareness"],
       "steps": [
-        { "text": "Let's go on safari! These animals live far away in hot countries. Can you find them?", "auto": true },
-        { "text": "Find the lion!", "expect": "LION_SPOKEN", "feedback": "Roar! The lion is called the king of the jungle." },
-        { "text": "Now find the elephant!", "expect": "ELEPHANT_SPOKEN", "feedback": "Elephants are the biggest land animals on Earth!" },
-        { "text": "Can you spot the giraffe?", "expect": "GIRAFFE_SPOKEN", "feedback": "Giraffes have the longest necks of any animal — to reach the tallest leaves." },
-        { "text": "Find the zebra!", "expect": "ZEBRA_SPOKEN", "feedback": "Every zebra has its own pattern of stripes — just like a fingerprint." },
-        { "text": "Last one — find the monkey!", "expect": "MONKEY_SPOKEN", "feedback": "Monkeys are very clever — they use their hands like we do!" },
+        { "text": "Let's go on safari! These animals live far away in hot countries. Find the lion!", "expect": "LION_SPOKEN", "feedback": "Roar! The lion is called the king of the jungle. Now find the elephant!" },
+        { "silent": true, "expect": "ELEPHANT_SPOKEN", "feedback": "Elephants are the biggest land animals on Earth! Now find the giraffe!" },
+        { "silent": true, "expect": "GIRAFFE_SPOKEN", "feedback": "Giraffes have the longest necks of any animal — to reach the tallest leaves. Now find the zebra!" },
+        { "silent": true, "expect": "ZEBRA_SPOKEN", "feedback": "Every zebra has its own pattern of stripes — just like a fingerprint. Last one — find the monkey!" },
+        { "silent": true, "expect": "MONKEY_SPOKEN", "feedback": "Monkeys are very clever — they use their hands like we do! Safari complete!" },
         { "text": ["Safari complete! You know so many animals!", "Brilliant explorer!", "Amazing — you found them all!"], "auto": true, "success": true }
       ]
     },
@@ -40,12 +38,11 @@
       "guide": "cat",
       "criteria": ["cl.feeling-vocabulary", "literacy.word-recognition", "psed.emotion-vocab"],
       "steps": [
-        { "text": "Everybody has feelings. Learning the words for feelings helps us talk about them. Let's find some feeling faces!", "auto": true },
-        { "text": "Who looks happy? Find the smiling face!", "expect": "SMILE_SPOKEN", "feedback": "A big smile! What makes you feel happy?" },
-        { "text": "Now find sad.", "expect": "SAD_SPOKEN", "feedback": "Sometimes we feel sad. That's okay — it's a normal feeling." },
-        { "text": "Can you find worried?", "expect": "WORRIED_SPOKEN", "feedback": "Worried means we're not sure if something will be okay. Everyone feels worried sometimes." },
-        { "text": "Find angry.", "expect": "ANGRY_SPOKEN", "feedback": "Angry is a big feeling. Taking a deep breath can help." },
-        { "text": "Last one — find surprised!", "expect": "SURPRISE_SPOKEN", "feedback": "Surprised! Something unexpected happened." },
+        { "text": "Everybody has feelings. Learning the words helps us talk about them. Who looks happy? Find the smiling face!", "expect": "SMILE_SPOKEN", "feedback": "A big smile! What makes you feel happy? Now find sad." },
+        { "silent": true, "expect": "SAD_SPOKEN", "feedback": "Sometimes we feel sad — that's okay, it's a normal feeling. Now find worried." },
+        { "silent": true, "expect": "WORRIED_SPOKEN", "feedback": "Worried means we're not sure if something will be okay. Now find angry." },
+        { "silent": true, "expect": "ANGRY_SPOKEN", "feedback": "Angry is a big feeling. Taking a deep breath can help. Last one — find surprised!" },
+        { "silent": true, "expect": "SURPRISE_SPOKEN", "feedback": "Surprised! Something unexpected happened. You know five important feelings!" },
         { "text": ["You know five important feelings. Brilliant!", "Amazing emotional explorer!", "Superstar — you found them all!"], "auto": true, "success": true }
       ]
     },
@@ -56,12 +53,11 @@
       "guide": "cat",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.community"],
       "steps": [
-        { "text": "Welcome to the fruit shop! Fruits grow on plants and trees — they're sweet and full of goodness. Can you name them all?", "auto": true },
-        { "text": "Find the apple!", "expect": "APPLE_SPOKEN", "feedback": "Apples grow on trees. They can be red or green!" },
-        { "text": "Now find the banana!", "expect": "BANANA_SPOKEN", "feedback": "Bananas grow in hot countries on big plants." },
-        { "text": "Can you spot the strawberry?", "expect": "STRAWBERRY_SPOKEN", "feedback": "Strawberries are red and grow close to the ground." },
-        { "text": "Find the orange!", "expect": "ORANGE_SPOKEN", "feedback": "Oranges are juicy and full of vitamin C." },
-        { "text": "Last one — find the pear!", "expect": "PEAR_SPOKEN", "feedback": "Pears are shaped like a teardrop." },
+        { "text": "Welcome to the fruit shop! Fruits grow on plants and trees — they're sweet and full of goodness. Find the apple!", "expect": "APPLE_SPOKEN", "feedback": "Apples grow on trees — they can be red or green! Now find the banana!" },
+        { "silent": true, "expect": "BANANA_SPOKEN", "feedback": "Bananas grow in hot countries on big plants. Now find the strawberry!" },
+        { "silent": true, "expect": "STRAWBERRY_SPOKEN", "feedback": "Strawberries are red and grow close to the ground. Now find the orange!" },
+        { "silent": true, "expect": "ORANGE_SPOKEN", "feedback": "Oranges are juicy and full of vitamin C. Last one — find the pear!" },
+        { "silent": true, "expect": "PEAR_SPOKEN", "feedback": "Pears are shaped like a teardrop. The fruit shop is sorted!" },
         { "text": ["The fruit shop is sorted! You know all those fruits!", "Wonderful — every single one!", "Superstar shopper!"], "auto": true, "success": true }
       ]
     },
@@ -72,12 +68,11 @@
       "guide": "dog",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.community"],
       "steps": [
-        { "text": "Vroom! These are all vehicles — things we ride or drive to get from place to place. Find them all!", "auto": true },
-        { "text": "Find the bus!", "expect": "BUS_SPOKEN", "feedback": "Buses carry lots of people at once — everyone sits together!" },
-        { "text": "Now find the train!", "expect": "TRAIN_SPOKEN", "feedback": "Trains travel on rails and can go very fast." },
-        { "text": "Can you spot the tractor?", "expect": "TRACTOR_SPOKEN", "feedback": "Tractors work on farms — they're very strong and slow." },
-        { "text": "Find the truck!", "expect": "TRUCK_SPOKEN", "feedback": "Trucks carry heavy loads from place to place." },
-        { "text": "Last one — find the digger!", "expect": "DIGGER_SPOKEN", "feedback": "Diggers scoop up earth to make roads and buildings." },
+        { "text": "Vroom! These are all vehicles — things we ride or drive to get from place to place. Find the bus!", "expect": "BUS_SPOKEN", "feedback": "Buses carry lots of people at once — everyone sits together! Now find the train!" },
+        { "silent": true, "expect": "TRAIN_SPOKEN", "feedback": "Trains travel on rails and can go very fast. Now find the tractor!" },
+        { "silent": true, "expect": "TRACTOR_SPOKEN", "feedback": "Tractors work on farms — very strong and slow. Now find the truck!" },
+        { "silent": true, "expect": "TRUCK_SPOKEN", "feedback": "Trucks carry heavy loads from place to place. Last one — find the digger!" },
+        { "silent": true, "expect": "DIGGER_SPOKEN", "feedback": "Diggers scoop up earth to make roads and buildings. Vroom — you found them all!" },
         { "text": ["Vroom! You know all those vehicles!", "Brilliant — every single one!", "Amazing driver!"], "auto": true, "success": true }
       ]
     },
@@ -88,11 +83,10 @@
       "guide": "cat",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.world-awareness"],
       "steps": [
-        { "text": "Some fruits come from far away in hot countries. These ones might be new to you — let's find out their names!", "auto": true },
-        { "text": "Find the mango!", "expect": "MANGO_SPOKEN", "feedback": "Mangoes are orange inside and very sweet — they grow in hot countries like India." },
-        { "text": "Now find the pineapple!", "expect": "PINEAPPLE_SPOKEN", "feedback": "Pineapples are spiky outside and sweet inside. They grow in tropical places." },
-        { "text": "Can you spot the coconut?", "expect": "COCONUT_SPOKEN", "feedback": "Coconuts grow on palm trees. Inside is coconut milk — try shaking one!" },
-        { "text": "Last one — find the kiwi!", "expect": "KIWI_SPOKEN", "feedback": "Kiwis are green inside with tiny seeds. They're named after a bird from New Zealand!" },
+        { "text": "Some fruits come from far away in hot countries. These might be new to you! Find the mango!", "expect": "MANGO_SPOKEN", "feedback": "Mangoes are orange inside and very sweet — they grow in hot countries like India. Now find the pineapple!" },
+        { "silent": true, "expect": "PINEAPPLE_SPOKEN", "feedback": "Pineapples are spiky outside and sweet inside. They grow in tropical places. Now find the coconut!" },
+        { "silent": true, "expect": "COCONUT_SPOKEN", "feedback": "Coconuts grow on palm trees. Inside is coconut milk — try shaking one! Last one — find the kiwi!" },
+        { "silent": true, "expect": "KIWI_SPOKEN", "feedback": "Kiwis are green inside with tiny seeds. They're named after a bird from New Zealand! You've been on a fruit adventure!" },
         { "text": ["You've been on a fruit adventure! Brilliant!", "Amazing — you found them all!", "Superstar fruit explorer!"], "auto": true, "success": true }
       ]
     }
