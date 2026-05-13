@@ -35,22 +35,22 @@ function buildFan(cx, cy, r) {
   r = r || 28;
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.dataset.output = 'fan';
-  const hub = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  hub.setAttribute('cx', cx); hub.setAttribute('cy', cy); hub.setAttribute('r', 5);
-  hub.setAttribute('fill', '#bbb');
   const blades = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   blades.dataset.blades = '1';
-  const angles = [0, 90, 180, 270];
-  angles.forEach(function(a) {
+  [0, 90, 180, 270].forEach(function(a) {
     const blade = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-    const rad = a * Math.PI / 180;
-    blade.setAttribute('cx', cx + (r * 0.5) * Math.cos(rad));
-    blade.setAttribute('cy', cy + (r * 0.5) * Math.sin(rad));
-    blade.setAttribute('rx', r * 0.45); blade.setAttribute('ry', r * 0.22);
+    blade.setAttribute('cx', cx + r * 0.52);
+    blade.setAttribute('cy', cy);
+    blade.setAttribute('rx', r * 0.52);
+    blade.setAttribute('ry', r * 0.18);
     blade.setAttribute('transform', `rotate(${a}, ${cx}, ${cy})`);
-    blade.setAttribute('fill', '#ccc'); blade.setAttribute('opacity', '0.85');
+    blade.setAttribute('fill', '#ccc');
+    blade.setAttribute('opacity', '0.9');
     blades.appendChild(blade);
   });
+  const hub = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  hub.setAttribute('cx', cx); hub.setAttribute('cy', cy); hub.setAttribute('r', 6);
+  hub.setAttribute('fill', '#bbb');
   g.appendChild(blades); g.appendChild(hub);
   return g;
 }
@@ -109,14 +109,12 @@ function updateFountain(g, active) {
 }
 
 function buildOutput(type, cx, cy, r) {
-  if (type === 'fan')      return buildFan(cx, cy, r);
-  if (type === 'fountain') return buildFountain(cx, cy, r);
+  if (type === 'fan') return buildFan(cx, cy, r);
   return buildLamp(cx, cy, r);
 }
 
 function updateOutput(g, type, active) {
-  if (type === 'fan')      return updateFan(g, active);
-  if (type === 'fountain') return updateFountain(g, active);
+  if (type === 'fan') return updateFan(g, active);
   return updateLamp(g, active);
 }
 

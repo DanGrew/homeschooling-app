@@ -36,7 +36,7 @@
     "nodes": [
       { "id": "G1", "type": "XOR", "inputs": ["A", "B"], "cell": [1, 1] }
     ],
-    "outputs": [{ "id": "O1", "type": "fountain", "source": "G1", "cell": [2, 1] }]
+    "outputs": [{ "id": "O1", "type": "fan",      "source": "G1", "cell": [2, 1] }]
   },
   {
     "id": "not_station",
