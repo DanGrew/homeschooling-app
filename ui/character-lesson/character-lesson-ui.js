@@ -38,6 +38,9 @@ function applyFilter(filter) {
 function hideBanner() { _hideBanner(); }
 
 function showBanner() {
+  [currentEntry].filter(Boolean).forEach(function(e) {
+    window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: 'CHAR_' + e.char + '_TRACED'}}));
+  });
   _showBanner({ buttons: [
     { label: '\u21BA Again', bg: 'white', color: '#E74C3C', onClick: function() { hideBanner(); [engine].filter(Boolean).forEach(function(e) { e.restart(); }); } },
     { label: 'Next \u2192',  bg: 'white', color: '#2ECC71', onClick: function() { paginator.next(); } }
@@ -229,6 +232,18 @@ export function init() {
   );
 
   paginator.goTo(Math.max(0, filteredChars.findIndex(e => e.char === paramChar)));
+
+  window.addEventListener('guidance:start', function() {
+    var lesson = window.guidanceService && window.guidanceService._lesson;
+    if (!lesson || !lesson.characters) return;
+    var chars = lesson.characters.map(String);
+    filteredChars = CHARS.filter(function(e) { return chars.indexOf(e.char) !== -1; });
+    paginator.reset(filteredChars);
+  });
+  window.addEventListener('guidance:stop', function() {
+    applyFilter(currentFilter);
+    paginator.reset(filteredChars);
+  });
 
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
   document.getElementById('btn-speak').addEventListener('click', () => { [currentEntry].filter(Boolean).forEach(e => speak(e.speak)); });

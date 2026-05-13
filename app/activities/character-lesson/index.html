@@ -6,6 +6,16 @@
 <title>Trace Letters</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
+<script>
+  window.DICT_BASE = '../../dictionary/entries/';
+  window.LESSONS = [
+    {id:'vowels',              number:1, title:'Vowels'},
+    {id:'round_letters',       number:2, title:'Round Letters'},
+    {id:'first_five',          number:3, title:'First Five Letters'},
+    {id:'digits_one_to_five',  number:4, title:'Count and Write 1 to 5'},
+    {id:'digits_six_to_ten',   number:5, title:'Count and Write 6 to 10'}
+  ];
+</script>
 <script src="../../shared/menu.js" defer></script>
 <style>
   .char-label{font-size:2em;font-weight:bold;color:#333;text-align:center;padding:8px 0;}
@@ -48,7 +58,17 @@
 <script src="../../../ui/trace/trace-ui.js"></script>
 <script type="module">
 import { init } from '../../../ui/character-lesson/character-lesson-ui.js';
-window.addEventListener('load', init);
+import { GuidanceService } from '../../../ui/guidance/guidance-service.js';
+window.addEventListener('load', function() {
+  init();
+  fetch('../../../content/lessons/character-lesson.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      window.LESSON_MAP = {};
+      data.lessons.forEach(function(l) { window.LESSON_MAP[l.id] = l; });
+      window.guidanceService = new GuidanceService();
+    });
+});
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='character-lesson';</script>
 <script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>
