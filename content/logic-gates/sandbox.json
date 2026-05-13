@@ -1,0 +1,53 @@
+[
+  {
+    "id": "and_station",
+    "label": "AND",
+    "grid": { "cols": 3, "rows": 3 },
+    "inputs": [
+      { "id": "A", "state": false, "label": "A", "cell": [0, 0] },
+      { "id": "B", "state": false, "label": "B", "cell": [0, 2] }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "AND", "inputs": ["A", "B"], "cell": [1, 1] }
+    ],
+    "outputs": [{ "id": "O1", "type": "lamp",     "source": "G1", "cell": [2, 1] }]
+  },
+  {
+    "id": "or_station",
+    "label": "OR",
+    "grid": { "cols": 3, "rows": 3 },
+    "inputs": [
+      { "id": "A", "state": false, "label": "A", "cell": [0, 0] },
+      { "id": "B", "state": false, "label": "B", "cell": [0, 2] }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "OR",  "inputs": ["A", "B"], "cell": [1, 1] }
+    ],
+    "outputs": [{ "id": "O1", "type": "fan",      "source": "G1", "cell": [2, 1] }]
+  },
+  {
+    "id": "xor_station",
+    "label": "XOR",
+    "grid": { "cols": 3, "rows": 3 },
+    "inputs": [
+      { "id": "A", "state": false, "label": "A", "cell": [0, 0] },
+      { "id": "B", "state": false, "label": "B", "cell": [0, 2] }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "XOR", "inputs": ["A", "B"], "cell": [1, 1] }
+    ],
+    "outputs": [{ "id": "O1", "type": "fan",      "source": "G1", "cell": [2, 1] }]
+  },
+  {
+    "id": "not_station",
+    "label": "NOT",
+    "grid": { "cols": 3, "rows": 1 },
+    "inputs": [
+      { "id": "A", "state": false, "label": "A", "cell": [0, 0] }
+    ],
+    "nodes": [
+      { "id": "G1", "type": "NOT", "inputs": ["A"], "cell": [1, 0] }
+    ],
+    "outputs": [{ "id": "O1", "type": "lamp",     "source": "G1", "cell": [2, 0] }]
+  }
+]
