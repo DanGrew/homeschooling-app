@@ -6,29 +6,23 @@ function goalText(goal, outputs) {
   return goal[0].value ? 'Turn the ' + device + ' ON' : 'Turn the ' + device + ' OFF';
 }
 
-function init() {
-  const puzzleArea  = document.getElementById('puzzle-area');
-  const goalBanner  = document.getElementById('goal-text');
-  const puzzleNum   = document.getElementById('puzzle-num');
-  const resetBtn    = document.getElementById('btn-reset');
-  const prevBtn     = document.getElementById('btn-prev');
-  const newPuzzleBtn = document.getElementById('btn-new-puzzle');
-
-  let puzzles = [];
-  let puzzleIndex = 0;
-  let currentConfig = null;
-  let currentSvg    = null;
-  let originalStates = [];
-  let solved = false;
+(function() {
+  var currentConfig = null;
+  var currentSvg    = null;
+  var originalStates = [];
+  var solved = false;
 
   function loadPuzzle(config) {
-    currentConfig = config;
+    var puzzleArea = document.getElementById('puzzle-area');
+    var goalBanner = document.getElementById('goal-text');
+
+    currentConfig = JSON.parse(JSON.stringify(config));
     solved = false;
-    originalStates = config.inputs.map(function(i) { return i.state; });
-    goalBanner.textContent = goalText(config.goal, config.outputs);
+    originalStates = currentConfig.inputs.map(function(i) { return i.state; });
+    goalBanner.textContent = goalText(currentConfig.goal, currentConfig.outputs);
 
     if (currentSvg) puzzleArea.removeChild(currentSvg);
-    currentSvg = window.StationUI.buildStation(config, function(id) {
+    currentSvg = window.StationUI.buildStation(currentConfig, function(id) {
       currentSvg._handleToggle(id);
       checkGoal();
     });
@@ -39,48 +33,26 @@ function init() {
 
   function checkGoal() {
     if (!currentConfig || solved) return;
-    const states = currentSvg._getInputStates();
-    const out = window.LogicEngine.evalGraph(currentConfig, states);
+    var states = currentSvg._getInputStates();
+    var out = window.LogicEngine.evalGraph(currentConfig, states);
     solved = currentConfig.goal.every(function(g) { return out[g.id] === g.value; });
     if (solved && window.showBanner) {
-      window.showBanner(function() { loadNext(); });
+      window.showBanner(function() {
+        if (window._puzzlePaginator) window._puzzlePaginator.next();
+      });
     }
   }
 
-  function loadNext() {
-    if (!puzzles.length) return;
-    const num = puzzleIndex + 1;
-    const config = JSON.parse(JSON.stringify(puzzles[puzzleIndex]));
-    puzzleIndex = (puzzleIndex + 1) % puzzles.length;
-    if (puzzleNum) puzzleNum.textContent = num + ' / ' + puzzles.length;
-    loadPuzzle(config);
-  }
-
-  resetBtn.addEventListener('click', function() {
-    if (!currentConfig) return;
-    currentConfig.inputs.forEach(function(inp, i) { inp.state = originalStates[i]; });
-    loadPuzzle(currentConfig);
+  window.addEventListener('load', function() {
+    var resetBtn = document.getElementById('btn-reset');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        if (!currentConfig) return;
+        currentConfig.inputs.forEach(function(inp, i) { inp.state = originalStates[i]; });
+        loadPuzzle(currentConfig);
+      });
+    }
   });
 
-  function loadPrev() {
-    if (!puzzles.length) return;
-    puzzleIndex = (puzzleIndex - 2 + puzzles.length) % puzzles.length;
-    loadNext();
-  }
-
-  prevBtn.addEventListener('click', loadPrev);
-  newPuzzleBtn.addEventListener('click', loadNext);
-
-  fetch('../../../content/logic-gates/puzzles.json?v=2')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      puzzles = data;
-      loadNext();
-    })
-    .catch(function(err) {
-      goalBanner.textContent = 'Failed to load puzzles';
-      console.error('puzzle load error:', err);
-    });
-}
-
-window.addEventListener('load', init);
+  window.PuzzleUI = { loadPuzzle: loadPuzzle };
+})();

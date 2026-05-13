@@ -11,7 +11,6 @@
 #goal-banner{display:flex;align-items:center;justify-content:center;gap:12px;padding:14px 20px;background:#f0f4ff;border-bottom:2px solid #d0d8f0;flex-shrink:0;}
 #goal-text{font-size:1.3em;font-weight:bold;color:#333;text-align:center;}
 #puzzle-area{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:hidden;}
-#puzzle-controls{display:flex;justify-content:center;padding:16px;flex-shrink:0;}
 #btn-reset{font-size:1em;padding:10px 28px;border:none;border-radius:12px;background:#eee;color:#555;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;}
 #btn-reset:active{transform:scale(0.96);}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -23,14 +22,12 @@
   <div id="goal-banner">
     <span style="font-size:1.4em;">🎯</span>
     <span id="goal-text">Loading…</span>
-    <span id="puzzle-num" style="margin-left:12px;font-size:0.85em;color:#888;font-weight:normal;"></span>
   </div>
   <div id="puzzle-area"></div>
-  <div id="puzzle-controls" style="gap:12px;">
-    <button id="btn-prev" style="font-size:1em;padding:10px 20px;border:none;border-radius:12px;background:#eee;color:#555;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;">&#8592;</button>
+  <div style="display:flex;justify-content:center;padding:8px 16px;flex-shrink:0;">
     <button id="btn-reset">Reset</button>
-    <button id="btn-new-puzzle" style="font-size:1em;padding:10px 20px;border:none;border-radius:12px;background:#2ECC71;color:#fff;font-family:inherit;font-weight:bold;cursor:pointer;touch-action:manipulation;">&#8594;</button>
   </div>
+  <div id="paginator-bar"></div>
 </div>
 <script src="../../shared/menu.js" defer></script>
 <script type="module" src="../../../ui/shared/success-banner.js"></script>
@@ -38,5 +35,27 @@
 <script src="../../../ui/logic-gates/output-ui.js"></script>
 <script src="../../../ui/logic-gates/station-ui.js"></script>
 <script src="../../../ui/logic-gates/puzzle-ui.js"></script>
+<script type="module">
+import { createPaginator } from '../../../ui/pagination/paginator-ui.js';
+
+fetch('../../../content/logic-gates/puzzles.json?v=2')
+  .then(function(r) { return r.json(); })
+  .then(function(puzzles) {
+    var paginator = createPaginator({
+      container: document.getElementById('paginator-bar'),
+      items: puzzles,
+      perPage: 1,
+      wrap: true,
+      onRender: function(slice) {
+        window.PuzzleUI.loadPuzzle(slice[0]);
+      }
+    });
+    window._puzzlePaginator = paginator;
+  })
+  .catch(function(err) {
+    document.getElementById('goal-text').textContent = 'Failed to load puzzles';
+    console.error('puzzle load error:', err);
+  });
+</script>
 </body>
 </html>
