@@ -1,9 +1,35 @@
 const SVG_NS = 'http://www.w3.org/2000/svg';
+const CELL_W = 120;
+const CELL_H = 80;
 
 function el(tag, attrs) {
   const e = document.createElementNS(SVG_NS, tag);
   Object.keys(attrs || {}).forEach(function(k) { e.setAttribute(k, attrs[k]); });
   return e;
+}
+
+function cellCenter(cell) {
+  return { x: cell[0] * CELL_W + CELL_W / 2, y: cell[1] * CELL_H + CELL_H / 2 };
+}
+
+function buildWirePath(svg, x1, y1, x2, y2, id) {
+  const cpx = (x1 + x2) / 2;
+  const d = `M${x1},${y1} C${cpx},${y1} ${cpx},${y2} ${x2},${y2}`;
+  const wire = el('path', {
+    d, stroke: '#ccc', 'stroke-width': '5', fill: 'none',
+    'stroke-linecap': 'round', 'data-wire': id
+  });
+  svg.appendChild(wire);
+  return wire;
+}
+
+function updateWire(wire, active, colour) {
+  wire.setAttribute('stroke', active ? colour : '#ccc');
+  if (active) {
+    wire.setAttribute('filter', `drop-shadow(0 0 5px ${colour})`);
+  } else {
+    wire.removeAttribute('filter');
+  }
 }
 
 function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
@@ -37,26 +63,6 @@ function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
   return { applyState };
 }
 
-function buildWirePath(svg, x1, y1, x2, y2, id) {
-  const mid = (x1 + x2) / 2;
-  const d = `M${x1},${y1} C${mid},${y1} ${mid},${y2} ${x2},${y2}`;
-  const wire = el('path', {
-    d, stroke: '#ccc', 'stroke-width': '5', fill: 'none',
-    'stroke-linecap': 'round', 'data-wire': id
-  });
-  svg.appendChild(wire);
-  return wire;
-}
-
-function updateWire(wire, active, colour) {
-  wire.setAttribute('stroke', active ? colour : '#ccc');
-  if (active) {
-    wire.setAttribute('filter', `drop-shadow(0 0 5px ${colour})`);
-  } else {
-    wire.removeAttribute('filter');
-  }
-}
-
 function buildGatePill(svg, cx, cy, label, colour) {
   const W = 80, H = 36, R = 18;
   const g = el('g', {});
@@ -76,25 +82,22 @@ function buildGatePill(svg, cx, cy, label, colour) {
 function buildStation(config, onToggle) {
   const { buildOutput, updateOutput, GATE_COLOURS } = window.OutputUI;
 
-  const nodeCount  = config.nodes.length;
-  const switchCount = config.inputs.length;
-
-  const W = 320 + nodeCount * 150 + switchCount * 20;
-  const H = switchCount <= 1 ? 120 : (switchCount >= 3 ? 220 : 180);
+  const grid = config.grid;
+  const W = grid.cols * CELL_W;
+  const H = grid.rows * CELL_H;
 
   const svg = el('svg', {
     viewBox: `0 0 ${W} ${H}`, width: '100%',
     style: 'max-width:720px;display:block;margin:0 auto;'
   });
 
-  const outputX = W - 56;
-  const gateSlotW = (outputX - 56 - 120) / nodeCount;
+  const positions = {};
+  config.inputs.forEach(function(i) { positions[i.id] = cellCenter(i.cell); });
+  config.nodes.forEach(function(n) { positions[n.id] = cellCenter(n.cell); });
+  config.outputs.forEach(function(o) { positions[o.id] = cellCenter(o.cell); });
 
-  function gateX(idx) { return 120 + gateSlotW * idx + gateSlotW / 2; }
-
-  const nodeColours = config.nodes.map(function(n) {
-    return GATE_COLOURS[n.type] || '#999';
-  });
+  const nodeColourMap = {};
+  config.nodes.forEach(function(n) { nodeColourMap[n.id] = GATE_COLOURS[n.type] || '#999'; });
 
   const inputStates = {};
   config.inputs.forEach(function(i) { inputStates[i.id] = i.state; });
@@ -102,35 +105,44 @@ function buildStation(config, onToggle) {
   const switchMetas = {};
   const wires = {};
 
-  const switchYPositions = config.inputs.map(function(_, i) {
-    return (H / (switchCount + 1)) * (i + 1);
-  });
-
-  const nodeXMap = {};
-  config.nodes.forEach(function(node, idx) { nodeXMap[node.id] = gateX(idx); });
-
-  config.inputs.forEach(function(input, idx) {
-    const cy = switchYPositions[idx];
+  // Wires drawn first — behind all components
+  config.inputs.forEach(function(input) {
+    const p1 = positions[input.id];
     const targetNode = config.nodes.find(function(n) { return n.inputs.indexOf(input.id) !== -1; });
-    const tx = targetNode ? nodeXMap[targetNode.id] - 40 : gateX(0) - 40;
-    const colour = nodeColours[config.nodes.indexOf(targetNode)] || nodeColours[0];
-    const meta = buildSwitch(svg, input.id, 72, cy, input.state, colour, input.label, onToggle);
-    switchMetas[input.id] = { meta, cy };
-    wires['in_' + input.id] = buildWirePath(svg, 72 + 40, cy, tx, H / 2, 'in_' + input.id);
+    if (!targetNode) return;
+    const p2 = positions[targetNode.id];
+    wires['in_' + input.id] = buildWirePath(svg, p1.x, p1.y, p2.x, p2.y, 'in_' + input.id);
   });
 
-  config.nodes.forEach(function(node, idx) {
-    const cx = gateX(idx);
-    buildGatePill(svg, cx, H / 2, node.type, nodeColours[idx]);
-    if (idx < nodeCount - 1) {
-      wires['mid_' + idx] = buildWirePath(svg, cx + 40, H / 2, gateX(idx + 1) - 40, H / 2, 'mid_' + idx);
-    }
+  config.nodes.forEach(function(node) {
+    node.inputs.forEach(function(srcId) {
+      if (!config.nodes.find(function(n) { return n.id === srcId; })) return;
+      const wireKey = 'gate_' + srcId + '_to_' + node.id;
+      wires[wireKey] = buildWirePath(svg, positions[srcId].x, positions[srcId].y, positions[node.id].x, positions[node.id].y, wireKey);
+    });
   });
 
-  wires['gate_out'] = buildWirePath(svg, gateX(nodeCount - 1) + 40, H / 2, outputX - 26, H / 2, 'gate_out');
+  config.outputs.forEach(function(out) {
+    wires['out_' + out.id] = buildWirePath(svg, positions[out.source].x, positions[out.source].y, positions[out.id].x, positions[out.id].y, 'out_' + out.id);
+  });
 
-  const outputType = config.outputs[0].type;
-  const outputG = buildOutput(outputType, outputX, H / 2, 24);
+  // Components drawn on top of wires
+  config.inputs.forEach(function(input) {
+    const p = positions[input.id];
+    const targetNode = config.nodes.find(function(n) { return n.inputs.indexOf(input.id) !== -1; });
+    const colour = targetNode ? nodeColourMap[targetNode.id] : '#999';
+    const meta = buildSwitch(svg, input.id, p.x, p.y, input.state, colour, input.label, onToggle);
+    switchMetas[input.id] = { meta };
+  });
+
+  config.nodes.forEach(function(node) {
+    const p = positions[node.id];
+    buildGatePill(svg, p.x, p.y, node.type, nodeColourMap[node.id]);
+  });
+
+  const out0 = config.outputs[0];
+  const op = positions[out0.id];
+  const outputG = buildOutput(out0.type, op.x, op.y, 24);
   svg.appendChild(outputG);
 
   function evaluate() {
@@ -141,22 +153,25 @@ function buildStation(config, onToggle) {
         node.inputs.map(function(id) { return !!nodeValues[id]; })
       );
     });
-    const active = !!nodeValues[config.outputs[0].source];
+    const active = !!nodeValues[out0.source];
 
     config.inputs.forEach(function(input) {
       const targetNode = config.nodes.find(function(n) { return n.inputs.indexOf(input.id) !== -1; });
-      const colour = targetNode ? nodeColours[config.nodes.indexOf(targetNode)] : nodeColours[0];
-      updateWire(wires['in_' + input.id], inputStates[input.id], colour);
+      if (!targetNode) return;
+      updateWire(wires['in_' + input.id], inputStates[input.id], nodeColourMap[targetNode.id]);
     });
 
-    config.nodes.forEach(function(node, idx) {
-      if (idx < nodeCount - 1) {
-        updateWire(wires['mid_' + idx], !!nodeValues[node.id], nodeColours[idx]);
-      }
+    config.nodes.forEach(function(node) {
+      node.inputs.forEach(function(srcId) {
+        const wireKey = 'gate_' + srcId + '_to_' + node.id;
+        if (wires[wireKey]) {
+          updateWire(wires[wireKey], !!nodeValues[srcId], nodeColourMap[srcId] || nodeColourMap[node.id]);
+        }
+      });
     });
 
-    updateWire(wires['gate_out'], active, nodeColours[nodeCount - 1]);
-    updateOutput(outputG, outputType, active);
+    updateWire(wires['out_' + out0.id], active, nodeColourMap[out0.source]);
+    updateOutput(outputG, out0.type, active);
     return active;
   }
 

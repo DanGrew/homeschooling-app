@@ -9,15 +9,21 @@ function goalText(goal, outputs) {
 function init() {
   const puzzleArea  = document.getElementById('puzzle-area');
   const goalBanner  = document.getElementById('goal-text');
+  const puzzleNum   = document.getElementById('puzzle-num');
   const resetBtn    = document.getElementById('btn-reset');
   const successOver = document.getElementById('success-overlay');
   const newPuzzleBtn = document.getElementById('btn-new-puzzle');
+  const successNextBtn = document.getElementById('btn-next-success');
 
+  let puzzles = [];
+  let puzzleIndex = 0;
   let currentConfig = null;
   let currentSvg    = null;
+  let originalStates = [];
 
   function loadPuzzle(config) {
     currentConfig = config;
+    originalStates = config.inputs.map(function(i) { return i.state; });
     goalBanner.textContent = goalText(config.goal, config.outputs);
 
     if (currentSvg) puzzleArea.removeChild(currentSvg);
@@ -38,32 +44,34 @@ function init() {
     if (solved) successOver.style.display = 'flex';
   }
 
-  function loadNewPuzzle() {
-    fetch('../../../content/logic-gates/templates.json?v=2')
-      .then(function(r) { return r.json(); })
-      .then(function(templates) {
-        const config = window.PuzzleGenerator.generate(templates);
-        if (config) {
-          loadPuzzle(config);
-        } else {
-          goalBanner.textContent = 'Could not generate puzzle — try again';
-        }
-      })
-      .catch(function(err) {
-        goalBanner.textContent = 'Failed to load puzzle';
-        console.error('puzzle load error:', err);
-      });
+  function loadNext() {
+    if (!puzzles.length) return;
+    const num = puzzleIndex + 1;
+    const config = JSON.parse(JSON.stringify(puzzles[puzzleIndex]));
+    puzzleIndex = (puzzleIndex + 1) % puzzles.length;
+    if (puzzleNum) puzzleNum.textContent = num + ' / ' + puzzles.length;
+    loadPuzzle(config);
   }
 
   resetBtn.addEventListener('click', function() {
     if (!currentConfig) return;
-    currentConfig.inputs.forEach(function(i) { i.state = false; });
+    currentConfig.inputs.forEach(function(inp, i) { inp.state = originalStates[i]; });
     loadPuzzle(currentConfig);
   });
 
-  newPuzzleBtn.addEventListener('click', loadNewPuzzle);
+  newPuzzleBtn.addEventListener('click', loadNext);
+  if (successNextBtn) successNextBtn.addEventListener('click', loadNext);
 
-  loadNewPuzzle();
+  fetch('../../../content/logic-gates/puzzles.json?v=1')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      puzzles = data;
+      loadNext();
+    })
+    .catch(function(err) {
+      goalBanner.textContent = 'Failed to load puzzles';
+      console.error('puzzle load error:', err);
+    });
 }
 
 window.addEventListener('load', init);
