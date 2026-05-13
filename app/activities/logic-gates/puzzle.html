@@ -43,14 +43,15 @@ fetch('../../../content/logic-gates/puzzles.json?v=2')
   .then(function(puzzles) {
     var paginator = createPaginator({
       container: document.getElementById('paginator-bar'),
-      items: puzzles,
+      items: [],
       perPage: 1,
       wrap: true,
-      onRender: function(slice) {
-        window.PuzzleUI.loadPuzzle(slice[0]);
+      onRender: function(puzzle) {
+        window.PuzzleUI.loadPuzzle(puzzle);
       }
     });
     window._puzzlePaginator = paginator;
+    paginator.reset(puzzles);
   })
   .catch(function(err) {
     document.getElementById('goal-text').textContent = 'Failed to load puzzles';
