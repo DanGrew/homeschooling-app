@@ -11,6 +11,7 @@ function init() {
   const goalBanner  = document.getElementById('goal-text');
   const puzzleNum   = document.getElementById('puzzle-num');
   const resetBtn    = document.getElementById('btn-reset');
+  const prevBtn     = document.getElementById('btn-prev');
   const newPuzzleBtn = document.getElementById('btn-new-puzzle');
 
   let puzzles = [];
@@ -61,6 +62,13 @@ function init() {
     loadPuzzle(currentConfig);
   });
 
+  function loadPrev() {
+    if (!puzzles.length) return;
+    puzzleIndex = (puzzleIndex - 2 + puzzles.length) % puzzles.length;
+    loadNext();
+  }
+
+  prevBtn.addEventListener('click', loadPrev);
   newPuzzleBtn.addEventListener('click', loadNext);
 
   fetch('../../../content/logic-gates/puzzles.json?v=2')
