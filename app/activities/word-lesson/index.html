@@ -6,6 +6,16 @@
 <title>Trace Words</title>
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
+<script>
+  window.DICT_BASE = '../../dictionary/entries/';
+  window.LESSONS = [
+    {id:'farm_animals',         number:1, title:'Farm Animals'},
+    {id:'wild_animals',         number:2, title:'Wild Animals'},
+    {id:'how_are_you_feeling',  number:3, title:'How Are You Feeling?'},
+    {id:'fruit_shop',           number:4, title:'Fruit Shop'},
+    {id:'things_that_go',       number:5, title:'Things That Go'}
+  ];
+</script>
 <script src="../../shared/menu.js" defer></script>
 <style>
   .word-label{font-size:2em;font-weight:bold;color:#333;letter-spacing:0.05em;text-align:center;padding:8px 0;}
@@ -47,7 +57,15 @@
 <script src="../../../ui/trace/trace-ui.js"></script>
 <script type="module">
 import { init } from '../../../ui/word-lesson/word-lesson-ui.js';
+import { GuidanceService } from '../../../ui/guidance/guidance-service.js';
 init();
+fetch('../../../content/lessons/word-lesson.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    window.LESSON_MAP = {};
+    data.lessons.forEach(function(l) { window.LESSON_MAP[l.id] = l; });
+    window.guidanceService = new GuidanceService();
+  });
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='word-lesson';</script>
 <script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>

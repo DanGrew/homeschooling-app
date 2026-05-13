@@ -40,6 +40,7 @@ GuidanceService.prototype.stop = function() {
   this._lesson = null;
   this._overlay.hide();
   stop();
+  window.dispatchEvent(new CustomEvent('guidance:stop'));
 };
 
 GuidanceService.prototype._handle = function(type) {
