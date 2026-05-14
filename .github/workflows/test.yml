@@ -212,6 +212,23 @@ jobs:
           name: report-check-manifest-files
           path: reports/check-manifest-files.txt
 
+  validate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - run: mkdir -p reports
+      - run: node scripts/validate-schemas.js reports/validate-json.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-validate-json
+          path: reports/validate-json.txt
+
   pr-report:
     runs-on: ubuntu-latest
     permissions:
@@ -227,6 +244,7 @@ jobs:
       - no-guard-chain
       - no-filter-conditional
       - check-manifest-files
+      - validate-json
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -260,6 +278,8 @@ jobs:
             cat reports/no-filter-conditional.txt 2>/dev/null || echo "⚠️ no-filter-conditional report missing"
             echo ""
             cat reports/check-manifest-files.txt 2>/dev/null || echo "⚠️ check-manifest-files report missing"
+            echo ""
+            cat reports/validate-json.txt 2>/dev/null || echo "⚠️ validate-json report missing"
             echo ""
             cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
           } > combined.md

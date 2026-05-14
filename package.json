@@ -6,9 +6,11 @@
     "test:ui": "playwright test --ui",
     "test:unit": "vitest run tests/unit",
     "test:coverage": "vitest run tests/unit --coverage",
-    "check:untested": "node scripts/check-untested.js"
+    "check:untested": "node scripts/check-untested.js",
+    "validate:json": "node scripts/validate-schemas.js reports/validate-json.txt"
   },
   "devDependencies": {
+    "ajv": "^8.17.1",
     "@playwright/test": "^1.49.0",
     "@vitest/coverage-v8": "^4.1.5",
     "eslint": "^8.57.1",
