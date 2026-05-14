@@ -67,7 +67,7 @@ GuidanceService.prototype._guideSrc = function() {
 GuidanceService.prototype._showStep = function() {
   var self = this;
   var step = this._lesson.steps[this._stepIdx];
-  if (step.silent) return;
+  if (!step.text) return;
   var text = _resolveText(step.text);
   var total = this._lesson.steps.length;
   this._overlay.show(
@@ -87,7 +87,7 @@ GuidanceService.prototype._showFeedback = function(rawText) {
   var total = this._lesson.steps.length;
   var displayIdx = this._stepIdx + 1;
   var nextStep = this._lesson.steps[this._stepIdx + 1];
-  var nextSilent = !!(nextStep && nextStep.silent);
+  var nextSilent = !!(nextStep && !nextStep.text);
   if (nextSilent) { this._stepIdx++; }
   this._overlay.show(
     this._guideSrc(),
