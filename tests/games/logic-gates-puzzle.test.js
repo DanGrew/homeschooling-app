@@ -55,12 +55,11 @@ test('switch elements are rendered in the puzzle', async ({ page }) => {
   await expect(page.locator('#puzzle-area [data-switch]').first()).toBeVisible();
 });
 
-test('filter bar is visible with All, Linear, Parallel, Converging buttons', async ({ page }) => {
+test('filter bar is visible with All, Linear, Converging buttons', async ({ page }) => {
   await page.goto(URL);
   await expect(page.locator('#filter-bar')).toBeVisible();
   await expect(page.locator('.filter-btn[data-cat="all"]')).toBeVisible();
   await expect(page.locator('.filter-btn[data-cat="linear"]')).toBeVisible();
-  await expect(page.locator('.filter-btn[data-cat="parallel"]')).toBeVisible();
   await expect(page.locator('.filter-btn[data-cat="converging"]')).toBeVisible();
 });
 
@@ -76,11 +75,6 @@ test('clicking Linear filter marks it active and deactivates All', async ({ page
   await expect(page.locator('.filter-btn[data-cat="all"]')).not.toHaveClass(/active/);
 });
 
-test('clicking Parallel filter marks it active', async ({ page }) => {
-  await page.goto(URL);
-  await page.locator('.filter-btn[data-cat="parallel"]').click();
-  await expect(page.locator('.filter-btn[data-cat="parallel"]')).toHaveClass(/active/);
-});
 
 test('clicking Converging filter marks it active and deactivates All', async ({ page }) => {
   await page.goto(URL);
