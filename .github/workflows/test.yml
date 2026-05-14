@@ -224,6 +224,7 @@ jobs:
       - run: npm ci
       - name: Run page contract validator
         run: |
+          mkdir -p reports
           node scripts/contracts/run.js 2>&1 | tee reports/contracts.txt
           exit ${PIPESTATUS[0]}
         continue-on-error: true
@@ -251,6 +252,7 @@ jobs:
       - run: npx playwright install chromium --with-deps
       - name: Run speakable contract tests
         run: |
+          mkdir -p reports
           npx playwright test tests/contracts/ --reporter=line 2>&1 | tee reports/contracts-speakable.txt
           exit ${PIPESTATUS[0]}
         continue-on-error: true
