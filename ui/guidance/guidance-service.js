@@ -88,6 +88,7 @@ GuidanceService.prototype.stop = function() {
 
 GuidanceService.prototype._handle = function(type) {
   var self = this;
+  [this._lesson].filter(Boolean).forEach(function() { stop(); });
   [this._lesson].filter(Boolean)
     .map(function(l) { return l.steps[self._stepIdx]; })
     .filter(Boolean)
@@ -129,5 +130,5 @@ GuidanceService.prototype._showFeedback = function(rawText) {
     function() { interrupt(text); },
     function() { self.stop(); }
   );
-  interrupt(text);
+  setTimeout(function() { interrupt(text); }, 0);
 };
