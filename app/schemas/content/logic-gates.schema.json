@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Logic Gates",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "required": ["id", "grid", "inputs", "nodes", "outputs"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string" },
+      "category": { "type": "string", "enum": ["linear", "converging"] },
+      "label": { "type": "string" },
+      "grid": {
+        "type": "object",
+        "required": ["cols", "rows"],
+        "additionalProperties": false,
+        "properties": {
+          "cols": { "type": "integer", "minimum": 1 },
+          "rows": { "type": "integer", "minimum": 1 }
+        }
+      },
+      "inputs": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["id", "state", "label", "cell"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "state": { "type": "boolean" },
+            "label": { "type": "string" },
+            "cell": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "nodes": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["id", "type", "inputs", "cell"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string", "enum": ["AND", "OR", "XOR", "NOT"] },
+            "inputs": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string" }
+            },
+            "cell": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "outputs": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["id", "type", "source", "cell"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string" },
+            "source": { "type": "string" },
+            "cell": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "goal": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["id", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "value": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}
