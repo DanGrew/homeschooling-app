@@ -1,6 +1,6 @@
 const SVG_NS = 'http://www.w3.org/2000/svg';
-const CELL_W = 120;
-const CELL_H = 80;
+const CELL_W = 90;
+const CELL_H = 65;
 const NOOP = function() {};
 
 function el(tag, attrs = {}) {
@@ -100,7 +100,7 @@ function buildStation(config, onToggle) {
 
   const svg = el('svg', {
     viewBox: `0 0 ${W} ${H}`, width: '100%',
-    style: 'max-width:720px;display:block;margin:0 auto;'
+    style: 'max-width:540px;display:block;margin:0 auto;'
   });
 
   const positions = {};

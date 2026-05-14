@@ -14,11 +14,7 @@ function goalText(goal, outputs) {
   var onSolvedFn = function() {};
 
   function noop() {}
-  function advancePuzzle() { window._puzzlePaginator.next(); }
-  function notifySolved() {
-    onSolvedFn = noop;
-    window.showBanner(advancePuzzle);
-  }
+  function notifySolved() { onSolvedFn = noop; }
 
   function stationToggle(id) {
     currentSvg._handleToggle(id);
@@ -52,7 +48,6 @@ function goalText(goal, outputs) {
     var next = window.StationUI.buildStation(currentConfig, stationToggle);
     document.getElementById('puzzle-area').replaceChild(next, currentSvg);
     currentSvg = next;
-    window.hideBanner();
     checkGoal();
   }
 
