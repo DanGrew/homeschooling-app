@@ -9,6 +9,8 @@ function _resolveText(text) {
   return str;
 }
 
+var TERMINAL_PRAISE = ['Well done!', 'Amazing!', 'Brilliant!', 'Superstar!', 'You did it!'];
+
 var STEP_REACTION = {
   'true':  function(svc, step) { svc._showFeedback(step.feedback); },
   'false': function(svc)       { svc._advance(); }
@@ -88,6 +90,7 @@ GuidanceService.prototype._showFeedback = function(rawText) {
   var displayIdx = this._stepIdx + 1;
   var nextStep = this._lesson.steps[this._stepIdx + 1];
   var isTerminal = !nextStep || !nextStep.expect;
+  if (isTerminal) { text += '\n' + TERMINAL_PRAISE[Math.floor(Math.random() * TERMINAL_PRAISE.length)]; }
   var nextSilent = !isTerminal && !nextStep.text;
   if (nextSilent) { this._stepIdx++; }
   this._overlay.show(

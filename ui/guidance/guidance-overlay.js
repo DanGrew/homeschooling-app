@@ -37,7 +37,7 @@ GuidanceOverlay.prototype._build = function(onStop) {
   body.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;';
 
   var text = document.createElement('div');
-  text.style.cssText = 'font-size:1.05em;font-weight:600;line-height:1.3;';
+  text.style.cssText = 'font-size:1.05em;font-weight:600;line-height:1.3;white-space:pre-line;';
   this._textEl = text;
 
   var footer = document.createElement('div');
