@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Logic Gates Puzzle Templates",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "required": ["id", "inputs", "nodes", "outputs", "goal"],
+    "additionalProperties": false,
+    "properties": {
+      "id": { "type": "string" },
+      "inputs": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["id", "state", "label"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "state": { "type": "boolean" },
+            "label": { "type": "string" }
+          }
+        }
+      },
+      "nodes": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["id", "type", "inputs"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string", "enum": ["AND", "OR", "XOR", "NOT"] },
+            "inputs": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "outputs": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": ["id", "type", "source"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string" },
+            "source": { "type": "string" }
+          }
+        }
+      },
+      "goal": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["id", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string" },
+            "value": { "type": "boolean" }
+          }
+        }
+      }
+    }
+  }
+}

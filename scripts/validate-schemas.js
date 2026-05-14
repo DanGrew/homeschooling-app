@@ -64,6 +64,12 @@ const MAPPINGS = [
     match: (name) => name === 'connect-dots.json'
   },
   {
+    label: 'dictionary/index',
+    schema: 'app/schemas/dictionary/dictionary-index.schema.json',
+    searchDir: 'app/dictionary',
+    match: (name) => name === 'dictionary.json'
+  },
+  {
     label: 'routine',
     schema: 'app/schemas/routine/routine.schema.json',
     searchDir: 'app/routine/data',
@@ -92,6 +98,24 @@ const MAPPINGS = [
     schema: 'app/schemas/content/colour-wheel-lessons.schema.json',
     searchDir: 'content/lessons',
     match: (name) => name === 'colour-wheel.json'
+  },
+  {
+    label: 'content/logic-gates-puzzles',
+    schema: 'app/schemas/content/logic-gates-puzzles.schema.json',
+    searchDir: 'content/logic-gates',
+    match: (name) => name.startsWith('puzzles-') && name.endsWith('.json')
+  },
+  {
+    label: 'content/logic-gates-sandbox',
+    schema: 'app/schemas/content/logic-gates-sandbox.schema.json',
+    searchDir: 'content/logic-gates',
+    match: (name) => name === 'sandbox.json'
+  },
+  {
+    label: 'content/logic-gates-templates',
+    schema: 'app/schemas/content/logic-gates-templates.schema.json',
+    searchDir: 'content/logic-gates',
+    match: (name) => name === 'templates.json'
   }
 ];
 
