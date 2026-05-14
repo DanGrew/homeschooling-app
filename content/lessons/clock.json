@@ -10,17 +10,17 @@
       "numbers": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
       "steps": [
         { "text": "This is a clock! Clocks have numbers all the way around. Can you tap the number 1?", "expect": "NUMBER_1_TAPPED", "feedback": "One! Now tap 2!" },
-        { "silent": true, "expect": "NUMBER_2_TAPPED", "feedback": "Two! Now tap 3!" },
-        { "silent": true, "expect": "NUMBER_3_TAPPED", "feedback": "Three! Now tap 4!" },
-        { "silent": true, "expect": "NUMBER_4_TAPPED", "feedback": "Four! Now tap 5!" },
-        { "silent": true, "expect": "NUMBER_5_TAPPED", "feedback": "Five! Now tap 6 — it's at the very bottom!" },
-        { "silent": true, "expect": "NUMBER_6_TAPPED", "feedback": "Six! Halfway around. Now tap 7!" },
-        { "silent": true, "expect": "NUMBER_7_TAPPED", "feedback": "Seven! Now tap 8!" },
-        { "silent": true, "expect": "NUMBER_8_TAPPED", "feedback": "Eight! Now tap 9!" },
-        { "silent": true, "expect": "NUMBER_9_TAPPED", "feedback": "Nine! Now tap 10!" },
-        { "silent": true, "expect": "NUMBER_10_TAPPED", "feedback": "Ten! Now tap 11!" },
-        { "silent": true, "expect": "NUMBER_11_TAPPED", "feedback": "Eleven! Last one — tap 12 at the very top!" },
-        { "silent": true, "expect": "NUMBER_12_TAPPED", "feedback": "Twelve! You counted all the way around!" },
+        { "expect": "NUMBER_2_TAPPED", "feedback": "Now tap 3!" },
+        { "expect": "NUMBER_3_TAPPED", "feedback": "Now tap 4!" },
+        { "expect": "NUMBER_4_TAPPED", "feedback": "Now tap 5!" },
+        { "expect": "NUMBER_5_TAPPED", "feedback": "Now tap 6 — it's at the very bottom!" },
+        { "expect": "NUMBER_6_TAPPED", "feedback": "Halfway around. Now tap 7!" },
+        { "expect": "NUMBER_7_TAPPED", "feedback": "Now tap 8!" },
+        { "expect": "NUMBER_8_TAPPED", "feedback": "Now tap 9!" },
+        { "expect": "NUMBER_9_TAPPED", "feedback": "Now tap 10!" },
+        { "expect": "NUMBER_10_TAPPED", "feedback": "Now tap 11!" },
+        { "expect": "NUMBER_11_TAPPED", "feedback": "Last one — tap 12 at the very top!" },
+        { "expect": "NUMBER_12_TAPPED", "feedback": "You counted all the way around!" },
         { "text": ["Amazing — all the way round!", "Brilliant counter!", "Superstar!"], "auto": true, "success": true }
       ]
     },
@@ -33,9 +33,9 @@
       "numbers": [12, 3, 6, 9],
       "steps": [
         { "text": "Some numbers on the clock have special jobs — they point in every direction. The 12 lives at the very top. Can you tap it?", "expect": "NUMBER_12_TAPPED", "feedback": "12 at the top — the clock always starts here! Now find the 6 at the bottom." },
-        { "silent": true, "expect": "NUMBER_6_TAPPED", "feedback": "6 at the bottom, right opposite 12. Now find the 3!" },
-        { "silent": true, "expect": "NUMBER_3_TAPPED", "feedback": "3 on the right side! Last one — find the 9!" },
-        { "silent": true, "expect": "NUMBER_9_TAPPED", "feedback": "9 on the left. These four numbers point in every direction!" },
+        { "expect": "NUMBER_6_TAPPED", "feedback": "At the bottom, opposite 12. Now find the 3!" },
+        { "expect": "NUMBER_3_TAPPED", "feedback": "On the right side! Last one — find the 9!" },
+        { "expect": "NUMBER_9_TAPPED", "feedback": "On the left. These four numbers point in every direction!" },
         { "text": ["You found all four special numbers!", "Brilliant navigator!", "Amazing — you know your way around!"], "auto": true, "success": true }
       ]
     },
@@ -47,7 +47,7 @@
       "criteria": ["maths.size-measure", "cl.descriptive-vocab"],
       "steps": [
         { "text": "The clock has two hands — one long, one short. They tell us the time! Can you tap the long hand?", "expect": "MINUTE_HAND_TAPPED", "feedback": "That's the long hand — it counts the minutes. Now tap the short hand!" },
-        { "silent": true, "expect": "HOUR_HAND_TAPPED", "feedback": "The short hand tells us the hour — like 1 o'clock or 3 o'clock. You know them both!" },
+        { "expect": "HOUR_HAND_TAPPED", "feedback": "The short hand tells us the hour — like 1 o'clock or 3 o'clock. You know them both!" },
         { "text": ["Long hand, short hand — you know them both!", "Brilliant!", "Amazing clock expert!"], "auto": true, "success": true }
       ]
     },
@@ -58,10 +58,10 @@
       "guide": "dog",
       "criteria": ["uw.seasonal-change", "cl.sequencing-language"],
       "steps": [
-        { "text": "Different times of day have different names. Press Breakfast — what time do you eat breakfast?", "expect": "PRESET_BREAKFAST_SELECTED", "feedback": "Breakfast time! The short hand is near the 10. Now press Lunch!" },
-        { "silent": true, "expect": "PRESET_LUNCH_SELECTED", "feedback": "Lunchtime! The short hand has moved to the 1. Now press Dinner!" },
-        { "silent": true, "expect": "PRESET_DINNER_SELECTED", "feedback": "Dinner time — it's getting dark outside! Now press Bedtime!" },
-        { "silent": true, "expect": "PRESET_BEDTIME_SELECTED", "feedback": "Bedtime! Time to sleep. You know your whole day!" },
+        { "text": "Different times of day have different names. Press Breakfast — what time do you eat breakfast?", "expect": "PRESET_BREAKFAST_SELECTED", "feedback": "The short hand is near the 10. Now press Lunch!" },
+        { "expect": "PRESET_LUNCH_SELECTED", "feedback": "The short hand has moved to the 1. Now press Dinner!" },
+        { "expect": "PRESET_DINNER_SELECTED", "feedback": "It's getting dark outside! Now press Bedtime!" },
+        { "expect": "PRESET_BEDTIME_SELECTED", "feedback": "Time to sleep. You know your whole day!" },
         { "text": ["Breakfast, lunch, dinner, bedtime — you know your whole day!", "Brilliant!", "Superstar time-keeper!"], "auto": true, "success": true }
       ]
     },
@@ -72,10 +72,10 @@
       "guide": "cat",
       "criteria": ["uw.seasonal-change", "cl.sequencing-language", "maths.number-order"],
       "steps": [
-        { "text": "Let's watch the day go by — from the moment you wake up to when the stars come out! Press Morning!", "expect": "PRESET_MORNING_SELECTED", "feedback": "Morning! The sun is just coming up. Now press Noon!" },
-        { "silent": true, "expect": "PRESET_NOON_SELECTED", "feedback": "Noon — the sun is right at the top of the sky! Now press Afternoon!" },
-        { "silent": true, "expect": "PRESET_AFTERNOON_SELECTED", "feedback": "Afternoon — the sun starts moving down. Now press Nighttime!" },
-        { "silent": true, "expect": "PRESET_NIGHTTIME_SELECTED", "feedback": "Night! The moon comes out and the stars appear. You followed the whole day!" },
+        { "text": "Let's watch the day go by — from the moment you wake up to when the stars come out! Press Morning!", "expect": "PRESET_MORNING_SELECTED", "feedback": "The sun is just coming up. Now press Noon!" },
+        { "expect": "PRESET_NOON_SELECTED", "feedback": "The sun is right at the top of the sky! Now press Afternoon!" },
+        { "expect": "PRESET_AFTERNOON_SELECTED", "feedback": "The sun starts moving down. Now press Nighttime!" },
+        { "expect": "PRESET_NIGHTTIME_SELECTED", "feedback": "The moon comes out and the stars appear. You followed the whole day!" },
         { "text": ["Morning, noon, afternoon, night — you followed the whole day!", "Brilliant day-explorer!", "Amazing!"], "auto": true, "success": true }
       ]
     }
