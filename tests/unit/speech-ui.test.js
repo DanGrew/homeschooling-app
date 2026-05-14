@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { speak, speakInterrupt, queue, interrupt, stop, setMode, setEnabled } from '../../ui/speech/speech-ui.js';
+import { speak, speakInterrupt, queue, interrupt, stop, setMode, setEnabled } from '../../app/shared/speech-ui.js';
 
 var cancelSpy, speakSpy;
 

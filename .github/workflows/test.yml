@@ -212,6 +212,54 @@ jobs:
           name: report-check-manifest-files
           path: reports/check-manifest-files.txt
 
+  check-contracts:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run page contract validator
+        run: |
+          node validator/run.js 2>&1 | tee reports/contracts.txt
+          exit ${PIPESTATUS[0]}
+        continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-contracts
+          path: reports/contracts.txt
+
+  contracts-speakable:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install chromium --with-deps
+      - name: Run speakable contract tests
+        run: |
+          npx playwright test tests/contracts/ --reporter=line 2>&1 | tee reports/contracts-speakable.txt
+          exit ${PIPESTATUS[0]}
+        continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-contracts-speakable
+          path: reports/contracts-speakable.txt
+
   pr-report:
     runs-on: ubuntu-latest
     permissions:
@@ -227,6 +275,8 @@ jobs:
       - no-guard-chain
       - no-filter-conditional
       - check-manifest-files
+      - check-contracts
+      - contracts-speakable
     if: always() && github.event_name == 'pull_request'
     steps:
       - name: Download reports
@@ -262,6 +312,16 @@ jobs:
             cat reports/check-manifest-files.txt 2>/dev/null || echo "⚠️ check-manifest-files report missing"
             echo ""
             cat reports/ui-cyclomatic.txt 2>/dev/null || echo "⚠️ ui-cyclomatic report missing"
+            echo ""
+            echo "### Page Contract Checks (non-blocking)"
+            echo '```'
+            cat reports/contracts.txt 2>/dev/null || echo "⚠️ contracts report missing"
+            echo '```'
+            echo ""
+            echo "### Speakable Button Contracts (non-blocking)"
+            echo '```'
+            cat reports/contracts-speakable.txt 2>/dev/null || echo "⚠️ speakable contracts report missing"
+            echo '```'
           } > combined.md
 
       - name: Comment on PR
