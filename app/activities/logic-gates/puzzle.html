@@ -25,7 +25,6 @@
   <div id="filter-bar">
     <button class="filter-btn active" data-cat="all">All</button>
     <button class="filter-btn" data-cat="linear">Linear</button>
-    <button class="filter-btn" data-cat="parallel">Parallel</button>
     <button class="filter-btn" data-cat="converging">Converging</button>
   </div>
   <div id="goal-banner">
@@ -79,7 +78,6 @@ document.querySelectorAll('.filter-btn').forEach(function(btn) {
 });
 
 Promise.all([
-  // fetch('../../../content/logic-gates/puzzles.json?v=4').then(function(r) { return r.json(); }),
   fetch('../../../content/logic-gates/puzzles-linear.json?v=1').then(function(r) { return r.json(); }),
   fetch('../../../content/logic-gates/puzzles-converging.json?v=1').then(function(r) { return r.json(); })
 ])
