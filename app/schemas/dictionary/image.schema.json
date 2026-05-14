@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Dictionary Image",
+  "type": "object",
+  "required": ["concept", "type", "level", "viewBox", "src"],
+  "additionalProperties": false,
+  "properties": {
+    "concept": { "type": "string" },
+    "type": { "type": "string", "const": "image" },
+    "level": { "type": "integer", "minimum": 1 },
+    "viewBox": { "type": "string", "pattern": "^[\\d.]+ [\\d.]+ [\\d.]+ [\\d.]+$" },
+    "src": { "type": "string" },
+    "attribution": {
+      "type": "object",
+      "required": ["text", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    }
+  }
+}
