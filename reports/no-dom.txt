@@ -1,0 +1,2 @@
+## no-dom-in-core
+✅ No issues (scanned 33 files)

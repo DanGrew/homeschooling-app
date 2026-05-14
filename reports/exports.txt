@@ -1,0 +1,4 @@
+## no-app-exports
+❌ Violations (scanned 6 files):
+- app/activities/drawing-dots/engine.js exports from app/ (move to core/ or ui/)
+- app/activities/simulator/engine/engine.js exports from app/ (move to core/ or ui/)

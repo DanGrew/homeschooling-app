@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Colour with Palette</title>
-<link rel="stylesheet" href="../../shared/theme.css">
-<link rel="stylesheet" href="../../shared/style.css">
-<script src="../../shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<script src="../../../components/menu.js" defer></script>
 <style>
 #layout{flex:1;display:flex;overflow:hidden;}
 #canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -46,7 +46,7 @@
   <div id="paginator-bar"></div>
 </div>
 <script src="../../../ui/colouring/colouring-common.js"></script>
-<script type="module" src="../../../ui/shared/success-banner.js"></script>
+<script type="module" src="../../../components/success-banner.js"></script>
 <script>var pictures=[];</script>
 <script src="../../../assets/colouring/pictures/sun.js"></script>
 <script src="../../../assets/colouring/pictures/cat.js"></script>
@@ -56,8 +56,8 @@
 <script type="module">
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
-import { buildFilterBar } from '../../../ui/filter-bar/filter-bar-ui.js';
-import { createPaginator } from '../../../ui/pagination/paginator-ui.js';
+import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
+import { createPaginator } from '../../../components/pagination/paginator-ui.js';
 var selectedColour=null,filledEls=[],paginator;
 
 function selectColour(c){
@@ -137,6 +137,6 @@ loadColouringPictures(pictures,function(){
 },function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='colouring-palette';</script>
-<script src="../../../ui/adult-prompts/adult-prompts-ui.js" defer></script>
+<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>

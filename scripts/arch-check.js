@@ -85,7 +85,7 @@ if (rule === 'no-ui-imports') {
 
 if (rule === 'no-stray-files') {
   const EXCLUDED = new Set(['scripts', 'tests', '.github', 'node_modules', 'coverage', 'reports', '.claude', 'assets', 'content']);
-  const LAYERS = new Set(['core', 'ui', 'app']);
+  const LAYERS = new Set(['core', 'ui', 'app', 'components', 'styles']);
   const allFiles = getAllFiles(ROOT);
   allFiles.forEach(file => {
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
@@ -95,7 +95,7 @@ if (rule === 'no-stray-files') {
     if (EXCLUDED.has(topDir)) return;
     scanned.push(file);
     if (!LAYERS.has(topDir)) {
-      violations.push(`${rel} is outside a recognised layer (core/ui/app)`);
+      violations.push(`${rel} is outside a recognised layer (core/ui/app/components/styles)`);
     }
   });
 }

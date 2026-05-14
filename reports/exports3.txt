@@ -1,0 +1,3 @@
+## no-app-exports
+❌ Violations (scanned 5 files):
+- app/activities/simulator/engine/engine.js exports from app/ (move to core/ or ui/)
