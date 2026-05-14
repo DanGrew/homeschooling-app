@@ -159,3 +159,4 @@ function handleSlot(slot){
 
 el('lsn-slot-a').addEventListener('click',function(){handleSlot('a');});
 el('lsn-slot-b').addEventListener('click',function(){handleSlot('b');});
+makeInteractive(el('lsn-result'),function(){[getMixResult()].filter(Boolean).forEach(function(c){speak(c.label);});});
