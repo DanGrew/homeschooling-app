@@ -13,10 +13,10 @@ test('has category headings', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'World' })).toBeVisible()
 })
 
-test('Words section has Say It and Trace Letters', async ({ page }) => {
+test('Words section has Say It', async ({ page }) => {
   await page.goto('/homeschooling-app/app/lessons/')
   await expect(page.getByRole('link', { name: 'Say It!' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Trace Letters' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Trace Letters' })).not.toBeVisible()
 })
 
 test('Colours section has Colour Wheel', async ({ page }) => {

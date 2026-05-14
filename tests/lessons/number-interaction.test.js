@@ -46,28 +46,26 @@ test('first step is expect step with no Next button', async ({ page }) => {
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-test('TOTAL_3 event shows feedback and Next button', async ({ page }) => {
+test('TOTAL_3 event shows feedback and no Next button', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await fireGuidanceEvent(page, 'TOTAL_3')
   await expect(page.locator('#guidance-overlay')).toContainText('Three')
-  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-test('Next after TOTAL_3 advances to COUNT_ALL step', async ({ page }) => {
+test('TOTAL_3 feedback contains instruction for next action', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await fireGuidanceEvent(page, 'TOTAL_3')
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await expect(page.locator('#guidance-overlay')).toContainText('Tap the Total')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-test('COUNT_ALL event shows feedback', async ({ page }) => {
+test('COUNT_ALL event shows terminal feedback', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await fireGuidanceEvent(page, 'TOTAL_3')
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'COUNT_ALL')
   await expect(page.locator('#guidance-overlay')).toContainText('You counted them all')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
@@ -77,9 +75,7 @@ test('success step has green background', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await fireGuidanceEvent(page, 'TOTAL_3')
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await fireGuidanceEvent(page, 'COUNT_ALL')
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   const bg = await page.locator('#guidance-overlay').evaluate(el => el.querySelector('div').style.background)
   expect(bg).toBe('rgb(46, 204, 113)')
 })
