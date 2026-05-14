@@ -47,7 +47,12 @@
 import { createPaginator } from '../../../ui/pagination/paginator-ui.js';
 
 var allPuzzles = [];
-var activeFilter = 'all';
+var FILTERS = {
+  all: function() { return true; },
+  linear: function(p) { return p.category === 'linear'; },
+  parallel: function(p) { return p.category === 'parallel'; }
+};
+var filterFn = FILTERS.all;
 
 var paginator = createPaginator({
   container: document.getElementById('paginator-bar'),
@@ -60,16 +65,11 @@ var paginator = createPaginator({
 });
 window._puzzlePaginator = paginator;
 
-function applyFilter() {
-  var filtered = activeFilter === 'all'
-    ? allPuzzles
-    : allPuzzles.filter(function(p) { return p.category === activeFilter; });
-  paginator.reset(filtered);
-}
+function applyFilter() { paginator.reset(allPuzzles.filter(filterFn)); }
 
 document.querySelectorAll('.filter-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    activeFilter = btn.dataset.cat;
+    filterFn = FILTERS[btn.dataset.cat];
     document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
     applyFilter();
