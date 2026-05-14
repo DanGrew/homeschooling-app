@@ -138,17 +138,14 @@ test('tapping red wheel segment shows feedback', async ({ page }) => {
   await page.locator('#guidance-overlay [data-action="next"]').click()
   await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
   await expect(page.locator('#guidance-overlay')).toContainText('Warm and bright!')
-  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
 async function completeLesson(page) {
   await page.locator('#guidance-overlay [data-action="next"]').click()
   await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await page.locator('#wheel-svg path[fill="#F1C40F"]').click()
-  await page.locator('#guidance-overlay [data-action="next"]').click()
   await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('click')
-  await page.locator('#guidance-overlay [data-action="next"]').click()
 }
 
 test('success step has green background', async ({ page }) => {

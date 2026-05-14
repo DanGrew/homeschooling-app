@@ -7,6 +7,16 @@
 <link rel="stylesheet" href="../../shared/theme.css">
 <link rel="stylesheet" href="../../shared/style.css">
 <link rel="stylesheet" href="../../shared/speakable.css">
+<script>
+  window.DICT_BASE = '../../dictionary/entries/';
+  window.LESSONS = [
+    {id:'count_the_clock',  number:1, title:'Count the Clock'},
+    {id:'find_the_number',  number:2, title:'Find the Number'},
+    {id:'long_and_short',   number:3, title:'Long Hand, Short Hand'},
+    {id:'times_of_day',     number:4, title:'Times of Day'},
+    {id:'morning_to_night', number:5, title:'Morning to Night'}
+  ];
+</script>
 <script src="../../shared/menu.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -60,13 +70,41 @@ import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
 import {makeSpeakable, makeInteractive} from '../../../ui/speech/speakable.js';
 import {speak} from '../../../ui/speech/speech-ui.js';
+import {GuidanceService} from '../../../ui/guidance/guidance-service.js';
 
 var currentHour = 0;
 var totalDeg = 0;
 var currentSpoken = 'Twelve o\'clock';
 var currentSpoken24 = 'Twelve hundred';
 
+function emit(type) {
+  window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: type}}));
+}
+
 clockInit(document.getElementById('clock-container'));
+
+var SPEAK_NUM = {
+  '0': function(num) { speak(num); },
+  '1': function()    {}
+};
+
+document.querySelectorAll('[data-num]').forEach(function(el) {
+  makeInteractive(el, function() {
+    var n = [window.guidanceService].filter(Boolean).map(function(s) { return s._lesson; }).filter(Boolean).length;
+    SPEAK_NUM[String(n)](el.dataset.num);
+    emit('NUMBER_' + el.dataset.num + '_TAPPED');
+  });
+  el.addEventListener('click', function(e) { e.stopPropagation(); });
+});
+
+document.querySelector('[data-hand="minute"]').addEventListener('click', function(e) {
+  e.stopPropagation();
+  emit('MINUTE_HAND_TAPPED');
+});
+document.querySelector('[data-hand="hour"]').addEventListener('click', function(e) {
+  e.stopPropagation();
+  emit('HOUR_HAND_TAPPED');
+});
 
 makeSpeakable(document.getElementById('sky-sun'),  'Sun');
 makeSpeakable(document.getElementById('sky-moon'), 'Moon');
@@ -82,6 +120,7 @@ function pressPreset(preset) {
   setHandDeg(totalDeg, 0);
   skyRender(hourToSky(preset.hour));
   digitalRender(preset.hour);
+  emit('PRESET_' + preset.label.toUpperCase() + '_SELECTED');
 }
 
 fetch('../../../assets/clock/presets.json')
@@ -96,6 +135,14 @@ fetch('../../../assets/clock/presets.json')
       btn.addEventListener('click', function() { pressPreset(preset); });
       btns.appendChild(btn);
     });
+  });
+
+fetch('../../../content/lessons/clock.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    window.LESSON_MAP = {};
+    data.lessons.forEach(function(l) { window.LESSON_MAP[l.id] = l; });
+    window.guidanceService = new GuidanceService();
   });
 </script>
 </body>

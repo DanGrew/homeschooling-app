@@ -10,11 +10,20 @@ var FACE = [
   '<circle cx="140" cy="140" r="2" fill="none" stroke="#D7CCC8" stroke-width="1"/>'
 ].concat(
   NUMS.map(function(n) {
-    return '<text x="' + n[0] + '" y="' + n[1] + '" text-anchor="middle" dominant-baseline="central" font-size="22" font-weight="bold" fill="#4E342E" font-family="sans-serif">' + n[2] + '</text>';
+    return '<g data-num="' + n[2] + '" style="cursor:pointer">' +
+           '<circle cx="' + n[0] + '" cy="' + n[1] + '" r="18" fill="transparent"/>' +
+           '<text x="' + n[0] + '" y="' + n[1] + '" text-anchor="middle" dominant-baseline="central" font-size="22" font-weight="bold" fill="#4E342E" font-family="sans-serif" style="pointer-events:none">' + n[2] + '</text>' +
+           '</g>';
   })
 ).concat([
-  '<rect id="clock-minute" x="137.5" y="28" width="5" height="112" rx="2.5" fill="#546E7A" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out"/>',
-  '<rect id="clock-hour"   x="136"   y="60" width="8" height="80"  rx="4"   fill="#2E7D32" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out"/>',
+  '<g id="clock-minute-hand" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out">',
+  '<rect x="137.5" y="28" width="5" height="112" rx="2.5" fill="#546E7A"/>',
+  '<rect x="129" y="28" width="22" height="112" rx="11" fill="transparent" data-hand="minute" style="cursor:pointer"/>',
+  '</g>',
+  '<g id="clock-hour-hand" style="transform-origin:140px 140px;transition:transform 0.8s ease-in-out">',
+  '<rect x="136" y="60" width="8" height="80" rx="4" fill="#2E7D32"/>',
+  '<rect x="128" y="60" width="24" height="80" rx="12" fill="transparent" data-hand="hour" style="cursor:pointer"/>',
+  '</g>',
   '<circle cx="140" cy="140" r="9" fill="#4E342E"/>',
   '</svg>'
 ]);
@@ -26,6 +35,6 @@ export function init(container) {
 }
 
 export function setHandDeg(hourDeg, minuteDeg) {
-  document.getElementById('clock-hour').style.transform   = 'rotate(' + hourDeg   + 'deg)';
-  document.getElementById('clock-minute').style.transform = 'rotate(' + minuteDeg + 'deg)';
+  document.getElementById('clock-hour-hand').style.transform   = 'rotate(' + hourDeg   + 'deg)';
+  document.getElementById('clock-minute-hand').style.transform = 'rotate(' + minuteDeg + 'deg)';
 }

@@ -1,0 +1,85 @@
+{
+  "activity": "word-lesson",
+  "lessons": [
+    {
+      "id": "farm_animals",
+      "number": 1,
+      "title": "Farm Animals",
+      "guide": "dog",
+      "criteria": ["literacy.word-recognition", "pd.fine-motor", "uw.animals-nature"],
+      "filter": "animals",
+      "words": ["cow", "dog", "duck", "cat", "horse"],
+      "steps": [
+        { "text": "Let's write some animal names! Find cow and trace it!", "expect": "WORD_cow_TRACED", "feedback": "Cow! Short and simple — three letters. Now find dog!" },
+        { "expect": "WORD_dog_TRACED", "feedback": "Dog! Your fingers know that one well. Now find duck!" },
+        { "expect": "WORD_duck_TRACED", "feedback": "Duck! Four letters — well done. Now find cat!" },
+        { "expect": "WORD_cat_TRACED", "feedback": "Cat! Three letters, just like cow. Last one — find horse!" },
+        { "expect": "WORD_horse_TRACED", "feedback": "Horse! Five letters — your longest word. You traced them all!" }
+      ]
+    },
+    {
+      "id": "wild_animals",
+      "number": 2,
+      "title": "Wild Animals",
+      "guide": "cat",
+      "criteria": ["literacy.word-recognition", "pd.fine-motor", "uw.animals-nature", "uw.world-awareness"],
+      "filter": "animals",
+      "words": ["lion", "tiger", "zebra", "camel", "turtle"],
+      "steps": [
+        { "text": "These animals live in wild places far away. Let's write their names! Find lion and trace it!", "expect": "WORD_lion_TRACED", "feedback": "Lion! Four letters for a mighty animal. Now find tiger!" },
+        { "expect": "WORD_tiger_TRACED", "feedback": "Tiger! Five letters — and very stripy. Now find zebra!" },
+        { "expect": "WORD_zebra_TRACED", "feedback": "Zebra! Five letters with a Z — rare letter! Now find camel!" },
+        { "expect": "WORD_camel_TRACED", "feedback": "Camel! Five letters — they live in the desert. Last one — find turtle!" },
+        { "expect": "WORD_turtle_TRACED", "feedback": "Turtle! Six letters — your longest yet. You wrote them all!" }
+      ]
+    },
+    {
+      "id": "how_are_you_feeling",
+      "number": 3,
+      "title": "How Are You Feeling?",
+      "guide": "cat",
+      "criteria": ["literacy.word-recognition", "pd.fine-motor", "psed.emotion-vocab", "cl.feeling-vocabulary"],
+      "filter": "emotions",
+      "words": ["sad", "shy", "smile", "angry", "worried"],
+      "steps": [
+        { "text": "Feelings have names — and now we're going to write them! Find sad and trace it!", "expect": "WORD_sad_TRACED", "feedback": "Sad. Three letters. Everyone feels sad sometimes. Now find shy!" },
+        { "expect": "WORD_shy_TRACED", "feedback": "Shy! Just three letters — a quiet little word. Now find smile!" },
+        { "expect": "WORD_smile_TRACED", "feedback": "Smile! Five letters and a happy feeling. Now find angry!" },
+        { "expect": "WORD_angry_TRACED", "feedback": "Angry. Five letters for a big feeling. Last one — find worried!" },
+        { "expect": "WORD_worried_TRACED", "feedback": "Worried! Seven letters — your biggest word today. You wrote them all!" }
+      ]
+    },
+    {
+      "id": "fruit_shop",
+      "number": 4,
+      "title": "Fruit Shop",
+      "guide": "cat",
+      "criteria": ["literacy.word-recognition", "pd.fine-motor", "cl.topic-vocabulary"],
+      "filter": "fruit",
+      "words": ["apple", "pear", "kiwi", "mango", "lemon"],
+      "steps": [
+        { "text": "Yum! Let's write the names of some fruits. Find apple and trace it!", "expect": "WORD_apple_TRACED", "feedback": "Apple! Five letters — starts with a. Now find pear!" },
+        { "expect": "WORD_pear_TRACED", "feedback": "Pear! Four letters — shaped like a teardrop. Now find kiwi!" },
+        { "expect": "WORD_kiwi_TRACED", "feedback": "Kiwi! Four letters — green and tangy inside. Now find mango!" },
+        { "expect": "WORD_mango_TRACED", "feedback": "Mango! Five letters — sweet and orange inside. Last one — find lemon!" },
+        { "expect": "WORD_lemon_TRACED", "feedback": "Lemon! Five letters — very sour! You wrote them all!" }
+      ]
+    },
+    {
+      "id": "things_that_go",
+      "number": 5,
+      "title": "Things That Go",
+      "guide": "dog",
+      "criteria": ["literacy.word-recognition", "pd.fine-motor", "cl.topic-vocabulary", "uw.community"],
+      "filter": "vehicles",
+      "words": ["bus", "train", "truck", "digger", "tractor"],
+      "steps": [
+        { "text": "Vroom! Let's write the names of things that go! Find bus and trace it!", "expect": "WORD_bus_TRACED", "feedback": "Bus! Just three letters — short and fast. Now find train!" },
+        { "expect": "WORD_train_TRACED", "feedback": "Train! Five letters — it travels on rails. Now find truck!" },
+        { "expect": "WORD_truck_TRACED", "feedback": "Truck! Five letters — carries heavy loads. Now find digger!" },
+        { "expect": "WORD_digger_TRACED", "feedback": "Digger! Six letters — scoops up earth. Last one — find tractor!" },
+        { "expect": "WORD_tractor_TRACED", "feedback": "Tractor! Seven letters — your longest word. Vroom — you wrote them all!" }
+      ]
+    }
+  ]
+}

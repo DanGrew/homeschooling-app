@@ -336,7 +336,11 @@ function doTraceChar(charIdx) {
   charEngines[charIdx] = engine;
 }
 
-function onWordComplete() { isTracing = false; showBanner(); }
+function emitWordTraced() {
+  window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: 'WORD_' + currentWord + '_TRACED'}}));
+}
+
+function onWordComplete() { isTracing = false; emitWordTraced(); showBanner(); }
 
 var START_TRACE_GUARD = { 'true': doStartTrace, 'false': () => {} };
 
@@ -387,6 +391,17 @@ export function init() {
   document.getElementById('btn-sayit').addEventListener('click', () => { [currentWord].filter(Boolean).forEach(w => { stop(); speak(w); }); });
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
+  window.addEventListener('guidance:start', function() {
+    [window.guidanceService].filter(Boolean)
+      .map(function(s) { return s._lesson; })
+      .filter(Boolean)
+      .filter(function(l) { return l.filter; })
+      .forEach(function(l) { showTagMode(l.filter); });
+  });
+  window.addEventListener('guidance:stop', function() {
+    showTagMode('all');
+  });
+
   window.__wlShowBanner = showBanner;
   loadDictionary().then(() => {
     setupFilterBar();
