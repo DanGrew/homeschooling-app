@@ -10,9 +10,8 @@
       "steps": [
         { "text": "Let's go on a colour hunt! We're going to make orange!", "auto": true },
         { "text": "Can you spot red on the colour wheel?", "expect": "RED_TAPPED", "feedback": "Warm and bright! Now find yellow!" },
-        { "silent": true, "expect": "YELLOW_TAPPED", "feedback": "Bright as sunshine! Nearly there — find orange!" },
-        { "silent": true, "expect": "ORANGE_TAPPED", "feedback": "That's what red and yellow make together!" },
-        { "text": ["Well done!", "Amazing work!", "You're a star!", "Brilliant!", "Superstar!", "Fantastic!"], "auto": true, "success": true }
+        { "expect": "YELLOW_TAPPED", "feedback": "Bright as sunshine! Nearly there — find orange!" },
+        { "expect": "ORANGE_TAPPED", "feedback": "That's what red and yellow make together!" }
       ]
     },
     {
@@ -24,9 +23,8 @@
       "steps": [
         { "text": "Time to mix colours! We're going to make green.", "auto": true },
         { "text": "Can you find blue on the colour wheel?", "expect": "BLUE_TAPPED", "feedback": "Cool and calm! Now find yellow!" },
-        { "silent": true, "expect": "YELLOW_TAPPED", "feedback": "Bright! Now find the colour they make together." },
-        { "silent": true, "expect": "GREEN_TAPPED", "feedback": "Blue and yellow make green!" },
-        { "text": ["Brilliant!", "Amazing!", "You did it!", "Superstar!", "Well done!"], "auto": true, "success": true }
+        { "expect": "YELLOW_TAPPED", "feedback": "Bright! Now find the colour they make together." },
+        { "expect": "GREEN_TAPPED", "feedback": "Blue and yellow make green!" }
       ]
     },
     {
@@ -38,9 +36,8 @@
       "steps": [
         { "text": "Ready to mix? We're going to make purple!", "auto": true },
         { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it! Now find blue." },
-        { "silent": true, "expect": "BLUE_TAPPED", "feedback": "Now find the colour they make together." },
-        { "silent": true, "expect": "PURPLE_TAPPED", "feedback": "Red and blue make purple!" },
-        { "text": ["Fantastic!", "Amazing work!", "You're a star!", "Brilliant!", "Superstar!"], "auto": true, "success": true }
+        { "expect": "BLUE_TAPPED", "feedback": "Now find the colour they make together." },
+        { "expect": "PURPLE_TAPPED", "feedback": "Red and blue make purple!" }
       ]
     },
     {
@@ -52,9 +49,8 @@
       "steps": [
         { "text": "Some colours are special — we call them PRIMARY colours. Red, yellow, and blue. We can't make them by mixing. Can you find all three?", "auto": true },
         { "text": "Find red — it's a primary colour.", "expect": "RED_TAPPED", "feedback": "Primary colour number one! Now find yellow." },
-        { "silent": true, "expect": "YELLOW_TAPPED", "feedback": "Primary colour number two! Now find blue." },
-        { "silent": true, "expect": "BLUE_TAPPED", "feedback": "Primary colour number three — you found them all!" },
-        { "text": "Red, yellow, blue — the three primary colours. You know them all!", "auto": true, "success": true }
+        { "expect": "YELLOW_TAPPED", "feedback": "Primary colour number two! Now find blue." },
+        { "expect": "BLUE_TAPPED", "feedback": "Primary colour number three — you found them all!" }
       ]
     },
     {
@@ -66,9 +62,8 @@
       "steps": [
         { "text": "Secondary colours are made by mixing two primary colours. Orange, green, and purple are the three secondary colours — can you find them all?", "auto": true },
         { "text": "Find orange — made from red and yellow!", "expect": "ORANGE_TAPPED", "feedback": "Secondary colour number one! Now find green." },
-        { "silent": true, "expect": "GREEN_TAPPED", "feedback": "Secondary colour number two! Now find purple." },
-        { "silent": true, "expect": "PURPLE_TAPPED", "feedback": "Secondary colour number three — all three secondaries!" },
-        { "text": "Orange, green, purple — the three secondary colours. Amazing!", "auto": true, "success": true }
+        { "expect": "GREEN_TAPPED", "feedback": "Secondary colour number two! Now find purple." },
+        { "expect": "PURPLE_TAPPED", "feedback": "Secondary colour number three — all three secondaries!" }
       ]
     },
     {
@@ -80,9 +75,8 @@
       "steps": [
         { "text": "Some colours feel warm and sunny — like fire and sunshine. Red, orange, and yellow are warm colours. Let's find them!", "auto": true },
         { "text": "Find red — a warm colour.", "expect": "RED_TAPPED", "feedback": "Warm like fire! Now find orange." },
-        { "silent": true, "expect": "ORANGE_TAPPED", "feedback": "Warm like the setting sun! Now find yellow." },
-        { "silent": true, "expect": "YELLOW_TAPPED", "feedback": "Warm like sunshine — all three warm colours found!" },
-        { "text": "Red, orange, yellow — the warm colours! Can you feel the warmth?", "auto": true, "success": true }
+        { "expect": "ORANGE_TAPPED", "feedback": "Warm like the setting sun! Now find yellow." },
+        { "expect": "YELLOW_TAPPED", "feedback": "Warm like sunshine — all three warm colours found!" }
       ]
     },
     {
@@ -94,9 +88,8 @@
       "steps": [
         { "text": "Some colours feel cool and calm — like water and sky. Blue, green, and purple are cool colours. Find them!", "auto": true },
         { "text": "Find blue — cool like the ocean.", "expect": "BLUE_TAPPED", "feedback": "Cool like the sea! Now find green." },
-        { "silent": true, "expect": "GREEN_TAPPED", "feedback": "Cool like leaves and grass! Now find purple." },
-        { "silent": true, "expect": "PURPLE_TAPPED", "feedback": "Cool and mysterious — all three cool colours!" },
-        { "text": "Blue, green, purple — the cool colours. Calm and beautiful!", "auto": true, "success": true }
+        { "expect": "GREEN_TAPPED", "feedback": "Cool like leaves and grass! Now find purple." },
+        { "expect": "PURPLE_TAPPED", "feedback": "Cool and mysterious — all three cool colours!" }
       ]
     },
     {
@@ -108,9 +101,8 @@
       "steps": [
         { "text": "Ready for a tricky one? We're going to mix two colours that are already mixed — and make something new! Let's make teal!", "auto": true },
         { "text": "Find blue.", "expect": "BLUE_TAPPED", "feedback": "Got it! Now find green." },
-        { "silent": true, "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make — teal!" },
-        { "silent": true, "expect": "BLUE_GREEN_TAPPED", "feedback": "Blue and green make teal!" },
-        { "text": ["Incredible!", "Amazing!", "You mixed a tricky one!", "Brilliant!", "Superstar!"], "auto": true, "success": true }
+        { "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make — teal!" },
+        { "expect": "BLUE_GREEN_TAPPED", "feedback": "Blue and green make teal!" }
       ]
     },
     {
@@ -122,9 +114,8 @@
       "steps": [
         { "text": "Let's mix red and orange to make a colour called Vermillion!", "auto": true },
         { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it! Now find orange." },
-        { "silent": true, "expect": "ORANGE_TAPPED", "feedback": "Now find the colour they make — Vermillion!" },
-        { "silent": true, "expect": "RED_ORANGE_TAPPED", "feedback": "Red and orange make Vermillion!" },
-        { "text": ["Incredible!", "Amazing!", "Brilliant!", "Superstar!", "You did it!"], "auto": true, "success": true }
+        { "expect": "ORANGE_TAPPED", "feedback": "Now find the colour they make — Vermillion!" },
+        { "expect": "RED_ORANGE_TAPPED", "feedback": "Red and orange make Vermillion!" }
       ]
     },
     {
@@ -136,9 +127,8 @@
       "steps": [
         { "text": "Time to mix! Yellow and orange make a warm colour called Amber.", "auto": true },
         { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Bright as sunshine! Now find orange." },
-        { "silent": true, "expect": "ORANGE_TAPPED", "feedback": "Now find the colour they make — Amber!" },
-        { "silent": true, "expect": "YELLOW_ORANGE_TAPPED", "feedback": "Yellow and orange make Amber!" },
-        { "text": ["Brilliant!", "Amazing work!", "You're a star!", "Superstar!", "Fantastic!"], "auto": true, "success": true }
+        { "expect": "ORANGE_TAPPED", "feedback": "Now find the colour they make — Amber!" },
+        { "expect": "YELLOW_ORANGE_TAPPED", "feedback": "Yellow and orange make Amber!" }
       ]
     },
     {
@@ -150,9 +140,8 @@
       "steps": [
         { "text": "Ready? We're going to mix yellow and green to make a colour called Chartreuse!", "auto": true },
         { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Got it! Now find green." },
-        { "silent": true, "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make — Chartreuse!" },
-        { "silent": true, "expect": "YELLOW_GREEN_TAPPED", "feedback": "Yellow and green make Chartreuse!" },
-        { "text": ["Incredible!", "Well done!", "You're a star!", "Brilliant!", "Amazing!"], "auto": true, "success": true }
+        { "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make — Chartreuse!" },
+        { "expect": "YELLOW_GREEN_TAPPED", "feedback": "Yellow and green make Chartreuse!" }
       ]
     },
     {
@@ -164,9 +153,8 @@
       "steps": [
         { "text": "Let's mix blue and purple to make a deep colour called Indigo!", "auto": true },
         { "text": "Find blue on the colour wheel.", "expect": "BLUE_TAPPED", "feedback": "Cool and calm! Now find purple." },
-        { "silent": true, "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make — Indigo!" },
-        { "silent": true, "expect": "BLUE_PURPLE_TAPPED", "feedback": "Blue and purple make Indigo!" },
-        { "text": ["Fantastic!", "Amazing work!", "Brilliant!", "Superstar!", "You did it!"], "auto": true, "success": true }
+        { "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make — Indigo!" },
+        { "expect": "BLUE_PURPLE_TAPPED", "feedback": "Blue and purple make Indigo!" }
       ]
     },
     {
@@ -178,9 +166,8 @@
       "steps": [
         { "text": "Ready for a bright one? Red and purple make a colour called Magenta!", "auto": true },
         { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it! Now find purple." },
-        { "silent": true, "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make — Magenta!" },
-        { "silent": true, "expect": "RED_PURPLE_TAPPED", "feedback": "Red and purple make Magenta!" },
-        { "text": ["Incredible!", "Amazing!", "You're a star!", "Brilliant!", "Superstar!"], "auto": true, "success": true }
+        { "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make — Magenta!" },
+        { "expect": "RED_PURPLE_TAPPED", "feedback": "Red and purple make Magenta!" }
       ]
     }
   ]
