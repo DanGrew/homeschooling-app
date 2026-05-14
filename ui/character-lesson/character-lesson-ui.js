@@ -234,11 +234,15 @@ export function init() {
   paginator.goTo(Math.max(0, filteredChars.findIndex(e => e.char === paramChar)));
 
   window.addEventListener('guidance:start', function() {
-    var lesson = window.guidanceService && window.guidanceService._lesson;
-    if (!lesson || !lesson.characters) return;
-    var chars = lesson.characters.map(String);
-    filteredChars = CHARS.filter(function(e) { return chars.indexOf(e.char) !== -1; });
-    paginator.reset(filteredChars);
+    [window.guidanceService].filter(Boolean)
+      .map(function(s) { return s._lesson; })
+      .filter(Boolean)
+      .filter(function(l) { return l.characters; })
+      .forEach(function(lesson) {
+        var chars = lesson.characters.map(String);
+        filteredChars = CHARS.filter(function(e) { return chars.indexOf(e.char) !== -1; });
+        paginator.reset(filteredChars);
+      });
   });
   window.addEventListener('guidance:stop', function() {
     applyFilter(currentFilter);

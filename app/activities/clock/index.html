@@ -83,9 +83,15 @@ function emit(type) {
 
 clockInit(document.getElementById('clock-container'));
 
+var SPEAK_NUM = {
+  '0': function(num) { speak(num); },
+  '1': function()    {}
+};
+
 document.querySelectorAll('[data-num]').forEach(function(el) {
   makeInteractive(el, function() {
-    if (!window.guidanceService || !window.guidanceService._lesson) speak(el.dataset.num);
+    var n = [window.guidanceService].filter(Boolean).map(function(s) { return s._lesson; }).filter(Boolean).length;
+    SPEAK_NUM[String(n)](el.dataset.num);
     emit('NUMBER_' + el.dataset.num + '_TAPPED');
   });
   el.addEventListener('click', function(e) { e.stopPropagation(); });

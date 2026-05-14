@@ -21,6 +21,47 @@ var ADVANCE_ACTION = {
   'false': function(svc) { svc._showStep(); }
 };
 
+var SHOW_STEP = {
+  'true':  function() {},
+  'false': function(svc, step) {
+    var text = _resolveText(step.text);
+    svc._overlay.show(
+      svc._guideSrc(),
+      { text: text, auto: step.auto, success: step.success },
+      svc._stepIdx + 1, svc._lesson.steps.length,
+      function() { svc._advance(); },
+      function() { interrupt(text); },
+      function() { svc.stop(); }
+    );
+    interrupt(text);
+  }
+};
+
+var TERMINAL_CHECK = {
+  'true':  function()   { return true; },
+  'false': function(ns) { return !ns.expect; }
+};
+
+var PRAISE_APPEND = {
+  'true':  function(text) { return text + '\n' + TERMINAL_PRAISE[Math.floor(Math.random() * TERMINAL_PRAISE.length)]; },
+  'false': function(text) { return text; }
+};
+
+var SILENT_CHECK = {
+  'true':  function()   { return false; },
+  'false': function(ns) { return !ns.text; }
+};
+
+var SILENT_ADVANCE = {
+  'true':  function(svc) { svc._stepIdx++; },
+  'false': function()    {}
+};
+
+var NEXT_CB = {
+  'true':  function()    { return null; },
+  'false': function(svc) { return function() { svc._advance(); }; }
+};
+
 export function GuidanceService() {
   this._overlay = new GuidanceOverlay();
   this._lesson = null;
@@ -67,37 +108,24 @@ GuidanceService.prototype._guideSrc = function() {
 };
 
 GuidanceService.prototype._showStep = function() {
-  var self = this;
   var step = this._lesson.steps[this._stepIdx];
-  if (!step.text) return;
-  var text = _resolveText(step.text);
-  var total = this._lesson.steps.length;
-  this._overlay.show(
-    this._guideSrc(),
-    { text: text, auto: step.auto, success: step.success },
-    this._stepIdx + 1, total,
-    function() { self._advance(); },
-    function() { interrupt(text); },
-    function() { self.stop(); }
-  );
-  interrupt(text);
+  SHOW_STEP[String(!step.text)](this, step);
 };
 
 GuidanceService.prototype._showFeedback = function(rawText) {
   var self = this;
   var text = _resolveText(rawText);
-  var total = this._lesson.steps.length;
   var displayIdx = this._stepIdx + 1;
   var nextStep = this._lesson.steps[this._stepIdx + 1];
-  var isTerminal = !nextStep || !nextStep.expect;
-  if (isTerminal) { text += '\n' + TERMINAL_PRAISE[Math.floor(Math.random() * TERMINAL_PRAISE.length)]; }
-  var nextSilent = !isTerminal && !nextStep.text;
-  if (nextSilent) { this._stepIdx++; }
+  var isTerminal = TERMINAL_CHECK[String(!nextStep)](nextStep);
+  text = PRAISE_APPEND[String(isTerminal)](text);
+  var nextSilent = SILENT_CHECK[String(isTerminal)](nextStep);
+  SILENT_ADVANCE[String(nextSilent)](this);
   this._overlay.show(
     this._guideSrc(),
     { text: text, auto: !nextSilent, success: isTerminal },
-    displayIdx, total,
-    nextSilent ? null : function() { self._advance(); },
+    displayIdx, this._lesson.steps.length,
+    NEXT_CB[String(nextSilent)](self),
     function() { interrupt(text); },
     function() { self.stop(); }
   );

@@ -58,7 +58,7 @@ test('TOTAL_3 feedback contains instruction for next action', async ({ page }) =
   await page.goto(URL)
   await startLesson(page)
   await fireGuidanceEvent(page, 'TOTAL_3')
-  await expect(page.locator('#guidance-overlay')).toContainText('Tap the Total')
+  await expect(page.locator('#guidance-overlay')).toContainText('tap the Total')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 

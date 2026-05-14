@@ -392,8 +392,11 @@ export function init() {
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
   window.addEventListener('guidance:start', function() {
-    var lesson = window.guidanceService && window.guidanceService._lesson;
-    if (lesson && lesson.filter) showTagMode(lesson.filter);
+    [window.guidanceService].filter(Boolean)
+      .map(function(s) { return s._lesson; })
+      .filter(Boolean)
+      .filter(function(l) { return l.filter; })
+      .forEach(function(l) { showTagMode(l.filter); });
   });
   window.addEventListener('guidance:stop', function() {
     showTagMode('all');
