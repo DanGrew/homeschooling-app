@@ -7,6 +7,7 @@
     "test:unit": "vitest run tests/unit",
     "test:coverage": "vitest run tests/unit --coverage",
     "check:untested": "node scripts/check-untested.js",
+    "check:contracts": "node scripts/contracts/run.js",
     "validate:json": "node scripts/validate-schemas.js reports/validate-json.txt"
   },
   "devDependencies": {
