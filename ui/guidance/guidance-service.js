@@ -87,11 +87,12 @@ GuidanceService.prototype._showFeedback = function(rawText) {
   var total = this._lesson.steps.length;
   var displayIdx = this._stepIdx + 1;
   var nextStep = this._lesson.steps[this._stepIdx + 1];
-  var nextSilent = !!(nextStep && !nextStep.text);
+  var isTerminal = !nextStep || !nextStep.expect;
+  var nextSilent = !isTerminal && !nextStep.text;
   if (nextSilent) { this._stepIdx++; }
   this._overlay.show(
     this._guideSrc(),
-    { text: text, auto: !nextSilent },
+    { text: text, auto: !nextSilent, success: isTerminal },
     displayIdx, total,
     nextSilent ? null : function() { self._advance(); },
     function() { interrupt(text); },
