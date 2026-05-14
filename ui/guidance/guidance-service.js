@@ -129,5 +129,5 @@ GuidanceService.prototype._showFeedback = function(rawText) {
     function() { interrupt(text); },
     function() { self.stop(); }
   );
-  queue(text);
+  interrupt(text);
 };
