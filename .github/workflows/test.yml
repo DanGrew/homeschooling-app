@@ -224,7 +224,7 @@ jobs:
       - run: npm ci
       - name: Run page contract validator
         run: |
-          node validator/run.js 2>&1 | tee reports/contracts.txt
+          node scripts/contracts/run.js 2>&1 | tee reports/contracts.txt
           exit ${PIPESTATUS[0]}
         continue-on-error: true
       - uses: actions/upload-artifact@v4

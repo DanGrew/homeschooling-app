@@ -25,9 +25,8 @@ function check(doc) {
     errors.push('data-home is required on .nav-bar (no opt-out)');
   }
 
-  const hasTitle   = hasAttr(bar, 'data-title') && attr(bar, 'data-title').trim() !== '';
-  const noTitle    = checkOptOut(bar, 'title', errors);
-
+  const hasTitle = hasAttr(bar, 'data-title') && attr(bar, 'data-title').trim() !== '';
+  const noTitle  = checkOptOut(bar, 'title', errors);
   if (!hasTitle && !noTitle) {
     errors.push('data-title or data-no-title="<reason>" required on .nav-bar');
   }

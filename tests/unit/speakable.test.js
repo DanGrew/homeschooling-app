@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-vi.mock('../../app/shared/speech-ui.js', () => ({ speakInterrupt: vi.fn(), stop: vi.fn() }));
+vi.mock('../../ui/speech/speech-ui.js', () => ({ speakInterrupt: vi.fn(), stop: vi.fn() }));
 
-import { makeSpeakable, makeSpeakableButton, makeInteractive } from '../../app/shared/speakable.js';
-import { speakInterrupt } from '../../app/shared/speech-ui.js';
+import { makeSpeakable, makeSpeakableButton, makeInteractive } from '../../ui/speech/speakable.js';
+import { speakInterrupt } from '../../ui/speech/speech-ui.js';
 
 beforeEach(() => { vi.clearAllMocks(); });
 
