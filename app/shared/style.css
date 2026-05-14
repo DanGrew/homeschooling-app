@@ -6,3 +6,9 @@ body{margin:0;user-select:none;-webkit-user-select:none;-webkit-touch-callout:no
 .activity-title{font-size:1.2em;font-weight:bold;color:#555;padding:6px 16px;cursor:pointer;user-select:none;flex-shrink:0;filter:drop-shadow(0 0 12px rgba(150,80,220,0.7));border-bottom:2px solid #eee;}
 .feedback-correct{outline:4px solid #2ECC71;outline-offset:3px;}
 .feedback-wrong{outline:4px solid #E74C3C;outline-offset:3px;}
+#bottom-bar{flex-shrink:0;height:100px;border-top:2px solid #ddd;background:#fff;position:relative;overflow:hidden;}
+#lesson-picker{display:flex;align-items:center;gap:8px;padding:8px 12px;overflow-x:auto;height:100%;box-sizing:border-box;scrollbar-width:none;}
+#lesson-picker::-webkit-scrollbar{display:none;}
+.lesson-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex-shrink:0;min-width:72px;max-width:110px;height:100%;padding:4px 8px;border:none;border-radius:12px;background:#f5f0ff;cursor:pointer;font-family:inherit;touch-action:manipulation;box-sizing:border-box;}
+.lesson-tile-num{font-size:1.3em;font-weight:bold;color:#7c6fcd;line-height:1;}
+.lesson-tile-title{font-size:0.62em;font-weight:600;color:#555;text-align:center;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}

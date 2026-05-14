@@ -4,7 +4,7 @@ export function createPaginator({ container, items, perPage = 1, onRender, wrap 
   var state = createPaginatorState({ items, perPage, wrap });
 
   var bar = document.createElement('div');
-  bar.style.cssText = 'display:flex;justify-content:center;align-items:center;gap:16px;padding:6px 16px 44px;';
+  bar.style.cssText = 'display:flex;justify-content:center;align-items:center;gap:16px;padding:6px 16px;';
 
   var btnPrev = document.createElement('button');
   btnPrev.innerHTML = '&#8592; Prev';

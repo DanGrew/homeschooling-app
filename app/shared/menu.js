@@ -70,6 +70,31 @@
     bar.appendChild(lsnContainer);
   }
 
+  if(window.LESSONS&&window.LESSONS.length){
+    var gameArea2=document.querySelector('.game-area');
+    if(gameArea2){
+      var bottomBar=document.createElement('div');
+      bottomBar.id='bottom-bar';
+      var picker=document.createElement('div');
+      picker.id='lesson-picker';
+      window.LESSONS.forEach(function(l){
+        var tile=document.createElement('button');
+        tile.className='lesson-tile';
+        tile.innerHTML='<span class="lesson-tile-num">'+l.number+'</span><span class="lesson-tile-title">'+l.title+'</span>';
+        tile.addEventListener('click',function(){
+          [window.guidanceService].filter(Boolean).forEach(function(svc){
+            [(window.LESSON_MAP||{})[l.id]].filter(Boolean).forEach(function(lesson){svc.start(lesson);});
+          });
+        });
+        picker.appendChild(tile);
+      });
+      bottomBar.appendChild(picker);
+      gameArea2.appendChild(bottomBar);
+      window.addEventListener('guidance:start',function(){picker.style.display='none';});
+      window.addEventListener('guidance:stop',function(){picker.style.display='';});
+    }
+  }
+
   if(bar.dataset.links){
     var links=JSON.parse(bar.dataset.links);
     var linksIcon=bar.dataset.linksIcon==='lesson'?'&#128218;':'&#127918;';

@@ -23,10 +23,10 @@ GuidanceOverlay.prototype._build = function(onStop) {
 
   var el = document.createElement('div');
   el.id = 'guidance-overlay';
-  el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:9500;display:none;padding:12px;box-sizing:border-box;';
+  el.style.cssText = 'position:absolute;inset:0;display:none;padding:8px;box-sizing:border-box;';
 
   var bubble = document.createElement('div');
-  bubble.style.cssText = 'background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,0.12);padding:14px 16px;display:flex;align-items:center;gap:14px;transition:background 0.3s;';
+  bubble.style.cssText = 'background:#fff;border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:12px;height:100%;box-sizing:border-box;transition:background 0.3s;';
   this._bubbleEl = bubble;
 
   var char = document.createElement('img');
@@ -34,44 +34,44 @@ GuidanceOverlay.prototype._build = function(onStop) {
   this._charEl = char;
 
   var body = document.createElement('div');
-  body.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;';
+  body.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;';
 
   var text = document.createElement('div');
-  text.style.cssText = 'font-size:1.05em;font-weight:600;line-height:1.3;white-space:pre-line;';
+  text.style.cssText = 'font-size:1em;font-weight:600;line-height:1.25;white-space:pre-line;';
   this._textEl = text;
 
   var footer = document.createElement('div');
   footer.style.cssText = 'display:flex;align-items:center;gap:8px;';
 
   var progress = document.createElement('span');
-  progress.style.cssText = 'font-size:0.75em;color:#aaa;margin-right:auto;';
+  progress.style.cssText = 'font-size:0.72em;color:#aaa;margin-right:auto;';
   this._progressEl = progress;
 
   var next = document.createElement('button');
   next.innerHTML = '&#9654;';
   next.dataset.action = 'next';
-  next.style.cssText = 'width:44px;height:44px;border-radius:50%;background:#2ECC71;color:#fff;border:none;font-size:1.3em;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;';
+  next.style.cssText = 'width:38px;height:38px;border-radius:50%;background:#2ECC71;color:#fff;border:none;font-size:1.2em;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;';
   next.addEventListener('click', function() { [self._onNext].filter(Boolean).forEach(function(fn) { fn(); }); });
   this._nextBtn = next;
 
   var replay = document.createElement('button');
   replay.innerHTML = '&#8635;';
   replay.title = 'Replay';
-  replay.style.cssText = 'width:30px;height:30px;border-radius:50%;border:2px solid #aaa;color:#aaa;background:none;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+  replay.style.cssText = 'width:28px;height:28px;border-radius:50%;border:2px solid #aaa;color:#aaa;background:none;cursor:pointer;font-size:1em;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
   replay.addEventListener('click', function() { [self._onReplay].filter(Boolean).forEach(function(fn) { fn(); }); });
 
   var closeWrap = document.createElement('div');
-  closeWrap.style.cssText = 'position:relative;width:30px;height:30px;flex-shrink:0;';
+  closeWrap.style.cssText = 'position:relative;width:28px;height:28px;flex-shrink:0;';
 
   var close = document.createElement('button');
   close.innerHTML = '&times;';
   close.title = 'Stop lesson';
-  close.style.cssText = 'position:absolute;top:0;left:0;width:30px;height:30px;border-radius:50%;border:none;background:#f0f0f0;color:#888;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;';
+  close.style.cssText = 'position:absolute;top:0;left:0;width:28px;height:28px;border-radius:50%;border:none;background:#f0f0f0;color:#888;cursor:pointer;font-size:1.1em;display:flex;align-items:center;justify-content:center;';
 
   var ARC_NS = 'http://www.w3.org/2000/svg';
   var ARC_C = 94;
   var arcSvg = document.createElementNS(ARC_NS, 'svg');
-  arcSvg.style.cssText = 'position:absolute;top:-4px;left:-4px;width:38px;height:38px;pointer-events:none;transform:rotate(-90deg);';
+  arcSvg.style.cssText = 'position:absolute;top:-4px;left:-4px;width:36px;height:36px;pointer-events:none;transform:rotate(-90deg);';
   arcSvg.setAttribute('viewBox', '0 0 38 38');
   var closeArc = document.createElementNS(ARC_NS, 'circle');
   closeArc.setAttribute('cx', '19'); closeArc.setAttribute('cy', '19'); closeArc.setAttribute('r', '15');
@@ -88,7 +88,7 @@ GuidanceOverlay.prototype._build = function(onStop) {
   closeWrap.appendChild(arcSvg);
 
   var controls = document.createElement('div');
-  controls.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;';
+  controls.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;';
   controls.appendChild(replay);
   controls.appendChild(closeWrap);
 
@@ -100,7 +100,8 @@ GuidanceOverlay.prototype._build = function(onStop) {
   bubble.appendChild(char);
   bubble.appendChild(body);
   el.appendChild(bubble);
-  document.body.appendChild(el);
+  var container = document.getElementById('bottom-bar') || document.body;
+  container.appendChild(el);
   this._el = el;
 };
 
