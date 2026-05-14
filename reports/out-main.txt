@@ -1,7 +1,0 @@
-## ui-cyclomatic
-❌ Violations (scanned 8 files, threshold: 1):
-- ui/piano/piano-ui.js — Function '_prefetchAudio' has a complexity of 2. Maximum allowed is 1. (line 7)
-- ui/piano/piano-ui.js — Function 'initAudio' has a complexity of 5. Maximum allowed is 1. (line 19)
-- ui/piano/piano-ui.js — Function has a complexity of 2. Maximum allowed is 1. (line 27)
-- ui/piano/piano-ui.js — Function 'playNote' has a complexity of 4. Maximum allowed is 1. (line 40)
-- ui/piano/piano-ui.js — Function 'glowKey' has a complexity of 4. Maximum allowed is 1. (line 68)

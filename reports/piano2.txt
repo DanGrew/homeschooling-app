@@ -1,5 +1,0 @@
-## ui-cyclomatic
-✅ No issues (scanned 7 files, threshold: 1)
-
-⚠️ Exceptions (pending fix):
-- ui/piano/piano-ui.js

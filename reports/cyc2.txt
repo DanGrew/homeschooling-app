@@ -1,5 +1,0 @@
-## ui-cyclomatic
-✅ No issues (scanned 8 files, threshold: 1)
-
-⚠️ Exceptions (pending fix):
-- ui/drawing-dots/drawing-dots-engine.js

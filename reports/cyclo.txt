@@ -1,2 +1,0 @@
-## ui-cyclomatic
-✅ No issues (scanned 10 files, threshold: 1)

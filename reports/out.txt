@@ -1,2 +1,0 @@
-## no-app-exports
-✅ No issues (scanned 4 files)
