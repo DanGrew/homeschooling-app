@@ -35,6 +35,7 @@
   }
 
   if(window.LESSONS&&window.LESSONS.length){
+    document.body.classList.add('has-lessons');
     var lsnContainer=document.createElement('div');
     lsnContainer.style.cssText='position:relative;';
     var lsnBtn=document.createElement('button');
