@@ -253,7 +253,7 @@ jobs:
       - name: Run speakable contract tests
         run: |
           mkdir -p reports
-          npx playwright test tests/contracts/ --reporter=line 2>&1 | tee reports/contracts-speakable.txt
+          npx playwright test --config playwright.contracts.config.js --reporter=line 2>&1 | tee reports/contracts-speakable.txt
           exit ${PIPESTATUS[0]}
         continue-on-error: true
       - uses: actions/upload-artifact@v4
@@ -291,6 +291,9 @@ jobs:
       - name: Combine reports
         run: |
           {
+            echo "<!-- ci-report -->"
+            echo "**CI Report** · \`${GITHUB_SHA:0:7}\` · $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo ""
             cat reports/coverage-report.md 2>/dev/null || echo "### Unit Test Coverage\n⚠️ Report missing"
             echo ""
             echo "### Untested Files Check"
@@ -326,8 +329,18 @@ jobs:
             echo '```'
           } > combined.md
 
+      - name: Find existing CI report comment
+        uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: '<!-- ci-report -->'
+
       - name: Comment on PR
         uses: peter-evans/create-or-update-comment@v4
         with:
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body-path: combined.md
+          edit-mode: replace
