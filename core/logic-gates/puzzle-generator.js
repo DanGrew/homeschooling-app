@@ -1,6 +1,6 @@
 function _getEvalGraph() {
   if (typeof require !== 'undefined') return require('./logic-engine.js').evalGraph;
-  return window.LogicEngine.evalGraph;
+  return globalThis.LogicEngine.evalGraph;
 }
 
 function allCombinations(n) {
@@ -66,5 +66,5 @@ function generate(templates, maxAttempts) {
 if (typeof module !== 'undefined') {
   module.exports = { generate, generateFromTemplate, validate };
 } else {
-  window.PuzzleGenerator = { generate, generateFromTemplate, validate };
+  globalThis.PuzzleGenerator = { generate, generateFromTemplate, validate };
 }

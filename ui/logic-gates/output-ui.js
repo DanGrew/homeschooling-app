@@ -1,7 +1,6 @@
 const GATE_COLOURS = { AND: '#3498DB', OR: '#2ECC71', XOR: '#9B59B6', NOT: '#F39C12' };
 
-function buildLamp(cx, cy, r) {
-  r = r || 28;
+function buildLamp(cx, cy, r = 28) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.dataset.output = 'lamp';
   const base = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -15,24 +14,26 @@ function buildLamp(cx, cy, r) {
   return g;
 }
 
-function updateLamp(g, active) {
+function activateLamp(g) {
   const base = g.querySelector('circle');
-  const fil  = g.querySelector('path');
-  if (active) {
-    base.setAttribute('fill', '#FFD700');
-    base.setAttribute('stroke', '#F39C12');
-    base.setAttribute('filter', 'drop-shadow(0 0 10px #FFD700)');
-    fil.setAttribute('stroke', '#fff');
-  } else {
-    base.setAttribute('fill', '#ddd');
-    base.setAttribute('stroke', '#bbb');
-    base.removeAttribute('filter');
-    fil.setAttribute('stroke', '#aaa');
-  }
+  const fil = g.querySelector('path');
+  base.setAttribute('fill', '#FFD700');
+  base.setAttribute('stroke', '#F39C12');
+  base.setAttribute('filter', 'drop-shadow(0 0 10px #FFD700)');
+  fil.setAttribute('stroke', '#fff');
 }
+function deactivateLamp(g) {
+  const base = g.querySelector('circle');
+  const fil = g.querySelector('path');
+  base.setAttribute('fill', '#ddd');
+  base.setAttribute('stroke', '#bbb');
+  base.removeAttribute('filter');
+  fil.setAttribute('stroke', '#aaa');
+}
+const LAMP_FNS = [deactivateLamp, activateLamp];
+function updateLamp(g, active) { LAMP_FNS[+active](g); }
 
-function buildFan(cx, cy, r) {
-  r = r || 28;
+function buildFan(cx, cy, r = 28) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.dataset.output = 'fan';
   const blades = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -55,20 +56,28 @@ function buildFan(cx, cy, r) {
   return g;
 }
 
-function updateFan(g, active) {
+function activateFan(g) {
   const blades = g.querySelector('[data-blades]');
   const hub = g.querySelector('circle');
-  Array.from(blades.children).forEach(function(b) {
-    b.setAttribute('fill', active ? '#1ABC9C' : '#ccc');
-  });
-  hub.setAttribute('fill', active ? '#0E8C6E' : '#bbb');
+  Array.from(blades.children).forEach(b => b.setAttribute('fill', '#1ABC9C'));
+  hub.setAttribute('fill', '#0E8C6E');
   blades.style.transformBox = 'fill-box';
   blades.style.transformOrigin = 'center';
-  blades.style.animation = active ? 'spin 1.2s linear infinite' : '';
+  blades.style.animation = 'spin 1.2s linear infinite';
 }
+function deactivateFan(g) {
+  const blades = g.querySelector('[data-blades]');
+  const hub = g.querySelector('circle');
+  Array.from(blades.children).forEach(b => b.setAttribute('fill', '#ccc'));
+  hub.setAttribute('fill', '#bbb');
+  blades.style.transformBox = 'fill-box';
+  blades.style.transformOrigin = 'center';
+  blades.style.animation = '';
+}
+const FAN_FNS = [deactivateFan, activateFan];
+function updateFan(g, active) { FAN_FNS[+active](g); }
 
-function buildFountain(cx, cy, r) {
-  r = r || 28;
+function buildFountain(cx, cy, r = 28) {
   const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
   g.dataset.output = 'fountain';
   const basin = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
@@ -94,29 +103,31 @@ function buildFountain(cx, cy, r) {
   return g;
 }
 
-function updateFountain(g, active) {
+function activateFountain(g) {
   const basin = g.querySelector('ellipse');
   const arcs = g.querySelectorAll('[data-arc]');
-  basin.setAttribute('fill', active ? '#5DADE2' : '#ddd');
-  arcs.forEach(function(arc) {
-    arc.setAttribute('stroke', active ? '#3498DB' : '#bbb');
-    if (active) {
-      arc.setAttribute('filter', 'drop-shadow(0 0 4px #3498DB)');
-    } else {
-      arc.removeAttribute('filter');
-    }
+  basin.setAttribute('fill', '#5DADE2');
+  arcs.forEach(arc => {
+    arc.setAttribute('stroke', '#3498DB');
+    arc.setAttribute('filter', 'drop-shadow(0 0 4px #3498DB)');
   });
 }
-
-function buildOutput(type, cx, cy, r) {
-  if (type === 'fan') return buildFan(cx, cy, r);
-  return buildLamp(cx, cy, r);
+function deactivateFountain(g) {
+  const basin = g.querySelector('ellipse');
+  const arcs = g.querySelectorAll('[data-arc]');
+  basin.setAttribute('fill', '#ddd');
+  arcs.forEach(arc => {
+    arc.setAttribute('stroke', '#bbb');
+    arc.removeAttribute('filter');
+  });
 }
+const FOUNTAIN_FNS = [deactivateFountain, activateFountain];
+function updateFountain(g, active) { FOUNTAIN_FNS[+active](g); }
 
-function updateOutput(g, type, active) {
-  if (type === 'fan') return updateFan(g, active);
-  return updateLamp(g, active);
-}
+const BUILDERS = { lamp: buildLamp, fan: buildFan, fountain: buildFountain };
+const UPDATERS = { lamp: updateLamp, fan: updateFan, fountain: updateFountain };
+function buildOutput(type, cx, cy, r) { return BUILDERS[type](cx, cy, r); }
+function updateOutput(g, type, active) { return UPDATERS[type](g, active); }
 
 if (typeof module !== 'undefined') {
   module.exports = { buildOutput, updateOutput, GATE_COLOURS };

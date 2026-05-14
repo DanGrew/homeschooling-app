@@ -1,9 +1,9 @@
-const OUTPUT_LABELS = { lamp: 'light', fan: 'fan' };
+const OUTPUT_LABELS = { lamp: 'light', fan: 'fan', fountain: 'fountain' };
+const GOAL_SUFFIX = ['OFF', 'ON'];
 
 function goalText(goal, outputs) {
-  const out = outputs.find(function(o) { return o.id === goal[0].id; });
-  const device = out ? OUTPUT_LABELS[out.type] || out.type : 'output';
-  return goal[0].value ? 'Turn the ' + device + ' ON' : 'Turn the ' + device + ' OFF';
+  const out = outputs.find(o => o.id === goal[0].id);
+  return 'Turn the ' + OUTPUT_LABELS[out.type] + ' ' + GOAL_SUFFIX[+goal[0].value];
 }
 
 (function() {
@@ -11,48 +11,56 @@ function goalText(goal, outputs) {
   var currentSvg    = null;
   var originalStates = [];
   var solved = false;
+  var onSolvedFn = function() {};
 
-  function loadPuzzle(config) {
-    var puzzleArea = document.getElementById('puzzle-area');
-    var goalBanner = document.getElementById('goal-text');
+  function noop() {}
+  function advancePuzzle() { window._puzzlePaginator.next(); }
+  function notifySolved() {
+    onSolvedFn = noop;
+    window.showBanner(advancePuzzle);
+  }
 
-    currentConfig = JSON.parse(JSON.stringify(config));
-    solved = false;
-    originalStates = currentConfig.inputs.map(function(i) { return i.state; });
-    goalBanner.textContent = goalText(currentConfig.goal, currentConfig.outputs);
-
-    if (currentSvg) puzzleArea.removeChild(currentSvg);
-    currentSvg = window.StationUI.buildStation(currentConfig, function(id) {
-      currentSvg._handleToggle(id);
-      checkGoal();
-    });
-    puzzleArea.appendChild(currentSvg);
-    if (window.hideBanner) window.hideBanner();
+  function stationToggle(id) {
+    currentSvg._handleToggle(id);
     checkGoal();
   }
 
-  function checkGoal() {
-    if (!currentConfig || solved) return;
+  function goalMet() {
     var states = currentSvg._getInputStates();
     var out = window.LogicEngine.evalGraph(currentConfig, states);
-    solved = currentConfig.goal.every(function(g) { return out[g.id] === g.value; });
-    if (solved && window.showBanner) {
-      window.showBanner(function() {
-        if (window._puzzlePaginator) window._puzzlePaginator.next();
-      });
-    }
+    return currentConfig.goal.every(g => out[g.id] === g.value);
+  }
+
+  function checkGoal() {
+    solved = goalMet();
+    [noop, onSolvedFn][+solved]();
+  }
+
+  function restoreState(inp, i) { inp.state = originalStates[i]; }
+
+  function onReset() {
+    currentConfig.inputs.forEach(restoreState);
+    loadPuzzle(currentConfig);
+  }
+
+  function loadPuzzle(config) {
+    onSolvedFn = notifySolved;
+    currentConfig = JSON.parse(JSON.stringify(config));
+    solved = false;
+    originalStates = currentConfig.inputs.map(i => i.state);
+    document.getElementById('goal-text').textContent = goalText(currentConfig.goal, currentConfig.outputs);
+    var next = window.StationUI.buildStation(currentConfig, stationToggle);
+    document.getElementById('puzzle-area').replaceChild(next, currentSvg);
+    currentSvg = next;
+    window.hideBanner();
+    checkGoal();
   }
 
   window.addEventListener('load', function() {
-    var resetBtn = document.getElementById('btn-reset');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', function() {
-        if (!currentConfig) return;
-        currentConfig.inputs.forEach(function(inp, i) { inp.state = originalStates[i]; });
-        loadPuzzle(currentConfig);
-      });
-    }
+    currentSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    document.getElementById('puzzle-area').appendChild(currentSvg);
+    document.getElementById('btn-reset').addEventListener('click', onReset);
   });
 
-  window.PuzzleUI = { loadPuzzle: loadPuzzle };
+  window.PuzzleUI = { loadPuzzle, getConfig: function() { return currentConfig; } };
 })();

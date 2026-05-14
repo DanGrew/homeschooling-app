@@ -23,5 +23,5 @@ function evalGraph(config, inputStates) {
 if (typeof module !== 'undefined') {
   module.exports = { evalGate, evalGraph };
 } else {
-  window.LogicEngine = { evalGate, evalGraph };
+  globalThis.LogicEngine = { evalGate, evalGraph };
 }
