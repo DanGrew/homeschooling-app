@@ -1,15 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "Logic Gates Puzzles",
+  "title": "Logic Gates",
   "type": "array",
   "minItems": 1,
   "items": {
     "type": "object",
-    "required": ["id", "category", "grid", "inputs", "nodes", "outputs", "goal"],
+    "required": ["id", "grid", "inputs", "nodes", "outputs"],
     "additionalProperties": false,
     "properties": {
       "id": { "type": "string" },
       "category": { "type": "string", "enum": ["linear", "converging"] },
+      "label": { "type": "string" },
       "grid": {
         "type": "object",
         "required": ["cols", "rows"],
@@ -85,7 +86,6 @@
       },
       "goal": {
         "type": "array",
-        "minItems": 1,
         "items": {
           "type": "object",
           "required": ["id", "value"],

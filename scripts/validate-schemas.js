@@ -100,22 +100,10 @@ const MAPPINGS = [
     match: (name) => name === 'colour-wheel.json'
   },
   {
-    label: 'content/logic-gates-puzzles',
-    schema: 'app/schemas/content/logic-gates-puzzles.schema.json',
+    label: 'content/logic-gates',
+    schema: 'app/schemas/content/logic-gates.schema.json',
     searchDir: 'content/logic-gates',
-    match: (name) => name.startsWith('puzzles-') && name.endsWith('.json')
-  },
-  {
-    label: 'content/logic-gates-sandbox',
-    schema: 'app/schemas/content/logic-gates-sandbox.schema.json',
-    searchDir: 'content/logic-gates',
-    match: (name) => name === 'sandbox.json'
-  },
-  {
-    label: 'content/logic-gates-templates',
-    schema: 'app/schemas/content/logic-gates-templates.schema.json',
-    searchDir: 'content/logic-gates',
-    match: (name) => name === 'templates.json'
+    match: (name) => name.endsWith('.json')
   }
 ];
 
