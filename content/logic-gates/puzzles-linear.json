@@ -1,0 +1,1202 @@
+[
+  {
+    "id": "2-AND-1-AND",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "AND",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "AND",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-AND-1-OR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "AND",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "OR",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "fan",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-AND-1-XOR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "AND",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "XOR",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-AND-0-NOT",
+    "category": "linear",
+    "grid": {
+      "cols": 4,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "AND",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "NOT",
+        "inputs": [
+          "G1"
+        ],
+        "cell": [
+          2,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "2-OR-1-AND",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "OR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "AND",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-OR-1-OR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "OR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "OR",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "fan",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-OR-1-XOR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "OR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "XOR",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-OR-0-NOT",
+    "category": "linear",
+    "grid": {
+      "cols": 4,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "OR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "NOT",
+        "inputs": [
+          "G1"
+        ],
+        "cell": [
+          2,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "fan",
+        "source": "G2",
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "2-XOR-1-AND",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "XOR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "AND",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "fan",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-XOR-1-OR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "XOR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "OR",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-XOR-1-XOR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "id": "S2",
+        "state": false,
+        "label": "C",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "XOR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "XOR",
+        "inputs": [
+          "G1",
+          "S2"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "2-XOR-0-NOT",
+    "category": "linear",
+    "grid": {
+      "cols": 4,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          0
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          0,
+          2
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "XOR",
+        "inputs": [
+          "S0",
+          "S1"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "NOT",
+        "inputs": [
+          "G1"
+        ],
+        "cell": [
+          2,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "1-NOT-1-AND",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "NOT",
+        "inputs": [
+          "S0"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "AND",
+        "inputs": [
+          "G1",
+          "S1"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  },
+  {
+    "id": "1-NOT-1-OR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "NOT",
+        "inputs": [
+          "S0"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "OR",
+        "inputs": [
+          "G1",
+          "S1"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "1-NOT-1-XOR",
+    "category": "linear",
+    "grid": {
+      "cols": 5,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          1
+        ]
+      },
+      {
+        "id": "S1",
+        "state": false,
+        "label": "B",
+        "cell": [
+          2,
+          0
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "NOT",
+        "inputs": [
+          "S0"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "XOR",
+        "inputs": [
+          "G1",
+          "S1"
+        ],
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "fan",
+        "source": "G2",
+        "cell": [
+          4,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": false
+      }
+    ]
+  },
+  {
+    "id": "1-NOT-0-NOT",
+    "category": "linear",
+    "grid": {
+      "cols": 4,
+      "rows": 3
+    },
+    "inputs": [
+      {
+        "id": "S0",
+        "state": false,
+        "label": "A",
+        "cell": [
+          0,
+          1
+        ]
+      }
+    ],
+    "nodes": [
+      {
+        "id": "G1",
+        "type": "NOT",
+        "inputs": [
+          "S0"
+        ],
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "id": "G2",
+        "type": "NOT",
+        "inputs": [
+          "G1"
+        ],
+        "cell": [
+          2,
+          1
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "id": "O1",
+        "type": "lamp",
+        "source": "G2",
+        "cell": [
+          3,
+          1
+        ]
+      }
+    ],
+    "goal": [
+      {
+        "id": "O1",
+        "value": true
+      }
+    ]
+  }
+]

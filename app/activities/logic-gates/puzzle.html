@@ -25,7 +25,7 @@
   <div id="filter-bar">
     <button class="filter-btn active" data-cat="all">All</button>
     <button class="filter-btn" data-cat="linear">Linear</button>
-    <button class="filter-btn" data-cat="parallel">Parallel</button>
+    <button class="filter-btn" data-cat="converging">Converging</button>
   </div>
   <div id="goal-banner">
     <span style="font-size:1.4em;">🎯</span>
@@ -50,7 +50,8 @@ var allPuzzles = [];
 var FILTERS = {
   all: function() { return true; },
   linear: function(p) { return p.category === 'linear'; },
-  parallel: function(p) { return p.category === 'parallel'; }
+  parallel: function(p) { return p.category === 'parallel'; },
+  converging: function(p) { return p.category === 'converging'; }
 };
 var filterFn = FILTERS.all;
 
@@ -76,10 +77,12 @@ document.querySelectorAll('.filter-btn').forEach(function(btn) {
   });
 });
 
-fetch('../../../content/logic-gates/puzzles.json?v=4')
-  .then(function(r) { return r.json(); })
-  .then(function(puzzles) {
-    allPuzzles = puzzles;
+Promise.all([
+  fetch('../../../content/logic-gates/puzzles-linear.json?v=1').then(function(r) { return r.json(); }),
+  fetch('../../../content/logic-gates/puzzles-converging.json?v=1').then(function(r) { return r.json(); })
+])
+  .then(function(results) {
+    allPuzzles = results.flat();
     applyFilter();
   })
   .catch(function(err) {
