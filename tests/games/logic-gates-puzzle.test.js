@@ -58,9 +58,9 @@ test('switch elements are rendered in the puzzle', async ({ page }) => {
 test('filter bar is visible with All, Linear, Parallel buttons', async ({ page }) => {
   await page.goto(URL);
   await expect(page.locator('#filter-bar')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'All' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Linear' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Parallel' })).toBeVisible();
+  await expect(page.locator('.filter-btn[data-cat="all"]')).toBeVisible();
+  await expect(page.locator('.filter-btn[data-cat="linear"]')).toBeVisible();
+  await expect(page.locator('.filter-btn[data-cat="parallel"]')).toBeVisible();
 });
 
 test('All filter button is active on load', async ({ page }) => {
