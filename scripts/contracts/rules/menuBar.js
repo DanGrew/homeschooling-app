@@ -45,6 +45,10 @@ function check(doc) {
     errors.push('data-links or data-no-links="<reason>" required on .nav-bar');
   }
 
+  if (!doc.querySelector('.game-area')) {
+    errors.push('Missing .game-area sibling — content must be wrapped in <div class="game-area">');
+  }
+
   return errors;
 }
 
