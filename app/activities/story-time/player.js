@@ -1,5 +1,6 @@
 import { activeIndex } from '../../../core/story-time/story-time-core.js';
 import { speak } from '../../../components/speech/speech-ui.js';
+import '../../../components/speech/speakable.js';
 
 (function () {
   var storyId = new URLSearchParams(window.location.search).get('story') || 'david-and-goliath';

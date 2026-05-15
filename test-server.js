@@ -1,0 +1,11 @@
+const http = require('http');
+const handler = require('./node_modules/serve-handler');
+
+const PORT = process.env.PORT || 3000;
+
+http.createServer((req, res) => {
+  req.url = req.url.replace(/^\/homeschooling-app(?=\/|$)/, '') || '/';
+  handler(req, res, { public: __dirname });
+}).listen(PORT, () => {
+  console.log(`Serving at http://localhost:${PORT}`);
+});

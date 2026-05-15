@@ -16,7 +16,7 @@ test('Play and Stop buttons are visible', async ({ page }) => {
 
 test('nav link points to stories hub', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/story-time/?story=david-and-goliath')
-  const href = await page.locator('#panel-header a').evaluate(el => new URL(el.href).pathname)
+  const href = await page.locator('.nav-bar a.nav-btn').evaluate(el => new URL(el.href).pathname)
   expect(href).toBe('/homeschooling-app/app/stories/')
 })
 
@@ -33,7 +33,7 @@ const STORIES = [
 for (const story of STORIES) {
   test(`${story.title}: shows title`, async ({ page }) => {
     await page.goto(`/homeschooling-app/app/activities/story-time/?story=${story.id}`)
-    await expect(page.locator('#story-title')).toHaveText(story.title)
+    await expect(page.locator('.activity-title')).toHaveText(story.title)
   })
 
   test(`${story.title}: loads words`, async ({ page }) => {

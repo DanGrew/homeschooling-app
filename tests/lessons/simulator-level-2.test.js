@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
 test('loads with the simulation title', async ({ page }) => {
   await page.goto(SIM_URL)
   await waitForEngine(page)
-  await expect(page.locator('#sim-title')).toHaveText('Grow Tomatoes [Level 2]')
+  await expect(page.locator('.activity-title')).toHaveText('Grow Tomatoes [Level 2]')
 })
 
 test('toolbar shows the watering can and sun tools', async ({ page }) => {

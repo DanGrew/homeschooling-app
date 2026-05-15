@@ -31,9 +31,9 @@ for (const { url, title } of PAGES) {
     expect(filter).toMatch(/drop-shadow/)
   })
 
-  test(`${title}: activity title is first child of game-area`, async ({ page }) => {
+  test(`${title}: activity header is first child of game-area`, async ({ page }) => {
     await page.goto(url)
     const firstChildClass = await page.locator('.game-area > *').first().getAttribute('class')
-    expect(firstChildClass).toMatch(/activity-title/)
+    expect(firstChildClass).toMatch(/activity-header/)
   })
 }

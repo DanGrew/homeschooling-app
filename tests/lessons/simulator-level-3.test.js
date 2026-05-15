@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
 test('loads with the simulation title and shows the table scene', async ({ page }) => {
   await page.goto(SIM_URL)
   await waitForEngine(page)
-  await expect(page.locator('#sim-title')).toHaveText('Grow Tomatoes [Level 3]')
+  await expect(page.locator('.activity-title')).toHaveText('Grow Tomatoes [Level 3]')
   await expect(page.locator('#obj-bg_table')).toBeVisible()
 })
 

@@ -89,7 +89,7 @@ test('books button links to say-words', async ({ page }) => {
 test('title is first child of game-area', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/word-match/')
   const firstClass = await page.locator('.game-area > *').first().getAttribute('class')
-  expect(firstClass).toMatch(/activity-title/)
+  expect(firstClass).toMatch(/activity-header/)
 })
 
 test('filter bar appears after title', async ({ page }) => {
