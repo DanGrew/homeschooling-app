@@ -85,11 +85,10 @@
   wrap.addEventListener('pointerleave', resetPress);
   wrap.addEventListener('pointercancel', resetPress);
 
-  var BASE_SRC = { 'true': s => s.src.replace(/adult-prompts-ui\.js$/, ''), 'false': () => '' };
-  var base = BASE_SRC[String(!!document.currentScript)](document.currentScript);
+  var CONTENT_BASE = '/homeschooling-app/content/adult-prompts/';
 
   [activity].filter(Boolean).forEach(function (act) {
-    fetch(base + 'prompts/' + act + '.json')
+    fetch(CONTENT_BASE + act + '.json')
       .then(function (r) { return r.json(); })
       .then(function (data) {
         [data.prompts].filter(Boolean).filter(function (p) { return p.length; }).forEach(function (p) {

@@ -1,0 +1,9 @@
+{
+  "activity": "match-colour-shape",
+  "prompts": [
+    { "type": "say",  "text": "Set up the challenge before starting: 'We're looking for two things at once — the right colour AND the right shape. Both have to match.' This dual focus is the core learning." },
+    { "type": "ask",  "text": "Core question: 'What colour is it? What shape is it?' — ask both, separately, before they choose. The goal is holding two attributes in mind simultaneously." },
+    { "type": "say",  "text": "When they name both correctly ('It's a red circle'), affirm the compound: 'Yes — red AND circle. You checked both!' — reinforces the two-attribute habit." },
+    { "type": "ask",  "text": "Real-world extension: 'Can you find a [colour] [shape] anywhere near us?' — moves two-attribute thinking into the environment." }
+  ]
+}

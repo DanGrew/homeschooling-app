@@ -1,0 +1,9 @@
+{
+  "activity": "word-lesson",
+  "prompts": [
+    { "type": "say",  "text": "Watch the animated tracing together in 'Watch' mode before the child tries. Name each letter as it's traced: 'That's [letter] — it says /sound/.' Then say the whole word together before they trace." },
+    { "type": "say",  "text": "Narrate stroke direction during tracing: 'Start at the top, come down, then across.' One instruction per stroke. This builds the habit of directional letter formation." },
+    { "type": "ask",  "text": "After tracing: 'What does [word] mean? Can you use it in a sentence?' — the word has meaning, not just letters. Connect the written form to what it refers to." },
+    { "type": "ask",  "text": "Core extension: 'Can you think of another word that starts with [first letter]?' — builds initial-sound awareness alongside word tracing." }
+  ]
+}

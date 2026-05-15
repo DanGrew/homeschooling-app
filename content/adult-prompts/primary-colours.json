@@ -1,0 +1,9 @@
+{
+  "activity": "primary-colours",
+  "prompts": [
+    { "type": "word", "text": "'Primary colours' — red, yellow, blue. These cannot be made by mixing other colours. Introduce this before starting: 'We're going to mix primary colours — let's see what they make.'" },
+    { "type": "ask",  "text": "Before every mix, ask: 'I wonder what [A] and [B] will make?' Never tell them first. The discovery is the learning — give them time to think." },
+    { "type": "say",  "text": "Model the cause-and-effect sentence: '[A] and [B] make [result].' Say it together after each mix. This sentence pattern — action leads to outcome — is the core language to build." },
+    { "type": "ask",  "text": "If they get it wrong: 'What could we change? Should we try swapping one colour?' — keeps them reasoning rather than being corrected." }
+  ]
+}

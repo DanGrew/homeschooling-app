@@ -1,0 +1,9 @@
+{
+  "activity": "shopping-scan",
+  "prompts": [
+    { "type": "word", "text": "'Barcode' — the striped pattern that tells the scanner what an item is. 'Scan' — reading the barcode with the camera. 'Match' — the scanner checks the barcode matches what's on the list." },
+    { "type": "say",  "text": "Before scanning each item, build anticipation: 'What do you think this one will be? Does the shape match what we're looking for?' — prediction before confirmation." },
+    { "type": "ask",  "text": "Core question throughout: 'How many items have we found? How many do we still need?' — counting with purpose, one-to-one correspondence in a real-world context." },
+    { "type": "ask",  "text": "Real-world connection: 'Where else have you seen barcodes? Can you find one on something in the house?' — environmental print and real-world observation." }
+  ]
+}

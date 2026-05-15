@@ -1,0 +1,9 @@
+{
+  "activity": "colouring-palette",
+  "prompts": [
+    { "type": "word", "text": "'Palette' — artists use a palette to hold the colours they plan to use. Warm colours: red, orange, yellow. Cool colours: blue, green, purple. Name these families as colours are picked." },
+    { "type": "ask",  "text": "Before starting: 'Which three colours do you think you'll use most? Why those ones?' — encourages deliberate choice rather than random picking." },
+    { "type": "say",  "text": "Affirm choices without directing: 'You chose [colour] for [part] — what made you pick that?' All choices are valid; the goal is intentional thinking about colour." },
+    { "type": "ask",  "text": "Core question: 'What colour is that in real life? Does it matter if we use a different one?' — opens up creative vs. realistic thinking." }
+  ]
+}
