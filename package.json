@@ -2,6 +2,7 @@
   "name": "homeschooling-app",
   "private": true,
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
     "test:unit": "vitest run tests/unit",
