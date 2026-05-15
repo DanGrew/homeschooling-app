@@ -6,6 +6,7 @@
 <title>Puzzle</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
 <style>
 *{box-sizing:border-box;}
 .chooser-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:28px;padding:20px;overflow:auto;}
@@ -88,5 +89,6 @@ fetch('../../../content/puzzle/manifest.json')
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='puzzle';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+<script type="module">import '../../../components/speech/speech-ui.js';</script>
 </body>
 </html>
