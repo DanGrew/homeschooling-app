@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { toMins, getTodayKey, buildOrderedDays, pixelsPerMin, formatTimeLabel, slotLineClass, blockLayout, focusedScrollX, nowScrollTop } = require('../../core/routine/routine-core.js');
+const { toMins, getTodayKey, buildOrderedDays, pixelsPerMin, formatTimeLabel, slotLineClass, blockLayout, focusedScrollX, nowScrollTop, nowInRange, fmtActivity, findCurrentNext, dayLabel } = require('../../core/routine/routine-core.js');
 
 const ALL_DAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 
@@ -132,5 +132,58 @@ describe('nowScrollTop', () => {
   });
   it('clamps to 0', () => {
     expect(nowScrollTop(0, 0, 1, 600, 36)).toBe(0);
+  });
+});
+
+describe('nowInRange', () => {
+  it('returns true when within range', () => expect(nowInRange(480, 0, 1440)).toBe(true));
+  it('returns true at start boundary', () => expect(nowInRange(0, 0, 1440)).toBe(true));
+  it('returns true at end boundary', () => expect(nowInRange(1440, 0, 1440)).toBe(true));
+  it('returns false below start', () => expect(nowInRange(-1, 0, 1440)).toBe(false));
+  it('returns false above end', () => expect(nowInRange(1441, 0, 1440)).toBe(false));
+});
+
+describe('dayLabel', () => {
+  it('returns label when day present', () => expect(dayLabel({ label: 'Monday' })).toBe('Monday'));
+  it('returns empty string when day falsy', () => expect(dayLabel(null)).toBe(''));
+});
+
+describe('fmtActivity', () => {
+  it('formats with emoji and label when activity found', () => {
+    const item = { activity: 'reading', start: '09:00' };
+    const activities = { reading: { emoji: '📖', label: 'Reading' } };
+    expect(fmtActivity(item, activities)).toBe('📖 Reading (09:00)');
+  });
+  it('falls back to activity id when not found', () => {
+    const item = { activity: 'unknown', start: '09:00' };
+    expect(fmtActivity(item, {})).toBe('unknown');
+  });
+});
+
+describe('findCurrentNext', () => {
+  const schedule = [
+    { start: '08:00', end: '09:00' },
+    { start: '09:00', end: '10:00' },
+    { start: '10:00', end: '11:00' },
+  ];
+  it('finds current and next', () => {
+    const { current, next } = findCurrentNext(schedule, toMins('08:30'));
+    expect(current).toBe(schedule[0]);
+    expect(next).toBe(schedule[1]);
+  });
+  it('returns null current before any item', () => {
+    const { current, next } = findCurrentNext(schedule, toMins('07:00'));
+    expect(current).toBeNull();
+    expect(next).toBe(schedule[0]);
+  });
+  it('returns null next after all items', () => {
+    const { current, next } = findCurrentNext(schedule, toMins('10:30'));
+    expect(current).toBe(schedule[2]);
+    expect(next).toBeNull();
+  });
+  it('handles empty schedule', () => {
+    const { current, next } = findCurrentNext([], 500);
+    expect(current).toBeNull();
+    expect(next).toBeNull();
   });
 });

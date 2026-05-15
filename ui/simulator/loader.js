@@ -6,7 +6,7 @@ async function startSim(simId) {
 
   document.title = spec.simulation.title;
   document.querySelector('.activity-title').textContent = spec.simulation.title;
-  document.querySelector('.activity-instruction').textContent = spec.simulation.instructions || '';
+  document.querySelector('.activity-instruction').textContent = [spec.simulation.instructions, ''][+!spec.simulation.instructions];
 
   const scene = document.getElementById('scene');
   const frame = document.getElementById('scene-frame');
@@ -17,7 +17,7 @@ async function startSim(simId) {
   const gameArea = frame.closest('.game-area');
   const header = gameArea.querySelector('.activity-header');
   const availWidth = gameArea.clientWidth;
-  const availHeight = gameArea.clientHeight - (header ? header.offsetHeight : 0);
+  const availHeight = gameArea.clientHeight - [() => 0, () => header.offsetHeight][+!!header]();
   const scale = Math.min(1, (availWidth - 32) / spec.scene.width, (availHeight - 32) / spec.scene.height);
   scene.style.transformOrigin = 'top left';
   scene.style.transform = `scale(${scale})`;
@@ -25,4 +25,5 @@ async function startSim(simId) {
   frame.style.height = `${spec.scene.height * scale}px`;
 }
 
-startSim(new URLSearchParams(location.search).get('sim') || 'grow_a_plant');
+var simParam = new URLSearchParams(location.search).get('sim');
+startSim([simParam, 'grow_a_plant'][+!simParam]);
