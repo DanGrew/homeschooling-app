@@ -329,7 +329,8 @@ jobs:
             row "validate-json" "$(grep -E '^(PASS|FAIL)' reports/validate-json.txt 2>/dev/null | tail -1 || echo '⚠️ missing')"
             row "ui-cyclomatic" "$(summary reports/ui-cyclomatic.txt)"
             row "Page Contract Checks" "$(tail -1 reports/contracts.txt 2>/dev/null || echo '⚠️ missing')"
-            row "Speakable Button Contracts" "$(grep -E '[0-9]+ failed' reports/contracts-speakable.txt 2>/dev/null | tail -1 || grep -E '[0-9]+ passed' reports/contracts-speakable.txt 2>/dev/null | tail -1 || echo '⚠️ missing')"
+            SPEAKABLE=$(sed 's/\x1b\[[0-9;]*[A-Za-z]//g' reports/contracts-speakable.txt 2>/dev/null)
+            row "Speakable Button Contracts" "$(echo "$SPEAKABLE" | grep -E '[0-9]+ failed' | tail -1 || echo "$SPEAKABLE" | grep -E '[0-9]+ passed' | tail -1 || echo '⚠️ missing')"
           } > combined.md
 
       - name: Find existing CI report comment
