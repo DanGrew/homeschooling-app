@@ -26,8 +26,10 @@ function subdirs(dir) {
   const filesDir = path.join(ROOT, 'app/activities/puzzle/files');
   const manifest = readJSON(manifestPath);
   if (!manifest) { violations.push('puzzle manifest.json — invalid JSON'); return; }
+  const manifestIds = new Set();
   manifest.forEach(entry => {
     scanned++;
+    manifestIds.add(entry.id);
     const dir = path.join(filesDir, entry.id);
     if (!exists(dir)) {
       violations.push(`puzzle/${entry.id} — directory missing`);
@@ -35,6 +37,12 @@ function subdirs(dir) {
     }
     if (!exists(path.join(dir, 'full.jpg'))) {
       violations.push(`puzzle/${entry.id} — full.jpg missing`);
+    }
+  });
+  subdirs(filesDir).forEach(id => {
+    if (!manifestIds.has(id) && exists(path.join(filesDir, id, 'full.jpg'))) {
+      scanned++;
+      violations.push(`puzzle/${id} — full.jpg present but not in manifest`);
     }
   });
 })();
