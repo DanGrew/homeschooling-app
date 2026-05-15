@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Clocks — What Time Is It?</title>
-<link rel="stylesheet" href="../../shared/theme.css">
-<link rel="stylesheet" href="../../shared/style.css">
-<link rel="stylesheet" href="../../shared/speakable.css">
-<script src="../../shared/menu.js" defer></script>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<script src="../../../components/menu.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 #sky-area{flex:1;min-height:0;display:flex;flex-direction:row;overflow:hidden;background:linear-gradient(to bottom,#78909C,#CFD8DC);}
@@ -64,9 +64,9 @@ import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
 import {renderChoices} from '../../../ui/clock/choice-ui.js';
-import {makeSpeakable, makeInteractive} from '../../../ui/speech/speakable.js';
-import {speak} from '../../../ui/speech/speech-ui.js';
-import {showBanner, hideBanner} from '../../../ui/shared/success-banner.js';
+import {makeSpeakable, makeInteractive} from '../../../components/speech/speakable.js';
+import {speak} from '../../../components/speech/speech-ui.js';
+import {showBanner, hideBanner} from '../../../components/success-banner.js';
 
 var currentHour = 0;
 var totalDeg = 0;

@@ -1,6 +1,6 @@
-import {makeSpeakable} from '../speech/speakable.js';
+import {makeSpeakable} from '../../components/speech/speakable.js';
 import {buildRound} from '../../core/word-match/word-match-core.js';
-import {showBanner, hideBanner} from '../shared/success-banner.js';
+import {showBanner, hideBanner} from '../../components/success-banner.js';
 
 var current,locked;
 

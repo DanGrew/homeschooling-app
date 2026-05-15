@@ -7,7 +7,7 @@ describe('success-banner', () => {
   beforeEach(async () => {
     vi.resetModules();
     document.body.innerHTML = '';
-    var mod = await import('../../ui/shared/success-banner.js');
+    var mod = await import('../../components/success-banner.js');
     showBanner = mod.showBanner;
     hideBanner = mod.hideBanner;
   });

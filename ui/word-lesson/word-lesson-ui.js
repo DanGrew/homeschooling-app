@@ -1,8 +1,8 @@
 import { validWord, charFile, extractWordTags, filterWordsByTag, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
-import { speak, stop } from '../speech/speech-ui.js';
-import { showBanner as _showBanner, hideBanner as _hideBanner } from '../shared/success-banner.js';
-import { buildSimpleFilterBar } from '../filter-bar/filter-bar-ui.js';
-import { createPaginator } from '../pagination/paginator-ui.js';
+import { speak, stop } from '../../components/speech/speech-ui.js';
+import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
+import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
+import { createPaginator } from '../../components/pagination/paginator-ui.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
 const DICT_BASE = '../../dictionary/';

@@ -8,7 +8,7 @@ export function filterListItems(fn){listItems=listItems.filter(fn);}
 
 import { flattenCatalogs, escHtml, byName } from '../../core/shopping/shopping-core.js';
 export { flattenCatalogs, escHtml, byName };
-import { showBanner, hideBanner } from '../shared/success-banner.js';
+import { showBanner, hideBanner } from '../../components/success-banner.js';
 
 export function renderTiles(items=allItems){
   var wrap=document.getElementById('tiles');

@@ -1,0 +1,9 @@
+{
+  "activity": "number-interaction",
+  "prompts": [
+    { "type": "word", "text": "Words to use throughout: 'altogether', 'total', 'more than', 'fewer than', 'equal'. Model them naturally: 'Group A has 3 and group B has 2 — altogether that's 5.'" },
+    { "type": "say",  "text": "Name the + and − action each time: 'You added one more — now there are four. One more than three is four.' This builds one-more/one-less language in a concrete context." },
+    { "type": "ask",  "text": "Core question to return to: 'Which group has more? How do you know?' — pushes beyond guessing to reasoning about quantity." },
+    { "type": "ask",  "text": "Challenge: 'Can you make both groups equal — the same amount in each? What's the total when they match?'" }
+  ]
+}

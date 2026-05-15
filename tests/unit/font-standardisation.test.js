@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
 
 const APP_DIR = join(process.cwd(), 'app');
-const THEME_CSS = join(APP_DIR, 'shared', 'theme.css');
+const THEME_CSS = join(process.cwd(), 'styles', 'theme.css');
 
 function findFiles(dir, ext) {
   const results = [];
@@ -39,7 +39,7 @@ describe('font standardisation', () => {
     '%s links theme.css',
     (rel) => {
       const html = readFileSync(join(process.cwd(), rel), 'utf8');
-      expect(html).toMatch(/href="[^"]*shared\/theme\.css"/);
+      expect(html).toMatch(/href="[^"]*styles\/theme\.css"/);
     }
   );
 

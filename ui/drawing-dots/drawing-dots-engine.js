@@ -1,6 +1,6 @@
 import { edgeKey, buildAdj, computeR, tapResult, formatTitle, getDotStyleIndex, isDotDone, getInstruction } from '../../core/drawing-dots/drawing-dots-core.js';
-import { buildFilterBar } from '../filter-bar/filter-bar-ui.js';
-import { showBanner, hideBanner } from '../shared/success-banner.js';
+import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
+import { showBanner, hideBanner } from '../../components/success-banner.js';
 
 var shapeIdx = 0, selectedDot = null, completedEdges, adj, complete, filtered = [];
 

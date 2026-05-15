@@ -1,4 +1,4 @@
-import { buildFilterBar } from '../filter-bar/filter-bar-ui.js';
+import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { flattenCatalogs, escHtml, byName, setAllItems, getListItems, resetListItems, filterListItems, renderTiles, renderList, hidePhase1, showPhase1, showSuccess, startFindPhase } from '../shopping/shopping-ui.js';
 
 var AudioCtx = [window.AudioContext, window.webkitAudioContext].filter(Boolean)[0];

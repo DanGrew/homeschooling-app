@@ -1,0 +1,9 @@
+{
+  "activity": "simulator",
+  "prompts": [
+    { "type": "word", "text": "Vocabulary to introduce before starting: pot, seeds, trowel, soil, water, shoot, roots, harvest. Point to each one when it appears: 'That's the trowel — it's for digging soil.' Name as you go." },
+    { "type": "say",  "text": "Model sequencing language throughout: 'first', 'then', 'next', 'finally'. 'First we pot the seeds. Then we water them.' The child should hear this structure and begin to use it." },
+    { "type": "ask",  "text": "Central question to return to: 'What does a plant need to grow?' Ask before starting and revisit at each stage. 'We just gave it water — why do you think it needs that?'" },
+    { "type": "ask",  "text": "Wonder prompts to drop in naturally: 'I wonder what happens if we pick the wrong tool?' and 'What do you think comes next?' — invites prediction before each stage reveals." }
+  ]
+}

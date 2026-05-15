@@ -1,4 +1,4 @@
-import { makeLongPress } from '../shared/long-press.js';
+import { makeLongPress } from '../../ui/shared/long-press.js';
 
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
 var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };

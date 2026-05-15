@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { resolveVoice } from '../../ui/speech/voice-service.js';
+import { resolveVoice } from '../../components/speech/voice-service.js';
 
 var enGB  = { lang: 'en-GB', name: 'Karen', localService: true };
 var enUS  = { lang: 'en-US', name: 'Alex',  localService: true };
