@@ -1,10 +1,13 @@
 import { activeIndex } from '../../core/story-time/story-time-core.js';
 import { speak } from '../../components/speech/speech-ui.js';
+import '../../components/speech/speakable.js';
 
 (function () {
   var storyId = new URLSearchParams(window.location.search).get('story') || 'david-and-goliath';
   var LESSON = LESSONS[storyId] || LESSONS['david-and-goliath'];
-  document.getElementById('story-title').textContent = LESSON.title;
+  var titleEl = document.querySelector('.activity-title');
+  if (titleEl) titleEl.textContent = LESSON.title;
+  document.querySelector('.nav-bar').dataset.title = LESSON.title;
   document.getElementById('words').textContent = 'Loading\u2026';
 
   Promise.all(LESSON.clips.map(function (clipId) {

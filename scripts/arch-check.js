@@ -257,8 +257,8 @@ if (rule === 'no-css-outside-styles') {
 }
 
 if (rule === 'no-md-outside-docs') {
-  const ALLOWED_ROOT_FILES = new Set(['README.md', 'TESTING.md', 'CLAUDE.md', 'ARCHITECTURE.md', 'TESTING-GAPS.md', 'LICENCE', 'LICENSE']);
-  const EXCLUDED_DIRS = new Set(['node_modules', 'docs', 'coverage', 'reports', '.claude', '.github', '.githooks']);
+  const ALLOWED_ROOT_FILES = new Set(['README.md', 'TESTING.md', 'CLAUDE.md', 'ARCHITECTURE.md', 'TESTING-GAPS.md', 'LICENCE', 'LICENSE', 'CONTRACT-VIOLATIONS.md']);
+  const EXCLUDED_DIRS = new Set(['node_modules', 'docs', 'coverage', 'reports', '.claude', '.github', '.githooks', 'test-results']);
   function walkMd(dir, depth) {
     if (!fs.existsSync(dir)) return;
     fs.readdirSync(dir, { withFileTypes: true }).forEach(entry => {
