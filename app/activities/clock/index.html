@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="../../../styles/style.css">
 <link rel="stylesheet" href="../../../styles/speakable.css">
 <script>
-  window.DICT_BASE = '../../dictionary/entries/';
+  window.DICT_BASE = '../../../content/dictionary/entries/';
   window.LESSONS = [
     {id:'count_the_clock',  number:1, title:'Count the Clock'},
     {id:'find_the_number',  number:2, title:'Find the Number'},
@@ -123,7 +123,7 @@ function pressPreset(preset) {
   emit('PRESET_' + preset.label.toUpperCase() + '_SELECTED');
 }
 
-fetch('../../../assets/clock/presets.json')
+fetch('../../../content/clock/presets.json')
   .then(function(r) { return r.json(); })
   .then(function(presets) {
     var btns = document.getElementById('preset-buttons');

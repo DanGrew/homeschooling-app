@@ -38,10 +38,12 @@ const untested = coreFiles.filter(f => {
 
 if (untested.length === 0) {
   console.log('check:untested — all core files referenced in unit tests.');
+  console.log(`\nSUMMARY: ✅ 0 / ${coreFiles.length} files`);
   process.exit(0);
 }
 
 console.log(`check:untested — ${untested.length} core file(s) with no unit test coverage:\n`);
 untested.forEach(f => console.log(`  ${f}`));
 console.log('\nAdd unit tests for each file listed above.');
+console.log(`\nSUMMARY: ❌ ${untested.length} / ${coreFiles.length} files`);
 process.exit(1);

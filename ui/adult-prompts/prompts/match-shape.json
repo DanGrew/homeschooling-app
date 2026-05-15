@@ -1,9 +1,0 @@
-{
-  "activity": "match-shape",
-  "prompts": [
-    { "type": "word", "text": "Shape vocabulary: triangle (3 sides, 3 corners), square (4 equal sides, 4 corners), rectangle (2 long, 2 short sides), circle (round, no corners), star, heart. Describe before naming each one." },
-    { "type": "say",  "text": "Frame the challenge: 'All the shapes are the same colour, so colour won't help here — we have to look at the shape itself. Count the sides and corners.' Say this once before starting." },
-    { "type": "ask",  "text": "Core question before each round: 'How many sides does it have? Any corners?' — gets them describing before guessing." },
-    { "type": "ask",  "text": "Real-world extension: 'Where can we find a [shape] near us? Look around the room.' — moves shape recognition into the environment." }
-  ]
-}

@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 const { PIANO_CONFIG } = require('../../core/piano/piano-core.js');
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SONGS_DIR = resolve(__dirname, '../../assets/audio/songs');
+const SONGS_DIR = resolve(__dirname, '../../content/audio/songs');
 
 function loadJson(file) {
   return JSON.parse(readFileSync(resolve(SONGS_DIR, file), 'utf8'));

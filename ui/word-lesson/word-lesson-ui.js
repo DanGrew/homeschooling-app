@@ -5,7 +5,9 @@ import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
-const DICT_BASE = '../../dictionary/';
+const DICT_BASE = (typeof window !== 'undefined' && window.DICT_BASE)
+  ? window.DICT_BASE.replace(/entries\/$/, '')
+  : '../../dictionary/';
 const NS = 'http://www.w3.org/2000/svg';
 
 var words = [];

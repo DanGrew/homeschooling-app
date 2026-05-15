@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dictDir = path.join(__dirname, '..', 'app/dictionary');
+const dictDir = path.join(__dirname, '..', 'content/dictionary');
 const entriesDir = path.join(dictDir, 'entries');
 const manifestsDir = path.join(dictDir, 'manifests');
 
@@ -34,7 +34,29 @@ Object.keys(groups).forEach(function(key) {
   console.log(key + ': ' + groups[key].length + ' entries');
 });
 
-console.log('Manifests written to app/dictionary/manifests/');
+console.log('Manifests written to content/dictionary/manifests/');
+
+// puzzle — manifest is hand-maintained (name/grids need human input)
+// warn about any puzzle dirs with full.jpg not registered in the manifest
+const puzzleManifestPath = path.join(__dirname, '..', 'content/puzzle/manifest.json');
+const puzzleFilesDir = path.join(__dirname, '..', 'app/activities/puzzle/files');
+const puzzleManifest = fs.existsSync(puzzleManifestPath)
+  ? JSON.parse(fs.readFileSync(puzzleManifestPath, 'utf8'))
+  : [];
+const registeredIds = new Set(puzzleManifest.map(e => e.id));
+const orphans = fs.existsSync(puzzleFilesDir)
+  ? fs.readdirSync(puzzleFilesDir).filter(d =>
+      fs.statSync(path.join(puzzleFilesDir, d)).isDirectory() &&
+      fs.existsSync(path.join(puzzleFilesDir, d, 'full.jpg')) &&
+      !registeredIds.has(d)
+    )
+  : [];
+if (orphans.length) {
+  console.warn('⚠️  Puzzle dirs with full.jpg not in manifest — add to content/puzzle/manifest.json:');
+  orphans.forEach(id => console.warn('   ' + id));
+} else {
+  console.log('content/puzzle/manifest.json: all puzzle dirs registered');
+}
 
 var lessonsDir = path.join(__dirname, '..', 'content/lessons');
 var lessonIndex = fs.readdirSync(lessonsDir)

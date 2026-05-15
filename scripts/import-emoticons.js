@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const srcDir = 'C:\\Users\\danie\\Documents\\dan-grew-repos\\homeschooling\\scripts\\vecteezy_cute-emoticons-faces-feeling-vector-set-for-social-media_6664262_split';
-const entriesDir = path.join(__dirname, '..', 'app/dictionary/entries');
+const entriesDir = path.join(__dirname, '..', 'content/dictionary/entries');
 
 const attribution = {
   text: 'Emoticons Vectors by Vecteezy',

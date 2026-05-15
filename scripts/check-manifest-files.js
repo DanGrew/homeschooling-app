@@ -22,12 +22,14 @@ function subdirs(dir) {
 
 // --- puzzle ---
 (function checkPuzzle() {
-  const manifestPath = path.join(ROOT, 'app/activities/puzzle/manifest.json');
+  const manifestPath = path.join(ROOT, 'content/puzzle/manifest.json');
   const filesDir = path.join(ROOT, 'app/activities/puzzle/files');
   const manifest = readJSON(manifestPath);
   if (!manifest) { violations.push('puzzle manifest.json — invalid JSON'); return; }
+  const manifestIds = new Set();
   manifest.forEach(entry => {
     scanned++;
+    manifestIds.add(entry.id);
     const dir = path.join(filesDir, entry.id);
     if (!exists(dir)) {
       violations.push(`puzzle/${entry.id} — directory missing`);
@@ -37,24 +39,32 @@ function subdirs(dir) {
       violations.push(`puzzle/${entry.id} — full.jpg missing`);
     }
   });
+  subdirs(filesDir).forEach(id => {
+    if (!manifestIds.has(id) && exists(path.join(filesDir, id, 'full.jpg'))) {
+      scanned++;
+      violations.push(`puzzle/${id} — full.jpg present but not in manifest`);
+    }
+  });
 })();
 
 // --- story-time ---
 (function checkStoryTime() {
-  const storyRoot = path.join(ROOT, 'app/activities/story-time');
-  subdirs(storyRoot).forEach(story => {
-    const audioDir = path.join(storyRoot, story, 'audio');
-    if (!exists(audioDir)) {
+  const jsonRoot = path.join(ROOT, 'content/story-time');
+  const audioRoot = path.join(ROOT, 'app/activities/story-time');
+  subdirs(jsonRoot).forEach(story => {
+    const jsonAudioDir = path.join(jsonRoot, story, 'audio');
+    const mp3AudioDir = path.join(audioRoot, story, 'audio');
+    if (!exists(jsonAudioDir)) {
       scanned++;
-      violations.push(`story-time/${story} — audio/ directory missing`);
+      violations.push(`story-time/${story} — content/story-time audio/ directory missing`);
       return;
     }
-    const jsonFiles = fs.readdirSync(audioDir).filter(f => f.endsWith('.json'));
+    const jsonFiles = fs.readdirSync(jsonAudioDir).filter(f => f.endsWith('.json'));
     jsonFiles.forEach(jsonFile => {
       scanned++;
-      const jsonPath = path.join(audioDir, jsonFile);
+      const jsonPath = path.join(jsonAudioDir, jsonFile);
       const mp3 = jsonFile.replace('.json', '.mp3');
-      const mp3Path = path.join(audioDir, mp3);
+      const mp3Path = path.join(mp3AudioDir, mp3);
       if (!readJSON(jsonPath)) {
         violations.push(`story-time/${story}/audio/${jsonFile} — invalid JSON`);
       }
@@ -67,7 +77,7 @@ function subdirs(dir) {
 
 // --- simulator ---
 (function checkSimulator() {
-  const simsDir = path.join(ROOT, 'app/activities/simulator/sims');
+  const simsDir = path.join(ROOT, 'content/simulator/sims');
   const spritesDir = path.join(ROOT, 'app/activities/simulator/sprites');
   if (!exists(spritesDir)) {
     violations.push('simulator — sprites/ directory missing');
@@ -91,6 +101,9 @@ if (violations.length === 0) {
   output += `❌ Violations (scanned ${scanned} entries):\n`;
   violations.forEach(v => output += `- ${v}\n`);
 }
+
+const manifestOk = violations.length === 0 && scanned > 0;
+output += `\nSUMMARY: ${manifestOk ? '✅' : '❌'} ${violations.length} / ${scanned} entries\n`;
 
 fs.writeFileSync(outputFile, output);
 console.log(output);

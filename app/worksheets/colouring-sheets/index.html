@@ -123,7 +123,7 @@ function removeImage(idx){
   ({'true':function(){},'false':function(){document.getElementById('empty-msg').style.display='';}})[String(!!sheet.querySelector('.worksheet-item'))]();
 }
 
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 loadColouringPictures(pictures,function(){
   pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
   buildFilterBar(pictures,function(filtered){buildPanel(filtered);});

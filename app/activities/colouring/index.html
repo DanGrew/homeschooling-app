@@ -67,7 +67,7 @@ paginator=createPaginator({
   onRender: function(pic){ renderPicture(pic); }
 });
 
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 loadColouringPictures(pictures,function(){
   buildFilterBar(pictures,function(f){paginator.reset(f);});
 },function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
