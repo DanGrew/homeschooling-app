@@ -76,7 +76,7 @@ function initChooser(puzzles) {
   puzzles.forEach(p => {
     const card = document.createElement('div');
     card.className = 'puzzle-card';
-    card.innerHTML = `<img src="files/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
+    card.innerHTML = `<img src="../../../assets/puzzle/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
     card.addEventListener('click', () => selectPuzzle(p, card, picker, btnsEl));
     cardsEl.appendChild(card);
   });

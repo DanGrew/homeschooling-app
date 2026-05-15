@@ -9,7 +9,7 @@
     "width": 560,
     "height": 700,
     "bg_color": "#f8f4ee",
-    "sprites_path": "sprites/"
+    "sprites_path": "../../../assets/simulator/grow/"
   },
   "toolbar": [
     { "id": "tool_pot",    "sprite": "empty-pot.png" },

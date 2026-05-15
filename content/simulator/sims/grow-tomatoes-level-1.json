@@ -9,7 +9,7 @@
     "background": "garden",
     "width": 360,
     "height": 700,
-    "sprites_path": "sprites/"
+    "sprites_path": "../../../assets/simulator/grow/"
   },
   "objects": [
     {

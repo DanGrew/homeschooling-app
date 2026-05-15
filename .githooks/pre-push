@@ -13,13 +13,17 @@ node scripts/arch-check.js no-stray-files        "$TMPDIR_HOOK/no-stray.txt"    
 node scripts/arch-check.js no-app-exports        "$TMPDIR_HOOK/no-app-exports.txt" || fail "no-app-exports"
 node scripts/arch-check.js no-guard-chain        "$TMPDIR_HOOK/no-guard.txt"       || fail "no-guard-chain"
 node scripts/arch-check.js no-filter-conditional "$TMPDIR_HOOK/no-filter.txt"      || fail "no-filter-conditional"
+node scripts/arch-check.js app-index-only        "$TMPDIR_HOOK/app-index.txt"      || fail "app-index-only"
+node scripts/arch-check.js no-media-outside-assets "$TMPDIR_HOOK/no-media.txt"     || fail "no-media-outside-assets"
+node scripts/arch-check.js no-css-outside-styles "$TMPDIR_HOOK/no-css.txt"         || fail "no-css-outside-styles"
+node scripts/arch-check.js no-md-outside-docs    "$TMPDIR_HOOK/no-md.txt"          || fail "no-md-outside-docs"
 
 echo "[pre-push] manifest check..."
 node scripts/check-manifest-files.js "$TMPDIR_HOOK/manifests.txt" || fail "check-manifest-files"
 
 echo "[pre-push] manifests up to date..."
 node scripts/generate-manifests.js
-git diff --exit-code app/dictionary/manifests/ || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
+git diff --exit-code content/dictionary/manifests/ content/lessons/index.json || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
 
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"

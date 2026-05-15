@@ -39,7 +39,7 @@ console.log('Manifests written to content/dictionary/manifests/');
 // puzzle — manifest is hand-maintained (name/grids need human input)
 // warn about any puzzle dirs with full.jpg not registered in the manifest
 const puzzleManifestPath = path.join(__dirname, '..', 'content/puzzle/manifest.json');
-const puzzleFilesDir = path.join(__dirname, '..', 'app/activities/puzzle/files');
+const puzzleFilesDir = path.join(__dirname, '..', 'assets/puzzle');
 const puzzleManifest = fs.existsSync(puzzleManifestPath)
   ? JSON.parse(fs.readFileSync(puzzleManifestPath, 'utf8'))
   : [];
