@@ -8,7 +8,7 @@
     "width": 680,
     "height": 680,
     "bg_color": "#f5f0ff",
-    "sprites_path": "sprites/potty/"
+    "sprites_path": "../../../assets/simulator/potty/"
   },
   "objects": [
     { "id": "bg_living",           "sprite": "bg-living-room.png",       "x": 0,   "y": 0,   "w": 680, "h": 680, "fit": "cover"              },

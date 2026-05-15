@@ -23,7 +23,7 @@ function subdirs(dir) {
 // --- puzzle ---
 (function checkPuzzle() {
   const manifestPath = path.join(ROOT, 'content/puzzle/manifest.json');
-  const filesDir = path.join(ROOT, 'app/activities/puzzle/files');
+  const filesDir = path.join(ROOT, 'assets/puzzle');
   const manifest = readJSON(manifestPath);
   if (!manifest) { violations.push('puzzle manifest.json — invalid JSON'); return; }
   const manifestIds = new Set();
@@ -50,7 +50,7 @@ function subdirs(dir) {
 // --- story-time ---
 (function checkStoryTime() {
   const jsonRoot = path.join(ROOT, 'content/story-time');
-  const audioRoot = path.join(ROOT, 'app/activities/story-time');
+  const audioRoot = path.join(ROOT, 'assets/story-time');
   subdirs(jsonRoot).forEach(story => {
     const jsonAudioDir = path.join(jsonRoot, story, 'audio');
     const mp3AudioDir = path.join(audioRoot, story, 'audio');
@@ -78,7 +78,7 @@ function subdirs(dir) {
 // --- simulator ---
 (function checkSimulator() {
   const simsDir = path.join(ROOT, 'content/simulator/sims');
-  const spritesDir = path.join(ROOT, 'app/activities/simulator/sprites');
+  const spritesDir = path.join(ROOT, 'assets/simulator');
   if (!exists(spritesDir)) {
     violations.push('simulator — sprites/ directory missing');
   }

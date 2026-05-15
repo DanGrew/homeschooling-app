@@ -198,6 +198,87 @@ if (rule === 'no-json-in-repo') {
   walkJson(ROOT);
 }
 
+if (rule === 'app-index-only') {
+  const appDir = path.join(ROOT, 'app');
+  function walkApp(dir) {
+    if (!fs.existsSync(dir)) return;
+    fs.readdirSync(dir).forEach(entry => {
+      const full = path.join(dir, entry);
+      if (fs.statSync(full).isDirectory()) { walkApp(full); return; }
+      const rel = path.relative(ROOT, full).replace(/\\/g, '/');
+      scanned.push(rel);
+      if (path.extname(full).toLowerCase() !== '.html') {
+        violations.push(`${rel} — app/ must contain only HTML pages (no JS/CSS/media)`);
+      }
+    });
+  }
+  walkApp(appDir);
+}
+
+if (rule === 'no-media-outside-assets') {
+  const MEDIA_EXT = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.mp3', '.mp4', '.wav', '.ogg']);
+  const EXCLUDED = new Set(['node_modules', 'assets', 'content', 'coverage', 'reports', 'test-results', '.claude', '.github', '.githooks']);
+  function walkMedia(dir) {
+    if (!fs.existsSync(dir)) return;
+    fs.readdirSync(dir, { withFileTypes: true }).forEach(entry => {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!EXCLUDED.has(entry.name)) walkMedia(full);
+        return;
+      }
+      if (MEDIA_EXT.has(path.extname(entry.name).toLowerCase())) {
+        const rel = path.relative(ROOT, full).replace(/\\/g, '/');
+        scanned.push(rel);
+        violations.push(`${rel} — media files must live under assets/`);
+      }
+    });
+  }
+  walkMedia(ROOT);
+}
+
+if (rule === 'no-css-outside-styles') {
+  const EXCLUDED = new Set(['node_modules', 'styles', 'coverage', 'reports', '.claude', '.github', '.githooks']);
+  function walkCss(dir) {
+    if (!fs.existsSync(dir)) return;
+    fs.readdirSync(dir, { withFileTypes: true }).forEach(entry => {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!EXCLUDED.has(entry.name)) walkCss(full);
+        return;
+      }
+      if (path.extname(entry.name) === '.css') {
+        const rel = path.relative(ROOT, full).replace(/\\/g, '/');
+        scanned.push(rel);
+        violations.push(`${rel} — CSS files must live under styles/`);
+      }
+    });
+  }
+  walkCss(ROOT);
+}
+
+if (rule === 'no-md-outside-docs') {
+  const ALLOWED_ROOT_FILES = new Set(['README.md', 'TESTING.md', 'CLAUDE.md', 'ARCHITECTURE.md', 'TESTING-GAPS.md', 'LICENCE', 'LICENSE']);
+  const EXCLUDED_DIRS = new Set(['node_modules', 'docs', 'coverage', 'reports', '.claude', '.github', '.githooks']);
+  function walkMd(dir, depth) {
+    if (!fs.existsSync(dir)) return;
+    fs.readdirSync(dir, { withFileTypes: true }).forEach(entry => {
+      const full = path.join(dir, entry.name);
+      const rel = path.relative(ROOT, full).replace(/\\/g, '/');
+      if (entry.isDirectory()) {
+        if (!EXCLUDED_DIRS.has(entry.name)) walkMd(full, depth + 1);
+        return;
+      }
+      const ext = path.extname(entry.name).toLowerCase();
+      if (ext === '.md' || ext === '.txt') {
+        if (depth === 0 && ALLOWED_ROOT_FILES.has(entry.name)) { exceptions.push(rel); return; }
+        scanned.push(rel);
+        violations.push(`${rel} — .md/.txt files must live under docs/`);
+      }
+    });
+  }
+  walkMd(ROOT, 0);
+}
+
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {
