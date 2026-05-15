@@ -23,7 +23,7 @@ node scripts/check-manifest-files.js "$TMPDIR_HOOK/manifests.txt" || fail "check
 
 echo "[pre-push] manifests up to date..."
 node scripts/generate-manifests.js
-git diff --exit-code app/dictionary/manifests/ || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
+git diff --exit-code content/dictionary/manifests/ content/lessons/index.json || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
 
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"
