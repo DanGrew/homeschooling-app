@@ -177,6 +177,54 @@ jobs:
           name: report-no-json-in-repo
           path: reports/no-json-in-repo.txt
 
+  app-index-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js app-index-only reports/app-index-only.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-app-index-only
+          path: reports/app-index-only.txt
+
+  no-media-outside-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-media-outside-assets reports/no-media-outside-assets.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-media-outside-assets
+          path: reports/no-media-outside-assets.txt
+
+  no-css-outside-styles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-css-outside-styles reports/no-css-outside-styles.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-css-outside-styles
+          path: reports/no-css-outside-styles.txt
+
+  no-md-outside-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-md-outside-docs reports/no-md-outside-docs.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-md-outside-docs
+          path: reports/no-md-outside-docs.txt
+
   no-guard-chain:
     runs-on: ubuntu-latest
     steps:
@@ -293,6 +341,10 @@ jobs:
       - no-stray-files
       - no-app-exports
       - no-json-in-repo
+      - app-index-only
+      - no-media-outside-assets
+      - no-css-outside-styles
+      - no-md-outside-docs
       - no-guard-chain
       - no-filter-conditional
       - check-manifest-files
@@ -326,6 +378,10 @@ jobs:
             row "no-stray-files" "$(smry reports/no-stray-files.txt)"
             row "no-app-exports" "$(smry reports/no-app-exports.txt)"
             row "no-json-in-repo" "$(smry reports/no-json-in-repo.txt)"
+            row "app-index-only" "$(smry reports/app-index-only.txt)"
+            row "no-media-outside-assets" "$(smry reports/no-media-outside-assets.txt)"
+            row "no-css-outside-styles" "$(smry reports/no-css-outside-styles.txt)"
+            row "no-md-outside-docs" "$(smry reports/no-md-outside-docs.txt)"
             row "no-guard-chain" "$(smry reports/no-guard-chain.txt)"
             row "no-filter-conditional" "$(smry reports/no-filter-conditional.txt)"
             row "manifest files" "$(smry reports/check-manifest-files.txt)"
