@@ -280,7 +280,6 @@ jobs:
 
   check-contracts:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -293,7 +292,6 @@ jobs:
           mkdir -p reports
           node scripts/contracts/run.js 2>&1 | tee reports/contracts.txt
           exit ${PIPESTATUS[0]}
-        continue-on-error: true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -302,7 +300,6 @@ jobs:
 
   contracts-speakable:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -321,7 +318,6 @@ jobs:
           mkdir -p reports
           npx playwright test --config playwright.contracts.config.js --reporter=line 2>&1 | tee reports/contracts-speakable.txt
           exit ${PIPESTATUS[0]}
-        continue-on-error: true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
