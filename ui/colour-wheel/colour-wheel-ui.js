@@ -1,5 +1,5 @@
-import { makeSpeakable, makeInteractive } from '../speech/speakable.js';
-import { speak } from '../speech/speech-ui.js';
+import { makeSpeakable, makeInteractive } from '../../components/speech/speakable.js';
+import { speak } from '../../components/speech/speech-ui.js';
 
 var LSN_COLOURS={
   red:            {hex:'#E74C3C',label:'Red'},

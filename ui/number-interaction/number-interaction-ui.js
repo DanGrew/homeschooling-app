@@ -1,6 +1,6 @@
-import { speak } from '../speech/speech-ui.js';
-import { getVoice } from '../speech/voice-service.js';
-import { makeInteractive } from '../speech/speakable.js';
+import { speak } from '../../components/speech/speech-ui.js';
+import { getVoice } from '../../components/speech/voice-service.js';
+import { makeInteractive } from '../../components/speech/speakable.js';
 import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
 
 var SIDE_EVT = { a: 'A', b: 'B' };
