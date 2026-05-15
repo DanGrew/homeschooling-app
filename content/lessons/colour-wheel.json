@@ -1,5 +1,6 @@
 {
   "activity": "colour-wheel",
+  "label": "Colour Wheel",
   "lessons": [
     {
       "id": "make_orange",

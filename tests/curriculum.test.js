@@ -59,7 +59,7 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads lesson rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(24)
+  await expect(rows).toHaveCount(29)
 })
 
 test('rows are sorted by activity then lesson title', async ({ page }) => {
@@ -96,7 +96,7 @@ test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
   await page.locator('.coverage thead th').nth(0).click()
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('Warm Colours')
+  await expect(firstLesson).toHaveText('Wild Animals')
 })
 
 test('sorted column shows direction indicator', async ({ page }) => {

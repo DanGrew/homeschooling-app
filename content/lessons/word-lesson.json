@@ -1,5 +1,6 @@
 {
   "activity": "word-lesson",
+  "label": "Trace Words",
   "lessons": [
     {
       "id": "farm_animals",
