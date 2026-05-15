@@ -94,7 +94,8 @@ if (violations.length === 0) {
   violations.forEach(v => output += `- ${v}\n`);
 }
 
-output += `\nSUMMARY: ${violations.length === 0 ? '✅' : '❌'} ${violations.length} / ${scanned} entries\n`;
+const manifestOk = violations.length === 0 && scanned > 0;
+output += `\nSUMMARY: ${manifestOk ? '✅' : '❌'} ${violations.length} / ${scanned} entries\n`;
 
 fs.writeFileSync(outputFile, output);
 console.log(output);
