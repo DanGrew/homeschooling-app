@@ -85,7 +85,7 @@
   wrap.addEventListener('pointerleave', resetPress);
   wrap.addEventListener('pointercancel', resetPress);
 
-  var CONTENT_BASE = '/homeschooling-app/content/adult-prompts/';
+  var CONTENT_BASE = window.location.pathname.replace(/\/app\/.*$/, '/') + 'content/adult-prompts/';
 
   [activity].filter(Boolean).forEach(function (act) {
     fetch(CONTENT_BASE + act + '.json')
