@@ -109,6 +109,20 @@ function showTagMode(tag) {
   paginator.enable();
 }
 
+function showLessonWords(l) {
+  var lessonWords = [].concat(l.words).map(function(w) {
+    return words.find(function(e) { return e.word === w; });
+  }).filter(Boolean);
+  isCustom = false;
+  document.getElementById('custom-input').style.display = 'none';
+  filtered = lessonWords;
+  paginator.reset(filtered);
+  paginator.enable();
+}
+
+var LESSON_FILTER_HANDLER = { 'true': showTagMode, 'false': function() {} };
+var GUIDANCE_START_HANDLER = { 'true': showLessonWords, 'false': function(l) { LESSON_FILTER_HANDLER[String(!!l.filter)](l.filter); } };
+
 var FILTER_HANDLERS = { 'true': showCustomMode, 'false': showTagMode };
 
 function onFilterClick(tag) {
@@ -395,8 +409,7 @@ export function init() {
     [window.guidanceService].filter(Boolean)
       .map(function(s) { return s._lesson; })
       .filter(Boolean)
-      .filter(function(l) { return l.filter; })
-      .forEach(function(l) { showTagMode(l.filter); });
+      .forEach(function(l) { GUIDANCE_START_HANDLER[String(!!l.words)](l); });
   });
   window.addEventListener('guidance:stop', function() {
     showTagMode('all');

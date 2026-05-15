@@ -6,6 +6,7 @@
       "number": 1,
       "title": "Farm Animals",
       "guide": "dog",
+      "filter": "animals",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.animals-nature"],
       "steps": [
         { "text": "Let's visit the farm! Farms are home to lots of animals. Find the cow and tap it!", "expect": "COW_SPOKEN", "feedback": "Moo! Cows give us milk. Now find the horse!" },
@@ -20,6 +21,7 @@
       "number": 2,
       "title": "Safari Animals",
       "guide": "cat",
+      "filter": "animals",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.animals-nature", "uw.world-awareness"],
       "steps": [
         { "text": "Let's go on safari! These animals live far away in hot countries. Find the lion!", "expect": "LION_SPOKEN", "feedback": "Roar! The lion is called the king of the jungle. Now find the elephant!" },
@@ -34,6 +36,7 @@
       "number": 3,
       "title": "How Are You Feeling?",
       "guide": "cat",
+      "filter": "emotions",
       "criteria": ["cl.feeling-vocabulary", "literacy.word-recognition", "psed.emotion-vocab"],
       "steps": [
         { "text": "Everybody has feelings. Learning the words helps us talk about them. Who looks happy? Find the smiling face!", "expect": "SMILE_SPOKEN", "feedback": "A big smile! What makes you feel happy? Now find sad." },
@@ -48,6 +51,7 @@
       "number": 4,
       "title": "Fruit Shop",
       "guide": "cat",
+      "filter": "fruit",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.community"],
       "steps": [
         { "text": "Welcome to the fruit shop! Fruits grow on plants and trees — they're sweet and full of goodness. Find the apple!", "expect": "APPLE_SPOKEN", "feedback": "Apples grow on trees — they can be red or green! Now find the banana!" },
@@ -62,6 +66,7 @@
       "number": 5,
       "title": "Things That Go",
       "guide": "dog",
+      "filter": "vehicles",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.community"],
       "steps": [
         { "text": "Vroom! These are all vehicles — things we ride or drive to get from place to place. Find the bus!", "expect": "BUS_SPOKEN", "feedback": "Buses carry lots of people at once — everyone sits together! Now find the train!" },
@@ -76,6 +81,7 @@
       "number": 6,
       "title": "Exotic Fruits",
       "guide": "cat",
+      "filter": "fruit",
       "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.world-awareness"],
       "steps": [
         { "text": "Some fruits come from far away in hot countries. These might be new to you! Find the mango!", "expect": "MANGO_SPOKEN", "feedback": "Mangoes are orange inside and very sweet — they grow in hot countries like India. Now find the pineapple!" },
