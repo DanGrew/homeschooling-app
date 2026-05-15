@@ -73,7 +73,7 @@ import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
 import {buildFilterBar} from '../../../components/filter-bar/filter-bar-ui.js';
 import {makeSpeakable} from '../../../components/speech/speakable.js';
 import {createPaginator} from '../../../components/pagination/paginator-ui.js';
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 
 var all=[];
 
@@ -114,7 +114,7 @@ loadImages(all,function(){
 });
 </script>
 <script>
-  window.DICT_BASE='../../dictionary/entries/';
+  window.DICT_BASE='../../../content/dictionary/entries/';
   window.ADULT_PROMPTS_ACTIVITY='say-words';
   window.LESSONS=[
     {id:'farm_animals',number:1,title:'Farm Animals'},
