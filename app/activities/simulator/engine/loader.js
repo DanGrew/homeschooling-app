@@ -1,7 +1,7 @@
 import { SimulatorEngine } from '../../../../ui/simulator/simulator-engine.js';
 
 async function startSim(simId) {
-  const spec = await fetch(`sims/${simId}.json`).then(r => r.json());
+  const spec = await fetch(`../../../content/simulator/sims/${simId}.json`).then(r => r.json());
 
   document.title = spec.simulation.title;
   document.getElementById('sim-title').textContent = spec.simulation.title;

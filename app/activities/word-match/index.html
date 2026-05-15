@@ -21,7 +21,7 @@ import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import {loadImages} from '../../../core/dictionary/dictionary-helpers-core.js';
 import {buildFilterBar} from '../../../components/filter-bar/filter-bar-ui.js';
 import {init,getCurrentTarget,renderRound} from '../../../ui/word-match/word-match-ui.js';
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 var allItems=[],filtered=[];
 window.__wmTarget=function(){return getCurrentTarget();};
 loadImages(allItems,function(){

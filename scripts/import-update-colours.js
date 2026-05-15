@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Reads all JS files from scripts/update-colours/, converts to colouring.json format,
-// and updates app/dictionary/entries/<concept>/colouring.json in-place.
+// and updates content/dictionary/entries/<concept>/colouring.json in-place.
 
 const fs = require('fs');
 const path = require('path');

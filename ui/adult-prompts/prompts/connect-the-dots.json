@@ -1,9 +1,0 @@
-{
-  "activity": "connect-the-dots",
-  "prompts": [
-    { "type": "word", "text": "'Sequence' — things in a fixed order: 1, 2, 3... 'Numeral' — the written symbol for a number. The sequence is the point here — each number leads to the next." },
-    { "type": "say",  "text": "Count forward together as dots are joined, emphasising the order. The goal isn't just reaching the total — it's understanding that numbers have a fixed sequence." },
-    { "type": "ask",  "text": "Before starting: 'What do you think the picture will be? Any clues from the shape of the dots?' — prediction and early spatial reasoning." },
-    { "type": "ask",  "text": "When the picture reveals: 'What shape is it? How many sides? What's it called?' — links numeral ordering to shape vocabulary." }
-  ]
-}

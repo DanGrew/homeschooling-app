@@ -15,7 +15,7 @@ jobs:
         run: node scripts/generate-manifests.js
       - name: Fail if manifests are stale
         run: |
-          if ! git diff --exit-code app/dictionary/manifests/ content/lessons/index.json; then
+          if ! git diff --exit-code content/dictionary/manifests/ content/lessons/index.json; then
             echo "Manifests are out of date. Run 'node generate-manifests.js' and commit the result."
             exit 1
           fi

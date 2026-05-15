@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const generatedDir = path.join(__dirname, 'app/games/colouring/generated');
-const entriesDir = path.join(__dirname, 'app/dictionary/entries');
+const entriesDir = path.join(__dirname, 'content/dictionary/entries');
 
 // Only elephant has connect-the-dots generated data
 var shapes = [];

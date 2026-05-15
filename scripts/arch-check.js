@@ -174,6 +174,30 @@ if (rule === 'no-filter-conditional') {
   });
 }
 
+if (rule === 'no-json-in-repo') {
+  const EXCLUDED_DIRS = new Set(['node_modules', 'content', 'coverage', 'reports', 'test-results']);
+  const ALLOWED_FILES = new Set(['package.json', 'package-lock.json', '.claude/settings.local.json']);
+
+  function walkJson(dir) {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      const rel = path.relative(ROOT, full).replace(/\\/g, '/');
+      if (entry.isDirectory()) {
+        if (!EXCLUDED_DIRS.has(entry.name)) walkJson(full);
+      } else if (entry.name.endsWith('.json')) {
+        if (ALLOWED_FILES.has(rel)) {
+          exceptions.push(rel);
+        } else {
+          scanned.push(rel);
+          violations.push(`${rel} — JSON must live under content/`);
+        }
+      }
+    }
+  }
+  walkJson(ROOT);
+}
+
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {

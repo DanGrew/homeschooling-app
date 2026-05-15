@@ -26,7 +26,7 @@
 import { startEngine } from '../../../ui/drawing-dots/drawing-dots-engine.js';
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadAllDrawingDots } from '../../../core/dictionary/dictionary-helpers-core.js';
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 var shapes=[];
 loadAllDrawingDots(shapes,function(){startEngine(shapes);},function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
 </script>

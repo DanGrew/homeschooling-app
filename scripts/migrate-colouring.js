@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const generatedDir = path.join(__dirname, 'app/games/colouring/generated');
-const entriesDir = path.join(__dirname, 'app/dictionary/entries');
+const entriesDir = path.join(__dirname, 'content/dictionary/entries');
 
 const animals = [
   'bird','bull','camel','cat','cow','dog','duck','elephant',

@@ -1,9 +1,0 @@
-{
-  "activity": "secondary-colours",
-  "prompts": [
-    { "type": "word", "text": "'Tertiary colours' — made by mixing a primary and a secondary colour. Keep the term light: 'We're mixing even more colours together now — let's see what happens.' The concept matters more than the word at this age." },
-    { "type": "ask",  "text": "Before every mix, ask: 'I wonder what [A] and [B] will make?' Never tell them first — even for harder combinations, prediction comes before discovery." },
-    { "type": "say",  "text": "Model the cause-and-effect sentence: '[A] and [B] make [result].' Say it together after each mix. Same pattern as primary colours — repetition builds the language." },
-    { "type": "ask",  "text": "After a result appears: 'Is that colour closer to [A] or [B]? Where do you think it sits on the colour wheel?' — builds understanding that mixed colours relate to their parent colours." }
-  ]
-}

@@ -41,67 +41,67 @@ function inDir(segment) {
 const MAPPINGS = [
   {
     label: 'dictionary/concept',
-    schema: 'app/schemas/dictionary/concept.schema.json',
-    searchDir: 'app/dictionary/entries',
+    schema: 'content/schemas/dictionary/concept.schema.json',
+    searchDir: 'content/dictionary/entries',
     match: (name) => name === 'concept.json'
   },
   {
     label: 'dictionary/image',
-    schema: 'app/schemas/dictionary/image.schema.json',
-    searchDir: 'app/dictionary/entries',
+    schema: 'content/schemas/dictionary/image.schema.json',
+    searchDir: 'content/dictionary/entries',
     match: (name) => name === 'image.json'
   },
   {
     label: 'dictionary/colouring',
-    schema: 'app/schemas/dictionary/colouring.schema.json',
-    searchDir: 'app/dictionary/entries',
+    schema: 'content/schemas/dictionary/colouring.schema.json',
+    searchDir: 'content/dictionary/entries',
     match: (name) => name === 'colouring.json'
   },
   {
     label: 'dictionary/connect-dots',
-    schema: 'app/schemas/dictionary/connect-dots.schema.json',
-    searchDir: 'app/dictionary/entries',
+    schema: 'content/schemas/dictionary/connect-dots.schema.json',
+    searchDir: 'content/dictionary/entries',
     match: (name) => name === 'connect-dots.json'
   },
   {
     label: 'dictionary/index',
-    schema: 'app/schemas/dictionary/dictionary-index.schema.json',
-    searchDir: 'app/dictionary',
+    schema: 'content/schemas/dictionary/dictionary-index.schema.json',
+    searchDir: 'content/dictionary',
     match: (name) => name === 'dictionary.json'
   },
   {
     label: 'routine',
-    schema: 'app/schemas/routine/routine.schema.json',
-    searchDir: 'app/routine/data',
+    schema: 'content/schemas/routine/routine.schema.json',
+    searchDir: 'content/routine',
     match: (name) => name.endsWith('.json')
   },
   {
     label: 'activities/puzzle-manifest',
-    schema: 'app/schemas/activities/puzzle-manifest.schema.json',
-    searchDir: 'app/activities/puzzle',
+    schema: 'content/schemas/activities/puzzle-manifest.schema.json',
+    searchDir: 'content/puzzle',
     match: (name) => name === 'manifest.json'
   },
   {
     label: 'activities/catalog',
-    schema: 'app/schemas/activities/catalog.schema.json',
-    searchDir: 'app/activities/shopping-play/catalogs',
+    schema: 'content/schemas/activities/catalog.schema.json',
+    searchDir: 'content/shopping-play/catalogs',
     match: (name) => name.endsWith('.json')
   },
   {
     label: 'activities/story-audio',
-    schema: 'app/schemas/activities/story-audio.schema.json',
-    searchDir: 'app/activities/story-time',
+    schema: 'content/schemas/activities/story-audio.schema.json',
+    searchDir: 'content/story-time',
     match: (name, full) => full.replace(/\\/g, '/').includes('/audio/') && name.endsWith('.json')
   },
   {
     label: 'content/colour-wheel-lessons',
-    schema: 'app/schemas/content/colour-wheel-lessons.schema.json',
+    schema: 'content/schemas/content/colour-wheel-lessons.schema.json',
     searchDir: 'content/lessons',
     match: (name) => name === 'colour-wheel.json'
   },
   {
     label: 'content/logic-gates',
-    schema: 'app/schemas/content/logic-gates.schema.json',
+    schema: 'content/schemas/content/logic-gates.schema.json',
     searchDir: 'content/logic-gates',
     match: (name) => name.endsWith('.json')
   }

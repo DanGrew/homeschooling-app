@@ -83,7 +83,7 @@ function initChooser(puzzles) {
   [() => {}, () => selectPuzzle(puzzles[0], cardsEl.firstElementChild, picker, btnsEl)][+(puzzles.length === 1)]();
 }
 
-fetch('manifest.json')
+fetch('../../../content/puzzle/manifest.json')
   .then(r => r.json())
   .then(initChooser);
 </script>

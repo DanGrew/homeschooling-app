@@ -1,9 +1,0 @@
-{
-  "activity": "piano-lesson",
-  "prompts": [
-    { "type": "word", "text": "Vocabulary to introduce: 'high' and 'low' (pitch — position on the keyboard), 'loud' and 'quiet' (volume — how hard they press), 'fast' and 'slow' (tempo — speed of playing). Use all six words during free play." },
-    { "type": "say",  "text": "Model musical exploration aloud: 'I wonder what it sounds like if I play only the high keys... now only the low ones.' Narrate your own exploration to show the vocabulary in use." },
-    { "type": "ask",  "text": "Questions to return to: 'Can you play something that sounds happy? Sad? Scary? Calm?' — connects music to emotion vocabulary." },
-    { "type": "ask",  "text": "Challenge: 'Can you play the same notes again and remember them?' — early pattern and musical memory work, no pressure." }
-  ]
-}

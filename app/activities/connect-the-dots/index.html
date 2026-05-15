@@ -206,7 +206,7 @@ paginator=createPaginator({
   onRender: function(shape){ render(shape); }
 });
 
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 loadConnectDots(shapes,function(){
   buildFilterBar(shapes,function(f){paginator.reset(f);});
 },function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});

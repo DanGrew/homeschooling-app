@@ -50,7 +50,7 @@ import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js'
 import { pickFruitPair } from '../../../core/number-interaction/number-interaction-core.js';
 import { init, change, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
 
-Dictionary.init('../../dictionary/');
+Dictionary.init('../../../content/dictionary/');
 
 var PLURAL_SUFFIX = { y: 'ies', h: 'es' };
 var GET_SUFFIX = { 'true': function(l) { return PLURAL_SUFFIX[l]; }, 'false': function() { return 's'; } };
@@ -79,7 +79,7 @@ window.change = change;
 window.countAll = countAll;
 </script>
 <script>
-  window.DICT_BASE='../../dictionary/entries/';
+  window.DICT_BASE='../../../content/dictionary/entries/';
   window.ADULT_PROMPTS_ACTIVITY='number-interaction';
   window.LESSONS=[
     {id:'make_three',number:1,title:'Make Three'},

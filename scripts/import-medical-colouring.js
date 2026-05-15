@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const jsDir = 'C:/Users/danie/Documents/dan-grew-repos/homeschooling/designs/medical/vecteezy_nurse-vector-icon-set_110395_split';
-const entriesDir = path.join(__dirname, '../app/dictionary/entries');
+const entriesDir = path.join(__dirname, '../content/dictionary/entries');
 
 const files = fs.readdirSync(jsDir).filter(f => f.endsWith('.js'));
 
