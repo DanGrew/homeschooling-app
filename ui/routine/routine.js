@@ -168,9 +168,6 @@ function renderSlotLines(body, ppm) {
   });
 }
 
-function nowInRange(nowMins) {
-  return [false, nowMins <= gridEndMins][+(nowMins >= gridStartMins)];
-}
 
 function renderNowLine(body, ppm) {
   const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
@@ -180,7 +177,7 @@ function renderNowLine(body, ppm) {
     line.id = 'now-line';
     line.style.top = ((nowMins - gridStartMins) * ppm) + 'px';
     body.appendChild(line);
-  }, 'false': function () {} })[String(nowInRange(nowMins))]();
+  }, 'false': function () {} })[String(nowInRange(nowMins, gridStartMins, gridEndMins))]();
 }
 
 function findToday() {
@@ -188,22 +185,6 @@ function findToday() {
   return [null, R.days.find(d => d.key === todayKey)][+!!R.meta.rollingWindow];
 }
 
-function fmtActivity(item) {
-  const act = R.activities[item.activity];
-  return [() => item.activity, () => `${act.emoji} ${act.label} (${item.start})`][+!!act]();
-}
-
-function findCurrentNext(schedule, nowMins) {
-  const result = { current: null, next: null };
-  schedule.forEach(item => {
-    const s = toMins(item.start), e = toMins(item.end);
-    const isCurrent = [false, nowMins < e][+(nowMins >= s)];
-    const isNext = [false, !result.next][+(nowMins < s)];
-    result.current = [result.current, item][+!!isCurrent];
-    result.next = [result.next, item][+!!isNext];
-  });
-  return result;
-}
 
 function setNoToday() {
   document.getElementById('now-label').textContent = '\u2014';
@@ -214,8 +195,8 @@ function setNowNext(today) {
   const nowMins = new Date().getHours() * 60 + new Date().getMinutes();
   const schedule = [today.schedule, []][+!today.schedule];
   const { current, next } = findCurrentNext(schedule, nowMins);
-  document.getElementById('now-label').textContent = [() => '\u2014', () => fmtActivity(current)][+!!current]();
-  document.getElementById('next-label').textContent = [() => '\u2014', () => fmtActivity(next)][+!!next]();
+  document.getElementById('now-label').textContent = [() => '\u2014', () => fmtActivity(current, R.activities)][+!!current]();
+  document.getElementById('next-label').textContent = [() => '\u2014', () => fmtActivity(next, R.activities)][+!!next]();
 }
 
 const UPDATE_NOW_NEXT = {
@@ -226,10 +207,6 @@ const UPDATE_NOW_NEXT = {
 function updateNowNext() {
   const today = findToday();
   UPDATE_NOW_NEXT[String(!!today)](today);
-}
-
-function dayLabel(day) {
-  return [() => '', () => day.label][+!!day]();
 }
 
 function setSnapDisplay(snapBtn) {
@@ -293,7 +270,7 @@ function doScrollToNow() {
     'true': function () { scrollToJumpTime(); },
     'false': function () { gridOuter.scrollTop = nowScrollTop(nowMins, gridStartMins, _ppm(), gridOuter.clientHeight, DAY_HEADER_H); },
   };
-  SCROLL_TO[String(!nowInRange(nowMins))]();
+  SCROLL_TO[String(!nowInRange(nowMins, gridStartMins, gridEndMins))]();
 }
 
 function scrollToNow() {

@@ -53,4 +53,29 @@ function nowScrollTop(nowMins, gridStartMins, ppm, containerHeight, dayHeaderH) 
   return Math.max(0, dayHeaderH + (nowMins - gridStartMins) * ppm - containerHeight / 2);
 }
 
-if(typeof module!=='undefined')module.exports={toMins,getTodayKey,buildOrderedDays,pixelsPerMin,formatTimeLabel,slotLineClass,blockLayout,focusedScrollX,nowScrollTop};
+function nowInRange(nowMins, gridStartMins, gridEndMins) {
+  return [false, nowMins <= gridEndMins][+(nowMins >= gridStartMins)];
+}
+
+function fmtActivity(item, activities) {
+  const act = activities[item.activity];
+  return [() => item.activity, () => `${act.emoji} ${act.label} (${item.start})`][+!!act]();
+}
+
+function dayLabel(day) {
+  return [() => '', () => day.label][+!!day]();
+}
+
+function findCurrentNext(schedule, nowMins) {
+  const result = { current: null, next: null };
+  schedule.forEach(function(item) {
+    const s = toMins(item.start), e = toMins(item.end);
+    const isCurrent = [false, nowMins < e][+(nowMins >= s)];
+    const isNext = [false, !result.next][+(nowMins < s)];
+    result.current = [result.current, item][+!!isCurrent];
+    result.next = [result.next, item][+!!isNext];
+  });
+  return result;
+}
+
+if(typeof module!=='undefined')module.exports={toMins,getTodayKey,buildOrderedDays,pixelsPerMin,formatTimeLabel,slotLineClass,blockLayout,focusedScrollX,nowScrollTop,nowInRange,fmtActivity,findCurrentNext,dayLabel};

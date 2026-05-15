@@ -148,9 +148,6 @@ import '../../components/speech/speakable.js';
       loadClip(0);
     });
 
-    function activeIdx(t) {
-      return activeIndex(t, clips[currentClip].words);
-    }
 
     wordsEl.addEventListener('click', function (e) {
       var span = e.target.closest('.dict-word');
@@ -252,7 +249,7 @@ import '../../components/speech/speakable.js';
     };
 
     function tick() {
-      var idx = activeIdx(audio.currentTime);
+      var idx = activeIndex(audio.currentTime, clips[currentClip].words);
       APPLY_CHANGE[String(idx !== lastActive)](idx);
       SCHEDULE_TICK[String(playing)]();
     }

@@ -279,6 +279,70 @@ if (rule === 'no-md-outside-docs') {
   walkMd(ROOT, 0);
 }
 
+if (rule === 'no-pure-fn-outside-core') {
+  // Named function declarations outside core/ with params + return + no DOM access belong in core/.
+  // Once in core/, check:untested enforces unit tests exist.
+  // Per-function escape hatch: add // arch: allow-pure-fn on the line before the function.
+  // File-level escape hatch: arch: allow-pure-fn anywhere in the file.
+  const DOM_PATTERN = /\b(document|window|navigator|requestAnimationFrame|cancelAnimationFrame)\b|\.(?:classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|insertBefore\b|addEventListener\b|removeEventListener\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b)/;
+
+  function extractFunctions(content) {
+    const results = [];
+    const fnRegex = /\bfunction\s+(\w+)\s*\(([^)]*)\)\s*\{/g;
+    let m;
+    while ((m = fnRegex.exec(content)) !== null) {
+      const params = m[2].trim();
+      if (!params) continue;
+      const name = m[1];
+      const bodyStart = m.index + m[0].length;
+      let depth = 1, i = bodyStart;
+      while (i < content.length && depth > 0) {
+        if (content[i] === '{') depth++;
+        else if (content[i] === '}') depth--;
+        i++;
+      }
+      const body = content.slice(bodyStart, i - 1);
+      const preceding = content.slice(Math.max(0, m.index - 150), m.index);
+      const line = content.slice(0, m.index).split('\n').length;
+      results.push({ name, body, preceding, line });
+    }
+    return results;
+  }
+
+  function checkJsFile(file) {
+    const content = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    if (hasAllow(content, 'allow-pure-fn')) { exceptions.push(rel); return; }
+    scanned.push(rel);
+    extractFunctions(content).forEach(({ name, body, preceding, line }) => {
+      if (preceding.includes('arch: allow-pure-fn')) return;
+      if (DOM_PATTERN.test(body)) return;
+      if (!/\breturn\b/.test(body)) return;
+      violations.push(`${rel}:${line} — '${name}' has no DOM access; move to core/ (or add // arch: allow-pure-fn before the function)`);
+    });
+  }
+
+  ['ui', 'components'].forEach(layer => {
+    getAllFiles(path.join(ROOT, layer), ['.js']).forEach(checkJsFile);
+  });
+
+  getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
+    const html = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    if (hasAllow(html, 'allow-pure-fn')) { exceptions.push(rel); return; }
+    extractInlineScripts(html).forEach((script, i) => {
+      const label = rel + ' (block ' + (i + 1) + ')';
+      scanned.push(label);
+      extractFunctions(script).forEach(({ name, body, preceding, line }) => {
+        if (preceding.includes('arch: allow-pure-fn')) return;
+        if (DOM_PATTERN.test(body)) return;
+        if (!/\breturn\b/.test(body)) return;
+        violations.push(`${label}:${line} — '${name}' has no DOM access; move to core/ (or add // arch: allow-pure-fn before the function)`);
+      });
+    });
+  });
+}
+
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {
