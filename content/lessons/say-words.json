@@ -1,5 +1,6 @@
 {
   "activity": "say-words",
+  "label": "Say Words",
   "lessons": [
     {
       "id": "farm_animals",
