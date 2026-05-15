@@ -310,7 +310,7 @@ jobs:
 
       - name: Combine reports
         run: |
-          smry() { grep '^SUMMARY:' "$1" 2>/dev/null | sed 's/^SUMMARY: //' || echo "⚠️ missing"; }
+          smry() { grep '^SUMMARY:' "$1" 2>/dev/null | sed 's/^SUMMARY: //' || echo "❌ missing"; }
           row() { echo "| $1 | $2 |"; }
           {
             echo "<!-- ci-report -->"
@@ -318,7 +318,7 @@ jobs:
             echo ""
             echo "| Check | Result |"
             echo "|-------|--------|"
-            COV=$(grep '| Lines' reports/coverage-report.md 2>/dev/null | grep -oP '\d+\.?\d*%' | head -1 || echo "⚠️ missing")
+            COV=$(grep '| Lines' reports/coverage-report.md 2>/dev/null | grep -oP '\d+\.?\d*%' | head -1 || echo "❌ missing")
             row "Coverage (lines)" "$COV"
             row "Untested files" "$(smry reports/untested-report.txt)"
             row "no-dom-in-core" "$(smry reports/no-dom.txt)"
@@ -340,7 +340,7 @@ jobs:
             elif [ -n "$SPPASS" ]; then
               row "Speakable Button Contracts" "✅ 0 / ${SPPASS} tests"
             else
-              row "Speakable Button Contracts" "⚠️ missing"
+              row "Speakable Button Contracts" "❌ missing"
             fi
           } > combined.md
 
