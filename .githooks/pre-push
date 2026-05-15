@@ -25,6 +25,14 @@ echo "[pre-push] manifests up to date..."
 node scripts/generate-manifests.js
 git diff --exit-code content/dictionary/manifests/ content/lessons/index.json || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
 
+echo "[pre-push] page contracts (changed files)..."
+CHANGED_HTML=$(git diff --name-only "origin/main...HEAD" 2>/dev/null | grep -E '^app/(activities|worksheets)/.*\.html$' || true)
+if [ -n "$CHANGED_HTML" ]; then
+  node scripts/contracts/run.js $CHANGED_HTML || fail "page-contracts"
+else
+  echo "[pre-push] no activity HTML changed, skipping"
+fi
+
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"
 
