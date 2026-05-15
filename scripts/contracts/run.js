@@ -57,14 +57,16 @@ function validate(html, optOuts) {
   return errors;
 }
 
-const htmlFiles = findHtml(path.join(ROOT, 'app'));
+const filterFiles = process.argv.slice(2).map(f => f.replace(/\\/g, '/'));
+const allHtmlFiles = findHtml(path.join(ROOT, 'app'));
 const results = [];
 
 console.log('\nPage Contract Validator\n');
 
-for (const abs of htmlFiles) {
+for (const abs of allHtmlFiles) {
   const rel = relPath(abs);
   if (classify(rel) !== 'activity') continue;
+  if (filterFiles.length > 0 && !filterFiles.includes(rel)) continue;
   const html = fs.readFileSync(abs, 'utf8');
   const optOuts = loadOptOuts(abs, rel);
   results.push({ file: rel, errors: validate(html, optOuts) });

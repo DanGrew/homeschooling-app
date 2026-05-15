@@ -44,6 +44,9 @@ export function makeSpeakable(el, text) {
   makeInteractive(el, () => speakInterrupt(getText()));
 }
 
+var _SET_SPEAKABLE = { 'true': function(fn) { window.__makeSpeakable = fn; }, 'false': function() {} };
+_SET_SPEAKABLE[String(typeof window !== 'undefined')](makeSpeakable);
+
 
 export function makeSpeakableButton(text) {
   var btn = document.createElement('button');
