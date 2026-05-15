@@ -13,7 +13,7 @@
 | File | Note | Resolution |
 |------|------|------------|
 | ~~`app/activities/simulator/index.html`~~ | ✅ Fixed | nav-bar added with opt-outs; `.game-area` wrapper added |
-| `app/activities/story-time/index.html` | No nav-bar, no speakable | Add `.nav-bar` with all required attrs, or exclude page from contract |
+| ~~`app/activities/story-time/index.html`~~ | ✅ Fixed | nav-bar added; controls moved to top of game-area; title via `.activity-title` |
 | `app/worksheets/character-worksheet/index.html` | Worksheet — no nav-bar, no speakable | Add `.nav-bar` with all required attrs, or exclude page from contract |
 | `app/worksheets/colouring-sheets/index.html` | Worksheet — no nav-bar, no speakable | Add `.nav-bar` with all required attrs, or exclude page from contract |
 

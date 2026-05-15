@@ -3,16 +3,7 @@
 function attr(el, name) { return el.getAttribute(name); }
 function hasAttr(el, name) { return el.hasAttribute(name); }
 
-function checkOptOut(el, feature, errors) {
-  const optOut = attr(el, `data-no-${feature}`);
-  if (optOut !== null && optOut.trim() === '') {
-    errors.push(`data-no-${feature} requires a non-empty reason string`);
-    return false;
-  }
-  return optOut !== null;
-}
-
-function check(doc) {
+function check(doc, optOuts = {}) {
   const errors = [];
   const bars = doc.querySelectorAll('.nav-bar');
 
@@ -26,23 +17,20 @@ function check(doc) {
   }
 
   const hasTitle = hasAttr(bar, 'data-title') && attr(bar, 'data-title').trim() !== '';
-  const noTitle  = checkOptOut(bar, 'title', errors);
-  if (!hasTitle && !noTitle) {
-    errors.push('data-title or data-no-title="<reason>" required on .nav-bar');
+  if (!hasTitle && !optOuts.title) {
+    errors.push('data-title required on .nav-bar (or declare opt-out in contract.json)');
   }
 
-  if (hasTitle) {
+  if (hasTitle || optOuts.title) {
     const hasInstruction = hasAttr(bar, 'data-instruction') && attr(bar, 'data-instruction').trim() !== '';
-    const noInstruction  = checkOptOut(bar, 'instruction', errors);
-    if (!hasInstruction && !noInstruction) {
-      errors.push('data-instruction or data-no-instruction="<reason>" required when data-title is set');
+    if (!hasInstruction && !optOuts.instruction) {
+      errors.push('data-instruction required when title is set (or declare opt-out in contract.json)');
     }
   }
 
   const hasLinks = hasAttr(bar, 'data-links');
-  const noLinks  = checkOptOut(bar, 'links', errors);
-  if (!hasLinks && !noLinks) {
-    errors.push('data-links or data-no-links="<reason>" required on .nav-bar');
+  if (!hasLinks && !optOuts.links) {
+    errors.push('data-links required on .nav-bar (or declare opt-out in contract.json)');
   }
 
   if (!doc.querySelector('.game-area')) {

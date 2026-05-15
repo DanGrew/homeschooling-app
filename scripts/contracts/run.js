@@ -28,11 +28,31 @@ function relPath(abs) {
   return abs.replace(ROOT + path.sep, '').replace(/\\/g, '/');
 }
 
-function validate(html) {
+function contractName(rel) {
+  // app/activities/simulator/index.html  -> simulator
+  // app/activities/piano/game.html       -> piano-game
+  // app/worksheets/colouring-sheets/index.html -> colouring-sheets
+  const parts = rel.replace(/^app\/(activities|worksheets)\//, '').split('/');
+  const dir  = parts[0];
+  const file = path.basename(parts[parts.length - 1], '.html');
+  return file === 'index' ? dir : `${dir}-${file}`;
+}
+
+function loadOptOuts(abs, rel) {
+  const contractPath = path.join(ROOT, 'content', 'contracts', contractName(rel) + '.json');
+  if (!fs.existsSync(contractPath)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(contractPath, 'utf8'))['opt-outs'] || {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function validate(html, optOuts) {
   const { window } = new JSDOM(html);
   const doc = window.document;
   const errors = [];
-  errors.push(...checkMenuBar(doc).map(e => `[menuBar] ${e}`));
+  errors.push(...checkMenuBar(doc, optOuts).map(e => `[menuBar] ${e}`));
   errors.push(...checkSpeakableUI(doc, html).map(e => `[speakableUI] ${e}`));
   return errors;
 }
@@ -46,7 +66,8 @@ for (const abs of htmlFiles) {
   const rel = relPath(abs);
   if (classify(rel) !== 'activity') continue;
   const html = fs.readFileSync(abs, 'utf8');
-  results.push({ file: rel, errors: validate(html) });
+  const optOuts = loadOptOuts(abs, rel);
+  results.push({ file: rel, errors: validate(html, optOuts) });
 }
 
 const totalErrors = report(results);
