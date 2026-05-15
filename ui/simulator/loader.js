@@ -5,7 +5,7 @@ async function startSim(simId) {
 
   document.title = spec.simulation.title;
   document.getElementById('sim-title').textContent = spec.simulation.title;
-  document.getElementById('sim-instructions').textContent = spec.simulation.instructions || '';
+  document.getElementById('sim-instructions').textContent = [spec.simulation.instructions, ''][+!spec.simulation.instructions];
 
   const scene = document.getElementById('scene');
   const frame = document.getElementById('scene-frame');
@@ -20,4 +20,5 @@ async function startSim(simId) {
   frame.style.height = `${spec.scene.height * scale}px`;
 }
 
-startSim(new URLSearchParams(location.search).get('sim') || 'grow_a_plant');
+var simParam = new URLSearchParams(location.search).get('sim');
+startSim([simParam, 'grow_a_plant'][+!simParam]);
