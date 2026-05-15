@@ -308,7 +308,7 @@ jobs:
 
       - name: Combine reports
         run: |
-          summary() { head -1 "$1" 2>/dev/null || echo "⚠️ missing"; }
+          smry() { grep '^SUMMARY:' "$1" 2>/dev/null | sed 's/^SUMMARY: //' || echo "⚠️ missing"; }
           row() { echo "| $1 | $2 |"; }
           {
             echo "<!-- ci-report -->"
@@ -318,19 +318,27 @@ jobs:
             echo "|-------|--------|"
             COV=$(grep '| Lines' reports/coverage-report.md 2>/dev/null | grep -oP '\d+\.?\d*%' | head -1 || echo "⚠️ missing")
             row "Coverage (lines)" "$COV"
-            row "Untested files" "$(summary reports/untested-report.txt)"
-            row "no-dom-in-core" "$(summary reports/no-dom.txt)"
-            row "no-ui-imports" "$(summary reports/no-ui-imports.txt)"
-            row "no-stray-files" "$(summary reports/no-stray-files.txt)"
-            row "no-app-exports" "$(summary reports/no-app-exports.txt)"
-            row "no-guard-chain" "$(summary reports/no-guard-chain.txt)"
-            row "no-filter-conditional" "$(summary reports/no-filter-conditional.txt)"
-            row "manifest files" "$(summary reports/check-manifest-files.txt)"
-            row "validate-json" "$(grep -E '^(PASS|FAIL)' reports/validate-json.txt 2>/dev/null | tail -1 || echo '⚠️ missing')"
-            row "ui-cyclomatic" "$(summary reports/ui-cyclomatic.txt)"
-            row "Page Contract Checks" "$(tail -1 reports/contracts.txt 2>/dev/null || echo '⚠️ missing')"
+            row "Untested files" "$(smry reports/untested-report.txt)"
+            row "no-dom-in-core" "$(smry reports/no-dom.txt)"
+            row "no-ui-imports" "$(smry reports/no-ui-imports.txt)"
+            row "no-stray-files" "$(smry reports/no-stray-files.txt)"
+            row "no-app-exports" "$(smry reports/no-app-exports.txt)"
+            row "no-guard-chain" "$(smry reports/no-guard-chain.txt)"
+            row "no-filter-conditional" "$(smry reports/no-filter-conditional.txt)"
+            row "manifest files" "$(smry reports/check-manifest-files.txt)"
+            row "validate-json" "$(smry reports/validate-json.txt)"
+            row "ui-cyclomatic" "$(smry reports/ui-cyclomatic.txt)"
+            row "Page Contract Checks" "$(smry reports/contracts.txt)"
             SPEAKABLE=$(sed 's/\x1b\[[0-9;]*[A-Za-z]//g' reports/contracts-speakable.txt 2>/dev/null)
-            row "Speakable Button Contracts" "$(echo "$SPEAKABLE" | grep -E '[0-9]+ failed' | tail -1 || echo "$SPEAKABLE" | grep -E '[0-9]+ passed' | tail -1 || echo '⚠️ missing')"
+            SPFAIL=$(echo "$SPEAKABLE" | grep -oP '\d+ failed' | grep -oP '\d+' | tail -1)
+            SPPASS=$(echo "$SPEAKABLE" | grep -oP '\d+ passed' | grep -oP '\d+' | tail -1)
+            if [ -n "$SPFAIL" ]; then
+              row "Speakable Button Contracts" "❌ ${SPFAIL} / $((${SPFAIL:-0} + ${SPPASS:-0})) tests"
+            elif [ -n "$SPPASS" ]; then
+              row "Speakable Button Contracts" "✅ 0 / ${SPPASS} tests"
+            else
+              row "Speakable Button Contracts" "⚠️ missing"
+            fi
           } > combined.md
 
       - name: Find existing CI report comment
