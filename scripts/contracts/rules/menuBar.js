@@ -23,14 +23,16 @@ function check(doc, optOuts = {}) {
 
   if (hasTitle || optOuts.title) {
     const hasInstruction = hasAttr(bar, 'data-instruction') && attr(bar, 'data-instruction').trim() !== '';
-    if (!hasInstruction && !optOuts.instruction) {
-      errors.push('data-instruction required when title is set (or declare opt-out in contract.json)');
+    const noInstruction = hasAttr(bar, 'data-no-instruction') && attr(bar, 'data-no-instruction').trim() !== '';
+    if (!hasInstruction && !noInstruction && !optOuts.instruction) {
+      errors.push('data-instruction required when title is set (or add data-no-instruction="<reason>" or declare opt-out in contract.json)');
     }
   }
 
   const hasLinks = hasAttr(bar, 'data-links');
-  if (!hasLinks && !optOuts.links) {
-    errors.push('data-links required on .nav-bar (or declare opt-out in contract.json)');
+  const noLinks = hasAttr(bar, 'data-no-links') && attr(bar, 'data-no-links').trim() !== '';
+  if (!hasLinks && !noLinks && !optOuts.links) {
+    errors.push('data-links required on .nav-bar (or add data-no-links="<reason>" or declare opt-out in contract.json)');
   }
 
   if (!doc.querySelector('.game-area')) {
