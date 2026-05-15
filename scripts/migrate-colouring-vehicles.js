@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const entriesDir = path.join(__dirname, '..', 'app/dictionary/entries');
+const entriesDir = path.join(__dirname, '..', 'content/dictionary/entries');
 
 const vehicles = [
   'bus', 'cement-mixer', 'digger', 'race-car', 'tractor', 'train', 'truck'

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const dictDir = path.join(__dirname, '..', 'app/dictionary');
+const dictDir = path.join(__dirname, '..', 'content/dictionary');
 const entriesDir = path.join(dictDir, 'entries');
 const manifestsDir = path.join(dictDir, 'manifests');
 
@@ -34,7 +34,7 @@ Object.keys(groups).forEach(function(key) {
   console.log(key + ': ' + groups[key].length + ' entries');
 });
 
-console.log('Manifests written to app/dictionary/manifests/');
+console.log('Manifests written to content/dictionary/manifests/');
 
 var lessonsDir = path.join(__dirname, '..', 'content/lessons');
 var lessonIndex = fs.readdirSync(lessonsDir)
