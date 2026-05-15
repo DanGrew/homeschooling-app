@@ -27,7 +27,7 @@ test('filter bar appears after title', async ({ page }) => {
   const children = page.locator('.game-area > *')
   const firstClass = await children.nth(0).getAttribute('class')
   const secondId = await children.nth(1).getAttribute('id')
-  expect(firstClass).toMatch(/activity-title/)
+  expect(firstClass).toMatch(/activity-header/)
   expect(secondId).toBe('filter-bar')
 })
 

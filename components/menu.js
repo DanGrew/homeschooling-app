@@ -4,34 +4,31 @@
 
   bar.insertAdjacentHTML('afterbegin','<a href="'+(bar.dataset.home||'index.html')+'" class="nav-btn">&#127968;</a>');
 
-  if(bar.dataset.title){
+  var gameArea=document.querySelector('.game-area');
+  if(gameArea){
     var titleEl=document.createElement('div');
-    titleEl.className='activity-title speakable';
-    titleEl.textContent=bar.dataset.title;
-    titleEl.onclick=function(){
-      if(typeof window.__speak==='function'){window.__speak(bar.dataset.title);}
-    };
-    if(bar.dataset.instruction){
-      var instrEl=document.createElement('div');
-      instrEl.id=bar.dataset.instructionId||'';
-      instrEl.className='speakable';
-      instrEl.style.cssText='font-size:0.8em;color:#aaa;padding:2px 16px 8px;';
-      instrEl.textContent=bar.dataset.instruction;
-      instrEl.onclick=function(){
-        if(typeof window.__speak==='function'){window.__speak(bar.dataset.instruction);}
-      };
-      titleEl.style.borderBottom='none';
-      titleEl.style.paddingBottom='2px';
-      var wrapper=document.createElement('div');
-      wrapper.style.cssText='flex-shrink:0;border-bottom:2px solid #eee;';
-      wrapper.appendChild(titleEl);
-      wrapper.appendChild(instrEl);
-      var gameArea=document.querySelector('.game-area');
-      if(gameArea) gameArea.insertAdjacentElement('afterbegin',wrapper);
-    } else {
-      var gameArea=document.querySelector('.game-area');
-      if(gameArea) gameArea.insertAdjacentElement('afterbegin',titleEl);
-    }
+    titleEl.className='activity-title';
+    titleEl.textContent=bar.dataset.title||'';
+    var instrEl=document.createElement('div');
+    instrEl.id=bar.dataset.instructionId||'';
+    instrEl.className='activity-instruction';
+    instrEl.textContent=bar.dataset.instruction||'';
+    var header=document.createElement('div');
+    header.className='activity-header';
+    header.appendChild(titleEl);
+    header.appendChild(instrEl);
+    gameArea.insertAdjacentElement('afterbegin',header);
+    window.addEventListener('load',function(){
+      [titleEl,instrEl].forEach(function(el){
+        if(typeof window.__makeSpeakable==='function'){
+          window.__makeSpeakable(el,function(){return el.textContent;});
+        } else {
+          el.addEventListener('click',function(){
+            if(el.textContent&&typeof window.__speak==='function'){window.__speak(el.textContent);}
+          });
+        }
+      });
+    });
   }
 
   if(window.LESSONS&&window.LESSONS.length){
