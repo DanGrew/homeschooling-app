@@ -48,7 +48,7 @@ import { speak } from '../../../components/speech/speech-ui.js';
     var currentSpeed = 1;
     var pausedForDict = false;
     var dictSavedTime = 0;
-    var DICT_BASE = '../../dictionary/entries/';
+    var DICT_BASE = '../../../content/dictionary/entries/';
 
     document.querySelectorAll('.speed-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -160,7 +160,7 @@ import { speak } from '../../../components/speech/speech-ui.js';
       fetch(DICT_BASE + conceptId + '/image.json')
         .then(function (r) { return r.json(); })
         .then(function (img) {
-          imgEl.src = '../../dictionary/' + img.src;
+          imgEl.src = '../../../content/dictionary/' + img.src;
           imgEl.style.display = '';
         })
         .catch(function () {});

@@ -123,7 +123,7 @@ function pressPreset(preset) {
   emit('PRESET_' + preset.label.toUpperCase() + '_SELECTED');
 }
 
-fetch('../../../assets/clock/presets.json')
+fetch('../../../content/clock/presets.json')
   .then(function(r) { return r.json(); })
   .then(function(presets) {
     var btns = document.getElementById('preset-buttons');

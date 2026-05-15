@@ -124,7 +124,7 @@ function nextRound() {
   );
 }
 
-fetch('../../../assets/clock/presets.json')
+fetch('../../../content/clock/presets.json')
   .then(function(r) { return r.json(); })
   .then(function(data) {
     presets = data;

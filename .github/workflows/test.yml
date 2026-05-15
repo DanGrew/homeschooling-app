@@ -165,6 +165,18 @@ jobs:
           name: report-no-app-exports
           path: reports/no-app-exports.txt
 
+  no-json-in-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-json-in-repo reports/no-json-in-repo.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-json-in-repo
+          path: reports/no-json-in-repo.txt
+
   no-guard-chain:
     runs-on: ubuntu-latest
     steps:
@@ -280,6 +292,7 @@ jobs:
       - ui-cyclomatic
       - no-stray-files
       - no-app-exports
+      - no-json-in-repo
       - no-guard-chain
       - no-filter-conditional
       - check-manifest-files
@@ -312,6 +325,7 @@ jobs:
             row "no-ui-imports" "$(smry reports/no-ui-imports.txt)"
             row "no-stray-files" "$(smry reports/no-stray-files.txt)"
             row "no-app-exports" "$(smry reports/no-app-exports.txt)"
+            row "no-json-in-repo" "$(smry reports/no-json-in-repo.txt)"
             row "no-guard-chain" "$(smry reports/no-guard-chain.txt)"
             row "no-filter-conditional" "$(smry reports/no-filter-conditional.txt)"
             row "manifest files" "$(smry reports/check-manifest-files.txt)"

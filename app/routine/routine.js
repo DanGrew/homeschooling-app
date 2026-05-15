@@ -249,7 +249,7 @@ function populateRoutinePicker() {
 }
 
 function loadRoutine(id) {
-  fetch(`data/${id}.json`)
+  fetch(`../../content/routine/${id}.json`)
     .then(r => r.json())
     .then(data => {
       R = data;
