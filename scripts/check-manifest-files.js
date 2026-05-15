@@ -92,6 +92,8 @@ if (violations.length === 0) {
   violations.forEach(v => output += `- ${v}\n`);
 }
 
+output += `\nSUMMARY: ${violations.length === 0 ? '✅' : '❌'} ${violations.length} / ${scanned} entries\n`;
+
 fs.writeFileSync(outputFile, output);
 console.log(output);
 process.exit(violations.length > 0 ? 1 : 0);

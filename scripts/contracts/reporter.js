@@ -13,12 +13,14 @@ function report(results) {
     }
   }
 
+  const failingPages = results.filter(r => r.errors.length).length;
   console.log('');
   if (totalErrors === 0) {
     console.log('\u2705 All pages pass contract checks.');
   } else {
-    console.log(`\u274c ${totalErrors} violation(s) across ${results.filter(r => r.errors.length).length} page(s).`);
+    console.log(`\u274c ${totalErrors} violation(s) across ${failingPages} page(s).`);
   }
+  console.log(`SUMMARY: ${totalErrors === 0 ? '\u2705' : '\u274c'} ${totalErrors} / ${results.length} pages`);
 
   return totalErrors;
 }

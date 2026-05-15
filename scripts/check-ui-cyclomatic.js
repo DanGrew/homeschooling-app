@@ -100,6 +100,10 @@ async function run() {
     exceptions.forEach(e => output += `- ${e}\n`);
   }
 
+  const icon = total === 0 ? '✅' : '❌';
+  const detail = total === 0 ? `0 / ${scanned} files` : `${prViolations.length} in PR + ${backlogViolations.length} backlog / ${scanned} files`;
+  output += `\nSUMMARY: ${icon} ${detail}\n`;
+
   fs.writeFileSync(outputFile, output);
   console.log(output);
   process.exit(prViolations.length > 0 ? 1 : 0);

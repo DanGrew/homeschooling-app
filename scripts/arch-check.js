@@ -188,6 +188,8 @@ if (exceptions.length > 0) {
   exceptions.forEach(e => output += `- ${e}\n`);
 }
 
+output += `\nSUMMARY: ${violations.length === 0 ? '✅' : '❌'} ${violations.length} / ${scanned.length} files\n`;
+
 fs.writeFileSync(outputFile, output);
 console.log(output);
 

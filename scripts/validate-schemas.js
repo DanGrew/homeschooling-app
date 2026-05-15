@@ -138,6 +138,7 @@ if (totalErrors > 0) {
 } else {
   log(`PASS: ${totalChecked} files validated against schema`);
 }
+log(`SUMMARY: ${totalErrors === 0 ? '✅' : '❌'} ${totalErrors} / ${totalChecked} files`);
 
 fs.mkdirSync(path.dirname(outputFile), { recursive: true });
 fs.writeFileSync(outputFile, lines.join('\n') + '\n');
