@@ -30,3 +30,37 @@ test('filter bar appears after title', async ({ page }) => {
   expect(firstClass).toMatch(/activity-title/)
   expect(secondId).toBe('filter-bar')
 })
+
+async function startLesson(page) {
+  await expect(page.locator('#word-label')).not.toBeEmpty({ timeout: 5000 })
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').first().click()
+}
+
+test('lesson nav shows 5 lessons', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.nav-lesson-btn').click()
+  await expect(page.locator('.nav-lesson-item')).toHaveCount(5)
+  await expect(page.locator('.nav-lesson-item').first()).toContainText('Lesson 1: Farm Animals')
+})
+
+test('starting farm lesson constrains paginator to lesson words', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await expect(page.locator('#word-label')).toHaveText('Cow')
+})
+
+test('starting lesson shows guidance overlay', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+})
+
+test('stopping lesson restores full word list', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
+  const allBtn = page.locator('#filter-bar button[data-value="all"]')
+  await expect(allBtn).toHaveCSS('color', 'rgb(255, 255, 255)')
+})

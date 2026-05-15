@@ -109,3 +109,20 @@ test('close button stops lesson and hides overlay', async ({ page }) => {
   await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
 })
+
+test('starting farm lesson auto-switches filter to animals', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#tile-grid .tile').first().waitFor()
+  await startLesson(page)
+  const animalsBtn = page.locator('#filter-bar button[data-tag="animals"]')
+  await expect(animalsBtn).toHaveCSS('color', 'rgb(255, 255, 255)')
+})
+
+test('stopping lesson resets filter to all', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#tile-grid .tile').first().waitFor()
+  await startLesson(page)
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
+  const allBtn = page.locator('#filter-bar button[data-tag="all"]')
+  await expect(allBtn).toHaveCSS('color', 'rgb(255, 255, 255)')
+})

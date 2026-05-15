@@ -135,6 +135,22 @@ loadImages(all,function(){
       window.guidanceService=new GuidanceService();
     });
 </script>
+<script>
+  window.addEventListener('guidance:start', function() {
+    [window.guidanceService].filter(Boolean)
+      .map(function(s) { return s._lesson; })
+      .filter(Boolean)
+      .filter(function(l) { return l.filter; })
+      .forEach(function(l) {
+        var btn = document.querySelector('#filter-bar button[data-tag="' + l.filter + '"]');
+        [btn].filter(Boolean).forEach(function(b) { b.click(); });
+      });
+  });
+  window.addEventListener('guidance:stop', function() {
+    var btn = document.querySelector('#filter-bar button[data-tag="all"]');
+    [btn].filter(Boolean).forEach(function(b) { b.click(); });
+  });
+</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>
