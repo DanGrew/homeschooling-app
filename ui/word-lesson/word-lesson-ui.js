@@ -395,8 +395,20 @@ export function init() {
     [window.guidanceService].filter(Boolean)
       .map(function(s) { return s._lesson; })
       .filter(Boolean)
-      .filter(function(l) { return l.filter; })
-      .forEach(function(l) { showTagMode(l.filter); });
+      .forEach(function(l) {
+        if (l.words && l.words.length) {
+          var lessonWords = l.words.map(function(w) {
+            return words.find(function(e) { return e.word === w; });
+          }).filter(Boolean);
+          isCustom = false;
+          document.getElementById('custom-input').style.display = 'none';
+          filtered = lessonWords;
+          paginator.reset(filtered);
+          paginator.enable();
+        } else if (l.filter) {
+          showTagMode(l.filter);
+        }
+      });
   });
   window.addEventListener('guidance:stop', function() {
     showTagMode('all');
