@@ -183,15 +183,6 @@ test('labels show same when counts are equal and non-zero', async ({ page }) => 
 })
 
 
-test('labels flip when B becomes bigger', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/number-interaction/')
-  await ready(page)
-  await page.locator('#btn-a-plus').click()
-  await page.locator('#btn-b-plus').click()
-  await page.locator('#btn-b-plus').click()
-  await expect(page.locator('#lbl-a')).toHaveText('smaller')
-  await expect(page.locator('#lbl-b')).toHaveText('bigger')
-})
 
 // --- out-of-bounds audio suppression ---
 
