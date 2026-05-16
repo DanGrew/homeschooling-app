@@ -53,7 +53,7 @@ function validate(html, optOuts) {
   const doc = window.document;
   const errors = [];
   errors.push(...checkMenuBar(doc, optOuts).map(e => `[menuBar] ${e}`));
-  errors.push(...checkSpeakableUI(doc, html).map(e => `[speakableUI] ${e}`));
+  errors.push(...checkSpeakableUI(doc, html, optOuts).map(e => `[speakableUI] ${e}`));
   return errors;
 }
 

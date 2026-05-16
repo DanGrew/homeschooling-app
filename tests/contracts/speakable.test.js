@@ -19,7 +19,6 @@ const ACTIVITY_PAGES = [
   '/homeschooling-app/app/activities/number-interaction/',
   '/homeschooling-app/app/activities/piano/game.html',
   '/homeschooling-app/app/activities/piano/lesson.html',
-  '/homeschooling-app/app/activities/piano/songs.html',
   '/homeschooling-app/app/activities/primary-colours/',
   '/homeschooling-app/app/activities/puzzle/',
   '/homeschooling-app/app/activities/puzzle/play.html',

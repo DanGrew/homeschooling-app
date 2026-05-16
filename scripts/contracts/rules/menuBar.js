@@ -7,7 +7,10 @@ function check(doc, optOuts = {}) {
   const errors = [];
   const bars = doc.querySelectorAll('.nav-bar');
 
-  if (bars.length === 0) { errors.push('Missing .nav-bar element'); return errors; }
+  if (bars.length === 0) {
+    if (!optOuts['nav-bar']) errors.push('Missing .nav-bar element');
+    return errors;
+  }
   if (bars.length > 1)   { errors.push(`Multiple .nav-bar elements found (${bars.length})`); return errors; }
 
   const bar = bars[0];

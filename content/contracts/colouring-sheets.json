@@ -1,0 +1,9 @@
+{
+  "opt-outs": {
+    "nav-bar": "print-only worksheet",
+    "title": "print-only worksheet",
+    "instruction": "print-only worksheet",
+    "links": "print-only worksheet",
+    "speakable": "print-only worksheet"
+  }
+}

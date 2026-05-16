@@ -1,6 +1,7 @@
 'use strict';
 
-function check(doc, html) {
+function check(doc, html, optOuts = {}) {
+  if (optOuts.speakable) return [];
   const errors = [];
 
   const links = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
