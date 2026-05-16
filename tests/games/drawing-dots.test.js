@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test')
 test('page loads with a title and dots', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/drawing-dots/')
   await expect(page.locator('#dot0')).toBeVisible({ timeout: 5000 })
-  await expect(page.locator('.game-title')).toBeVisible()
+  await expect(page.locator('.picture-title')).toBeVisible()
 })
 
 test('tapping a dot selects it', async ({ page }) => {

@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test')
 
 test('page loads with a title and answer buttons', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/count-shapes/')
-  await expect(page.getByText('How many?')).toBeVisible()
+  await expect(page.locator('.activity-instruction')).toContainText('Count how many shapes you can see')
   await expect(page.getByRole('button', { name: '1' })).toBeVisible()
   await expect(page.getByRole('button', { name: '5' })).toBeVisible()
 })

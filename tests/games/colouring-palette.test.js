@@ -26,9 +26,9 @@ test('paginator bar is visible with prev and next buttons', async ({ page }) => 
 test('next button advances to next picture', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/colouring-palette/')
   await page.locator('#palette .swatch').first().waitFor({ timeout: 5000 })
-  const firstTitle = await page.locator('.game-title span').textContent()
+  const firstTitle = await page.locator('.picture-title span').textContent()
   await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
-  await expect(page.locator('.game-title span')).not.toHaveText(firstTitle)
+  await expect(page.locator('.picture-title span')).not.toHaveText(firstTitle)
 })
 
 test('selecting a colour then clicking a shape applies that colour', async ({ page }) => {
