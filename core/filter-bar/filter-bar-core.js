@@ -19,9 +19,9 @@ export function filterItems(items,activeTag,activeLevel){
   });
 }
 
-var ACTIVE_STYLES = {
-  'true': function(colour) { return { border: colour, bg: colour, color: 'white' }; },
-  'false': function() { return { border: '#ddd', bg: '#fff', color: '#333' }; }
+export var ACTIVE_STYLES = {
+  'true':  function(colour) { return { border: colour, bg: colour, color: 'white' }; },
+  'false': function()       { return { border: '#ddd', bg: '#fff', color: '#333' }; }
 };
 
 export function active(on, colour) {

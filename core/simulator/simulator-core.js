@@ -1,3 +1,5 @@
+export function gridMajorKey(n) { return String(+(n % 100 !== 0)); }
+
 export function evalCond(state, cond) {
   if (cond && typeof cond === 'object') {
     if (cond.all) return cond.all.every(c => evalCond(state, c));
@@ -142,8 +144,6 @@ export function findAction(spec, state, objectId, selectedTool, won) {
 export function shouldTriggerWin(spec, state, won) {
   return !won && evalCond(state, spec.win_condition);
 }
-
-export function gridMajorKey(n) { return String(+(n % 100 !== 0)); }
 
 if (typeof module !== 'undefined') module.exports = {
   evalCond, applyStateAction, resolveScene, resolveImgFit, resolveImgSrc, resolveObject,

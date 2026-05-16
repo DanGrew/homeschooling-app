@@ -1,4 +1,4 @@
-import { extractTags, extractLevels, filterItems, active } from '../../core/filter-bar/filter-bar-core.js';
+import { extractTags, extractLevels, filterItems, active, ACTIVE_STYLES } from '../../core/filter-bar/filter-bar-core.js';
 
 const item = (tags, level) => ({ tags, level });
 
@@ -107,6 +107,21 @@ describe('filterItems', () => {
     const result = filterItems(noTags, 'animals', 'all');
     expect(result).toHaveLength(1);
     expect(result[0].tags).toContain('animals');
+  });
+});
+
+describe('ACTIVE_STYLES', () => {
+  it('active state returns provided colour', () => {
+    const s = ACTIVE_STYLES['true']('#3498DB');
+    expect(s.border).toBe('#3498DB');
+    expect(s.bg).toBe('#3498DB');
+    expect(s.color).toBe('white');
+  });
+  it('inactive state returns neutral colours', () => {
+    const s = ACTIVE_STYLES['false']();
+    expect(s.border).toBe('#ddd');
+    expect(s.bg).toBe('#fff');
+    expect(s.color).toBe('#333');
   });
 });
 

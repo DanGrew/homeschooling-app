@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { buildCatalogItems } from '../../core/shopping-scan/shopping-scan-core.js';
 
 const CATALOGS = [
@@ -28,6 +29,10 @@ describe('buildCatalogItems', () => {
     const result = buildCatalogItems([CATALOGS[0]], CATALOGS);
     expect(result).toHaveLength(2);
     result.forEach(it => expect(it.catalog).toBe('Fruit'));
+  });
+
+  it('returns empty array when no catalogs match', () => {
+    expect(buildCatalogItems([{ name: 'Dairy' }], CATALOGS)).toHaveLength(0);
   });
 
   it('returns empty array when filtered list is empty', () => {

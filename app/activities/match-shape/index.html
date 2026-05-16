@@ -28,10 +28,8 @@ var CHECK_RESULT={
   'false':function(btn){btn.classList.add('feedback-wrong');setTimeout(function(){btn.classList.remove('feedback-wrong');},500);}
 };
 
-function doCheck(btn){CHECK_RESULT[String(btn.dataset.type===current.type)](btn);}
-
 function check(btn){
-  [doCheck].filter(function(){return !locked;}).forEach(function(f){f(btn);});
+  ({'true':function(){},'false':function(){CHECK_RESULT[String(btn.dataset.type===current.type)](btn);}})[String(locked)]();
 }
 
 function newRound(){

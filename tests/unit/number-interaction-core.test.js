@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { comparisonColor, pickFruitPair, clamp, pluralize, makeImg, labelState, computeChange } from '../../core/number-interaction/number-interaction-core.js'
+import { comparisonColor, pickFruitPair, clamp, makeImg, labelState, pluralize, computeChange } from '../../core/number-interaction/number-interaction-core.js'
 
 describe('comparisonColor', () => {
   it('returns green when a > b', () => {
@@ -87,6 +87,21 @@ describe('labelState', () => {
   it('same when equal non-zero', () => expect(labelState(3, 3)).toBe('same'));
   it('bigger when self > other', () => expect(labelState(5, 3)).toBe('bigger'));
   it('smaller when self < other', () => expect(labelState(2, 4)).toBe('smaller'));
+})
+
+describe('pluralize', () => {
+  it('appends s for regular words', () => {
+    expect(pluralize('apple')).toBe('apples')
+  })
+  it('handles -y ending: cherry → cherries', () => {
+    expect(pluralize('cherry')).toBe('cherries')
+  })
+  it('handles -h ending: strips last char and adds es', () => {
+    expect(pluralize('peach')).toBe('peaces')
+  })
+  it('handles regular ending: orange → oranges', () => {
+    expect(pluralize('orange')).toBe('oranges')
+  })
 })
 
 describe('computeChange', () => {

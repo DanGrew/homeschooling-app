@@ -22,8 +22,6 @@ var NULL_PROMISE = () => Promise.resolve(null);
 var LOAD_FILE = (file) => LOAD_SOURCES[String(file in svgCache)](file);
 var LOAD_DISPATCH = { 'true': NULL_PROMISE, 'false': LOAD_FILE };
 
-function loadPath(c) { return LOAD_DISPATCH[String(!charToFile(c))](charToFile(c)); }
-
 function makeSvgPath(d) {
   const path = document.createElementNS(SVG_NS, 'path');
   path.setAttribute('d', d);
@@ -54,7 +52,10 @@ function makeCell(d) {
 var EMPTY_DISPLAY = { 'true': 'none', 'false': '' };
 
 async function renderCells(sheet, chars) {
-  const paths = await Promise.all(buildPattern(chars.split(''), state.cols * state.rows).map(loadPath));
+  const paths = await Promise.all(buildPattern(chars.split(''), state.cols * state.rows).map(c => {
+    const file = charToFile(c);
+    return LOAD_DISPATCH[String(!file)](file);
+  }));
   paths.forEach(d => sheet.appendChild(makeCell(d)));
 }
 

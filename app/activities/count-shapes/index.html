@@ -41,10 +41,8 @@ var CHECK_RESULT={
   'false':function(btn){btn.classList.add('feedback-wrong');setTimeout(reset,600);}
 };
 
-function doCheck(n,btn){locked=true;CHECK_RESULT[String(n===count)](btn);}
-
 function check(n,btn){
-  [doCheck].filter(function(){return !locked;}).forEach(function(f){f(n,btn);});
+  ({'true':function(){},'false':function(){locked=true;CHECK_RESULT[String(n===count)](btn);}})[String(locked)]();
 }
 
 function newRound(){

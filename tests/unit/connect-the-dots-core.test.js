@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { tightVB, tapKey } from '../../core/connect-the-dots/connect-the-dots-core.js';
 
 describe('tightVB', () => {
