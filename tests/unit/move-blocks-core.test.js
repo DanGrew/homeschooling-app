@@ -1,4 +1,4 @@
-import { N, bfs, generatePuzzle } from '../../core/move-blocks/move-blocks-core.js';
+import { N, bfs, generatePuzzle, posKey, inBounds, isObstacle, isTarget } from '../../core/move-blocks/move-blocks-core.js';
 
 describe('N', () => {
   it('is 5', () => expect(N).toBe(5));
@@ -21,6 +21,30 @@ describe('bfs', () => {
   it('diagonal target requires Manhattan distance', () => {
     expect(bfs(0, 0, 2, 2, 4, 4)).toBe(4);
   });
+});
+
+describe('posKey', () => {
+  it('encodes position as string', () => expect(posKey(2, 3)).toBe('2,3'));
+  it('origin', () => expect(posKey(0, 0)).toBe('0,0'));
+});
+
+describe('inBounds', () => {
+  it('centre is in bounds', () => expect(inBounds(2, 2)).toBe(true));
+  it('origin is in bounds', () => expect(inBounds(0, 0)).toBe(true));
+  it('max corner is in bounds', () => expect(inBounds(N - 1, N - 1)).toBe(true));
+  it('negative x is out of bounds', () => expect(inBounds(-1, 2)).toBe(false));
+  it('x === N is out of bounds', () => expect(inBounds(N, 2)).toBe(false));
+  it('negative y is out of bounds', () => expect(inBounds(2, -1)).toBe(false));
+});
+
+describe('isObstacle', () => {
+  it('matches obstacle position', () => expect(isObstacle(2, 3, 2, 3)).toBe(true));
+  it('non-match returns false', () => expect(isObstacle(1, 1, 2, 3)).toBe(false));
+});
+
+describe('isTarget', () => {
+  it('matches target position', () => expect(isTarget(4, 1, 4, 1)).toBe(true));
+  it('non-match returns false', () => expect(isTarget(0, 0, 4, 1)).toBe(false));
 });
 
 describe('generatePuzzle', () => {

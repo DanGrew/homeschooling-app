@@ -1,11 +1,3 @@
-const OUTPUT_LABELS = { lamp: 'light', fan: 'fan', fountain: 'fountain' };
-const GOAL_SUFFIX = ['OFF', 'ON'];
-
-function goalText(goal, outputs) {
-  const out = outputs.find(o => o.id === goal[0].id);
-  return 'Turn the ' + OUTPUT_LABELS[out.type] + ' ' + GOAL_SUFFIX[+goal[0].value];
-}
-
 (function() {
   var currentConfig = null;
   var currentSvg    = null;

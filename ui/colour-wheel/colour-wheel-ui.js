@@ -1,5 +1,6 @@
 import { makeSpeakable, makeInteractive } from '../../components/speech/speakable.js';
 import { speak } from '../../components/speech/speech-ui.js';
+import { w2r, pieSeg, annulusSeg, hex, lsnMix } from '../../core/colour-wheel/colour-wheel-core.js';
 
 var LSN_COLOURS={
   red:            {hex:'#E74C3C',label:'Red'},
@@ -51,30 +52,7 @@ var TERTIARIES  =[
 
 var slotA=null,slotB=null,sel=null;
 
-function hex(id){return LSN_COLOURS[id].hex;}
 function el(id){return document.getElementById(id);}
-function w2r(deg){return(deg-90)*Math.PI/180;}
-
-function pieSeg(cx,cy,r,a1deg,a2deg,gap){
-  var a1=w2r(a1deg+gap),a2=w2r(a2deg-gap);
-  var x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
-  var x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
-  return 'M'+cx+' '+cy+' L'+x1+' '+y1+' A'+r+' '+r+' 0 0 1 '+x2+' '+y2+'Z';
-}
-
-function annulusSeg(cx,cy,ro,ri,a1deg,a2deg,gap){
-  var a1=w2r(a1deg+gap),a2=w2r(a2deg-gap);
-  var x1o=cx+ro*Math.cos(a1),y1o=cy+ro*Math.sin(a1);
-  var x2o=cx+ro*Math.cos(a2),y2o=cy+ro*Math.sin(a2);
-  var x1i=cx+ri*Math.cos(a1),y1i=cy+ri*Math.sin(a1);
-  var x2i=cx+ri*Math.cos(a2),y2i=cy+ri*Math.sin(a2);
-  return 'M'+x1o+' '+y1o+' A'+ro+' '+ro+' 0 0 1 '+x2o+' '+y2o+
-         ' L'+x2i+' '+y2i+' A'+ri+' '+ri+' 0 0 0 '+x1i+' '+y1i+'Z';
-}
-
-function lsnMix(a,b){
-  return [LSN_MIXES[a+'+'+b],a].filter(Boolean)[0];
-}
 
 var SWATCH_STATE={
   'true': function(sw){sw.style.borderColor='#333';sw.style.transform='scale(1.12)';},
@@ -95,7 +73,7 @@ var SLOT_ASSIGN={
 function getMixResult(){
   return [slotA,slotB].filter(Boolean)
     .filter(function(_,i,a){return a.length===2;})
-    .map(function(){return lsnMix(slotA,slotB);})
+    .map(function(){return lsnMix(slotA,slotB,LSN_MIXES);})
     .map(function(m){return LSN_COLOURS[m];})
     .filter(Boolean)[0];
 }
@@ -109,8 +87,8 @@ function updateResult(){
 function doSlot(slot){
   SLOT_ASSIGN[slot]();
   sel=null;
-  el('lsn-slot-a').style.background=[slotA].filter(Boolean).map(hex).concat(['#f0f0f0'])[0];
-  el('lsn-slot-b').style.background=[slotB].filter(Boolean).map(hex).concat(['#f0f0f0'])[0];
+  el('lsn-slot-a').style.background=[slotA].filter(Boolean).map(function(c){return hex(c,LSN_COLOURS);}).concat(['#f0f0f0'])[0];
+  el('lsn-slot-b').style.background=[slotB].filter(Boolean).map(function(c){return hex(c,LSN_COLOURS);}).concat(['#f0f0f0'])[0];
   renderPalette();
   updateResult();
 }
@@ -137,9 +115,9 @@ function handleSlot(slot){
       });
     });
   }
-  PRIMARIES.forEach(function(s){addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c),s.c);});
-  SECONDARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rSiOut,rSiIn,s.start,s.start+120,gap),hex(s.c),s.c);});
-  TERTIARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rToOut,rToIn,s.start,s.start+60,gap),hex(s.c),s.c);});
+  PRIMARIES.forEach(function(s){addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c,LSN_COLOURS),s.c);});
+  SECONDARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rSiOut,rSiIn,s.start,s.start+120,gap),hex(s.c,LSN_COLOURS),s.c);});
+  TERTIARIES.forEach(function(s){addPath(annulusSeg(cx,cy,rToOut,rToIn,s.start,s.start+60,gap),hex(s.c,LSN_COLOURS),s.c);});
   var cc=document.createElementNS('http://www.w3.org/2000/svg','circle');
   cc.setAttribute('cx','150');cc.setAttribute('cy','150');cc.setAttribute('r','16');
   cc.setAttribute('fill','#fff8f0');
@@ -151,7 +129,7 @@ function handleSlot(slot){
   PALETTE.forEach(function(c){
     var sw=document.createElement('div');
     sw.id='lsn-sw-'+c;
-    sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c)+';cursor:pointer;border:4px solid transparent;transition:transform 0.1s;';
+    sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c,LSN_COLOURS)+';cursor:pointer;border:4px solid transparent;transition:transform 0.1s;';
     makeInteractive(sw,function(){handleSwatch(c);speak(LSN_COLOURS[c].label);});
     pal.appendChild(sw);
   });
