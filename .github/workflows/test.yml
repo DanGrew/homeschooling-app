@@ -249,6 +249,18 @@ jobs:
           name: report-no-filter-conditional
           path: reports/no-filter-conditional.txt
 
+  no-pure-fn-outside-core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/arch-check.js no-pure-fn-outside-core reports/no-pure-fn-outside-core.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-no-pure-fn-outside-core
+          path: reports/no-pure-fn-outside-core.txt
+
   check-manifest-files:
     runs-on: ubuntu-latest
     steps:
@@ -343,6 +355,7 @@ jobs:
       - no-md-outside-docs
       - no-guard-chain
       - no-filter-conditional
+      - no-pure-fn-outside-core
       - check-manifest-files
       - validate-json
       - check-contracts
@@ -380,6 +393,7 @@ jobs:
             row "no-md-outside-docs" "$(smry reports/no-md-outside-docs.txt)"
             row "no-guard-chain" "$(smry reports/no-guard-chain.txt)"
             row "no-filter-conditional" "$(smry reports/no-filter-conditional.txt)"
+            row "no-pure-fn-outside-core" "$(smry reports/no-pure-fn-outside-core.txt)"
             row "manifest files" "$(smry reports/check-manifest-files.txt)"
             row "validate-json" "$(smry reports/validate-json.txt)"
             row "ui-cyclomatic" "$(smry reports/ui-cyclomatic.txt)"
