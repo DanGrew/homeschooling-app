@@ -72,6 +72,25 @@ describe('loadManifest', () => {
   });
 });
 
+describe('loadManifest — rep with src (SVG fetch)', () => {
+  it('fetches SVG text and sets svg + url on item', async () => {
+    const concept = { name: 'Star', tags: [] };
+    const rep = { concept: 'star', src: 'entries/star/star.svg' };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(['entries/star/rep.json']) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(rep) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(concept) })
+      .mockResolvedValueOnce({ ok: true, status: 200, text: () => Promise.resolve('<svg/>') });
+    vi.stubGlobal('fetch', fetchMock);
+    const D = await freshDictionary();
+    D.init('/base/');
+    const [item] = await D.loadManifest('image', 1);
+    expect(item.svg).toBe('<svg/>');
+    expect(item.url).toBe('/base/entries/star/star.svg');
+    expect(item.concept).toBeUndefined();
+  });
+});
+
 describe('caching', () => {
   it('does not re-fetch a rep already loaded', async () => {
     const concept = { name: 'Fish', tags: [] };

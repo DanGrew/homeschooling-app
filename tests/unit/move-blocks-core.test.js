@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { N, bfs, generatePuzzle } = require('../../core/move-blocks/move-blocks-core.js');
+import { N, bfs, generatePuzzle } from '../../core/move-blocks/move-blocks-core.js';
 
 describe('N', () => {
   it('is 5', () => expect(N).toBe(5));
@@ -9,14 +7,8 @@ describe('N', () => {
 describe('bfs', () => {
   it('adjacent cells have distance 1', () => expect(bfs(0, 0, 1, 0, 4, 4)).toBe(1));
   it('same start and end returns 0', () => expect(bfs(2, 2, 2, 2, 4, 4)).toBe(0));
-  it('returns -1 when path is blocked', () => {
-    // Obstacle at (1,0) blocks only route from (0,0) to (2,0) on a 2-wide corridor
-    // Actually we need to fully block — test with obstacle that seals off target
-    // Place player at (0,0), target at (1,0), obstacle at (1,0) same as target
-    // More reliable: obstacle blocks the only available adjacent cell
-    // Use N=5 grid: player (0,0), target (0,4), obstacle (0,1) — path must go around (still reachable)
-    // To make truly unreachable we'd need to surround — just test that non-blocking paths work
-    expect(bfs(0, 0, 4, 4, 2, 2)).toBeGreaterThan(0);
+  it('returns -1 when obstacle is on the target cell', () => {
+    expect(bfs(0, 0, 1, 0, 1, 0)).toBe(-1);
   });
   it('obstacle forces longer path', () => {
     const direct = bfs(0, 2, 4, 2, 4, 4);
@@ -64,5 +56,10 @@ describe('generatePuzzle', () => {
     const p = generatePuzzle();
     expect(p).not.toBeNull();
     expect(bfs(p.px, p.py, p.tx, p.ty, p.bx, p.by)).toBeGreaterThanOrEqual(4);
+  });
+
+  it('returns null when rng always produces same cell (player==target)', () => {
+    const p = generatePuzzle(() => 0);
+    expect(p).toBeNull();
   });
 });
