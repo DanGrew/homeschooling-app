@@ -5,17 +5,9 @@ export function extractTags(items){
   return ['all'].concat(tags);
 }
 
-export function extractLevels(items){
-  var levels=[];
-  items.forEach(function(p){if(p.level!==undefined&&levels.indexOf(p.level)<0)levels.push(p.level);});
-  return levels.sort(function(a,b){return a-b;});
-}
-
-export function filterItems(items,activeTag,activeLevel){
+export function filterItems(items,activeTag){
   return items.filter(function(p){
-    var tagOk=activeTag==='all'||(p.tags||[]).indexOf(activeTag)>=0;
-    var levelOk=activeLevel==='all'||p.level===activeLevel;
-    return tagOk&&levelOk;
+    return activeTag==='all'||(p.tags||[]).indexOf(activeTag)>=0;
   });
 }
 

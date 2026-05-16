@@ -1,12 +1,12 @@
-import { extractTags, extractLevels, filterItems, active, ACTIVE_STYLES } from '../../core/filter-bar/filter-bar-core.js';
+import { extractTags, filterItems, active, ACTIVE_STYLES } from '../../core/filter-bar/filter-bar-core.js';
 
-const item = (tags, level) => ({ tags, level });
+const item = (tags) => ({ tags });
 
 const ITEMS = [
-  item(['animals', 'easy'], 1),
-  item(['animals', 'hard'], 2),
-  item(['food', 'easy'], 1),
-  item(['food'], undefined),
+  item(['animals', 'easy']),
+  item(['animals', 'hard']),
+  item(['food', 'easy']),
+  item(['food']),
 ];
 
 describe('extractTags', () => {
@@ -34,6 +34,7 @@ describe('extractTags', () => {
   it('items with no tags returns ["all"]', () => {
     expect(extractTags([{ tags: [] }, {}])).toEqual(['all']);
   });
+
   it('tags sorted a-z after "all"', () => {
     const tags = extractTags(ITEMS);
     const rest = tags.slice(1);
@@ -41,70 +42,29 @@ describe('extractTags', () => {
   });
 });
 
-describe('extractLevels', () => {
-  it('returns sorted unique levels', () => {
-    expect(extractLevels(ITEMS)).toEqual([1, 2]);
-  });
-
-  it('excludes items with no level', () => {
-    const levels = extractLevels(ITEMS);
-    expect(levels).not.toContain(undefined);
-  });
-
-  it('sorts numerically not lexicographically', () => {
-    const items = [item([], 10), item([], 2), item([], 1)];
-    expect(extractLevels(items)).toEqual([1, 2, 10]);
-  });
-
-  it('empty items returns []', () => {
-    expect(extractLevels([])).toEqual([]);
-  });
-});
-
 describe('filterItems', () => {
-  it('"all" tag + "all" level returns everything', () => {
-    expect(filterItems(ITEMS, 'all', 'all')).toHaveLength(ITEMS.length);
+  it('"all" tag returns everything', () => {
+    expect(filterItems(ITEMS, 'all')).toHaveLength(ITEMS.length);
   });
 
   it('specific tag filters correctly', () => {
-    const result = filterItems(ITEMS, 'animals', 'all');
+    const result = filterItems(ITEMS, 'animals');
     expect(result).toHaveLength(2);
     result.forEach(p => expect(p.tags).toContain('animals'));
   });
 
-  it('specific level filters correctly', () => {
-    const result = filterItems(ITEMS, 'all', 1);
-    expect(result).toHaveLength(2);
-    result.forEach(p => expect(p.level).toBe(1));
-  });
-
-  it('tag + level combined', () => {
-    const result = filterItems(ITEMS, 'animals', 1);
-    expect(result).toHaveLength(1);
-    expect(result[0].tags).toContain('animals');
-    expect(result[0].level).toBe(1);
-  });
-
   it('no matching tag returns empty', () => {
-    expect(filterItems(ITEMS, 'nonexistent', 'all')).toHaveLength(0);
-  });
-
-  it('no matching level returns empty', () => {
-    expect(filterItems(ITEMS, 'all', 99)).toHaveLength(0);
-  });
-
-  it('tag + level combo with no overlap returns empty', () => {
-    expect(filterItems(ITEMS, 'food', 2)).toHaveLength(0);
+    expect(filterItems(ITEMS, 'nonexistent')).toHaveLength(0);
   });
 
   it('items with no tags excluded by specific tag filter', () => {
-    const result = filterItems(ITEMS, 'easy', 'all');
+    const result = filterItems(ITEMS, 'easy');
     result.forEach(p => expect(p.tags || []).toContain('easy'));
   });
 
   it('item missing tags property is excluded by specific tag filter', () => {
-    const noTags = [{ level: 1 }, { tags: ['animals'], level: 1 }];
-    const result = filterItems(noTags, 'animals', 'all');
+    const noTags = [{}, { tags: ['animals'] }];
+    const result = filterItems(noTags, 'animals');
     expect(result).toHaveLength(1);
     expect(result[0].tags).toContain('animals');
   });
