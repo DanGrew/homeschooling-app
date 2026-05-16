@@ -70,7 +70,12 @@ fetch('../../../content/lessons/word-lesson.json')
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='word-lesson';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+[['btn-watch','Watch'],['btn-sayit','Say It'],['btn-tryit','Try It'],['btn-stop','Reset'],['btn-generate','Go']].forEach(function(pair) {
+  makeSpeakable(document.getElementById(pair[0]), pair[1]);
+});
+</script>
 </body>
 </html>

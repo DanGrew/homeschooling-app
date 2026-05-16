@@ -112,7 +112,10 @@ initGame();
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='shopping-play';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+makeSpeakable(document.getElementById('btn-find'), 'Find it');
+</script>
 </body>
 </html>

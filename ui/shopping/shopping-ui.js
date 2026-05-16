@@ -8,6 +8,7 @@ export function filterListItems(fn){listItems=listItems.filter(fn);}
 
 import { flattenCatalogs, escHtml, byName } from '../../core/shopping/shopping-core.js';
 export { flattenCatalogs, escHtml, byName };
+import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner, hideBanner } from '../../components/success-banner.js';
 
 export function renderTiles(items=allItems){
@@ -19,6 +20,7 @@ export function renderTiles(items=allItems){
     btn.style.background=TILE_COLOURS[i%TILE_COLOURS.length];
     btn.innerHTML='<span class="ctile-icon">'+it.icon+'</span><span class="ctile-name">'+escHtml(it.name)+'</span>';
     btn.onclick=function(){addToList(it);};
+    makeSpeakable(btn, it.name);
     wrap.appendChild(btn);
   });
 }

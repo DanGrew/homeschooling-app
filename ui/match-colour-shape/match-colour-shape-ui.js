@@ -25,7 +25,7 @@ function newRound() {
   var distractors = makeDistractors(col, type);
   var options = [current].concat(distractors).sort(function() { return Math.random() - 0.5; });
   document.getElementById('options').innerHTML = options.map(function(o) {
-    return '<button data-col="' + o.col + '" data-type="' + o.type + '" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">' + svg(o.type, o.col, 'clamp(60px,13vmin,96px)') + '</button>';
+    return '<button data-col="' + o.col + '" data-type="' + o.type + '" data-no-speak style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">' + svg(o.type, o.col, 'clamp(60px,13vmin,96px)') + '</button>';
   }).join('');
 }
 

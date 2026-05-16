@@ -6,7 +6,7 @@ module.exports = defineConfig({
     baseURL: 'http://localhost:3000',
   },
   webServer: {
-    command: 'npx serve .. -l 3000 --no-clipboard',
+    command: 'node test-server.js',
     url: 'http://localhost:3000',
     reuseExistingServer: false,
   },

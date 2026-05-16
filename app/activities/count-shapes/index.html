@@ -67,7 +67,13 @@ newRound();
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='count-shapes';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+['b1','b2','b3','b4','b5'].forEach(function(id) {
+  var el = document.getElementById(id);
+  makeSpeakable(el, el.textContent);
+});
+</script>
 </body>
 </html>
