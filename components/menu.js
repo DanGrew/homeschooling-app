@@ -6,7 +6,7 @@
     var s=document.createElement('span');
     s.setAttribute('data-nav-label','');
     s.textContent=text;
-    s.style.cssText='display:none;font-size:0.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    s.style.cssText='font-size:0.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
     return s;
   }
 
@@ -30,10 +30,27 @@
 
   function positionPopout(popout,btn){
     var r=btn.getBoundingClientRect();
-    popout.style.top=r.top+'px';
     popout.style.left=(r.right+8)+'px';
-    popout.style.maxHeight=(window.innerHeight-r.top-8)+'px';
-    popout.style.overflowY='auto';
+    popout.style.maxHeight='';
+    popout.style.overflowY='';
+    popout.style.top='';
+    popout.style.bottom='';
+    popout.style.visibility='hidden';
+    popout.style.display='block';
+    var h=popout.offsetHeight;
+    popout.style.display='none';
+    popout.style.visibility='';
+    var spaceBelow=window.innerHeight-r.top-8;
+    var spaceAbove=r.bottom-8;
+    if(h<=spaceBelow){
+      popout.style.top=r.top+'px';
+    } else if(h<=spaceAbove){
+      popout.style.bottom=(window.innerHeight-r.bottom)+'px';
+    } else {
+      popout.style.top=r.top+'px';
+      popout.style.maxHeight=spaceBelow+'px';
+      popout.style.overflowY='auto';
+    }
   }
 
   function togglePopout(popout,btn){
@@ -54,7 +71,7 @@
 
   var filterSlot=document.createElement('div');
   filterSlot.id='nav-filter-slot';
-  filterSlot.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1;min-height:0;overflow-y:auto;width:100%;box-sizing:border-box;padding-top:4px;align-items:center;';
+  filterSlot.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;width:100%;box-sizing:border-box;padding-top:4px;align-items:center;';
   bar.appendChild(filterSlot);
 
   var gameArea=document.querySelector('.game-area');

@@ -2,6 +2,7 @@ body{margin:0;user-select:none;-webkit-user-select:none;-webkit-touch-callout:no
 .nav-bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;padding:12px 8px;background:#eee;border-right:2px solid #ddd;position:relative;width:56px;flex-shrink:0;transition:width 0.25s ease;overflow:hidden;}
 .nav-bar.expanded{width:160px;}
 .nav-bar.expanded .nav-btn{width:100%;height:auto;padding:6px 8px;justify-content:flex-start;gap:8px;box-sizing:border-box;}
+[data-nav-label]{display:none;}
 .nav-bar.expanded [data-nav-label]{display:inline;}
 .nav-btn-container{width:100%;display:flex;justify-content:center;}
 .nav-btn{font-size:1.6em;color:#666;text-decoration:none;padding:8px;background:#fff;border-radius:12px;border:none;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;width:40px;height:40px;box-sizing:content-box;}
