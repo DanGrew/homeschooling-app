@@ -1,3 +1,5 @@
+export function gridMajorKey(n) { return String(+(n % 100 !== 0)); }
+
 export function evalCond(state, cond) {
   if (cond && typeof cond === 'object') {
     if (cond.all) return cond.all.every(c => evalCond(state, c));

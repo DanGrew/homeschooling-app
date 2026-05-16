@@ -21,8 +21,6 @@ let dotEl = null;
 let autoPlay = false;
 let paginator = null;
 
-function getParam(key) { return new URLSearchParams(location.search).get(key); }
-
 function setParam(char, filter) {
   const url = new URL(location.href);
   url.searchParams.set('char', char);
@@ -209,9 +207,9 @@ var MODE_PARAM = { 'true': 'trace', 'false': 'lesson' };
 function getSpeakLabel() { return [currentEntry].filter(Boolean).map(function(e) { return e.speak; }).concat(['Speak'])[0]; }
 
 export function init() {
-  const paramChar   = [getParam('char'),   'a'  ].filter(Boolean)[0];
-  const paramFilter = [getParam('filter'), 'all'].filter(Boolean)[0];
-  mode = MODE_PARAM[String(getParam('mode') === 'trace')];
+  const paramChar   = [new URLSearchParams(location.search).get('char'),   'a'  ].filter(Boolean)[0];
+  const paramFilter = [new URLSearchParams(location.search).get('filter'), 'all'].filter(Boolean)[0];
+  mode = MODE_PARAM[String(new URLSearchParams(location.search).get('mode') === 'trace')];
   applyFilter(paramFilter);
   applyModeUI();
 

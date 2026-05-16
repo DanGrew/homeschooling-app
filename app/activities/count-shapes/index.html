@@ -33,10 +33,6 @@ var SVG_SHAPE={
   'triangle':'<polygon points="40,4 76,76 4,76" fill="#F39C12"/>'
 };
 
-function svg(t){
-  return '<svg width="80" height="80" viewBox="0 0 80 80" style="width:min(80px,15vw);height:min(80px,15vw)">'+SVG_SHAPE[t]+'</svg>';
-}
-
 function reset(){
   locked=false;
   ['b1','b2','b3','b4','b5'].forEach(function(id){
@@ -50,16 +46,14 @@ var CHECK_RESULT={
   'false':function(btn){btn.classList.add('feedback-wrong');setTimeout(reset,600);}
 };
 
-function doCheck(n,btn){locked=true;CHECK_RESULT[String(n===count)](btn);}
-
 function check(n,btn){
-  [doCheck].filter(function(){return !locked;}).forEach(function(f){f(n,btn);});
+  ({'true':function(){},'false':function(){locked=true;CHECK_RESULT[String(n===count)](btn);}})[String(locked)]();
 }
 
 function newRound(){
   count=Math.floor(Math.random()*5)+1;
   var t=types[Math.floor(Math.random()*types.length)];
-  document.getElementById('shapes').innerHTML=Array.from({length:count},function(){return svg(t);}).join('');
+  document.getElementById('shapes').innerHTML=Array.from({length:count},function(){return '<svg width="80" height="80" viewBox="0 0 80 80" style="width:min(80px,15vw);height:min(80px,15vw)">'+SVG_SHAPE[t]+'</svg>';}).join('');
   reset();
 }
 

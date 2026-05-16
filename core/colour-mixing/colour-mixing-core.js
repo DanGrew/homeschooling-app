@@ -39,3 +39,7 @@ export const CM_MIXES={
 
 export function mix(a,b){if(a===b)return a;return CM_MIXES[a+'+'+b]||null;}
 export function hex(id){return CM_COLOURS[id]?CM_COLOURS[id].hex:'#f0f0f0';}
+
+export function slotHtml(id, lbl) {
+  return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div id="' + id + '" style="width:76px;height:76px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div><div style="font-size:0.85em;color:#bbb;font-weight:bold;">' + lbl + '</div></div>';
+}

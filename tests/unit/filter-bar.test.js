@@ -1,4 +1,4 @@
-import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/filter-bar-core.js';
+import { extractTags, extractLevels, filterItems, active, ACTIVE_STYLES } from '../../core/filter-bar/filter-bar-core.js';
 
 const item = (tags, level) => ({ tags, level });
 
@@ -107,5 +107,36 @@ describe('filterItems', () => {
     const result = filterItems(noTags, 'animals', 'all');
     expect(result).toHaveLength(1);
     expect(result[0].tags).toContain('animals');
+  });
+});
+
+describe('ACTIVE_STYLES', () => {
+  it('active state returns provided colour', () => {
+    const s = ACTIVE_STYLES['true']('#3498DB');
+    expect(s.border).toBe('#3498DB');
+    expect(s.bg).toBe('#3498DB');
+    expect(s.color).toBe('white');
+  });
+  it('inactive state returns neutral colours', () => {
+    const s = ACTIVE_STYLES['false']();
+    expect(s.border).toBe('#ddd');
+    expect(s.bg).toBe('#fff');
+    expect(s.color).toBe('#333');
+  });
+});
+
+describe('active', () => {
+  it('returns a CSS string', () => {
+    expect(typeof active(true, '#3498DB')).toBe('string');
+  });
+  it('active string contains the colour', () => {
+    expect(active(true, '#3498DB')).toContain('#3498DB');
+  });
+  it('inactive string contains #ddd', () => {
+    expect(active(false, '#3498DB')).toContain('#ddd');
+  });
+  it('always contains cursor:pointer', () => {
+    expect(active(true, '#fff')).toContain('cursor:pointer');
+    expect(active(false, '#fff')).toContain('cursor:pointer');
   });
 });

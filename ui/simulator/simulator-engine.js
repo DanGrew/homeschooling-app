@@ -1,6 +1,7 @@
 import {
   evalCond, applyStateAction, resolveScene, resolveImgFit, resolveImgSrc, resolveObject,
   objectRenderType, resolveAnimName, nextSpriteIdx, parseAction, findAction, shouldTriggerWin,
+  gridMajorKey,
 } from '../../core/simulator/simulator-core.js';
 
 var DISPLAY = { 'true': '', 'false': 'none' };
@@ -297,8 +298,6 @@ var EXEC_HANDLERS = {
 var GRID_KEYS = new Set(['g', 'G']);
 var GRID_STROKE_COLOR = { '0': 'rgba(255,0,0,0.5)', '1': 'rgba(255,0,0,0.2)' };
 var GRID_STROKE_WIDTH = { '0': '1', '1': '0.5' };
-
-function gridMajorKey(n) { return String(+(n % 100 !== 0)); }
 
 var ZINDEX = {
   'true': function(i) { return 50 + i; },

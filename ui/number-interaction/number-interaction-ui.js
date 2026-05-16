@@ -1,7 +1,7 @@
 import { speak } from '../../components/speech/speech-ui.js';
 import { getVoice } from '../../components/speech/voice-service.js';
 import { makeInteractive } from '../../components/speech/speakable.js';
-import { comparisonColor, clamp } from '../../core/number-interaction/number-interaction-core.js';
+import { comparisonColor, clamp, makeImg, labelState } from '../../core/number-interaction/number-interaction-core.js';
 
 var SIDE_EVT = { a: 'A', b: 'B' };
 var DELTA_EVT = { 'true': '_PLUS', 'false': '_MINUS' };
@@ -49,10 +49,6 @@ var numA = document.getElementById('num-a');
   render();
 }
 
-export function makeImg(item, sz) {
-  return `<img src="${item.url}" style="${sz};transition:transform 0.15s,filter 0.15s;" draggable="false">`;
-}
-
 function makeImgEl(item, sz) {
   var img = document.createElement('img');
   img.src = item.url;
@@ -76,15 +72,6 @@ var SHOW_GHOST = {
 };
 
 var LABEL_TEXT = { empty: '', same: 'same', bigger: 'bigger', smaller: 'smaller' };
-function labelState(self, other) {
-  return (
-    ['empty'].filter(() => self + other === 0)
-    .concat(['same'].filter(() => self === other))
-    .concat(['bigger'].filter(() => self > other))
-    .concat(['smaller'].filter(() => self < other))
-    .concat(['empty'])
-  )[0];
-}
 
 export function render() {
   var aContainer = document.getElementById('objects-a');
@@ -127,6 +114,7 @@ function stopCounting() {
 }
 
 export function change(side, delta) {
+  var numEl = document.getElementById('num-' + side);
   var wasCounting = stopCounting();
   var prevA = aCount, prevB = bCount;
   ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();

@@ -34,13 +34,10 @@
   card.style.cssText = 'position:fixed;bottom:70px;right:12px;width:268px;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.16);border:1.5px solid #eee;z-index:9001;display:none;flex-direction:column;overflow:hidden;';
   card.setAttribute('data-testid', 'adult-prompts-card');
 
-  function typeCol(type) { return [TYPE_COLOR[type]].filter(Boolean).concat(['#999'])[0]; }
-  function typeLbl(type) { return [TYPE_LABEL[type]].filter(Boolean).concat([type.toUpperCase()])[0]; }
-
   function renderCard() {
     var p = prompts[idx];
-    var col = typeCol(p.type);
-    var lbl = typeLbl(p.type);
+    var col = [TYPE_COLOR[p.type]].filter(Boolean).concat(['#999'])[0];
+    var lbl = [TYPE_LABEL[p.type]].filter(Boolean).concat([p.type.toUpperCase()])[0];
     card.innerHTML =
       '<div style="background:#f8f8f8;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;">' +
         '<div style="display:flex;align-items:center;gap:7px;">' +

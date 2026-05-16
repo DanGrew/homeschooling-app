@@ -1,6 +1,7 @@
 import {
   evalCond, applyStateAction, resolveScene, resolveImgFit, resolveImgSrc, resolveObject,
   objectRenderType, resolveAnimName, nextSpriteIdx, parseAction, findAction, shouldTriggerWin,
+  gridMajorKey,
 } from '../../core/simulator/simulator-core.js';
 
 describe('evalCond — state comparisons', () => {
@@ -204,4 +205,18 @@ describe('shouldTriggerWin', () => {
   it('true when not won and condition met', () => expect(shouldTriggerWin(spec, { x: 3 }, false)).toBe(true));
   it('false when already won', () => expect(shouldTriggerWin(spec, { x: 5 }, true)).toBe(false));
   it('false when condition not met', () => expect(shouldTriggerWin(spec, { x: 1 }, false)).toBe(false));
+});
+
+
+describe('gridMajorKey', () => {
+  it('returns "1" for non-multiples of 100 (minor)', () => {
+    expect(gridMajorKey(10)).toBe('1');
+    expect(gridMajorKey(50)).toBe('1');
+    expect(gridMajorKey(1)).toBe('1');
+  });
+  it('returns "0" for multiples of 100 (major)', () => {
+    expect(gridMajorKey(100)).toBe('0');
+    expect(gridMajorKey(200)).toBe('0');
+    expect(gridMajorKey(0)).toBe('0');
+  });
 });

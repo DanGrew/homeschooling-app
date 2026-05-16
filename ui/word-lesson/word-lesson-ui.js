@@ -148,6 +148,7 @@ function fetchCharData(c) {
 
 function loadWord(word) {
   stopAllEngines();
+  document.getElementById('word-container').innerHTML = '';
   const chars = word.split('');
   return Promise.all(chars.map(fetchCharData))
     .then(charData => renderWord(chars, charData))

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { comparisonColor, pickFruitPair, clamp } from '../../core/number-interaction/number-interaction-core.js'
+import { comparisonColor, pickFruitPair, clamp, makeImg, labelState, pluralize } from '../../core/number-interaction/number-interaction-core.js'
 
 describe('comparisonColor', () => {
   it('returns green when a > b', () => {
@@ -66,5 +66,58 @@ describe('clamp', () => {
   it('clamps to max', () => {
     expect(clamp(11, 0, 10)).toBe(10)
     expect(clamp(100, 0, 10)).toBe(10)
+  })
+})
+
+describe('makeImg', () => {
+  it('returns an img tag string', () => {
+    const result = makeImg({ url: 'apple.png' }, 'width:60px')
+    expect(result).toContain('<img')
+    expect(result).toContain('apple.png')
+    expect(result).toContain('width:60px')
+  })
+
+  it('sets draggable false', () => {
+    expect(makeImg({ url: 'x.png' }, 'w')).toContain('draggable="false"')
+  })
+})
+
+describe('labelState', () => {
+  it('returns "empty" when both are 0', () => {
+    expect(labelState(0, 0)).toBe('empty')
+  })
+
+  it('returns "same" when equal and non-zero', () => {
+    expect(labelState(3, 3)).toBe('same')
+  })
+
+  it('returns "bigger" when self > other', () => {
+    expect(labelState(5, 3)).toBe('bigger')
+  })
+
+  it('returns "smaller" when self < other', () => {
+    expect(labelState(2, 4)).toBe('smaller')
+  })
+
+  it('returns "empty" when other is 0 but self too', () => {
+    expect(labelState(0, 0)).toBe('empty')
+  })
+})
+
+describe('pluralize', () => {
+  it('appends s for regular words', () => {
+    expect(pluralize('apple')).toBe('apples')
+  })
+
+  it('handles -y ending: cherry → cherries', () => {
+    expect(pluralize('cherry')).toBe('cherries')
+  })
+
+  it('handles -h ending: strips last char and adds es', () => {
+    expect(pluralize('peach')).toBe('peaces')
+  })
+
+  it('handles regular ending: orange → oranges', () => {
+    expect(pluralize('orange')).toBe('oranges')
   })
 })

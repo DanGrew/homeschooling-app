@@ -1,4 +1,4 @@
-import { mix, hex, CM_COLOURS, CM_MIXES } from '../../core/colour-mixing/colour-mixing-core.js';
+import { mix, hex, CM_COLOURS, CM_MIXES, slotHtml } from '../../core/colour-mixing/colour-mixing-core.js';
 
 describe('mix', () => {
   it('same colour returns itself', () => {
@@ -61,5 +61,26 @@ describe('CM_COLOURS', () => {
       expect(val.hex).toMatch(/^#[0-9A-Fa-f]{6}$/);
       expect(typeof val.label).toBe('string');
     });
+  });
+});
+
+describe('slotHtml', () => {
+  it('returns a string', () => {
+    expect(typeof slotHtml('cm-slot-a', 'A')).toBe('string');
+  });
+
+  it('includes the id in the output', () => {
+    expect(slotHtml('cm-slot-a', 'A')).toContain('id="cm-slot-a"');
+  });
+
+  it('includes the label in the output', () => {
+    expect(slotHtml('cm-slot-a', 'A')).toContain('A');
+  });
+
+  it('uses different ids for different slots', () => {
+    const a = slotHtml('cm-slot-a', 'A');
+    const b = slotHtml('cm-slot-b', 'B');
+    expect(a).toContain('cm-slot-a');
+    expect(b).toContain('cm-slot-b');
   });
 });
