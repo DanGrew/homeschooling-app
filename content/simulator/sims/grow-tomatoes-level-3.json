@@ -47,6 +47,7 @@
       "id": "the_fruit_on_table",
       "sprite": "fruit-outside-pot.png",
       "x": 210, "y": -70, "w": 240, "h": 582,
+      "clickable": true,
       "visible": false
     },
     {
