@@ -278,7 +278,7 @@ function renderRef(pic){
 }
 
 function renderPicture(pic){
-  currentPic=pic;closePop();selectedColour=null;filled=0;
+  currentPic=pic;closePop();filled=0;
   var titleBtn=document.getElementById('pic-title');
   titleBtn.textContent=pic.name;
   makeSpeakable(titleBtn,pic.name);
@@ -308,6 +308,7 @@ function renderPicture(pic){
   renderRef(pic);
   if(mode==='guided')buildGuidedPal(pic);
   applyLayout();
+  setActive(selectedColour);
 }
 
 buildBasePalette();
