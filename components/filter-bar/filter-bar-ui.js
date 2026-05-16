@@ -1,19 +1,6 @@
-import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/filter-bar-core.js';
+import { extractTags, extractLevels, filterItems, tagIcon, optIcon, btnStyle } from '../../core/filter-bar/filter-bar-core.js';
 export { extractTags, extractLevels, filterItems };
 import { makeSpeakable } from '../speech/speakable.js';
-
-var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E', fruit: '\uD83C\uDF4E', emotions: '\uD83D\uDE0A', vehicles: '\uD83D\uDE97', medical: '\uD83C\uDFE5', vegetables: '\uD83E\uDD66', dairy: '\uD83E\uDDC0', bakery: '\uD83E\uDD50', groceries: '\uD83D\uDED2' };
-
-function tagIcon(t) {
-  if (t === 'all') return '\u2726';
-  return TAG_EMOJI[t] || t.charAt(0).toUpperCase();
-}
-
-function optIcon(opt) {
-  if (opt.icon) return opt.icon;
-  if (opt.value === 'all') return '\u2726';
-  return TAG_EMOJI[opt.value] || opt.label.charAt(0);
-}
 
 var _expanded = false;
 var _applyFn = null;
@@ -22,24 +9,10 @@ window.addEventListener('nav:expand', function(e) {
   if (_applyFn) _applyFn();
 });
 
-function collapsedBtn(on, colour) {
-  var border = on ? colour : '#ddd', bg = on ? colour : '#fff', col = on ? 'white' : '#333';
-  return 'display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:2px solid ' + border + ';background:' + bg + ';color:' + col + ';font-family:inherit;cursor:pointer;box-sizing:border-box;padding:0;font-size:1.2em;flex-shrink:0;';
-}
-
-function expandedBtn(on, colour) {
-  var border = on ? colour : '#ddd', bg = on ? colour : '#fff', col = on ? 'white' : '#333';
-  return 'display:flex;align-items:center;gap:6px;width:100%;padding:6px 8px;border-radius:10px;border:2px solid ' + border + ';background:' + bg + ';color:' + col + ';font-family:inherit;cursor:pointer;box-sizing:border-box;text-align:left;flex-shrink:0;';
-}
-
-function btnStyle(on, colour) {
-  return _expanded ? expandedBtn(on, colour) : collapsedBtn(on, colour);
-}
-
 function makeBtn(icon, label, dataAttr, dataVal, on, colour, onClick) {
   var b = document.createElement('button');
   b.setAttribute(dataAttr, dataVal);
-  b.style.cssText = btnStyle(on, colour);
+  b.style.cssText = btnStyle(_expanded, on, colour);
 
   var iconSpan = document.createElement('span');
   iconSpan.setAttribute('data-icon', '');
@@ -78,12 +51,12 @@ export function buildFilterBar(items, onChange) {
   function updateStyles() {
     slot.querySelectorAll('button[data-tag]').forEach(function(b) {
       var on = b.getAttribute('data-tag') === activeTag;
-      b.style.cssText = btnStyle(on, '#2ECC71');
+      b.style.cssText = btnStyle(_expanded, on, '#2ECC71');
       b.querySelector('[data-label]').style.display = _expanded ? '' : 'none';
     });
     slot.querySelectorAll('button[data-level]').forEach(function(b) {
       var on = b.getAttribute('data-level') === String(activeLevel);
-      b.style.cssText = btnStyle(on, '#3498DB');
+      b.style.cssText = btnStyle(_expanded, on, '#3498DB');
       b.querySelector('[data-label]').style.display = _expanded ? '' : 'none';
     });
   }
@@ -134,7 +107,7 @@ export function buildSimpleFilterBar(options, onChange, initialValue) {
   function updateStyles() {
     slot.querySelectorAll('button[data-value]').forEach(function(b) {
       var on = b.getAttribute('data-value') === activeValue;
-      b.style.cssText = btnStyle(on, '#3498DB');
+      b.style.cssText = btnStyle(_expanded, on, '#3498DB');
       b.querySelector('[data-label]').style.display = _expanded ? '' : 'none';
     });
   }
