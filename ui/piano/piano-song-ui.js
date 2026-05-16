@@ -28,19 +28,6 @@ var _lessonVerse = 0;
 var _lessonEl = {};
 var _simplifications = {};
 
-function _simpleInfo(token) {
-  return [SONG_NOTE_MAP[_simplifications[token]]].filter(Boolean)
-    .map(function(i) { return {note: i.note, color: i.color, simplified: true, displayToken: _simplifications[token]}; })[0];
-}
-
-function _noteInfo(token) {
-  return (
-    [SONG_NOTE_MAP[token]].filter(Boolean).filter(function(i) { return i.note; })
-    .concat([_simpleInfo(token)].filter(Boolean))
-    .concat([_NO_NOTE_INFO])
-  )[0];
-}
-
 function _chipGlow(chip, color) {
   chip.style.transform = 'scale(1.2)';
   chip.style.filter = 'brightness(1.35) drop-shadow(0 0 6px ' + color + ')';
@@ -57,7 +44,7 @@ function _addChipListener(chip, info) {
 }
 
 function makeSongChip(token) {
-  var info = _noteInfo(token);
+  var info = noteInfo(token, SONG_NOTE_MAP, _simplifications, _NO_NOTE_INFO);
   var suffix = ['*'].filter(function() { return info.simplified; }).join('');
   var chip = document.createElement('span');
   chip.className = _CHIP_CLASS[String(!!info.note)];

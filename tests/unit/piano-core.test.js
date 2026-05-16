@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { PIANO_CONFIG, generateNotes, scoreMessage } = require('../../core/piano/piano-core.js');
+const { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo } = require('../../core/piano/piano-core.js');
 
 describe('PIANO_CONFIG', () => {
   it('has 12 notes', () => expect(PIANO_CONFIG.NOTES).toHaveLength(12));
@@ -123,5 +123,63 @@ describe('scoreMessage', () => {
   it('3 → Keep playing', () => expect(scoreMessage(3).text).toBe('Keep playing!'));
   it('returns emoji', () => expect(scoreMessage(10).emoji).toBeTruthy());
   it('sub includes count for non-perfect', () => expect(scoreMessage(7).sub).toContain('7'));
+});
+
+describe('simpleNoteInfo', () => {
+  const noteMap = {
+    'C': {note: 'C4', color: '#FFB3B3'},
+    'D': {note: 'D4', color: '#FFCBA4'}
+  };
+  const simplifications = {'Do': 'C', 'Re': 'D', 'Unknown': 'ZZZ'};
+
+  it('returns correct object when token maps to a known note', () => {
+    const result = simpleNoteInfo('Do', noteMap, simplifications);
+    expect(result).toEqual({note: 'C4', color: '#FFB3B3', simplified: true, displayToken: 'C'});
+  });
+
+  it('returns correct object for another token', () => {
+    const result = simpleNoteInfo('Re', noteMap, simplifications);
+    expect(result).toEqual({note: 'D4', color: '#FFCBA4', simplified: true, displayToken: 'D'});
+  });
+
+  it('returns undefined when simplified token not in noteMap', () => {
+    const result = simpleNoteInfo('Unknown', noteMap, simplifications);
+    expect(result).toBeUndefined();
+  });
+
+  it('returns undefined when token not in simplifications', () => {
+    const result = simpleNoteInfo('X', noteMap, simplifications);
+    expect(result).toBeUndefined();
+  });
+});
+
+describe('noteInfo', () => {
+  const noteMap = {
+    'C': {note: 'C4', color: '#FFB3B3'},
+    'D': {note: 'D4', color: '#FFCBA4'},
+    'noNote': {note: null, color: '#aaa'}
+  };
+  const simplifications = {'X': 'C'};
+  const noNoteInfo = {note: null, color: '#ccc'};
+
+  it('returns direct note info when token is in noteMap with a note', () => {
+    const result = noteInfo('C', noteMap, simplifications, noNoteInfo);
+    expect(result).toEqual({note: 'C4', color: '#FFB3B3'});
+  });
+
+  it('falls back to simpleNoteInfo when token not directly in noteMap', () => {
+    const result = noteInfo('X', noteMap, simplifications, noNoteInfo);
+    expect(result).toEqual({note: 'C4', color: '#FFB3B3', simplified: true, displayToken: 'C'});
+  });
+
+  it('returns noNoteInfo for completely unknown token', () => {
+    const result = noteInfo('ZZZ', noteMap, simplifications, noNoteInfo);
+    expect(result).toBe(noNoteInfo);
+  });
+
+  it('skips direct entry with null note and falls back to simplified', () => {
+    const result = noteInfo('noNote', noteMap, simplifications, noNoteInfo);
+    expect(result).toBe(noNoteInfo);
+  });
 });
 

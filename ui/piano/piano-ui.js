@@ -29,16 +29,12 @@ function _decodeNote(ctx, note) {
     .concat([Promise.resolve()])[0];
 }
 
-function _decodeAll(ctx) {
-  return Promise.all(PIANO_CONFIG.NOTES.map(function(note) { return _decodeNote(ctx, note); }));
-}
-
 function _onCtxStateChange() {
   [_audioCtx]
     .filter(Boolean)
     .filter(function(c) { return c.state === 'running'; })
     .filter(function() { return _initDone; })
-    .forEach(function(c) { _decodeAll(c); });
+    .forEach(function(c) { Promise.all(PIANO_CONFIG.NOTES.map(function(note) { return _decodeNote(c, note); })); });
 }
 
 function _resumeOnTouch() {
@@ -54,7 +50,7 @@ var initAudio = once(function() {
   _audioCtx.addEventListener('statechange', _onCtxStateChange);
   document.addEventListener('touchstart', _resumeOnTouch, { passive: true });
   return _audioCtx.resume()
-    .then(function() { unlockAudioCtx(_audioCtx); return _decodeAll(_audioCtx); })
+    .then(function() { unlockAudioCtx(_audioCtx); return Promise.all(PIANO_CONFIG.NOTES.map(function(note) { return _decodeNote(_audioCtx, note); })); })
     .then(function() { _initDone = true; })
     .catch(function() {});
 });
