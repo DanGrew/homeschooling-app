@@ -1,5 +1,4 @@
 import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
-import { buildCatalogItems } from '../../core/shopping-scan/shopping-scan-core.js';
 import { flattenCatalogs, escHtml, byName, setAllItems, getListItems, resetListItems, filterListItems, renderTiles, renderList, hidePhase1, showPhase1, showSuccess, startFindPhase } from '../shopping/shopping-ui.js';
 import { buildCatalogItems } from '../../core/shopping-scan/shopping-scan-core.js';
 
