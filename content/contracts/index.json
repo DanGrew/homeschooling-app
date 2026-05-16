@@ -1,0 +1,6 @@
+{
+  "opt-outs": {
+    "nav-bar": "home page — no back navigation",
+    "speakable": "home page — no activity content"
+  }
+}

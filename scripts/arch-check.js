@@ -101,15 +101,10 @@ if (rule === 'no-stray-files') {
 }
 
 if (rule === 'no-guard-chain') {
-  const files = getAllFiles(path.join(ROOT, 'ui'), ['.js']);
   const CHAIN_LINE = /('true'\s*:\s*\(\)\s*=>\s*\w+\[).*('false'\s*:\s*\(\)\s*=>\s*\{\s*\})/;
   const WINDOW = 10;
-  files.forEach(file => {
-    const content = read(file);
-    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(content, 'allow-guard-chain')) { exceptions.push(rel); return; }
-    scanned.push(file);
-    const lines = content.split('\n');
+
+  function checkGuardChain(lines, label) {
     for (let i = 0; i < lines.length; i++) {
       if (!CHAIN_LINE.test(lines[i])) continue;
       const chainLines = [i];
@@ -117,10 +112,29 @@ if (rule === 'no-guard-chain') {
         if (CHAIN_LINE.test(lines[j])) chainLines.push(j);
       }
       if (chainLines.length >= 2) {
-        violations.push(`${rel} — chained noop-guard dispatch tables at lines ${chainLines.map(l => l + 1).join(', ')} (use [fn].filter(() => [...].every(Boolean)).forEach(f => f()))`);
+        violations.push(`${label} — chained noop-guard dispatch tables at lines ${chainLines.map(l => l + 1).join(', ')} (use [fn].filter(() => [...].every(Boolean)).forEach(f => f()))`);
         break;
       }
     }
+  }
+
+  getAllFiles(path.join(ROOT, 'ui'), ['.js']).forEach(file => {
+    const content = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    if (hasAllow(content, 'allow-guard-chain')) { exceptions.push(rel); return; }
+    scanned.push(rel);
+    checkGuardChain(content.split('\n'), rel);
+  });
+
+  getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
+    const html = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    if (hasAllow(html, 'allow-guard-chain')) { exceptions.push(rel); return; }
+    extractInlineScripts(html).forEach((script, blockIdx) => {
+      const label = `${rel} (block ${blockIdx + 1})`;
+      scanned.push(label);
+      checkGuardChain(script.split('\n'), label);
+    });
   });
 }
 
