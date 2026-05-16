@@ -114,7 +114,6 @@ function stopCounting() {
 }
 
 export function change(side, delta) {
-  var numEl = document.getElementById('num-' + side);
   var wasCounting = stopCounting();
   var prevA = aCount, prevB = bCount;
   ({a: () => { aCount = clamp(aCount + delta, 0, MAX); }, b: () => { bCount = clamp(bCount + delta, 0, MAX); }})[side]();

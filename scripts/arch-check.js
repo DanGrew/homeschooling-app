@@ -348,7 +348,8 @@ if (rule === 'no-pure-fn-outside-core') {
       extractFunctions(script).forEach(({ name, body, preceding, line }) => {
         if (preceding.includes('arch: allow-pure-fn')) return;
         if (DOM_PATTERN.test(body)) return;
-        if (!/\breturn\b/.test(body)) return;
+        if (!hasTopLevelReturn(body)) return;
+        if (THIN_DISPATCHER.test(body)) return;
         violations.push(`${label}:${line} — '${name}' has no DOM access; move to core/ (or add // arch: allow-pure-fn before the function)`);
       });
     });

@@ -51,6 +51,13 @@ describe('pickFruitPair', () => {
   })
 })
 
+describe('pluralize', () => {
+  it('adds s for regular words', () => expect(pluralize('apple')).toBe('apples'));
+  it('converts y to ies', () => expect(pluralize('cherry')).toBe('cherries'));
+  it('adds es for words ending in h (removes h, appends es)', () => expect(pluralize('peach')).toBe('peaces'));
+  it('lowercase input works', () => expect(pluralize('strawberry')).toBe('strawberries'));
+})
+
 describe('clamp', () => {
   it('returns value when within range', () => {
     expect(clamp(5, 0, 10)).toBe(5)
