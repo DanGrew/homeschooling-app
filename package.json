@@ -10,7 +10,8 @@
     "check:untested": "node scripts/check-untested.js",
     "check:contracts": "node scripts/contracts/run.js",
     "validate:json": "node scripts/validate-schemas.js reports/validate-json.txt",
-    "audit:zorder": "node scripts/check-colouring-zorder.js"
+    "audit:zorder": "node scripts/check-colouring-zorder.js",
+    "sync:zorder": "node scripts/sync-colouring-zorder-from-svg.js"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
