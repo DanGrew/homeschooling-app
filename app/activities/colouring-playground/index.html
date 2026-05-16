@@ -60,7 +60,7 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Colour Playground" data-instruction="Pick a colour and tap each shape to colour it in" data-no-links="no related activities yet"></div>
 <div class="game-area">
   <div id="mode-bar">
     <button class="mode-btn active" data-mode="magic">✨ Magic</button>
@@ -117,6 +117,7 @@
 <script src="../../../assets/colouring/pictures/house.js"></script>
 <script src="../../../assets/colouring/pictures/tree.js"></script>
 <script type="module">
+import '../../../components/speech/speakable.js';
 import { initColouringPlayground } from '../../../ui/colouring-playground/colouring-playground-ui.js';
 initColouringPlayground();
 </script>

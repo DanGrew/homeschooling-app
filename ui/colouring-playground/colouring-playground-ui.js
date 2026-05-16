@@ -5,29 +5,42 @@ import { createPaginator } from '../../components/pagination/paginator-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 import { mixHex, baseOf, BASE_COLOURS as BASE } from '../../core/colouring-playground/colouring-playground-core.js';
 
+var LAYOUT = {
+  magic:  {ref:'none', palette:'none', guided:'none', free:'none'},
+  guided: {ref:'',     palette:'',     guided:'',     free:'none'},
+  free:   {ref:'',     palette:'',     guided:'none', free:''}
+};
+var DISPLAY = {true:'', false:'none'};
+var REF_LABEL = {true:'Hide', false:'Show'};
+var ACTIVE_OUTLINE = {true:'4px solid #2ECC71', false:'none'};
+
 export function initColouringPlayground() {
   var mode='magic',selectedColour=null,mixA=null,mixB=null,refVisible=true;
   var currentPic=null,paginator,filled=0,total=0,popBase=null;
   var shadePop=document.getElementById('shade-pop');
+  var refToggleEl=document.getElementById('ref-toggle');
+  var mixAEl=document.getElementById('mix-a');
+  var mixBEl=document.getElementById('mix-b');
+  var mixResultEl=document.getElementById('mix-result');
 
   function setActive(c) {
     selectedColour=c;
     var cur=document.getElementById('cur-colour');
-    cur.style.background=c||'#e0e0e0';
-    cur.style.outline=c?'4px solid #2ECC71':'none';
+    cur.style.background=[c,'#e0e0e0'].find(Boolean);
+    cur.style.outline=ACTIVE_OUTLINE[String(!!c)];
     cur.style.outlineOffset='2px';
-    var fam=baseOf(c)||c;
+    var fam=[baseOf(c),c].find(Boolean);
     document.querySelectorAll('#base-palette .swatch').forEach(function(sw){
       sw.classList.toggle('sel',sw.dataset.base===fam);
     });
     document.querySelectorAll('#guided-pal .swatch').forEach(function(sw){
       sw.classList.toggle('sel',sw.dataset.colour===c);
     });
-    if(popBase){
-      document.getElementById('sh-light').classList.toggle('active-shade',popBase.light===c);
-      document.getElementById('sh-base').classList.toggle('active-shade',popBase.base===c);
-      document.getElementById('sh-dark').classList.toggle('active-shade',popBase.dark===c);
-    }
+    [popBase].filter(Boolean).forEach(function(pb){
+      document.getElementById('sh-light').classList.toggle('active-shade',pb.light===c);
+      document.getElementById('sh-base').classList.toggle('active-shade',pb.base===c);
+      document.getElementById('sh-dark').classList.toggle('active-shade',pb.dark===c);
+    });
   }
 
   function closePop(){shadePop.classList.remove('open');popBase=null;}
@@ -46,38 +59,62 @@ export function initColouringPlayground() {
     shadePop.classList.add('open');
   }
 
-  function updateMix(){
-    var el=document.getElementById('mix-result');
-    if(mixA&&mixB){
-      var c=mixHex(mixA,mixB);
-      el.style.background=c;el.classList.add('filled');el.dataset.c=c;
-    } else {
-      el.style.background='#f5f5f5';el.classList.remove('filled');el.dataset.c='';
-    }
+  function bothMixSet(){return[mixA,mixB].every(Boolean);}
+
+  function applyMixResult(c){
+    mixResultEl.style.background=c;
+    mixResultEl.classList.add('filled');
+    mixResultEl.dataset.c=c;
   }
 
+  function clearMixResult(){
+    mixResultEl.style.background='#f5f5f5';
+    mixResultEl.classList.remove('filled');
+    mixResultEl.dataset.c='';
+  }
+
+  var MIX_UPDATE={
+    true:function(){applyMixResult(mixHex(mixA,mixB));},
+    false:clearMixResult
+  };
+
+  function updateMix(){MIX_UPDATE[String(bothMixSet())]();}
+
   function applyLayout(){
-    var isNotMagic=mode!=='magic';
-    document.getElementById('ref-panel').style.display=isNotMagic?'':'none';
-    document.getElementById('palette-panel').style.display=isNotMagic?'':'none';
-    document.getElementById('guided-pal').style.display=mode==='guided'?'':'none';
-    document.getElementById('free-pal').style.display=mode==='free'?'':'none';
+    var l=LAYOUT[mode];
+    document.getElementById('ref-panel').style.display=l.ref;
+    document.getElementById('palette-panel').style.display=l.palette;
+    document.getElementById('guided-pal').style.display=l.guided;
+    document.getElementById('free-pal').style.display=l.free;
   }
 
   function buildGuidedPal(pic){
     var gp=document.getElementById('guided-pal');
     gp.innerHTML='';
-    var seen={},cols=[];
-    pic.shapes.filter(function(s){return !s.noColour;}).forEach(function(s){
-      if(!seen[s.colour]){seen[s.colour]=1;cols.push(s.colour);}
-    });
-    cols.forEach(function(c){
-      var d=document.createElement('div');
-      d.className='swatch';d.style.background=c;d.dataset.colour=c;
-      d.addEventListener('click',function(){setActive(c);});
-      gp.appendChild(d);
-    });
+    var seen={};
+    pic.shapes.filter(function(s){return !s.noColour;})
+      .map(function(s){return s.colour;})
+      .filter(function(c){var n=!seen[c];seen[c]=1;return n;})
+      .forEach(function(c){
+        var d=document.createElement('div');
+        d.className='swatch';d.style.background=c;d.dataset.colour=c;
+        d.addEventListener('click',function(){setActive(c);});
+        gp.appendChild(d);
+      });
   }
+
+  function isPopOpenFor(bc){
+    return[shadePop]
+      .filter(function(s){return s.classList.contains('open');})
+      .some(function(){return popBase===bc;});
+  }
+
+  var POP_TOGGLE={
+    true:function(){closePop();},
+    false:function(bc,d){openPop(bc,d);}
+  };
+
+  function handleSwatchClick(bc,d){POP_TOGGLE[String(isPopOpenFor(bc))](bc,d);}
 
   function buildBasePalette(){
     var bp=document.getElementById('base-palette');
@@ -87,8 +124,7 @@ export function initColouringPlayground() {
       d.className='swatch';d.style.background=bc.base;d.dataset.base=bc.base;d.title=bc.name;
       d.addEventListener('click',function(e){
         e.stopPropagation();
-        if(shadePop.classList.contains('open')&&popBase===bc)closePop();
-        else openPop(bc,d);
+        handleSwatchClick(bc,d);
       });
       bp.appendChild(d);
     });
@@ -98,11 +134,32 @@ export function initColouringPlayground() {
     var ref=document.getElementById('ref-svg');
     ref.innerHTML='';ref.setAttribute('viewBox',pic.vb);
     pic.shapes.forEach(function(s){
-      var attrs=Object.assign({},{fill:s.colour||'#eee',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
+      var attrs=Object.assign({},{fill:[s.colour,'#eee'].find(Boolean),stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       ref.appendChild(ns(s.tag,attrs));
     });
-    ref.style.display=refVisible?'':'none';
+    ref.style.display=DISPLAY[String(refVisible)];
   }
+
+  var MAGIC_ADVANCE={
+    true:function(){showBanner(function(){paginator.next();});},
+    false:function(){}
+  };
+
+  function magicClick(el,s){
+    el.setAttribute('fill',s.colour);
+    filled++;
+    MAGIC_ADVANCE[String(filled===total)]();
+  }
+
+  function colourClick(el){
+    [selectedColour].filter(Boolean).forEach(function(c){el.setAttribute('fill',c);});
+  }
+
+  var CLICK_HANDLER={magic:magicClick,guided:colourClick,free:colourClick};
+
+  function makeClickHandler(el,s){return function(){CLICK_HANDLER[mode](el,s);};}
+
+  var ON_RENDER_MODE={guided:buildGuidedPal,free:function(){},magic:function(){}};
 
   function renderPicture(pic){
     currentPic=pic;closePop();filled=0;
@@ -114,26 +171,19 @@ export function initColouringPlayground() {
     var svg=document.getElementById('svg');
     svg.innerHTML='';svg.setAttribute('viewBox',pic.vb);
     injectDotPattern(svg);
-    pic.shapes.forEach(function(s){
+    pic.shapes.filter(function(s){return s.noColour;}).forEach(function(s){
+      var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
+      svg.appendChild(ns(s.tag,attrs));
+    });
+    pic.shapes.filter(function(s){return !s.noColour;}).forEach(function(s){
       var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       var el=ns(s.tag,attrs);
-      if(s.noColour){
-        svg.appendChild(el);
-      } else {
-        el.style.cursor='pointer';
-        el.addEventListener('click',function(){
-          if(mode==='magic'){
-            el.setAttribute('fill',s.colour);filled++;
-            if(filled===total)showBanner(function(){paginator.next();});
-          } else if(selectedColour){
-            el.setAttribute('fill',selectedColour);
-          }
-        });
-        svg.appendChild(el);
-      }
+      el.style.cursor='pointer';
+      el.addEventListener('click',makeClickHandler(el,s));
+      svg.appendChild(el);
     });
     renderRef(pic);
-    if(mode==='guided')buildGuidedPal(pic);
+    ON_RENDER_MODE[mode](pic);
     applyLayout();
     setActive(selectedColour);
   }
@@ -141,27 +191,37 @@ export function initColouringPlayground() {
   ['sh-light','sh-base','sh-dark'].forEach(function(id,i){
     document.getElementById(id).addEventListener('click',function(e){
       e.stopPropagation();
-      if(popBase)setActive([popBase.light,popBase.base,popBase.dark][i]);
+      [popBase].filter(Boolean).forEach(function(pb){
+        setActive([pb.light,pb.base,pb.dark][i]);
+      });
       closePop();
     });
   });
 
   document.addEventListener('click',function(e){
-    if(!shadePop.contains(e.target)&&!e.target.closest('#base-palette'))closePop();
+    [1].filter(function(){return !shadePop.contains(e.target);})
+       .filter(function(){return !e.target.closest('#base-palette');})
+       .forEach(closePop);
   });
 
-  document.getElementById('mix-a').addEventListener('click',function(){
-    if(selectedColour){mixA=selectedColour;this.style.background=mixA;this.classList.add('filled');updateMix();}
+  mixAEl.addEventListener('click',function(){
+    [selectedColour].filter(Boolean).forEach(function(c){
+      mixA=c;mixAEl.style.background=c;mixAEl.classList.add('filled');updateMix();
+    });
   });
-  document.getElementById('mix-b').addEventListener('click',function(){
-    if(selectedColour){mixB=selectedColour;this.style.background=mixB;this.classList.add('filled');updateMix();}
+  mixBEl.addEventListener('click',function(){
+    [selectedColour].filter(Boolean).forEach(function(c){
+      mixB=c;mixBEl.style.background=c;mixBEl.classList.add('filled');updateMix();
+    });
   });
-  document.getElementById('mix-result').addEventListener('click',function(){if(this.dataset.c)setActive(this.dataset.c);});
+  mixResultEl.addEventListener('click',function(){
+    [mixResultEl.dataset.c].filter(Boolean).forEach(setActive);
+  });
 
-  document.getElementById('ref-toggle').addEventListener('click',function(){
+  refToggleEl.addEventListener('click',function(){
     refVisible=!refVisible;
-    document.getElementById('ref-svg').style.display=refVisible?'':'none';
-    this.textContent=refVisible?'Hide':'Show';
+    document.getElementById('ref-svg').style.display=DISPLAY[String(refVisible)];
+    refToggleEl.textContent=REF_LABEL[String(refVisible)];
   });
 
   document.querySelectorAll('.mode-btn').forEach(function(btn){
@@ -170,7 +230,7 @@ export function initColouringPlayground() {
       btn.classList.add('active');
       mode=btn.dataset.mode;
       selectedColour=null;
-      if(currentPic)renderPicture(currentPic);
+      [currentPic].filter(Boolean).forEach(renderPicture);
     });
   });
 
