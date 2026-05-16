@@ -17,6 +17,8 @@ node scripts/arch-check.js app-index-only        "$TMPDIR_HOOK/app-index.txt"   
 node scripts/arch-check.js no-media-outside-assets "$TMPDIR_HOOK/no-media.txt"     || fail "no-media-outside-assets"
 node scripts/arch-check.js no-css-outside-styles "$TMPDIR_HOOK/no-css.txt"         || fail "no-css-outside-styles"
 node scripts/arch-check.js no-md-outside-docs    "$TMPDIR_HOOK/no-md.txt"          || fail "no-md-outside-docs"
+node scripts/arch-check.js no-json-in-repo       "$TMPDIR_HOOK/no-json-in-repo.txt" || fail "no-json-in-repo"
+node scripts/arch-check.js no-pure-fn-outside-core "$TMPDIR_HOOK/no-pure-fn.txt"   || fail "no-pure-fn-outside-core"
 
 echo "[pre-push] manifest check..."
 node scripts/check-manifest-files.js "$TMPDIR_HOOK/manifests.txt" || fail "check-manifest-files"
@@ -24,6 +26,12 @@ node scripts/check-manifest-files.js "$TMPDIR_HOOK/manifests.txt" || fail "check
 echo "[pre-push] manifests up to date..."
 node scripts/generate-manifests.js
 git diff --exit-code content/dictionary/manifests/ content/lessons/index.json || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
+
+echo "[pre-push] validate-json..."
+node scripts/validate-schemas.js "$TMPDIR_HOOK/validate-json.txt" || fail "validate-json"
+
+echo "[pre-push] ui-cyclomatic..."
+node scripts/check-ui-cyclomatic.js "$TMPDIR_HOOK/ui-cyclomatic.txt" || fail "ui-cyclomatic"
 
 echo "[pre-push] page contracts (changed files)..."
 CHANGED_HTML=$(git diff --name-only "origin/main...HEAD" 2>/dev/null | grep -E '^app/(activities|worksheets)/.*\.html$' || true)
