@@ -63,7 +63,6 @@
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="Say Words" data-instruction="Tap a picture and say the word" data-links='[{"href":"../word-match/","label":"Word Match"}]'></div>
 <div class="game-area" style="display:flex;flex-direction:column;overflow:hidden;">
-  <div id="filter-bar"></div>
   <div id="tile-grid"></div>
   <div id="paginator-bar"></div>
 </div>
@@ -142,12 +141,12 @@ loadImages(all,function(){
       .filter(Boolean)
       .filter(function(l) { return l.filter; })
       .forEach(function(l) {
-        var btn = document.querySelector('#filter-bar button[data-tag="' + l.filter + '"]');
+        var btn = document.querySelector('#nav-filter-slot button[data-tag="' + l.filter + '"]');
         [btn].filter(Boolean).forEach(function(b) { b.click(); });
       });
   });
   window.addEventListener('guidance:stop', function() {
-    var btn = document.querySelector('#filter-bar button[data-tag="all"]');
+    var btn = document.querySelector('#nav-filter-slot button[data-tag="all"]');
     [btn].filter(Boolean).forEach(function(b) { b.click(); });
   });
 </script>

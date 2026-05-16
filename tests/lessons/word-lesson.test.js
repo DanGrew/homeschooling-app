@@ -7,28 +7,24 @@ test('page loads and shows a word', async ({ page }) => {
   await expect(page.locator('#word-label')).not.toBeEmpty({ timeout: 5000 })
 })
 
-test('filter bar rendered and centred', async ({ page }) => {
+test('filter bar rendered in nav-bar sidebar', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('#filter-bar')).toBeVisible({ timeout: 3000 })
-  const row = page.locator('#filter-bar > div').first()
-  await expect(row).toHaveCSS('justify-content', 'center')
+  await expect(page.locator('.nav-bar #nav-filter-slot')).toBeVisible({ timeout: 3000 })
 })
 
 test('filter bar has All option active by default', async ({ page }) => {
   await page.goto(URL)
-  const allBtn = page.locator('#filter-bar button[data-value="all"]')
+  const allBtn = page.locator('#nav-filter-slot button[data-value="all"]')
   await expect(allBtn).toBeVisible({ timeout: 3000 })
   const bg = await allBtn.evaluate(el => getComputedStyle(el).backgroundColor)
   expect(bg).toBe('rgb(52, 152, 219)')
 })
 
-test('filter bar appears after title', async ({ page }) => {
+test('filter bar is in nav-bar not game-area', async ({ page }) => {
   await page.goto(URL)
-  const children = page.locator('.game-area > *')
-  const firstClass = await children.nth(0).getAttribute('class')
-  const secondId = await children.nth(1).getAttribute('id')
+  await expect(page.locator('.nav-bar #nav-filter-slot')).toBeVisible()
+  const firstClass = await page.locator('.game-area > *').nth(0).getAttribute('class')
   expect(firstClass).toMatch(/activity-header/)
-  expect(secondId).toBe('filter-bar')
 })
 
 async function startLesson(page) {
@@ -61,6 +57,6 @@ test('stopping lesson restores full word list', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
-  const allBtn = page.locator('#filter-bar button[data-value="all"]')
+  const allBtn = page.locator('#nav-filter-slot button[data-value="all"]')
   await expect(allBtn).toHaveCSS('color', 'rgb(255, 255, 255)')
 })

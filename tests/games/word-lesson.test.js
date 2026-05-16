@@ -11,9 +11,9 @@ test('page loads and shows word label', async ({ page }) => {
 
 test('filter bar renders with at least All and Custom buttons', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
-  await expect(page.getByRole('button', { name: 'All', exact: true })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Custom', exact: true })).toBeVisible()
+  await page.waitForFunction(() => document.querySelectorAll('#nav-filter-slot button[data-value]').length > 0)
+  await expect(page.locator('#nav-filter-slot button[data-value="all"]')).toBeVisible()
+  await expect(page.locator('#nav-filter-slot button[data-value="custom"]')).toBeVisible()
 })
 
 test('Watch and Say It buttons visible on load', async ({ page }) => {
@@ -71,8 +71,8 @@ test('paginator bar shows page indicator', async ({ page }) => {
 
 test('custom mode disables paginator buttons', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
-  await page.getByRole('button', { name: 'Custom', exact: true }).click()
+  await page.waitForFunction(() => document.querySelectorAll('#nav-filter-slot button[data-value]').length > 0)
+  await page.locator('#nav-filter-slot button[data-value="custom"]').click()
   await expect(page.locator('#paginator-bar button', { hasText: 'Next' })).toBeDisabled()
   await expect(page.locator('#paginator-bar button', { hasText: 'Prev' })).toBeDisabled()
 })
@@ -102,8 +102,8 @@ test('Reset stops Watch animation and hides Reset', async ({ page }) => {
 
 test('Watch animation completes and hides Reset', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
-  await page.getByRole('button', { name: 'Custom', exact: true }).click()
+  await page.waitForFunction(() => document.querySelectorAll('#nav-filter-slot button[data-value]').length > 0)
+  await page.locator('#nav-filter-slot button[data-value="custom"]').click()
   await page.locator('#custom-word-input').fill('ab')
   await page.locator('#btn-generate').click()
   await page.waitForFunction(() =>
@@ -143,15 +143,15 @@ test('SVGs rendered equal to word length', async ({ page }) => {
 
 test('Custom filter shows text input', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
-  await page.getByRole('button', { name: 'Custom', exact: true }).click()
+  await page.waitForFunction(() => document.querySelectorAll('#nav-filter-slot button[data-value]').length > 0)
+  await page.locator('#nav-filter-slot button[data-value="custom"]').click()
   await expect(page.locator('#custom-word-input')).toBeVisible()
 })
 
 test('custom word loads correct number of SVGs', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
-  await page.getByRole('button', { name: 'Custom', exact: true }).click()
+  await page.waitForFunction(() => document.querySelectorAll('#nav-filter-slot button[data-value]').length > 0)
+  await page.locator('#nav-filter-slot button[data-value="custom"]').click()
   await page.locator('#custom-word-input').fill('dog')
   await page.locator('#btn-generate').click()
   await page.waitForFunction(() =>
@@ -165,8 +165,8 @@ test('custom word loads correct number of SVGs', async ({ page }) => {
 
 test('invalid custom word flashes input border red', async ({ page }) => {
   await page.goto(URL)
-  await page.waitForFunction(() => document.querySelectorAll('#filter-bar button[data-value]').length > 0)
-  await page.getByRole('button', { name: 'Custom', exact: true }).click()
+  await page.waitForFunction(() => document.querySelectorAll('#nav-filter-slot button[data-value]').length > 0)
+  await page.locator('#nav-filter-slot button[data-value="custom"]').click()
   await page.locator('#custom-word-input').fill('bad word!')
   await page.locator('#btn-generate').click()
   const borderColor = await page.locator('#custom-word-input').evaluate(el =>

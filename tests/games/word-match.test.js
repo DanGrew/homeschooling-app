@@ -92,9 +92,7 @@ test('title is first child of game-area', async ({ page }) => {
   expect(firstClass).toMatch(/activity-header/)
 })
 
-test('filter bar appears after title', async ({ page }) => {
+test('filter bar is in nav-bar sidebar', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/word-match/')
-  await expect(page.locator('#filter-bar')).toBeVisible({ timeout: 3000 })
-  const secondId = await page.locator('.game-area > *').nth(1).getAttribute('id')
-  expect(secondId).toBe('filter-bar')
+  await expect(page.locator('.nav-bar #nav-filter-slot')).toBeVisible({ timeout: 3000 })
 })

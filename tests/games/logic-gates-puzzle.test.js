@@ -57,30 +57,30 @@ test('switch elements are rendered in the puzzle', async ({ page }) => {
 
 test('filter bar is visible with All, Linear, Converging buttons', async ({ page }) => {
   await page.goto(URL);
-  await expect(page.locator('#filter-bar')).toBeVisible();
-  await expect(page.locator('.filter-btn[data-cat="all"]')).toBeVisible();
-  await expect(page.locator('.filter-btn[data-cat="linear"]')).toBeVisible();
-  await expect(page.locator('.filter-btn[data-cat="converging"]')).toBeVisible();
+  await expect(page.locator('#nav-filter-slot')).toBeVisible();
+  await expect(page.locator('#nav-filter-slot button[data-value="all"]')).toBeVisible();
+  await expect(page.locator('#nav-filter-slot button[data-value="linear"]')).toBeVisible();
+  await expect(page.locator('#nav-filter-slot button[data-value="converging"]')).toBeVisible();
 });
 
 test('All filter button is active on load', async ({ page }) => {
   await page.goto(URL);
-  await expect(page.locator('.filter-btn[data-cat="all"]')).toHaveClass(/active/);
+  const allBtn = page.locator('#nav-filter-slot button[data-value="all"]');
+  await expect(allBtn).toHaveCSS('background-color', 'rgb(52, 152, 219)');
 });
 
 test('clicking Linear filter marks it active and deactivates All', async ({ page }) => {
   await page.goto(URL);
-  await page.locator('.filter-btn[data-cat="linear"]').click();
-  await expect(page.locator('.filter-btn[data-cat="linear"]')).toHaveClass(/active/);
-  await expect(page.locator('.filter-btn[data-cat="all"]')).not.toHaveClass(/active/);
+  await page.locator('#nav-filter-slot button[data-value="linear"]').click();
+  await expect(page.locator('#nav-filter-slot button[data-value="linear"]')).toHaveCSS('background-color', 'rgb(52, 152, 219)');
+  await expect(page.locator('#nav-filter-slot button[data-value="all"]')).not.toHaveCSS('background-color', 'rgb(52, 152, 219)');
 });
-
 
 test('clicking Converging filter marks it active and deactivates All', async ({ page }) => {
   await page.goto(URL);
-  await page.locator('.filter-btn[data-cat="converging"]').click();
-  await expect(page.locator('.filter-btn[data-cat="converging"]')).toHaveClass(/active/);
-  await expect(page.locator('.filter-btn[data-cat="all"]')).not.toHaveClass(/active/);
+  await page.locator('#nav-filter-slot button[data-value="converging"]').click();
+  await expect(page.locator('#nav-filter-slot button[data-value="converging"]')).toHaveCSS('background-color', 'rgb(52, 152, 219)');
+  await expect(page.locator('#nav-filter-slot button[data-value="all"]')).not.toHaveCSS('background-color', 'rgb(52, 152, 219)');
 });
 
 test('paginator bar is rendered', async ({ page }) => {

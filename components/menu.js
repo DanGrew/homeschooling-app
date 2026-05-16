@@ -4,6 +4,11 @@
 
   bar.insertAdjacentHTML('afterbegin','<a href="'+(bar.dataset.home||'index.html')+'" class="nav-btn">&#127968;</a>');
 
+  var filterSlot=document.createElement('div');
+  filterSlot.id='nav-filter-slot';
+  filterSlot.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1;min-height:0;overflow-y:auto;width:100%;box-sizing:border-box;padding-top:4px;';
+  bar.appendChild(filterSlot);
+
   var gameArea=document.querySelector('.game-area');
   if(gameArea){
     var titleEl=document.createElement('div');
@@ -102,6 +107,20 @@
     }
     bar.appendChild(container);
   }
+
+  var navExpanded=false;
+  var expandBtn=document.createElement('button');
+  expandBtn.innerHTML='\u00BB';
+  expandBtn.className='nav-btn';
+  expandBtn.style.cssText='flex-shrink:0;font-size:1em;';
+  expandBtn.addEventListener('click',function(e){
+    e.stopPropagation();
+    navExpanded=!navExpanded;
+    bar.classList.toggle('expanded',navExpanded);
+    expandBtn.innerHTML=navExpanded?'\u00AB':'\u00BB';
+    window.dispatchEvent(new CustomEvent('nav:expand',{detail:{expanded:navExpanded}}));
+  });
+  bar.appendChild(expandBtn);
 
   document.addEventListener('touchstart',function(e){if(e.touches.length>=3)e.preventDefault();},{passive:false});
 })();
