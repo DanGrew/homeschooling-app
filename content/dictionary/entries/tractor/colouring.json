@@ -76,6 +76,28 @@
       "colour": "#616161"
     },
     {
+      "id": "shape_11",
+      "tag": "circle",
+      "attrs": {
+        "cx": "78.1",
+        "cy": "249",
+        "r": "55.5",
+        "stroke-width": "2"
+      },
+      "colour": "#111111"
+    },
+    {
+      "id": "shape_12",
+      "tag": "circle",
+      "attrs": {
+        "cx": "78.1",
+        "cy": "249",
+        "r": "20.5",
+        "stroke-width": "2"
+      },
+      "colour": "#616161"
+    },
+    {
       "id": "shape_8",
       "tag": "path",
       "attrs": {
@@ -104,28 +126,6 @@
         "stroke-width": "2"
       },
       "colour": "#F1C40F"
-    },
-    {
-      "id": "shape_11",
-      "tag": "circle",
-      "attrs": {
-        "cx": "78.1",
-        "cy": "249",
-        "r": "55.5",
-        "stroke-width": "2"
-      },
-      "colour": "#111111"
-    },
-    {
-      "id": "shape_12",
-      "tag": "circle",
-      "attrs": {
-        "cx": "78.1",
-        "cy": "249",
-        "r": "20.5",
-        "stroke-width": "2"
-      },
-      "colour": "#616161"
     }
   ]
 }
