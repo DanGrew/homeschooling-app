@@ -6,11 +6,13 @@
 <title>Colour Playground</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
 <script src="../../../components/menu.js" defer></script>
 <style>
-#mode-bar{display:flex;border-bottom:2px solid #eee;flex-shrink:0;}
+#mode-bar{display:flex;border-bottom:2px solid #eee;flex-shrink:0;align-items:stretch;}
 .mode-btn{flex:1;padding:10px 0;font-size:1em;font-weight:bold;border:none;background:#f5f5f5;cursor:pointer;color:#888;border-bottom:3px solid transparent;}
 .mode-btn.active{background:#fff;color:#333;border-bottom-color:#F39C12;}
+#pic-title{padding:0 14px;font-size:1em;font-weight:bold;border:none;border-left:2px solid #eee;background:#f5f5f5;color:#555;cursor:pointer;flex-shrink:0;white-space:nowrap;border-bottom:3px solid transparent;}
 #layout{flex:1;display:flex;overflow:hidden;}
 #canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 #sidebar{width:180px;display:flex;flex-direction:column;gap:8px;padding:8px;flex-shrink:0;overflow:hidden;}
@@ -19,17 +21,18 @@
 #ref-label{font-size:0.7em;color:#888;}
 #ref-toggle{font-size:0.7em;background:#eee;border:none;border-radius:6px;padding:2px 7px;cursor:pointer;color:#555;}
 #ref-svg{width:100%;flex:1;min-height:0;}
-#guided-pal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;flex-shrink:0;}
-#free-pal{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
-#cur-colour{width:48px;height:48px;border-radius:12px;border:3px solid #ddd;align-self:center;background:#e0e0e0;flex-shrink:0;}
-#base-palette{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.swatch{aspect-ratio:1;border-radius:10px;cursor:pointer;border:3px solid transparent;box-sizing:border-box;}
+#guided-pal{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;flex-shrink:0;}
+#free-pal{display:flex;flex-direction:column;gap:5px;flex-shrink:0;}
+#base-palette{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;}
+.swatch{aspect-ratio:1;border-radius:8px;cursor:pointer;border:3px solid transparent;box-sizing:border-box;}
 .swatch.sel{border-color:#333;box-shadow:0 0 0 2px #fff,0 0 0 4px #333;}
-#mixer{display:flex;align-items:center;gap:4px;}
-.mix-slot{width:40px;height:40px;border-radius:10px;border:3px dashed #ccc;cursor:pointer;box-sizing:border-box;flex-shrink:0;background:#f5f5f5;}
+#active-mix-row{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+#cur-colour{width:32px;height:32px;border-radius:8px;border:3px solid #ddd;background:#e0e0e0;flex-shrink:0;}
+.mix-sep{width:1px;height:24px;background:#ddd;flex-shrink:0;margin:0 2px;}
+.mix-slot{width:32px;height:32px;border-radius:8px;border:3px dashed #ccc;cursor:pointer;box-sizing:border-box;flex-shrink:0;background:#f5f5f5;}
 .mix-slot.filled{border-style:solid;border-color:#555;}
-.mix-op{color:#bbb;font-weight:bold;flex-shrink:0;}
-#mix-result{width:40px;height:40px;border-radius:10px;border:3px solid #eee;box-sizing:border-box;flex-shrink:0;background:#f5f5f5;}
+.mix-op{color:#bbb;font-weight:bold;flex-shrink:0;font-size:0.9em;}
+#mix-result{width:32px;height:32px;border-radius:8px;border:3px solid #eee;box-sizing:border-box;flex-shrink:0;background:#f5f5f5;}
 #mix-result.filled{border-color:#555;cursor:pointer;}
 #shade-pop{display:none;position:fixed;background:#fff;border:2px solid #ccc;border-radius:14px;padding:8px;gap:6px;flex-direction:row;box-shadow:0 4px 16px rgba(0,0,0,0.2);z-index:200;align-items:center;}
 #shade-pop.open{display:flex;}
@@ -39,15 +42,14 @@
 @media(orientation:portrait){
   #layout{flex-direction:column;}
   #sidebar{width:100%;flex-direction:row;height:auto;padding:6px 8px;align-items:stretch;}
-  #ref-wrap{flex:0 0 auto;width:100px;min-width:80px;}
-  #ref-svg{width:100%;height:90px;flex:none;}
-  #guided-pal{flex:1;grid-template-columns:repeat(5,1fr);align-content:start;}
-  #free-pal{flex:1;flex-direction:column;gap:4px;}
-  #cur-colour{width:36px;height:36px;align-self:flex-start;}
+  #ref-wrap{flex:0 0 auto;width:90px;min-width:70px;}
+  #ref-svg{width:100%;height:80px;flex:none;}
+  #guided-pal{flex:1;align-content:start;}
+  #free-pal{flex:1;flex-direction:column;gap:3px;}
   #base-palette{grid-template-columns:repeat(5,1fr);}
   .swatch{aspect-ratio:1;}
-  #mixer{gap:3px;}
-  .mix-slot,#mix-result{width:32px;height:32px;}
+  #active-mix-row{gap:3px;}
+  #cur-colour,.mix-slot,#mix-result{width:28px;height:28px;}
 }
 </style>
 </head>
@@ -58,9 +60,9 @@
     <button class="mode-btn active" data-mode="magic">✨ Magic</button>
     <button class="mode-btn" data-mode="guided">🎯 Guided</button>
     <button class="mode-btn" data-mode="free">🎨 Free</button>
+    <button id="pic-title"></button>
   </div>
   <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
-  <div class="game-title"><span id="title"></span></div>
   <div id="layout">
     <div id="canvas-wrap">
       <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
@@ -75,9 +77,10 @@
       </div>
       <div id="guided-pal"></div>
       <div id="free-pal">
-        <div id="cur-colour"></div>
         <div id="base-palette"></div>
-        <div id="mixer">
+        <div id="active-mix-row">
+          <div id="cur-colour"></div>
+          <div class="mix-sep"></div>
           <div class="mix-slot" id="mix-a"></div>
           <span class="mix-op">+</span>
           <div class="mix-slot" id="mix-b"></div>
@@ -98,6 +101,7 @@
 
 <script src="../../../ui/colouring/colouring-common.js"></script>
 <script type="module" src="../../../components/success-banner.js"></script>
+<script type="module" src="../../../components/speech/speech-ui.js"></script>
 <script>var pictures=[];</script>
 <script src="../../../assets/colouring/pictures/sun.js"></script>
 <script src="../../../assets/colouring/pictures/cat.js"></script>
@@ -109,6 +113,7 @@ import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
+import { makeSpeakable } from '../../../components/speech/speakable.js';
 
 var BASE=[
   {name:'Red',    base:'#E74C3C',light:'#F1948A',dark:'#922B21'},
@@ -263,7 +268,9 @@ function renderRef(pic){
 
 function renderPicture(pic){
   currentPic=pic;closePop();selectedColour=null;filled=0;
-  document.getElementById('title').textContent=pic.name;
+  var titleBtn=document.getElementById('pic-title');
+  titleBtn.textContent=pic.name;
+  makeSpeakable(titleBtn,pic.name);
   hideBanner();
   total=pic.shapes.filter(function(s){return !s.noColour;}).length;
   var svg=document.getElementById('svg');
@@ -304,7 +311,7 @@ paginator=createPaginator({
 Dictionary.init('../../../content/dictionary/');
 loadColouringPictures(pictures,function(){
   buildFilterBar(pictures,function(f){paginator.reset(f);});
-},function(){document.getElementById('title').textContent='⚠️ Failed to load — check connection';});
+},function(){document.getElementById('pic-title').textContent='⚠️ Failed to load — check connection';});
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='colouring-playground';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
