@@ -101,7 +101,7 @@ export function buildSimpleFilterBar(options, onChange, initialValue) {
       });
       onChange(opt.value);
     };
-    makeSpeakable(b, b.textContent);
+    makeSpeakable(b, opt.label);
     r.appendChild(b);
   });
 
