@@ -143,7 +143,10 @@ export function shouldTriggerWin(spec, state, won) {
   return !won && evalCond(state, spec.win_condition);
 }
 
+export function gridMajorKey(n) { return String(+(n % 100 !== 0)); }
+
 if (typeof module !== 'undefined') module.exports = {
   evalCond, applyStateAction, resolveScene, resolveImgFit, resolveImgSrc, resolveObject,
   objectRenderType, resolveAnimName, nextSpriteIdx, parseAction, findAction, shouldTriggerWin,
+  gridMajorKey,
 };

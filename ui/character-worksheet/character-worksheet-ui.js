@@ -22,10 +22,7 @@ var NULL_PROMISE = () => Promise.resolve(null);
 var LOAD_FILE = (file) => LOAD_SOURCES[String(file in svgCache)](file);
 var LOAD_DISPATCH = { 'true': NULL_PROMISE, 'false': LOAD_FILE };
 
-function loadPath(c) {
-  const file = charToFile(c);
-  return LOAD_DISPATCH[String(!file)](file);
-}
+function loadPath(c) { return LOAD_DISPATCH[String(!charToFile(c))](charToFile(c)); }
 
 function makeSvgPath(d) {
   const path = document.createElementNS(SVG_NS, 'path');

@@ -1,19 +1,9 @@
-import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/filter-bar-core.js';
+import { extractTags, extractLevels, filterItems, active } from '../../core/filter-bar/filter-bar-core.js';
 export { extractTags, extractLevels, filterItems };
 import { makeSpeakable } from '../speech/speakable.js';
 
 var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E ', fruit: '\uD83C\uDF4E ', emotions: '\uD83D\uDE0A ', vehicles: '\uD83D\uDE97 ', medical: '\uD83C\uDFE5 ' };
 var GET_TAG_EMOJI = { 'true': function(t) { return TAG_EMOJI[t]; }, 'false': function() { return ''; } };
-
-var ACTIVE_STYLES = {
-  'true': colour => ({ border: colour, bg: colour, color: 'white' }),
-  'false': () => ({ border: '#ddd', bg: '#fff', color: '#333' })
-};
-
-function active(on, colour) {
-  var s = ACTIVE_STYLES[String(on)](colour);
-  return 'padding:6px 14px;border-radius:12px;border:2px solid ' + s.border + ';background:' + s.bg + ';color:' + s.color + ';font-family:inherit;font-size:0.95em;cursor:pointer;';
-}
 
 var ROW_EXTRA = { 'true': extra => extra, 'false': () => '' };
 

@@ -1,4 +1,4 @@
-import { mix, hex, CM_COLOURS, CM_MIXES } from '../../core/colour-mixing/colour-mixing-core.js';
+import { mix, hex, CM_COLOURS, CM_MIXES, slotHtml } from '../../core/colour-mixing/colour-mixing-core.js';
 
 describe('mix', () => {
   it('same colour returns itself', () => {
@@ -62,4 +62,10 @@ describe('CM_COLOURS', () => {
       expect(typeof val.label).toBe('string');
     });
   });
+});
+
+describe('slotHtml', () => {
+  it('contains the given id', () => expect(slotHtml('cm-slot-a', 'A')).toContain('id="cm-slot-a"'));
+  it('contains the given label', () => expect(slotHtml('cm-slot-b', 'B')).toContain('>B<'));
+  it('returns a div string', () => expect(slotHtml('x', 'y')).toMatch(/^<div/));
 });

@@ -186,19 +186,20 @@ test('labels show same when counts are equal and non-zero', async ({ page }) => 
 
 // --- out-of-bounds audio suppression ---
 
-test('change returns changed:false when already at zero', async ({ page }) => {
+test('change has no effect when already at zero', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
-  const result = await page.evaluate(() => window.change('a', -1))
-  expect(result.changed).toBe(false)
+  await page.evaluate(() => window.change('a', -1))
+  expect(await page.locator('#num-a').textContent()).toBe('0')
 })
 
-test('change returns changed:false when already at max', async ({ page }) => {
+test('change has no effect when already at max', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
   for (let i = 0; i < 10; i++) await page.evaluate(() => window.change('a', 1))
-  const result = await page.evaluate(() => window.change('a', 1))
-  expect(result.changed).toBe(false)
+  const before = await page.locator('#num-a').textContent()
+  await page.evaluate(() => window.change('a', 1))
+  expect(await page.locator('#num-a').textContent()).toBe(before)
 })
 
 // --- bigger boxes ---

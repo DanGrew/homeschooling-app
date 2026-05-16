@@ -1,5 +1,6 @@
 import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { flattenCatalogs, escHtml, byName, setAllItems, getListItems, resetListItems, filterListItems, renderTiles, renderList, hidePhase1, showPhase1, showSuccess, startFindPhase } from '../shopping/shopping-ui.js';
+import { buildCatalogItems } from '../../core/shopping-scan/shopping-scan-core.js';
 
 var AudioCtx = [window.AudioContext, window.webkitAudioContext].filter(Boolean)[0];
 var hasDetector = typeof BarcodeDetector !== 'undefined';
@@ -137,17 +138,6 @@ function resetScan() {
   showPhase1();
   renderList();
   renderTiles();
-}
-
-function buildCatalogItems(filtered, catalogs) {
-  return filtered.flatMap(function(c) {
-    return catalogs.filter(function(cat) { return cat.name === c.name; })
-                   .flatMap(function(cat) {
-                     return cat.items.map(function(it) {
-                       return { name: it.name, barcode: it.barcode, icon: it.icon, tags: [].concat(cat.tags).filter(Boolean), catalog: cat.name };
-                     });
-                   });
-  });
 }
 
 export function init(catalogs) {
