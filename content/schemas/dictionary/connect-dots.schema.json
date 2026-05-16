@@ -2,24 +2,47 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Dictionary Connect Dots",
   "type": "object",
-  "required": ["concept", "type", "level", "viewBox", "dots"],
+  "required": [
+    "concept",
+    "type",
+    "viewBox",
+    "dots"
+  ],
   "additionalProperties": false,
   "properties": {
-    "concept": { "type": "string" },
-    "type": { "type": "string", "const": "connectDots" },
-    "level": { "type": "integer", "minimum": 1 },
-    "viewBox": { "type": "string", "pattern": "^[\\d.]+ [\\d.]+ [\\d.]+ [\\d.]+$" },
+    "concept": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "const": "connectDots"
+    },
+    "viewBox": {
+      "type": "string",
+      "pattern": "^[\\d.]+ [\\d.]+ [\\d.]+ [\\d.]+$"
+    },
     "dots": {
       "type": "array",
       "minItems": 2,
       "items": {
         "type": "object",
-        "required": ["n", "cx", "cy"],
+        "required": [
+          "n",
+          "cx",
+          "cy"
+        ],
         "additionalProperties": false,
         "properties": {
-          "n": { "type": "integer", "minimum": 1 },
-          "cx": { "type": "number" },
-          "cy": { "type": "number" }
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cx": {
+            "type": "number"
+          },
+          "cy": {
+            "type": "number"
+          }
         }
       }
     },
@@ -27,17 +50,26 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["cx", "cy"],
+        "required": [
+          "cx",
+          "cy"
+        ],
         "additionalProperties": false,
         "properties": {
-          "cx": { "type": "number" },
-          "cy": { "type": "number" }
+          "cx": {
+            "type": "number"
+          },
+          "cy": {
+            "type": "number"
+          }
         }
       }
     },
     "guides": {
       "type": "array"
     },
-    "decor": { "type": "string" }
+    "decor": {
+      "type": "string"
+    }
   }
 }
