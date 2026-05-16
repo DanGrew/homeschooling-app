@@ -28,14 +28,14 @@ describe('fetchJSON error handling', () => {
     vi.stubGlobal('fetch', notOk(404));
     const D = await freshDictionary();
     D.init('/base/');
-    await expect(D.loadManifest('colouring', 1)).rejects.toThrow('404');
+    await expect(D.loadManifest('colouring')).rejects.toThrow('404');
   });
 
   it('rejects on network failure', async () => {
     vi.stubGlobal('fetch', networkError());
     const D = await freshDictionary();
     D.init('/base/');
-    await expect(D.loadManifest('colouring', 1)).rejects.toThrow('network');
+    await expect(D.loadManifest('colouring')).rejects.toThrow('network');
   });
 });
 
@@ -50,7 +50,7 @@ describe('loadManifest', () => {
     vi.stubGlobal('fetch', fetchMock);
     const D = await freshDictionary();
     D.init('/base/');
-    const items = await D.loadManifest('colouring', 1);
+    const items = await D.loadManifest('colouring');
     expect(items).toHaveLength(1);
     expect(items[0].name).toBe('Cat');
   });
@@ -65,7 +65,7 @@ describe('loadManifest', () => {
     vi.stubGlobal('fetch', fetchMock);
     const D = await freshDictionary();
     D.init('/base/');
-    const [item] = await D.loadManifest('colouring', 1);
+    const [item] = await D.loadManifest('colouring');
     expect(item.name).toBe('Dog');
     expect(item.viewBox).toBe('0 0 50 50');
     expect(item.concept).toBeUndefined();
@@ -84,7 +84,7 @@ describe('loadManifest — rep with src (SVG fetch)', () => {
     vi.stubGlobal('fetch', fetchMock);
     const D = await freshDictionary();
     D.init('/base/');
-    const [item] = await D.loadManifest('image', 1);
+    const [item] = await D.loadManifest('image');
     expect(item.svg).toBe('<svg/>');
     expect(item.url).toBe('/base/entries/star/star.svg');
     expect(item.concept).toBeUndefined();
@@ -103,8 +103,8 @@ describe('caching', () => {
     vi.stubGlobal('fetch', fetchMock);
     const D = await freshDictionary();
     D.init('/base/');
-    await D.loadManifest('colouring', 1);
-    await D.loadManifest('colouring', 2); // same rep path — should use repCache
+    await D.loadManifest('colouring');
+    await D.loadManifest('colouring'); // same rep path — should use repCache
     const repFetches = fetchMock.mock.calls.filter(c => c[0].includes('rep.json') && !c[0].includes('manifests'));
     expect(repFetches).toHaveLength(1);
   });

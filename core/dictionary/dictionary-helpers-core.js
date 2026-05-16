@@ -3,7 +3,7 @@ import Dictionary from './dictionary-core.js';
 function onErr(onError,callback){return function(err){if(onError)onError(err);else callback();};}
 
 export function loadColouringPictures(pictures,callback,onError){
-  Dictionary.loadManifest('colouring',1).then(function(items){
+  Dictionary.loadManifest('colouring').then(function(items){
     items.forEach(function(item){
       pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.shapes});
     });
@@ -12,7 +12,7 @@ export function loadColouringPictures(pictures,callback,onError){
 }
 
 export function loadConnectDots(shapes,callback,onError){
-  Dictionary.loadManifest('connectDots',1).then(function(items){
+  Dictionary.loadManifest('connectDots').then(function(items){
     items.forEach(function(item){
       shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,guides:item.guides,decor:item.decor});
     });
@@ -22,7 +22,7 @@ export function loadConnectDots(shapes,callback,onError){
 }
 
 export function loadImages(items,callback,onError){
-  Dictionary.loadManifest('image',1).then(function(loaded){
+  Dictionary.loadManifest('image').then(function(loaded){
     loaded.forEach(function(item){items.push(item);});
     callback();
   }).catch(onErr(onError,callback));
