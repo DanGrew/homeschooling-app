@@ -42,5 +42,18 @@ function scoreMessage(hitCount) {
   return              { emoji: '\uD83C\uDFB5',          text: 'Keep playing!', sub: hitCount + ' out of 10' };
 }
 
-if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage };
+function simpleNoteInfo(token, noteMap, simplifications) {
+  return [noteMap[simplifications[token]]].filter(Boolean)
+    .map(function(i) { return {note: i.note, color: i.color, simplified: true, displayToken: simplifications[token]}; })[0];
+}
+
+function noteInfo(token, noteMap, simplifications, noNoteInfo) {
+  return (
+    [noteMap[token]].filter(Boolean).filter(function(i) { return i.note; })
+    .concat([simpleNoteInfo(token, noteMap, simplifications)].filter(Boolean))
+    .concat([noNoteInfo])
+  )[0];
+}
+
+if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo };
 
