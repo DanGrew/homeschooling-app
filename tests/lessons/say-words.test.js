@@ -56,7 +56,7 @@ test('filter bar vehicles button has car emoji', async ({ page }) => {
 test('lesson nav button is visible', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('.nav-lesson-btn')).toBeVisible()
-  await expect(page.locator('.nav-lesson-btn')).toHaveText('\uD83D\uDCDA')
+  await expect(page.locator('.nav-lesson-btn')).toContainText('\uD83D\uDCDA')
 })
 
 test('lesson popout shows all 6 lessons', async ({ page }) => {

@@ -65,9 +65,9 @@ window._puzzlePaginator = paginator;
 function applyFilter() { paginator.reset(allPuzzles.filter(filterFn)); }
 
 buildSimpleFilterBar([
-  {value:'all',      label:'All'},
-  {value:'linear',   label:'Linear'},
-  {value:'converging',label:'Converging'}
+  {value:'all',        label:'All'},
+  {value:'linear',     label:'Linear',     icon:'\u25B6\uFE0F'},
+  {value:'converging', label:'Converging', icon:'\uD83D\uDD00'}
 ], function(cat) {
   filterFn = FILTERS[cat];
   applyFilter();

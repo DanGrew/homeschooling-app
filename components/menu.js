@@ -2,11 +2,59 @@
   var bar=document.querySelector('.nav-bar');
   if(!bar)return;
 
-  bar.insertAdjacentHTML('afterbegin','<a href="'+(bar.dataset.home||'index.html')+'" class="nav-btn">&#127968;</a>');
+  function navLabel(text){
+    var s=document.createElement('span');
+    s.setAttribute('data-nav-label','');
+    s.textContent=text;
+    s.style.cssText='display:none;font-size:0.6em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+    return s;
+  }
+
+  function makeNavBtn(tag,attrs,iconHtml,label){
+    var el=document.createElement(tag);
+    Object.keys(attrs).forEach(function(k){el[k]=attrs[k];});
+    el.className='nav-btn';
+    var icon=document.createElement('span');
+    icon.innerHTML=iconHtml;
+    el.appendChild(icon);
+    el.appendChild(navLabel(label));
+    return el;
+  }
+
+  function fixedPopout(minWidth){
+    var d=document.createElement('div');
+    d.style.cssText='display:none;position:fixed;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:'+minWidth+'px;overflow:hidden;z-index:9600;';
+    document.body.appendChild(d);
+    return d;
+  }
+
+  function positionPopout(popout,btn){
+    var r=btn.getBoundingClientRect();
+    popout.style.top=r.top+'px';
+    popout.style.left=(r.right+8)+'px';
+    popout.style.maxHeight=(window.innerHeight-r.top-8)+'px';
+    popout.style.overflowY='auto';
+  }
+
+  function togglePopout(popout,btn){
+    if(popout.style.display==='block'){
+      popout.style.display='none';
+    } else {
+      positionPopout(popout,btn);
+      popout.style.display='block';
+    }
+  }
+
+  document.addEventListener('click',function(){
+    document.querySelectorAll('.nav-lesson-popout,.nav-links-popout').forEach(function(p){p.style.display='none';});
+  });
+
+  var homeBtn=makeNavBtn('a',{href:bar.dataset.home||'index.html'},'&#127968;','Home');
+  bar.insertAdjacentElement('afterbegin',homeBtn);
 
   var filterSlot=document.createElement('div');
   filterSlot.id='nav-filter-slot';
-  filterSlot.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1;min-height:0;overflow-y:auto;width:100%;box-sizing:border-box;padding-top:4px;';
+  filterSlot.style.cssText='display:flex;flex-direction:column;gap:4px;flex:1;min-height:0;overflow-y:auto;width:100%;box-sizing:border-box;padding-top:4px;align-items:center;';
   bar.appendChild(filterSlot);
 
   var gameArea=document.querySelector('.game-area');
@@ -39,14 +87,11 @@
   if(window.LESSONS&&window.LESSONS.length){
     document.body.classList.add('has-lessons');
     var lsnContainer=document.createElement('div');
-    lsnContainer.style.cssText='position:relative;';
-    var lsnBtn=document.createElement('button');
-    lsnBtn.innerHTML='&#128218;';
-    lsnBtn.className='nav-btn nav-lesson-btn';
-    lsnBtn.style.cssText='flex-shrink:0;';
-    var lsnPopout=document.createElement('div');
+    lsnContainer.className='nav-btn-container';
+    var lsnBtn=makeNavBtn('button',{},'&#128218;','Lessons');
+    lsnBtn.classList.add('nav-lesson-btn');
+    var lsnPopout=fixedPopout(190);
     lsnPopout.className='nav-lesson-popout';
-    lsnPopout.style.cssText='display:none;position:absolute;top:0;left:calc(100% + 8px);background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:190px;overflow:hidden;z-index:9600;';
     window.LESSONS.forEach(function(l,i){
       var item=document.createElement('button');
       item.textContent='Lesson '+l.number+': '+l.title;
@@ -63,49 +108,40 @@
     });
     lsnBtn.addEventListener('click',function(e){
       e.stopPropagation();
-      lsnPopout.style.display=lsnPopout.style.display===''?'none':'';
-    });
-    document.addEventListener('click',function(){
-      document.querySelectorAll('.nav-lesson-popout').forEach(function(p){p.style.display='none';});
+      togglePopout(lsnPopout,lsnBtn);
     });
     lsnContainer.appendChild(lsnBtn);
-    lsnContainer.appendChild(lsnPopout);
     bar.appendChild(lsnContainer);
   }
 
   if(bar.dataset.links){
     var links=JSON.parse(bar.dataset.links);
-    var linksIcon=bar.dataset.linksIcon==='lesson'?'&#128218;':'&#127918;';
-    var container=document.createElement('div');
-    container.style.cssText='position:relative;';
+    var isLesson=bar.dataset.linksIcon==='lesson';
+    var linksIconHtml=isLesson?'&#128218;':'&#127918;';
+    var linksLabel=isLesson?'Related':'Games';
+    var lnkContainer=document.createElement('div');
+    lnkContainer.className='nav-btn-container';
     if(links.length===1){
-      var directBtn=document.createElement('a');
-      directBtn.href=links[0].href;
-      directBtn.innerHTML=linksIcon;
-      directBtn.className='nav-btn';
-      container.appendChild(directBtn);
+      var directBtn=makeNavBtn('a',{href:links[0].href},linksIconHtml,linksLabel);
+      lnkContainer.appendChild(directBtn);
     } else {
-      var btn=document.createElement('button');
-      btn.innerHTML=linksIcon;
-      btn.className='nav-btn';
-      var popout=document.createElement('div');
-      popout.style.cssText='display:none;position:absolute;top:0;left:calc(100% + 8px);background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,0.15);min-width:160px;overflow:hidden;z-index:9600;';
+      var lnkBtn=makeNavBtn('button',{},linksIconHtml,linksLabel);
+      var lnkPopout=fixedPopout(160);
+      lnkPopout.className='nav-links-popout';
       links.forEach(function(l,i){
         var item=document.createElement('a');
         item.href=l.href;
         item.textContent=l.label;
         item.style.cssText='display:block;padding:12px 16px;text-decoration:none;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;'+(i>0?'border-top:1px solid #f0f0f0;':'');
-        popout.appendChild(item);
+        lnkPopout.appendChild(item);
       });
-      btn.addEventListener('click',function(e){
+      lnkBtn.addEventListener('click',function(e){
         e.stopPropagation();
-        popout.style.display=popout.style.display===''?'none':'';
+        togglePopout(lnkPopout,lnkBtn);
       });
-      document.addEventListener('click',function(){popout.style.display='none';});
-      container.appendChild(btn);
-      container.appendChild(popout);
+      lnkContainer.appendChild(lnkBtn);
     }
-    bar.appendChild(container);
+    bar.appendChild(lnkContainer);
   }
 
   var navExpanded=false;

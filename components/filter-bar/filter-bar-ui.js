@@ -2,7 +2,7 @@ import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/f
 export { extractTags, extractLevels, filterItems };
 import { makeSpeakable } from '../speech/speakable.js';
 
-var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E', fruit: '\uD83C\uDF4E', emotions: '\uD83D\uDE0A', vehicles: '\uD83D\uDE97', medical: '\uD83C\uDFE5' };
+var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E', fruit: '\uD83C\uDF4E', emotions: '\uD83D\uDE0A', vehicles: '\uD83D\uDE97', medical: '\uD83C\uDFE5', vegetables: '\uD83E\uDD66', dairy: '\uD83E\uDDC0', bakery: '\uD83E\uDD50', groceries: '\uD83D\uDED2' };
 
 function tagIcon(t) {
   if (t === 'all') return '\u2726';
@@ -10,8 +10,9 @@ function tagIcon(t) {
 }
 
 function optIcon(opt) {
+  if (opt.icon) return opt.icon;
   if (opt.value === 'all') return '\u2726';
-  return TAG_EMOJI[opt.value] || opt.label.charAt(0).toUpperCase();
+  return TAG_EMOJI[opt.value] || opt.label.charAt(0);
 }
 
 var _expanded = false;
