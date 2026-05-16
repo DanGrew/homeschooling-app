@@ -10,9 +10,7 @@ const { report } = require('./reporter.js');
 const ROOT = path.resolve(__dirname, '..', '..');
 
 function classify(rel) {
-  if (rel.startsWith('app/activities/')) return 'activity';
-  if (rel.startsWith('app/worksheets/') && rel !== 'app/worksheets/index.html') return 'activity';
-  return 'hub';
+  return rel.startsWith('app/') ? 'activity' : 'hub';
 }
 
 function findHtml(dir, found = []) {
@@ -32,7 +30,13 @@ function contractName(rel) {
   // app/activities/simulator/index.html  -> simulator
   // app/activities/piano/game.html       -> piano-game
   // app/worksheets/colouring-sheets/index.html -> colouring-sheets
-  const parts = rel.replace(/^app\/(activities|worksheets)\//, '').split('/');
+  // app/curriculum/index.html            -> curriculum
+  // app/index.html                       -> index
+  // app/attributions.html                -> attributions
+  let stripped = rel.replace(/^app\//, '');
+  stripped = stripped.replace(/^(activities|worksheets)\//, '');
+  const parts = stripped.split('/');
+  if (parts.length === 1) return path.basename(parts[0], '.html');
   const dir  = parts[0];
   const file = path.basename(parts[parts.length - 1], '.html');
   return file === 'index' ? dir : `${dir}-${file}`;
