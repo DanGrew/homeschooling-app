@@ -1,4 +1,4 @@
-import { CM_COLOURS, CM_MIXES, mix, hex } from '../../core/colour-mixing/colour-mixing-core.js';
+import { CM_COLOURS, CM_MIXES, mix, hex, slotHtml } from '../../core/colour-mixing/colour-mixing-core.js';
 export { CM_COLOURS, CM_MIXES, mix, hex };
 
 const cfg=window.CM_CONFIG;
@@ -12,8 +12,6 @@ function pickTarget(){
   var src=PICK_POOL[String(pool.length>0)](pool);
   return src[Math.floor(Math.random()*src.length)];
 }
-
-function slotHtml(id,lbl){return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div id="'+id+'" style="width:76px;height:76px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div><div style="font-size:0.85em;color:#bbb;font-weight:bold;">'+lbl+'</div></div>';}
 
 var SW_OUTLINE = { 'true': () => '4px solid #333', 'false': () => 'none' };
 var SW_TRANSFORM = { 'true': () => 'scale(1.12)', 'false': () => 'scale(1)' };

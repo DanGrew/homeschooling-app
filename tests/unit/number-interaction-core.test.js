@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { comparisonColor, pickFruitPair, clamp, pluralize } from '../../core/number-interaction/number-interaction-core.js'
+import { comparisonColor, pickFruitPair, clamp, pluralize, makeImg, labelState, computeChange } from '../../core/number-interaction/number-interaction-core.js'
 
 describe('comparisonColor', () => {
   it('returns green when a > b', () => {
@@ -74,4 +74,41 @@ describe('clamp', () => {
     expect(clamp(11, 0, 10)).toBe(10)
     expect(clamp(100, 0, 10)).toBe(10)
   })
+})
+
+describe('makeImg', () => {
+  it('returns img tag string', () => expect(makeImg({ url: '/img.png' }, '60px')).toMatch(/^<img /));
+  it('includes url', () => expect(makeImg({ url: '/img.png' }, '60px')).toContain('src="/img.png"'));
+  it('includes size in style', () => expect(makeImg({ url: '/x.png' }, '80px')).toContain('80px'));
+})
+
+describe('labelState', () => {
+  it('empty when both zero', () => expect(labelState(0, 0)).toBe('empty'));
+  it('same when equal non-zero', () => expect(labelState(3, 3)).toBe('same'));
+  it('bigger when self > other', () => expect(labelState(5, 3)).toBe('bigger'));
+  it('smaller when self < other', () => expect(labelState(2, 4)).toBe('smaller'));
+})
+
+describe('computeChange', () => {
+  it('increments side a', () => {
+    const r = computeChange('a', 1, 2, 3, 10);
+    expect(r.newA).toBe(3);
+    expect(r.newB).toBe(3);
+    expect(r.changed).toBe(true);
+  });
+  it('increments side b', () => {
+    const r = computeChange('b', 1, 2, 3, 10);
+    expect(r.newA).toBe(2);
+    expect(r.newB).toBe(4);
+  });
+  it('clamps at max', () => {
+    const r = computeChange('a', 1, 10, 0, 10);
+    expect(r.newA).toBe(10);
+    expect(r.changed).toBe(false);
+  });
+  it('clamps at 0', () => {
+    const r = computeChange('a', -1, 0, 0, 10);
+    expect(r.newA).toBe(0);
+    expect(r.changed).toBe(false);
+  });
 })

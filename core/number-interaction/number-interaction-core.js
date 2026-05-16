@@ -21,3 +21,23 @@ export function pickFruitPair(fruits) {
 export function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
+
+export function makeImg(item, sz) {
+  return '<img src="' + item.url + '" style="' + sz + ';transition:transform 0.15s,filter 0.15s;" draggable="false">';
+}
+
+export function labelState(self, other) {
+  return (
+    ['empty'].filter(function() { return self + other === 0; })
+    .concat(['same'].filter(function() { return self === other; }))
+    .concat(['bigger'].filter(function() { return self > other; }))
+    .concat(['smaller'].filter(function() { return self < other; }))
+    .concat(['empty'])
+  )[0];
+}
+
+export function computeChange(side, delta, aCount, bCount, max) {
+  var newA = ({ a: function() { return clamp(aCount + delta, 0, max); }, b: function() { return aCount; } })[side]();
+  var newB = ({ a: function() { return bCount; }, b: function() { return clamp(bCount + delta, 0, max); } })[side]();
+  return { newA: newA, newB: newB, changed: [newA !== aCount, newB !== bCount].some(Boolean) };
+}

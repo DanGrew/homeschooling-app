@@ -34,8 +34,8 @@
   card.style.cssText = 'position:fixed;bottom:70px;right:12px;width:268px;background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,0.16);border:1.5px solid #eee;z-index:9001;display:none;flex-direction:column;overflow:hidden;';
   card.setAttribute('data-testid', 'adult-prompts-card');
 
-  function typeCol(type) { return [TYPE_COLOR[type]].filter(Boolean).concat(['#999'])[0]; }
-  function typeLbl(type) { return [TYPE_LABEL[type]].filter(Boolean).concat([type.toUpperCase()])[0]; }
+  var typeCol = function(type) { return [TYPE_COLOR[type]].filter(Boolean).concat(['#999'])[0]; };
+  var typeLbl = function(type) { return [TYPE_LABEL[type]].filter(Boolean).concat([type.toUpperCase()])[0]; };
 
   function renderCard() {
     var p = prompts[idx];
