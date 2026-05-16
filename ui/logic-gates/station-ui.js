@@ -9,10 +9,6 @@ function el(tag, attrs = {}) {
   return e;
 }
 
-function cellCenter(cell) {
-  return { x: cell[0] * CELL_W + CELL_W / 2, y: cell[1] * CELL_H + CELL_H / 2 };
-}
-
 function buildWirePath(svg, x1, y1, x2, y2, id) {
   const cpx = (x1 + x2) / 2;
   const d = `M${x1},${y1} C${cpx},${y1} ${cpx},${y2} ${x2},${y2}`;
@@ -104,9 +100,9 @@ function buildStation(config, onToggle) {
   });
 
   const positions = {};
-  config.inputs.forEach(i => { positions[i.id] = cellCenter(i.cell); });
-  config.nodes.forEach(n => { positions[n.id] = cellCenter(n.cell); });
-  config.outputs.forEach(o => { positions[o.id] = cellCenter(o.cell); });
+  config.inputs.forEach(i => { positions[i.id] = cellCenter(i.cell, CELL_W, CELL_H); });
+  config.nodes.forEach(n => { positions[n.id] = cellCenter(n.cell, CELL_W, CELL_H); });
+  config.outputs.forEach(o => { positions[o.id] = cellCenter(o.cell, CELL_W, CELL_H); });
 
   const nodeColourMap = {};
   config.nodes.forEach(n => { nodeColourMap[n.id] = GATE_COLOURS[n.type]; });
