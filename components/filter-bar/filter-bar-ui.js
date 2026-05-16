@@ -1,5 +1,5 @@
-import { extractTags, extractLevels, filterItems, active } from '../../core/filter-bar/filter-bar-core.js';
-export { extractTags, extractLevels, filterItems };
+import { extractTags, filterItems, active } from '../../core/filter-bar/filter-bar-core.js';
+export { extractTags, filterItems };
 import { makeSpeakable } from '../speech/speakable.js';
 
 var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E ', fruit: '\uD83C\uDF4E ', emotions: '\uD83D\uDE0A ', vehicles: '\uD83D\uDE97 ', medical: '\uD83C\uDFE5 ' };
@@ -13,39 +13,18 @@ function row(extra) {
   return d;
 }
 
-var LEVEL_LABEL = { 'true': () => 'All Levels', 'false': l => 'Level ' + l };
-
-var ADD_LEVEL_ROW = {
-  'true': function(bar, levels, getActiveLevel, setActiveLevel, apply) {
-    var levelRow = row('border-top:1px solid #eee;');
-    ['all'].concat(levels).forEach(function(l) {
-      var b = document.createElement('button');
-      b.textContent = LEVEL_LABEL[String(l === 'all')](l);
-      b.setAttribute('data-level', String(l));
-      b.onclick = function() { setActiveLevel(l); apply(); };
-      makeSpeakable(b, b.textContent);
-      levelRow.appendChild(b);
-    });
-    bar.appendChild(levelRow);
-  },
-  'false': () => {}
-};
-
 export function buildFilterBar(items, onChange) {
   var bar = document.getElementById('filter-bar');
   bar.innerHTML = '';
   bar.style.cssText = 'display:flex;flex-direction:column;border-bottom:1px solid #eee;';
 
-  var tags = extractTags(items), levels = extractLevels(items);
-  var activeTag = 'all', activeLevel = 'all';
+  var tags = extractTags(items);
+  var activeTag = 'all';
 
   function apply() {
-    var filtered = filterItems(items, activeTag, activeLevel);
+    var filtered = filterItems(items, activeTag);
     bar.querySelectorAll('button[data-tag]').forEach(function(b) {
       b.style.cssText = active(b.getAttribute('data-tag') === activeTag, '#2ECC71');
-    });
-    bar.querySelectorAll('button[data-level]').forEach(function(b) {
-      b.style.cssText = active(b.getAttribute('data-level') === String(activeLevel), '#3498DB');
     });
     onChange(filtered);
   }
@@ -60,8 +39,6 @@ export function buildFilterBar(items, onChange) {
     tagRow.appendChild(b);
   });
   bar.appendChild(tagRow);
-
-  ADD_LEVEL_ROW[String(levels.length > 0)](bar, levels, () => activeLevel, l => { activeLevel = l; }, apply);
 
   apply();
 }
