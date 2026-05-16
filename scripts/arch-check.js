@@ -284,7 +284,7 @@ if (rule === 'no-pure-fn-outside-core') {
   // Once in core/, check:untested enforces unit tests exist.
   // Per-function escape hatch: add // arch: allow-pure-fn on the line before the function.
   // File-level escape hatch: arch: allow-pure-fn anywhere in the file.
-  const DOM_PATTERN = /\b(document|window|navigator|requestAnimationFrame|cancelAnimationFrame|fetch|decodeAudioBuffer|decodeAudioData)\b|\.(?:classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|insertBefore\b|addEventListener\b|removeEventListener\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b|createElementNS\b|createBufferSource\b|createGain\b|resume\b)/;
+  const DOM_PATTERN = /\b(document|window|navigator|location|requestAnimationFrame|cancelAnimationFrame|fetch|decodeAudioBuffer|decodeAudioData)\b|\.(?:classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|insertBefore\b|addEventListener\b|removeEventListener\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b|createElementNS\b|createBufferSource\b|createGain\b|resume\b|decodeAudioData\b)/;
   const THIN_DISPATCHER = /^\s*return\s+\w+\[.*\]\s*\(.*\)\s*;?\s*$/s;
 
   function hasTopLevelReturn(body) {

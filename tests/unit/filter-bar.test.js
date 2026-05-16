@@ -126,17 +126,16 @@ describe('ACTIVE_STYLES', () => {
 });
 
 describe('active', () => {
-  it('returns a CSS string', () => {
-    expect(typeof active(true, '#3498DB')).toBe('string');
+  it('active state uses colour for border and background', () => {
+    const style = active(true, '#3498DB');
+    expect(style).toContain('border:2px solid #3498DB');
+    expect(style).toContain('background:#3498DB');
+    expect(style).toContain('color:white');
   });
-  it('active string contains the colour', () => {
-    expect(active(true, '#3498DB')).toContain('#3498DB');
-  });
-  it('inactive string contains #ddd', () => {
-    expect(active(false, '#3498DB')).toContain('#ddd');
-  });
-  it('always contains cursor:pointer', () => {
-    expect(active(true, '#fff')).toContain('cursor:pointer');
-    expect(active(false, '#fff')).toContain('cursor:pointer');
+  it('inactive state uses neutral colours', () => {
+    const style = active(false, '#3498DB');
+    expect(style).toContain('border:2px solid #ddd');
+    expect(style).toContain('background:#fff');
+    expect(style).toContain('color:#333');
   });
 });

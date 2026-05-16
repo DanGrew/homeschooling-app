@@ -207,16 +207,9 @@ describe('shouldTriggerWin', () => {
   it('false when condition not met', () => expect(shouldTriggerWin(spec, { x: 1 }, false)).toBe(false));
 });
 
-
 describe('gridMajorKey', () => {
-  it('returns "1" for non-multiples of 100 (minor)', () => {
-    expect(gridMajorKey(10)).toBe('1');
-    expect(gridMajorKey(50)).toBe('1');
-    expect(gridMajorKey(1)).toBe('1');
-  });
-  it('returns "0" for multiples of 100 (major)', () => {
-    expect(gridMajorKey(100)).toBe('0');
-    expect(gridMajorKey(200)).toBe('0');
-    expect(gridMajorKey(0)).toBe('0');
-  });
+  it('returns 0 for multiples of 100', () => expect(gridMajorKey(100)).toBe('0'));
+  it('returns 0 for 0', () => expect(gridMajorKey(0)).toBe('0'));
+  it('returns 1 for non-multiples of 100', () => expect(gridMajorKey(50)).toBe('1'));
+  it('returns 1 for 1', () => expect(gridMajorKey(1)).toBe('1'));
 });

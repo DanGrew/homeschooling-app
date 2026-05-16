@@ -148,4 +148,5 @@ export function shouldTriggerWin(spec, state, won) {
 if (typeof module !== 'undefined') module.exports = {
   evalCond, applyStateAction, resolveScene, resolveImgFit, resolveImgSrc, resolveObject,
   objectRenderType, resolveAnimName, nextSpriteIdx, parseAction, findAction, shouldTriggerWin,
+  gridMajorKey,
 };
