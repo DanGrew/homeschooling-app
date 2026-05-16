@@ -71,7 +71,7 @@ function switchMode(newMode) {
 
 function renderChar(entry) {
   currentEntry = entry;
-  document.getElementById('char-label').textContent = entry.char;
+  [document.getElementById('char-label')].filter(Boolean).forEach(el => { el.textContent = entry.char; });
   hideBanner();
   setParam(entry.char, currentFilter);
   loadChar(entry);
