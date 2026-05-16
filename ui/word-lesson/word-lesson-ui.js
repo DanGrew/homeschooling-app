@@ -68,7 +68,8 @@ function setTraceUI() {
 
 function renderWordEntry(entry) {
   currentWord = entry.word;
-hideBanner();
+  document.getElementById('word-label').textContent = entry.displayName;
+  hideBanner();
   setLessonUI();
   loadWord(currentWord);
 }
@@ -380,6 +381,7 @@ var GENERATE_HANDLERS = { 'true': doGenerate, 'false': flashInvalid };
 
 function doGenerate(val) {
   currentWord = val;
+  document.getElementById('word-label').textContent = val;
   hideBanner();
   setLessonUI();
   loadWord(val);
