@@ -20,9 +20,10 @@ test('Words section has Say It, Trace Letters and Trace Words', async ({ page })
   await expect(page.getByRole('link', { name: 'Trace Words' })).toBeVisible()
 })
 
-test('Colours section has Colour Wheel', async ({ page }) => {
+test('Colours section has Colour Wheel and Colour Playground', async ({ page }) => {
   await page.goto('/homeschooling-app/app/lessons/')
   await expect(page.getByRole('link', { name: 'Colour Wheel' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Colour Playground' })).toBeVisible()
 })
 
 test('Music section has Piano', async ({ page }) => {
