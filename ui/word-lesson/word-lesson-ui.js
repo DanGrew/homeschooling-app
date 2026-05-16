@@ -405,7 +405,7 @@ export function init() {
   document.getElementById('btn-tryit').addEventListener('click', startTrace);
   document.getElementById('btn-stop').addEventListener('click', () => { stopAllEngines(); clearProgress(); setLessonUI(); });
   document.getElementById('btn-sayit').addEventListener('click', () => { [currentWord].filter(Boolean).forEach(w => { stop(); speak(w); }); });
-  makeSpeakable(document.getElementById('btn-sayit'), () => currentWord || 'Say It');
+  makeSpeakable(document.getElementById('btn-sayit'), () => [currentWord].filter(Boolean).concat(['Say It'])[0]);
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
   window.addEventListener('guidance:start', function() {
