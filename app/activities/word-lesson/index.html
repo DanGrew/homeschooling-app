@@ -19,7 +19,6 @@
 </script>
 <script src="../../../components/menu.js" defer></script>
 <style>
-  .word-label{font-size:2em;font-weight:bold;color:#333;letter-spacing:0.05em;text-align:center;padding:8px 0;}
   .mode-btns{display:flex;gap:12px;justify-content:center;padding:10px 16px 0;flex-wrap:wrap;}
   .mode-btn{border:none;border-radius:16px;padding:12px 28px;font-size:1.1em;font-family:inherit;font-weight:bold;cursor:pointer;}
   .mode-btn:disabled{opacity:0.35;cursor:default;}
@@ -31,7 +30,7 @@
   #custom-word-input{font-size:1.2em;font-family:inherit;padding:8px 14px;border:2px solid #ddd;border-radius:12px;width:200px;outline:none;}
   #custom-word-input:focus{border-color:#3498DB;}
   #btn-generate{background:#E74C3C;color:white;border:none;border-radius:12px;padding:10px 20px;font-size:1.1em;font-family:inherit;cursor:pointer;font-weight:bold;}
-  #word-container{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:8px;}
+  #word-container{flex:1;display:flex;align-items:center;justify-content:center;padding:8px;}
 </style>
 </head>
 <body>
@@ -43,7 +42,7 @@
            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <button id="btn-generate">&#8635; Go</button>
   </div>
-  <div class="word-label" id="word-label"></div>
+  <div id="word-label" style="display:none;"></div>
   <div class="mode-btns">
     <button class="mode-btn" id="btn-watch">&#128218; Watch</button>
     <button class="mode-btn" id="btn-sayit">&#128264; Say It</button>
@@ -70,7 +69,12 @@ fetch('../../../content/lessons/word-lesson.json')
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='word-lesson';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+[['btn-watch','Watch'],['btn-tryit','Try It'],['btn-stop','Reset'],['btn-generate','Go']].forEach(function(pair) {
+  makeSpeakable(document.getElementById(pair[0]), pair[1]);
+});
+</script>
 </body>
 </html>

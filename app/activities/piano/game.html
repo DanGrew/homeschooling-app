@@ -47,10 +47,13 @@ body{background:#1a1a2e;}
 <script src="../../../ui/shared/audio-ctx.js"></script>
 <script src="../../../ui/piano/piano-ui.js"></script>
 <script type="module">
-import '../../../components/speech/speakable.js';
+import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 import { init } from '../../../ui/piano/piano-game-ui.js';
 window.addEventListener('load', init);
+[['btn-play','Play'],['btn-pause','Pause'],['btn-stop','Stop'],['btn-play-again','Play Again']].forEach(function(pair) {
+  makeSpeakable(document.getElementById(pair[0]), pair[1]);
+});
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='piano-game';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>

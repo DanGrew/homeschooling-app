@@ -1,5 +1,6 @@
 import { validWord, charFile, extractWordTags, filterWordsByTag, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 import { speak, stop } from '../../components/speech/speech-ui.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
@@ -96,7 +97,6 @@ function showCustomMode() {
   isCustom = true;
   stopAllEngines();
   document.getElementById('custom-input').style.display = 'flex';
-  document.getElementById('word-label').textContent = '';
   paginator.disable();
   document.getElementById('word-container').innerHTML = '';
   charSvgs = []; charBases = []; charBalls = []; charDots = [];
@@ -151,7 +151,7 @@ function loadWord(word) {
   const chars = word.split('');
   return Promise.all(chars.map(fetchCharData))
     .then(charData => renderWord(chars, charData))
-    .catch(() => { document.getElementById('word-label').textContent = '⚠️ Could not load "' + word + '"'; });
+    .catch(() => { console.warn('Could not load "' + word + '"'); });
 }
 
 function makeSvgPath(d) {
@@ -405,6 +405,7 @@ export function init() {
   document.getElementById('btn-tryit').addEventListener('click', startTrace);
   document.getElementById('btn-stop').addEventListener('click', () => { stopAllEngines(); clearProgress(); setLessonUI(); });
   document.getElementById('btn-sayit').addEventListener('click', () => { [currentWord].filter(Boolean).forEach(w => { stop(); speak(w); }); });
+  makeSpeakable(document.getElementById('btn-sayit'), () => currentWord || 'Say It');
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
   window.addEventListener('guidance:start', function() {
@@ -423,6 +424,6 @@ export function init() {
     filtered = words.slice();
     paginator.reset(filtered);
   }).catch(() => {
-    document.getElementById('word-label').textContent = '⚠️ Failed to load — check connection';
+    console.warn('Failed to load dictionary — check connection');
   });
 }

@@ -44,7 +44,14 @@ newGame();
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='move-blocks';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+var ARROW_LABELS = {'0,-1':'Up','-1,0':'Left','1,0':'Right','0,1':'Down'};
+document.querySelectorAll('.arr').forEach(function(btn) {
+  var key = btn.dataset.dx + ',' + btn.dataset.dy;
+  makeSpeakable(btn, ARROW_LABELS[key]);
+});
+</script>
 </body>
 </html>

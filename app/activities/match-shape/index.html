@@ -41,7 +41,7 @@ function newRound(){
   document.getElementById('shape').innerHTML=svg(current.type,col);
   var shuffled=types.slice().sort(function(){return Math.random()-0.5;});
   document.getElementById('options').innerHTML=shuffled.map(function(t){
-    return '<button data-type="'+t+'" onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,'clamp(60px,13vmin,96px)')+'</button>';
+    return '<button data-type="'+t+'" data-no-speak onclick="check(this)" style="background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;">'+svg(t,col,'clamp(60px,13vmin,96px)')+'</button>';
   }).join('');
 }
 

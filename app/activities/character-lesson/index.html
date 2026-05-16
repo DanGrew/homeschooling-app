@@ -19,7 +19,6 @@
 </script>
 <script src="../../../components/menu.js" defer></script>
 <style>
-  .char-label{font-size:2em;font-weight:bold;color:#333;text-align:center;padding:8px 0;}
   .mode-btns{display:flex;gap:12px;justify-content:center;padding:10px 16px 0;flex-wrap:wrap;}
   .mode-btn{border:none;border-radius:16px;padding:12px 28px;font-size:1.1em;font-family:inherit;font-weight:bold;cursor:pointer;}
   .mode-btn:disabled{opacity:0.35;cursor:default;}
@@ -37,7 +36,6 @@
 <div class="nav-bar" data-home="../../lessons/" data-title="Trace Letters" data-instruction="Trace the letters with your finger" data-no-links="standalone lesson"></div>
 <div class="game-area">
   <div id="filter-bar"></div>
-  <div class="char-label" id="char-label"></div>
   <div class="mode-btns">
     <button class="mode-btn" id="btn-trace" style="display:none">&#9654; Trace</button>
     <button class="mode-btn" id="btn-watch">&#128218; Watch</button>
@@ -47,7 +45,7 @@
   </div>
   <div class="trace-hint" id="trace-hint">Hold the red ball and trace!</div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-    <svg id="svg" viewBox="0 0 200 250" style="width:clamp(224px,44vmin,368px);height:clamp(280px,55vmin,460px);touch-action:none;" preserveAspectRatio="xMidYMid meet">
+    <svg id="svg" viewBox="0 0 200 250" style="width:clamp(224px,44vmin,368px);height:clamp(280px,55vmin,460px);max-height:100%;touch-action:none;" preserveAspectRatio="xMidYMid meet">
       <path id="base" fill="none" stroke="#ddd" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/>
       <circle id="ball" r="16" fill="#E74C3C" stroke="white" stroke-width="3"/>
     </svg>
@@ -73,7 +71,12 @@ window.addEventListener('load', function() {
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='character-lesson';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+[['btn-trace','Trace'],['btn-watch','Watch'],['btn-tryit','Try It'],['btn-stop','Reset']].forEach(function(pair) {
+  makeSpeakable(document.getElementById(pair[0]), pair[1]);
+});
+</script>
 </body>
 </html>

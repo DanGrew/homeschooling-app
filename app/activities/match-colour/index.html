@@ -40,7 +40,7 @@ function newRound(){
   document.getElementById('shape').innerHTML=svg(current.type,current.col);
   var shuffled=colours.slice().sort(function(){return Math.random()-0.5;});
   document.getElementById('swatches').innerHTML=shuffled.map(function(c){
-    return '<button data-col="'+c+'" onclick="check(this)" style="width:clamp(60px,13vmin,96px);height:clamp(60px,13vmin,96px);background:'+c+';border:4px solid rgba(0,0,0,0.12);border-radius:50%;cursor:pointer;transition:transform 0.1s;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;"></button>';
+    return '<button data-col="'+c+'" data-no-speak onclick="check(this)" style="width:clamp(60px,13vmin,96px);height:clamp(60px,13vmin,96px);background:'+c+';border:4px solid rgba(0,0,0,0.12);border-radius:50%;cursor:pointer;transition:transform 0.1s;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;"></button>';
   }).join('');
 }
 

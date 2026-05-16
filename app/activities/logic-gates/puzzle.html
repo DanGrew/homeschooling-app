@@ -47,7 +47,7 @@
 <script src="../../../ui/logic-gates/puzzle-ui.js"></script>
 <script type="module">
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
-import '../../../components/speech/speakable.js';
+import { makeSpeakable } from '../../../components/speech/speakable.js';
 
 var allPuzzles = [];
 var FILTERS = {
@@ -72,6 +72,7 @@ window._puzzlePaginator = paginator;
 function applyFilter() { paginator.reset(allPuzzles.filter(filterFn)); }
 
 document.querySelectorAll('.filter-btn').forEach(function(btn) {
+  makeSpeakable(btn, btn.textContent);
   btn.addEventListener('click', function() {
     filterFn = FILTERS[btn.dataset.cat];
     document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
@@ -79,6 +80,7 @@ document.querySelectorAll('.filter-btn').forEach(function(btn) {
     applyFilter();
   });
 });
+makeSpeakable(document.getElementById('btn-reset'), 'Reset');
 
 Promise.all([
   fetch('../../../content/logic-gates/puzzles-linear.json?v=1').then(function(r) { return r.json(); }),

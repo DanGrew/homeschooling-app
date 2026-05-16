@@ -10,3 +10,4 @@ body.has-lessons .game-area{padding-bottom:110px;}
 .activity-instruction{font-size:1em;color:#666;margin-top:4px;line-height:1.5;cursor:pointer;user-select:none;}
 .feedback-correct{outline:4px solid #2ECC71;outline-offset:3px;}
 .feedback-wrong{outline:4px solid #E74C3C;outline-offset:3px;}
+button:disabled{opacity:0.35;cursor:default;}

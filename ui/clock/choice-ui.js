@@ -1,4 +1,5 @@
 import { hourToSky } from '../../core/clock/clock-core.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 
 function buildTile(preset, isCorrect, onPick) {
   var sky = hourToSky(preset.hour);
@@ -12,6 +13,7 @@ function buildTile(preset, isCorrect, onPick) {
   tile.appendChild(em);
   tile.appendChild(lbl);
   tile.addEventListener('click', function() { onPick(tile, isCorrect); });
+  makeSpeakable(tile, preset.label);
   return tile;
 }
 

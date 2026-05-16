@@ -1,5 +1,6 @@
 import { extractTags, extractLevels, filterItems } from '../../core/filter-bar/filter-bar-core.js';
 export { extractTags, extractLevels, filterItems };
+import { makeSpeakable } from '../speech/speakable.js';
 
 var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E ', fruit: '\uD83C\uDF4E ', emotions: '\uD83D\uDE0A ', vehicles: '\uD83D\uDE97 ', medical: '\uD83C\uDFE5 ' };
 var GET_TAG_EMOJI = { 'true': function(t) { return TAG_EMOJI[t]; }, 'false': function() { return ''; } };
@@ -32,6 +33,7 @@ var ADD_LEVEL_ROW = {
       b.textContent = LEVEL_LABEL[String(l === 'all')](l);
       b.setAttribute('data-level', String(l));
       b.onclick = function() { setActiveLevel(l); apply(); };
+      makeSpeakable(b, b.textContent);
       levelRow.appendChild(b);
     });
     bar.appendChild(levelRow);
@@ -64,6 +66,7 @@ export function buildFilterBar(items, onChange) {
     b.textContent = GET_TAG_EMOJI[String(t in TAG_EMOJI)](t) + t.charAt(0).toUpperCase() + t.slice(1);
     b.setAttribute('data-tag', t);
     b.onclick = function() { activeTag = t; apply(); };
+    makeSpeakable(b, t.charAt(0).toUpperCase() + t.slice(1));
     tagRow.appendChild(b);
   });
   bar.appendChild(tagRow);
@@ -98,6 +101,7 @@ export function buildSimpleFilterBar(options, onChange, initialValue) {
       });
       onChange(opt.value);
     };
+    makeSpeakable(b, opt.label);
     r.appendChild(b);
   });
 

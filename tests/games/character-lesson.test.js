@@ -5,33 +5,29 @@ const { test, expect } = require('@playwright/test')
 test('page loads with ball and first character label', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/')
   await expect(page.locator('#ball')).toBeVisible()
-  await expect(page.locator('#char-label')).not.toBeEmpty()
+  await expect(page).toHaveURL(/char=a/)
 })
 
 test('filter buttons switch character set', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/')
   await page.getByRole('button', { name: 'A–Z', exact: true }).click()
-  const label = await page.locator('#char-label').textContent()
-  expect(label).toMatch(/[A-Z]/)
+  await expect(page).toHaveURL(/filter=upper/)
 
   await page.getByRole('button', { name: '0–9', exact: true }).click()
-  const label2 = await page.locator('#char-label').textContent()
-  expect(label2).toMatch(/[0-9]/)
+  await expect(page).toHaveURL(/filter=digit/)
 })
 
 test('next button advances character', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=a&filter=lower')
-  const first = await page.locator('#char-label').textContent()
   await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
-  const second = await page.locator('#char-label').textContent()
-  expect(second).not.toBe(first)
+  await expect(page).toHaveURL(/char=b/)
 })
 
 test('prev button goes back', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=b&filter=lower')
-  await expect(page.locator('#char-label')).toHaveText('b')
+  await expect(page).toHaveURL(/char=b/)
   await page.locator('#paginator-bar button', { hasText: 'Prev' }).click()
-  await expect(page.locator('#char-label')).toHaveText('a')
+  await expect(page).toHaveURL(/char=a/)
 })
 
 test('paginator bar shows page indicator', async ({ page }) => {
@@ -42,7 +38,7 @@ test('paginator bar shows page indicator', async ({ page }) => {
 
 test('URL params set initial character and filter', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=m&filter=lower')
-  await expect(page.locator('#char-label')).toHaveText('m')
+  await expect(page).toHaveURL(/char=m/)
   const lowerBtn = page.getByRole('button', { name: 'a–z', exact: true })
   const lowerBg = await lowerBtn.evaluate(el => getComputedStyle(el).backgroundColor)
   expect(lowerBg).toBe('rgb(52, 152, 219)')

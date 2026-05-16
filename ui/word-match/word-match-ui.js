@@ -17,6 +17,7 @@ function makeBtn(item,items){
   img.style.cssText='width:clamp(80px,16vmin,140px);height:clamp(80px,16vmin,140px);object-fit:contain;pointer-events:none;';
   btn.appendChild(img);
   btn.onclick=function(){pick(btn,item,items);};
+  makeSpeakable(btn, item.name);
   return btn;
 }
 

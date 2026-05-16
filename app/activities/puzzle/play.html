@@ -223,7 +223,11 @@
   fullImage.src = PUZZLE.src;
   refImg.src = PUZZLE.src;
 </script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+var refToggle = document.getElementById('ref-toggle');
+makeSpeakable(refToggle, function() { return refToggle.textContent; });
+</script>
 </body>
 </html>
