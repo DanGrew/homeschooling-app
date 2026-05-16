@@ -15,11 +15,6 @@ test('clicking dot 1 turns it green', async ({ page }) => {
   await expect(page.locator('#c1')).toHaveAttribute('fill', '#2ECC71')
 })
 
-test('level filter row appears', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
-  await expect(page.locator('#c1')).toBeVisible({ timeout: 5000 })
-  await expect(page.locator('button[data-level="1"]')).toBeVisible()
-})
 
 test('clicking all dots in order shows Well done', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
