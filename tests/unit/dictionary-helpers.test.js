@@ -11,7 +11,7 @@ function call(fn, ...args) {
 }
 
 function makeItem(overrides) {
-  return { name: 'Item', tags: [], viewBox: '0 0 10 10', shapes: [], level: 1, dots: [], edges: [], guides: [], decor: [], ...overrides };
+  return { name: 'Item', tags: [], viewBox: '0 0 10 10', shapes: [], dots: [], edges: [], guides: [], decor: [], ...overrides };
 }
 
 beforeEach(() => { vi.unstubAllGlobals(); });
@@ -35,26 +35,25 @@ describe('loadColouringPictures', () => {
 
 describe('loadConnectDots', () => {
   it('pushes items with correct shape and calls callback on success', async () => {
-    const item = makeItem({ name: 'Star', level: 2, dots: [{ cx: 1, cy: 2 }], guides: ['g'], decor: ['d'] });
+    const item = makeItem({ name: 'Star', dots: [{ cx: 1, cy: 2 }], guides: ['g'], decor: ['d'] });
     const { loadConnectDots } = await loadHelpers({ loadManifest: () => Promise.resolve([item]) });
     const shapes = [];
     await call(loadConnectDots, shapes);
     expect(shapes).toHaveLength(1);
     expect(shapes[0].name).toBe('Star');
-    expect(shapes[0].level).toBe(2);
     expect(shapes[0].dots).toEqual([{ cx: 1, cy: 2 }]);
   });
 
-  it('sorts by level then name', async () => {
+  it('sorts by name', async () => {
     const items = [
-      makeItem({ name: 'Zebra', level: 1 }),
-      makeItem({ name: 'Apple', level: 1 }),
-      makeItem({ name: 'Mango', level: 2 }),
+      makeItem({ name: 'Zebra' }),
+      makeItem({ name: 'Apple' }),
+      makeItem({ name: 'Mango' }),
     ];
     const { loadConnectDots } = await loadHelpers({ loadManifest: () => Promise.resolve(items) });
     const shapes = [];
     await call(loadConnectDots, shapes);
-    expect(shapes.map(s => s.name)).toEqual(['Apple', 'Zebra', 'Mango']);
+    expect(shapes.map(s => s.name)).toEqual(['Apple', 'Mango', 'Zebra']);
   });
 
   it('calls callback on failure', async () => {

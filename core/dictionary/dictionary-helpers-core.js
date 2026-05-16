@@ -14,9 +14,9 @@ export function loadColouringPictures(pictures,callback,onError){
 export function loadConnectDots(shapes,callback,onError){
   Dictionary.loadManifest('connectDots').then(function(items){
     items.forEach(function(item){
-      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,level:item.level,dots:item.dots,guides:item.guides,decor:item.decor});
+      shapes.push({name:item.name,tags:item.tags,vb:item.viewBox,dots:item.dots,guides:item.guides,decor:item.decor});
     });
-    shapes.sort(function(a,b){var l=a.level-b.level;return l!==0?l:a.name.localeCompare(b.name);});
+    shapes.sort(function(a,b){return a.name.localeCompare(b.name);});
     callback();
   }).catch(onErr(onError,callback));
 }
