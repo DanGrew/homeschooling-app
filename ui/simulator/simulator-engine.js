@@ -142,7 +142,7 @@ var ANIMATORS = {
       setTimeout(function() {
         var img = document.createElement('img');
         img.src = resolveImgSrc(engine.spritesPath, 'splash.png');
-        img.style.cssText = 'position:absolute;left:' + (cx + ox - sw/2) + 'px;top:' + (cy + oy - sh/2) + 'px;width:' + sw + 'px;height:' + sh + 'px;object-fit:contain;pointer-events:none;z-index:50;transition:opacity 0.25s;';
+        img.style.cssText = 'position:absolute;left:' + (cx + ox - sw/2) + 'px;top:' + (cy + oy - sh/2) + 'px;width:' + sw + 'px;height:' + sh + 'px;object-fit:contain;pointer-events:none;z-index:99;transition:opacity 0.25s;';
         engine.container.appendChild(img);
         setTimeout(function() { img.style.opacity = '0'; }, 280);
         setTimeout(function() { img.remove(); }, 550);
@@ -163,7 +163,7 @@ var ANIMATORS = {
     var endY = el.offsetTop + el.offsetHeight / 2 - sz / 2;
     var img = document.createElement('img');
     img.src = resolveImgSrc(engine.spritesPath, 'dirt-falling.png');
-    img.style.cssText = 'position:absolute;left:' + cx + 'px;top:' + startY + 'px;width:' + sz + 'px;height:' + sz + 'px;object-fit:contain;pointer-events:none;z-index:50;transition:top 0.35s ease-in;';
+    img.style.cssText = 'position:absolute;left:' + cx + 'px;top:' + startY + 'px;width:' + sz + 'px;height:' + sz + 'px;object-fit:contain;pointer-events:none;z-index:99;transition:top 0.35s ease-in;';
     engine.container.appendChild(img);
     requestAnimationFrame(function() { requestAnimationFrame(function() { img.style.top = endY + 'px'; }); });
     setTimeout(function() { img.style.transition += ',opacity 0.25s'; img.style.opacity = '0'; }, 400);
@@ -280,7 +280,7 @@ var EXEC_HANDLERS = {
       setTimeout(function() {
         var img = document.createElement('img');
         img.src = resolveImgSrc(engine.spritesPath, 'splash.png');
-        img.style.cssText = 'position:absolute;left:' + (cx + offset[0] - sw/2) + 'px;top:' + (cy + offset[1] - sh/2) + 'px;width:' + sw + 'px;height:' + sh + 'px;object-fit:contain;pointer-events:none;z-index:50;transition:opacity 0.25s;';
+        img.style.cssText = 'position:absolute;left:' + (cx + offset[0] - sw/2) + 'px;top:' + (cy + offset[1] - sh/2) + 'px;width:' + sw + 'px;height:' + sh + 'px;object-fit:contain;pointer-events:none;z-index:99;transition:opacity 0.25s;';
         engine.container.appendChild(img);
         setTimeout(function() { img.style.opacity = '0'; }, 280);
         setTimeout(function() { img.remove(); }, 550);
@@ -576,6 +576,8 @@ export class SimulatorEngine {
         el.style.opacity = '';
         el.style.transition = '';
         el.style.transform = '';
+        el.style.left = obj.x + 'px';
+        el.style.top = obj.y + 'px';
         RESET_SPRITE[String(!!obj.sprite_states)](el, obj, this);
       });
     });

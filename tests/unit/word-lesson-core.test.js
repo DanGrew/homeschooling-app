@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { bestVoice, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } = require('../../core/word-lesson/word-lesson-core.js');
+import { bestVoice, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry } from '../../core/word-lesson/word-lesson-core.js';
 
 describe('bestVoice', () => {
   const make = (lang, name) => ({ lang, name });

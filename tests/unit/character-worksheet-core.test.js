@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { charToFile, clamp, buildPattern } = require('../../core/character-worksheet/character-worksheet-core.js');
+import { charToFile, clamp, buildPattern } from '../../core/character-worksheet/character-worksheet-core.js';
 
 describe('charToFile', () => {
   it('lowercase maps to lower-x.svg', () => expect(charToFile('a')).toBe('lower-a.svg'));
