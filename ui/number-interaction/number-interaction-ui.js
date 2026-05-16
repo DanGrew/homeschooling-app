@@ -112,14 +112,16 @@ function stopCounting() {
   return was;
 }
 
-export function change(side, delta) {
+var _change = [function(side, delta) {
   var wasCounting = stopCounting();
   var result = computeChange(side, delta, aCount, bCount, MAX);
   aCount = result.newA;
   bCount = result.newB;
   render();
   [1].filter(() => result.changed).forEach(() => { guidanceEvent(SIDE_EVT[side] + DELTA_EVT[String(delta > 0)]); });
-}
+  return { wasCounting: wasCounting, changed: result.changed };
+}];
+export function change(side, delta) { return _change[0](side, delta); }
 
 function countSpeak(text, onDone) {
   const u = new SpeechSynthesisUtterance(text);
