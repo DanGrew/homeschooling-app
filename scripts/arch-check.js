@@ -284,7 +284,18 @@ if (rule === 'no-pure-fn-outside-core') {
   // Once in core/, check:untested enforces unit tests exist.
   // Per-function escape hatch: add // arch: allow-pure-fn on the line before the function.
   // File-level escape hatch: arch: allow-pure-fn anywhere in the file.
-  const DOM_PATTERN = /\b(document|window|navigator|requestAnimationFrame|cancelAnimationFrame)\b|\.(?:classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|insertBefore\b|addEventListener\b|removeEventListener\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b)/;
+  const DOM_PATTERN = /\b(document|window|navigator|requestAnimationFrame|cancelAnimationFrame|fetch|decodeAudioBuffer)\b|\.(?:classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|insertBefore\b|addEventListener\b|removeEventListener\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b|createElementNS\b|createBufferSource\b|createGain\b|resume\b)/;
+  const THIN_DISPATCHER = /^\s*return\s+\w+\[.*\]\s*\(.*\)\s*;?\s*$/s;
+
+  function hasTopLevelReturn(body) {
+    let depth = 0;
+    for (let i = 0; i < body.length; i++) {
+      if (body[i] === '{') { depth++; continue; }
+      if (body[i] === '}') { depth--; continue; }
+      if (depth === 0 && /^return\b/.test(body.slice(i))) return true;
+    }
+    return false;
+  }
 
   function extractFunctions(content) {
     const results = [];
@@ -317,7 +328,8 @@ if (rule === 'no-pure-fn-outside-core') {
     extractFunctions(content).forEach(({ name, body, preceding, line }) => {
       if (preceding.includes('arch: allow-pure-fn')) return;
       if (DOM_PATTERN.test(body)) return;
-      if (!/\breturn\b/.test(body)) return;
+      if (!hasTopLevelReturn(body)) return;
+      if (THIN_DISPATCHER.test(body)) return;
       violations.push(`${rel}:${line} — '${name}' has no DOM access; move to core/ (or add // arch: allow-pure-fn before the function)`);
     });
   }

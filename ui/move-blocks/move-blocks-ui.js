@@ -1,10 +1,5 @@
 var px, py, tx, ty, bx, by, locked;
 
-function posKey(x, y) { return x + ',' + y; }
-function inBounds(x, y) { return [x, y].every(function(v) { return Math.max(0, Math.min(N - 1, v)) === v; }); }
-function isObstacle(x, y) { return posKey(x, y) === posKey(bx, by); }
-function isTarget(x, y) { return posKey(x, y) === posKey(tx, ty); }
-
 function render() {
   var cellMap = {};
   [[px, py, 'player'], [tx, ty, 'target'], [bx, by, 'obstacle']].forEach(function(entry) {
@@ -23,7 +18,7 @@ function render() {
 function doMove(nx, ny) {
   px = nx; py = ny;
   render();
-  ({'true':function(){locked=true;showBanner(newGame);},'false':function(){}})[String(isTarget(px,py))]();
+  ({'true':function(){locked=true;showBanner(newGame);},'false':function(){}})[String(isTarget(px,py,tx,ty))]();
 }
 
 function move(dx, dy) {
@@ -31,7 +26,7 @@ function move(dx, dy) {
   [doMove]
     .filter(function() { return !locked; })
     .filter(function() { return inBounds(nx, ny); })
-    .filter(function() { return !isObstacle(nx, ny); })
+    .filter(function() { return !isObstacle(nx, ny, bx, by); })
     .forEach(function(f) { f(nx, ny); });
 }
 
