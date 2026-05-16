@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test')
 
-const URL = '/homeschooling-app/app/lessons/colouring/'
+const URL = '/homeschooling-app/app/activities/colouring-playground/'
 
 async function waitForPicture(page) {
   await expect(page.locator('#pic-title')).not.toBeEmpty({ timeout: 5000 })
