@@ -66,7 +66,7 @@ export function buildFilterBar(items, onChange) {
     b.textContent = GET_TAG_EMOJI[String(t in TAG_EMOJI)](t) + t.charAt(0).toUpperCase() + t.slice(1);
     b.setAttribute('data-tag', t);
     b.onclick = function() { activeTag = t; apply(); };
-    makeSpeakable(b, b.textContent);
+    makeSpeakable(b, t.charAt(0).toUpperCase() + t.slice(1));
     tagRow.appendChild(b);
   });
   bar.appendChild(tagRow);

@@ -46,7 +46,7 @@
     <button class="mode-btn" id="btn-stop" style="display:none">&#9632; Reset</button>
   </div>
   <div class="trace-hint" id="trace-hint">Hold the red ball and trace!</div>
-  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;position:relative;">
     <svg id="svg" viewBox="0 0 200 250" style="width:clamp(224px,44vmin,368px);height:clamp(280px,55vmin,460px);touch-action:none;" preserveAspectRatio="xMidYMid meet">
       <path id="base" fill="none" stroke="#ddd" stroke-width="18" stroke-linecap="butt" stroke-linejoin="round"/>
       <circle id="ball" r="16" fill="#E74C3C" stroke="white" stroke-width="3"/>
@@ -76,7 +76,7 @@ window.addEventListener('load', function() {
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
-[['btn-trace','Trace'],['btn-watch','Watch'],['btn-speak','Speak'],['btn-tryit','Try It'],['btn-stop','Reset']].forEach(function(pair) {
+[['btn-trace','Trace'],['btn-watch','Watch'],['btn-tryit','Try It'],['btn-stop','Reset']].forEach(function(pair) {
   makeSpeakable(document.getElementById(pair[0]), pair[1]);
 });
 </script>

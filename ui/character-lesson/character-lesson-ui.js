@@ -1,4 +1,5 @@
 import { speak } from '../../components/speech/speech-ui.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
@@ -251,6 +252,7 @@ export function init() {
 
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
   document.getElementById('btn-speak').addEventListener('click', () => { [currentEntry].filter(Boolean).forEach(e => speak(e.speak)); });
+  makeSpeakable(document.getElementById('btn-speak'), () => currentEntry?.speak ?? 'Speak');
   document.getElementById('btn-tryit').addEventListener('click', () => switchMode('trace'));
   document.getElementById('btn-watch').addEventListener('click', () => WATCH_CLICK[mode]());
   document.getElementById('btn-stop').addEventListener('click', () => {

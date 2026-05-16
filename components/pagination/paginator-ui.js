@@ -10,7 +10,7 @@ export function createPaginator({ container, items, perPage = 1, onRender, wrap 
   var btnPrev = document.createElement('button');
   btnPrev.innerHTML = '&#8592; Prev';
   btnPrev.style.cssText = 'font-size:clamp(0.9em,3vmin,1.4em);padding:clamp(6px,1.2vmin,12px) clamp(14px,2.5vw,24px);border:none;border-radius:14px;background:#2ECC71;color:#fff;font-family:inherit;cursor:pointer;touch-action:manipulation;user-select:none;';
-  makeSpeakable(btnPrev, '← Prev');
+  makeSpeakable(btnPrev, 'Previous');
 
   var indicator = document.createElement('span');
   indicator.style.cssText = 'font-size:clamp(0.85em,2.5vmin,1.2em);color:#555;min-width:90px;text-align:center;';
@@ -18,7 +18,7 @@ export function createPaginator({ container, items, perPage = 1, onRender, wrap 
   var btnNext = document.createElement('button');
   btnNext.innerHTML = 'Next &#8594;';
   btnNext.style.cssText = btnPrev.style.cssText;
-  makeSpeakable(btnNext, 'Next →');
+  makeSpeakable(btnNext, 'Next');
 
   bar.appendChild(btnPrev);
   bar.appendChild(indicator);
