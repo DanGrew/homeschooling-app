@@ -42,4 +42,9 @@ function generatePuzzle(rng) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { N, bfs, generatePuzzle };
+function posKey(x, y) { return x + ',' + y; }
+function inBounds(x, y) { return [x, y].every(function(v) { return Math.max(0, Math.min(N - 1, v)) === v; }); }
+function isObstacle(x, y, bx, by) { return posKey(x, y) === posKey(bx, by); }
+function isTarget(x, y, tx, ty) { return posKey(x, y) === posKey(tx, ty); }
+
+if (typeof module !== 'undefined') module.exports = { N, bfs, generatePuzzle, posKey, inBounds, isObstacle, isTarget };
