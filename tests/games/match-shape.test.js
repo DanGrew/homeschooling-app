@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test')
 
 test('page loads with a title and shape options', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/match-shape/')
-  await expect(page.getByText('Match the shape!')).toBeVisible()
+  await expect(page.locator('.activity-instruction')).toContainText('Find the matching shape')
   await expect(page.locator('#shape svg')).toBeVisible()
   await expect(page.locator('#options button').first()).toBeVisible()
 })

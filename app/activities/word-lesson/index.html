@@ -6,6 +6,7 @@
 <title>Trace Words</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
 <script>
   window.DICT_BASE = '../../../content/dictionary/entries/';
   window.LESSONS = [
@@ -34,7 +35,7 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Trace Words"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Trace Words" data-instruction="Trace the words with your finger" data-no-links="standalone lesson"></div>
 <div class="game-area">
   <div id="filter-bar"></div>
   <div id="custom-input" style="display:none;">
@@ -69,5 +70,7 @@ fetch('../../../content/lessons/word-lesson.json')
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='word-lesson';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+<script type="module">import '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';</script>
 </body>
 </html>

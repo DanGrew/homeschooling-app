@@ -6,11 +6,11 @@
 <title>Secondary Colours</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/"><a href="../../activities/colour-wheel/" class="nav-btn">&#128218;</a></div>
+<div class="nav-bar" data-home="../../games/" data-title="Secondary Colours" data-instruction="Mix two colours to make a new one" data-links='[{"href":"../../activities/colour-wheel/","label":"Colour Wheel"}]'></div>
 <div class="game-area">
-  <div class="game-title">Secondary Colours</div>
   <div id="cm-root" style="flex:1;overflow:hidden;"></div>
 </div>
 <script src="../../../components/menu.js"></script>
@@ -20,5 +20,7 @@
 <script type="module" src="../../../ui/colour-mixing/colour-mixing-ui.js"></script>
 <script>window.ADULT_PROMPTS_ACTIVITY='secondary-colours';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+<script type="module">import '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';</script>
 </body>
 </html>

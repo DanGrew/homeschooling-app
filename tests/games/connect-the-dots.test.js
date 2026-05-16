@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test')
 test('page loads with a title and numbered dots', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/connect-the-dots/')
   await expect(page.locator('#title')).not.toBeEmpty({ timeout: 5000 })
-  await expect(page.locator('.game-title')).toBeVisible()
+  await expect(page.locator('.picture-title')).toBeVisible()
   await expect(page.locator('#c1')).toBeVisible()
 })
 

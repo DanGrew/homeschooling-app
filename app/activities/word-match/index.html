@@ -10,7 +10,7 @@
 <script src="../../../components/menu.js" defer></script>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/" data-title="Word Match" data-links='[{"href":"../say-words/","label":"Say Words"}]' data-links-icon="lesson"></div>
+<div class="nav-bar" data-home="../../games/" data-title="Word Match" data-instruction="Match the word to the right picture" data-links='[{"href":"../say-words/","label":"Say Words"}]' data-links-icon="lesson"></div>
 <div class="game-area">
   <div id="filter-bar"></div>
 <div id="wm-word" style="font-size:clamp(2em,10vmin,5em);font-weight:bold;color:#333;text-align:center;padding:clamp(8px,2vmin,16px) 16px;letter-spacing:0.04em;touch-action:manipulation;user-select:none;"></div>
@@ -31,5 +31,7 @@ loadImages(allItems,function(){
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='word-match';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+<script type="module">import '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';</script>
 </body>
 </html>

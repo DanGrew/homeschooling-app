@@ -6,13 +6,14 @@
 <title>Colouring Pictures</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
 <script src="../../../components/menu.js" defer></script>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/"></div>
+<div class="nav-bar" data-home="../../games/" data-title="Colouring" data-instruction="Tap a colour then paint the picture" data-no-links="standalone game"></div>
 <div class="game-area">
   <div id="filter-bar" style="display:flex;gap:8px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid #eee;"></div>
-  <div class="game-title"><span id="title"></span></div>
+  <div class="picture-title"><span id="title"></span></div>
   <div style="flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;">
     <svg id="svg" style="width:100%;height:100%;" preserveAspectRatio="xMidYMid meet"></svg>
   </div>
@@ -74,5 +75,7 @@ loadColouringPictures(pictures,function(){
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='colouring';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+<script type="module">import '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';</script>
 </body>
 </html>

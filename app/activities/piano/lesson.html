@@ -6,6 +6,7 @@
 <title>Piano</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;}
@@ -30,7 +31,7 @@ body{background:#fff8f0;}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Piano" data-links='[{"label":"Game","href":"./game.html"}]'></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Piano" data-instruction="Follow along and learn to play" data-links='[{"label":"Game","href":"./game.html"}]'></div>
 <div class="game-area">
   <div id="stage">
     <div class="nav-arrow" id="btn-prev">&#9664;</div>
@@ -41,7 +42,8 @@ body{background:#fff8f0;}
   <div id="black-keys-wrap"></div>
   <div id="keys-wrap"></div>
 </div>
-<script type="module">import '../../../components/speech/speech-ui.js';</script>
+<script type="module">import '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';</script>
 <script src="../../../components/menu.js" defer></script>
 <script src="../../../core/shared/utils.js"></script>
 <script src="../../../core/piano/piano-core.js"></script>

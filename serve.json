@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/homeschooling-app/:path*", "destination": "/:path*" }
+  ]
+}

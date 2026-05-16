@@ -10,6 +10,9 @@ function check(doc, html) {
   const hasJs = html.includes('speech-ui.js');
   if (!hasJs) errors.push('speech-ui.js not imported');
 
+  const hasSpeakable = html.includes('speakable.js');
+  if (!hasSpeakable) errors.push('speakable.js not imported');
+
   return errors;
 }
 
