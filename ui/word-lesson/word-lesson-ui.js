@@ -149,7 +149,7 @@ function fetchCharData(c) {
 function loadWord(word) {
   stopAllEngines();
   const chars = word.split('');
-  return Promise.all(chars.map(fetchCharData))
+  Promise.all(chars.map(fetchCharData))
     .then(charData => renderWord(chars, charData))
     .catch(() => { console.warn('Could not load "' + word + '"'); });
 }

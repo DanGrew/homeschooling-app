@@ -48,19 +48,10 @@ import '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
-import { pickFruitPair } from '../../../core/number-interaction/number-interaction-core.js';
+import { pickFruitPair, pluralize } from '../../../core/number-interaction/number-interaction-core.js';
 import { init, change, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
 
 Dictionary.init('../../../content/dictionary/');
-
-var PLURAL_SUFFIX = { y: 'ies', h: 'es' };
-var GET_SUFFIX = { 'true': function(l) { return PLURAL_SUFFIX[l]; }, 'false': function() { return 's'; } };
-var GET_BASE   = { 'true': function(n) { return n.slice(0,-1); },   'false': function(n) { return n; } };
-function pluralize(name) {
-  var last = name.slice(-1);
-  var has = String(last in PLURAL_SUFFIX);
-  return GET_BASE[has](name) + GET_SUFFIX[has](last);
-}
 
 const all = [];
 loadImages(all, () => {
