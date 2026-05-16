@@ -157,8 +157,6 @@ export function initColouringPlayground() {
 
   var CLICK_HANDLER={magic:magicClick,guided:colourClick,free:colourClick};
 
-  function makeClickHandler(el,s){return function(){CLICK_HANDLER[mode](el,s);};}
-
   var ON_RENDER_MODE={guided:buildGuidedPal,free:function(){},magic:function(){}};
 
   function renderPicture(pic){
@@ -179,7 +177,7 @@ export function initColouringPlayground() {
       var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       var el=ns(s.tag,attrs);
       el.style.cursor='pointer';
-      el.addEventListener('click',makeClickHandler(el,s));
+      el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});
       svg.appendChild(el);
     });
     renderRef(pic);
