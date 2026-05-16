@@ -50,6 +50,7 @@ tr:nth-child(even) td{background:#fafafa;}
 </table>
 </div>
 
+<script src="../../core/curriculum/curriculum-core.js"></script>
 <script>
 var areas = [];
 var rows = [];
@@ -58,14 +59,10 @@ var sortCol = -1;
 var sortAsc = true;
 
 var SORT_CLASS   = { 'true': 'sort-asc', 'false': 'sort-desc' };
-var COMPARE_DIR  = {
-  'true':  function(ka, kb) { return ka.localeCompare(kb); },
-  'false': function(ka, kb) { return kb.localeCompare(ka); }
-};
 var SORT_DEFAULT = { '-1': true };
 var SORT_FN      = {
   'true':  function() { rows.sort(defaultCompare); },
-  'false': function() { rows.sort(colCompare); }
+  'false': function() { rows.sort(function(a, b) { return colCompare(a, b, sortAsc, colKeyFns, sortCol); }); }
 };
 var ADD_HEADER_CLASS = {
   'true':  function(th) { th.classList.add(SORT_CLASS[String(sortAsc)]); },
@@ -75,57 +72,6 @@ var CLICK_ACTION = {
   'true':  function() { sortAsc = !sortAsc; },
   'false': function(i) { sortCol = i; sortAsc = true; }
 };
-
-function buildCriterionMap(criteriaData) {
-  var map = {};
-  criteriaData.areas.forEach(function(area) {
-    area.criteria.forEach(function(c) { map[c.id] = { label: c.label, areaId: area.id }; });
-  });
-  return map;
-}
-
-function initByArea() {
-  var byArea = {};
-  areas.forEach(function(a) { byArea[a.id] = []; });
-  return byArea;
-}
-
-function pushCriterion(byArea, cid, criterionMap) {
-  byArea[criterionMap[cid].areaId].push(criterionMap[cid].label);
-}
-
-function buildByArea(criteria, criterionMap) {
-  var byArea = initByArea();
-  criteria.filter(function(cid) { return criterionMap[cid]; })
-    .forEach(function(cid) { pushCriterion(byArea, cid, criterionMap); });
-  Object.keys(byArea).forEach(function(aid) { byArea[aid].sort(); });
-  return byArea;
-}
-
-var GET_CRITERIA = {
-  'true':  function(lesson) { return lesson.criteria; },
-  'false': function() { return []; }
-};
-function lessonCriteria(lesson) { return GET_CRITERIA[String(Array.isArray(lesson.criteria))](lesson); }
-function lessonToRow(lesson, activityLabel, criterionMap) {
-  return { title: lesson.title, activity: activityLabel, byArea: buildByArea(lessonCriteria(lesson), criterionMap) };
-}
-
-function flattenLessons(files, criterionMap) {
-  var result = [];
-  files.forEach(function(f) {
-    f.lessons.forEach(function(lesson) { result.push(lessonToRow(lesson, f.activityLabel, criterionMap)); });
-  });
-  return result;
-}
-
-function defaultCompare(a, b) {
-  return (a.activity + '\x00' + a.title).localeCompare(b.activity + '\x00' + b.title);
-}
-
-function colCompare(a, b) {
-  return COMPARE_DIR[String(sortAsc)](colKeyFns[sortCol](a), colKeyFns[sortCol](b));
-}
 
 function applySort() {
   SORT_FN[String(!!SORT_DEFAULT[String(sortCol)])]();
@@ -211,7 +157,7 @@ async function init() {
   buildColKeyFns();
   renderGlossary();
   var files = await Promise.all(manifest.map(attachActivity));
-  rows = flattenLessons(files, criterionMap);
+  rows = flattenLessons(files, criterionMap, areas);
   applySort();
   renderCoverageHeader();
   renderBody();
