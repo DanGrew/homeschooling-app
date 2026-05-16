@@ -111,10 +111,10 @@ test('guided: selected colour fills cur-colour bar', async ({ page }) => {
   await waitForPicture(page)
   await page.locator('.mode-btn[data-mode="guided"]').click()
   const swatch = page.locator('#guided-pal .swatch').first()
-  const colour = await swatch.evaluate(el => el.dataset.colour)
+  const swatchBg = await swatch.evaluate(el => window.getComputedStyle(el).backgroundColor)
   await swatch.click()
-  const bg = await page.locator('#cur-colour').evaluate(el => el.style.background)
-  expect(bg).toBe(colour)
+  const curBg = await page.locator('#cur-colour').evaluate(el => window.getComputedStyle(el).backgroundColor)
+  expect(curBg).toBe(swatchBg)
 })
 
 test('guided: shape click with no colour selected does nothing', async ({ page }) => {
@@ -142,13 +142,12 @@ test('guided: selected colour persists across picture navigation', async ({ page
   await page.goto(URL)
   await waitForPicture(page)
   await page.locator('.mode-btn[data-mode="guided"]').click()
-  const swatch = page.locator('#guided-pal .swatch').first()
-  const colour = await swatch.evaluate(el => el.dataset.colour)
-  await swatch.click()
+  await page.locator('#guided-pal .swatch').first().click()
+  const colourBefore = await page.locator('#cur-colour').evaluate(el => window.getComputedStyle(el).backgroundColor)
   await page.locator('#paginator-bar button', { hasText: 'Next' }).click()
   await waitForPicture(page)
-  const bg = await page.locator('#cur-colour').evaluate(el => el.style.background)
-  expect(bg).toBe(colour)
+  const colourAfter = await page.locator('#cur-colour').evaluate(el => window.getComputedStyle(el).backgroundColor)
+  expect(colourAfter).toBe(colourBefore)
 })
 
 // ── Free mode ──────────────────────────────────────────────────────────────
