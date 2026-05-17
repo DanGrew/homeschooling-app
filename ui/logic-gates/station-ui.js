@@ -72,7 +72,7 @@ function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
 
 function buildGatePill(svg, cx, cy, label, colour) {
   const W = 80, H = 36, R = 18;
-  const g = el('g', {});
+  const g = el('g', { 'data-gate-pill': label, style: 'cursor:pointer' });
   const rect = el('rect', {
     x: cx - W/2, y: cy - H/2, width: W, height: H, rx: R, fill: colour
   });
@@ -83,6 +83,7 @@ function buildGatePill(svg, cx, cy, label, colour) {
   lbl.textContent = label;
   g.appendChild(rect); g.appendChild(lbl);
   svg.appendChild(g);
+  if (typeof window.__makeSpeakable === 'function') window.__makeSpeakable(g, label);
   return g;
 }
 

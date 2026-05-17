@@ -137,6 +137,13 @@ test('paginator next button advances to next puzzle', async ({ page }) => {
   expect(goalAfter).not.toBe(goalBefore);
 });
 
+test('gate pills have speakable glow', async ({ page }) => {
+  await page.goto(URL);
+  await waitForPuzzle(page);
+  await page.waitForSelector('[data-gate-pill]');
+  await expect(page.locator('[data-gate-pill]').first()).toHaveAttribute('filter', 'url(#speakable-glow)');
+});
+
 test('wire colour updates after toggle', async ({ page }) => {
   await page.goto(URL);
   await waitForPuzzle(page);

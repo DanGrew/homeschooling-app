@@ -68,6 +68,12 @@ test('clicking a switch updates wire colour', async ({ page }) => {
   expect(wireAfter).not.toBe(wireBefore);
 });
 
+test('gate pills have speakable glow', async ({ page }) => {
+  await page.goto(URL);
+  await page.waitForSelector('[data-gate-pill]');
+  await expect(page.locator('[data-gate-pill]').first()).toHaveAttribute('filter', 'url(#speakable-glow)');
+});
+
 test('clicking switch twice returns wire to inactive colour', async ({ page }) => {
   await page.goto(URL);
   await page.waitForSelector('[data-wire]');

@@ -86,6 +86,7 @@ function buildChecklist() {
     row.innerHTML = '<span class="sc-tick">☐</span><span class="sc-icon">' + it.icon + '</span><span class="sc-name">' + escHtml(it.name) + '</span><button class="btn-not-here">Not here ✕</button>';
     makeSpeakable(row.querySelector('.sc-name'), it.name);
     var btn = row.querySelector('.btn-not-here');
+    makeSpeakable(btn, function() { return btn.textContent.replace('✕', '').trim(); });
     btn.addEventListener('click', function() { onNotHere(row, btn); });
     barcodeMap[it.barcode] = { row: row, name: it.name, icon: it.icon };
     ci.appendChild(row);

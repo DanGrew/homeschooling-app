@@ -20,6 +20,15 @@ test('Find it button enables once an item is added', async ({ page }) => {
   await expect(page.locator('#btn-find')).toBeEnabled()
 })
 
+test('find phase action buttons are speakable', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-play/')
+  await page.locator('#tiles .ctile').first().click()
+  await page.locator('#btn-find').click()
+  await expect(page.locator('.btn-got').first()).toHaveClass(/speakable/)
+  await expect(page.locator('.btn-cross').first()).toHaveClass(/speakable/)
+  await expect(page.locator('.btn-undo').first()).toHaveClass(/speakable/)
+})
+
 test('filter bar is in nav-bar sidebar', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-play/')
   await expect(page.locator('.nav-bar #nav-filter-slot')).toBeVisible({ timeout: 5000 })
