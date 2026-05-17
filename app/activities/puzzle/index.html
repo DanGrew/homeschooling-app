@@ -53,9 +53,7 @@ function makeGridBtn(p, g, label) {
   btn.className = 'grid-btn';
   btn.innerHTML = `<span class="grid-btn-label">${label}</span><span class="grid-btn-size">${cols}\u00d7${rows}</span>`;
   btn.addEventListener('click', () => {
-    sessionStorage.setItem('puzzle-id', p.id);
-    sessionStorage.setItem('puzzle-grid', g);
-    location.href = 'play.html';
+    location.href = 'play.html?puzzle=' + encodeURIComponent(p.id) + '&grid=' + encodeURIComponent(g) + '&difficulty=' + encodeURIComponent(label);
   });
   DO_SPEAK[String(typeof window.__makeSpeakable==='function')](btn, label);
   return btn;

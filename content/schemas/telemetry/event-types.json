@@ -1,0 +1,8 @@
+{
+  "types": [
+    "lesson_completed",
+    "colouring_guided_complete",
+    "colouring_free_complete",
+    "puzzle_completed"
+  ]
+}

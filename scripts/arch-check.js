@@ -370,6 +370,39 @@ if (rule === 'no-pure-fn-outside-core') {
   });
 }
 
+if (rule === 'valid-learning-event') {
+  const schemaFile = path.join(ROOT, 'content/schemas/telemetry/event-types.json');
+  if (!fs.existsSync(schemaFile)) {
+    violations.push('content/schemas/telemetry/event-types.json not found');
+  } else {
+    const validTypes = new Set(JSON.parse(read(schemaFile)).types);
+    const TYPE_RE = /recordLearningEvent\s*\(\s*\{[^}]*?type\s*:\s*['"]([^'"]+)['"]/;
+
+    function checkLearningEventContent(content, label) {
+      const re = new RegExp(TYPE_RE.source, 'g');
+      let m;
+      while ((m = re.exec(content)) !== null) {
+        scanned.push(label + ':' + m[1]);
+        if (!validTypes.has(m[1])) {
+          const line = content.slice(0, m.index).split('\n').length;
+          violations.push(`${label}:${line} — unknown event type '${m[1]}' (not in event-types.json)`);
+        }
+      }
+    }
+
+    ['core', 'ui', 'components'].forEach(layer => {
+      getAllFiles(path.join(ROOT, layer)).forEach(file => {
+        checkLearningEventContent(read(file), path.relative(ROOT, file).replace(/\\/g, '/'));
+      });
+    });
+
+    getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
+      const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+      extractInlineScripts(read(file)).forEach(script => checkLearningEventContent(script, rel));
+    });
+  }
+}
+
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {

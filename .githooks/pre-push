@@ -19,6 +19,7 @@ node scripts/arch-check.js no-css-outside-styles "$TMPDIR_HOOK/no-css.txt"      
 node scripts/arch-check.js no-md-outside-docs    "$TMPDIR_HOOK/no-md.txt"          || fail "no-md-outside-docs"
 node scripts/arch-check.js no-json-in-repo       "$TMPDIR_HOOK/no-json-in-repo.txt" || fail "no-json-in-repo"
 node scripts/arch-check.js no-pure-fn-outside-core "$TMPDIR_HOOK/no-pure-fn.txt"   || fail "no-pure-fn-outside-core"
+node scripts/arch-check.js valid-learning-event    "$TMPDIR_HOOK/valid-event.txt"   || fail "valid-learning-event"
 
 echo "[pre-push] manifest check..."
 node scripts/check-manifest-files.js "$TMPDIR_HOOK/manifests.txt" || fail "check-manifest-files"
