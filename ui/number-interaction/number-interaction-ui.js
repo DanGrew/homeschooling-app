@@ -36,10 +36,10 @@ var numA = document.getElementById('num-a');
   makeInteractive(lblA, () => { var t=lblA.textContent; [t].filter(Boolean).forEach(() => stopAndSpeak(stopCounting(), () => speak(t))); });
   makeInteractive(lblB, () => { var t=lblB.textContent; [t].filter(Boolean).forEach(() => stopAndSpeak(stopCounting(), () => speak(t))); });
   makeInteractive(document.getElementById('lbl-total'), () => stopAndSpeak(stopCounting(), () => speak('Total')));
-  makeInteractive(document.getElementById('btn-a-plus'),  () => { var r=change('a',  1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('plus'))); });
-  makeInteractive(document.getElementById('btn-a-minus'), () => { var r=change('a', -1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('minus'))); });
-  makeInteractive(document.getElementById('btn-b-plus'),  () => { var r=change('b',  1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('plus'))); });
-  makeInteractive(document.getElementById('btn-b-minus'), () => { var r=change('b', -1); [r].filter(x=>x.changed).forEach(()=>stopAndSpeak(r.wasCounting,()=>speak('minus'))); });
+  makeInteractive(document.getElementById('btn-a-plus'),  () => change('a',  1, (wc) => stopAndSpeak(wc, () => speak('plus'))));
+  makeInteractive(document.getElementById('btn-a-minus'), () => change('a', -1, (wc) => stopAndSpeak(wc, () => speak('minus'))));
+  makeInteractive(document.getElementById('btn-b-plus'),  () => change('b',  1, (wc) => stopAndSpeak(wc, () => speak('plus'))));
+  makeInteractive(document.getElementById('btn-b-minus'), () => change('b', -1, (wc) => stopAndSpeak(wc, () => speak('minus'))));
   numA.style.cursor = 'pointer';
   numB.style.cursor = 'pointer';
   numTotal.style.cursor = 'pointer';
@@ -112,14 +112,16 @@ function stopCounting() {
   return was;
 }
 
-export function change(side, delta) {
+export function change(side, delta, onChanged) {
   var wasCounting = stopCounting();
   var result = computeChange(side, delta, aCount, bCount, MAX);
   aCount = result.newA;
   bCount = result.newB;
   render();
-  [1].filter(() => result.changed).forEach(() => { guidanceEvent(SIDE_EVT[side] + DELTA_EVT[String(delta > 0)]); });
-  return { changed: result.changed, wasCounting: wasCounting };
+  [1].filter(() => result.changed).forEach(() => {
+    guidanceEvent(SIDE_EVT[side] + DELTA_EVT[String(delta > 0)]);
+    [onChanged].filter(Boolean).forEach(function(cb) { cb(wasCounting); });
+  });
 }
 
 function countSpeak(text, onDone) {
