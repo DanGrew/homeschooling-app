@@ -31,12 +31,14 @@ export function renderList(){
   var wrap=document.getElementById('list-items');
   var empty=listItems.length===0;
   wrap.innerHTML=EMPTY_HTML[String(empty)]();
+  [document.getElementById('empty-list')].filter(Boolean).forEach(function(el){makeSpeakable(el,'Tap items to add them');});
   document.getElementById('btn-find').disabled=empty;
   [document.getElementById('btn-scan-it')].filter(Boolean).forEach(btn => { btn.disabled=empty; });
   listItems.slice().sort(byName).forEach(function(it){
     var row=document.createElement('div');
     row.className='list-row';
     row.innerHTML='<span class="list-icon">'+it.icon+'</span><span class="list-name">'+escHtml(it.name)+'</span><button class="list-remove">✕</button>';
+    makeSpeakable(row.querySelector('.list-name'),it.name);
     row.querySelector('.list-remove').onclick=function(){removeFromList(it);};
     wrap.appendChild(row);
   });
@@ -73,6 +75,7 @@ export function startFindPhase(onReset){
     var row=document.createElement('div');
     row.className='find-row';
     row.innerHTML='<span class="find-icon">'+it.icon+'</span><span class="find-name">'+escHtml(it.name)+'</span><span class="find-tick"></span><button class="btn-got">Got it! ✓</button><button class="btn-cross">Not here ✕</button><button class="btn-undo">Undo</button>';
+    makeSpeakable(row.querySelector('.find-name'),it.name);
     row.querySelector('.btn-got').onclick=function(){row.classList.add('found');row.querySelector('.find-tick').textContent='✅';found++;checkDone();};
     row.querySelector('.btn-cross').onclick=function(){row.classList.add('crossed');row.querySelector('.find-tick').textContent='✕';crossed++;checkDone();};
     row.querySelector('.btn-undo').onclick=function(){

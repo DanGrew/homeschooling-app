@@ -102,6 +102,13 @@ import '../../../components/speech/speech-ui.js';
 makeSpeakable(document.getElementById('btn-find'), 'Find it');
 makeSpeakable(document.getElementById('btn-scan-it'), 'Scan it');
 makeSpeakable(document.getElementById('stub-btn'), 'Scan');
+makeSpeakable(document.getElementById('catalog-title'), 'Choose items for your list');
+makeSpeakable(document.getElementById('list-header'), 'My List');
+makeSpeakable(document.getElementById('phase2-title'), 'Find each item');
+var _sct = document.getElementById('scan-checklist-title');
+makeSpeakable(_sct, function(){ return _sct.textContent; });
+[document.querySelector('#scan-stub p')].filter(Boolean).forEach(function(el){ makeSpeakable(el, el.textContent.trim()); });
+makeSpeakable(document.getElementById('scan-toast-tick'), 'found');
 </script>
 </body>
 </html>

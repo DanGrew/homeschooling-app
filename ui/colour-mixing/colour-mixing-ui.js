@@ -1,5 +1,6 @@
 import { CM_COLOURS, CM_MIXES, mix, hex, slotHtml } from '../../core/colour-mixing/colour-mixing-core.js';
 export { CM_COLOURS, CM_MIXES, mix, hex };
+import { makeSpeakable } from '../../components/speech/speakable.js';
 
 const cfg=window.CM_CONFIG;
 let slotA=null,slotB=null,sel=null,target=null;
@@ -60,9 +61,16 @@ function buildUI(){
   var root=el('cm-root');
   root.style.cssText='flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:12px;overflow:hidden;';
   root.innerHTML=
-    '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;"><div style="font-size:1em;color:#999;">Mix to make:</div><div id="cm-target-swatch" style="width:90px;height:90px;border-radius:50%;background:'+hex(target)+';box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div><div id="cm-target-label" style="font-size:1.1em;font-weight:bold;color:#333;">'+CM_COLOURS[target].label+'</div></div>'+
-    '<div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;">'+slotHtml('cm-slot-a','A')+'<div style="font-size:1.6em;color:#ccc;font-weight:bold;">+</div>'+slotHtml('cm-slot-b','B')+'<div style="font-size:1.6em;color:#ccc;font-weight:bold;">=</div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div id="cm-result" style="width:76px;height:76px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;"></div><div style="font-size:0.85em;color:#bbb;">Result</div></div></div>'+
+    '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;"><div id="cm-mix-label" style="font-size:1em;color:#999;">Mix to make:</div><div id="cm-target-swatch" style="width:90px;height:90px;border-radius:50%;background:'+hex(target)+';box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div><div id="cm-target-label" style="font-size:1.1em;font-weight:bold;color:#333;">'+CM_COLOURS[target].label+'</div></div>'+
+    '<div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;">'+slotHtml('cm-slot-a','A')+'<div id="cm-plus" style="font-size:1.6em;color:#ccc;font-weight:bold;">+</div>'+slotHtml('cm-slot-b','B')+'<div id="cm-equals" style="font-size:1.6em;color:#ccc;font-weight:bold;">=</div><div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><div id="cm-result" style="width:76px;height:76px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;"></div><div id="cm-result-label" style="font-size:0.85em;color:#bbb;">Result</div></div></div>'+
     '<div id="cm-palette" style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;flex-shrink:0;"></div>';
+  makeSpeakable(el('cm-mix-label'),'Mix to make');
+  makeSpeakable(el('cm-target-label'),CM_COLOURS[target].label);
+  makeSpeakable(el('cm-plus'),'plus');
+  makeSpeakable(el('cm-equals'),'equals');
+  makeSpeakable(el('cm-result-label'),'Result');
+  makeSpeakable(el('cm-slot-a-label'),'A');
+  makeSpeakable(el('cm-slot-b-label'),'B');
   el('cm-slot-a').addEventListener('click',function(){handleSlot('a');});
   el('cm-slot-b').addEventListener('click',function(){handleSlot('b');});
   cfg.palette.forEach(function(c){
