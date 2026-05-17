@@ -32,13 +32,13 @@
     },
     {
       "step": 2,
-      "instruction": "Child climbs the rope grid. Don't lift.",
-      "prompt": "\"Hold the rope with both hands, one foot at a time.\" Then step back."
+      "instruction": "Child climbs the rope grid.",
+      "prompt": "\"Hold the rope with both hands, one foot at a time.\""
     },
     {
       "step": 3,
       "instruction": "At rope grid mid, child transfers across to ladder mid.",
-      "prompt": "\"What does your body need to do first?\" Don't point to the rung."
+      "prompt": "\"What does your body need to do first?\""
     },
     {
       "step": 4,

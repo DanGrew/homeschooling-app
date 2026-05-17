@@ -33,17 +33,17 @@
     },
     {
       "step": 2,
-      "instruction": "Child climbs grips side to climbing wall mid. Feet pushing, not dangling.",
+      "instruction": "Child climbs grips side to climbing wall mid.",
       "prompt": "\"Find each grip before you move. Where does your weight go?\""
     },
     {
       "step": 3,
-      "instruction": "At climbing wall mid (grips), stop. Child must traverse sideways to the holes side — lateral shift at height. Don't guide hands.",
+      "instruction": "At climbing wall mid (grips), stop. Child traverses sideways to holes side.",
       "prompt": "\"You need to cross over without coming down. How?\""
     },
     {
       "step": 4,
-      "instruction": "Child traverses to climbing wall mid (holes). One limb at a time. This may take a while.",
+      "instruction": "Child traverses to climbing wall mid (holes).",
       "prompt": "If they freeze: \"Move one hand. That's the whole next step.\""
     },
     {
@@ -58,7 +58,7 @@
     },
     {
       "step": 7,
-      "instruction": "Begin rope grid descent. Child must face the apparatus and find each rope with their foot before shifting weight.",
+      "instruction": "Begin rope grid descent.",
       "prompt": "\"Slow feet. Feel the rope before you move your hands.\""
     },
     {
