@@ -1,0 +1,6 @@
+{
+  "opt-outs": {
+    "nav-bar": "template shell — content rendered client-side, not a directly served page",
+    "speakable": "template shell — content rendered client-side, not a directly served page"
+  }
+}
