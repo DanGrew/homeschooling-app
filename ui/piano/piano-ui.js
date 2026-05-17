@@ -101,6 +101,7 @@ function renderKeys(container, onKeyPress) {
   container.style.touchAction = 'none';
   PIANO_CONFIG.NOTES.forEach(function(note, i) {
     var key = document.createElement('div');
+    key.id = 'key-' + note;
     key.dataset.keyIndex = i;
     key.dataset.note = note;
     key._origBg = PIANO_CONFIG.KEY_COLORS[i];
@@ -122,6 +123,7 @@ function renderBlackKeys(container, onKeyPress) {
     gap.style.flex = String(bk.position - 0.5 - pos);
     container.appendChild(gap);
     var key = document.createElement('div');
+    key.id = 'key-' + bk.note;
     key.dataset.note = bk.note;
     key._origBg = bk.color;
     key.style.cssText = 'flex:1;height:100%;background:' + bk.color + ';border-radius:0 0 8px 8px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:clamp(10px,2.5vw,14px);font-weight:bold;color:#444;cursor:pointer;user-select:none;touch-action:none;border:1.5px solid rgba(0,0,0,0.15);box-sizing:border-box;';

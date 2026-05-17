@@ -42,7 +42,7 @@
           <div id="puzzle-grid"></div>
         </div>
         <div id="slot-area">
-          <div class="slot-label">Holding</div>
+          <div class="slot-label">Selected</div>
           <div id="selected-slot"></div>
           <button id="ref-toggle">Hide guide</button>
         </div>
@@ -228,7 +228,7 @@ import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 var refToggle = document.getElementById('ref-toggle');
 makeSpeakable(refToggle, function() { return refToggle.textContent; });
-makeSpeakable(document.querySelector('.slot-label'), 'Holding');
+makeSpeakable(document.querySelector('.slot-label'), 'Selected');
 </script>
 </body>
 </html>

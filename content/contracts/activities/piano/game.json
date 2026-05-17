@@ -1,0 +1,21 @@
+{
+  "opt-outs": {
+    "speakable-text": [
+      "key-C4",
+      "key-D4",
+      "key-E4",
+      "key-F4",
+      "key-G4",
+      "key-A4",
+      "key-B4",
+      "key-C5",
+      "key-D5",
+      "key-E5",
+      "key-F5",
+      "key-G5",
+      "key-Gb4",
+      "key-Bb4",
+      "key-Cs5"
+    ]
+  }
+}

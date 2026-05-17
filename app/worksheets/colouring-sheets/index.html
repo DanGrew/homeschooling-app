@@ -57,7 +57,6 @@
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
-import { makeSpeakable } from '../../../components/speech/speakable.js';
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
@@ -100,7 +99,6 @@ function buildPanel(items){
     cb.type='checkbox';cb.id='cb-'+idx;cb.checked=checked.has(pic);
     var lbl=document.createElement('label');
     lbl.htmlFor='cb-'+idx;lbl.textContent=pic.name;
-    makeSpeakable(lbl,pic.name);
     cb.addEventListener('change',function(){
       ({'true':function(){checked.add(pic);addImage(idx);},'false':function(){checked.delete(pic);removeImage(idx);}})[String(cb.checked)]();
     });
@@ -136,8 +134,6 @@ loadColouringPictures(pictures,function(){
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 makeSpeakable(document.getElementById('btn-print'),'Print');
-document.querySelectorAll('#panel-header h2, #panel-header p').forEach(function(el){ makeSpeakable(el, function(){ return el.textContent; }); });
-[document.getElementById('empty-msg')].filter(Boolean).forEach(function(el){ makeSpeakable(el, el.textContent.trim()); });
 </script>
 </body>
 </html>
