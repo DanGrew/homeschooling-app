@@ -83,7 +83,8 @@ function buildGatePill(svg, cx, cy, label, colour) {
   lbl.textContent = label;
   g.appendChild(rect); g.appendChild(lbl);
   svg.appendChild(g);
-  if (typeof window.__makeSpeakable === 'function') { window.__makeSpeakable(g, label); g.removeAttribute('filter'); }
+  var SPOKEN = { 'AND': 'and', 'OR': 'or', 'NOT': 'not', 'XOR': 'ex or', 'NAND': 'nand', 'XNOR': 'ex nor' };
+  if (typeof window.__makeSpeakable === 'function') { window.__makeSpeakable(g, SPOKEN[label] || label.toLowerCase()); g.removeAttribute('filter'); }
   return g;
 }
 
