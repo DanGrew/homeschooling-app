@@ -11,6 +11,24 @@ async function selectBaseColour(page, swatchIndex, shade = '#sh-base') {
   await page.locator(shade).click()
 }
 
+// ── Z-order ────────────────────────────────────────────────────────────────
+
+test('shapes render in array order — noColour z-order preserved', async ({ page }) => {
+  await page.route('**/assets/colouring/pictures/sun.js', route => {
+    route.fulfill({ body: `pictures.push({name:'Sun',tags:['prototype'],vb:'0 0 400 400',shapes:[
+      {tag:'circle',attrs:{cx:'200',cy:'200',r:'90'},colour:'#F1C40F'},
+      {tag:'circle',attrs:{cx:'200',cy:'200',r:'100'},noColour:true},
+      {tag:'polygon',attrs:{points:'200,18 184,112 216,112'},colour:'#F39C12'},
+    ]});` })
+  })
+  await page.goto(URL)
+  await waitForPicture(page)
+  const shapes = page.locator('#svg > :not(defs)')
+  await expect(shapes.nth(0)).toHaveCSS('cursor', 'pointer')
+  await expect(shapes.nth(1)).not.toHaveCSS('cursor', 'pointer')
+  await expect(shapes.nth(2)).toHaveCSS('cursor', 'pointer')
+})
+
 // ── Page load ──────────────────────────────────────────────────────────────
 
 test('page loads with mode buttons and a picture title', async ({ page }) => {
