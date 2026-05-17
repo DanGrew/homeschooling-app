@@ -8,6 +8,26 @@ var AREA = {
   m:    'Maths'
 };
 
+export var GROUP_LABELS = ['Today', 'Earlier This Week', 'Older'];
+
+var _lessonCache = {};
+var _activityLabels = {};
+
+var TIME_FORMAT = {
+  'true':  function(ts) { return formatTime(ts); },
+  'false': function(ts) { return formatDate(ts) + ' ' + formatTime(ts); }
+};
+
+var SOURCE_FORMAT = {
+  'true':  function(label, num) { return label + num; },
+  'false': function()           { return ''; }
+};
+
+var LESSON_NUM_FORMAT = {
+  'true':  function(n) { return ' · Lesson ' + n; },
+  'false': function()  { return ''; }
+};
+
 export function formatCriterion(c) {
   var parts = c.split('.');
   var area = AREA[parts[0]] || parts[0];
@@ -30,4 +50,44 @@ export function formatTime(ts) {
 
 export function formatDate(ts) {
   return new Date(ts).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+export function buildEntryViewModel(event, lesson) {
+  var group = groupKey(event.timestamp);
+  var timeStr = TIME_FORMAT[String(group === 'Today')](event.timestamp);
+  var title = (lesson && lesson.title) || event.lessonId || event.type;
+  var actLabel = (event.activityId && (_activityLabels[event.activityId] || event.activityId)) || '';
+  var numStr = LESSON_NUM_FORMAT[String(!!(lesson && lesson.number))](lesson && lesson.number);
+  var sourceStr = SOURCE_FORMAT[String(!!actLabel)](actLabel, numStr);
+  var criteria = (lesson && lesson.criteria) || [];
+  return {
+    timeStr: timeStr,
+    sourceStr: sourceStr,
+    title: title,
+    criteriaTags: criteria.map(formatCriterion)
+  };
+}
+
+export function sortAndGroupEvents(events) {
+  var sorted = events.slice().sort(function(a, b) { return b.timestamp - a.timestamp; });
+  var groups = { 'Today': [], 'Earlier This Week': [], 'Older': [] };
+  sorted.forEach(function(e) { groups[groupKey(e.timestamp)].push(e); });
+  var order = GROUP_LABELS.filter(function(l) { return groups[l].length > 0; });
+  return { groups: groups, order: order };
+}
+
+export function fetchLesson(activityId, lessonId, cb) {
+  if (!activityId || !lessonId) { cb(null); return; }
+  var key = activityId;
+  if (_lessonCache[key]) { cb(_lessonCache[key][lessonId] || null); return; }
+  fetch('../../content/lessons/' + activityId + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var map = {};
+      (data.lessons || []).forEach(function(l) { map[l.id] = l; });
+      _lessonCache[key] = map;
+      _activityLabels[key] = data.label || activityId;
+      cb(map[lessonId] || null);
+    })
+    .catch(function() { cb(null); });
 }

@@ -16,8 +16,10 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 .entry{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.07);}
 .entry-time{font-size:0.78em;color:#aaa;margin-bottom:4px;}
 .entry-source{font-size:0.78em;color:#bbb;margin-bottom:2px;}
+.entry-source:empty{display:none;}
 .entry-title{font-size:1em;font-weight:bold;color:#333;margin-bottom:6px;}
 .entry-criteria{display:flex;flex-wrap:wrap;gap:6px;}
+.entry-criteria:empty{display:none;}
 .tag{font-size:0.75em;background:#f0e8ff;color:#7c6fcd;border-radius:6px;padding:2px 8px;}
 .empty{color:#bbb;font-size:0.95em;margin-top:32px;text-align:center;}
 </style>
@@ -28,79 +30,51 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 <div id="journal"></div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { formatCriterion, groupKey, formatTime, formatDate } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLesson, buildEntryViewModel, sortAndGroupEvents } from '../../core/telemetry/learning-journal-core.js';
 
-var lessonCache = {};
-var activityLabels = {};
-function fetchLesson(activityId, lessonId, cb) {
-  if (!activityId || !lessonId) { cb(null); return; }
-  var key = activityId;
-  if (lessonCache[key]) { cb(lessonCache[key][lessonId] || null); return; }
-  fetch('../../content/lessons/' + activityId + '.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var map = {};
-      (data.lessons || []).forEach(function(l) { map[l.id] = l; });
-      lessonCache[key] = map;
-      activityLabels[key] = data.label || activityId;
-      cb(map[lessonId] || null);
-    })
-    .catch(function() { cb(null); });
-}
+var NO_EVENTS = {
+  'true':  function(j)    { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
+  'false': function(j, e) { renderGroups(j, e); }
+};
 
 function renderEntry(event, lesson) {
+  var vm = buildEntryViewModel(event, lesson);
   var div = document.createElement('div');
   div.className = 'entry';
-  var group = groupKey(event.timestamp);
-  var timeStr = group === 'Today' ? formatTime(event.timestamp) : formatDate(event.timestamp) + ' ' + formatTime(event.timestamp);
-  var title = lesson ? lesson.title : (event.lessonId || event.type);
-  var criteria = lesson ? (lesson.criteria || []) : [];
-  var actLabel = event.activityId ? (activityLabels[event.activityId] || event.activityId) : null;
-  var sourceStr = actLabel ? actLabel + (lesson && lesson.number ? ' · Lesson ' + lesson.number : '') : null;
   div.innerHTML =
-    '<div class="entry-time">' + timeStr + '</div>' +
-    (sourceStr ? '<div class="entry-source">' + sourceStr + '</div>' : '') +
-    '<div class="entry-title">' + title + '</div>' +
-    (criteria.length ? '<div class="entry-criteria">' + criteria.map(function(c) {
-      return '<span class="tag">' + formatCriterion(c) + '</span>';
-    }).join('') + '</div>' : '');
+    '<div class="entry-time">' + vm.timeStr + '</div>' +
+    '<div class="entry-source">' + vm.sourceStr + '</div>' +
+    '<div class="entry-title">' + vm.title + '</div>' +
+    '<div class="entry-criteria">' + vm.criteriaTags.map(function(t) {
+      return '<span class="tag">' + t + '</span>';
+    }).join('') + '</div>';
   return div;
+}
+
+function appendEntry(wrap, event) {
+  fetchLesson(event.activityId, event.lessonId, function(lesson) {
+    wrap.appendChild(renderEntry(event, lesson));
+  });
+}
+
+function renderGroup(journal, label, events) {
+  var h = document.createElement('div');
+  h.className = 'group-label';
+  h.textContent = label;
+  journal.appendChild(h);
+  var wrap = document.createElement('div');
+  journal.appendChild(wrap);
+  events.forEach(function(event) { appendEntry(wrap, event); });
+}
+
+function renderGroups(journal, events) {
+  var grouped = sortAndGroupEvents(events);
+  grouped.order.forEach(function(label) { renderGroup(journal, label, grouped.groups[label]); });
 }
 
 getAllEvents(function(events) {
   var journal = document.getElementById('journal');
-  if (!events.length) {
-    journal.innerHTML = '<p class="empty">No learnings recorded yet.</p>';
-    return;
-  }
-  events.sort(function(a, b) { return b.timestamp - a.timestamp; });
-
-  var groups = { 'Today': [], 'Earlier This Week': [], 'Older': [] };
-  events.forEach(function(e) { groups[groupKey(e.timestamp)].push(e); });
-
-  var pending = 0;
-  var containers = {};
-  ['Today', 'Earlier This Week', 'Older'].forEach(function(label) {
-    if (!groups[label].length) return;
-    var h = document.createElement('div');
-    h.className = 'group-label';
-    h.textContent = label;
-    journal.appendChild(h);
-    var wrap = document.createElement('div');
-    containers[label] = wrap;
-    journal.appendChild(wrap);
-  });
-
-  events.forEach(function(event) {
-    var label = groupKey(event.timestamp);
-    var wrap = containers[label];
-    if (!wrap) return;
-    pending++;
-    fetchLesson(event.activityId, event.lessonId, function(lesson) {
-      wrap.appendChild(renderEntry(event, lesson));
-      pending--;
-    });
-  });
+  NO_EVENTS[String(!events.length)](journal, events);
 });
 </script>
 </body>
