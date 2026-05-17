@@ -21,14 +21,14 @@
     <div style="display:flex;align-items:center;gap:10px;">
       <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
         <div id="lsn-slot-a" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
-        <span style="font-size:0.8em;color:#bbb;font-weight:bold;">A</span>
+        <span id="lsn-label-a" style="font-size:0.8em;color:#bbb;font-weight:bold;">A</span>
       </div>
-      <span style="font-size:1.5em;color:#ccc;font-weight:bold;">+</span>
+      <span id="lsn-label-plus" style="font-size:1.5em;color:#ccc;font-weight:bold;">+</span>
       <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
         <div id="lsn-slot-b" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
-        <span style="font-size:0.8em;color:#bbb;font-weight:bold;">B</span>
+        <span id="lsn-label-b" style="font-size:0.8em;color:#bbb;font-weight:bold;">B</span>
       </div>
-      <span style="font-size:1.5em;color:#ccc;font-weight:bold;">=</span>
+      <span id="lsn-label-equals" style="font-size:1.5em;color:#ccc;font-weight:bold;">=</span>
       <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
         <div id="lsn-result" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;"></div>
         <span id="lsn-result-label" style="font-size:0.8em;color:#bbb;">Result</span>
@@ -70,7 +70,10 @@
     });
 </script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+[['lsn-label-a','A'],['lsn-label-plus','plus'],['lsn-label-b','B'],['lsn-label-equals','equals'],['lsn-result-label','Result']].forEach(function(pair){
+  [document.getElementById(pair[0])].filter(Boolean).forEach(function(el){makeSpeakable(el,pair[1]);});
+});</script>
 </body>
 </html>

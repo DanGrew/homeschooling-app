@@ -75,6 +75,8 @@ loadColouringPictures(pictures,function(){
 <script>window.ADULT_PROMPTS_ACTIVITY='colouring';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+import '../../../components/speech/speech-ui.js';
+var _titleEl=document.getElementById('title');
+if(_titleEl&&typeof window.__makeSpeakable==='function') window.__makeSpeakable(_titleEl,function(){return _titleEl.textContent;});</script>
 </body>
 </html>

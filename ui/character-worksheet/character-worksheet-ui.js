@@ -1,4 +1,5 @@
 import { charToFile, clamp, buildPattern } from '../../core/character-worksheet/character-worksheet-core.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const CHARS_BASE = '../../../assets/language-characters/';
@@ -84,6 +85,12 @@ export function init() {
   document.getElementById('rows-dec').addEventListener('click', () => adjustCounter('rows', 'rows-val', -1, 1, 8));
   document.getElementById('rows-inc').addEventListener('click', () => adjustCounter('rows', 'rows-val', +1, 1, 8));
 
+  makeSpeakable(document.getElementById('cols-dec'), 'Fewer columns');
+  makeSpeakable(document.getElementById('cols-inc'), 'More columns');
+  makeSpeakable(document.getElementById('rows-dec'), 'Fewer rows');
+  makeSpeakable(document.getElementById('rows-inc'), 'More rows');
+
+  const SIZE_LABELS = { '80': 'Small', '120': 'Medium', '180': 'Large' };
   document.querySelectorAll('.size-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
@@ -91,6 +98,7 @@ export function init() {
       state.cellSize = parseInt(btn.dataset.size);
       render();
     });
+    makeSpeakable(btn, SIZE_LABELS[btn.dataset.size]);
   });
 
   let debounce;
@@ -100,4 +108,5 @@ export function init() {
   });
 
   document.getElementById('btn-print').addEventListener('click', () => window.print());
+  makeSpeakable(document.getElementById('btn-print'), 'Print');
 }

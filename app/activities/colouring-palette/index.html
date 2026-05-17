@@ -139,6 +139,12 @@ loadColouringPictures(pictures,function(){
 <script>window.ADULT_PROMPTS_ACTIVITY='colouring-palette';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+import '../../../components/speech/speech-ui.js';
+var _titleEl=document.getElementById('title');
+var _refEl=document.getElementById('ref-label');
+if(typeof window.__makeSpeakable==='function'){
+  if(_titleEl) window.__makeSpeakable(_titleEl,function(){return _titleEl.textContent;});
+  if(_refEl) window.__makeSpeakable(_refEl,'Reference');
+}</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { svg, pickCol, colours, types } = require('../../core/shapes/shapes-core.js');
+const { svg, pickCol, colours, types, colourNames } = require('../../core/shapes/shapes-core.js');
 
 describe('svg', () => {
   it('wraps output in svg element with viewBox', () => {
@@ -70,5 +70,20 @@ describe('pickCol', () => {
     const seen = new Set();
     for (let i = 0; i < 200; i++) seen.add(pickCol());
     colours.forEach(c => expect(seen).toContain(c));
+  });
+});
+
+describe('colourNames', () => {
+  it('has entry for every colour in palette', () => {
+    colours.forEach(c => expect(colourNames).toHaveProperty(c));
+  });
+
+  it('maps hex to human name string', () => {
+    expect(colourNames['#E74C3C']).toBe('Red');
+    expect(colourNames['#3498DB']).toBe('Blue');
+    expect(colourNames['#2ECC71']).toBe('Green');
+    expect(colourNames['#F1C40F']).toBe('Yellow');
+    expect(colourNames['#E67E22']).toBe('Orange');
+    expect(colourNames['#9B59B6']).toBe('Purple');
   });
 });
