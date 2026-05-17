@@ -3,6 +3,12 @@ const CELL_W = 90;
 const CELL_H = 65;
 const NOOP = function() {};
 
+const GATE_SPOKEN = { 'AND': 'and', 'OR': 'or', 'NOT': 'not', 'XOR': 'ex or', 'NAND': 'nand', 'XNOR': 'ex nor' };
+const DO_SPEAK_PILL = {
+  'true':  function(g, label) { window.__makeSpeakable(g, GATE_SPOKEN[label]); g.removeAttribute('filter'); },
+  'false': function() {}
+};
+
 function el(tag, attrs = {}) {
   const e = document.createElementNS(SVG_NS, tag);
   Object.keys(attrs).forEach(function(k) { e.setAttribute(k, attrs[k]); });
@@ -83,8 +89,7 @@ function buildGatePill(svg, cx, cy, label, colour) {
   lbl.textContent = label;
   g.appendChild(rect); g.appendChild(lbl);
   svg.appendChild(g);
-  var SPOKEN = { 'AND': 'and', 'OR': 'or', 'NOT': 'not', 'XOR': 'ex or', 'NAND': 'nand', 'XNOR': 'ex nor' };
-  if (typeof window.__makeSpeakable === 'function') { window.__makeSpeakable(g, SPOKEN[label] || label.toLowerCase()); g.removeAttribute('filter'); }
+  DO_SPEAK_PILL[String(typeof window.__makeSpeakable === 'function')](g, label);
   return g;
 }
 
