@@ -1,4 +1,5 @@
 var DO_SPEAK = {'true':function(el,t){window.__makeSpeakable(el,t);},'false':function(){}};
+var MAYBE_SEP = {'true':addSeparator,'false':function(){}};
 
 function buildSection(config, container, idx) {
   const section = document.createElement('div');
@@ -34,12 +35,8 @@ function init() {
   fetch('../../../content/logic-gates/sandbox.json?v=2')
     .then(function(r) { return r.json(); })
     .then(function(stations) {
-      function addSeparatorAndBuild(config) {
-        addSeparator(container);
-        buildSection(config, container);
-      }
       stations.forEach(function(config, i) {
-        if (i > 0) addSeparator(container);
+        MAYBE_SEP[String(i > 0)](container);
         buildSection(config, container, i);
       });
     })
