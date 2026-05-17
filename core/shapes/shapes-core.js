@@ -22,4 +22,4 @@ function pickCol(){
   return c;
 }
 
-if(typeof module!=='undefined')module.exports={svg,pickCol,colours,types};
+if(typeof module!=='undefined')module.exports={svg,pickCol,colours,types,colourNames};
