@@ -40,7 +40,7 @@ function getSlot() {
 export function buildFilterBar(items, onChange) {
   var slot = getSlot();
   if (!slot) return;
-  slot.innerHTML = '';
+  slot.querySelectorAll('button[data-tag]').forEach(function(b){b.remove();});
 
   var tags = extractTags(items);
   var activeTag = 'all';
