@@ -49,8 +49,8 @@ test('prev button disabled on first page', async ({ page }) => {
 
 test('filter bar is visible', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('#filter-bar')).toBeVisible({ timeout: 5000 })
-  await expect(page.locator('#filter-bar button').first()).toBeVisible()
+  await expect(page.locator('#nav-filter-slot')).toBeVisible({ timeout: 5000 })
+  await expect(page.locator('#nav-filter-slot button').first()).toBeVisible()
 })
 
 test('nav bar has link to word-match', async ({ page }) => {

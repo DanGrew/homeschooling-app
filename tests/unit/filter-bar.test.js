@@ -1,4 +1,4 @@
-import { extractTags, filterItems, active, ACTIVE_STYLES } from '../../core/filter-bar/filter-bar-core.js';
+import { extractTags, filterItems, active, ACTIVE_STYLES, tagIcon, optIcon, collapsedBtn, expandedBtn, btnStyle } from '../../core/filter-bar/filter-bar-core.js';
 
 const item = (tags) => ({ tags });
 
@@ -97,5 +97,81 @@ describe('active', () => {
     expect(style).toContain('border:2px solid #ddd');
     expect(style).toContain('background:#fff');
     expect(style).toContain('color:#333');
+  });
+});
+
+describe('tagIcon', () => {
+  it('"all" returns star', () => {
+    expect(tagIcon('all')).toBe('\u2726');
+  });
+  it('known tag returns emoji', () => {
+    expect(tagIcon('animals')).toBe('\uD83D\uDC3E');
+    expect(tagIcon('fruit')).toBe('\uD83C\uDF4E');
+  });
+  it('unknown tag returns uppercased first char', () => {
+    expect(tagIcon('custom')).toBe('C');
+  });
+});
+
+describe('optIcon', () => {
+  it('uses opt.icon when provided', () => {
+    expect(optIcon({ icon: '\u25B6\uFE0F', value: 'linear', label: 'Linear' })).toBe('\u25B6\uFE0F');
+  });
+  it('"all" value returns star', () => {
+    expect(optIcon({ value: 'all', label: 'All' })).toBe('\u2726');
+  });
+  it('known tag value returns emoji', () => {
+    expect(optIcon({ value: 'animals', label: 'Animals' })).toBe('\uD83D\uDC3E');
+  });
+  it('unknown value returns lowercase first char of label', () => {
+    expect(optIcon({ value: 'xyz', label: 'custom' })).toBe('c');
+  });
+});
+
+describe('collapsedBtn', () => {
+  it('active state uses colour for border and background', () => {
+    const s = collapsedBtn(true, '#E74C3C');
+    expect(s).toContain('border:2px solid #E74C3C');
+    expect(s).toContain('background:#E74C3C');
+    expect(s).toContain('color:white');
+  });
+  it('inactive state uses neutral colours', () => {
+    const s = collapsedBtn(false, '#E74C3C');
+    expect(s).toContain('border:2px solid #ddd');
+    expect(s).toContain('background:#fff');
+    expect(s).toContain('color:#333');
+  });
+  it('produces fixed 40x40 dimensions', () => {
+    const s = collapsedBtn(false, '#000');
+    expect(s).toContain('width:40px');
+    expect(s).toContain('height:40px');
+  });
+});
+
+describe('expandedBtn', () => {
+  it('active state uses colour', () => {
+    const s = expandedBtn(true, '#2ECC71');
+    expect(s).toContain('background:#2ECC71');
+    expect(s).toContain('color:white');
+  });
+  it('inactive state uses neutral colours', () => {
+    const s = expandedBtn(false, '#2ECC71');
+    expect(s).toContain('background:#fff');
+    expect(s).toContain('color:#333');
+  });
+  it('full-width layout', () => {
+    const s = expandedBtn(false, '#000');
+    expect(s).toContain('width:100%');
+  });
+});
+
+describe('btnStyle', () => {
+  it('collapsed → collapsedBtn output', () => {
+    expect(btnStyle(false, true, '#2ECC71')).toBe(collapsedBtn(true, '#2ECC71'));
+    expect(btnStyle(false, false, '#2ECC71')).toBe(collapsedBtn(false, '#2ECC71'));
+  });
+  it('expanded → expandedBtn output', () => {
+    expect(btnStyle(true, true, '#3498DB')).toBe(expandedBtn(true, '#3498DB'));
+    expect(btnStyle(true, false, '#3498DB')).toBe(expandedBtn(false, '#3498DB'));
   });
 });

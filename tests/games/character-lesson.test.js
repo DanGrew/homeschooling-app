@@ -10,10 +10,10 @@ test('page loads with ball and first character label', async ({ page }) => {
 
 test('filter buttons switch character set', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/')
-  await page.getByRole('button', { name: 'A–Z', exact: true }).click()
+  await page.locator('#nav-filter-slot button[data-value="upper"]').click()
   await expect(page).toHaveURL(/filter=upper/)
 
-  await page.getByRole('button', { name: '0–9', exact: true }).click()
+  await page.locator('#nav-filter-slot button[data-value="digit"]').click()
   await expect(page).toHaveURL(/filter=digit/)
 })
 
@@ -39,7 +39,7 @@ test('paginator bar shows page indicator', async ({ page }) => {
 test('URL params set initial character and filter', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/character-lesson/?char=m&filter=lower')
   await expect(page).toHaveURL(/char=m/)
-  const lowerBtn = page.getByRole('button', { name: 'a–z', exact: true })
+  const lowerBtn = page.locator('#nav-filter-slot button[data-value="lower"]')
   const lowerBg = await lowerBtn.evaluate(el => getComputedStyle(el).backgroundColor)
   expect(lowerBg).toBe('rgb(52, 152, 219)')
 })
