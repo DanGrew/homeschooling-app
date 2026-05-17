@@ -14,8 +14,6 @@ const ACTIVITIES = [
   '/homeschooling-app/app/activities/number-interaction/',
   '/homeschooling-app/app/activities/piano/lesson.html',
   '/homeschooling-app/app/activities/piano/game.html',
-  '/homeschooling-app/app/activities/colouring/',
-  '/homeschooling-app/app/activities/colouring-palette/',
   '/homeschooling-app/app/activities/connect-the-dots/',
   '/homeschooling-app/app/activities/shopping-play/',
   '/homeschooling-app/app/activities/shopping-scan/',

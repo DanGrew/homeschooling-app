@@ -32,8 +32,6 @@ test('Colours section has matching and colouring games', async ({ page }) => {
   await expect(page.locator('a[href*="activities/match-colour/"]')).toBeVisible()
   await expect(page.locator('a[href*="activities/match-shape/"]')).toBeVisible()
   await expect(page.locator('a[href*="activities/match-colour-shape/"]')).toBeVisible()
-  await expect(page.locator('a[href*="activities/colouring/"]')).toBeVisible()
-  await expect(page.locator('a[href*="activities/colouring-palette/"]')).toBeVisible()
 })
 
 test('Music section has Piano Game', async ({ page }) => {
