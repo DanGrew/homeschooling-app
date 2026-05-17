@@ -188,7 +188,7 @@
   });
   window.addEventListener('load',function(){
     if(typeof window.__makeSpeakable==='function'){
-      window.__makeSpeakable(expandBtn,function(){return navExpanded?'Collapse navigation':'Expand navigation';});
+      window.__makeSpeakable(expandBtn,function(){return navExpanded?'Close':'Open';});
     }
   });
   bar.appendChild(expandBtn);
