@@ -161,6 +161,11 @@ export function initColouringPlayground() {
 
   var ON_RENDER_MODE={guided:buildGuidedPal,free:function(){},magic:function(){}};
 
+  var ATTACH_CLICK={
+    true:function(){},
+    false:function(el,s){el.style.cursor='pointer';el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});}
+  };
+
   function renderPicture(pic){
     currentPic=pic;closePop();filled=0;
     var titleBtn=document.getElementById('pic-title');
@@ -174,10 +179,7 @@ export function initColouringPlayground() {
     pic.shapes.forEach(function(s){
       var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       var el=ns(s.tag,attrs);
-      if(!s.noColour){
-        el.style.cursor='pointer';
-        el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});
-      }
+      ATTACH_CLICK[String(!!s.noColour)](el,s);
       svg.appendChild(el);
     });
     renderRef(pic);
