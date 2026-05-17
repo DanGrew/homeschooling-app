@@ -27,19 +27,22 @@ function relPath(abs) {
 }
 
 function contractName(rel) {
-  // app/activities/simulator/index.html  -> simulator
-  // app/activities/piano/game.html       -> piano-game
-  // app/worksheets/colouring-sheets/index.html -> colouring-sheets
-  // app/curriculum/index.html            -> curriculum
-  // app/index.html                       -> index
-  // app/attributions.html                -> attributions
+  // app/activities/simulator/index.html             -> simulator
+  // app/activities/piano/game.html                  -> piano-game
+  // app/worksheets/colouring-sheets/index.html      -> colouring-sheets
+  // app/physical/index.html                         -> physical
+  // app/physical/activities/rope-rescue/index.html  -> physical-rope-rescue
+  // app/curriculum/index.html                       -> curriculum
+  // app/index.html                                  -> index
   let stripped = rel.replace(/^app\//, '');
   stripped = stripped.replace(/^(activities|worksheets)\//, '');
+  stripped = stripped.replace(/\/activities\//, '/');
   const parts = stripped.split('/');
   if (parts.length === 1) return path.basename(parts[0], '.html');
-  const dir  = parts[0];
+  const dirs = parts.slice(0, -1);
   const file = path.basename(parts[parts.length - 1], '.html');
-  return file === 'index' ? dir : `${dir}-${file}`;
+  const dirPart = dirs.join('-');
+  return file === 'index' ? dirPart : `${dirPart}-${file}`;
 }
 
 function loadOptOuts(abs, rel) {

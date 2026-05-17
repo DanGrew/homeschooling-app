@@ -1,0 +1,6 @@
+{
+  "opt-outs": {
+    "nav-bar": "adult-facing activity card — no child nav-bar or speech required",
+    "speakable": "adult-facing activity card — no child nav-bar or speech required"
+  }
+}
