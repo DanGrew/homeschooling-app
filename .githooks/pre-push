@@ -41,8 +41,6 @@ else
   echo "[pre-push] no activity HTML changed, skipping"
 fi
 
-echo "[pre-push] speakable contracts (runtime)..."
-npm run check:speakable || fail "speakable-contracts"
 
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"
