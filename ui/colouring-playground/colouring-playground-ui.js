@@ -171,15 +171,13 @@ export function initColouringPlayground() {
     var svg=document.getElementById('svg');
     svg.innerHTML='';svg.setAttribute('viewBox',pic.vb);
     injectDotPattern(svg);
-    pic.shapes.filter(function(s){return s.noColour;}).forEach(function(s){
-      var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
-      svg.appendChild(ns(s.tag,attrs));
-    });
-    pic.shapes.filter(function(s){return !s.noColour;}).forEach(function(s){
+    pic.shapes.forEach(function(s){
       var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       var el=ns(s.tag,attrs);
-      el.style.cursor='pointer';
-      el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});
+      if(!s.noColour){
+        el.style.cursor='pointer';
+        el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});
+      }
       svg.appendChild(el);
     });
     renderRef(pic);
