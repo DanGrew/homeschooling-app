@@ -31,7 +31,7 @@ const ACTIVITY_PAGES = [
   '/homeschooling-app/app/worksheets/colouring-sheets/',
 ];
 
-const UNWIRED_BUTTONS_SELECTOR = '.game-area button:not(.speakable):not([data-no-speak])';
+const UNWIRED_BUTTONS_SELECTOR = 'button:not(.speakable)';
 
 // Text elements with direct text node children that haven't been made speakable.
 // Uses page.evaluate to filter by direct text nodes (not just descendant text) to
@@ -39,12 +39,11 @@ const UNWIRED_BUTTONS_SELECTOR = '.game-area button:not(.speakable):not([data-no
 function findUnwiredText(page) {
   return page.evaluate(() => {
     const candidates = document.querySelectorAll(
-      '.game-area p, .game-area span, .game-area h1, .game-area h2, .game-area h3, .game-area h4, .game-area label, .game-area li, .game-area td, .game-area div'
+      'p, span, h1, h2, h3, h4, label, li, td, div'
     );
     const results = [];
     for (const el of candidates) {
       if (el.classList.contains('speakable')) continue;
-      if (el.hasAttribute('data-no-speak')) continue;
       if (getComputedStyle(el).display === 'none') continue;
       if (getComputedStyle(el).visibility === 'hidden') continue;
       const hasDirectText = Array.from(el.childNodes).some(
