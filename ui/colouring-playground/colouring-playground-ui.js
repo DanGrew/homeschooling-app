@@ -269,6 +269,7 @@ var MODES=[
     false:'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;background:none;color:#888;'
   };
 
+  // arch: allow-pure-fn
   function modeBtn(on){return MODE_BTN_ACTIVE[String(on)];}
 
   buildBasePalette();
