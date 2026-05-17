@@ -1,0 +1,98 @@
+{
+  "title": "Switchback",
+  "archetype": "Inverse Challenge",
+  "competencies": ["upper_limb_strength", "crossing_midline", "motor_planning"],
+  "key_movements": [
+    "climbing wall grips",
+    "wall traverse",
+    "climbing wall holes",
+    "monkey bars",
+    "rope grid descent"
+  ],
+  "route": ["G8", "A2", "A1", "B1", "B2", "A3", "G2"],
+  "route_labels": [
+    "Climbing wall base",
+    "Climbing wall mid (grips)",
+    "Climbing wall mid (holes)",
+    "Top platform (ladder side)",
+    "Top platform (rope/wall side)",
+    "Rope grid mid",
+    "Rope grid base"
+  ],
+  "setup": [
+    "No props — the challenge is the route itself",
+    "If child has done Rope Rescue, introduce as the mirror version: wall up, ropes down",
+    "Stand near the wall traverse section (A2→A1) on first run — this is where most children need time"
+  ],
+  "activity_flow": [
+    {
+      "step": 1,
+      "instruction": "Start at climbing wall base. Child examines both sides of the wall before touching it.",
+      "prompt": "\"What's the difference between these two sides? Which looks easier?\""
+    },
+    {
+      "step": 2,
+      "instruction": "Child climbs grips side to climbing wall mid. Feet pushing, not dangling.",
+      "prompt": "\"Find each grip before you move. Where does your weight go?\""
+    },
+    {
+      "step": 3,
+      "instruction": "At climbing wall mid (grips), stop. Child must traverse sideways to the holes side — lateral shift at height. Don't guide hands.",
+      "prompt": "\"You need to cross over without coming down. How?\""
+    },
+    {
+      "step": 4,
+      "instruction": "Child traverses to climbing wall mid (holes). One limb at a time. This may take a while.",
+      "prompt": "If they freeze: \"Move one hand. That's the whole next step.\""
+    },
+    {
+      "step": 5,
+      "instruction": "Climb holes side to top platform (ladder side).",
+      "prompt": "\"Different holds, same idea. Slow and strong.\""
+    },
+    {
+      "step": 6,
+      "instruction": "Monkey bars across to top platform (rope/wall side).",
+      "prompt": "\"Same bars as before — does it feel different from this direction?\""
+    },
+    {
+      "step": 7,
+      "instruction": "Begin rope grid descent. Child must face the apparatus and find each rope with their foot before shifting weight.",
+      "prompt": "\"Slow feet. Feel the rope before you move your hands.\""
+    },
+    {
+      "step": 8,
+      "instruction": "Descend to rope grid base. Debrief.",
+      "prompt": "\"You went up the wall and down the ropes. Which part needed the most thinking?\""
+    }
+  ],
+  "adult_guidance": [
+    {
+      "headline": "The traverse is the whole point",
+      "detail": "A2→A1 is lateral weight shift at height with midline crossing. It is harder than anything above or below it on this route. Give it as long as it needs. One cue only: 'move one hand.'"
+    },
+    {
+      "headline": "Descent is harder than ascent",
+      "detail": "The rope grid descent (B2→A3→G2) demands more motor control than climbing. Children rush because down feels easy. 'Slow feet, feel the rope' is the complete instruction — don't add more."
+    },
+    {
+      "headline": "Use Rope Rescue as a reference point if they've done it",
+      "detail": "The comparison prompt at the monkey bars ('does it feel different?') builds schema — noticing that a familiar element feels different from a new starting position is genuine cognitive work."
+    },
+    {
+      "headline": "Freezing at the traverse is planning, not fear",
+      "detail": "A child who stops at A2 and stares is problem-solving. Wait at least 10 seconds before any cue. The freeze is the most valuable moment in the activity."
+    }
+  ],
+  "variations": [
+    "Skip monkey bars: descend holes side back to wall base and walk around to rope grid — same start and end, ground-level connector instead",
+    "Slower is harder: set the challenge as descending the rope grid as slowly as possible — controlled speed is harder than fast",
+    "Narrated traverse: child must say out loud which limb they're moving and where, while crossing — slows them down and builds body awareness"
+  ],
+  "free_play": [
+    "Can you get from the wall to the ropes without touching the top platform?",
+    "How many ways can you cross from one side of the top to the other?",
+    "Make a route that uses the wall traverse in the middle"
+  ],
+  "why_it_works": "Rope Rescue ascends the rope grid and descends the wall. Switchback reverses this — same elements, different order — making it a schema challenge: familiar movements feel physically and cognitively different in a new sequence. The wall traverse (A2→A1) sits mid-route rather than at the end, forcing the child to conserve energy for the rope descent that follows. The rope grid descent closes the route under accumulated fatigue, demanding precise foot-finding and grip control when the child's arms are already tired. The debrief question ('which part needed the most thinking?') makes executive function visible without requiring it to be named."
+}

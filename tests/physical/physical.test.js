@@ -49,6 +49,28 @@ test('the long way round activity page renders', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'The Long Way Round' })).toBeVisible()
 })
 
+test('secret passage activity page renders', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/secret-passage/')
+  await expect(page.getByRole('heading', { name: 'Secret Passage' })).toBeVisible()
+})
+
+test('secret passage shows crawl competency', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/secret-passage/')
+  await expect(page.getByText('core stability').first()).toBeVisible()
+  await expect(page.getByText('spatial awareness').first()).toBeVisible()
+})
+
+test('switchback activity page renders', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/switchback/')
+  await expect(page.getByRole('heading', { name: 'Switchback' })).toBeVisible()
+})
+
+test('switchback shows wall traverse competency', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/switchback/')
+  await expect(page.getByText('upper limb strength')).toBeVisible()
+  await expect(page.getByText('crossing midline')).toBeVisible()
+})
+
 test('activity back link returns to physical index', async ({ page }) => {
   await page.goto('/homeschooling-app/app/physical/activities/rope-rescue/')
   await page.getByRole('link', { name: '←' }).click()
