@@ -228,9 +228,10 @@ var MODES=[
     {mode:'free',icon:'🎨',label:'Free'}
   ];
 
+  var LABEL_DISPLAY={true:'',false:'none'};
+
   function buildModeNav(){
     var slot=document.getElementById('nav-filter-slot');
-    if(!slot)return;
     var divider=document.createElement('div');
     divider.setAttribute('data-mode-divider','');
     divider.style.cssText='height:2px;background:#e0e0e0;width:80%;margin:4px auto;flex-shrink:0;border-radius:2px;';
@@ -258,15 +259,17 @@ var MODES=[
     slot.appendChild(divider);
     window.addEventListener('nav:expand',function(e){
       slot.querySelectorAll('button[data-mode-btn]').forEach(function(b){
-        b.querySelector('[data-label]').style.display=e.detail.expanded?'':'none';
+        b.querySelector('[data-label]').style.display=LABEL_DISPLAY[String(e.detail.expanded)];
       });
     });
   }
 
-  // arch: allow-pure-fn
-  function modeBtn(on){
-    return'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;'+(on?'background:#F39C12;color:#fff;':'background:none;color:#888;');
-  }
+  var MODE_BTN_ACTIVE={
+    true:'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;background:#F39C12;color:#fff;',
+    false:'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;background:none;color:#888;'
+  };
+
+  function modeBtn(on){return MODE_BTN_ACTIVE[String(on)];}
 
   buildBasePalette();
   applyLayout();
