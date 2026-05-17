@@ -37,8 +37,8 @@
     },
     {
       "step": 2,
-      "instruction": "Child climbs ladder to ladder mid. Don't prompt mid-climb.",
-      "prompt": "Wait. Only act if child signals distress."
+      "instruction": "Child climbs ladder to ladder mid.",
+      "prompt": ""
     },
     {
       "step": 3,
@@ -52,7 +52,7 @@
     },
     {
       "step": 5,
-      "instruction": "Descend rope grid to ground. Face apparatus, one foot at a time.",
+      "instruction": "Descend rope grid to ground.",
       "prompt": "\"Face the ropes. Come down slow.\""
     },
     {
