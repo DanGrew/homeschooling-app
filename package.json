@@ -9,6 +9,7 @@
     "test:coverage": "vitest run tests/unit --coverage",
     "check:untested": "node scripts/check-untested.js",
     "check:contracts": "node scripts/contracts/run.js",
+    "check:speakable": "playwright test --config playwright.contracts.config.js",
     "validate:json": "node scripts/validate-schemas.js reports/validate-json.txt",
     "audit:zorder": "node scripts/check-colouring-zorder.js",
     "sync:zorder": "node scripts/sync-colouring-zorder-from-svg.js",

@@ -41,6 +41,7 @@ else
   echo "[pre-push] no activity HTML changed, skipping"
 fi
 
+
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"
 

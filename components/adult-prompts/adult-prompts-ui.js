@@ -13,6 +13,7 @@
   var wrap = document.createElement('div');
   wrap.style.cssText = 'position:fixed;bottom:16px;right:16px;width:44px;height:44px;z-index:9000;touch-action:none;';
   wrap.setAttribute('data-testid', 'adult-prompts-btn');
+  wrap.setAttribute('data-speakable-container', '');
 
   var btn = document.createElement('div');
   btn.style.cssText = 'position:absolute;top:0;left:0;width:44px;height:44px;border-radius:50%;background:#fff;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.15);user-select:none;-webkit-user-select:none;';
