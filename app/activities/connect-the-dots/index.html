@@ -196,6 +196,12 @@ loadConnectDots(shapes,function(){
 <script>window.ADULT_PROMPTS_ACTIVITY='connect-the-dots';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+import '../../../components/speech/speech-ui.js';
+var _titleEl=document.getElementById('title');
+var _instrEl=document.getElementById('instruction');
+if(typeof window.__makeSpeakable==='function'){
+  if(_titleEl) window.__makeSpeakable(_titleEl,function(){return _titleEl.textContent;});
+  if(_instrEl) window.__makeSpeakable(_instrEl,function(){return _instrEl.textContent;});
+}</script>
 </body>
 </html>

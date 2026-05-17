@@ -1,4 +1,5 @@
 var colours=['#E74C3C','#3498DB','#2ECC71','#F1C40F','#E67E22','#9B59B6'];
+var colourNames={'#E74C3C':'Red','#3498DB':'Blue','#2ECC71':'Green','#F1C40F':'Yellow','#E67E22':'Orange','#9B59B6':'Purple'};
 var types=['circle','square','triangle','star','rectangle','heart'];
 var lastCol;
 

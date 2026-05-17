@@ -130,5 +130,10 @@ loadColouringPictures(pictures,function(){
 },function(){document.getElementById('panel-list').textContent='⚠️ Failed to load — check connection';
 });
 </script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+makeSpeakable(document.getElementById('btn-print'),'Print');
+</script>
 </body>
 </html>

@@ -73,6 +73,11 @@ buildSimpleFilterBar([
   applyFilter();
 }, 'all');
 makeSpeakable(document.getElementById('btn-reset'), 'Reset');
+var _goalEl=document.getElementById('goal-text');
+if(_goalEl) makeSpeakable(_goalEl,function(){return _goalEl.textContent;});
+document.querySelectorAll('#goal-banner span:not(#goal-text)').forEach(function(s){
+  if(s.textContent.trim()) makeSpeakable(s,s.textContent.trim());
+});
 
 Promise.all([
   fetch('../../../content/logic-gates/puzzles-linear.json?v=1').then(function(r) { return r.json(); }),
