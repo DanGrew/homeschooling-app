@@ -55,6 +55,8 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
     var DICT_BASE = '../../../content/dictionary/entries/';
     var dictOverlay = document.getElementById('dict-overlay');
 
+    makeSpeakable(document.getElementById('dict-close'), 'Close');
+    makeSpeakable(document.getElementById('dict-speak'), 'Speak');
     var playbtn = document.getElementById('playbtn');
     var stopbtn = document.getElementById('stopbtn');
     makeSpeakable(playbtn, function () { return playbtn.textContent; });
