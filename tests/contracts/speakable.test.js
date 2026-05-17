@@ -31,8 +31,29 @@ const ACTIVITY_PAGES = [
   '/homeschooling-app/app/worksheets/colouring-sheets/',
 ];
 
-// Selector: all buttons except nav-bar navigation buttons
-const UNWIRED_SELECTOR = '.game-area button:not(.speakable):not([data-no-speak])';
+const UNWIRED_BUTTONS_SELECTOR = 'button:not(.speakable)';
+
+// Text elements with direct text node children that haven't been made speakable.
+// Uses page.evaluate to filter by direct text nodes (not just descendant text) to
+// avoid flagging wrapper containers and double-counting nested elements.
+function findUnwiredText(page) {
+  return page.evaluate(() => {
+    const candidates = document.querySelectorAll(
+      'p, span, h1, h2, h3, h4, label, li, td, div'
+    );
+    const results = [];
+    for (const el of candidates) {
+      if (el.classList.contains('speakable')) continue;
+      if (getComputedStyle(el).display === 'none') continue;
+      if (getComputedStyle(el).visibility === 'hidden') continue;
+      const hasDirectText = Array.from(el.childNodes).some(
+        n => n.nodeType === Node.TEXT_NODE && n.textContent.trim().length > 0
+      );
+      if (hasDirectText) results.push(el.textContent.trim().slice(0, 60));
+    }
+    return results;
+  });
+}
 
 for (const pagePath of ACTIVITY_PAGES) {
   test(`${pagePath} — all buttons speakable`, async ({ page }) => {
@@ -40,10 +61,19 @@ for (const pagePath of ACTIVITY_PAGES) {
     await page.waitForLoadState('networkidle');
 
     const unwired = await page.$$eval(
-      UNWIRED_SELECTOR,
+      UNWIRED_BUTTONS_SELECTOR,
       els => els.map(el => el.textContent?.trim() || '(no text)')
     );
 
     expect(unwired, `Unwired buttons in ${pagePath}`).toEqual([]);
+  });
+
+  test(`${pagePath} — all text speakable`, async ({ page }) => {
+    await page.goto(pagePath);
+    await page.waitForLoadState('networkidle');
+
+    const unwired = await findUnwiredText(page);
+
+    expect(unwired, `Unwired text in ${pagePath}`).toEqual([]);
   });
 }
