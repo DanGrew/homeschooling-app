@@ -28,6 +28,23 @@ var LESSON_NUM_FORMAT = {
   'false': function()  { return ''; }
 };
 
+export function formatSlug(s) {
+  if (!s) return '';
+  return s.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+}
+
+var NON_LESSON_TITLE = {
+  'colouring_guided_complete': function(e) { return formatSlug(e.designId) || 'Design'; },
+  'colouring_free_complete':   function(e) { return formatSlug(e.designId) || 'Design'; },
+  'puzzle_completed':          function(e) { return formatSlug(e.puzzleId) || 'Puzzle'; }
+};
+
+var NON_LESSON_SOURCE = {
+  'colouring_guided_complete': function()  { return 'Colouring Playground \u2014 Guided'; },
+  'colouring_free_complete':   function()  { return 'Colouring Playground \u2014 Free'; },
+  'puzzle_completed':          function(e) { return 'Puzzle' + (e.difficulty ? ' \u2014 ' + e.difficulty : ''); }
+};
+
 export function formatCriterion(c) {
   var parts = c.split('.');
   var area = AREA[parts[0]] || parts[0];
@@ -55,11 +72,13 @@ export function formatDate(ts) {
 export function buildEntryViewModel(event, lesson) {
   var group = groupKey(event.timestamp);
   var timeStr = TIME_FORMAT[String(group === 'Today')](event.timestamp);
-  var title = (lesson && lesson.title) || event.lessonId || event.type;
+  var titleFn = NON_LESSON_TITLE[event.type];
+  var title = titleFn ? titleFn(event) : ((lesson && lesson.title) || event.lessonId || event.type);
+  var sourceFn = NON_LESSON_SOURCE[event.type];
   var actLabel = (event.activityId && (_activityLabels[event.activityId] || event.activityId)) || '';
   var numStr = LESSON_NUM_FORMAT[String(!!(lesson && lesson.number))](lesson && lesson.number);
-  var sourceStr = SOURCE_FORMAT[String(!!actLabel)](actLabel, numStr);
-  var criteria = (lesson && lesson.criteria) || [];
+  var sourceStr = sourceFn ? sourceFn(event) : SOURCE_FORMAT[String(!!actLabel)](actLabel, numStr);
+  var criteria = (!titleFn && lesson && lesson.criteria) || [];
   return {
     timeStr: timeStr,
     sourceStr: sourceStr,

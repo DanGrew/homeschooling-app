@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   formatCriterion,
+  formatSlug,
   groupKey,
   formatTime,
   formatDate,
@@ -8,6 +9,19 @@ import {
   sortAndGroupEvents,
   GROUP_LABELS
 } from '../../core/telemetry/learning-journal-core.js';
+
+describe('formatSlug', () => {
+  it('capitalises single word', () => {
+    expect(formatSlug('sun')).toBe('Sun');
+  });
+  it('converts hyphens to spaces and capitalises each word', () => {
+    expect(formatSlug('paw-patrol')).toBe('Paw Patrol');
+  });
+  it('returns empty string for falsy input', () => {
+    expect(formatSlug(null)).toBe('');
+    expect(formatSlug('')).toBe('');
+  });
+});
 
 describe('formatCriterion', () => {
   it('expands known area prefix and sub', () => {
@@ -71,6 +85,29 @@ describe('buildEntryViewModel', () => {
   it('returns empty sourceStr when no activityId on event', () => {
     const e = Object.assign({}, event, { activityId: null });
     expect(buildEntryViewModel(e, lesson).sourceStr).toBe('');
+  });
+});
+
+describe('buildEntryViewModel non-lesson events', () => {
+  it('colouring_guided_complete uses designId as title', () => {
+    const e = { type: 'colouring_guided_complete', timestamp: Date.now(), activityId: 'colouring-playground', designId: 'sun', version: 1 };
+    expect(buildEntryViewModel(e, null).title).toBe('Sun');
+  });
+  it('colouring_free_complete shows Free source', () => {
+    const e = { type: 'colouring_free_complete', timestamp: Date.now(), activityId: 'colouring-playground', designId: 'cat', version: 1 };
+    expect(buildEntryViewModel(e, null).sourceStr).toContain('Free');
+  });
+  it('puzzle_completed uses puzzleId as title', () => {
+    const e = { type: 'puzzle_completed', timestamp: Date.now(), activityId: 'puzzle', puzzleId: 'paw-patrol', difficulty: 'Medium', version: 1 };
+    expect(buildEntryViewModel(e, null).title).toBe('Paw Patrol');
+  });
+  it('puzzle_completed includes difficulty in source', () => {
+    const e = { type: 'puzzle_completed', timestamp: Date.now(), activityId: 'puzzle', puzzleId: 'paw-patrol', difficulty: 'Hard', version: 1 };
+    expect(buildEntryViewModel(e, null).sourceStr).toContain('Hard');
+  });
+  it('non-lesson events have empty criteriaTags', () => {
+    const e = { type: 'puzzle_completed', timestamp: Date.now(), activityId: 'puzzle', puzzleId: 'x', difficulty: 'Easy', version: 1 };
+    expect(buildEntryViewModel(e, null).criteriaTags).toEqual([]);
   });
 });
 

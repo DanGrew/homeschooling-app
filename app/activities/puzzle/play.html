@@ -61,9 +61,11 @@
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
   import { showBanner, hideBanner } from '../../../components/success-banner.js';
 
+  import { recordLearningEvent } from '../../../core/telemetry/learning-events.js';
   const params = new URLSearchParams(location.search);
-  const puzzleId = sessionStorage.getItem('puzzle-id') || params.get('puzzle') || 'paw-patrol';
-  const gridParam = sessionStorage.getItem('puzzle-grid') || params.get('grid') || '4x3';
+  const puzzleId = params.get('puzzle') || sessionStorage.getItem('puzzle-id') || 'paw-patrol';
+  const gridParam = params.get('grid') || sessionStorage.getItem('puzzle-grid') || '4x3';
+  const difficultyParam = params.get('difficulty') || 'Easy';
   const [colsStr, rowsStr] = gridParam.split('x');
   const PUZZLE = {
     src: `../../../assets/puzzle/${puzzleId}/full.jpg`,
@@ -159,6 +161,7 @@
   function completionCheck() {
     locked = true;
     refToggle.disabled = true;
+    recordLearningEvent({version:1, type:'puzzle_completed', timestamp:Date.now(), activityId:'puzzle', puzzleId:puzzleId, difficulty:difficultyParam});
     revealPicture(() => {
       showBanner({ buttons: [{ label: 'Choose another \u2192', onClick: function() { hideBanner(); location.href = './'; } }] });
     });
