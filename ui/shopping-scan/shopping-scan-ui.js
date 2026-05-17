@@ -1,6 +1,7 @@
 import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { flattenCatalogs, escHtml, byName, setAllItems, getListItems, resetListItems, filterListItems, renderTiles, renderList, hidePhase1, showPhase1, showSuccess, startFindPhase } from '../shopping/shopping-ui.js';
 import { buildCatalogItems } from '../../core/shopping-scan/shopping-scan-core.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 
 var AudioCtx = [window.AudioContext, window.webkitAudioContext].filter(Boolean)[0];
 var hasDetector = typeof BarcodeDetector !== 'undefined';
@@ -83,6 +84,7 @@ function buildChecklist() {
     var row = document.createElement('div');
     row.className = 'sc-row';
     row.innerHTML = '<span class="sc-tick">☐</span><span class="sc-icon">' + it.icon + '</span><span class="sc-name">' + escHtml(it.name) + '</span><button class="btn-not-here">Not here ✕</button>';
+    makeSpeakable(row.querySelector('.sc-name'), it.name);
     var btn = row.querySelector('.btn-not-here');
     btn.addEventListener('click', function() { onNotHere(row, btn); });
     barcodeMap[it.barcode] = { row: row, name: it.name, icon: it.icon };
@@ -141,7 +143,7 @@ function resetScan() {
 }
 
 export function init(catalogs) {
-  ({'true':function(){document.getElementById('scan-unavailable').textContent='No camera — stub mode active';},'false':function(){}})[String(!hasDetector)]();
+  ({'true':function(){var su=document.getElementById('scan-unavailable');su.textContent='No camera — stub mode active';makeSpeakable(su,'No camera — stub mode active');},'false':function(){}})[String(!hasDetector)]();
 
   document.getElementById('btn-find').addEventListener('click', function() { startFindPhase(resetScan); });
   document.getElementById('btn-scan-it').addEventListener('click', startScanPhase);

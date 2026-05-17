@@ -1,8 +1,11 @@
+var DO_SPEAK = {'true':function(el,t){window.__makeSpeakable(el,t);},'false':function(){}};
+
 function buildSection(config, container) {
   const section = document.createElement('div');
   section.style.cssText = 'padding:0 16px;';
   const heading = document.createElement('h2');
   heading.textContent = config.label + ' gate';
+  DO_SPEAK[String(typeof window.__makeSpeakable==='function')](heading, config.label + ' gate');
   heading.style.cssText = `
     text-align:center;
     font-size:1.6em;

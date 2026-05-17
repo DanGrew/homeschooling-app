@@ -228,6 +228,7 @@ import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 var refToggle = document.getElementById('ref-toggle');
 makeSpeakable(refToggle, function() { return refToggle.textContent; });
+makeSpeakable(document.querySelector('.slot-label'), 'Holding');
 </script>
 </body>
 </html>

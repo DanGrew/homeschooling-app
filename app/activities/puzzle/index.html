@@ -86,15 +86,13 @@ function initChooser(puzzles) {
   [() => {}, () => selectPuzzle(puzzles[0], cardsEl.firstElementChild, picker, btnsEl)][+(puzzles.length === 1)]();
 }
 
-fetch('../../../content/puzzle/manifest.json')
-  .then(r => r.json())
-  .then(initChooser);
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='puzzle';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 var _prompt=document.getElementById('grid-picker-prompt');
-if(_prompt) makeSpeakable(_prompt,'Choose difficulty');</script>
+[_prompt].filter(Boolean).forEach(function(el){ makeSpeakable(el,'Choose difficulty'); });
+fetch('../../../content/puzzle/manifest.json').then(function(r){return r.json();}).then(initChooser);</script>
 </body>
 </html>
