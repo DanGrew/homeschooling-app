@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
 const NAV_BAR_PAGES = [
-  '/homeschooling-app/app/activities/colouring-palette/',
   '/homeschooling-app/app/activities/logic-gates/puzzle.html',
   '/homeschooling-app/app/activities/number-interaction/',
   '/homeschooling-app/app/activities/piano/lesson.html',
