@@ -44,6 +44,7 @@ function findUnwiredText(page) {
     const results = [];
     for (const el of candidates) {
       if (el.classList.contains('speakable')) continue;
+      if (el.closest('.speakable')) continue;
       if (getComputedStyle(el).display === 'none') continue;
       if (getComputedStyle(el).visibility === 'hidden') continue;
       const hasDirectText = Array.from(el.childNodes).some(

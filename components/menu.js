@@ -189,6 +189,11 @@
         e.stopPropagation();
         togglePopout(lnkPopout,lnkBtn);
       });
+      window.addEventListener('load',function(){
+        if(typeof window.__makeSpeakable==='function'){
+          window.__makeSpeakable(lnkBtn,linksLabel);
+        }
+      });
       lnkContainer.appendChild(lnkBtn);
     }
     bar.appendChild(lnkContainer);
@@ -205,6 +210,11 @@
     bar.classList.toggle('expanded',navExpanded);
     expandBtn.innerHTML=navExpanded?'\u00AB':'\u00BB';
     window.dispatchEvent(new CustomEvent('nav:expand',{detail:{expanded:navExpanded}}));
+  });
+  window.addEventListener('load',function(){
+    if(typeof window.__makeSpeakable==='function'){
+      window.__makeSpeakable(expandBtn,function(){return navExpanded?'Close':'Open';});
+    }
   });
   bar.appendChild(expandBtn);
 
