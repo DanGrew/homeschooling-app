@@ -1,11 +1,26 @@
+// Isometric projection: sx=15, sy=8, sz=20, cx=90, cy=125
+// Apparatus footprint: front-left G1(0,0) → front-right G3(8,0)
+//                      back-left G5(0,4) → back-right G8(8,4)
+// Level heights: ground z=0, first z=3, top z=6
 const NODE_POS = {
-  B1: [170,  28], B2: [290,  88],
-  A4: [170,  94], A3: [230, 124], A2: [290, 154], A1: [250, 174], A5: [110, 124],
-  G1: [170, 160], G2: [230, 190], G3: [130, 240], G4: [130, 220],
-  G5: [130, 180], G6: [170, 260], G7: [ 90, 200], G8: [290, 220], G9: [190, 270]
+  B1: [ 90,   5], B2: [210,  69],
+  A4: [ 90,  65], A3: [135,  89], A1: [180, 145], A2: [150, 161], A5: [105, 121],
+  G1: [ 90, 125], G2: [135, 149], G7: [180, 173], G3: [210, 189],
+  G5: [ 30, 157], G6: [ 90, 189], G8: [150, 221], G9: [180, 205], G4: [120, 173]
 };
 
 const LEVEL_COLOR = { ground: '#27AE60', first: '#F39C12', top: '#2980B9' };
+
+// Structural frame corners at top (z=6):
+// front-left (0,0,6)=(90,5), front-right (8,0,6)=(210,69)
+// back-left  (0,4,6)=(30,37), back-right (8,4,6)=(150,101)
+const STRUCT =
+  `<polygon points="90,5 210,69 150,101 30,37" fill="#f0f0f0" stroke="#d0d0d0" stroke-width="1.5"/>` +
+  `<polygon points="90,5 210,69 210,189 90,125" fill="#f9f9f9" stroke="#e0e0e0" stroke-width="1"/>` +
+  `<polygon points="90,5 30,37 30,157 90,125" fill="#f6f6f6" stroke="#e0e0e0" stroke-width="1"/>` +
+  `<line x1="150" y1="101" x2="150" y2="221" stroke="#d8d8d8" stroke-width="1.5"/>` +
+  `<line x1="30" y1="157" x2="150" y2="221" stroke="#e0e0e0" stroke-width="1"/>` +
+  `<line x1="210" y1="189" x2="150" y2="221" stroke="#e0e0e0" stroke-width="1"/>`;
 
 export function renderApparatusSVG(graphData, activeRoute = []) {
   const activeNodes = new Set(activeRoute);
@@ -14,18 +29,6 @@ export function renderApparatusSVG(graphData, activeRoute = []) {
     activeEdges.add(`${activeRoute[i]}-${activeRoute[i + 1]}`);
     activeEdges.add(`${activeRoute[i + 1]}-${activeRoute[i]}`);
   }
-
-  const struct = [
-    `<polygon points="170,28 290,88 210,128 90,68" fill="#f0f0f0" stroke="#d0d0d0" stroke-width="1.5"/>`,
-    `<polygon points="170,28 290,88 290,220 170,160" fill="#f8f8f8" stroke="#d8d8d8" stroke-width="1"/>`,
-    `<line x1="290" y1="88"  x2="290" y2="220" stroke="#d0d0d0" stroke-width="1.5"/>`,
-    `<line x1="90"  y1="68"  x2="90"  y2="200" stroke="#d0d0d0" stroke-width="1.5"/>`,
-    `<line x1="210" y1="128" x2="210" y2="260" stroke="#d0d0d0" stroke-width="1.5"/>`,
-    `<line x1="170" y1="160" x2="90"  y2="200" stroke="#e0e0e0" stroke-width="1"/>`,
-    `<line x1="90"  y1="200" x2="210" y2="260" stroke="#e0e0e0" stroke-width="1"/>`,
-    `<line x1="210" y1="260" x2="290" y2="220" stroke="#e0e0e0" stroke-width="1"/>`,
-    `<line x1="170" y1="94"  x2="290" y2="154" stroke="#e0e0e0" stroke-width="1"/>`,
-  ].join('');
 
   const edges = graphData.edges.map(({ from, to, bidirectional }) => {
     const p1 = NODE_POS[from], p2 = NODE_POS[to];
@@ -58,15 +61,15 @@ export function renderApparatusSVG(graphData, activeRoute = []) {
   }).join('');
 
   const legend =
-    `<circle cx="80" cy="276" r="5" fill="${LEVEL_COLOR.ground}" opacity="0.8"/>` +
-    `<text x="88" y="280" font-size="8" fill="#666">Ground</text>` +
-    `<circle cx="130" cy="276" r="5" fill="${LEVEL_COLOR.first}" opacity="0.8"/>` +
-    `<text x="138" y="280" font-size="8" fill="#666">First</text>` +
-    `<circle cx="172" cy="276" r="5" fill="${LEVEL_COLOR.top}" opacity="0.8"/>` +
-    `<text x="180" y="280" font-size="8" fill="#666">Top</text>`;
+    `<circle cx="30" cy="236" r="5" fill="${LEVEL_COLOR.ground}" opacity="0.8"/>` +
+    `<text x="38" y="240" font-size="8" fill="#666">Ground</text>` +
+    `<circle cx="84" cy="236" r="5" fill="${LEVEL_COLOR.first}" opacity="0.8"/>` +
+    `<text x="92" y="240" font-size="8" fill="#666">First</text>` +
+    `<circle cx="128" cy="236" r="5" fill="${LEVEL_COLOR.top}" opacity="0.8"/>` +
+    `<text x="136" y="240" font-size="8" fill="#666">Top</text>`;
 
-  return `<svg viewBox="70 10 250 280" xmlns="http://www.w3.org/2000/svg" width="100%">` +
-    `<g>${struct}</g>` +
+  return `<svg viewBox="10 -5 230 250" xmlns="http://www.w3.org/2000/svg" width="100%">` +
+    `<g>${STRUCT}</g>` +
     `<g>${edges}</g>` +
     `<g>${nodes}</g>` +
     `<g font-family="sans-serif">${legend}</g>` +
