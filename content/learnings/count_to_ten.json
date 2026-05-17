@@ -2,10 +2,22 @@
   "id": "count_to_ten",
   "title": "Count to Ten",
   "number": 4,
+  "guide": "cat",
   "source": "Numbers",
-  "criteria": ["maths.counting-10", "maths.numeral-recognition", "maths.number-order"],
+  "criteria": [
+    "maths.counting-10",
+    "maths.numeral-recognition",
+    "maths.number-order"
+  ],
   "steps": [
-    { "text": "Ten is a special number! Press + on both groups until the Total shows 10!", "expect": "TOTAL_10", "feedback": "Ten! That's a full set. Now tap the Total and count all the way!" },
-    { "expect": "COUNT_ALL", "feedback": "You counted all the way to ten!" }
+    {
+      "text": "Ten is a special number! Press + on both groups until the Total shows 10!",
+      "expect": "TOTAL_10",
+      "feedback": "Ten! That's a full set. Now tap the Total and count all the way!"
+    },
+    {
+      "expect": "COUNT_ALL",
+      "feedback": "You counted all the way to ten!"
+    }
   ]
 }

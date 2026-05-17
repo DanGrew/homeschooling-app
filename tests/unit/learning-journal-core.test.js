@@ -6,7 +6,8 @@ import {
   formatDate,
   buildEntryViewModel,
   sortAndGroupEvents,
-  GROUP_LABELS
+  GROUP_LABELS,
+  fetchLearning
 } from '../../core/telemetry/learning-journal-core.js';
 
 describe('formatCriterion', () => {
@@ -114,5 +115,48 @@ describe('sortAndGroupEvents', () => {
     const events = [{ timestamp: 1 }, { timestamp: 3 }, { timestamp: 2 }];
     sortAndGroupEvents(events);
     expect(events[0].timestamp).toBe(1);
+  });
+});
+
+describe('fetchLearning', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('calls fetch with correct URL', async () => {
+    const data = { id: 'make_orange', title: 'Make Orange', source: 'Colour Wheel', criteria: [] };
+    fetch.mockResolvedValue({ json: () => Promise.resolve(data) });
+    await new Promise(resolve => fetchLearning('make_orange', resolve));
+    expect(fetch).toHaveBeenCalledWith('../../content/learnings/make_orange.json');
+  });
+
+  it('passes fetched data to callback', async () => {
+    const data = { id: 'make_orange', title: 'Make Orange', source: 'Colour Wheel', criteria: [] };
+    fetch.mockResolvedValue({ json: () => Promise.resolve(data) });
+    const result = await new Promise(resolve => fetchLearning('make_orange2', resolve));
+    expect(result.title).toBe('Make Orange');
+  });
+
+  it('calls callback with null when fetch fails', async () => {
+    fetch.mockRejectedValue(new Error('network'));
+    const result = await new Promise(resolve => fetchLearning('bad_id', resolve));
+    expect(result).toBeNull();
+  });
+
+  it('calls callback with null for missing learningId', async () => {
+    const result = await new Promise(resolve => fetchLearning(null, resolve));
+    expect(result).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('returns cached result on second call', async () => {
+    const data = { id: 'cached_one', title: 'Cached', source: 'X', criteria: [] };
+    fetch.mockResolvedValue({ json: () => Promise.resolve(data) });
+    await new Promise(resolve => fetchLearning('cached_one', resolve));
+    await new Promise(resolve => fetchLearning('cached_one', resolve));
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 });

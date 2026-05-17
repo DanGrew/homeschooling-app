@@ -2,11 +2,25 @@
   "id": "make_magenta",
   "title": "Make Magenta",
   "number": 13,
+  "guide": "cat",
   "source": "Colour Wheel",
-  "criteria": ["ead.colour-mixing", "uw.cause-effect"],
+  "criteria": [
+    "ead.colour-mixing",
+    "uw.cause-effect"
+  ],
   "steps": [
-    { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it! Now find purple." },
-    { "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make — Magenta!" },
-    { "expect": "RED_PURPLE_TAPPED", "feedback": "Red and purple make Magenta!" }
+    {
+      "text": "Find red on the colour wheel.",
+      "expect": "RED_TAPPED",
+      "feedback": "Got it! Now find purple."
+    },
+    {
+      "expect": "PURPLE_TAPPED",
+      "feedback": "Now find the colour they make — Magenta!"
+    },
+    {
+      "expect": "RED_PURPLE_TAPPED",
+      "feedback": "Red and purple make Magenta!"
+    }
   ]
 }

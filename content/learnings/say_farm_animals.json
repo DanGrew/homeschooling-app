@@ -2,13 +2,34 @@
   "id": "say_farm_animals",
   "title": "Farm Animals",
   "number": 1,
+  "guide": "dog",
   "source": "Say Words",
-  "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.animals-nature"],
+  "criteria": [
+    "cl.topic-vocabulary",
+    "literacy.word-recognition",
+    "uw.animals-nature"
+  ],
   "steps": [
-    { "text": "Let's visit the farm! Farms are home to lots of animals. Find the cow and tap it!", "expect": "COW_SPOKEN", "feedback": "Moo! Cows give us milk. Now find the horse!" },
-    { "expect": "HORSE_SPOKEN", "feedback": "Horses are strong — farmers use them to help with work. Now find the duck!" },
-    { "expect": "DUCK_SPOKEN", "feedback": "Quack! Ducks love splashing in water. Now find the rabbit!" },
-    { "expect": "RABBIT_SPOKEN", "feedback": "Rabbits love to hop and eat vegetables! Last one — find the dog!" },
-    { "expect": "DOG_SPOKEN", "feedback": "Dogs help farmers look after the other animals. You found them all!" }
+    {
+      "text": "Let's visit the farm! Farms are home to lots of animals. Find the cow and tap it!",
+      "expect": "COW_SPOKEN",
+      "feedback": "Moo! Cows give us milk. Now find the horse!"
+    },
+    {
+      "expect": "HORSE_SPOKEN",
+      "feedback": "Horses are strong — farmers use them to help with work. Now find the duck!"
+    },
+    {
+      "expect": "DUCK_SPOKEN",
+      "feedback": "Quack! Ducks love splashing in water. Now find the rabbit!"
+    },
+    {
+      "expect": "RABBIT_SPOKEN",
+      "feedback": "Rabbits love to hop and eat vegetables! Last one — find the dog!"
+    },
+    {
+      "expect": "DOG_SPOKEN",
+      "feedback": "Dogs help farmers look after the other animals. You found them all!"
+    }
   ]
 }

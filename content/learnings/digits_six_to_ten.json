@@ -2,13 +2,34 @@
   "id": "digits_six_to_ten",
   "title": "Count and Write 6 to 10",
   "number": 5,
+  "guide": "cat",
   "source": "Letters & Numbers",
-  "criteria": ["maths.counting-10", "maths.numeral-recognition", "pd.fine-motor"],
+  "criteria": [
+    "maths.counting-10",
+    "maths.numeral-recognition",
+    "pd.fine-motor"
+  ],
   "steps": [
-    { "text": "You know 1 to 5 — now let's trace 6 all the way to 10! We use 0 for the zero in 10. Find 6 and trace it!", "expect": "CHAR_6_TRACED", "feedback": "6! Curves round and closes at the bottom. Now find 7!" },
-    { "expect": "CHAR_7_TRACED", "feedback": "7! Across the top, then a diagonal line down. Now find 8!" },
-    { "expect": "CHAR_8_TRACED", "feedback": "8! Two loops on top of each other. Now find 9!" },
-    { "expect": "CHAR_9_TRACED", "feedback": "9! A circle on top, then a tail going down. Last one — find 0!" },
-    { "expect": "CHAR_0_TRACED", "feedback": "0! A full oval — the zero that makes 10. You can write all ten digits!" }
+    {
+      "text": "You know 1 to 5 — now let's trace 6 all the way to 10! We use 0 for the zero in 10. Find 6 and trace it!",
+      "expect": "CHAR_6_TRACED",
+      "feedback": "6! Curves round and closes at the bottom. Now find 7!"
+    },
+    {
+      "expect": "CHAR_7_TRACED",
+      "feedback": "7! Across the top, then a diagonal line down. Now find 8!"
+    },
+    {
+      "expect": "CHAR_8_TRACED",
+      "feedback": "8! Two loops on top of each other. Now find 9!"
+    },
+    {
+      "expect": "CHAR_9_TRACED",
+      "feedback": "9! A circle on top, then a tail going down. Last one — find 0!"
+    },
+    {
+      "expect": "CHAR_0_TRACED",
+      "feedback": "0! A full oval — the zero that makes 10. You can write all ten digits!"
+    }
   ]
 }

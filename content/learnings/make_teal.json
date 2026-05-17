@@ -2,11 +2,25 @@
   "id": "make_teal",
   "title": "Make Teal",
   "number": 8,
+  "guide": "cat",
   "source": "Colour Wheel",
-  "criteria": ["ead.colour-mixing", "uw.cause-effect"],
+  "criteria": [
+    "ead.colour-mixing",
+    "uw.cause-effect"
+  ],
   "steps": [
-    { "text": "Find blue.", "expect": "BLUE_TAPPED", "feedback": "Got it! Now find green." },
-    { "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make — teal!" },
-    { "expect": "BLUE_GREEN_TAPPED", "feedback": "Blue and green make teal!" }
+    {
+      "text": "Find blue.",
+      "expect": "BLUE_TAPPED",
+      "feedback": "Got it! Now find green."
+    },
+    {
+      "expect": "GREEN_TAPPED",
+      "feedback": "Now find the colour they make — teal!"
+    },
+    {
+      "expect": "BLUE_GREEN_TAPPED",
+      "feedback": "Blue and green make teal!"
+    }
   ]
 }

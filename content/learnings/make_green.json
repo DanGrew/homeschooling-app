@@ -2,11 +2,25 @@
   "id": "make_green",
   "title": "Make Green",
   "number": 2,
+  "guide": "cat",
   "source": "Colour Wheel",
-  "criteria": ["ead.colour-mixing", "uw.cause-effect"],
+  "criteria": [
+    "ead.colour-mixing",
+    "uw.cause-effect"
+  ],
   "steps": [
-    { "text": "Can you find blue on the colour wheel?", "expect": "BLUE_TAPPED", "feedback": "Cool and calm! Now find yellow!" },
-    { "expect": "YELLOW_TAPPED", "feedback": "Bright! Now find the colour they make together." },
-    { "expect": "GREEN_TAPPED", "feedback": "Blue and yellow make green!" }
+    {
+      "text": "Can you find blue on the colour wheel?",
+      "expect": "BLUE_TAPPED",
+      "feedback": "Cool and calm! Now find yellow!"
+    },
+    {
+      "expect": "YELLOW_TAPPED",
+      "feedback": "Bright! Now find the colour they make together."
+    },
+    {
+      "expect": "GREEN_TAPPED",
+      "feedback": "Blue and yellow make green!"
+    }
   ]
 }

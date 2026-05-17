@@ -2,13 +2,34 @@
   "id": "vowels",
   "title": "Vowels",
   "number": 1,
+  "guide": "cat",
   "source": "Letters & Numbers",
-  "criteria": ["literacy.phonics", "pd.fine-motor", "literacy.word-recognition"],
+  "criteria": [
+    "literacy.phonics",
+    "pd.fine-motor",
+    "literacy.word-recognition"
+  ],
   "steps": [
-    { "text": "Some letters are extra special — they're called vowels. Every word needs at least one! Find a and trace it!", "expect": "CHAR_a_TRACED", "feedback": "a! You'll find this in almost every word. Now find e!" },
-    { "expect": "CHAR_e_TRACED", "feedback": "e! The most common letter in English. Now find i!" },
-    { "expect": "CHAR_i_TRACED", "feedback": "i! Don't forget the dot on top. Now find o!" },
-    { "expect": "CHAR_o_TRACED", "feedback": "o! A perfect circle. Last one — find u!" },
-    { "expect": "CHAR_u_TRACED", "feedback": "u! Like a little cup. a, e, i, o, u — all five vowels!" }
+    {
+      "text": "Some letters are extra special — they're called vowels. Every word needs at least one! Find a and trace it!",
+      "expect": "CHAR_a_TRACED",
+      "feedback": "a! You'll find this in almost every word. Now find e!"
+    },
+    {
+      "expect": "CHAR_e_TRACED",
+      "feedback": "e! The most common letter in English. Now find i!"
+    },
+    {
+      "expect": "CHAR_i_TRACED",
+      "feedback": "i! Don't forget the dot on top. Now find o!"
+    },
+    {
+      "expect": "CHAR_o_TRACED",
+      "feedback": "o! A perfect circle. Last one — find u!"
+    },
+    {
+      "expect": "CHAR_u_TRACED",
+      "feedback": "u! Like a little cup. a, e, i, o, u — all five vowels!"
+    }
   ]
 }

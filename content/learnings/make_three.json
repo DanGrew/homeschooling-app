@@ -2,10 +2,22 @@
   "id": "make_three",
   "title": "Make Three",
   "number": 1,
+  "guide": "cat",
   "source": "Numbers",
-  "criteria": ["maths.counting-5", "maths.subitising", "maths.numeral-recognition"],
+  "criteria": [
+    "maths.counting-5",
+    "maths.subitising",
+    "maths.numeral-recognition"
+  ],
   "steps": [
-    { "text": "Keep pressing + until the Total shows 3!", "expect": "TOTAL_3", "feedback": "Three {fruit_a_p}! Now tap the Total to count them all!" },
-    { "expect": "COUNT_ALL", "feedback": "You counted them all!" }
+    {
+      "text": "Keep pressing + until the Total shows 3!",
+      "expect": "TOTAL_3",
+      "feedback": "Three {fruit_a_p}! Now tap the Total to count them all!"
+    },
+    {
+      "expect": "COUNT_ALL",
+      "feedback": "You counted them all!"
+    }
   ]
 }
