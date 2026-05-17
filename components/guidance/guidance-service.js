@@ -89,7 +89,7 @@ GuidanceService.prototype.stop = function() {
 
 GuidanceService.prototype.complete = function() {
   var lessonId = this._lesson && this._lesson.id;
-  var activityId = window.ADULT_PROMPTS_ACTIVITY || null;
+  var activityId = window.ACTIVITY_ID || null;
   this.stop();
   try {
     recordLearningEvent({
