@@ -59,7 +59,7 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads lesson rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(29)
+  await expect(rows).toHaveCount(33)
 })
 
 test('rows are sorted by activity then lesson title', async ({ page }) => {
@@ -106,4 +106,23 @@ test('sorted column shows direction indicator', async ({ page }) => {
   await expect(lessonTh).toHaveClass(/sort-asc/)
   await lessonTh.click()
   await expect(lessonTh).toHaveClass(/sort-desc/)
+})
+
+test('physical activity rows appear in coverage table', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.coverage tbody tr').filter({ hasText: 'Rope Rescue' })).toBeVisible()
+  await expect(page.locator('.coverage tbody tr').filter({ hasText: 'Switchback' })).toBeVisible()
+})
+
+test('physical activity rows show Physical Play in activity column', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Rope Rescue' })
+  await expect(row.locator('.col-activity')).toHaveText('Physical Play')
+})
+
+test('Rope Rescue row has Climbing apparatus in PD column', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Rope Rescue' })
+  const pdCell = row.locator('td').nth(8)
+  await expect(pdCell).toContainText('Climbing apparatus')
 })

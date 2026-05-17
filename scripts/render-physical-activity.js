@@ -18,9 +18,17 @@ const target = args[0];
     path.join(ROOT, 'content/physical/jungle-gym.json'), 'utf8'
   ));
 
+  const criteriaData = JSON.parse(fs.readFileSync(
+    path.join(ROOT, 'content/curriculum/criteria.json'), 'utf8'
+  ));
+  const criteriaMap = {};
+  criteriaData.areas.forEach(area => {
+    area.criteria.forEach(c => { criteriaMap[c.id] = { label: c.label, areaLabel: area.shortLabel }; });
+  });
+
   const files = target
     ? [`${target}.json`]
-    : fs.readdirSync(ACTIVITIES_JSON).filter(f => f.endsWith('.json'));
+    : fs.readdirSync(ACTIVITIES_JSON).filter(f => f.endsWith('.json') && f !== 'index.json');
 
   if (!files.length) {
     console.log('No activity JSON files found.');
@@ -32,7 +40,7 @@ const target = args[0];
   files.forEach(file => {
     const name = file.replace('.json', '');
     const activity = JSON.parse(fs.readFileSync(path.join(ACTIVITIES_JSON, file), 'utf8'));
-    const html = renderActivityHTML(activity, graphData);
+    const html = renderActivityHTML(activity, graphData, criteriaMap);
     const outDir = path.join(ACTIVITIES_HTML, name);
     fs.mkdirSync(outDir, { recursive: true });
     fs.writeFileSync(path.join(outDir, 'index.html'), html);
@@ -41,7 +49,7 @@ const target = args[0];
   });
 
   if (!target) {
-    const allFiles = fs.readdirSync(ACTIVITIES_JSON).filter(f => f.endsWith('.json'));
+    const allFiles = fs.readdirSync(ACTIVITIES_JSON).filter(f => f.endsWith('.json') && f !== 'index.json');
     const allActivities = allFiles.map(file => ({
       name: file.replace('.json', ''),
       activity: JSON.parse(fs.readFileSync(path.join(ACTIVITIES_JSON, file), 'utf8'))

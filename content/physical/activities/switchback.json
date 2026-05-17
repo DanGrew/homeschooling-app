@@ -2,6 +2,7 @@
   "title": "Switchback",
   "archetype": "Inverse Challenge",
   "competencies": ["upper_limb_strength", "crossing_midline", "motor_planning"],
+  "criteria": ["pd.gross-motor-climb", "pd.crossing-midline", "pd.bilateral-coord", "pd.spatial-awareness", "psed.self-regulation"],
   "key_movements": [
     "climbing wall grips",
     "wall traverse",

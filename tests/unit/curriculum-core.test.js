@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
+const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
 
 const CRITERIA_DATA = {
   areas: [
@@ -76,6 +76,39 @@ describe('flattenLessons', () => {
     expect(result).toHaveLength(3);
     expect(result[0].activity).toBe('Game A');
     expect(result[2].activity).toBe('Game B');
+  });
+});
+
+describe('physicalToRow', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('returns row with title, activity=Physical Play, byArea, type=physical', () => {
+    const row = physicalToRow({ title: 'Rope Rescue', criteria: ['cl1'] }, map, AREAS);
+    expect(row.title).toBe('Rope Rescue');
+    expect(row.activity).toBe('Physical Play');
+    expect(row.byArea['cl']).toEqual(['Speaking']);
+    expect(row.type).toBe('physical');
+  });
+  it('handles missing criteria', () => {
+    const row = physicalToRow({ title: 'Rope Rescue' }, map, AREAS);
+    expect(row.byArea['cl']).toEqual([]);
+    expect(row.type).toBe('physical');
+  });
+});
+
+describe('flattenPhysical', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('maps each file to a physical row', () => {
+    const files = [
+      { data: { title: 'Activity A', criteria: ['cl1'] } },
+      { data: { title: 'Activity B', criteria: ['md1'] } }
+    ];
+    const result = flattenPhysical(files, map, AREAS);
+    expect(result).toHaveLength(2);
+    expect(result[0].type).toBe('physical');
+    expect(result[1].activity).toBe('Physical Play');
+  });
+  it('returns empty array for empty input', () => {
+    expect(flattenPhysical([], map, AREAS)).toEqual([]);
   });
 });
 

@@ -47,9 +47,18 @@ export function renderFreePlay(freePlay) {
   return seeds.map(s => `<li style="padding:5px 0;">&#10023; ${s}</li>`).join('');
 }
 
-export function renderActivityHTML(activity, graphData) {
+export function renderActivityHTML(activity, graphData, criteriaMap = {}) {
   const competencyBadges = activity.competencies
     .map(c => `<span style="display:inline-block;background:#D5F5E3;color:#1E8449;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">${c.replace(/_/g, ' ')}</span>`)
+    .join('');
+
+  const criteriaArr = Array.isArray(activity.criteria) ? activity.criteria : [];
+  const criteriaBadges = criteriaArr
+    .map(id => {
+      const c = criteriaMap[id];
+      return c ? `<span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[${c.areaLabel}] ${c.label}</span>` : '';
+    })
+    .filter(Boolean)
     .join('');
 
   const routeHTML = renderRouteSteps(activity.route, activity.route_labels, graphData);
@@ -101,6 +110,11 @@ ul{list-style:none;padding:0;}
   <h2>Competencies</h2>
   <div>${competencyBadges}</div>
 </div>
+
+${criteriaBadges ? `<div class="card">
+  <h2>EYFS Criteria</h2>
+  <div>${criteriaBadges}</div>
+</div>` : ''}
 
 <div class="card">
   <h2>Key Movements</h2>

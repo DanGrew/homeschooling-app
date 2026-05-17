@@ -1,0 +1,6 @@
+[
+  { "file": "rope-rescue.json",        "activity": "Rope Rescue" },
+  { "file": "the-long-way-round.json", "activity": "The Long Way Round" },
+  { "file": "secret-passage.json",     "activity": "Secret Passage" },
+  { "file": "switchback.json",         "activity": "Switchback" }
+]

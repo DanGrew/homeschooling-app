@@ -20,6 +20,7 @@ td{padding:8px 12px;border:1px solid #e5e7eb;vertical-align:top;line-height:1.5;
 tr:nth-child(even) td{background:#fafafa;}
 .col-lesson{font-weight:600;color:#333;white-space:nowrap;}
 .col-activity{color:#888;white-space:nowrap;font-size:0.9em;}
+.row-physical .col-activity{color:#27AE60;}
 .glossary th:first-child{width:200px;}
 .glossary th:nth-child(2){width:80px;}
 .coverage th:first-child{width:160px;}
@@ -42,7 +43,7 @@ tr:nth-child(even) td{background:#fafafa;}
 </table>
 </div>
 
-<h2>Lesson Coverage</h2>
+<h2>Coverage</h2>
 <div class="table-wrap">
 <table class="coverage">
   <thead id="coverage-head"></thead>
@@ -101,6 +102,7 @@ function renderGlossary() {
 
 function buildCoverageRow(row) {
   var tr = document.createElement('tr');
+  if (row.type === 'physical') tr.classList.add('row-physical');
   tr.innerHTML = '<td class="col-lesson">' + row.title + '</td><td class="col-activity">' + row.activity + '</td>' +
     areas.map(function(area) { return '<td>' + row.byArea[area.id].join('<br>') + '</td>'; }).join('');
   return tr;
@@ -149,15 +151,23 @@ function attachActivity(entry) {
     .then(function(data) { return { lessons: data.lessons, activityLabel: entry.activity }; });
 }
 
+function attachPhysical(entry) {
+  return fetch('../../content/physical/activities/' + entry.file)
+    .then(function(r) { return r.json(); })
+    .then(function(data) { return { data: data }; });
+}
+
 async function init() {
-  var criteriaData = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
-  var manifest     = await fetch('../../content/lessons/index.json').then(function(r) { return r.json(); });
+  var criteriaData     = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
+  var manifest         = await fetch('../../content/lessons/index.json').then(function(r) { return r.json(); });
+  var physicalManifest = await fetch('../../content/physical/activities/index.json').then(function(r) { return r.json(); });
   areas = criteriaData.areas;
   var criterionMap = buildCriterionMap(criteriaData);
   buildColKeyFns();
   renderGlossary();
-  var files = await Promise.all(manifest.map(attachActivity));
-  rows = flattenLessons(files, criterionMap, areas);
+  var files         = await Promise.all(manifest.map(attachActivity));
+  var physicalFiles = await Promise.all(physicalManifest.map(attachPhysical));
+  rows = flattenLessons(files, criterionMap, areas).concat(flattenPhysical(physicalFiles, criterionMap, areas));
   applySort();
   renderCoverageHeader();
   renderBody();
