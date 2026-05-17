@@ -19,7 +19,7 @@
 #clock-container{cursor:pointer;border-radius:50%;}
 #digital{display:flex;gap:16px;align-items:center;}
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
-#digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
+#digital-24h{border-left:2px solid rgba(255,255,255,0.5);padding-left:16px;}
 #prompt{font-size:clamp(1em,3.5vw,1.4em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.6);text-align:center;padding:6px 12px;background:rgba(0,0,0,0.25);border-radius:10px;margin-top:4px;cursor:pointer;}
 #choice-panel{flex:1;display:flex;flex-direction:column;padding:12px 12px 12px 4px;gap:8px;justify-content:center;}
 #choice-grid{display:flex;flex-wrap:wrap;gap:8px;flex:1;align-content:center;}
@@ -47,7 +47,6 @@
         <div id="clock-container"></div>
         <div id="digital">
           <span id="digital-12h">--:-- --</span>
-          <span id="digital-sep">|</span>
           <span id="digital-24h">--:--</span>
         </div>
         <div id="prompt">Choose the right time</div>

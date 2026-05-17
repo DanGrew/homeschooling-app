@@ -29,7 +29,7 @@
 #clock-container{cursor:pointer;border-radius:50%;}
 #digital{display:flex;gap:16px;align-items:center;}
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
-#digital-sep{color:rgba(255,255,255,0.5);font-size:1.1em;}
+#digital-24h{border-left:2px solid rgba(255,255,255,0.5);padding-left:16px;}
 #preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
 .preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
@@ -55,7 +55,6 @@
         <div id="clock-container"></div>
         <div id="digital">
           <span id="digital-12h">--:-- --</span>
-          <span id="digital-sep">|</span>
           <span id="digital-24h">--:--</span>
         </div>
       </div>

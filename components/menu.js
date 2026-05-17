@@ -63,6 +63,14 @@
     document.addEventListener('click',function(){
       document.querySelectorAll('.nav-lesson-popout').forEach(function(p){p.style.display='none';});
     });
+    window.addEventListener('load',function(){
+      if(typeof window.__makeSpeakable==='function'){
+        window.__makeSpeakable(lsnBtn,'Lessons');
+        lsnPopout.querySelectorAll('.nav-lesson-item').forEach(function(item){
+          window.__makeSpeakable(item,function(){return item.textContent;});
+        });
+      }
+    });
     lsnContainer.appendChild(lsnBtn);
     lsnContainer.appendChild(lsnPopout);
     bar.appendChild(lsnContainer);
