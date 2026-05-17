@@ -14,8 +14,8 @@
   100% { filter: drop-shadow(0 0 4px gold);  transform: scale(1); }
 }
 
-.speakable:not(button) {
-  filter: drop-shadow(0 0 12px rgba(150,80,220,0.7));
+.speakable:not(button):not(.nav-btn) {
+  text-shadow: 0 0 10px rgba(150,80,220,0.85);
 }
 
 .speakable--tap {

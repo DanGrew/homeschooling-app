@@ -31,7 +31,7 @@
   <div class="chooser-wrap">
     <div class="puzzle-cards" id="puzzle-cards"></div>
     <div id="grid-picker">
-      <div class="grid-picker-prompt">Choose difficulty</div>
+      <div class="grid-picker-prompt" id="grid-picker-prompt">Choose difficulty</div>
       <div class="grid-btns" id="grid-btns"></div>
     </div>
   </div>
@@ -56,6 +56,7 @@ function makeGridBtn(p, g, label) {
     sessionStorage.setItem('puzzle-grid', g);
     location.href = 'play.html';
   });
+  if(typeof window.__makeSpeakable==='function') window.__makeSpeakable(btn, label);
   return btn;
 }
 
@@ -78,6 +79,7 @@ function initChooser(puzzles) {
     card.className = 'puzzle-card';
     card.innerHTML = `<img src="../../../assets/puzzle/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
     card.addEventListener('click', () => selectPuzzle(p, card, picker, btnsEl));
+    if(typeof window.__makeSpeakable==='function') window.__makeSpeakable(card, p.name);
     cardsEl.appendChild(card);
   });
   [() => {}, () => selectPuzzle(puzzles[0], cardsEl.firstElementChild, picker, btnsEl)][+(puzzles.length === 1)]();
@@ -89,7 +91,9 @@ fetch('../../../content/puzzle/manifest.json')
 </script>
 <script>window.ADULT_PROMPTS_ACTIVITY='puzzle';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+var _prompt=document.getElementById('grid-picker-prompt');
+if(_prompt) makeSpeakable(_prompt,'Choose difficulty');</script>
 </body>
 </html>

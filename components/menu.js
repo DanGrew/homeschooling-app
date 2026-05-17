@@ -227,7 +227,7 @@
   });
   window.addEventListener('load',function(){
     if(typeof window.__makeSpeakable==='function'){
-      window.__makeSpeakable(expandBtn,function(){return navExpanded?'Close':'Open';});
+      window.__makeSpeakable(expandBtn,function(){return navExpanded?'Open':'Close';});
     }
   });
   bar.appendChild(expandBtn);
