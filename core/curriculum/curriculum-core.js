@@ -29,7 +29,7 @@ function buildByArea(criteria, criterionMap, areas) {
 }
 
 function lessonToRow(lesson, activityLabel, criterionMap, areas) {
-  return { title: lesson.title, activity: activityLabel, byArea: buildByArea(lessonCriteria(lesson), criterionMap, areas) };
+  return { title: lesson.title, activity: activityLabel, byArea: buildByArea(lessonCriteria(lesson), criterionMap, areas), type: 'lesson' };
 }
 
 function flattenLessons(files, criterionMap, areas) {

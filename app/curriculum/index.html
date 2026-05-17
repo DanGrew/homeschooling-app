@@ -100,9 +100,11 @@ function renderGlossary() {
   areas.forEach(function(area) { gb.appendChild(renderGlossaryRow(area)); });
 }
 
+var ROW_CLASS = { 'lesson': '', 'physical': 'row-physical' };
+
 function buildCoverageRow(row) {
   var tr = document.createElement('tr');
-  if (row.type === 'physical') tr.classList.add('row-physical');
+  tr.className = ROW_CLASS[row.type];
   tr.innerHTML = '<td class="col-lesson">' + row.title + '</td><td class="col-activity">' + row.activity + '</td>' +
     areas.map(function(area) { return '<td>' + row.byArea[area.id].join('<br>') + '</td>'; }).join('');
   return tr;
