@@ -47,6 +47,7 @@ function findUnwiredText(page, excludedIds) {
     for (const el of candidates) {
       if (el.classList.contains('speakable')) continue;
       if (el.closest('.speakable')) continue;
+      if (el.closest('[data-speakable-container]')) continue;
       if (getComputedStyle(el).display === 'none') continue;
       if (getComputedStyle(el).visibility === 'hidden') continue;
       if (el.id && excluded.includes(el.id)) continue;

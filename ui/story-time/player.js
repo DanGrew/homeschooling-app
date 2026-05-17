@@ -1,6 +1,6 @@
 import { activeIndex } from '../../core/story-time/story-time-core.js';
 import { speak } from '../../components/speech/speech-ui.js';
-import '../../components/speech/speakable.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 
 (function () {
   var storyParam = new URLSearchParams(window.location.search).get('story');
@@ -55,7 +55,12 @@ import '../../components/speech/speakable.js';
     var DICT_BASE = '../../../content/dictionary/entries/';
     var dictOverlay = document.getElementById('dict-overlay');
 
+    var playbtn = document.getElementById('playbtn');
+    var stopbtn = document.getElementById('stopbtn');
+    makeSpeakable(playbtn, function () { return playbtn.textContent; });
+    makeSpeakable(stopbtn, 'Stop');
     document.querySelectorAll('.speed-btn').forEach(function (btn) {
+      makeSpeakable(btn, btn.textContent);
       btn.addEventListener('click', function () {
         currentSpeed = parseFloat(this.dataset.speed);
         audio.playbackRate = currentSpeed;

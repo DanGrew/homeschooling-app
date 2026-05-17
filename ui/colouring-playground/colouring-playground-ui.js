@@ -19,6 +19,8 @@ export function initColouringPlayground() {
   var currentPic=null,paginator,filled=0,total=0,popBase=null;
   var shadePop=document.getElementById('shade-pop');
   var refToggleEl=document.getElementById('ref-toggle');
+  makeSpeakable(refToggleEl,function(){return refToggleEl.textContent;});
+  makeSpeakable(document.getElementById('ref-label'),'Reference');
   var mixAEl=document.getElementById('mix-a');
   var mixBEl=document.getElementById('mix-b');
   var mixResultEl=document.getElementById('mix-result');
