@@ -26,24 +26,12 @@ function relPath(abs) {
   return abs.replace(ROOT + path.sep, '').replace(/\\/g, '/');
 }
 
-function contractName(rel) {
-  // app/activities/simulator/index.html  -> simulator
-  // app/activities/piano/game.html       -> piano-game
-  // app/worksheets/colouring-sheets/index.html -> colouring-sheets
-  // app/curriculum/index.html            -> curriculum
-  // app/index.html                       -> index
-  // app/attributions.html                -> attributions
-  let stripped = rel.replace(/^app\//, '');
-  stripped = stripped.replace(/^(activities|worksheets)\//, '');
-  const parts = stripped.split('/');
-  if (parts.length === 1) return path.basename(parts[0], '.html');
-  const dir  = parts[0];
-  const file = path.basename(parts[parts.length - 1], '.html');
-  return file === 'index' ? dir : `${dir}-${file}`;
-}
-
 function loadOptOuts(abs, rel) {
-  const contractPath = path.join(ROOT, 'content', 'contracts', contractName(rel) + '.json');
+  // Mirror app/ path directly into content/contracts/, replacing .html with .json.
+  // e.g. app/physical/activities/rope-rescue/index.html
+  //   -> content/contracts/physical/activities/rope-rescue/index.json
+  const mirrored = rel.replace(/^app\//, '').replace(/\.html$/, '.json');
+  const contractPath = path.join(ROOT, 'content/contracts', mirrored);
   if (!fs.existsSync(contractPath)) return {};
   try {
     return JSON.parse(fs.readFileSync(contractPath, 'utf8'))['opt-outs'] || {};

@@ -11,7 +11,8 @@
     "check:contracts": "node scripts/contracts/run.js",
     "validate:json": "node scripts/validate-schemas.js reports/validate-json.txt",
     "audit:zorder": "node scripts/check-colouring-zorder.js",
-    "sync:zorder": "node scripts/sync-colouring-zorder-from-svg.js"
+    "sync:zorder": "node scripts/sync-colouring-zorder-from-svg.js",
+    "render:physical": "node scripts/render-physical-activity.js"
   },
   "devDependencies": {
     "ajv": "^8.17.1",

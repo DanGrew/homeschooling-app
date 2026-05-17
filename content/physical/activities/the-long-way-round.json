@@ -1,0 +1,117 @@
+{
+  "title": "The Long Way Round",
+  "archetype": "Route Challenge",
+  "competencies": ["balance", "motor_planning", "sequencing"],
+  "key_movements": [
+    "ladder climb",
+    "rope grid traverse",
+    "rope grid descent",
+    "walk outside",
+    "walk inside",
+    "steps up",
+    "slide"
+  ],
+  "route": ["G1", "A4", "A3", "G2", "G7", "G3", "G4", "A5", "G5"],
+  "route_labels": [
+    "Ladder base",
+    "Ladder mid",
+    "Rope grid mid",
+    "Rope grid base",
+    "Outside corner",
+    "Inside entrance",
+    "Inside platform",
+    "Slide platform",
+    "Slide exit"
+  ],
+  "setup": [
+    "Spot marker at ladder base (start) and slide exit (finish)",
+    "Walk the route yourself first",
+    "Stand near the rope grid descent on first run"
+  ],
+  "activity_flow": [
+    {
+      "step": 1,
+      "instruction": "Start at ladder base. Child looks at ladder.",
+      "prompt": "\"Where do you think it goes?\""
+    },
+    {
+      "step": 2,
+      "instruction": "Child climbs ladder to ladder mid. Don't prompt mid-climb.",
+      "prompt": "Wait. Only act if child signals distress."
+    },
+    {
+      "step": 3,
+      "instruction": "Pause at ladder mid. Child spots the rope grid.",
+      "prompt": "\"What can you see? This part is wobbly — how will you hold on?\""
+    },
+    {
+      "step": 4,
+      "instruction": "Traverse rope grid laterally to rope grid mid.",
+      "prompt": "\"Where's your next hand going?\""
+    },
+    {
+      "step": 5,
+      "instruction": "Descend rope grid to ground. Face apparatus, one foot at a time.",
+      "prompt": "\"Face the ropes. Come down slow.\""
+    },
+    {
+      "step": 6,
+      "instruction": "Walk outside: rope grid base → outside corner → inside entrance.",
+      "prompt": "Ask child to recall where they've been. What comes next?"
+    },
+    {
+      "step": 7,
+      "instruction": "Enter inside the apparatus to inside platform.",
+      "prompt": "\"Does it feel different in here?\""
+    },
+    {
+      "step": 8,
+      "instruction": "Climb steps inside to slide platform.",
+      "prompt": "\"Can you find the top?\""
+    },
+    {
+      "step": 9,
+      "instruction": "Child pauses, then slides to slide exit.",
+      "prompt": "\"Fast or slow? You choose.\""
+    },
+    {
+      "step": 10,
+      "instruction": "Finish at slide exit.",
+      "prompt": "\"Can you remember every part of the journey?\""
+    }
+  ],
+  "adult_guidance": [
+    {
+      "headline": "Narrate, don't catch",
+      "detail": "Stay close on the rope grid descent but spot with eyes. Let the child find their own footing."
+    },
+    {
+      "headline": "Say the words before they move",
+      "detail": "Over, across, through, up, down, inside, outside. Position language before the movement, not as a correction after."
+    },
+    {
+      "headline": "Pause cue, not warning",
+      "detail": "If they rush: \"Stop — what's your plan?\" Builds motor planning without implying danger."
+    },
+    {
+      "headline": "Walks are load-bearing",
+      "detail": "Ground sections are sequencing time. Don't skip them. Ask what comes next."
+    },
+    {
+      "headline": "Celebrate the decision, not the climb",
+      "detail": "\"I noticed you slowed down on the ropes\" lands better than \"good climbing.\""
+    }
+  ],
+  "variations": [
+    "Reverse: start at slide exit, climb steps, go back through in opposite order",
+    "Add crawl: detour through crawl hole between inside platform and steps",
+    "Memory run: adult names the route once, then stays silent — child leads"
+  ],
+  "free_play": [
+    "Make your own long way round",
+    "Use at least one climb and one walk",
+    "Start and end at different spots",
+    "Find the sneakiest route"
+  ],
+  "why_it_works": "The route mixes a ladder ascent, rope traverse, rope descent, ground walk, enclosed transition, and slide — no two consecutive movements use the same motor pattern, forcing continuous motor planning. The walk sections require the child to hold the full route in memory without apparatus cues, making sequencing cognitive as well as physical. The adult's role is to make the child's planning visible through language, not to remove the need for it."
+}

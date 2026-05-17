@@ -1,0 +1,6 @@
+{
+  "opt-outs": {
+    "nav-bar": "adult-facing hub page — no child nav-bar or speech required",
+    "speakable": "adult-facing hub page — no child nav-bar or speech required"
+  }
+}

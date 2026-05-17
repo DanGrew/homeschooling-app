@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Physical Play</title>
+<link rel="stylesheet" href="../../styles/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#F0FFF4;display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:32px 16px 48px;}
+h1{font-size:3em;color:#1E8449;margin-bottom:8px;}
+.subtitle{color:#555;margin-bottom:40px;font-size:1em;}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:180px;height:180px;border-radius:24px;text-decoration:none;color:#333;font-family:inherit;font-weight:bold;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.12);transition:transform 0.15s,box-shadow 0.15s;background:#fff;padding:0;}
+.tile:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(0,0,0,0.18);}
+.home{color:#27AE60;margin-bottom:24px;align-self:flex-start;}
+.empty{color:#aaa;font-style:italic;margin-top:32px;}
+</style>
+</head>
+<body>
+<a class="home" href="../index.html">&#127968; Home</a>
+<h1>Physical Play</h1>
+<p class="subtitle">Jungle gym activities — adult guided</p>
+<div class="tiles">
+  <a class="tile" href="activities/rope-rescue/" style="background:#F0FFF4;">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
+      <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:40px;">
+        <rect x="10" y="30" width="40" height="4" rx="2" fill="#A9DFBF"/>
+        <rect x="20" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
+        <rect x="36" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
+        <rect x="22" y="10" width="16" height="10" rx="3" fill="#52BE80"/>
+        <circle cx="30" cy="6" r="4" fill="#82E0AA"/>
+      </svg>
+      <div style="text-align:center;"><span style="font-size:0.7em;background:#D5F5E3;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">grip strength</span><span style="font-size:0.7em;background:#D6EAF8;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">confidence</span></div>
+    </div>
+    <span style="padding:0 8px 12px;text-align:center;font-size:0.95em;">Rope Rescue</span>
+  </a>
+  <a class="tile" href="activities/the-long-way-round/" style="background:#F0FFF4;">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
+      <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:40px;">
+        <rect x="10" y="30" width="40" height="4" rx="2" fill="#A9DFBF"/>
+        <rect x="20" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
+        <rect x="36" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
+        <rect x="22" y="10" width="16" height="10" rx="3" fill="#52BE80"/>
+        <circle cx="30" cy="6" r="4" fill="#82E0AA"/>
+      </svg>
+      <div style="text-align:center;"><span style="font-size:0.7em;background:#D5F5E3;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">balance</span><span style="font-size:0.7em;background:#D6EAF8;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">motor planning</span></div>
+    </div>
+    <span style="padding:0 8px 12px;text-align:center;font-size:0.95em;">The Long Way Round</span>
+  </a>
+</div>
+</body>
+</html>
