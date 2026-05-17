@@ -1,5 +1,5 @@
 (function () {
-  var activity = window.ADULT_PROMPTS_ACTIVITY;
+  var activity = window.ACTIVITY_ID;
 
   var idx = 0;
   var prompts = [];

@@ -13,7 +13,8 @@
     "validate:json": "node scripts/validate-schemas.js reports/validate-json.txt",
     "audit:zorder": "node scripts/check-colouring-zorder.js",
     "sync:zorder": "node scripts/sync-colouring-zorder-from-svg.js",
-    "render:physical": "node scripts/render-physical-activity.js"
+    "render:physical": "node scripts/render-physical-activity.js",
+    "check:lesson-json-reachable": "node scripts/check-lesson-json-reachable.js"
   },
   "devDependencies": {
     "ajv": "^8.17.1",
