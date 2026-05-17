@@ -29,7 +29,7 @@ function buildByArea(criteria, criterionMap, areas) {
 }
 
 function lessonToRow(lesson, activityLabel, criterionMap, areas) {
-  return { title: lesson.title, activity: activityLabel, byArea: buildByArea(lessonCriteria(lesson), criterionMap, areas) };
+  return { title: lesson.title, activity: activityLabel, byArea: buildByArea(lessonCriteria(lesson), criterionMap, areas), type: 'lesson' };
 }
 
 function flattenLessons(files, criterionMap, areas) {
@@ -40,6 +40,16 @@ function flattenLessons(files, criterionMap, areas) {
   return result;
 }
 
+function physicalToRow(activityData, criterionMap, areas) {
+  var criteria = Array.isArray(activityData.criteria) ? activityData.criteria : [];
+  return { title: activityData.title, activity: 'Physical Play',
+           byArea: buildByArea(criteria, criterionMap, areas), type: 'physical' };
+}
+
+function flattenPhysical(files, criterionMap, areas) {
+  return files.map(function(f) { return physicalToRow(f.data, criterionMap, areas); });
+}
+
 function defaultCompare(a, b) {
   return (a.activity + '\x00' + a.title).localeCompare(b.activity + '\x00' + b.title);
 }
@@ -48,4 +58,4 @@ function colCompare(a, b, sortAsc, colKeyFns, sortCol) {
   return COMPARE_DIR[String(sortAsc)](colKeyFns[sortCol](a), colKeyFns[sortCol](b));
 }
 
-if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, defaultCompare, colCompare };
+if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, defaultCompare, colCompare };

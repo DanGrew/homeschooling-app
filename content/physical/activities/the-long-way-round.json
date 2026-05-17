@@ -2,6 +2,7 @@
   "title": "The Long Way Round",
   "archetype": "Route Challenge",
   "competencies": ["balance", "motor_planning", "sequencing"],
+  "criteria": ["pd.gross-motor-climb", "pd.gross-motor-balance", "pd.spatial-awareness", "cl.sequencing-language", "psed.self-regulation"],
   "key_movements": [
     "ladder climb",
     "rope grid traverse",

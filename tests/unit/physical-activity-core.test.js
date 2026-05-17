@@ -175,6 +175,37 @@ describe('renderActivityHTML', () => {
   })
 })
 
+describe('renderActivityHTML with criteriaMap', () => {
+  const criteriaMap = {
+    'pd.gross-motor-climb': { label: 'Climbing apparatus', areaLabel: 'PD' },
+    'psed.self-regulation': { label: 'Self-regulation', areaLabel: 'PSED' }
+  }
+  const activityWithCriteria = { ...MOCK_ACTIVITY, criteria: ['pd.gross-motor-climb', 'psed.self-regulation'] }
+
+  it('shows EYFS Criteria section when criteriaMap provided', () => {
+    const html = renderActivityHTML(activityWithCriteria, MOCK_GRAPH, criteriaMap)
+    expect(html).toContain('EYFS Criteria')
+    expect(html).toContain('Climbing apparatus')
+    expect(html).toContain('Self-regulation')
+  })
+
+  it('includes areaLabel prefix on each badge', () => {
+    const html = renderActivityHTML(activityWithCriteria, MOCK_GRAPH, criteriaMap)
+    expect(html).toContain('[PD]')
+    expect(html).toContain('[PSED]')
+  })
+
+  it('omits criteria section when activity has no criteria', () => {
+    const html = renderActivityHTML(MOCK_ACTIVITY, MOCK_GRAPH, criteriaMap)
+    expect(html).not.toContain('EYFS Criteria')
+  })
+
+  it('omits criteria section when criteriaMap is empty', () => {
+    const html = renderActivityHTML(activityWithCriteria, MOCK_GRAPH, {})
+    expect(html).not.toContain('EYFS Criteria')
+  })
+})
+
 describe('renderIndexHTML', () => {
   it('includes activity title as link text', () => {
     const html = renderIndexHTML([{ name: 'test-act', activity: MOCK_ACTIVITY }])

@@ -2,6 +2,7 @@
   "title": "Rope Rescue",
   "archetype": "Rescue Mission",
   "competencies": ["grip_strength", "confidence", "bilateral_integration"],
+  "criteria": ["pd.gross-motor-climb", "pd.bilateral-coord", "psed.independence", "psed.self-regulation"],
   "key_movements": [
     "rope grid ascent",
     "rope to ladder lateral transfer",

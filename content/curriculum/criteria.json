@@ -101,13 +101,19 @@
       "id": "pd",
       "label": "Physical Development",
       "shortLabel": "PD",
-      "covers": "Fine and gross motor skills, physical control",
+      "covers": "Fine motor, gross motor, climbing, balance, core stability, body awareness",
       "criteria": [
         { "id": "pd.fine-motor",          "label": "Fine motor" },
         { "id": "pd.fine-motor-circular", "label": "Fine motor (circular)" },
         { "id": "pd.numeral-formation",   "label": "Numeral formation" },
         { "id": "pd.tool-use",            "label": "Tool use (pencils, scissors, brushes)" },
-        { "id": "pd.gross-motor",         "label": "Gross motor & physical play" }
+        { "id": "pd.gross-motor",         "label": "Gross motor & physical play" },
+        { "id": "pd.gross-motor-climb",   "label": "Climbing apparatus" },
+        { "id": "pd.gross-motor-balance", "label": "Balance (static & dynamic)" },
+        { "id": "pd.core-stability",      "label": "Core stability & trunk control" },
+        { "id": "pd.bilateral-coord",     "label": "Bilateral coordination" },
+        { "id": "pd.spatial-awareness",   "label": "Spatial awareness & body schema" },
+        { "id": "pd.crossing-midline",    "label": "Crossing the midline" }
       ]
     }
   ]
