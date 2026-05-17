@@ -42,6 +42,9 @@ else
 fi
 
 
+echo "[pre-push] lesson json reachable..."
+node scripts/check-lesson-json-reachable.js || fail "lesson-json-reachable"
+
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"
 
