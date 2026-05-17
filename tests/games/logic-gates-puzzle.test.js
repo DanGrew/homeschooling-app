@@ -137,6 +137,16 @@ test('paginator next button advances to next puzzle', async ({ page }) => {
   expect(goalAfter).not.toBe(goalBefore);
 });
 
+test('gate pills are clickable and do not throw', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.goto(URL);
+  await waitForPuzzle(page);
+  await page.waitForSelector('[data-gate-pill]');
+  await page.locator('[data-gate-pill]').first().click();
+  expect(errors).toHaveLength(0);
+});
+
 test('wire colour updates after toggle', async ({ page }) => {
   await page.goto(URL);
   await waitForPuzzle(page);

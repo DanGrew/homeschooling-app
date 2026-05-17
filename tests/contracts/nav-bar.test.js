@@ -18,4 +18,14 @@ for (const pagePath of NAV_BAR_PAGES) {
     const width = await page.locator('.nav-bar').evaluate(el => el.getBoundingClientRect().width);
     expect(width).toBe(56);
   });
+
+  test(`${pagePath} — nav-bar width is 160px expanded`, async ({ page }) => {
+    await page.goto(pagePath);
+    await page.waitForLoadState('networkidle');
+    await page.locator('.nav-bar .nav-btn').last().click();
+    await page.locator('.nav-bar.expanded').waitFor();
+    await page.waitForTimeout(300);
+    const width = await page.locator('.nav-bar').evaluate(el => el.getBoundingClientRect().width);
+    expect(width).toBe(160);
+  });
 }

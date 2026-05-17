@@ -76,6 +76,9 @@ export function startFindPhase(onReset){
     row.className='find-row';
     row.innerHTML='<span class="find-icon">'+it.icon+'</span><span class="find-name">'+escHtml(it.name)+'</span><span class="find-tick"></span><button class="btn-got">Got it! ✓</button><button class="btn-cross">Not here ✕</button><button class="btn-undo">Undo</button>';
     makeSpeakable(row.querySelector('.find-name'),it.name);
+    makeSpeakable(row.querySelector('.btn-got'),'Got it');
+    makeSpeakable(row.querySelector('.btn-cross'),'Not here');
+    makeSpeakable(row.querySelector('.btn-undo'),'Undo');
     row.querySelector('.btn-got').onclick=function(){row.classList.add('found');row.querySelector('.find-tick').textContent='✅';found++;checkDone();};
     row.querySelector('.btn-cross').onclick=function(){row.classList.add('crossed');row.querySelector('.find-tick').textContent='✕';crossed++;checkDone();};
     row.querySelector('.btn-undo').onclick=function(){

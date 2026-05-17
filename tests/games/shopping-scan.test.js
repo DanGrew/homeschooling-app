@@ -41,6 +41,13 @@ test('home nav button points to games index', async ({ page }) => {
   expect(href).toBe('/homeschooling-app/app/games/')
 })
 
+test('not here button is speakable', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/shopping-scan/')
+  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#btn-scan-it').click()
+  await expect(page.locator('.btn-not-here').first()).toHaveClass(/speakable/)
+})
+
 test('not here button crosses an item', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
   await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()

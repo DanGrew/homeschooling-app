@@ -185,7 +185,7 @@
     var links=JSON.parse(bar.dataset.links);
     var isLesson=bar.dataset.linksIcon==='lesson';
     var linksIconHtml=isLesson?'&#128218;':'&#127918;';
-    var linksLabel=isLesson?'Related':'Games';
+    var linksLabel=isLesson?'Lessons':'Games';
     var lnkContainer=document.createElement('div');
     lnkContainer.className='nav-btn-container';
     if(links.length===1){
