@@ -1,4 +1,5 @@
 var current, locked;
+var DO_SPEAK = { 'true': function(btn, text) { window.__makeSpeakable(btn, text); }, 'false': function() {} };
 
 function newRound() {
   locked = false;
@@ -16,7 +17,7 @@ function newRound() {
     btn.dataset.type = o.type;
     btn.style.cssText = 'background:none;border:4px solid rgba(0,0,0,0.08);border-radius:18px;padding:8px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;';
     btn.innerHTML = svg(o.type, o.col, 'clamp(60px,13vmin,96px)');
-    if (typeof window.__makeSpeakable === 'function') window.__makeSpeakable(btn, (colourNames[o.col] || o.col) + ' ' + o.type);
+    DO_SPEAK[String(typeof window.__makeSpeakable === 'function')](btn, colourNames[o.col] + ' ' + o.type);
     optContainer.appendChild(btn);
   });
 }
@@ -42,6 +43,6 @@ document.getElementById('options').addEventListener('click', function(e) {
 newRound();
 window.addEventListener('load', function() {
   document.querySelectorAll('#options button:not(.speakable)').forEach(function(btn) {
-    if (typeof window.__makeSpeakable === 'function') window.__makeSpeakable(btn, (colourNames[btn.dataset.col] || btn.dataset.col) + ' ' + btn.dataset.type);
+    DO_SPEAK[String(typeof window.__makeSpeakable === 'function')](btn, colourNames[btn.dataset.col] + ' ' + btn.dataset.type);
   });
 });

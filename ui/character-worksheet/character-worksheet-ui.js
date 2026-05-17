@@ -90,6 +90,7 @@ export function init() {
   makeSpeakable(document.getElementById('rows-dec'), 'Fewer rows');
   makeSpeakable(document.getElementById('rows-inc'), 'More rows');
 
+  const SIZE_LABELS = { '80': 'Small', '120': 'Medium', '180': 'Large' };
   document.querySelectorAll('.size-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
@@ -97,8 +98,7 @@ export function init() {
       state.cellSize = parseInt(btn.dataset.size);
       render();
     });
-    const labels = { '80': 'Small', '120': 'Medium', '180': 'Large' };
-    makeSpeakable(btn, labels[btn.dataset.size] || btn.textContent);
+    makeSpeakable(btn, SIZE_LABELS[btn.dataset.size]);
   });
 
   let debounce;

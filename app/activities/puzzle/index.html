@@ -38,6 +38,7 @@
 </div>
 <script src="../../../components/menu.js" defer></script>
 <script>
+var DO_SPEAK={'true':function(el,text){window.__makeSpeakable(el,text);},'false':function(){}};
 const LABELS = {
   1: ['Play'],
   2: ['Easy', 'Hard'],
@@ -56,7 +57,7 @@ function makeGridBtn(p, g, label) {
     sessionStorage.setItem('puzzle-grid', g);
     location.href = 'play.html';
   });
-  if(typeof window.__makeSpeakable==='function') window.__makeSpeakable(btn, label);
+  DO_SPEAK[String(typeof window.__makeSpeakable==='function')](btn, label);
   return btn;
 }
 
@@ -79,7 +80,7 @@ function initChooser(puzzles) {
     card.className = 'puzzle-card';
     card.innerHTML = `<img src="../../../assets/puzzle/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
     card.addEventListener('click', () => selectPuzzle(p, card, picker, btnsEl));
-    if(typeof window.__makeSpeakable==='function') window.__makeSpeakable(card, p.name);
+    DO_SPEAK[String(typeof window.__makeSpeakable==='function')](card, p.name);
     cardsEl.appendChild(card);
   });
   [() => {}, () => selectPuzzle(puzzles[0], cardsEl.firstElementChild, picker, btnsEl)][+(puzzles.length === 1)]();

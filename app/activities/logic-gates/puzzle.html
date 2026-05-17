@@ -74,9 +74,9 @@ buildSimpleFilterBar([
 }, 'all');
 makeSpeakable(document.getElementById('btn-reset'), 'Reset');
 var _goalEl=document.getElementById('goal-text');
-if(_goalEl) makeSpeakable(_goalEl,function(){return _goalEl.textContent;});
+[_goalEl].filter(Boolean).forEach(function(el){makeSpeakable(el,function(){return el.textContent;});});
 document.querySelectorAll('#goal-banner span:not(#goal-text)').forEach(function(s){
-  if(s.textContent.trim()) makeSpeakable(s,s.textContent.trim());
+  [s.textContent.trim()].filter(Boolean).forEach(function(t){makeSpeakable(s,t);});
 });
 
 Promise.all([
