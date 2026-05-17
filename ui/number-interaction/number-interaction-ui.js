@@ -119,6 +119,7 @@ export function change(side, delta) {
   bCount = result.newB;
   render();
   [1].filter(() => result.changed).forEach(() => { guidanceEvent(SIDE_EVT[side] + DELTA_EVT[String(delta > 0)]); });
+  return { changed: result.changed, wasCounting: wasCounting };
 }
 
 function countSpeak(text, onDone) {

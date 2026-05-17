@@ -42,6 +42,28 @@ function check(doc, optOuts = {}) {
     errors.push('Missing .game-area sibling — content must be wrapped in <div class="game-area">');
   }
 
+  if (bar.hasAttribute('style')) {
+    errors.push('.nav-bar must not have an inline style attribute — use style.css only');
+  }
+
+  const OVERRIDE_PROPS = ['width', 'padding', 'box-sizing', 'min-width', 'max-width'];
+  doc.querySelectorAll('style').forEach(function(styleEl) {
+    var text = styleEl.textContent || '';
+    var ruleRe = /([^{]+)\{([^}]*)\}/g;
+    var match;
+    while ((match = ruleRe.exec(text)) !== null) {
+      var selector = match[1].trim();
+      var decls = match[2];
+      if (!/\.nav-bar/.test(selector)) continue;
+      OVERRIDE_PROPS.forEach(function(prop) {
+        var propRe = new RegExp('(?:^|;)\\s*' + prop + '\\s*:');
+        if (propRe.test(decls)) {
+          errors.push('Page <style> must not override .nav-bar ' + prop + ' (selector: "' + selector + '") — use style.css only');
+        }
+      });
+    }
+  });
+
   return errors;
 }
 
