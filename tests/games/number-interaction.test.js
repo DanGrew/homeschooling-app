@@ -186,6 +186,15 @@ test('labels show same when counts are equal and non-zero', async ({ page }) => 
 
 // --- out-of-bounds audio suppression ---
 
+test('change invokes onChanged callback when count changes', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  const wasCounting = await page.evaluate(() => new Promise(resolve => {
+    window.change('a', 1, (wc) => resolve(wc));
+  }))
+  expect(wasCounting).toBe(false)
+})
+
 test('change has no effect when already at zero', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/number-interaction/')
   await ready(page)
