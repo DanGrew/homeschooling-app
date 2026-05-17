@@ -1,7 +1,9 @@
 var DO_SPEAK = {'true':function(el,t){window.__makeSpeakable(el,t);},'false':function(){}};
+var MAYBE_SEP = {'true':addSeparator,'false':function(){}};
 
-function buildSection(config, container) {
+function buildSection(config, container, idx) {
   const section = document.createElement('div');
+  section.id = 'sandbox-station-' + idx;
   section.style.cssText = 'padding:0 16px;';
   const heading = document.createElement('h2');
   heading.textContent = config.label + ' gate';
@@ -33,12 +35,10 @@ function init() {
   fetch('../../../content/logic-gates/sandbox.json?v=2')
     .then(function(r) { return r.json(); })
     .then(function(stations) {
-      function addSeparatorAndBuild(config) {
-        addSeparator(container);
-        buildSection(config, container);
-      }
-      stations.slice(0, 1).forEach(function(config) { buildSection(config, container); });
-      stations.slice(1).forEach(addSeparatorAndBuild);
+      stations.forEach(function(config, i) {
+        MAYBE_SEP[String(i > 0)](container);
+        buildSection(config, container, i);
+      });
     })
     .catch(function(err) {
       container.textContent = 'Failed to load stations';

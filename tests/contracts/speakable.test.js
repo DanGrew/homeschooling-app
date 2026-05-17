@@ -61,21 +61,21 @@ function findUnwiredText(page, excludedIds) {
 }
 
 // SVG elements that haven't been made speakable (directly or via ancestor).
-// excludedIds: parent element IDs declared in the page's opt-out profile.
-function findUnwiredSvgs(page, excludedIds) {
-  return page.evaluate((excluded) => {
+// Returns flat array of parent id/class strings (one entry per unwired SVG).
+function findUnwiredSvgs(page) {
+  return page.evaluate(() => {
     const results = [];
     for (const svg of document.querySelectorAll('svg')) {
       if (getComputedStyle(svg).display === 'none') continue;
       if (getComputedStyle(svg).visibility === 'hidden') continue;
       if (svg.closest('.speakable')) continue;
       if (svg.closest('[data-speakable-container]')) continue;
+      if (svg.querySelector('#speakable-glow')) continue;
       const parent = svg.parentElement;
-      if (parent?.id && excluded.includes(parent.id)) continue;
       results.push(parent?.id || parent?.className || '(unknown)');
     }
     return results;
-  }, excludedIds);
+  });
 }
 
 for (const { pagePath, profile } of PAGES) {
@@ -103,15 +103,41 @@ for (const { pagePath, profile } of PAGES) {
   });
 
   test(`${pagePath} — all svgs speakable`, async ({ page }) => {
-    if (profile['speakable-svg'] === true) return;
-
     await page.goto(pagePath);
     await page.waitForLoadState('networkidle');
 
-    const speakableSvgProfile = profile['speakable-svg'];
-    const excludedSvgIds = Array.isArray(speakableSvgProfile) ? speakableSvgProfile : [];
-    const unwired = await findUnwiredSvgs(page, excludedSvgIds);
+    const allUnwired = await findUnwiredSvgs(page);
+    const exclusions = profile['speakable-svg'] || {};
+    const patternRe = Object.fromEntries(
+      Object.keys(exclusions).map(k => [k, new RegExp('^' + k.replace(/\*/g, '.*') + '$')])
+    );
+    function matchKey(id) {
+      return Object.keys(patternRe).find(k => patternRe[k].test(id));
+    }
 
-    expect(unwired, `Unwired SVGs in ${pagePath}`).toEqual([]);
+    const errors = [];
+    const actualCounts = {};
+    for (const parentId of allUnwired) {
+      const key = matchKey(parentId);
+      if (key) {
+        actualCounts[parentId] = (actualCounts[parentId] || 0) + 1;
+      } else {
+        errors.push(`unwired: ${parentId}`);
+      }
+    }
+    for (const [pattern, declared] of Object.entries(exclusions)) {
+      const re = patternRe[pattern];
+      if (!pattern.includes('*')) {
+        const actual = actualCounts[pattern] || 0;
+        if (actual !== declared) errors.push(`${pattern}: declared ${declared}, found ${actual}`);
+      } else {
+        const matched = Object.entries(actualCounts).filter(([id]) => re.test(id));
+        for (const [id, actual] of matched) {
+          if (actual !== declared) errors.push(`${id}: declared ${declared}, found ${actual}`);
+        }
+      }
+    }
+
+    expect(errors, `SVG violations in ${pagePath}`).toEqual([]);
   });
 }
