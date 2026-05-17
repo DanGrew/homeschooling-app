@@ -27,6 +27,10 @@ const ACTIVITY_PAGES = [
   '/homeschooling-app/app/activities/shopping-scan/',
   '/homeschooling-app/app/activities/word-lesson/',
   '/homeschooling-app/app/activities/word-match/',
+  // Worksheets are adult-facing tools — speakable contract does not apply
+];
+
+const WORKSHEET_PAGES = [
   '/homeschooling-app/app/worksheets/character-worksheet/',
   '/homeschooling-app/app/worksheets/colouring-sheets/',
 ];

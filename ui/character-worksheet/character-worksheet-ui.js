@@ -90,14 +90,6 @@ export function init() {
   makeSpeakable(document.getElementById('rows-dec'), 'Fewer rows');
   makeSpeakable(document.getElementById('rows-inc'), 'More rows');
 
-  document.querySelectorAll('#panel-header h2, #panel-header p').forEach(el => makeSpeakable(el, () => el.textContent));
-  document.querySelectorAll('.ctrl-label').forEach(el => makeSpeakable(el, () => el.textContent));
-  const colsVal = document.getElementById('cols-val');
-  const rowsVal = document.getElementById('rows-val');
-  makeSpeakable(colsVal, () => colsVal.textContent);
-  makeSpeakable(rowsVal, () => rowsVal.textContent);
-  makeSpeakable(document.getElementById('empty-msg'), () => document.getElementById('empty-msg').textContent);
-
   const SIZE_LABELS = { '80': 'Small', '120': 'Medium', '180': 'Large' };
   document.querySelectorAll('.size-btn').forEach(btn => {
     btn.addEventListener('click', () => {
