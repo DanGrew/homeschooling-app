@@ -15,6 +15,7 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 .group-label:first-of-type{margin-top:0;}
 .entry{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.07);}
 .entry-time{font-size:0.78em;color:#aaa;margin-bottom:4px;}
+.entry-source{font-size:0.78em;color:#bbb;margin-bottom:2px;}
 .entry-title{font-size:1em;font-weight:bold;color:#333;margin-bottom:6px;}
 .entry-criteria{display:flex;flex-wrap:wrap;gap:6px;}
 .tag{font-size:0.75em;background:#f0e8ff;color:#7c6fcd;border-radius:6px;padding:2px 8px;}
@@ -64,6 +65,7 @@ function formatDate(ts) {
 }
 
 var lessonCache = {};
+var activityLabels = {};
 function fetchLesson(activityId, lessonId, cb) {
   if (!activityId || !lessonId) { cb(null); return; }
   var key = activityId;
@@ -74,6 +76,7 @@ function fetchLesson(activityId, lessonId, cb) {
       var map = {};
       (data.lessons || []).forEach(function(l) { map[l.id] = l; });
       lessonCache[key] = map;
+      activityLabels[key] = data.label || activityId;
       cb(map[lessonId] || null);
     })
     .catch(function() { cb(null); });
@@ -86,8 +89,11 @@ function renderEntry(event, lesson) {
   var timeStr = group === 'Today' ? formatTime(event.timestamp) : formatDate(event.timestamp) + ' ' + formatTime(event.timestamp);
   var title = lesson ? lesson.title : (event.lessonId || event.type);
   var criteria = lesson ? (lesson.criteria || []) : [];
+  var actLabel = event.activityId ? (activityLabels[event.activityId] || event.activityId) : null;
+  var sourceStr = actLabel ? actLabel + (lesson && lesson.number ? ' · Lesson ' + lesson.number : '') : null;
   div.innerHTML =
     '<div class="entry-time">' + timeStr + '</div>' +
+    (sourceStr ? '<div class="entry-source">' + sourceStr + '</div>' : '') +
     '<div class="entry-title">' + title + '</div>' +
     (criteria.length ? '<div class="entry-criteria">' + criteria.map(function(c) {
       return '<span class="tag">' + formatCriterion(c) + '</span>';
