@@ -2,54 +2,35 @@ const { test, expect } = require('@playwright/test');
 const fs   = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname, '../..');
+const ROOT   = path.resolve(__dirname, '../..');
+const APP_DIR = path.join(ROOT, 'app');
 
-const ACTIVITY_PAGES = [
-  '/homeschooling-app/app/activities/character-lesson/',
-  '/homeschooling-app/app/activities/clock/game-mc.html',
-  '/homeschooling-app/app/activities/clock/',
-  '/homeschooling-app/app/activities/colour-wheel/',
-  '/homeschooling-app/app/activities/colouring-palette/',
-  '/homeschooling-app/app/activities/colouring/',
-  '/homeschooling-app/app/activities/connect-the-dots/',
-  '/homeschooling-app/app/activities/count-shapes/',
-  '/homeschooling-app/app/activities/logic-gates/puzzle.html',
-  '/homeschooling-app/app/activities/logic-gates/sandbox.html',
-  '/homeschooling-app/app/activities/match-colour-shape/',
-  '/homeschooling-app/app/activities/match-colour/',
-  '/homeschooling-app/app/activities/match-shape/',
-  '/homeschooling-app/app/activities/move-blocks/',
-  '/homeschooling-app/app/activities/number-interaction/',
-  '/homeschooling-app/app/activities/piano/game.html',
-  '/homeschooling-app/app/activities/piano/lesson.html',
-  '/homeschooling-app/app/activities/primary-colours/',
-  '/homeschooling-app/app/activities/puzzle/',
-  '/homeschooling-app/app/activities/puzzle/play.html',
-  '/homeschooling-app/app/activities/say-words/',
-  '/homeschooling-app/app/activities/secondary-colours/',
-  '/homeschooling-app/app/activities/shopping-play/',
-  '/homeschooling-app/app/activities/shopping-scan/',
-  '/homeschooling-app/app/activities/word-lesson/',
-  '/homeschooling-app/app/activities/word-match/',
-  // Worksheets are adult-facing tools — speakable contract does not apply
-];
+function findHtmlFiles(dir) {
+  const results = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) results.push(...findHtmlFiles(full));
+    else if (entry.name.endsWith('.html')) results.push(full);
+  }
+  return results;
+}
 
-const WORKSHEET_PAGES = [
-  '/homeschooling-app/app/worksheets/character-worksheet/',
-  '/homeschooling-app/app/worksheets/colouring-sheets/',
-];
+function toPagePath(absPath) {
+  return '/homeschooling-app/' + path.relative(ROOT, absPath).replace(/\\/g, '/');
+}
 
 // Loads opt-outs from content/contracts/ mirroring the app/ path.
-// Returns empty opt-outs if no profile exists.
-// Throws if a profile exists but cannot be parsed.
-function loadProfile(pagePath) {
-  let rel = pagePath.replace('/homeschooling-app/', '');
-  if (rel.endsWith('/')) rel += 'index.html';
-  rel = rel.replace(/^app\//, '').replace(/\.html$/, '.json');
+// Returns empty object if no profile exists.
+function loadProfile(absPath) {
+  const rel = path.relative(APP_DIR, absPath).replace(/\\/g, '/').replace(/\.html$/, '.json');
   const profilePath = path.join(ROOT, 'content/contracts', rel);
   if (!fs.existsSync(profilePath)) return {};
   return JSON.parse(fs.readFileSync(profilePath, 'utf8'))['opt-outs'] || {};
 }
+
+const PAGES = findHtmlFiles(APP_DIR)
+  .map(absPath => ({ absPath, pagePath: toPagePath(absPath), profile: loadProfile(absPath) }))
+  .filter(({ profile }) => !profile.speakable);
 
 const UNWIRED_BUTTONS_SELECTOR = 'button:not(.speakable)';
 
@@ -78,8 +59,7 @@ function findUnwiredText(page, excludedIds) {
   }, excludedIds);
 }
 
-for (const pagePath of ACTIVITY_PAGES) {
-  const profile = loadProfile(pagePath);
+for (const { pagePath, profile } of PAGES) {
   const excludedIds = profile['speakable-text'] || [];
 
   test(`${pagePath} — all buttons speakable`, async ({ page }) => {

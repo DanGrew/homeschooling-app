@@ -222,18 +222,54 @@ export function initColouringPlayground() {
     refToggleEl.textContent=REF_LABEL[String(refVisible)];
   });
 
-  document.querySelectorAll('.mode-btn').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.remove('active');});
-      btn.classList.add('active');
-      mode=btn.dataset.mode;
-      selectedColour=null;
-      [currentPic].filter(Boolean).forEach(renderPicture);
+var MODES=[
+    {mode:'magic',icon:'✨',label:'Magic'},
+    {mode:'guided',icon:'🎯',label:'Guided'},
+    {mode:'free',icon:'🎨',label:'Free'}
+  ];
+
+  function buildModeNav(){
+    var slot=document.getElementById('nav-filter-slot');
+    if(!slot)return;
+    var divider=document.createElement('div');
+    divider.setAttribute('data-mode-divider','');
+    divider.style.cssText='height:2px;background:#e0e0e0;width:80%;margin:4px auto;flex-shrink:0;border-radius:2px;';
+    MODES.forEach(function(m){
+      var b=document.createElement('button');
+      b.setAttribute('data-mode-btn',m.mode);
+      b.style.cssText=modeBtn(m.mode===mode);
+      var icon=document.createElement('span');
+      icon.textContent=m.icon;
+      var lbl=document.createElement('span');
+      lbl.setAttribute('data-label','');
+      lbl.textContent=m.label;
+      lbl.style.cssText='font-size:0.8em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:none;';
+      b.appendChild(icon);b.appendChild(lbl);
+      makeSpeakable(b,m.label);
+      b.addEventListener('click',function(){
+        mode=m.mode;selectedColour=null;
+        slot.querySelectorAll('button[data-mode-btn]').forEach(function(x){
+          x.style.cssText=modeBtn(x.getAttribute('data-mode-btn')===mode);
+        });
+        [currentPic].filter(Boolean).forEach(renderPicture);
+      });
+      slot.appendChild(b);
     });
-  });
+    slot.appendChild(divider);
+    window.addEventListener('nav:expand',function(e){
+      slot.querySelectorAll('button[data-mode-btn]').forEach(function(b){
+        b.querySelector('[data-label]').style.display=e.detail.expanded?'':'none';
+      });
+    });
+  }
+
+  function modeBtn(on){
+    return'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;'+(on?'background:#F39C12;color:#fff;':'background:none;color:#888;');
+  }
 
   buildBasePalette();
   applyLayout();
+  buildModeNav();
 
   paginator=createPaginator({
     container:document.getElementById('paginator-bar'),
