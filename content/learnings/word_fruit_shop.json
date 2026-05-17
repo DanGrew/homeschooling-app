@@ -1,0 +1,14 @@
+{
+  "id": "word_fruit_shop",
+  "title": "Fruit Shop",
+  "number": 4,
+  "source": "Trace Words",
+  "criteria": ["literacy.word-recognition", "pd.fine-motor", "cl.topic-vocabulary"],
+  "steps": [
+    { "text": "Yum! Let's write the names of some fruits. Find apple and trace it!", "expect": "WORD_apple_TRACED", "feedback": "Apple! Five letters — starts with a. Now find pear!" },
+    { "expect": "WORD_pear_TRACED", "feedback": "Pear! Four letters — shaped like a teardrop. Now find kiwi!" },
+    { "expect": "WORD_kiwi_TRACED", "feedback": "Kiwi! Four letters — green and tangy inside. Now find mango!" },
+    { "expect": "WORD_mango_TRACED", "feedback": "Mango! Five letters — sweet and orange inside. Last one — find lemon!" },
+    { "expect": "WORD_lemon_TRACED", "feedback": "Lemon! Five letters — very sour! You wrote them all!" }
+  ]
+}

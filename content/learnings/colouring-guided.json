@@ -1,0 +1,6 @@
+{
+  "id": "colouring-guided",
+  "title": "Guided Colouring",
+  "source": "Colouring Playground",
+  "criteria": ["ead.colour-recognition", "pd.fine-motor"]
+}

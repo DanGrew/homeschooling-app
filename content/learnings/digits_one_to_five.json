@@ -1,0 +1,14 @@
+{
+  "id": "digits_one_to_five",
+  "title": "Count and Write 1 to 5",
+  "number": 4,
+  "source": "Letters & Numbers",
+  "criteria": ["maths.counting-5", "maths.numeral-recognition", "pd.fine-motor"],
+  "steps": [
+    { "text": "Numbers have shapes too — let's trace them in order! Find 1 and trace it!", "expect": "CHAR_1_TRACED", "feedback": "1! One straight line. Now find 2!" },
+    { "expect": "CHAR_2_TRACED", "feedback": "2! A curve and a slide. Now find 3!" },
+    { "expect": "CHAR_3_TRACED", "feedback": "3! Two bumps facing right. Now find 4!" },
+    { "expect": "CHAR_4_TRACED", "feedback": "4! Down, across, then tall. Last one — find 5!" },
+    { "expect": "CHAR_5_TRACED", "feedback": "5! Straight down, belly out, hat on top. You wrote them all!" }
+  ]
+}

@@ -57,15 +57,10 @@
 <script type="module">
 import { init } from '../../../ui/character-lesson/character-lesson-ui.js';
 import { GuidanceService } from '../../../components/guidance/guidance-service.js';
+window.LEARNINGS_BASE = '../../../content/learnings/';
 window.addEventListener('load', function() {
   init();
-  fetch('../../../content/lessons/character-lesson.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      window.LESSON_MAP = {};
-      data.lessons.forEach(function(l) { window.LESSON_MAP[l.id] = l; });
-      window.guidanceService = new GuidanceService();
-    });
+  window.guidanceService = new GuidanceService();
 });
 </script>
 <script>window.ACTIVITY_ID='character-lesson';</script>

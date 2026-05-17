@@ -1,0 +1,14 @@
+{
+  "id": "how_are_you_feeling",
+  "title": "How Are You Feeling?",
+  "number": 3,
+  "source": "Trace Words",
+  "criteria": ["literacy.word-recognition", "pd.fine-motor", "psed.emotion-vocab", "cl.feeling-vocabulary"],
+  "steps": [
+    { "text": "Feelings have names — and now we're going to write them! Find sad and trace it!", "expect": "WORD_sad_TRACED", "feedback": "Sad. Three letters. Everyone feels sad sometimes. Now find shy!" },
+    { "expect": "WORD_shy_TRACED", "feedback": "Shy! Just three letters — a quiet little word. Now find smile!" },
+    { "expect": "WORD_smile_TRACED", "feedback": "Smile! Five letters and a happy feeling. Now find angry!" },
+    { "expect": "WORD_angry_TRACED", "feedback": "Angry. Five letters for a big feeling. Last one — find worried!" },
+    { "expect": "WORD_worried_TRACED", "feedback": "Worried! Seven letters — your biggest word today. You wrote them all!" }
+  ]
+}

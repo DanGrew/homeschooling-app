@@ -30,7 +30,7 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 <div id="journal"></div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { fetchLesson, buildEntryViewModel, sortAndGroupEvents } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLearning, buildEntryViewModel, sortAndGroupEvents } from '../../core/telemetry/learning-journal-core.js';
 
 var NO_EVENTS = {
   'true':  function(j)    { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
@@ -52,8 +52,9 @@ function renderEntry(event, lesson) {
 }
 
 function appendEntry(wrap, event) {
-  fetchLesson(event.activityId, event.lessonId, function(lesson) {
-    wrap.appendChild(renderEntry(event, lesson));
+  var lid = [event.learning_id, event.lessonId].filter(Boolean)[0];
+  fetchLearning(lid, function(learning) {
+    wrap.appendChild(renderEntry(event, learning));
   });
 }
 

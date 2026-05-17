@@ -1,0 +1,12 @@
+{
+  "id": "make_chartreuse",
+  "title": "Make Chartreuse",
+  "number": 11,
+  "source": "Colour Wheel",
+  "criteria": ["ead.colour-mixing", "uw.cause-effect"],
+  "steps": [
+    { "text": "Find yellow on the colour wheel.", "expect": "YELLOW_TAPPED", "feedback": "Got it! Now find green." },
+    { "expect": "GREEN_TAPPED", "feedback": "Now find the colour they make — Chartreuse!" },
+    { "expect": "YELLOW_GREEN_TAPPED", "feedback": "Yellow and green make Chartreuse!" }
+  ]
+}

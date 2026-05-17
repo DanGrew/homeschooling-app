@@ -1,0 +1,12 @@
+{
+  "id": "make_purple",
+  "title": "Make Purple",
+  "number": 3,
+  "source": "Colour Wheel",
+  "criteria": ["ead.colour-mixing", "uw.cause-effect"],
+  "steps": [
+    { "text": "Find red on the colour wheel.", "expect": "RED_TAPPED", "feedback": "Got it! Now find blue." },
+    { "expect": "BLUE_TAPPED", "feedback": "Now find the colour they make together." },
+    { "expect": "PURPLE_TAPPED", "feedback": "Red and blue make purple!" }
+  ]
+}

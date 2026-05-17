@@ -116,23 +116,18 @@ loadImages(all,function(){
   window.DICT_BASE='../../../content/dictionary/entries/';
   window.ACTIVITY_ID='say-words';
   window.LESSONS=[
-    {id:'farm_animals',number:1,title:'Farm Animals'},
+    {id:'say_farm_animals',number:1,title:'Farm Animals'},
     {id:'safari_animals',number:2,title:'Safari Animals'},
     {id:'core_emotions',number:3,title:'How Are You Feeling?'},
-    {id:'fruit_shop',number:4,title:'Fruit Shop'},
+    {id:'say_fruit_shop',number:4,title:'Fruit Shop'},
     {id:'vehicles',number:5,title:'Things That Go'},
     {id:'exotic_fruit',number:6,title:'Exotic Fruits'}
   ];
 </script>
 <script type="module">
   import{GuidanceService}from'../../../components/guidance/guidance-service.js';
-  fetch('../../../content/lessons/say-words.json')
-    .then(function(r){return r.json();})
-    .then(function(data){
-      window.LESSON_MAP={};
-      data.lessons.forEach(function(l){window.LESSON_MAP[l.id]=l;});
-      window.guidanceService=new GuidanceService();
-    });
+  window.LEARNINGS_BASE='../../../content/learnings/';
+  window.guidanceService=new GuidanceService();
 </script>
 <script>
   window.addEventListener('guidance:start', function() {

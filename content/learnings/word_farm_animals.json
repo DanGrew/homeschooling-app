@@ -1,0 +1,14 @@
+{
+  "id": "word_farm_animals",
+  "title": "Farm Animals",
+  "number": 1,
+  "source": "Trace Words",
+  "criteria": ["literacy.word-recognition", "pd.fine-motor", "uw.animals-nature"],
+  "steps": [
+    { "text": "Let's write some animal names! Find cow and trace it!", "expect": "WORD_cow_TRACED", "feedback": "Cow! Short and simple — three letters. Now find dog!" },
+    { "expect": "WORD_dog_TRACED", "feedback": "Dog! Your fingers know that one well. Now find duck!" },
+    { "expect": "WORD_duck_TRACED", "feedback": "Duck! Four letters — well done. Now find cat!" },
+    { "expect": "WORD_cat_TRACED", "feedback": "Cat! Three letters, just like cow. Last one — find horse!" },
+    { "expect": "WORD_horse_TRACED", "feedback": "Horse! Five letters — your longest word. You traced them all!" }
+  ]
+}

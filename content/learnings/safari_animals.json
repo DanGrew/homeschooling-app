@@ -1,0 +1,14 @@
+{
+  "id": "safari_animals",
+  "title": "Safari Animals",
+  "number": 2,
+  "source": "Say Words",
+  "criteria": ["cl.topic-vocabulary", "literacy.word-recognition", "uw.animals-nature", "uw.world-awareness"],
+  "steps": [
+    { "text": "Let's go on safari! These animals live far away in hot countries. Find the lion!", "expect": "LION_SPOKEN", "feedback": "Roar! The lion is called the king of the jungle. Now find the elephant!" },
+    { "expect": "ELEPHANT_SPOKEN", "feedback": "Elephants are the biggest land animals on Earth! Now find the giraffe!" },
+    { "expect": "GIRAFFE_SPOKEN", "feedback": "Giraffes have the longest necks of any animal — to reach the tallest leaves. Now find the zebra!" },
+    { "expect": "ZEBRA_SPOKEN", "feedback": "Every zebra has its own pattern of stripes — just like a fingerprint. Last one — find the monkey!" },
+    { "expect": "MONKEY_SPOKEN", "feedback": "Monkeys are very clever — they use their hands like we do! Safari complete!" }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "core_emotions",
+  "title": "How Are You Feeling?",
+  "number": 3,
+  "source": "Say Words",
+  "criteria": ["cl.feeling-vocabulary", "literacy.word-recognition", "psed.emotion-vocab"],
+  "steps": [
+    { "text": "Everybody has feelings. Learning the words helps us talk about them. Who looks happy? Find the smiling face!", "expect": "SMILE_SPOKEN", "feedback": "A big smile! What makes you feel happy? Now find sad." },
+    { "expect": "SAD_SPOKEN", "feedback": "Sometimes we feel sad — that's okay, it's a normal feeling. Now find worried." },
+    { "expect": "WORRIED_SPOKEN", "feedback": "Worried means we're not sure if something will be okay. Now find angry." },
+    { "expect": "ANGRY_SPOKEN", "feedback": "Angry is a big feeling. Taking a deep breath can help. Last one — find surprised!" },
+    { "expect": "SURPRISE_SPOKEN", "feedback": "Surprised! Something unexpected happened. You know five important feelings!" }
+  ]
+}

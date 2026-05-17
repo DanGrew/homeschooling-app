@@ -1,0 +1,6 @@
+{
+  "id": "puzzle",
+  "title": "Puzzle",
+  "source": "Puzzle",
+  "criteria": ["maths.spatial", "pd.fine-motor"]
+}

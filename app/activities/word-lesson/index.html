@@ -54,19 +54,23 @@
 
 <script src="../../../core/trace/trace-core.js"></script>
 <script src="../../../ui/trace/trace-ui.js"></script>
+<script>
+  window.ACTIVITY_ID='word-lesson';
+  window.LEARNINGS_BASE='../../../content/learnings/';
+  window.LESSONS=[
+    {id:'word_farm_animals',number:1,title:'Farm Animals'},
+    {id:'wild_animals',number:2,title:'Wild Animals'},
+    {id:'how_are_you_feeling',number:3,title:'How Are You Feeling?'},
+    {id:'word_fruit_shop',number:4,title:'Fruit Shop'},
+    {id:'things_that_go',number:5,title:'Things That Go'}
+  ];
+</script>
 <script type="module">
 import { init } from '../../../ui/word-lesson/word-lesson-ui.js';
 import { GuidanceService } from '../../../components/guidance/guidance-service.js';
 init();
-fetch('../../../content/lessons/word-lesson.json')
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    window.LESSON_MAP = {};
-    data.lessons.forEach(function(l) { window.LESSON_MAP[l.id] = l; });
-    window.guidanceService = new GuidanceService();
-  });
+window.guidanceService = new GuidanceService();
 </script>
-<script>window.ACTIVITY_ID='word-lesson';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';

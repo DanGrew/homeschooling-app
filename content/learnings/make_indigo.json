@@ -1,0 +1,12 @@
+{
+  "id": "make_indigo",
+  "title": "Make Indigo",
+  "number": 12,
+  "source": "Colour Wheel",
+  "criteria": ["ead.colour-mixing", "uw.cause-effect"],
+  "steps": [
+    { "text": "Find blue on the colour wheel.", "expect": "BLUE_TAPPED", "feedback": "Cool and calm! Now find purple." },
+    { "expect": "PURPLE_TAPPED", "feedback": "Now find the colour they make — Indigo!" },
+    { "expect": "BLUE_PURPLE_TAPPED", "feedback": "Blue and purple make Indigo!" }
+  ]
+}
