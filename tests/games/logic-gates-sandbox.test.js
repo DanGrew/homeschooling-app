@@ -68,10 +68,13 @@ test('clicking a switch updates wire colour', async ({ page }) => {
   expect(wireAfter).not.toBe(wireBefore);
 });
 
-test('gate pills have speakable glow', async ({ page }) => {
+test('gate pills are clickable and do not throw', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
   await page.goto(URL);
   await page.waitForSelector('[data-gate-pill]');
-  await expect(page.locator('[data-gate-pill]').first()).toHaveAttribute('filter', 'url(#speakable-glow)');
+  await page.locator('[data-gate-pill]').first().click();
+  expect(errors).toHaveLength(0);
 });
 
 test('clicking switch twice returns wire to inactive colour', async ({ page }) => {

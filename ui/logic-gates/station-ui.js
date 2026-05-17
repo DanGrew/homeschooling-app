@@ -83,7 +83,7 @@ function buildGatePill(svg, cx, cy, label, colour) {
   lbl.textContent = label;
   g.appendChild(rect); g.appendChild(lbl);
   svg.appendChild(g);
-  if (typeof window.__makeSpeakable === 'function') window.__makeSpeakable(g, label);
+  if (typeof window.__makeSpeakable === 'function') { window.__makeSpeakable(g, label); g.removeAttribute('filter'); }
   return g;
 }
 
