@@ -54,3 +54,25 @@ test('activity back link returns to physical index', async ({ page }) => {
   await page.getByRole('link', { name: '←' }).click()
   await expect(page).toHaveURL(/\/physical\/?$/)
 })
+
+test('rope rescue shows apparatus SVG schematic', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/rope-rescue/')
+  await expect(page.locator('svg [id^="node-"]').first()).toBeAttached()
+  await expect(page.locator('svg [id^="edge-"]').first()).toBeAttached()
+})
+
+test('apparatus expand button opens fullscreen dialog', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/rope-rescue/')
+  const expandBtn = page.locator('button', { hasText: 'Expand' })
+  await expect(expandBtn).toBeVisible()
+  await expandBtn.click()
+  await expect(page.locator('#apparatus-dialog')).toBeVisible()
+})
+
+test('apparatus dialog closes on close button click', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/physical/activities/rope-rescue/')
+  await page.locator('button', { hasText: 'Expand' }).click()
+  await expect(page.locator('#apparatus-dialog')).toBeVisible()
+  await page.locator('#apparatus-dialog button').click()
+  await expect(page.locator('#apparatus-dialog')).not.toBeVisible()
+})

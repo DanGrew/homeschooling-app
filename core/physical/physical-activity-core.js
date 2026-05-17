@@ -1,3 +1,5 @@
+import { renderApparatusSVG } from './jungle-gym-svg.js';
+
 const LEVEL_COLORS = {
   ground: { bg: '#E8F8F5', border: '#27AE60' },
   first:  { bg: '#FFFDE7', border: '#F39C12' },
@@ -53,6 +55,7 @@ export function renderActivityHTML(activity, graphData) {
     .join('');
 
   const routeHTML = renderRouteSteps(activity.route, activity.route_labels, graphData);
+  const svgHTML = renderApparatusSVG(graphData, activity.route);
   const setupItems = activity.setup.map(s => `<li style="padding:5px 0;border-bottom:1px solid #eee;">${s}</li>`).join('');
   const flowRows = renderFlowRows(activity.activity_flow);
   const guidanceHTML = renderGuidanceItems(activity.adult_guidance);
@@ -112,7 +115,19 @@ ul{list-style:none;padding:0;}
 <div class="card">
   <h2>Route</h2>
   <div class="route">${routeHTML}</div>
+  <div style="margin-top:16px;position:relative;">
+    ${svgHTML}
+    <button onclick="document.getElementById('apparatus-dialog').showModal()" style="position:absolute;top:6px;right:6px;background:rgba(255,255,255,0.9);border:1px solid #ddd;border-radius:6px;padding:4px 8px;font-size:0.75em;cursor:pointer;color:#555;">&#x26F6; Expand</button>
+  </div>
 </div>
+
+<dialog id="apparatus-dialog" style="padding:0;border:none;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.25);max-width:90vw;width:560px;background:#fff;" onclick="this.close()">
+  <div onclick="event.stopPropagation()" style="padding:20px;position:relative;">
+    <button onclick="document.getElementById('apparatus-dialog').close()" style="position:absolute;top:12px;right:12px;background:#f0f0f0;border:none;border-radius:50%;width:28px;height:28px;font-size:1em;cursor:pointer;line-height:1;">&#x2715;</button>
+    <h3 style="font-size:0.9em;color:#1E8449;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;">Apparatus Route</h3>
+    ${svgHTML}
+  </div>
+</dialog>
 
 <div class="card">
   <h2>Setup</h2>

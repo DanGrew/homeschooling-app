@@ -7,13 +7,18 @@ import {
   renderActivityHTML,
   renderIndexHTML,
 } from '../../core/physical/physical-activity-core.js'
+import { renderApparatusSVG } from '../../core/physical/jungle-gym-svg.js'
 
 const MOCK_GRAPH = {
   nodes: [
     { id: 'G1', label: 'Ladder base', level: 'ground' },
     { id: 'A1', label: 'Ladder mid', level: 'first' },
     { id: 'B1', label: 'Top platform', level: 'top' },
-  ]
+  ],
+  edges: [
+    { from: 'G1', to: 'A1', movement: 'climbing_ladder', bidirectional: true },
+    { from: 'A1', to: 'B1', movement: 'climbing_wall_holes', bidirectional: true },
+  ],
 }
 
 const MOCK_ACTIVITY = {
@@ -134,6 +139,55 @@ describe('renderFreePlay', () => {
   })
 })
 
+describe('renderApparatusSVG', () => {
+  it('returns an SVG element', () => {
+    const svg = renderApparatusSVG(MOCK_GRAPH)
+    expect(svg).toMatch(/^<svg /)
+    expect(svg).toContain('</svg>')
+  })
+
+  it('includes node circle for each known node', () => {
+    const svg = renderApparatusSVG(MOCK_GRAPH)
+    expect(svg).toContain('id="node-G1"')
+    expect(svg).toContain('id="node-A1"')
+    expect(svg).toContain('id="node-B1"')
+  })
+
+  it('includes edge line for each edge', () => {
+    const svg = renderApparatusSVG(MOCK_GRAPH)
+    expect(svg).toContain('id="edge-G1-A1"')
+    expect(svg).toContain('id="edge-A1-B1"')
+  })
+
+  it('highlights active nodes from route', () => {
+    const inactive = renderApparatusSVG(MOCK_GRAPH, [])
+    const active = renderApparatusSVG(MOCK_GRAPH, ['G1', 'A1', 'B1'])
+    const inactiveG1 = inactive.match(/id="node-G1"[^/]*r="(\d+)"/)
+    const activeG1 = active.match(/id="node-G1"[^/]*r="(\d+)"/)
+    expect(Number(activeG1[1])).toBeGreaterThan(Number(inactiveG1[1]))
+  })
+
+  it('highlights active edges in red', () => {
+    const svg = renderApparatusSVG(MOCK_GRAPH, ['G1', 'A1'])
+    expect(svg).toContain('id="edge-G1-A1"')
+    const edgeLine = svg.match(/id="edge-G1-A1"[^/]*stroke="([^"]+)"/)
+    expect(edgeLine[1]).toBe('#E74C3C')
+  })
+
+  it('inactive edges not red', () => {
+    const svg = renderApparatusSVG(MOCK_GRAPH, [])
+    const edgeLine = svg.match(/id="edge-G1-A1"[^/]*stroke="([^"]+)"/)
+    expect(edgeLine[1]).not.toBe('#E74C3C')
+  })
+
+  it('includes level legend', () => {
+    const svg = renderApparatusSVG(MOCK_GRAPH)
+    expect(svg).toContain('Ground')
+    expect(svg).toContain('First')
+    expect(svg).toContain('Top')
+  })
+})
+
 describe('renderActivityHTML', () => {
   it('includes the activity title', () => {
     const html = renderActivityHTML(MOCK_ACTIVITY, MOCK_GRAPH)
@@ -172,6 +226,18 @@ describe('renderActivityHTML', () => {
     const html = renderActivityHTML(MOCK_ACTIVITY, MOCK_GRAPH)
     expect(html).toMatch(/^<!DOCTYPE html>/)
     expect(html).toContain('</html>')
+  })
+
+  it('embeds apparatus SVG with node IDs', () => {
+    const html = renderActivityHTML(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).toContain('id="node-G1"')
+    expect(html).toContain('id="node-B1"')
+  })
+
+  it('includes apparatus expand dialog', () => {
+    const html = renderActivityHTML(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).toContain('id="apparatus-dialog"')
+    expect(html).toContain('showModal()')
   })
 })
 
