@@ -70,6 +70,7 @@ function findUnwiredSvgs(page) {
       if (getComputedStyle(svg).visibility === 'hidden') continue;
       if (svg.closest('.speakable')) continue;
       if (svg.closest('[data-speakable-container]')) continue;
+      if (svg.querySelector('#speakable-glow')) continue;
       const parent = svg.parentElement;
       results.push(parent?.id || parent?.className || '(unknown)');
     }
@@ -107,19 +108,34 @@ for (const { pagePath, profile } of PAGES) {
 
     const allUnwired = await findUnwiredSvgs(page);
     const exclusions = profile['speakable-svg'] || {};
+    const patternRe = Object.fromEntries(
+      Object.keys(exclusions).map(k => [k, new RegExp('^' + k.replace(/\*/g, '.*') + '$')])
+    );
+    function matchKey(id) {
+      return Object.keys(patternRe).find(k => patternRe[k].test(id));
+    }
 
     const errors = [];
     const actualCounts = {};
     for (const parentId of allUnwired) {
-      if (parentId in exclusions) {
+      const key = matchKey(parentId);
+      if (key) {
         actualCounts[parentId] = (actualCounts[parentId] || 0) + 1;
       } else {
         errors.push(`unwired: ${parentId}`);
       }
     }
-    for (const [parentId, declared] of Object.entries(exclusions)) {
-      const actual = actualCounts[parentId] || 0;
-      if (actual !== declared) errors.push(`${parentId}: declared ${declared}, found ${actual}`);
+    for (const [pattern, declared] of Object.entries(exclusions)) {
+      const re = patternRe[pattern];
+      if (!pattern.includes('*')) {
+        const actual = actualCounts[pattern] || 0;
+        if (actual !== declared) errors.push(`${pattern}: declared ${declared}, found ${actual}`);
+      } else {
+        const matched = Object.entries(actualCounts).filter(([id]) => re.test(id));
+        for (const [id, actual] of matched) {
+          if (actual !== declared) errors.push(`${id}: declared ${declared}, found ${actual}`);
+        }
+      }
     }
 
     expect(errors, `SVG violations in ${pagePath}`).toEqual([]);

@@ -220,7 +220,10 @@ function renderWord(chars, charData) {
     svg.appendChild(base);
     [dc].filter(Boolean).forEach(el => svg.appendChild(el));
     svg.appendChild(ball);
-    wrap.appendChild(svg);
+    const charWrap = document.createElement('div');
+    charWrap.id = 'word-char-' + i;
+    charWrap.appendChild(svg);
+    wrap.appendChild(charWrap);
 
     charSvgs.push(svg);
     charBases.push(base);

@@ -1,7 +1,8 @@
 var DO_SPEAK = {'true':function(el,t){window.__makeSpeakable(el,t);},'false':function(){}};
 
-function buildSection(config, container) {
+function buildSection(config, container, idx) {
   const section = document.createElement('div');
+  section.id = 'sandbox-station-' + idx;
   section.style.cssText = 'padding:0 16px;';
   const heading = document.createElement('h2');
   heading.textContent = config.label + ' gate';
@@ -37,8 +38,10 @@ function init() {
         addSeparator(container);
         buildSection(config, container);
       }
-      stations.slice(0, 1).forEach(function(config) { buildSection(config, container); });
-      stations.slice(1).forEach(addSeparatorAndBuild);
+      stations.forEach(function(config, i) {
+        if (i > 0) addSeparator(container);
+        buildSection(config, container, i);
+      });
     })
     .catch(function(err) {
       container.textContent = 'Failed to load stations';
