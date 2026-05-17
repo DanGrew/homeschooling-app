@@ -14,6 +14,7 @@ export function createPaginator({ container, items, perPage = 1, onRender, wrap 
 
   var indicator = document.createElement('span');
   indicator.style.cssText = 'font-size:clamp(0.85em,2.5vmin,1.2em);color:#555;min-width:90px;text-align:center;';
+  makeSpeakable(indicator, function(){ return indicator.textContent; });
 
   var btnNext = document.createElement('button');
   btnNext.innerHTML = 'Next &#8594;';

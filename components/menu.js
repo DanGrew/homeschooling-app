@@ -127,6 +127,14 @@
       e.stopPropagation();
       togglePopout(lsnPopout,lsnBtn);
     });
+    window.addEventListener('load',function(){
+      if(typeof window.__makeSpeakable==='function'){
+        window.__makeSpeakable(lsnBtn,'Lessons');
+        lsnPopout.querySelectorAll('.nav-lesson-item').forEach(function(item){
+          window.__makeSpeakable(item,function(){return item.textContent;});
+        });
+      }
+    });
     lsnContainer.appendChild(lsnBtn);
     bar.appendChild(lsnContainer);
   }
