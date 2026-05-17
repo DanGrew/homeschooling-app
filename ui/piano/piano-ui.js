@@ -106,7 +106,6 @@ function renderKeys(container, onKeyPress) {
     key._origBg = PIANO_CONFIG.KEY_COLORS[i];
     key.style.cssText = 'flex:1;height:100%;background:' + PIANO_CONFIG.KEY_COLORS[i] + ';border-radius:0 0 14px 14px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:clamp(14px,3vw,20px);font-weight:bold;color:#555;cursor:pointer;user-select:none;touch-action:none;border:2px solid rgba(0,0,0,0.08);box-sizing:border-box';
     key.textContent = PIANO_CONFIG.NOTE_LABELS[i];
-    [window.__makeSpeakable].filter(Boolean).forEach(function(fn){fn(key,PIANO_CONFIG.NOTE_LABELS[i]);});
     key.addEventListener('pointerdown', function(e) {
       e.preventDefault();
       onKeyPress(i, note, key);
@@ -127,7 +126,6 @@ function renderBlackKeys(container, onKeyPress) {
     key._origBg = bk.color;
     key.style.cssText = 'flex:1;height:100%;background:' + bk.color + ';border-radius:0 0 8px 8px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:clamp(10px,2.5vw,14px);font-weight:bold;color:#444;cursor:pointer;user-select:none;touch-action:none;border:1.5px solid rgba(0,0,0,0.15);box-sizing:border-box;';
     key.textContent = bk.label;
-    [window.__makeSpeakable].filter(Boolean).forEach(function(fn){fn(key,bk.label);});
     key.addEventListener('pointerdown', function(e) {
       e.preventDefault();
       onKeyPress(bk, key);

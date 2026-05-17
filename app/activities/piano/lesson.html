@@ -47,9 +47,6 @@ import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 makeSpeakable(document.getElementById('btn-prev'),'Previous');
 makeSpeakable(document.getElementById('btn-next'),'Next');
-document.querySelectorAll('#keys-wrap div[data-note],#black-keys-wrap div[data-note]').forEach(function(key){
-  makeSpeakable(key,key.textContent);
-});
 var _sd=document.getElementById('section-display');
 function _wire(){
   _sd.querySelectorAll('.lyric:not(.speakable),.note-chip:not(.speakable)').forEach(function(el){
