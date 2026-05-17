@@ -19,7 +19,6 @@ var SONG_NOTE_MAP = {
 
 var _NO_NOTE_INFO = {note: null, color: '#ccc'};
 var _CHIP_CLASS = {'true': 'note-chip playable', 'false': 'note-chip no-audio'};
-var _ARROW_HIDDEN = {'true': 'nav-arrow hidden', 'false': 'nav-arrow'};
 var _DOT_CLASS = {'true': 'verse-dot active', 'false': 'verse-dot'};
 
 var _lessonSongs = [];
@@ -106,8 +105,8 @@ function _renderDots() {
 
 function _updateArrows() {
   var last = _lessonSongs[_lessonSong].verses.length - 1;
-  _lessonEl.prev.className = _ARROW_HIDDEN[String(_lessonVerse === 0)];
-  _lessonEl.next.className = _ARROW_HIDDEN[String(_lessonVerse === last)];
+  _lessonEl.prev.classList.toggle('hidden', _lessonVerse === 0);
+  _lessonEl.next.classList.toggle('hidden', _lessonVerse === last);
 }
 
 function lessonGoTo(i) {

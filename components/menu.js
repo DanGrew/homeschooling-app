@@ -95,6 +95,12 @@
         });
       }
     });
+    if(document.readyState==='complete'&&typeof window.__makeSpeakable==='function'){
+      window.__makeSpeakable(btn,label);
+      popout.querySelectorAll('button').forEach(function(item){
+        window.__makeSpeakable(item,function(){return item.textContent;});
+      });
+    }
     container.appendChild(btn);
     return container;
   };

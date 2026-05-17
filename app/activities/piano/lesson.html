@@ -42,8 +42,23 @@ body{background:#fff8f0;}
   <div id="black-keys-wrap"></div>
   <div id="keys-wrap"></div>
 </div>
-<script type="module">import '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';</script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+makeSpeakable(document.getElementById('btn-prev'),'Previous');
+makeSpeakable(document.getElementById('btn-next'),'Next');
+document.querySelectorAll('#keys-wrap div[data-note],#black-keys-wrap div[data-note]').forEach(function(key){
+  makeSpeakable(key,key.textContent);
+});
+var _sd=document.getElementById('section-display');
+function _wire(){
+  _sd.querySelectorAll('.lyric:not(.speakable),.note-chip:not(.speakable)').forEach(function(el){
+    makeSpeakable(el,function(){return el.textContent;});
+  });
+}
+_wire();
+new MutationObserver(_wire).observe(_sd,{childList:true,subtree:true});
+</script>
 <script src="../../../components/menu.js" defer></script>
 <script src="../../../core/shared/utils.js"></script>
 <script src="../../../core/piano/piano-core.js"></script>
