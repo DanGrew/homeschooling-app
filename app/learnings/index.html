@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Learnings</title>
+<link rel="stylesheet" href="../../styles/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;font-family:inherit;padding:24px 16px 48px;}
+a.back{display:inline-block;margin-bottom:20px;color:#7c6fcd;text-decoration:none;font-size:0.95em;}
+a.back:hover{text-decoration:underline;}
+h1{font-size:2em;color:#333;margin-bottom:28px;}
+.group-label{font-size:0.85em;font-weight:bold;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:32px 0 12px;}
+.group-label:first-of-type{margin-top:0;}
+.entry{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.07);}
+.entry-time{font-size:0.78em;color:#aaa;margin-bottom:4px;}
+.entry-source{font-size:0.78em;color:#bbb;margin-bottom:2px;}
+.entry-source:empty{display:none;}
+.entry-title{font-size:1em;font-weight:bold;color:#333;margin-bottom:6px;}
+.entry-criteria{display:flex;flex-wrap:wrap;gap:6px;}
+.entry-criteria:empty{display:none;}
+.tag{font-size:0.75em;background:#f0e8ff;color:#7c6fcd;border-radius:6px;padding:2px 8px;}
+.empty{color:#bbb;font-size:0.95em;margin-top:32px;text-align:center;}
+</style>
+</head>
+<body>
+<a class="back" href="../">← Home</a>
+<h1>Learnings</h1>
+<div id="journal"></div>
+<script type="module">
+import { getAllEvents } from '../../core/telemetry/learning-db.js';
+import { fetchLesson, buildEntryViewModel, sortAndGroupEvents } from '../../core/telemetry/learning-journal-core.js';
+
+var NO_EVENTS = {
+  'true':  function(j)    { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
+  'false': function(j, e) { renderGroups(j, e); }
+};
+
+function renderEntry(event, lesson) {
+  var vm = buildEntryViewModel(event, lesson);
+  var div = document.createElement('div');
+  div.className = 'entry';
+  div.innerHTML =
+    '<div class="entry-time">' + vm.timeStr + '</div>' +
+    '<div class="entry-source">' + vm.sourceStr + '</div>' +
+    '<div class="entry-title">' + vm.title + '</div>' +
+    '<div class="entry-criteria">' + vm.criteriaTags.map(function(t) {
+      return '<span class="tag">' + t + '</span>';
+    }).join('') + '</div>';
+  return div;
+}
+
+function appendEntry(wrap, event) {
+  fetchLesson(event.activityId, event.lessonId, function(lesson) {
+    wrap.appendChild(renderEntry(event, lesson));
+  });
+}
+
+function renderGroup(journal, label, events) {
+  var h = document.createElement('div');
+  h.className = 'group-label';
+  h.textContent = label;
+  journal.appendChild(h);
+  var wrap = document.createElement('div');
+  journal.appendChild(wrap);
+  events.forEach(function(event) { appendEntry(wrap, event); });
+}
+
+function renderGroups(journal, events) {
+  var grouped = sortAndGroupEvents(events);
+  grouped.order.forEach(function(label) { renderGroup(journal, label, grouped.groups[label]); });
+}
+
+getAllEvents(function(events) {
+  var journal = document.getElementById('journal');
+  NO_EVENTS[String(!events.length)](journal, events);
+});
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 import { queue, interrupt, stop } from '../speech/speech-ui.js';
 import { GuidanceOverlay } from './guidance-overlay.js';
+import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 
 function _resolveText(text) {
   var arr = [].concat(text);
@@ -17,7 +18,7 @@ var STEP_REACTION = {
 };
 
 var ADVANCE_ACTION = {
-  'true':  function(svc) { svc.stop(); },
+  'true':  function(svc) { svc.complete(); },
   'false': function(svc) { svc._showStep(); }
 };
 
@@ -84,6 +85,21 @@ GuidanceService.prototype.stop = function() {
   this._overlay.hide();
   stop();
   window.dispatchEvent(new CustomEvent('guidance:stop'));
+};
+
+GuidanceService.prototype.complete = function() {
+  var lessonId = this._lesson && this._lesson.id;
+  var activityId = window.ADULT_PROMPTS_ACTIVITY || null;
+  this.stop();
+  try {
+    recordLearningEvent({
+      version: 1,
+      type: 'lesson_completed',
+      timestamp: Date.now(),
+      lessonId: lessonId,
+      activityId: activityId
+    });
+  } catch(e) {}
 };
 
 GuidanceService.prototype._handle = function(type) {

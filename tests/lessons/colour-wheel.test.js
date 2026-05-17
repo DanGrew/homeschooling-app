@@ -163,3 +163,31 @@ test('close button stops lesson and hides overlay', async ({ page }) => {
   await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
 })
+
+test('completing a lesson records a learning event in IndexedDB', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await completeLesson(page)
+  await page.locator('#guidance-overlay [data-action="next"]').click()
+  await page.waitForTimeout(300)
+  const events = await page.evaluate(() => new Promise((resolve) => {
+    const req = indexedDB.open('learning-records', 1)
+    req.onsuccess = (e) => {
+      try {
+        const db = e.target.result
+        if (!db.objectStoreNames.contains('events')) { resolve([]); return; }
+        const tx = db.transaction('events', 'readonly')
+        const all = tx.objectStore('events').getAll()
+        all.onsuccess = (e) => resolve(e.target.result)
+        all.onerror = () => resolve([])
+      } catch(err) { resolve([]); }
+    }
+    req.onerror = () => resolve([])
+    req.onupgradeneeded = () => resolve([])
+  }))
+  const evt = events.find(e => e.lessonId === 'make_orange')
+  expect(evt).toBeTruthy()
+  expect(evt.type).toBe('lesson_completed')
+  expect(evt.activityId).toBe('colour-wheel')
+  expect(evt.version).toBe(1)
+})
