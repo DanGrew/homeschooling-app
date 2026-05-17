@@ -47,7 +47,7 @@ export function renderFreePlay(freePlay) {
   return seeds.map(s => `<li style="padding:5px 0;">&#10023; ${s}</li>`).join('');
 }
 
-export function renderActivityHTML(activity, graphData, criteriaMap = {}) {
+export function renderActivityContent(activity, graphData, criteriaMap = {}) {
   const competencyBadges = activity.competencies
     .map(c => `<span style="display:inline-block;background:#D5F5E3;color:#1E8449;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">${c.replace(/_/g, ' ')}</span>`)
     .join('');
@@ -70,35 +70,7 @@ export function renderActivityHTML(activity, graphData, criteriaMap = {}) {
     .join('');
   const freePlayHTML = renderFreePlay(activity.free_play);
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${activity.title}</title>
-<link rel="stylesheet" href="../../../../styles/theme.css">
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:#F0FFF4;font-family:inherit;min-height:100vh;padding-bottom:48px;}
-.header{background:#27AE60;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;}
-.header a{color:#fff;text-decoration:none;font-size:1.5em;}
-.header h1{font-size:1.3em;line-height:1.3;}
-.archetype{font-size:0.8em;opacity:0.85;margin-top:2px;}
-.card{background:#fff;border-radius:12px;margin:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
-.card h2{font-size:1em;color:#1E8449;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;}
-.flow-header{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:4px;}
-.flow-header span{font-size:0.75em;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;border-bottom:2px solid #eee;}
-.flow-header span:last-child{padding-left:12px;}
-.route{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
-ul{list-style:none;padding:0;}
-.movements{display:flex;flex-wrap:wrap;gap:8px;}
-.movement-tag{background:#FEF9E7;border:1px solid #F39C12;color:#7D6608;border-radius:8px;padding:4px 10px;font-size:0.85em;}
-.why{color:#555;line-height:1.7;font-size:0.95em;}
-</style>
-</head>
-<body>
-
-<div class="header">
+  return `<div class="header">
   <a href="../../index.html">&#8592;</a>
   <div>
     <h1>${activity.title}</h1>
@@ -157,13 +129,43 @@ ${criteriaBadges ? `<div class="card">
 <div class="card">
   <h2>Why This Works</h2>
   <p class="why">${activity.why_it_works}</p>
-</div>
+</div>`;
+}
 
+export function renderActivityHTML(activity, graphData, criteriaMap = {}) {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${activity.title}</title>
+<link rel="stylesheet" href="../../../../styles/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#F0FFF4;font-family:inherit;min-height:100vh;padding-bottom:48px;}
+.header{background:#27AE60;color:#fff;padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.header a{color:#fff;text-decoration:none;font-size:1.5em;}
+.header h1{font-size:1.3em;line-height:1.3;}
+.archetype{font-size:0.8em;opacity:0.85;margin-top:2px;}
+.card{background:#fff;border-radius:12px;margin:16px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+.card h2{font-size:1em;color:#1E8449;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;}
+.flow-header{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:4px;}
+.flow-header span{font-size:0.75em;color:#aaa;text-transform:uppercase;letter-spacing:0.05em;padding-bottom:6px;border-bottom:2px solid #eee;}
+.flow-header span:last-child{padding-left:12px;}
+.route{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+ul{list-style:none;padding:0;}
+.movements{display:flex;flex-wrap:wrap;gap:8px;}
+.movement-tag{background:#FEF9E7;border:1px solid #F39C12;color:#7D6608;border-radius:8px;padding:4px 10px;font-size:0.85em;}
+.why{color:#555;line-height:1.7;font-size:0.95em;}
+</style>
+</head>
+<body>
+${renderActivityContent(activity, graphData, criteriaMap)}
 </body>
 </html>`;
 }
 
-export function renderIndexHTML(activities) {
+export function renderIndexContent(activities) {
   const competencyColors = ['#D5F5E3', '#D6EAF8', '#FEF9E7', '#FDEDEC'];
 
   const tiles = activities.map(({ name, activity }) => {
@@ -189,6 +191,15 @@ export function renderIndexHTML(activities) {
     ? '<p class="empty">No activities yet — ask Claude to generate some.</p>'
     : '';
 
+  return `<a class="home" href="../index.html">&#127968; Home</a>
+<h1>Physical Play</h1>
+<p class="subtitle">Jungle gym activities — adult guided</p>
+<div class="tiles">
+${tiles}${emptyMsg}
+</div>`;
+}
+
+export function renderIndexHTML(activities) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -209,12 +220,7 @@ h1{font-size:3em;color:#1E8449;margin-bottom:8px;}
 </style>
 </head>
 <body>
-<a class="home" href="../index.html">&#127968; Home</a>
-<h1>Physical Play</h1>
-<p class="subtitle">Jungle gym activities — adult guided</p>
-<div class="tiles">
-${tiles}${emptyMsg}
-</div>
+${renderIndexContent(activities)}
 </body>
 </html>`;
 }

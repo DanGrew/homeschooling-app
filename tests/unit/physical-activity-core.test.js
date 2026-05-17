@@ -4,7 +4,9 @@ import {
   renderFlowRows,
   renderGuidanceItems,
   renderFreePlay,
+  renderActivityContent,
   renderActivityHTML,
+  renderIndexContent,
   renderIndexHTML,
 } from '../../core/physical/physical-activity-core.js'
 
@@ -134,6 +136,36 @@ describe('renderFreePlay', () => {
   })
 })
 
+describe('renderActivityContent', () => {
+  it('includes the activity title', () => {
+    const html = renderActivityContent(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).toContain('Test Activity')
+  })
+
+  it('includes all competencies', () => {
+    const html = renderActivityContent(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).toContain('balance')
+    expect(html).toContain('motor planning')
+  })
+
+  it('includes Steps and Prompts column headers', () => {
+    const html = renderActivityContent(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).toContain('Steps')
+    expect(html).toContain('Prompts')
+  })
+
+  it('includes why it works text', () => {
+    const html = renderActivityContent(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).toContain('Builds motor planning')
+  })
+
+  it('does not include DOCTYPE or html tags', () => {
+    const html = renderActivityContent(MOCK_ACTIVITY, MOCK_GRAPH)
+    expect(html).not.toMatch(/<!DOCTYPE/i)
+    expect(html).not.toContain('<html')
+  })
+})
+
 describe('renderActivityHTML', () => {
   it('includes the activity title', () => {
     const html = renderActivityHTML(MOCK_ACTIVITY, MOCK_GRAPH)
@@ -203,6 +235,29 @@ describe('renderActivityHTML with criteriaMap', () => {
   it('omits criteria section when criteriaMap is empty', () => {
     const html = renderActivityHTML(activityWithCriteria, MOCK_GRAPH, {})
     expect(html).not.toContain('EYFS Criteria')
+  })
+})
+
+describe('renderIndexContent', () => {
+  it('includes activity title', () => {
+    const html = renderIndexContent([{ name: 'test-act', activity: MOCK_ACTIVITY }])
+    expect(html).toContain('Test Activity')
+  })
+
+  it('includes link to activity', () => {
+    const html = renderIndexContent([{ name: 'test-act', activity: MOCK_ACTIVITY }])
+    expect(html).toContain('activities/test-act/')
+  })
+
+  it('shows empty message when no activities', () => {
+    const html = renderIndexContent([])
+    expect(html).toContain('No activities yet')
+  })
+
+  it('does not include DOCTYPE or html tags', () => {
+    const html = renderIndexContent([])
+    expect(html).not.toMatch(/<!DOCTYPE/i)
+    expect(html).not.toContain('<html')
   })
 })
 

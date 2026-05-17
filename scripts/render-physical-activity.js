@@ -5,57 +5,29 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const ACTIVITIES_JSON = path.join(ROOT, 'content/physical/activities');
+const MANIFEST = path.join(ROOT, 'content/physical/activities/index.json');
 const ACTIVITIES_HTML = path.join(ROOT, 'app/physical/activities');
+const SHELL = path.join(ROOT, 'app/physical/activities/_shell.html');
+
+const manifest = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
+const shell = fs.readFileSync(SHELL, 'utf8');
 
 const args = process.argv.slice(2);
 const target = args[0];
 
-(async () => {
-  const { renderActivityHTML, renderIndexHTML } = await import('../core/physical/physical-activity-core.js');
+const entries = target
+  ? manifest.filter(e => e.file === target + '.json')
+  : manifest;
 
-  const graphData = JSON.parse(fs.readFileSync(
-    path.join(ROOT, 'content/physical/jungle-gym.json'), 'utf8'
-  ));
+if (!entries.length) {
+  console.log('No matching entries in manifest.');
+  process.exit(0);
+}
 
-  const criteriaData = JSON.parse(fs.readFileSync(
-    path.join(ROOT, 'content/curriculum/criteria.json'), 'utf8'
-  ));
-  const criteriaMap = {};
-  criteriaData.areas.forEach(area => {
-    area.criteria.forEach(c => { criteriaMap[c.id] = { label: c.label, areaLabel: area.shortLabel }; });
-  });
-
-  const files = target
-    ? [`${target}.json`]
-    : fs.readdirSync(ACTIVITIES_JSON).filter(f => f.endsWith('.json') && f !== 'index.json');
-
-  if (!files.length) {
-    console.log('No activity JSON files found.');
-    process.exit(0);
-  }
-
-  const activities = [];
-
-  files.forEach(file => {
-    const name = file.replace('.json', '');
-    const activity = JSON.parse(fs.readFileSync(path.join(ACTIVITIES_JSON, file), 'utf8'));
-    const html = renderActivityHTML(activity, graphData, criteriaMap);
-    const outDir = path.join(ACTIVITIES_HTML, name);
-    fs.mkdirSync(outDir, { recursive: true });
-    fs.writeFileSync(path.join(outDir, 'index.html'), html);
-    console.log(`Rendered: app/physical/activities/${name}/index.html`);
-    activities.push({ name, activity });
-  });
-
-  if (!target) {
-    const allFiles = fs.readdirSync(ACTIVITIES_JSON).filter(f => f.endsWith('.json') && f !== 'index.json');
-    const allActivities = allFiles.map(file => ({
-      name: file.replace('.json', ''),
-      activity: JSON.parse(fs.readFileSync(path.join(ACTIVITIES_JSON, file), 'utf8'))
-    }));
-    const indexHTML = renderIndexHTML(allActivities);
-    fs.writeFileSync(path.join(ROOT, 'app/physical/index.html'), indexHTML);
-    console.log('Updated: app/physical/index.html');
-  }
-})();
+entries.forEach(entry => {
+  const name = entry.file.replace('.json', '');
+  const outDir = path.join(ACTIVITIES_HTML, name);
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'index.html'), shell);
+  console.log(`Scaffolded: app/physical/activities/${name}/index.html`);
+});
