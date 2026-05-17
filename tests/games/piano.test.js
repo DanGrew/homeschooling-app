@@ -22,8 +22,9 @@ test('lesson page songs button has Songs label', async ({ page }) => {
 
 test('lesson page songs popout opens when button clicked', async ({ page }) => {
   await page.goto(LESSON_URL)
-  await page.waitForLoadState('networkidle')
-  await page.locator('.nav-bar .nav-btn-container button').click()
+  const button = page.locator('.nav-bar .nav-btn-container button')
+  await expect(button).toBeVisible()
+  await button.click()
   await expect(page.locator('.nav-custom-popout')).toBeVisible()
 })
 
@@ -37,8 +38,9 @@ test('lesson page songs popout uses fixed positioning', async ({ page }) => {
 
 test('lesson page songs popout closes when clicking outside', async ({ page }) => {
   await page.goto(LESSON_URL)
-  await page.waitForLoadState('networkidle')
-  await page.locator('.nav-bar .nav-btn-container button').click()
+  const button = page.locator('.nav-bar .nav-btn-container button')
+  await expect(button).toBeVisible()
+  await button.click()
   await expect(page.locator('.nav-custom-popout')).toBeVisible()
   await page.locator('.game-area').click()
   await expect(page.locator('.nav-custom-popout')).not.toBeVisible()
