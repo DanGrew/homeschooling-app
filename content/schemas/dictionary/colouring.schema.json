@@ -2,33 +2,71 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Dictionary Colouring",
   "type": "object",
-  "required": ["concept", "type", "level", "viewBox", "shapes"],
+  "required": [
+    "concept",
+    "type",
+    "viewBox",
+    "shapes"
+  ],
   "additionalProperties": false,
   "properties": {
-    "concept": { "type": "string" },
-    "type": { "type": "string", "const": "colouring" },
-    "level": { "type": "integer", "minimum": 1 },
-    "viewBox": { "type": "string", "pattern": "^[\\d.]+ [\\d.]+ [\\d.]+ [\\d.]+$" },
+    "concept": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "const": "colouring"
+    },
+    "viewBox": {
+      "type": "string",
+      "pattern": "^[\\d.]+ [\\d.]+ [\\d.]+ [\\d.]+$"
+    },
     "shapes": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "tag", "attrs"],
+        "required": [
+          "id",
+          "tag",
+          "attrs"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": { "type": "string" },
+          "id": {
+            "type": "string"
+          },
           "tag": {
             "type": "string",
-            "enum": ["path", "ellipse", "circle", "rect", "polygon", "polyline", "line"]
+            "enum": [
+              "path",
+              "ellipse",
+              "circle",
+              "rect",
+              "polygon",
+              "polyline",
+              "line"
+            ]
           },
           "attrs": {
             "type": "object",
-            "additionalProperties": { "type": "string" }
+            "additionalProperties": {
+              "type": "string"
+            }
           },
-          "colour": { "type": ["string", "null"], "pattern": "^#[0-9A-Fa-f]{6}$" },
-          "noColour": { "type": "boolean" },
-          "fixed": { "type": "boolean" }
+          "colour": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^#[0-9A-Fa-f]{6}$"
+          },
+          "noColour": {
+            "type": "boolean"
+          },
+          "fixed": {
+            "type": "boolean"
+          }
         }
       }
     }

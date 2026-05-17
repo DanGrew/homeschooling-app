@@ -74,7 +74,7 @@ function render(shape){
   svg.innerHTML='';
   [shape.decor].filter(Boolean).forEach(function(decor){var bg=document.createElementNS('http://www.w3.org/2000/svg','g');bg.id='bg';bg.setAttribute('opacity','0.4');bg.innerHTML=decor;Array.from(bg.children).forEach(function(el){el.removeAttribute('opacity');});svg.appendChild(bg);});
   nextDot=1;prevDot=null;complete=false;
-  document.getElementById('title').textContent=shape.name+[shape.level].filter(function(v){return v!==undefined;}).map(function(v){return ' [Level '+v+']';}).concat([''])[0];
+  document.getElementById('title').textContent=shape.name;
   hideBanner();
   document.getElementById('instruction').innerHTML='Tap dot <b>1</b> to start!';
 

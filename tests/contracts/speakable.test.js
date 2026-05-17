@@ -9,7 +9,6 @@ const ACTIVITY_PAGES = [
   '/homeschooling-app/app/activities/colouring/',
   '/homeschooling-app/app/activities/connect-the-dots/',
   '/homeschooling-app/app/activities/count-shapes/',
-  '/homeschooling-app/app/activities/drawing-dots/',
   '/homeschooling-app/app/activities/logic-gates/puzzle.html',
   '/homeschooling-app/app/activities/logic-gates/sandbox.html',
   '/homeschooling-app/app/activities/match-colour-shape/',

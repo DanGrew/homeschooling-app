@@ -1,7 +1,6 @@
 {
   "concept": "digger",
   "type": "colouring",
-  "level": 1,
   "viewBox": "0 0 463 298",
   "shapes": [
     {
@@ -12,6 +11,15 @@
         "stroke-width": "2"
       },
       "colour": "#F1C40F"
+    },
+    {
+      "id": "shape_4",
+      "tag": "path",
+      "attrs": {
+        "d": "M 453 106.1 c 0 -5 -4.1 -9.1 -9.1 -9.1 h -34.9 c -5 0 -9.1 4.1 -9.1 9.1 v 88.9 c 0 5 4.1 9.1 9.1 9.1 h 34.9 c 5 0 9.1 -4.1 9.1 -9.1 V 106.1 z",
+        "stroke-width": "2"
+      },
+      "colour": "#1F3A93"
     },
     {
       "id": "shape_2",
@@ -30,15 +38,6 @@
         "stroke-width": "2"
       },
       "colour": "#E74C3C"
-    },
-    {
-      "id": "shape_4",
-      "tag": "path",
-      "attrs": {
-        "d": "M 453 106.1 c 0 -5 -4.1 -9.1 -9.1 -9.1 h -34.9 c -5 0 -9.1 4.1 -9.1 9.1 v 88.9 c 0 5 4.1 9.1 9.1 9.1 h 34.9 c 5 0 9.1 -4.1 9.1 -9.1 V 106.1 z",
-        "stroke-width": "2"
-      },
-      "colour": "#1F3A93"
     },
     {
       "id": "shape_5",

@@ -38,6 +38,31 @@ Scans every `.js` file in `/app`.
 Fails if any file contains a top-level `export` statement.
 If a file exports, it's reusable and belongs in `core/` or `ui/`, not `app/`.
 
+### `colouring-zorder-svg-sync` (preferred fix tool)
+Syncs `colouring.json` shape order to the original SVG document order — no heuristics.
+SVG elements render in document order; this script uses that as ground truth.
+
+Requires the source SVG files from the `homeschooling` repo under `designs/`.
+Matches shapes by `d`/`cx`/`cy` attributes. Unmatched shapes (manually added) go to end.
+
+Run: `npm run sync:zorder` (report) or `npm run sync:zorder -- --apply` (fix)
+Pass `--designs /path/to/designs` if the homeschooling repo is elsewhere.
+Pass `--concept camel` to target one entry.
+
+### `colouring-zorder` (heuristic fallback — use when source SVG unavailable)
+Scans every `colouring.json` in `/content/dictionary/entries/`.
+Flags pairs of overlapping shapes where a larger shape renders on top of a smaller one,
+or a colourable shape covers a fixed/noColour decoration of similar size.
+
+The colouring renderer appends shapes in array order — SVG painter algorithm means later
+shapes render on top. A misplaced large shape can obscure details the child is meant to see.
+
+Run: `npm run audit:zorder`
+
+Fix: `npm run audit:zorder -- --apply` sorts each flagged file's shapes by bounding box
+area descending (large background shapes first, small detail shapes last). Review visually
+after applying — the heuristic is good but not perfect for highly concave paths.
+
 ### `ui-cyclomatic`
 Scans every `.js` file in `/ui` using ESLint's `complexity` rule (AST-based).
 Fails if any **function** has a cyclomatic complexity above **1** — meaning zero branches per function.
@@ -236,4 +261,8 @@ node scripts/arch-check.js ui-complexity     reports/out.txt
 node scripts/arch-check.js no-stray-files    reports/out.txt
 node scripts/arch-check.js no-app-exports    reports/out.txt
 node scripts/check-ui-cyclomatic.js          reports/out.txt
+npm run sync:zorder                            # sync colouring z-order from source SVGs (preferred)
+npm run sync:zorder -- --apply               # write fixes
+npm run audit:zorder                           # heuristic z-order audit (no SVG required)
+npm run audit:zorder -- --apply               # heuristic fix (review visually after)
 ```

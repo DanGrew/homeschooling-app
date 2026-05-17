@@ -21,8 +21,8 @@ animals.forEach(function(id) {
     var repFile = path.join(animalDir, filename);
     var rep;
     try { rep = JSON.parse(fs.readFileSync(repFile, 'utf8')); } catch(e) { return; }
-    if (!rep.type || rep.level === undefined) return;
-    var key = rep.type + '-level-' + rep.level;
+    if (!rep.type) return;
+    var key = rep.type;
     if (!groups[key]) groups[key] = [];
     groups[key].push('entries/' + id + '/' + filename);
   });

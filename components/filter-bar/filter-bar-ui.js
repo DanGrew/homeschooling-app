@@ -1,5 +1,5 @@
-import { extractTags, extractLevels, filterItems, tagIcon, optIcon, btnStyle } from '../../core/filter-bar/filter-bar-core.js';
-export { extractTags, extractLevels, filterItems };
+import { extractTags, filterItems, tagIcon, optIcon, btnStyle } from '../../core/filter-bar/filter-bar-core.js';
+export { extractTags, filterItems };
 import { makeSpeakable } from '../speech/speakable.js';
 
 var _expanded = false;
@@ -37,16 +37,13 @@ function getSlot() {
   return document.getElementById('filter-bar');
 }
 
-var LEVEL_LABEL = { 'true': function() { return 'All Levels'; }, 'false': function(l) { return 'Level ' + l; } };
-var LEVEL_ICON  = { 'true': function() { return '\u2605'; },      'false': function(l) { return 'L' + l; } };
-
 export function buildFilterBar(items, onChange) {
   var slot = getSlot();
   if (!slot) return;
   slot.innerHTML = '';
 
-  var tags = extractTags(items), levels = extractLevels(items);
-  var activeTag = 'all', activeLevel = 'all';
+  var tags = extractTags(items);
+  var activeTag = 'all';
 
   function updateStyles() {
     slot.querySelectorAll('button[data-tag]').forEach(function(b) {
@@ -54,16 +51,11 @@ export function buildFilterBar(items, onChange) {
       b.style.cssText = btnStyle(_expanded, on, '#2ECC71');
       b.querySelector('[data-label]').style.display = _expanded ? '' : 'none';
     });
-    slot.querySelectorAll('button[data-level]').forEach(function(b) {
-      var on = b.getAttribute('data-level') === String(activeLevel);
-      b.style.cssText = btnStyle(_expanded, on, '#3498DB');
-      b.querySelector('[data-label]').style.display = _expanded ? '' : 'none';
-    });
   }
 
   function apply() {
     updateStyles();
-    onChange(filterItems(items, activeTag, activeLevel));
+    onChange(filterItems(items, activeTag));
   }
 
   _applyFn = updateStyles;
@@ -74,20 +66,6 @@ export function buildFilterBar(items, onChange) {
       activeTag = t; apply();
     }));
   });
-
-  if (levels.length > 0) {
-    var sep = document.createElement('div');
-    sep.style.cssText = 'border-top:1px solid #eee;margin:4px 0;flex-shrink:0;';
-    slot.appendChild(sep);
-    ['all'].concat(levels).forEach(function(l) {
-      slot.appendChild(makeBtn(
-        LEVEL_ICON[String(l === 'all')](l),
-        LEVEL_LABEL[String(l === 'all')](l),
-        'data-level', String(l), l === 'all', '#3498DB',
-        function() { activeLevel = l; apply(); }
-      ));
-    });
-  }
 
   apply();
 }

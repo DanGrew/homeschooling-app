@@ -36,8 +36,8 @@ var Dictionary=(function(){
     });
   }
 
-  function loadManifest(type,level){
-    var manifestPath=base+'manifests/'+type+'-level-'+level+'.json';
+  function loadManifest(type){
+    var manifestPath=base+'manifests/'+type+'.json';
     return fetchJSON(manifestPath).then(function(paths){
       return Promise.all(paths.map(function(p){return loadRep(p);}));
     });

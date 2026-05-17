@@ -45,7 +45,6 @@ test('Puzzles section has puzzle games', async ({ page }) => {
   await page.goto('/homeschooling-app/app/games/')
   await expect(page.getByRole('link', { name: 'Move the Block' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Connect the Dots' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Drawing Dots' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Puzzle', exact: true })).toBeVisible()
 })
 
