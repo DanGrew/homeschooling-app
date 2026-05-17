@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Learnings</title>
+<link rel="stylesheet" href="../../styles/theme.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;font-family:inherit;padding:24px 16px 48px;}
+a.back{display:inline-block;margin-bottom:20px;color:#7c6fcd;text-decoration:none;font-size:0.95em;}
+a.back:hover{text-decoration:underline;}
+h1{font-size:2em;color:#333;margin-bottom:28px;}
+.group-label{font-size:0.85em;font-weight:bold;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:32px 0 12px;}
+.group-label:first-of-type{margin-top:0;}
+.entry{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.07);}
+.entry-time{font-size:0.78em;color:#aaa;margin-bottom:4px;}
+.entry-title{font-size:1em;font-weight:bold;color:#333;margin-bottom:6px;}
+.entry-criteria{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-size:0.75em;background:#f0e8ff;color:#7c6fcd;border-radius:6px;padding:2px 8px;}
+.empty{color:#bbb;font-size:0.95em;margin-top:32px;text-align:center;}
+</style>
+</head>
+<body>
+<a class="back" href="../">← Home</a>
+<h1>Learnings</h1>
+<div id="journal"></div>
+<script type="module">
+import { getAllEvents } from '../../core/telemetry/learning-db.js';
+
+var AREA = {
+  ead: 'Expressive Arts',
+  uw:  'Understanding the World',
+  cl:  'Communication',
+  pd:  'Physical Development',
+  psed:'Personal & Social',
+  l:   'Literacy',
+  m:   'Maths'
+};
+
+function formatCriterion(c) {
+  var parts = c.split('.');
+  var area = AREA[parts[0]] || parts[0];
+  var sub = parts.slice(1).join('.').replace(/-/g, ' ');
+  return sub ? area + ' — ' + sub : area;
+}
+
+function groupKey(ts) {
+  var now = new Date();
+  var d = new Date(ts);
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  var startOfWeek = startOfToday - (now.getDay() * 86400000);
+  if (ts >= startOfToday) return 'Today';
+  if (ts >= startOfWeek) return 'Earlier This Week';
+  return 'Older';
+}
+
+function formatTime(ts) {
+  return new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+var lessonCache = {};
+function fetchLesson(activityId, lessonId, cb) {
+  if (!activityId || !lessonId) { cb(null); return; }
+  var key = activityId;
+  if (lessonCache[key]) { cb(lessonCache[key][lessonId] || null); return; }
+  fetch('../../content/lessons/' + activityId + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var map = {};
+      (data.lessons || []).forEach(function(l) { map[l.id] = l; });
+      lessonCache[key] = map;
+      cb(map[lessonId] || null);
+    })
+    .catch(function() { cb(null); });
+}
+
+function renderEntry(event, lesson) {
+  var div = document.createElement('div');
+  div.className = 'entry';
+  var group = groupKey(event.timestamp);
+  var timeStr = group === 'Today' ? formatTime(event.timestamp) : formatDate(event.timestamp) + ' ' + formatTime(event.timestamp);
+  var title = lesson ? lesson.title : (event.lessonId || event.type);
+  var criteria = lesson ? (lesson.criteria || []) : [];
+  div.innerHTML =
+    '<div class="entry-time">' + timeStr + '</div>' +
+    '<div class="entry-title">' + title + '</div>' +
+    (criteria.length ? '<div class="entry-criteria">' + criteria.map(function(c) {
+      return '<span class="tag">' + formatCriterion(c) + '</span>';
+    }).join('') + '</div>' : '');
+  return div;
+}
+
+getAllEvents(function(events) {
+  var journal = document.getElementById('journal');
+  if (!events.length) {
+    journal.innerHTML = '<p class="empty">No learnings recorded yet.</p>';
+    return;
+  }
+  events.sort(function(a, b) { return b.timestamp - a.timestamp; });
+
+  var groups = { 'Today': [], 'Earlier This Week': [], 'Older': [] };
+  events.forEach(function(e) { groups[groupKey(e.timestamp)].push(e); });
+
+  var pending = 0;
+  var containers = {};
+  ['Today', 'Earlier This Week', 'Older'].forEach(function(label) {
+    if (!groups[label].length) return;
+    var h = document.createElement('div');
+    h.className = 'group-label';
+    h.textContent = label;
+    journal.appendChild(h);
+    var wrap = document.createElement('div');
+    containers[label] = wrap;
+    journal.appendChild(wrap);
+  });
+
+  events.forEach(function(event) {
+    var label = groupKey(event.timestamp);
+    var wrap = containers[label];
+    if (!wrap) return;
+    pending++;
+    fetchLesson(event.activityId, event.lessonId, function(lesson) {
+      wrap.appendChild(renderEntry(event, lesson));
+      pending--;
+    });
+  });
+});
+</script>
+</body>
+</html>
