@@ -1,0 +1,97 @@
+{
+  "title": "Rope Rescue",
+  "archetype": "Rescue Mission",
+  "competencies": ["grip_strength", "confidence", "bilateral_integration"],
+  "key_movements": [
+    "rope grid ascent",
+    "rope to ladder lateral transfer",
+    "ladder climb to top",
+    "monkey bars traverse",
+    "climbing wall descent"
+  ],
+  "route": ["G2", "A3", "A4", "B1", "B2", "A2", "G8"],
+  "route_labels": [
+    "Rope grid base",
+    "Rope grid mid",
+    "Ladder mid",
+    "Top platform (ladder side)",
+    "Top platform (rope/wall side)",
+    "Climbing wall mid (grips)",
+    "Climbing wall base"
+  ],
+  "setup": [
+    "Bean bag at top platform (rope/wall side) — the stranded animal",
+    "Position yourself between rope grid mid and the top"
+  ],
+  "activity_flow": [
+    {
+      "step": 1,
+      "instruction": "Start at rope grid base. Point to the bean bag at the top.",
+      "prompt": "\"There's an animal stuck up there. How do you think you'll get to it?\""
+    },
+    {
+      "step": 2,
+      "instruction": "Child climbs the rope grid. Don't lift.",
+      "prompt": "\"Hold the rope with both hands, one foot at a time.\" Then step back."
+    },
+    {
+      "step": 3,
+      "instruction": "At rope grid mid, child transfers across to ladder mid.",
+      "prompt": "\"What does your body need to do first?\" Don't point to the rung."
+    },
+    {
+      "step": 4,
+      "instruction": "Climb ladder to top platform.",
+      "prompt": "\"Strong hands, strong feet.\""
+    },
+    {
+      "step": 5,
+      "instruction": "Monkey bars across to bean bag at far top platform.",
+      "prompt": "If they drop: \"Your hands got tired. Try again or find another way?\""
+    },
+    {
+      "step": 6,
+      "instruction": "Child picks up the bean bag.",
+      "prompt": "\"How are you going to carry it and still hold on?\""
+    },
+    {
+      "step": 7,
+      "instruction": "Descend climbing wall grips to climbing wall base.",
+      "prompt": "\"Slow feet. Feel the wall.\""
+    },
+    {
+      "step": 8,
+      "instruction": "Finish at climbing wall base. Debrief.",
+      "prompt": "\"What was the hardest part? What did your hands have to do on the bars?\""
+    }
+  ],
+  "adult_guidance": [
+    {
+      "headline": "Model grip once, then step back",
+      "detail": "Wrap your fingers around, both hands on — then move away. Don't re-model mid-climb."
+    },
+    {
+      "headline": "Silence means planning",
+      "detail": "If the child is still and looking, they are working it out. Don't fill the pause."
+    },
+    {
+      "headline": "The carry is the challenge",
+      "detail": "Don't suggest how to hold the bean bag on the way down. The problem-solving is the point."
+    },
+    {
+      "headline": "Let them find another way",
+      "detail": "If monkey bars feel too hard, offer a choice: go back the way they came or try the wall. The rescue still completes."
+    }
+  ],
+  "variations": [
+    "Two rescues: second bean bag at rope grid mid — collect on the way up or make a second trip",
+    "Sleeping creature: don't wake it — child must move slowly and controlled",
+    "Pair version: one child up the rope grid, one up the ladder — meet at the top, one crosses for the rescue"
+  ],
+  "free_play": [
+    "Where should the animal live on the apparatus?",
+    "Can you make a route to get it home?",
+    "What if there were two to rescue?"
+  ],
+  "why_it_works": "The rope grid ascent demands bilateral grip and weight transfer from the first move. The monkey bars are the curriculum peak — both hands working in sequence, grip sustaining load, child self-regulating pace. Carrying the bean bag on descent adds a genuine self-managed constraint: the child must solve a real problem rather than follow a prescribed technique, building confidence through agency rather than instruction."
+}
