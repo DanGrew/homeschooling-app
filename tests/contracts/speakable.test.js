@@ -60,6 +60,24 @@ function findUnwiredText(page, excludedIds) {
   }, excludedIds);
 }
 
+// SVG elements that haven't been made speakable (directly or via ancestor).
+// excludedIds: parent element IDs declared in the page's opt-out profile.
+function findUnwiredSvgs(page, excludedIds) {
+  return page.evaluate((excluded) => {
+    const results = [];
+    for (const svg of document.querySelectorAll('svg')) {
+      if (getComputedStyle(svg).display === 'none') continue;
+      if (getComputedStyle(svg).visibility === 'hidden') continue;
+      if (svg.closest('.speakable')) continue;
+      if (svg.closest('[data-speakable-container]')) continue;
+      const parent = svg.parentElement;
+      if (parent?.id && excluded.includes(parent.id)) continue;
+      results.push(parent?.id || parent?.className || '(unknown)');
+    }
+    return results;
+  }, excludedIds);
+}
+
 for (const { pagePath, profile } of PAGES) {
   const excludedIds = profile['speakable-text'] || [];
 
@@ -82,5 +100,18 @@ for (const { pagePath, profile } of PAGES) {
     const unwired = await findUnwiredText(page, excludedIds);
 
     expect(unwired, `Unwired text in ${pagePath}`).toEqual([]);
+  });
+
+  test(`${pagePath} — all svgs speakable`, async ({ page }) => {
+    if (profile['speakable-svg'] === true) return;
+
+    await page.goto(pagePath);
+    await page.waitForLoadState('networkidle');
+
+    const speakableSvgProfile = profile['speakable-svg'];
+    const excludedSvgIds = Array.isArray(speakableSvgProfile) ? speakableSvgProfile : [];
+    const unwired = await findUnwiredSvgs(page, excludedSvgIds);
+
+    expect(unwired, `Unwired SVGs in ${pagePath}`).toEqual([]);
   });
 }

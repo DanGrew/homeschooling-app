@@ -26,7 +26,8 @@
 </div>
 <script>
 var types=['circle','square','triangle'];
-var count,locked;
+var count,locked,currentType;
+var DO_SPEAK={'true':function(el,text){window.__makeSpeakable(el,text);},'false':function(){}};
 
 function reset(){
   locked=false;
@@ -47,10 +48,24 @@ function check(n,btn){
 
 function newRound(){
   count=Math.floor(Math.random()*5)+1;
-  var t=types[Math.floor(Math.random()*types.length)];
-  document.getElementById('shapes').innerHTML=Array.from({length:count},function(){return svg(t);}).join('');
+  currentType=types[Math.floor(Math.random()*types.length)];
+  var container=document.getElementById('shapes');
+  container.innerHTML='';
+  Array.from({length:count},function(){
+    var btn=document.createElement('button');
+    btn.style.cssText='background:none;border:none;padding:4px;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;';
+    btn.innerHTML=svg(currentType);
+    DO_SPEAK[String(typeof window.__makeSpeakable==='function')](btn,currentType);
+    container.appendChild(btn);
+  });
   reset();
 }
+
+window.addEventListener('load',function(){
+  document.querySelectorAll('#shapes button:not(.speakable)').forEach(function(btn){
+    DO_SPEAK[String(typeof window.__makeSpeakable==='function')](btn,currentType);
+  });
+});
 
 newRound();
 </script>
