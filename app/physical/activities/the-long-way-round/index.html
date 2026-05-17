@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Long Way Round</title>
+<title>Physical Activity</title>
 <link rel="stylesheet" href="../../../../styles/theme.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -25,67 +25,26 @@ ul{list-style:none;padding:0;}
 </style>
 </head>
 <body>
+<script type="module">
+import { renderActivityContent } from '../../../../core/physical/physical-activity-core.js';
 
-<div class="header">
-  <a href="../../index.html">&#8592;</a>
-  <div>
-    <h1>The Long Way Round</h1>
-    <div class="archetype">Route Challenge</div>
-  </div>
-</div>
+var slug = window.location.pathname.replace(/\/$/, '').split('/').pop();
 
-<div class="card">
-  <h2>Competencies</h2>
-  <div><span style="display:inline-block;background:#D5F5E3;color:#1E8449;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">balance</span><span style="display:inline-block;background:#D5F5E3;color:#1E8449;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">motor planning</span><span style="display:inline-block;background:#D5F5E3;color:#1E8449;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">sequencing</span></div>
-</div>
-
-<div class="card">
-  <h2>EYFS Criteria</h2>
-  <div><span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[PD] Climbing apparatus</span><span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[PD] Balance (static & dynamic)</span><span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[PD] Spatial awareness & body schema</span><span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[C&L] Sequencing language</span><span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[PSED] Self-regulation</span></div>
-</div>
-
-<div class="card">
-  <h2>Key Movements</h2>
-  <div class="movements">
-    <span class="movement-tag">ladder climb</span><span class="movement-tag">rope grid traverse</span><span class="movement-tag">rope grid descent</span><span class="movement-tag">walk outside</span><span class="movement-tag">walk inside</span><span class="movement-tag">steps up</span><span class="movement-tag">slide</span>
-  </div>
-</div>
-
-<div class="card">
-  <h2>Route</h2>
-  <div class="route"><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#E8F8F5;border:2px solid #27AE60;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Ladder base</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#FFFDE7;border:2px solid #F39C12;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Ladder mid</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#FFFDE7;border:2px solid #F39C12;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Rope grid mid</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#E8F8F5;border:2px solid #27AE60;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Rope grid base</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#E8F8F5;border:2px solid #27AE60;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Outside corner</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#E8F8F5;border:2px solid #27AE60;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Inside entrance</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#E8F8F5;border:2px solid #27AE60;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Inside platform</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#FFFDE7;border:2px solid #F39C12;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Slide platform</span><span style="color:#aaa;font-size:1.2em;">›</span></span><span style="display:inline-flex;align-items:center;gap:6px;"><span style="background:#E8F8F5;border:2px solid #27AE60;border-radius:8px;padding:4px 10px;font-size:0.9em;font-weight:bold;white-space:nowrap;">Slide exit</span></span></div>
-</div>
-
-<div class="card">
-  <h2>Setup</h2>
-  <ul><li style="padding:5px 0;border-bottom:1px solid #eee;">Spot marker at ladder base (start) and slide exit (finish)</li><li style="padding:5px 0;border-bottom:1px solid #eee;">Walk the route yourself first</li><li style="padding:5px 0;border-bottom:1px solid #eee;">Stand near the rope grid descent on first run</li></ul>
-</div>
-
-<div class="card">
-  <h2>Activity</h2>
-  <div class="flow-header"><span>Steps</span><span>Prompts</span></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">1</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Start at ladder base. Child looks at ladder.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Where do you think it goes?"</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">2</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Child climbs ladder to ladder mid.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">3</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Pause at ladder mid. Child spots the rope grid.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"What can you see? This part is wobbly — how will you hold on?"</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">4</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Traverse rope grid laterally to rope grid mid.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Where's your next hand going?"</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">5</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Descend rope grid to ground.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Face the ropes. Come down slow."</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">6</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Walk outside: rope grid base → outside corner → inside entrance.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">Ask child to recall where they've been. What comes next?</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">7</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Enter inside the apparatus to inside platform.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Does it feel different in here?"</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">8</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Climb steps inside to slide platform.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Can you find the top?"</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">9</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Child pauses, then slides to slide exit.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Fast or slow? You choose."</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #eee;"><div style="display:flex;gap:12px;align-items:flex-start;padding:12px 12px 12px 0;border-right:2px solid #E8F8F5;"><span style="min-width:28px;height:28px;border-radius:50%;background:#27AE60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:0.95em;flex-shrink:0;">10</span><p style="margin:0;line-height:1.5;font-size:0.95em;padding-top:4px;">Finish at slide exit.</p></div><div style="padding:12px 0 12px 12px;color:#555;font-style:italic;font-size:0.9em;line-height:1.5;">"Can you remember every part of the journey?"</div></div>
-</div>
-
-<div class="card" style="background:#F0FFF4;border:1px solid #A9DFBF;">
-  <h2>Adult Guidance</h2>
-  <div style="padding:12px 0;border-bottom:1px solid #d5e8d4;"><div style="font-weight:bold;color:#1E8449;margin-bottom:4px;">Narrate, don't catch</div><div style="color:#444;font-size:0.9em;line-height:1.5;">Stay close on the rope grid descent but spot with eyes. Let the child find their own footing.</div></div><div style="padding:12px 0;border-bottom:1px solid #d5e8d4;"><div style="font-weight:bold;color:#1E8449;margin-bottom:4px;">Say the words before they move</div><div style="color:#444;font-size:0.9em;line-height:1.5;">Over, across, through, up, down, inside, outside. Position language before the movement, not as a correction after.</div></div><div style="padding:12px 0;border-bottom:1px solid #d5e8d4;"><div style="font-weight:bold;color:#1E8449;margin-bottom:4px;">Pause cue, not warning</div><div style="color:#444;font-size:0.9em;line-height:1.5;">If they rush: "Stop — what's your plan?" Builds motor planning without implying danger.</div></div><div style="padding:12px 0;border-bottom:1px solid #d5e8d4;"><div style="font-weight:bold;color:#1E8449;margin-bottom:4px;">Walks are load-bearing</div><div style="color:#444;font-size:0.9em;line-height:1.5;">Ground sections are sequencing time. Don't skip them. Ask what comes next.</div></div><div style="padding:12px 0;border-bottom:1px solid #d5e8d4;"><div style="font-weight:bold;color:#1E8449;margin-bottom:4px;">Celebrate the decision, not the climb</div><div style="color:#444;font-size:0.9em;line-height:1.5;">"I noticed you slowed down on the ropes" lands better than "good climbing."</div></div>
-</div>
-
-<div class="card">
-  <h2>Variations</h2>
-  <ul><li style="padding:7px 0;border-bottom:1px solid #eee;line-height:1.5;"><strong>1.</strong> Reverse: start at slide exit, climb steps, go back through in opposite order</li><li style="padding:7px 0;border-bottom:1px solid #eee;line-height:1.5;"><strong>2.</strong> Add crawl: detour through crawl hole between inside platform and steps</li><li style="padding:7px 0;border-bottom:1px solid #eee;line-height:1.5;"><strong>3.</strong> Memory run: adult names the route once, then stays silent — child leads</li></ul>
-</div>
-
-<div class="card">
-  <h2>Free Play</h2>
-  <ul style="color:#1E8449;line-height:1.8;"><li style="padding:5px 0;">&#10023; Make your own long way round</li><li style="padding:5px 0;">&#10023; Use at least one climb and one walk</li><li style="padding:5px 0;">&#10023; Start and end at different spots</li><li style="padding:5px 0;">&#10023; Find the sneakiest route</li></ul>
-</div>
-
-<div class="card">
-  <h2>Why This Works</h2>
-  <p class="why">The route mixes a ladder ascent, rope traverse, rope descent, ground walk, enclosed transition, and slide — no two consecutive movements use the same motor pattern, forcing continuous motor planning. The walk sections require the child to hold the full route in memory without apparatus cues, making sequencing cognitive as well as physical. The adult's role is to make the child's planning visible through language, not to remove the need for it.</p>
-</div>
-
+Promise.all([
+  fetch('../../../../content/physical/activities/' + slug + '.json').then(function(r) { return r.json(); }),
+  fetch('../../../../content/physical/jungle-gym.json').then(function(r) { return r.json(); }),
+  fetch('../../../../content/curriculum/criteria.json').then(function(r) { return r.json(); }),
+]).then(function(results) {
+  var activity = results[0];
+  var graphData = results[1];
+  var criteriaData = results[2];
+  var criteriaMap = {};
+  criteriaData.areas.forEach(function(area) {
+    area.criteria.forEach(function(c) { criteriaMap[c.id] = { label: c.label, areaLabel: area.shortLabel }; });
+  });
+  document.title = activity.title;
+  document.body.innerHTML = renderActivityContent(activity, graphData, criteriaMap);
+});
+</script>
 </body>
 </html>

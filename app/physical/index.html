@@ -18,62 +18,21 @@ h1{font-size:3em;color:#1E8449;margin-bottom:8px;}
 </style>
 </head>
 <body>
-<a class="home" href="../index.html">&#127968; Home</a>
-<h1>Physical Play</h1>
-<p class="subtitle">Jungle gym activities — adult guided</p>
-<div class="tiles">
-  <a class="tile" href="activities/rope-rescue/" style="background:#F0FFF4;">
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
-      <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:40px;">
-        <rect x="10" y="30" width="40" height="4" rx="2" fill="#A9DFBF"/>
-        <rect x="20" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="36" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="22" y="10" width="16" height="10" rx="3" fill="#52BE80"/>
-        <circle cx="30" cy="6" r="4" fill="#82E0AA"/>
-      </svg>
-      <div style="text-align:center;"><span style="font-size:0.7em;background:#D5F5E3;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">grip strength</span><span style="font-size:0.7em;background:#D6EAF8;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">confidence</span></div>
-    </div>
-    <span style="padding:0 8px 12px;text-align:center;font-size:0.95em;">Rope Rescue</span>
-  </a>
-  <a class="tile" href="activities/secret-passage/" style="background:#F0FFF4;">
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
-      <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:40px;">
-        <rect x="10" y="30" width="40" height="4" rx="2" fill="#A9DFBF"/>
-        <rect x="20" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="36" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="22" y="10" width="16" height="10" rx="3" fill="#52BE80"/>
-        <circle cx="30" cy="6" r="4" fill="#82E0AA"/>
-      </svg>
-      <div style="text-align:center;"><span style="font-size:0.7em;background:#D5F5E3;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">core stability</span><span style="font-size:0.7em;background:#D6EAF8;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">spatial awareness</span></div>
-    </div>
-    <span style="padding:0 8px 12px;text-align:center;font-size:0.95em;">Secret Passage</span>
-  </a>
-  <a class="tile" href="activities/switchback/" style="background:#F0FFF4;">
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
-      <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:40px;">
-        <rect x="10" y="30" width="40" height="4" rx="2" fill="#A9DFBF"/>
-        <rect x="20" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="36" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="22" y="10" width="16" height="10" rx="3" fill="#52BE80"/>
-        <circle cx="30" cy="6" r="4" fill="#82E0AA"/>
-      </svg>
-      <div style="text-align:center;"><span style="font-size:0.7em;background:#D5F5E3;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">upper limb strength</span><span style="font-size:0.7em;background:#D6EAF8;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">crossing midline</span></div>
-    </div>
-    <span style="padding:0 8px 12px;text-align:center;font-size:0.95em;">Switchback</span>
-  </a>
-  <a class="tile" href="activities/the-long-way-round/" style="background:#F0FFF4;">
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
-      <svg viewBox="0 0 60 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:40px;">
-        <rect x="10" y="30" width="40" height="4" rx="2" fill="#A9DFBF"/>
-        <rect x="20" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="36" y="18" width="4" height="14" rx="2" fill="#27AE60"/>
-        <rect x="22" y="10" width="16" height="10" rx="3" fill="#52BE80"/>
-        <circle cx="30" cy="6" r="4" fill="#82E0AA"/>
-      </svg>
-      <div style="text-align:center;"><span style="font-size:0.7em;background:#D5F5E3;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">balance</span><span style="font-size:0.7em;background:#D6EAF8;border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">motor planning</span></div>
-    </div>
-    <span style="padding:0 8px 12px;text-align:center;font-size:0.95em;">The Long Way Round</span>
-  </a>
-</div>
+<script type="module">
+import { renderIndexContent } from '../../core/physical/physical-activity-core.js';
+
+fetch('../../content/physical/activities/index.json')
+  .then(function(r) { return r.json(); })
+  .then(function(manifest) {
+    return Promise.all(manifest.map(function(entry) {
+      return fetch('../../content/physical/activities/' + entry.file)
+        .then(function(r) { return r.json(); })
+        .then(function(activity) { return { name: entry.file.replace('.json', ''), activity: activity }; });
+    }));
+  })
+  .then(function(activities) {
+    document.body.innerHTML = renderIndexContent(activities);
+  });
+</script>
 </body>
 </html>
