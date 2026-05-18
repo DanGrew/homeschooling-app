@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Logic Gates" data-instruction="Flip switches to explore"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Logic Gates" data-instruction="Flip switches to explore" data-links='[{"href":"puzzle.html","label":"Puzzles"}]' data-links-icon="game"></div>
 <div class="game-area">
   <div id="puzzle-area"></div>
   <div id="paginator-bar"></div>
@@ -47,6 +47,7 @@ window.EXERCISES = [
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
 import { buildSimpleFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
 import { GuidanceService } from '../../../components/guidance/guidance-service.js';
+import { makeSpeakable } from '../../../components/speech/speakable.js';
 
 var allItems = [];
 
@@ -63,6 +64,7 @@ function renderPrimitive(item) {
   area.innerHTML = '';
   var svg = window.StationUI.buildStation(item, function(id) { svg._handleToggle(id); });
   area.appendChild(svg);
+  makeSpeakable(area);
 }
 
 var ITEM_RENDER = {
