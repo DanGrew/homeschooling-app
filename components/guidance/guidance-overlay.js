@@ -11,6 +11,7 @@ export function GuidanceOverlay() {
   this._el = null;
   this._bubbleEl = null;
   this._textEl = null;
+  this._dotsEl = null;
   this._progressEl = null;
   this._nextBtn = null;
   this._charEl = null;
@@ -91,7 +92,12 @@ GuidanceOverlay.prototype._build = function(onStop) {
   footer.appendChild(next);
   footer.appendChild(replay);
   footer.appendChild(closeWrap);
+  var dots = document.createElement('div');
+  dots.style.cssText = 'display:none;flex-direction:row;gap:8px;justify-content:center;padding-top:4px;';
+  this._dotsEl = dots;
+
   body.appendChild(text);
+  body.appendChild(dots);
   body.appendChild(footer);
   bubble.appendChild(char);
   bubble.appendChild(body);
@@ -113,7 +119,25 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   var showNext = !!step.auto;
   this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
   this._nextBtn.classList.toggle('speakable', showNext);
+  this._renderDots(step.dots || 0, 0);
   this._el.style.display = '';
+};
+
+GuidanceOverlay.prototype._renderDots = function(total, ticked) {
+  this._dotsEl.innerHTML = '';
+  this._dotsEl.style.display = total > 0 ? 'flex' : 'none';
+  for (var i = 0; i < total; i++) {
+    var box = document.createElement('span');
+    var checked = i < ticked;
+    box.style.cssText = 'width:18px;height:18px;border-radius:4px;border:2px solid ' + (checked ? '#2ECC71' : '#bbb') + ';background:' + (checked ? '#2ECC71' : 'transparent') + ';display:inline-flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;box-sizing:border-box;font-size:0.85em;color:#fff;font-weight:bold;';
+    box.textContent = checked ? '\u2713' : '';
+    this._dotsEl.appendChild(box);
+  }
+};
+
+GuidanceOverlay.prototype.setDots = function(ticked, total) {
+  [this._dotsEl].filter(Boolean).forEach(function() {});
+  this._renderDots(total, ticked);
 };
 
 GuidanceOverlay.prototype.hide = function() {

@@ -28,7 +28,7 @@ var SHOW_STEP = {
     var text = _resolveText(step.text);
     svc._overlay.show(
       svc._guideSrc(),
-      { text: text, auto: step.auto, success: step.success },
+      { text: text, auto: step.auto, success: step.success, dots: Array.isArray(step.expect) ? step.expect.length : 0 },
       svc._stepIdx + 1, svc._lesson.steps.length,
       function() { svc._advance(); },
       function() { interrupt(text); },
@@ -68,6 +68,7 @@ export function GuidanceService() {
   this._lesson = null;
   this._stepIdx = 0;
   this._startReq = 0;
+  this._collected = [];
   var self = this;
   window.addEventListener('guidance:event', function(e) { self._handle(e.detail.type); });
 }
@@ -112,12 +113,22 @@ GuidanceService.prototype.complete = function() {
 
 GuidanceService.prototype._handle = function(type) {
   var self = this;
-  [this._lesson].filter(Boolean).forEach(function() { stop(); });
-  [this._lesson].filter(Boolean)
-    .map(function(l) { return l.steps[self._stepIdx]; })
-    .filter(Boolean)
-    .filter(function(step) { return step.expect === type; })
-    .forEach(function(step) { STEP_REACTION[String(!!step.feedback)](self, step); });
+  if (!this._lesson) return;
+  stop();
+  var step = this._lesson.steps[this._stepIdx];
+  if (!step) return;
+  if (Array.isArray(step.expect)) {
+    if (step.expect.indexOf(type) !== -1 && self._collected.indexOf(type) === -1) {
+      self._collected.push(type);
+      self._overlay.setDots(self._collected.length, step.expect.length);
+      if (self._collected.length === step.expect.length) {
+        STEP_REACTION[String(!!step.feedback)](self, step);
+      }
+    }
+  } else {
+    [step].filter(function(s) { return s.expect === type; })
+      .forEach(function(s) { STEP_REACTION[String(!!s.feedback)](self, s); });
+  }
 };
 
 GuidanceService.prototype._advance = function() {
@@ -133,6 +144,7 @@ GuidanceService.prototype._guideSrc = function() {
 };
 
 GuidanceService.prototype._showStep = function() {
+  this._collected = [];
   var step = this._lesson.steps[this._stepIdx];
   SHOW_STEP[String(!step.text)](this, step);
 };

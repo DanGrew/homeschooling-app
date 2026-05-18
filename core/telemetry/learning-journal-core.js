@@ -22,9 +22,10 @@ var SOURCE_FORMAT = {
   'false': function()            { return ''; }
 };
 
+var NUM_TYPE_LABEL = { 'exercise': 'Exercise', 'lesson': 'Lesson' };
 var LESSON_NUM_FORMAT = {
-  'true':  function(n) { return ' · Lesson ' + n; },
-  'false': function()  { return ''; }
+  'true':  function(n, type) { return ' · ' + (NUM_TYPE_LABEL[type] || 'Lesson') + ' ' + n; },
+  'false': function()        { return ''; }
 };
 
 export function formatCriterion(c) {
@@ -57,7 +58,7 @@ export function buildEntryViewModel(event, learning) {
   var lid = event.learning_id || event.lessonId;
   var title = (learning && learning.title) || lid || event.type;
   var source = (learning && learning.source) || '';
-  var numStr = LESSON_NUM_FORMAT[String(!!(learning && learning.number))](learning && learning.number);
+  var numStr = LESSON_NUM_FORMAT[String(!!(learning && learning.number))](learning && learning.number, (learning && learning.type) || 'lesson');
   var sourceStr = SOURCE_FORMAT[String(!!source)](source, numStr);
   var criteria = (learning && learning.criteria) || [];
   return {

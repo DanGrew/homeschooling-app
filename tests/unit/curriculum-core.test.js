@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
+const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, exerciseToRow, flattenExercises, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
 
 const CRITERIA_DATA = {
   areas: [
@@ -126,6 +126,36 @@ describe('defaultCompare', () => {
   it('equal rows return 0', () => {
     const a = { activity: 'A', title: 'T' };
     expect(defaultCompare(a, a)).toBe(0);
+  });
+});
+
+describe('exerciseToRow', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('sets type to exercise', () => {
+    const row = exerciseToRow({ title: 'Find Primaries', source: 'Colour Wheel', criteria: [] }, map, AREAS);
+    expect(row.type).toBe('exercise');
+  });
+  it('uses source as activity', () => {
+    const row = exerciseToRow({ title: 'Find Primaries', source: 'Colour Wheel', criteria: [] }, map, AREAS);
+    expect(row.activity).toBe('Colour Wheel');
+  });
+  it('maps criteria to byArea', () => {
+    const row = exerciseToRow({ title: 'T', source: 'S', criteria: ['cl1'] }, map, AREAS);
+    expect(row.byArea['cl']).toEqual(['Speaking']);
+  });
+  it('falls back to empty string when source missing', () => {
+    const row = exerciseToRow({ title: 'T', criteria: [] }, map, AREAS);
+    expect(row.activity).toBe('');
+  });
+});
+
+describe('flattenExercises', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('maps exercises to rows', () => {
+    const exercises = [{ title: 'E1', source: 'S', criteria: [] }, { title: 'E2', source: 'S', criteria: [] }];
+    const rows = flattenExercises(exercises, map, AREAS);
+    expect(rows).toHaveLength(2);
+    expect(rows[0].type).toBe('exercise');
   });
 });
 
