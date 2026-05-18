@@ -13,6 +13,8 @@ function pairsSpeak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
 function pairsMakeSpeak(el, text) {
+  el.classList.add('speakable');
+  el.setAttribute('data-speak', text);
   [window.__makeSpeakable].filter(Boolean).forEach(function(fn) { fn(el, text); });
 }
 
