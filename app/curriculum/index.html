@@ -24,8 +24,8 @@ tr:nth-child(even) td{background:#fafafa;}
 .row-exercise .col-activity{color:#1ABC9C;}
 .glossary th:first-child{width:200px;}
 .glossary th:nth-child(2){width:80px;}
-.coverage th:first-child{width:160px;}
-.coverage th:nth-child(2){width:110px;}
+.coverage th:first-child,.exercises-coverage th:first-child{width:160px;}
+.coverage th:nth-child(2),.exercises-coverage th:nth-child(2){width:110px;}
 .coverage th{cursor:pointer;user-select:none;}
 .coverage th:hover{background:#e4d5ff;}
 .coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
@@ -54,7 +54,7 @@ tr:nth-child(even) td{background:#fafafa;}
 
 <h2>Exercises</h2>
 <div class="table-wrap">
-<table class="coverage">
+<table class="exercises-coverage">
   <thead id="exercise-head"></thead>
   <tbody id="exercise-body"></tbody>
 </table>
