@@ -174,16 +174,18 @@ function speakCard(cardIndex) {
   var el = gameScreen.querySelector('[data-testid="card-' + cardIndex + '"] .pairs-card-front img');
   var card = gameState.cards[cardIndex];
   var name = [conceptNames[card.contentId], card.contentId].filter(Boolean)[0];
-  [el].filter(Boolean).filter(function() { return typeof window.__makeSpeakable === 'function'; }).forEach(function(e) {
-    window.__makeSpeakable(e, name);
+  [el].filter(Boolean).forEach(function(e) {
+    [window.__makeSpeakable].filter(Boolean).forEach(function(fn) { fn(e, name); });
+    [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(name); });
   });
 }
 </script>
 
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
-import '../../../components/speech/speech-ui.js';
+import { speakInterrupt } from '../../../components/speech/speech-ui.js';
 window.__makeSpeakable = makeSpeakable;
+window.__speakInterrupt = speakInterrupt;
 </script>
 </body>
 </html>

@@ -9,6 +9,13 @@ var PAIRS_SEL    = { 'true': ' selected',    'false': '' };
 var PAIRS_ACTIVE = { 'true': ' active-turn', 'false': '' };
 var PAIRS_NOOP   = function() {};
 
+function pairsSpeak(text) {
+  [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
+}
+function pairsMakeSpeak(el, text) {
+  [window.__makeSpeakable].filter(Boolean).forEach(function(fn) { fn(el, text); });
+}
+
 function pairsImgSrc(id) {
   return window.DICT_BASE + id + '/' + id + '.svg';
 }
@@ -70,6 +77,7 @@ function buildCountSection(playerCount, onChange) {
     btn.className = 'pairs-count-btn' + PAIRS_SEL[String(playerCount === n)];
     btn.setAttribute('data-testid', 'player-count-' + n);
     btn.addEventListener('click', function() { onChange({ playerCount: n }); });
+    pairsMakeSpeak(btn, btn.textContent);
     section.appendChild(btn);
   });
   return section;
@@ -137,6 +145,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
     img.src = pairsImgSrc(entry.id);
     img.alt = [entry.name, entry.id].filter(Boolean)[0];
     btn.appendChild(img);
+    pairsMakeSpeak(btn, img.alt);
     btn.addEventListener('click', function() {
       var newPlayers = allPlayers.map(function(p, j) {
         var nameDefault = [p.name, entry.name, entry.id].filter(Boolean)[0];
@@ -169,6 +178,7 @@ function buildSizeSection(gridSize, onChange) {
     btn.className = 'pairs-size-btn' + PAIRS_SEL[String(gridSize === o.size)];
     btn.setAttribute('data-testid', 'grid-size-' + o.size);
     btn.addEventListener('click', function() { onChange({ gridSize: o.size }); });
+    pairsMakeSpeak(btn, btn.textContent);
     section.appendChild(btn);
   });
   return section;
@@ -187,6 +197,7 @@ function buildModeSection(mode, onChange) {
     btn.className = 'pairs-size-btn' + PAIRS_SEL[String(mode === m.value)];
     btn.setAttribute('data-testid', 'mode-' + m.value);
     btn.addEventListener('click', function() { onChange({ mode: m.value }); });
+    pairsMakeSpeak(btn, btn.textContent);
     section.appendChild(btn);
   });
   return section;
@@ -200,6 +211,7 @@ function buildStartButton(cfg, onStart) {
   btn.disabled = !allSet;
   btn.setAttribute('data-testid', 'pairs-start-btn');
   btn.addEventListener('click', onStart);
+  pairsMakeSpeak(btn, 'Start Game');
   return btn;
 }
 
@@ -254,6 +266,7 @@ function buildPlayerTraySection(state, playerIdx, testId) {
   nameSpan.textContent = p.name;
   labelDiv.appendChild(nameSpan);
   wrap.appendChild(labelDiv);
+  pairsMakeSpeak(labelDiv, p.name);
 
   var tray = document.createElement('div');
   tray.className = 'pairs-tray';
@@ -288,6 +301,7 @@ function buildTraysRow(state) {
     nameSpan.textContent = p.name;
     labelDiv.appendChild(nameSpan);
     trayWrap.appendChild(labelDiv);
+    pairsMakeSpeak(labelDiv, p.name);
 
     var tray = document.createElement('div');
     tray.className = 'pairs-tray';
@@ -441,12 +455,15 @@ function renderPairsHandover(container, playerName, onReady) {
   msg.className = 'pairs-handover-name';
   msg.textContent = playerName + '\u2019s turn';
   overlay.appendChild(msg);
+  pairsMakeSpeak(msg, msg.textContent);
+  pairsSpeak(msg.textContent);
 
   var btn = document.createElement('button');
   btn.textContent = 'Ready';
   btn.className = 'pairs-handover-btn';
   btn.setAttribute('data-testid', 'pairs-handover-ready');
   btn.addEventListener('click', function() { overlay.remove(); onReady(); });
+  pairsMakeSpeak(btn, 'Ready');
   overlay.appendChild(btn);
 
   container.appendChild(overlay);
@@ -462,6 +479,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
   var heading = document.createElement('h2');
   heading.textContent = 'All pairs found!';
   inner.appendChild(heading);
+  pairsSpeak('All pairs found!');
 
   state.players.forEach(function(p) {
     var row = document.createElement('div');
@@ -478,6 +496,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
     var text = document.createElement('span');
     text.textContent = p.name + ' \u2014 ' + p.pairs.length + ' pair' + ['s', ''][Number(p.pairs.length === 1)];
     row.appendChild(text);
+    pairsMakeSpeak(row, text.textContent);
     inner.appendChild(row);
   });
 
@@ -486,6 +505,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
   btn.className = 'pairs-play-again';
   btn.setAttribute('data-testid', 'pairs-play-again');
   btn.addEventListener('click', onPlayAgain);
+  pairsMakeSpeak(btn, 'Play again');
   inner.appendChild(btn);
 
   container.appendChild(inner);
