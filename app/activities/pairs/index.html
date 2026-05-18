@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Pairs</title>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<link rel="stylesheet" href="../../../styles/pairs.css">
+<script src="../../../components/menu.js" defer></script>
+<script type="module" src="../../../components/success-banner.js"></script>
+<script src="../../../core/pairs/pairs-content.js"></script>
+<script src="../../../core/pairs/pairs-core.js"></script>
+<script src="../../../ui/pairs/pairs-ui.js"></script>
+</head>
+<body>
+<div class="nav-bar" data-home="../../games/" data-title="Pairs" data-instruction="Find the matching pairs" data-no-links="standalone game"></div>
+
+<div class="game-area" style="flex-direction:column;overflow:hidden;">
+  <div id="pairs-setup" class="pairs-screen active"></div>
+  <div id="pairs-game" class="pairs-screen"></div>
+  <div id="pairs-summary" class="pairs-screen"></div>
+</div>
+
+<script>window.ACTIVITY_ID = 'pairs';</script>
+<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+
+<script>
+window.DICT_BASE = '../../../content/dictionary/entries/';
+
+var MISMATCH_DELAY = 1000;
+var COMPLETE_DELAY = 1200;
+
+var setupScreen   = document.getElementById('pairs-setup');
+var gameScreen    = document.getElementById('pairs-game');
+var summaryScreen = document.getElementById('pairs-summary');
+
+var gameState;
+var gameMode = 'shared';
+var fruitEntries;
+var animalEntries;
+var conceptNames = {};
+
+function showScreen(name) {
+  var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
+  Object.keys(screens).forEach(function(k) {
+    screens[k].className = 'pairs-screen' + (k === name ? ' active' : '');
+  });
+}
+
+function applyRotation() {
+  var rotate = gameMode === 'shared' && gameState.players.length === 2 && gameState.turnIndex === 1;
+  gameScreen.classList.toggle('pairs-game--rotated', rotate);
+}
+
+function reRenderGame() {
+  renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
+  pairsMeasureCards(gameScreen);
+}
+
+function handleTurnChange() {
+  var TURN_HANDLERS = {
+    passplay: function() {
+      var player = gameState.players[gameState.turnIndex];
+      renderPairsHandover(gameScreen, player.name, reRenderGame);
+    },
+    shared: function() {
+      pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
+      applyRotation();
+    }
+  };
+  (TURN_HANDLERS[gameMode] || TURN_HANDLERS.shared)();
+}
+
+fetch('../../../content/dictionary/dictionary.json')
+  .then(function(r) { return r.json(); })
+  .then(function(ids) {
+    return Promise.all(ids.map(function(id) {
+      return fetch(window.DICT_BASE + id + '/concept.json').then(function(r) { return r.json(); });
+    }));
+  })
+  .then(function(concepts) {
+    concepts.forEach(function(c) { conceptNames[c.id] = c.name || c.id; });
+    fruitEntries  = filterByTag(concepts, 'fruit');
+    animalEntries = filterByTag(concepts, 'animals');
+    renderPairsSetup(setupScreen, fruitEntries, animalEntries, function(cfg) {
+      startGame(cfg);
+    });
+  });
+
+function startGame(cfg) {
+  var contentEntries = cfg.gridSize === 64 ? animalEntries : fruitEntries;
+  var contentSet = buildContentSet(contentEntries, GRID_PAIRS[cfg.gridSize]);
+  var players = cfg.players.slice(0, cfg.playerCount).map(function(p, i) {
+    return { id: 'p' + i, name: p.name || ('Player ' + (i + 1)), icon: p.icon, role: p.role };
+  });
+  gameMode = cfg.mode || 'shared';
+  gameState = createGame(players, cfg.gridSize, contentSet);
+  showScreen('game');
+  renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
+  if (gameMode === 'passplay') {
+    renderPairsHandover(gameScreen, gameState.players[0].name, reRenderGame);
+  } else {
+    applyRotation();
+  }
+}
+
+window.addEventListener('resize', function() {
+  if (gameState) pairsMeasureCards(gameScreen);
+});
+
+function handleFlip(cardIndex) {
+  if (!gameState || gameState.phase === 'resolving' || gameState.phase === 'complete') return;
+  var result = flipCard(gameState, cardIndex);
+  gameState = result.state;
+  result.events.forEach(function(ev) { applyEvent(ev, cardIndex); });
+}
+
+function applyEvent(ev, cardIndex) {
+  var HANDLERS = {
+    card_reveal: function() {
+      pairsApplyReveal(gameScreen, ev.data.cardIndex);
+      speakCard(ev.data.cardIndex);
+    },
+    match_success: function() {
+      pairsApplyMatch(gameScreen, ev.data.cardIndices);
+    },
+    tray_update: function() {
+      pairsApplyTrayUpdate(gameScreen, ev.data.playerId, ev.data.contentId);
+    },
+    turn_start: function() {
+      handleTurnChange();
+    },
+    match_fail: function() {
+      var indices = ev.data.cardIndices;
+      setTimeout(function() {
+        var result = resolveFlip(gameState);
+        gameState = result.state;
+        pairsApplyMismatch(gameScreen, indices);
+        result.events.forEach(function(e2) {
+          var RESOLVE_HANDLERS = { turn_start: handleTurnChange };
+          (RESOLVE_HANDLERS[e2.type] || function() {})();
+        });
+      }, MISMATCH_DELAY);
+    },
+    invalid_action: function() {
+      pairsFlashInvalid(gameScreen, cardIndex);
+    },
+    game_complete: function() {
+      setTimeout(function() {
+        gameScreen.classList.remove('pairs-game--rotated');
+        showScreen('summary');
+        renderPairsSummary(summaryScreen, gameState, function() {
+          showScreen('setup');
+          renderPairsSetup(setupScreen, fruitEntries, animalEntries, function(cfg) {
+            startGame(cfg);
+          });
+        });
+      }, COMPLETE_DELAY);
+    }
+  };
+  (HANDLERS[ev.type] || function() {})();
+}
+
+function speakCard(cardIndex) {
+  var el = gameScreen.querySelector('[data-testid="card-' + cardIndex + '"] .pairs-card-front img');
+  if (!el || typeof window.__makeSpeakable !== 'function') return;
+  var card = gameState.cards[cardIndex];
+  var name = conceptNames[card.contentId] || card.contentId;
+  window.__makeSpeakable(el, name);
+}
+</script>
+
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+window.__makeSpeakable = makeSpeakable;
+</script>
+</body>
+</html>
