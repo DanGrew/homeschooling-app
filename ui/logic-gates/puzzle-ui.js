@@ -15,12 +15,14 @@
     return currentConfig.goal.every(g => out[g.id] === g.value);
   }
 
+  var NOOP = function() {};
+  function dispatchSolved() { window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'PUZZLE_SOLVED' } })); }
+  var SOLVE_DISPATCH = { 'true:true': NOOP, 'true:false': dispatchSolved, 'false:true': NOOP, 'false:false': NOOP };
+
   function checkGoal() {
     var wasSolved = solved;
     solved = goalMet();
-    if (solved && !wasSolved) {
-      window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'PUZZLE_SOLVED' } }));
-    }
+    SOLVE_DISPATCH[solved + ':' + wasSolved]();
   }
 
   function onReset() {
@@ -28,30 +30,31 @@
     loadPuzzle(currentConfig);
   }
 
+  var PLACE_SVG = {
+    'true':  function(area, next) { area.replaceChild(next, currentSvg); },
+    'false': function(area, next) { area.innerHTML = ''; area.appendChild(next); }
+  };
+
+  function placeSvg(area, next) { PLACE_SVG[String(area.contains(currentSvg))](area, next); }
+
   function loadPuzzle(config) {
     currentConfig = JSON.parse(JSON.stringify(config));
     solved = false;
     originalStates = currentConfig.inputs.map(i => i.state);
-    var gt = document.getElementById('goal-text');
-    if (gt) gt.textContent = goalText(currentConfig.goal, currentConfig.outputs);
+    [document.getElementById('goal-text')].filter(Boolean).forEach(function(gt) {
+      gt.textContent = goalText(currentConfig.goal, currentConfig.outputs);
+    });
     var area = document.getElementById('puzzle-area');
     var next = window.StationUI.buildStation(currentConfig, stationToggle);
-    if (currentSvg && currentSvg.parentNode === area) {
-      area.replaceChild(next, currentSvg);
-    } else {
-      area.innerHTML = '';
-      area.appendChild(next);
-    }
+    placeSvg(area, next);
     currentSvg = next;
     checkGoal();
   }
 
   window.addEventListener('load', function() {
     currentSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    var area = document.getElementById('puzzle-area');
-    if (area) area.appendChild(currentSvg);
-    var resetBtn = document.getElementById('btn-reset');
-    if (resetBtn) resetBtn.addEventListener('click', onReset);
+    [document.getElementById('puzzle-area')].filter(Boolean).forEach(function(area) { area.appendChild(currentSvg); });
+    [document.getElementById('btn-reset')].filter(Boolean).forEach(function(btn) { btn.addEventListener('click', onReset); });
   });
 
   window.PuzzleUI = { loadPuzzle, getConfig: function() { return currentConfig; } };

@@ -65,14 +65,12 @@ function renderPrimitive(item) {
   area.appendChild(svg);
 }
 
-function renderItem(item) {
-  if (!item) return;
-  if (item.category === 'primitive') {
-    renderPrimitive(item);
-  } else {
-    window.PuzzleUI.loadPuzzle(item);
-  }
-}
+var ITEM_RENDER = {
+  primitive:  function(item) { renderPrimitive(item); },
+  linear:     function(item) { window.PuzzleUI.loadPuzzle(item); },
+  converging: function(item) { window.PuzzleUI.loadPuzzle(item); }
+};
+function renderItem(item) { ITEM_RENDER[item.category](item); }
 
 var paginator = createPaginator({
   container: document.getElementById('paginator-bar'),
@@ -97,8 +95,7 @@ buildSimpleFilterBar([
 var _guidance = new GuidanceService();
 window.guidanceService = {
   start: function(entry) {
-    var item = allItems.find(function(i) { return i.id === entry.puzzle_id; });
-    if (item) paginator.reset([item]);
+    allItems.filter(function(i) { return i.id === entry.puzzle_id; }).slice(0, 1).forEach(function(item) { paginator.reset([item]); });
     _guidance.start(entry);
   }
 };
