@@ -31,6 +31,9 @@ window.DICT_BASE = '../../../content/dictionary/entries/';
 
 var MISMATCH_DELAY = 1000;
 var COMPLETE_DELAY = 1200;
+var MATCH_HANDOVER_DELAY = 1200;
+
+var handoverDelay = 0;
 
 var setupScreen   = document.getElementById('pairs-setup');
 var gameScreen    = document.getElementById('pairs-game');
@@ -68,7 +71,9 @@ function handleTurnChange() {
   var TURN_HANDLERS = {
     passplay: function() {
       var player = gameState.players[gameState.turnIndex];
-      renderPairsHandover(gameScreen, player.name, reRenderGame);
+      var delay = handoverDelay;
+      handoverDelay = 0;
+      setTimeout(function() { renderPairsHandover(gameScreen, player.name, reRenderGame); }, delay);
     },
     shared: function() {
       pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
@@ -101,6 +106,7 @@ function startGame(cfg) {
     return { id: 'p' + i, name: [p.name, 'Player ' + (i + 1)].filter(Boolean)[0], icon: p.icon, role: p.role };
   });
   gameMode = [cfg.mode, 'shared'].filter(Boolean)[0];
+  handoverDelay = 0;
   gameState = createGame(players, cfg.gridSize, contentSet);
   showScreen('game');
   renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
@@ -132,6 +138,7 @@ function applyEvent(ev, cardIndex) {
     },
     match_success: function() {
       pairsApplyMatch(gameScreen, ev.data.cardIndices);
+      handoverDelay = MATCH_HANDOVER_DELAY;
     },
     tray_update: function() {
       pairsApplyTrayUpdate(gameScreen, ev.data.playerId, ev.data.contentId);
