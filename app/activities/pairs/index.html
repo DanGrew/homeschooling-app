@@ -110,6 +110,7 @@ window.addEventListener('resize', function() {
   if (gameState) pairsMeasureCards(gameScreen);
 });
 
+// arch: allow-pure-fn
 function handleFlip(cardIndex) {
   if (!gameState || gameState.phase === 'resolving' || gameState.phase === 'complete') return;
   var result = flipCard(gameState, cardIndex);
