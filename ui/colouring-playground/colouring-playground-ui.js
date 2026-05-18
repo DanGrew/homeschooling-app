@@ -4,6 +4,7 @@ import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 import { mixHex, baseOf, BASE_COLOURS as BASE } from '../../core/colouring-playground/colouring-playground-core.js';
+import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 
 var LAYOUT = {
   magic:  {ref:'none', palette:'none', guided:'none', free:'none'},
@@ -16,7 +17,7 @@ var ACTIVE_OUTLINE = {true:'4px solid #2ECC71', false:'none'};
 
 export function initColouringPlayground() {
   var mode='magic',selectedColour=null,mixA=null,mixB=null,refVisible=true;
-  var currentPic=null,paginator,filled=0,total=0,popBase=null;
+  var currentPic=null,paginator,filled=0,total=0,popBase=null,filledEls=new Set();
   var shadePop=document.getElementById('shade-pop');
   var refToggleEl=document.getElementById('ref-toggle');
   makeSpeakable(refToggleEl,function(){return refToggleEl.textContent;});
@@ -147,6 +148,22 @@ export function initColouringPlayground() {
     false:function(){}
   };
 
+  var COMPLETE_FN={
+    guided:function(){
+      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-guided',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID});
+      showBanner(function(){paginator.next();});
+    },
+    free:function(){
+      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-free',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID});
+      showBanner(function(){paginator.next();});
+    }
+  };
+
+  var COLOUR_ADVANCE={
+    true:function(){COMPLETE_FN[mode]();},
+    false:function(){}
+  };
+
   function magicClick(el,s){
     el.setAttribute('fill',s.colour);
     filled++;
@@ -154,7 +171,11 @@ export function initColouringPlayground() {
   }
 
   function colourClick(el){
-    [selectedColour].filter(Boolean).forEach(function(c){el.setAttribute('fill',c);});
+    [selectedColour].filter(Boolean).forEach(function(c){
+      el.setAttribute('fill',c);
+      filledEls.add(el);
+      COLOUR_ADVANCE[String(filledEls.size===total)]();
+    });
   }
 
   var CLICK_HANDLER={magic:magicClick,guided:colourClick,free:colourClick};
@@ -167,7 +188,7 @@ export function initColouringPlayground() {
   };
 
   function renderPicture(pic){
-    currentPic=pic;closePop();filled=0;
+    currentPic=pic;closePop();filled=0;filledEls=new Set();
     var titleBtn=document.getElementById('pic-title');
     titleBtn.textContent=pic.name;
     makeSpeakable(titleBtn,pic.name);

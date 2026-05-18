@@ -45,6 +45,9 @@ fi
 echo "[pre-push] lesson json reachable..."
 node scripts/check-lesson-json-reachable.js || fail "lesson-json-reachable"
 
+echo "[pre-push] learnings reachable..."
+node scripts/check-learnings-reachable.js || fail "learnings-reachable"
+
 echo "[pre-push] untested check..."
 node scripts/check-untested.js || fail "check-untested"
 

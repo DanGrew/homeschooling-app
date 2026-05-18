@@ -1,0 +1,36 @@
+{
+  "id": "say_fruit_shop",
+  "title": "Fruit Shop",
+  "number": 4,
+  "guide": "cat",
+  "filter": "fruit",
+  "source": "Say Words",
+  "criteria": [
+    "cl.topic-vocabulary",
+    "literacy.word-recognition",
+    "uw.community"
+  ],
+  "steps": [
+    {
+      "text": "Welcome to the fruit shop! Fruits grow on plants and trees — they're sweet and full of goodness. Find the apple!",
+      "expect": "APPLE_SPOKEN",
+      "feedback": "Apples grow on trees — they can be red or green! Now find the banana!"
+    },
+    {
+      "expect": "BANANA_SPOKEN",
+      "feedback": "Bananas grow in hot countries on big plants. Now find the strawberry!"
+    },
+    {
+      "expect": "STRAWBERRY_SPOKEN",
+      "feedback": "Strawberries are red and grow close to the ground. Now find the orange!"
+    },
+    {
+      "expect": "ORANGE_SPOKEN",
+      "feedback": "Oranges are juicy and full of vitamin C. Last one — find the pear!"
+    },
+    {
+      "expect": "PEAR_SPOKEN",
+      "feedback": "Pears are shaped like a teardrop. The fruit shop is sorted!"
+    }
+  ]
+}

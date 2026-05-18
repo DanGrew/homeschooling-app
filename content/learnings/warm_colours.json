@@ -1,0 +1,26 @@
+{
+  "id": "warm_colours",
+  "title": "Warm Colours",
+  "number": 6,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "cl.descriptive-vocab",
+    "ead.colour-families"
+  ],
+  "steps": [
+    {
+      "text": "Find red — a warm colour.",
+      "expect": "RED_TAPPED",
+      "feedback": "Warm like fire! Now find orange."
+    },
+    {
+      "expect": "ORANGE_TAPPED",
+      "feedback": "Warm like the setting sun! Now find yellow."
+    },
+    {
+      "expect": "YELLOW_TAPPED",
+      "feedback": "Warm like sunshine — all three warm colours found!"
+    }
+  ]
+}

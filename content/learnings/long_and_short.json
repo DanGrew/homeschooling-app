@@ -1,0 +1,22 @@
+{
+  "id": "long_and_short",
+  "title": "Long Hand, Short Hand",
+  "number": 3,
+  "guide": "cat",
+  "source": "Clock",
+  "criteria": [
+    "maths.size-measure",
+    "cl.descriptive-vocab"
+  ],
+  "steps": [
+    {
+      "text": "The clock has two hands — one long, one short. They tell us the time! Can you tap the long hand?",
+      "expect": "MINUTE_HAND_TAPPED",
+      "feedback": "That's the long hand — it counts the minutes. Now tap the short hand!"
+    },
+    {
+      "expect": "HOUR_HAND_TAPPED",
+      "feedback": "The short hand tells us the hour — like 1 o'clock or 3 o'clock. You know them both!"
+    }
+  ]
+}

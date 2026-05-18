@@ -1,0 +1,38 @@
+{
+  "id": "wild_animals",
+  "title": "Wild Animals",
+  "number": 2,
+  "guide": "cat",
+  "filter": "animals",
+  "words": ["lion", "tiger", "zebra", "camel", "turtle"],
+  "source": "Trace Words",
+  "criteria": [
+    "literacy.word-recognition",
+    "pd.fine-motor",
+    "uw.animals-nature",
+    "uw.world-awareness"
+  ],
+  "steps": [
+    {
+      "text": "These animals live in wild places far away. Let's write their names! Find lion and trace it!",
+      "expect": "WORD_lion_TRACED",
+      "feedback": "Lion! Four letters for a mighty animal. Now find tiger!"
+    },
+    {
+      "expect": "WORD_tiger_TRACED",
+      "feedback": "Tiger! Five letters — and very stripy. Now find zebra!"
+    },
+    {
+      "expect": "WORD_zebra_TRACED",
+      "feedback": "Zebra! Five letters with a Z — rare letter! Now find camel!"
+    },
+    {
+      "expect": "WORD_camel_TRACED",
+      "feedback": "Camel! Five letters — they live in the desert. Last one — find turtle!"
+    },
+    {
+      "expect": "WORD_turtle_TRACED",
+      "feedback": "Turtle! Six letters — your longest yet. You wrote them all!"
+    }
+  ]
+}

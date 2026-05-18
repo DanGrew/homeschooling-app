@@ -137,13 +137,8 @@ fetch('../../../content/clock/presets.json')
     });
   });
 
-fetch('../../../content/lessons/clock.json')
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    window.LESSON_MAP = {};
-    data.lessons.forEach(function(l) { window.LESSON_MAP[l.id] = l; });
-    window.guidanceService = new GuidanceService();
-  });
+window.LEARNINGS_BASE = '../../../content/learnings/';
+window.guidanceService = new GuidanceService();
 </script>
 </body>
 </html>

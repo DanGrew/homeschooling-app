@@ -1,17 +1,16 @@
 var AREA = {
-  ead:  'Expressive Arts',
-  uw:   'Understanding the World',
-  cl:   'Communication',
-  pd:   'Physical Development',
-  psed: 'Personal & Social',
-  l:    'Literacy',
-  m:    'Maths'
+  ead:     'Expressive Arts',
+  uw:      'Understanding the World',
+  cl:      'Communication',
+  pd:      'Physical Development',
+  psed:    'Personal & Social',
+  literacy:'Literacy',
+  maths:   'Maths'
 };
 
 export var GROUP_LABELS = ['Today', 'Earlier This Week', 'Older'];
 
-var _lessonCache = {};
-var _activityLabels = {};
+var _learningCache = {};
 
 var TIME_FORMAT = {
   'true':  function(ts) { return formatTime(ts); },
@@ -19,8 +18,8 @@ var TIME_FORMAT = {
 };
 
 var SOURCE_FORMAT = {
-  'true':  function(label, num) { return label + num; },
-  'false': function()           { return ''; }
+  'true':  function(source, num) { return source + num; },
+  'false': function()            { return ''; }
 };
 
 var LESSON_NUM_FORMAT = {
@@ -52,14 +51,15 @@ export function formatDate(ts) {
   return new Date(ts).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-export function buildEntryViewModel(event, lesson) {
+export function buildEntryViewModel(event, learning) {
   var group = groupKey(event.timestamp);
   var timeStr = TIME_FORMAT[String(group === 'Today')](event.timestamp);
-  var title = (lesson && lesson.title) || event.lessonId || event.type;
-  var actLabel = (event.activityId && (_activityLabels[event.activityId] || event.activityId)) || '';
-  var numStr = LESSON_NUM_FORMAT[String(!!(lesson && lesson.number))](lesson && lesson.number);
-  var sourceStr = SOURCE_FORMAT[String(!!actLabel)](actLabel, numStr);
-  var criteria = (lesson && lesson.criteria) || [];
+  var lid = event.learning_id || event.lessonId;
+  var title = (learning && learning.title) || lid || event.type;
+  var source = (learning && learning.source) || '';
+  var numStr = LESSON_NUM_FORMAT[String(!!(learning && learning.number))](learning && learning.number);
+  var sourceStr = SOURCE_FORMAT[String(!!source)](source, numStr);
+  var criteria = (learning && learning.criteria) || [];
   return {
     timeStr: timeStr,
     sourceStr: sourceStr,
@@ -76,18 +76,14 @@ export function sortAndGroupEvents(events) {
   return { groups: groups, order: order };
 }
 
-export function fetchLesson(activityId, lessonId, cb) {
-  if (!activityId || !lessonId) { cb(null); return; }
-  var key = activityId;
-  if (_lessonCache[key]) { cb(_lessonCache[key][lessonId] || null); return; }
-  fetch('../../content/lessons/' + activityId + '.json')
+export function fetchLearning(learningId, cb) {
+  if (!learningId) { cb(null); return; }
+  if (_learningCache[learningId]) { cb(_learningCache[learningId]); return; }
+  fetch('../../content/learnings/' + learningId + '.json')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      var map = {};
-      (data.lessons || []).forEach(function(l) { map[l.id] = l; });
-      _lessonCache[key] = map;
-      _activityLabels[key] = data.label || activityId;
-      cb(map[lessonId] || null);
+      _learningCache[learningId] = data;
+      cb(data);
     })
     .catch(function() { cb(null); });
 }

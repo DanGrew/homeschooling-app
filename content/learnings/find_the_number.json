@@ -1,0 +1,30 @@
+{
+  "id": "find_the_number",
+  "title": "Find the Number",
+  "number": 2,
+  "guide": "dog",
+  "source": "Clock",
+  "criteria": [
+    "maths.number-order",
+    "maths.spatial"
+  ],
+  "steps": [
+    {
+      "text": "Some numbers on the clock have special jobs — they point in every direction. The 12 lives at the very top. Can you tap it?",
+      "expect": "NUMBER_12_TAPPED",
+      "feedback": "12 at the top — the clock always starts here! Now find the 6 at the bottom."
+    },
+    {
+      "expect": "NUMBER_6_TAPPED",
+      "feedback": "At the bottom, opposite 12. Now find the 3!"
+    },
+    {
+      "expect": "NUMBER_3_TAPPED",
+      "feedback": "On the right side! Last one — find the 9!"
+    },
+    {
+      "expect": "NUMBER_9_TAPPED",
+      "feedback": "On the left. These four numbers point in every direction!"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "more_and_fewer",
+  "title": "More and Fewer",
+  "number": 5,
+  "guide": "dog",
+  "source": "Numbers",
+  "criteria": [
+    "cl.descriptive-vocab",
+    "maths.equivalence",
+    "maths.numeral-recognition"
+  ],
+  "steps": [
+    {
+      "text": "Press + on the {fruit_a_p} to add one!",
+      "expect": "A_PLUS",
+      "feedback": "The {fruit_a_p} grew bigger! + adds one each time. Now press + on the {fruit_b_p}!"
+    },
+    {
+      "expect": "B_PLUS",
+      "feedback": "The {fruit_b_p} grew too! Now press − on the {fruit_a_p} to take one away."
+    },
+    {
+      "expect": "A_MINUS",
+      "feedback": "The {fruit_a_p} got smaller! When a group has less we say it has fewer."
+    }
+  ]
+}

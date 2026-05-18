@@ -1,0 +1,38 @@
+{
+  "id": "things_that_go",
+  "title": "Things That Go",
+  "number": 5,
+  "guide": "dog",
+  "filter": "vehicles",
+  "words": ["bus", "train", "truck", "digger", "tractor"],
+  "source": "Trace Words",
+  "criteria": [
+    "literacy.word-recognition",
+    "pd.fine-motor",
+    "cl.topic-vocabulary",
+    "uw.community"
+  ],
+  "steps": [
+    {
+      "text": "Vroom! Let's write the names of things that go! Find bus and trace it!",
+      "expect": "WORD_bus_TRACED",
+      "feedback": "Bus! Just three letters — short and fast. Now find train!"
+    },
+    {
+      "expect": "WORD_train_TRACED",
+      "feedback": "Train! Five letters — it travels on rails. Now find truck!"
+    },
+    {
+      "expect": "WORD_truck_TRACED",
+      "feedback": "Truck! Five letters — carries heavy loads. Now find digger!"
+    },
+    {
+      "expect": "WORD_digger_TRACED",
+      "feedback": "Digger! Six letters — scoops up earth. Last one — find tractor!"
+    },
+    {
+      "expect": "WORD_tractor_TRACED",
+      "feedback": "Tractor! Seven letters — your longest word. Vroom — you wrote them all!"
+    }
+  ]
+}

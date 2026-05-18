@@ -160,7 +160,7 @@
         e.stopPropagation();
         lsnPopout.style.display='none';
         [window.guidanceService].filter(Boolean).forEach(function(svc){
-          [(window.LESSON_MAP||{})[l.id]].filter(Boolean).forEach(function(lesson){svc.start(lesson);});
+          svc.start(l);
         });
       });
       lsnPopout.appendChild(item);

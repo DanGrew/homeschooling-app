@@ -1,0 +1,26 @@
+{
+  "id": "find_secondaries",
+  "title": "Secondary Colours",
+  "number": 5,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "cl.technical-vocab",
+    "ead.colour-recognition"
+  ],
+  "steps": [
+    {
+      "text": "Find orange — made from red and yellow!",
+      "expect": "ORANGE_TAPPED",
+      "feedback": "Secondary colour number one! Now find green."
+    },
+    {
+      "expect": "GREEN_TAPPED",
+      "feedback": "Secondary colour number two! Now find purple."
+    },
+    {
+      "expect": "PURPLE_TAPPED",
+      "feedback": "Secondary colour number three — all three secondaries!"
+    }
+  ]
+}

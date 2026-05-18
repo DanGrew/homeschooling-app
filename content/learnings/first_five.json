@@ -1,0 +1,35 @@
+{
+  "id": "first_five",
+  "title": "First Five Letters",
+  "number": 3,
+  "guide": "cat",
+  "source": "Letters & Numbers",
+  "criteria": [
+    "literacy.phonics",
+    "maths.number-order",
+    "pd.fine-motor"
+  ],
+  "steps": [
+    {
+      "text": "The alphabet has a special order. Let's trace the very first five letters! Find a — the first letter!",
+      "expect": "CHAR_a_TRACED",
+      "feedback": "a! Right at the start. Now find b!"
+    },
+    {
+      "expect": "CHAR_b_TRACED",
+      "feedback": "b! A tall letter — the line goes up high. Now find c!"
+    },
+    {
+      "expect": "CHAR_c_TRACED",
+      "feedback": "c! The round one. Now find d!"
+    },
+    {
+      "expect": "CHAR_d_TRACED",
+      "feedback": "d! Tall again, but faces the other way to b. Last one — find e!"
+    },
+    {
+      "expect": "CHAR_e_TRACED",
+      "feedback": "e! a, b, c, d, e — five in a row!"
+    }
+  ]
+}

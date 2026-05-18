@@ -67,6 +67,7 @@ export function GuidanceService() {
   this._overlay = new GuidanceOverlay();
   this._lesson = null;
   this._stepIdx = 0;
+  this._startReq = 0;
   var self = this;
   window.addEventListener('guidance:event', function(e) { self._handle(e.detail.type); });
 }
@@ -74,10 +75,17 @@ export function GuidanceService() {
 GuidanceService.prototype.start = function(lesson) {
   var self = this;
   [this._lesson].filter(Boolean).forEach(function() { self.stop(); });
-  this._lesson = lesson;
-  this._stepIdx = 0;
-  window.dispatchEvent(new CustomEvent('guidance:start'));
-  this._showStep();
+  var req = ++this._startReq;
+  fetch(window.LEARNINGS_BASE + lesson.id + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      [1].filter(function() { return req === self._startReq; }).forEach(function() {
+        self._lesson = data;
+        self._stepIdx = 0;
+        window.dispatchEvent(new CustomEvent('guidance:start'));
+        self._showStep();
+      });
+    });
 };
 
 GuidanceService.prototype.stop = function() {
@@ -88,16 +96,16 @@ GuidanceService.prototype.stop = function() {
 };
 
 GuidanceService.prototype.complete = function() {
-  var lessonId = this._lesson && this._lesson.id;
+  var learningId = this._lesson && this._lesson.id;
   var activityId = window.ACTIVITY_ID || null;
   this.stop();
   try {
     recordLearningEvent({
       version: 1,
-      type: 'lesson_completed',
+      type: 'learning_completed',
       timestamp: Date.now(),
-      lessonId: lessonId,
-      activityId: activityId
+      learning_id: learningId,
+      activity_id: activityId
     });
   } catch(e) {}
 };

@@ -1,0 +1,6 @@
+{
+  "id": "colouring-free",
+  "title": "Free Colouring",
+  "source": "Colouring Playground",
+  "criteria": ["ead.colour-mixing", "ead.colour-recognition"]
+}

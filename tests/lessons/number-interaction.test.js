@@ -27,6 +27,7 @@ async function startLesson(page) {
   await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
   await page.locator('.nav-lesson-btn').click()
   await page.locator('.nav-lesson-item').first().click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
 }
 
 function fireGuidanceEvent(page, type) {

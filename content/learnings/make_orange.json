@@ -1,0 +1,26 @@
+{
+  "id": "make_orange",
+  "title": "Make Orange",
+  "number": 1,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-mixing",
+    "uw.cause-effect"
+  ],
+  "steps": [
+    {
+      "text": "Can you spot red on the colour wheel?",
+      "expect": "RED_TAPPED",
+      "feedback": "Warm and bright! Now find yellow!"
+    },
+    {
+      "expect": "YELLOW_TAPPED",
+      "feedback": "Bright as sunshine! Nearly there — find orange!"
+    },
+    {
+      "expect": "ORANGE_TAPPED",
+      "feedback": "That's what red and yellow make together!"
+    }
+  ]
+}
