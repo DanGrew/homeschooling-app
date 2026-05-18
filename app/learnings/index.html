@@ -56,6 +56,8 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
 import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion } from '../../core/telemetry/learning-journal-core.js';
 
+var ZERO_CLASS = { 'true': ' bar-row-zero', 'false': '' };
+
 var AREA_META = [
   { key: 'ead',      label: 'Expressive Arts',        color: '#9B59B6' },
   { key: 'uw',       label: 'Understanding the World', color: '#27AE60' },
@@ -109,7 +111,7 @@ function renderGroups(journal, events) {
 
 function makeBar(label, pct, color) {
   var row = document.createElement('div');
-  row.className = 'bar-row' + (pct === 0 ? ' bar-row-zero' : '');
+  row.className = 'bar-row' + ZERO_CLASS[String(pct === 0)];
   row.innerHTML =
     '<div class="bar-label">' + label + '</div>' +
     '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>';
@@ -119,57 +121,51 @@ function makeBar(label, pct, color) {
 function renderBreakdown(events, learnings) {
   var areaTally = {};
   var critTally = {};
+  AREA_META.forEach(function(a) { areaTally[a.key] = 0; });
+  Object.keys(learnings).forEach(function(lid) {
+    learnings[lid].criteria.forEach(function(c) { critTally[c] = 0; });
+  });
   events.forEach(function(ev) {
     var lid = [ev.learning_id, ev.lessonId].filter(Boolean)[0];
-    var l = learnings[lid];
-    var criteria = (l && l.criteria) || [];
-    criteria.forEach(function(c) {
-      var areaKey = c.split('.')[0];
-      areaTally[areaKey] = (areaTally[areaKey] || 0) + 1;
-      critTally[c] = (critTally[c] || 0) + 1;
+    [learnings[lid]].filter(Boolean).forEach(function(l) {
+      l.criteria.forEach(function(c) {
+        areaTally[c.split('.')[0]] += 1;
+        critTally[c] += 1;
+      });
     });
   });
-
-  var areaMax = Math.max.apply(null, AREA_META.map(function(a) { return areaTally[a.key] || 0; }).concat([1]));
+  var areaMax = Math.max(1, Math.max.apply(null, AREA_META.map(function(a) { return areaTally[a.key]; })));
   var areaBars = document.getElementById('area-bars');
   AREA_META.forEach(function(a) {
-    var pct = Math.round(((areaTally[a.key] || 0) / areaMax) * 100);
-    areaBars.appendChild(makeBar(a.label, pct, a.color));
+    areaBars.appendChild(makeBar(a.label, Math.round((areaTally[a.key] / areaMax) * 100), a.color));
   });
-
   var critKeys = Object.keys(critTally).sort(function(a, b) { return critTally[b] - critTally[a]; });
-  var critMax = critKeys.length ? critTally[critKeys[0]] : 1;
+  var critMax = [critKeys[0]].filter(Boolean).reduce(function(acc, k) { return critTally[k]; }, 1);
   var critBars = document.getElementById('crit-bars');
   critKeys.forEach(function(c) {
-    var pct = Math.round((critTally[c] / critMax) * 100);
-    critBars.appendChild(makeBar(formatCriterion(c), pct, '#7c6fcd'));
+    critBars.appendChild(makeBar(formatCriterion(c), Math.round((critTally[c] / critMax) * 100), '#7c6fcd'));
   });
-
-  var empty = ['true'].filter(function() { return !critKeys.length; });
-  empty.forEach(function() { critBars.innerHTML = '<p style="font-size:0.8em;color:#ccc;">No criteria yet.</p>'; });
+  [critKeys.length].filter(function(n) { return n === 0; }).forEach(function() {
+    critBars.innerHTML = '<p style="font-size:0.8em;color:#ccc;">No criteria yet.</p>';
+  });
 }
 
 getAllEvents(function(events) {
   var journal = document.getElementById('journal');
-  NO_EVENTS[String(!events.length)](journal, events);
-
+  NO_EVENTS[String(events.length === 0)](journal, events);
   var seen = {};
   var lids = [];
   events.forEach(function(ev) {
     var lid = [ev.learning_id, ev.lessonId].filter(Boolean)[0];
-    [lid].filter(Boolean).filter(function(id) { return !seen[id]; }).forEach(function(id) {
+    [lid].filter(Boolean).filter(function(id) { return seen[id] === undefined; }).forEach(function(id) {
       seen[id] = true;
       lids.push(id);
     });
   });
-
   var loaded = {};
   var remaining = lids.length;
-
   function onAllLoaded() { renderBreakdown(events, loaded); }
-
   [lids.length].filter(function(n) { return n === 0; }).forEach(onAllLoaded);
-
   lids.forEach(function(lid) {
     fetchLearning(lid, function(learning) {
       [learning].filter(Boolean).forEach(function(l) { loaded[lid] = l; });
