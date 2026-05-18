@@ -86,6 +86,20 @@ describe('buildEntryViewModel', () => {
     const l = Object.assign({}, learning, { source: '' });
     expect(buildEntryViewModel(event, l).sourceStr).toBe('');
   });
+  it('returns undefined variantId when not on event', () => {
+    expect(buildEntryViewModel(event, learning).variantId).toBeUndefined();
+  });
+  it('returns variantId from event', () => {
+    const ev = Object.assign({}, event, { variant_id: 'puzzle-42' });
+    expect(buildEntryViewModel(ev, learning).variantId).toBe('puzzle-42');
+  });
+  it('returns undefined difficulty when not on event', () => {
+    expect(buildEntryViewModel(event, learning).difficulty).toBeUndefined();
+  });
+  it('returns difficulty from event', () => {
+    const ev = Object.assign({}, event, { difficulty: '3x3' });
+    expect(buildEntryViewModel(ev, learning).difficulty).toBe('3x3');
+  });
 });
 
 describe('sortAndGroupEvents', () => {
