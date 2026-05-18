@@ -237,7 +237,6 @@ function buildPlayerTraySection(state, playerIdx) {
   var p = state.players[playerIdx];
   var wrap = document.createElement('div');
   wrap.className = 'pairs-tray-wrap';
-  wrap.setAttribute('data-testid', 'pairs-trays');
 
   var labelDiv = document.createElement('div');
   labelDiv.className = 'pairs-tray-label' + PAIRS_ACTIVE[String(state.turnIndex === playerIdx)];
