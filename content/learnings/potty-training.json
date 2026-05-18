@@ -1,0 +1,7 @@
+{
+  "id": "potty-training",
+  "title": "Potty Training",
+  "guide": "horse",
+  "source": "Simulator",
+  "criteria": ["psed.independence", "psed.self-regulation", "cl.sequencing-language"]
+}

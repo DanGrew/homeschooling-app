@@ -1,6 +1,7 @@
 {
   "simulation": {
     "id": "potty-training",
+    "learning_id": "potty-training",
     "title": "Potty Time!",
     "instructions": "Help your friend use the potty!"
   },
