@@ -63,7 +63,7 @@
   }
 
   document.addEventListener('click',function(){
-    document.querySelectorAll('.nav-lesson-popout,.nav-links-popout,.nav-custom-popout').forEach(function(p){p.style.display='none';});
+    document.querySelectorAll('.nav-lesson-popout,.nav-exercise-popout,.nav-links-popout,.nav-custom-popout').forEach(function(p){p.style.display='none';});
   });
 
   window.__buildNavPopout=function(iconHtml,label,minWidth,items,onSelect){
@@ -179,6 +179,43 @@
     });
     lsnContainer.appendChild(lsnBtn);
     bar.appendChild(lsnContainer);
+  }
+
+  if(window.EXERCISES&&window.EXERCISES.length){
+    var exContainer=document.createElement('div');
+    exContainer.className='nav-btn-container';
+    var exBtn=makeNavBtn('button',{},'&#9998;','Exercises');
+    exBtn.classList.add('nav-exercise-btn');
+    var exPopout=fixedPopout(210);
+    exPopout.className='nav-exercise-popout';
+    window.EXERCISES.forEach(function(ex,i){
+      var item=document.createElement('button');
+      item.textContent='Exercise '+ex.number+': '+ex.title;
+      item.className='nav-exercise-item';
+      item.style.cssText='display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;'+(i>0?'border-top:1px solid #f0f0f0;':'');
+      item.addEventListener('click',function(e){
+        e.stopPropagation();
+        exPopout.style.display='none';
+        [window.guidanceService].filter(Boolean).forEach(function(svc){
+          svc.start(ex);
+        });
+      });
+      exPopout.appendChild(item);
+    });
+    exBtn.addEventListener('click',function(e){
+      e.stopPropagation();
+      togglePopout(exPopout,exBtn);
+    });
+    window.addEventListener('load',function(){
+      if(typeof window.__makeSpeakable==='function'){
+        window.__makeSpeakable(exBtn,'Exercises');
+        exPopout.querySelectorAll('.nav-exercise-item').forEach(function(item){
+          window.__makeSpeakable(item,function(){return item.textContent;});
+        });
+      }
+    });
+    exContainer.appendChild(exBtn);
+    bar.appendChild(exContainer);
   }
 
   if(bar.dataset.links){

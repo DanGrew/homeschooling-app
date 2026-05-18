@@ -11,6 +11,7 @@ export function GuidanceOverlay() {
   this._el = null;
   this._bubbleEl = null;
   this._textEl = null;
+  this._dotsEl = null;
   this._progressEl = null;
   this._nextBtn = null;
   this._charEl = null;
@@ -91,7 +92,12 @@ GuidanceOverlay.prototype._build = function(onStop) {
   footer.appendChild(next);
   footer.appendChild(replay);
   footer.appendChild(closeWrap);
+  var dots = document.createElement('div');
+  dots.style.cssText = 'display:none;flex-direction:row;gap:8px;justify-content:center;padding-top:4px;';
+  this._dotsEl = dots;
+
   body.appendChild(text);
+  body.appendChild(dots);
   body.appendChild(footer);
   bubble.appendChild(char);
   bubble.appendChild(body);
@@ -113,7 +119,23 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   var showNext = !!step.auto;
   this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
   this._nextBtn.classList.toggle('speakable', showNext);
+  this._renderDots(step.dots || 0, 0);
   this._el.style.display = '';
+};
+
+GuidanceOverlay.prototype._renderDots = function(total, ticked) {
+  this._dotsEl.innerHTML = '';
+  this._dotsEl.style.display = total > 0 ? 'flex' : 'none';
+  for (var i = 0; i < total; i++) {
+    var dot = document.createElement('span');
+    dot.style.cssText = 'width:12px;height:12px;border-radius:50%;border:2px solid #888;background:' + (i < ticked ? '#555' : 'transparent') + ';display:inline-block;transition:background 0.2s;box-sizing:border-box;';
+    this._dotsEl.appendChild(dot);
+  }
+};
+
+GuidanceOverlay.prototype.setDots = function(ticked, total) {
+  [this._dotsEl].filter(Boolean).forEach(function() {});
+  this._renderDots(total, ticked);
 };
 
 GuidanceOverlay.prototype.hide = function() {

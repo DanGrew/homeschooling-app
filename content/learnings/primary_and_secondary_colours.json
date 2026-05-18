@@ -1,0 +1,23 @@
+{
+  "id": "primary_and_secondary_colours",
+  "title": "Primary and Secondary Colours",
+  "number": 1,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-recognition",
+    "cl.technical-vocab"
+  ],
+  "steps": [
+    {
+      "text": "Can you find all three primary colours?",
+      "expect": ["RED_TAPPED", "YELLOW_TAPPED", "BLUE_TAPPED"],
+      "feedback": "Red, yellow, and blue — the three primary colours!"
+    },
+    {
+      "text": "Now find all three secondary colours.",
+      "expect": ["ORANGE_TAPPED", "GREEN_TAPPED", "PURPLE_TAPPED"],
+      "feedback": "Orange, green, and purple — the three secondary colours!"
+    }
+  ]
+}
