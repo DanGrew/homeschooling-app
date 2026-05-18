@@ -82,6 +82,10 @@ describe('buildEntryViewModel', () => {
   it('returns sourceStr with source and lesson number', () => {
     expect(buildEntryViewModel(event, learning).sourceStr).toBe('Colour Wheel · Lesson 1');
   });
+  it('returns sourceStr with Exercise label when type is exercise', () => {
+    const ex = Object.assign({}, learning, { type: 'exercise' });
+    expect(buildEntryViewModel(event, ex).sourceStr).toBe('Colour Wheel · Exercise 1');
+  });
   it('returns empty sourceStr when no source on learning', () => {
     const l = Object.assign({}, learning, { source: '' });
     expect(buildEntryViewModel(event, l).sourceStr).toBe('');

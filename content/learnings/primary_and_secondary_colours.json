@@ -2,6 +2,7 @@
   "id": "primary_and_secondary_colours",
   "title": "Primary and Secondary Colours",
   "number": 1,
+  "type": "exercise",
   "guide": "cat",
   "source": "Colour Wheel",
   "criteria": [

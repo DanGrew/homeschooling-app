@@ -50,6 +50,14 @@ function flattenPhysical(files, criterionMap, areas) {
   return files.map(function(f) { return physicalToRow(f.data, criterionMap, areas); });
 }
 
+function exerciseToRow(exercise, criterionMap, areas) {
+  return { title: exercise.title, activity: exercise.source || '', byArea: buildByArea(lessonCriteria(exercise), criterionMap, areas), type: 'exercise' };
+}
+
+function flattenExercises(exercises, criterionMap, areas) {
+  return exercises.map(function(ex) { return exerciseToRow(ex, criterionMap, areas); });
+}
+
 function defaultCompare(a, b) {
   return (a.activity + '\x00' + a.title).localeCompare(b.activity + '\x00' + b.title);
 }
@@ -58,4 +66,4 @@ function colCompare(a, b, sortAsc, colKeyFns, sortCol) {
   return COMPARE_DIR[String(sortAsc)](colKeyFns[sortCol](a), colKeyFns[sortCol](b));
 }
 
-if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, defaultCompare, colCompare };
+if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, exerciseToRow, flattenExercises, defaultCompare, colCompare };

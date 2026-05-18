@@ -184,7 +184,7 @@
   if(window.EXERCISES&&window.EXERCISES.length){
     var exContainer=document.createElement('div');
     exContainer.className='nav-btn-container';
-    var exBtn=makeNavBtn('button',{},'&#9998;','Exercises');
+    var exBtn=makeNavBtn('button',{},'&#128221;','Exercises');
     exBtn.classList.add('nav-exercise-btn');
     var exPopout=fixedPopout(210);
     exPopout.className='nav-exercise-popout';
