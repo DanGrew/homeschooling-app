@@ -42,15 +42,20 @@ var fruitEntries;
 var animalEntries;
 var conceptNames = {};
 
+var PAIRS_NOOP = function() {};
+var PAIRS_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+var PAIRS_BLOCKED_PHASES = { resolving: true, complete: true };
+
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
   Object.keys(screens).forEach(function(k) {
-    screens[k].className = 'pairs-screen' + (k === name ? ' active' : '');
+    screens[k].className = 'pairs-screen' + PAIRS_SCREEN_ACTIVE[String(k === name)];
   });
 }
 
 function applyRotation() {
-  var rotate = gameMode === 'shared' && gameState.players.length === 2 && gameState.turnIndex === 1;
+  var conditions = [gameMode === 'shared', gameState.players.length === 2, gameState.turnIndex === 1];
+  var rotate = conditions.filter(Boolean).length === conditions.length;
   gameScreen.classList.toggle('pairs-game--rotated', rotate);
 }
 
@@ -70,7 +75,7 @@ function handleTurnChange() {
       applyRotation();
     }
   };
-  (TURN_HANDLERS[gameMode] || TURN_HANDLERS.shared)();
+  [TURN_HANDLERS[gameMode]].filter(Boolean).concat([TURN_HANDLERS.shared])[0]();
 }
 
 fetch('../../../content/dictionary/dictionary.json')
@@ -81,7 +86,7 @@ fetch('../../../content/dictionary/dictionary.json')
     }));
   })
   .then(function(concepts) {
-    concepts.forEach(function(c) { conceptNames[c.id] = c.name || c.id; });
+    concepts.forEach(function(c) { conceptNames[c.id] = [c.name, c.id].filter(Boolean)[0]; });
     fruitEntries  = filterByTag(concepts, 'fruit');
     animalEntries = filterByTag(concepts, 'animals');
     renderPairsSetup(setupScreen, fruitEntries, animalEntries, function(cfg) {
@@ -90,32 +95,33 @@ fetch('../../../content/dictionary/dictionary.json')
   });
 
 function startGame(cfg) {
-  var contentEntries = cfg.gridSize === 64 ? animalEntries : fruitEntries;
+  var contentEntries = [animalEntries].filter(function() { return cfg.gridSize === 64; }).concat([fruitEntries])[0];
   var contentSet = buildContentSet(contentEntries, GRID_PAIRS[cfg.gridSize]);
   var players = cfg.players.slice(0, cfg.playerCount).map(function(p, i) {
-    return { id: 'p' + i, name: p.name || ('Player ' + (i + 1)), icon: p.icon, role: p.role };
+    return { id: 'p' + i, name: [p.name, 'Player ' + (i + 1)].filter(Boolean)[0], icon: p.icon, role: p.role };
   });
-  gameMode = cfg.mode || 'shared';
+  gameMode = [cfg.mode, 'shared'].filter(Boolean)[0];
   gameState = createGame(players, cfg.gridSize, contentSet);
   showScreen('game');
   renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
-  if (gameMode === 'passplay') {
-    renderPairsHandover(gameScreen, gameState.players[0].name, reRenderGame);
-  } else {
-    applyRotation();
-  }
+  var START_ACTIONS = {
+    passplay: function() { renderPairsHandover(gameScreen, gameState.players[0].name, reRenderGame); },
+    shared: applyRotation
+  };
+  [START_ACTIONS[gameMode]].filter(Boolean).concat([START_ACTIONS.shared])[0]();
 }
 
 window.addEventListener('resize', function() {
-  if (gameState) pairsMeasureCards(gameScreen);
+  [gameState].filter(Boolean).forEach(function() { pairsMeasureCards(gameScreen); });
 });
 
 // arch: allow-pure-fn
 function handleFlip(cardIndex) {
-  if (!gameState || gameState.phase === 'resolving' || gameState.phase === 'complete') return;
-  var result = flipCard(gameState, cardIndex);
-  gameState = result.state;
-  result.events.forEach(function(ev) { applyEvent(ev, cardIndex); });
+  [gameState].filter(Boolean).filter(function(s) { return !PAIRS_BLOCKED_PHASES[s.phase]; }).forEach(function(s) {
+    var result = flipCard(s, cardIndex);
+    gameState = result.state;
+    result.events.forEach(function(ev) { applyEvent(ev, cardIndex); });
+  });
 }
 
 function applyEvent(ev, cardIndex) {
@@ -141,7 +147,7 @@ function applyEvent(ev, cardIndex) {
         pairsApplyMismatch(gameScreen, indices);
         result.events.forEach(function(e2) {
           var RESOLVE_HANDLERS = { turn_start: handleTurnChange };
-          (RESOLVE_HANDLERS[e2.type] || function() {})();
+          [RESOLVE_HANDLERS[e2.type]].filter(Boolean).concat([PAIRS_NOOP])[0]();
         });
       }, MISMATCH_DELAY);
     },
@@ -161,15 +167,16 @@ function applyEvent(ev, cardIndex) {
       }, COMPLETE_DELAY);
     }
   };
-  (HANDLERS[ev.type] || function() {})();
+  [HANDLERS[ev.type]].filter(Boolean).concat([PAIRS_NOOP])[0]();
 }
 
 function speakCard(cardIndex) {
   var el = gameScreen.querySelector('[data-testid="card-' + cardIndex + '"] .pairs-card-front img');
-  if (!el || typeof window.__makeSpeakable !== 'function') return;
   var card = gameState.cards[cardIndex];
-  var name = conceptNames[card.contentId] || card.contentId;
-  window.__makeSpeakable(el, name);
+  var name = [conceptNames[card.contentId], card.contentId].filter(Boolean)[0];
+  [el].filter(Boolean).filter(function() { return typeof window.__makeSpeakable === 'function'; }).forEach(function(e) {
+    window.__makeSpeakable(e, name);
+  });
 }
 </script>
 
