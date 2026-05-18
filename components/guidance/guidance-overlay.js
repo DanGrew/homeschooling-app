@@ -127,9 +127,11 @@ GuidanceOverlay.prototype._renderDots = function(total, ticked) {
   this._dotsEl.innerHTML = '';
   this._dotsEl.style.display = total > 0 ? 'flex' : 'none';
   for (var i = 0; i < total; i++) {
-    var dot = document.createElement('span');
-    dot.style.cssText = 'width:12px;height:12px;border-radius:50%;border:2px solid #888;background:' + (i < ticked ? '#555' : 'transparent') + ';display:inline-block;transition:background 0.2s;box-sizing:border-box;';
-    this._dotsEl.appendChild(dot);
+    var box = document.createElement('span');
+    var checked = i < ticked;
+    box.style.cssText = 'width:18px;height:18px;border-radius:4px;border:2px solid ' + (checked ? '#2ECC71' : '#bbb') + ';background:' + (checked ? '#2ECC71' : 'transparent') + ';display:inline-flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;box-sizing:border-box;font-size:0.85em;color:#fff;font-weight:bold;';
+    box.textContent = checked ? '\u2713' : '';
+    this._dotsEl.appendChild(box);
   }
 };
 
