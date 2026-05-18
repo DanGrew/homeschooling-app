@@ -135,7 +135,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
     btn.setAttribute('data-testid', 'avatar-' + idx + '-' + entry.id);
     var img = document.createElement('img');
     img.src = pairsImgSrc(entry.id);
-    img.alt = entry.name || entry.id;
+    img.alt = [entry.name, entry.id].filter(Boolean)[0];
     btn.appendChild(img);
     btn.addEventListener('click', function() {
       var newPlayers = allPlayers.map(function(p, j) {
