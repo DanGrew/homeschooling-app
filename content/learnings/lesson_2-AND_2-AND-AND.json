@@ -1,0 +1,12 @@
+{
+  "id": "lesson_2-AND_2-AND-AND",
+  "title": "AND Cascade",
+  "number": 5,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["uw.cause-effect"],
+  "steps": [
+    { "text": "Turn switches A and B on.", "expect": ["SWITCH_A_ON", "SWITCH_B_ON"], "feedback": "First AND gate is on! Now turn C and D on too." },
+    { "expect": ["SWITCH_C_ON", "SWITCH_D_ON"], "feedback": "All four on — the lamp is lit! Three AND gates, each needs both inputs." }
+  ]
+}

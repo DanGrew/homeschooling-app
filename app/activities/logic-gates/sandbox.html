@@ -9,23 +9,113 @@
 <link rel="stylesheet" href="../../../styles/speakable.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-.game-area{overflow-y:auto;-webkit-overflow-scrolling:touch;}
-#stations-container{padding:32px 8px 48px;max-width:580px;margin:0 auto;width:100%;}
+#puzzle-area{flex:1;display:flex;align-items:center;justify-content:center;padding:24px 16px;overflow:hidden;}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Logic Gates" data-instruction="Learn how logic gates work" data-links='[{"href":"puzzle.html","label":"Logic Puzzle"}]'></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Logic Gates" data-instruction="Flip switches to explore"></div>
 <div class="game-area">
-  <div id="stations-container"></div>
+  <div id="puzzle-area"></div>
+  <div id="paginator-bar"></div>
 </div>
+
+<script>
+window.ACTIVITY_ID = 'logic-gates';
+window.DICT_BASE = '../../../content/dictionary/entries/';
+window.LEARNINGS_BASE = '../../../content/learnings/';
+window.LESSONS = [
+  { id: 'and_gate',                 number: 1, title: 'AND Gate',     puzzle_id: 'and_station' },
+  { id: 'or_gate',                  number: 2, title: 'OR Gate',      puzzle_id: 'or_station' },
+  { id: 'xor_gate',                 number: 3, title: 'XOR Gate',     puzzle_id: 'xor_station' },
+  { id: 'not_gate',                 number: 4, title: 'NOT Gate',     puzzle_id: 'not_station' },
+  { id: 'lesson_2-AND_2-AND-AND',   number: 5, title: 'AND Cascade',  puzzle_id: '2-AND_2-AND-AND' }
+];
+window.EXERCISES = [
+  { id: 'exercise_2-AND_2-AND-AND', number: 1, title: 'AND Cascade',  puzzle_id: '2-AND_2-AND-AND' }
+];
+</script>
+
 <script src="../../../components/menu.js" defer></script>
-<script type="module">import '../../../components/speech/speakable.js';</script>
 <script src="../../../core/logic-gates/logic-engine.js"></script>
 <script src="../../../core/logic-gates/logic-gates-core.js"></script>
 <script src="../../../ui/logic-gates/output-ui.js"></script>
 <script src="../../../ui/logic-gates/station-ui.js"></script>
-<script src="../../../ui/logic-gates/sandbox-ui.js"></script>
+<script src="../../../ui/logic-gates/puzzle-ui.js"></script>
+
+<script type="module">
+import { createPaginator } from '../../../components/pagination/paginator-ui.js';
+import { buildSimpleFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
+import { GuidanceService } from '../../../components/guidance/guidance-service.js';
+
+var allItems = [];
+
+var FILTERS = {
+  all:        function() { return true; },
+  primitive:  function(p) { return p.category === 'primitive'; },
+  linear:     function(p) { return p.category === 'linear'; },
+  converging: function(p) { return p.category === 'converging'; }
+};
+var filterFn = FILTERS.all;
+
+function renderPrimitive(item) {
+  var area = document.getElementById('puzzle-area');
+  area.innerHTML = '';
+  var svg = window.StationUI.buildStation(item, function(id) { svg._handleToggle(id); });
+  area.appendChild(svg);
+}
+
+function renderItem(item) {
+  if (!item) return;
+  if (item.category === 'primitive') {
+    renderPrimitive(item);
+  } else {
+    window.PuzzleUI.loadPuzzle(item);
+  }
+}
+
+var paginator = createPaginator({
+  container: document.getElementById('paginator-bar'),
+  items: [],
+  perPage: 1,
+  wrap: true,
+  onRender: renderItem
+});
+
+function applyFilter() { paginator.reset(allItems.filter(filterFn)); }
+
+buildSimpleFilterBar([
+  { value: 'all',        label: 'All' },
+  { value: 'primitive',  label: 'Primitives' },
+  { value: 'linear',     label: 'Linear',     icon: '\u25B6\uFE0F' },
+  { value: 'converging', label: 'Converging', icon: '\uD83D\uDD00' }
+], function(cat) {
+  filterFn = FILTERS[cat];
+  applyFilter();
+}, 'all');
+
+var _guidance = new GuidanceService();
+window.guidanceService = {
+  start: function(entry) {
+    var item = allItems.find(function(i) { return i.id === entry.puzzle_id; });
+    if (item) paginator.reset([item]);
+    _guidance.start(entry);
+  }
+};
+
+Promise.all([
+  fetch('../../../content/logic-gates/sandbox.json?v=2').then(function(r) { return r.json(); }),
+  fetch('../../../content/logic-gates/puzzles-linear.json?v=1').then(function(r) { return r.json(); }),
+  fetch('../../../content/logic-gates/puzzles-converging.json?v=1').then(function(r) { return r.json(); })
+]).then(function(results) {
+  var stations = results[0].map(function(s) { return Object.assign({}, s, { category: 'primitive' }); });
+  allItems = stations.concat(results[1]).concat(results[2]);
+  applyFilter();
+}).catch(function(err) {
+  console.error('logic gates load error:', err);
+});
+</script>
+
 <script type="module">import '../../../components/speech/speech-ui.js';</script>
 </body>
 </html>

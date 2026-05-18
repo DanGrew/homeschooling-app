@@ -186,7 +186,12 @@ function buildStation(config, onToggle) {
   function handleToggle(id) {
     inputStates[id] = !inputStates[id];
     switchMetas[id].meta.applyState(inputStates[id]);
-    config.onUpdate(inputStates, evaluate());
+    const output = evaluate();
+    const inp = config.inputs.find(i => i.id === id);
+    const label = inp ? inp.label : id;
+    window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'SWITCH_' + label + '_' + (inputStates[id] ? 'ON' : 'OFF') } }));
+    window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: output ? 'OUTPUT_ON' : 'OUTPUT_OFF' } }));
+    config.onUpdate(inputStates, output);
   }
 
   svg._handleToggle = handleToggle;
