@@ -168,9 +168,9 @@ function buildSizeSection(gridSize, onChange) {
   label.textContent = 'Grid size:';
   section.appendChild(label);
   var sizes = [
-    { size: 16, label: '4\u00d74 \u2014 Easy' },
-    { size: 36, label: '6\u00d76 \u2014 Medium' },
-    { size: 64, label: '8\u00d78 \u2014 Hard' }
+    { size: 16, label: '4\u00d74 \u2014 Easy',   speak: '4 by 4, Easy' },
+    { size: 36, label: '6\u00d76 \u2014 Medium', speak: '6 by 6, Medium' },
+    { size: 64, label: '8\u00d78 \u2014 Hard',   speak: '8 by 8, Hard' }
   ];
   sizes.forEach(function(o) {
     var btn = document.createElement('button');
@@ -178,7 +178,7 @@ function buildSizeSection(gridSize, onChange) {
     btn.className = 'pairs-size-btn' + PAIRS_SEL[String(gridSize === o.size)];
     btn.setAttribute('data-testid', 'grid-size-' + o.size);
     btn.addEventListener('click', function() { onChange({ gridSize: o.size }); });
-    pairsMakeSpeak(btn, btn.textContent);
+    pairsMakeSpeak(btn, o.speak);
     section.appendChild(btn);
   });
   return section;
