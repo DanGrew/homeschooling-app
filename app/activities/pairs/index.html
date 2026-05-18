@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Pairs</title>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<link rel="stylesheet" href="../../../styles/pairs.css">
+<script src="../../../components/menu.js" defer></script>
+<script type="module" src="../../../components/success-banner.js"></script>
+<script src="../../../core/pairs/pairs-content.js"></script>
+<script src="../../../core/pairs/pairs-core.js"></script>
+<script src="../../../ui/pairs/pairs-ui.js"></script>
+</head>
+<body>
+<div class="nav-bar" data-home="../../games/" data-title="Pairs" data-instruction="Find the matching pairs" data-no-links="standalone game"></div>
+
+<div class="game-area" style="flex-direction:column;overflow:hidden;">
+  <div id="pairs-setup" class="pairs-screen active"></div>
+  <div id="pairs-game" class="pairs-screen"></div>
+  <div id="pairs-summary" class="pairs-screen"></div>
+</div>
+
+<script>window.ACTIVITY_ID = 'pairs';</script>
+<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+
+<script>
+window.DICT_BASE = '../../../content/dictionary/entries/';
+
+var MISMATCH_DELAY = 1000;
+var COMPLETE_DELAY = 1200;
+
+var setupScreen   = document.getElementById('pairs-setup');
+var gameScreen    = document.getElementById('pairs-game');
+var summaryScreen = document.getElementById('pairs-summary');
+
+var gameState;
+var gameMode = 'shared';
+var fruitEntries;
+var animalEntries;
+var conceptNames = {};
+
+var PAIRS_NOOP = function() {};
+var PAIRS_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+var PAIRS_BLOCKED_PHASES = { resolving: true, complete: true };
+
+function showScreen(name) {
+  var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
+  Object.keys(screens).forEach(function(k) {
+    screens[k].className = 'pairs-screen' + PAIRS_SCREEN_ACTIVE[String(k === name)];
+  });
+}
+
+function applyRotation() {
+  var conditions = [gameMode === 'shared', gameState.players.length === 2, gameState.turnIndex === 1];
+  var rotate = conditions.filter(Boolean).length === conditions.length;
+  gameScreen.classList.toggle('pairs-game--rotated', rotate);
+}
+
+function reRenderGame() {
+  renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
+  pairsMeasureCards(gameScreen);
+}
+
+function handleTurnChange() {
+  var TURN_HANDLERS = {
+    passplay: function() {
+      var player = gameState.players[gameState.turnIndex];
+      renderPairsHandover(gameScreen, player.name, reRenderGame);
+    },
+    shared: function() {
+      pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
+      applyRotation();
+    }
+  };
+  [TURN_HANDLERS[gameMode]].filter(Boolean).concat([TURN_HANDLERS.shared])[0]();
+}
+
+fetch('../../../content/dictionary/dictionary.json')
+  .then(function(r) { return r.json(); })
+  .then(function(ids) {
+    return Promise.all(ids.map(function(id) {
+      return fetch(window.DICT_BASE + id + '/concept.json').then(function(r) { return r.json(); });
+    }));
+  })
+  .then(function(concepts) {
+    concepts.forEach(function(c) { conceptNames[c.id] = [c.name, c.id].filter(Boolean)[0]; });
+    fruitEntries  = filterByTag(concepts, 'fruit');
+    animalEntries = filterByTag(concepts, 'animals');
+    renderPairsSetup(setupScreen, fruitEntries, animalEntries, function(cfg) {
+      startGame(cfg);
+    });
+  });
+
+function startGame(cfg) {
+  var contentEntries = [animalEntries].filter(function() { return cfg.gridSize === 64; }).concat([fruitEntries])[0];
+  var contentSet = buildContentSet(contentEntries, GRID_PAIRS[cfg.gridSize]);
+  var players = cfg.players.slice(0, cfg.playerCount).map(function(p, i) {
+    return { id: 'p' + i, name: [p.name, 'Player ' + (i + 1)].filter(Boolean)[0], icon: p.icon, role: p.role };
+  });
+  gameMode = [cfg.mode, 'shared'].filter(Boolean)[0];
+  gameState = createGame(players, cfg.gridSize, contentSet);
+  showScreen('game');
+  renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
+  var START_ACTIONS = {
+    passplay: function() { renderPairsHandover(gameScreen, gameState.players[0].name, reRenderGame); },
+    shared: applyRotation
+  };
+  [START_ACTIONS[gameMode]].filter(Boolean).concat([START_ACTIONS.shared])[0]();
+}
+
+window.addEventListener('resize', function() {
+  [gameState].filter(Boolean).forEach(function() { pairsMeasureCards(gameScreen); });
+});
+
+// arch: allow-pure-fn
+function handleFlip(cardIndex) {
+  [gameState].filter(Boolean).filter(function(s) { return !PAIRS_BLOCKED_PHASES[s.phase]; }).forEach(function(s) {
+    var result = flipCard(s, cardIndex);
+    gameState = result.state;
+    result.events.forEach(function(ev) { applyEvent(ev, cardIndex); });
+  });
+}
+
+function applyEvent(ev, cardIndex) {
+  var HANDLERS = {
+    card_reveal: function() {
+      pairsApplyReveal(gameScreen, ev.data.cardIndex);
+      speakCard(ev.data.cardIndex);
+    },
+    match_success: function() {
+      pairsApplyMatch(gameScreen, ev.data.cardIndices);
+    },
+    tray_update: function() {
+      pairsApplyTrayUpdate(gameScreen, ev.data.playerId, ev.data.contentId);
+    },
+    turn_start: function() {
+      handleTurnChange();
+    },
+    match_fail: function() {
+      var indices = ev.data.cardIndices;
+      setTimeout(function() {
+        var result = resolveFlip(gameState);
+        gameState = result.state;
+        pairsApplyMismatch(gameScreen, indices);
+        result.events.forEach(function(e2) {
+          var RESOLVE_HANDLERS = { turn_start: handleTurnChange };
+          [RESOLVE_HANDLERS[e2.type]].filter(Boolean).concat([PAIRS_NOOP])[0]();
+        });
+      }, MISMATCH_DELAY);
+    },
+    invalid_action: function() {
+      pairsFlashInvalid(gameScreen, cardIndex);
+    },
+    game_complete: function() {
+      setTimeout(function() {
+        gameScreen.classList.remove('pairs-game--rotated');
+        showScreen('summary');
+        renderPairsSummary(summaryScreen, gameState, function() {
+          showScreen('setup');
+          renderPairsSetup(setupScreen, fruitEntries, animalEntries, function(cfg) {
+            startGame(cfg);
+          });
+        });
+      }, COMPLETE_DELAY);
+    }
+  };
+  [HANDLERS[ev.type]].filter(Boolean).concat([PAIRS_NOOP])[0]();
+}
+
+function speakCard(cardIndex) {
+  var el = gameScreen.querySelector('[data-testid="card-' + cardIndex + '"] .pairs-card-front img');
+  var card = gameState.cards[cardIndex];
+  var name = [conceptNames[card.contentId], card.contentId].filter(Boolean)[0];
+  [el].filter(Boolean).filter(function() { return typeof window.__makeSpeakable === 'function'; }).forEach(function(e) {
+    window.__makeSpeakable(e, name);
+  });
+}
+</script>
+
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+window.__makeSpeakable = makeSpeakable;
+</script>
+</body>
+</html>
