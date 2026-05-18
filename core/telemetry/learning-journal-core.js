@@ -64,7 +64,9 @@ export function buildEntryViewModel(event, learning) {
     timeStr: timeStr,
     sourceStr: sourceStr,
     title: title,
-    criteriaTags: criteria.map(formatCriterion)
+    criteriaTags: criteria.map(formatCriterion),
+    variantId: event.variant_id,
+    difficulty: event.difficulty
   };
 }
 

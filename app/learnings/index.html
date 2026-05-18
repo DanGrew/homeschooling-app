@@ -8,6 +8,8 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#fff8f0;font-family:inherit;padding:24px 16px 48px;}
+#page-layout{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;}
+#journal-col{flex:1;min-width:280px;}
 a.back{display:inline-block;margin-bottom:20px;color:#7c6fcd;text-decoration:none;font-size:0.95em;}
 a.back:hover{text-decoration:underline;}
 h1{font-size:2em;color:#333;margin-bottom:28px;}
@@ -22,15 +24,52 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 .entry-criteria:empty{display:none;}
 .tag{font-size:0.75em;background:#f0e8ff;color:#7c6fcd;border-radius:6px;padding:2px 8px;}
 .empty{color:#bbb;font-size:0.95em;margin-top:32px;text-align:center;}
+#breakdown-panel{width:260px;flex-shrink:0;position:sticky;top:24px;}
+.bp-section{background:#fff;border-radius:12px;padding:16px;box-shadow:0 2px 6px rgba(0,0,0,0.07);margin-bottom:16px;}
+.bp-heading{font-size:0.8em;font-weight:bold;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:14px;}
+.bar-row{margin-bottom:10px;}
+.bar-label{font-size:0.75em;color:#555;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bar-track{height:8px;background:#f3f0fb;border-radius:4px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.5s ease;}
+.bar-row-zero .bar-label{color:#ccc;}
+.entry-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+.entry-meta:empty{display:none;}
+.meta-tag{font-size:0.72em;background:#f5f5f5;color:#888;border-radius:6px;padding:2px 8px;}
 </style>
 </head>
 <body>
-<a class="back" href="../">← Home</a>
-<h1>Learnings</h1>
-<div id="journal"></div>
+<div id="page-layout">
+  <div id="journal-col">
+    <a class="back" href="../">← Home</a>
+    <h1>Learnings</h1>
+    <div id="journal"></div>
+  </div>
+  <div id="breakdown-panel">
+    <div class="bp-section">
+      <div class="bp-heading">Areas</div>
+      <div id="area-bars"></div>
+    </div>
+    <div class="bp-section">
+      <div class="bp-heading">Skills</div>
+      <div id="crit-bars"></div>
+    </div>
+  </div>
+</div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { fetchLearning, buildEntryViewModel, sortAndGroupEvents } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion } from '../../core/telemetry/learning-journal-core.js';
+
+var ZERO_CLASS = { 'true': ' bar-row-zero', 'false': '' };
+
+var AREA_META = [
+  { key: 'ead',      label: 'Expressive Arts',        color: '#9B59B6' },
+  { key: 'uw',       label: 'Understanding the World', color: '#27AE60' },
+  { key: 'cl',       label: 'Communication',           color: '#3498DB' },
+  { key: 'pd',       label: 'Physical Dev.',           color: '#E67E22' },
+  { key: 'psed',     label: 'Personal & Social',       color: '#E91E63' },
+  { key: 'literacy', label: 'Literacy',                color: '#1ABC9C' },
+  { key: 'maths',    label: 'Maths',                   color: '#E74C3C' }
+];
 
 var NO_EVENTS = {
   'true':  function(j)    { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
@@ -41,10 +80,17 @@ function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);
   var div = document.createElement('div');
   div.className = 'entry';
+  var metaTags = [
+    { key: 'variant_id', label: 'Variant', val: vm.variantId },
+    { key: 'difficulty', label: 'Difficulty', val: vm.difficulty }
+  ].filter(function(m) { return m.val !== undefined; })
+   .map(function(m) { return '<span class="meta-tag">' + m.label + ': ' + m.val + '</span>'; })
+   .join('');
   div.innerHTML =
     '<div class="entry-time">' + vm.timeStr + '</div>' +
     '<div class="entry-source">' + vm.sourceStr + '</div>' +
     '<div class="entry-title">' + vm.title + '</div>' +
+    '<div class="entry-meta">' + metaTags + '</div>' +
     '<div class="entry-criteria">' + vm.criteriaTags.map(function(t) {
       return '<span class="tag">' + t + '</span>';
     }).join('') + '</div>';
@@ -73,9 +119,70 @@ function renderGroups(journal, events) {
   grouped.order.forEach(function(label) { renderGroup(journal, label, grouped.groups[label]); });
 }
 
+function makeBar(label, pct, color) {
+  var row = document.createElement('div');
+  row.className = 'bar-row' + ZERO_CLASS[String(pct === 0)];
+  row.innerHTML =
+    '<div class="bar-label">' + label + '</div>' +
+    '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + color + ';"></div></div>';
+  return row;
+}
+
+function renderBreakdown(events, learnings) {
+  var areaTally = {};
+  var critTally = {};
+  AREA_META.forEach(function(a) { areaTally[a.key] = 0; });
+  Object.keys(learnings).forEach(function(lid) {
+    learnings[lid].criteria.forEach(function(c) { critTally[c] = 0; });
+  });
+  events.forEach(function(ev) {
+    var lid = [ev.learning_id, ev.lessonId].filter(Boolean)[0];
+    [learnings[lid]].filter(Boolean).forEach(function(l) {
+      l.criteria.forEach(function(c) {
+        areaTally[c.split('.')[0]] += 1;
+        critTally[c] += 1;
+      });
+    });
+  });
+  var areaMax = Math.max(1, Math.max.apply(null, AREA_META.map(function(a) { return areaTally[a.key]; })));
+  var areaBars = document.getElementById('area-bars');
+  AREA_META.forEach(function(a) {
+    areaBars.appendChild(makeBar(a.label, Math.round((areaTally[a.key] / areaMax) * 100), a.color));
+  });
+  var critKeys = Object.keys(critTally).sort(function(a, b) { return critTally[b] - critTally[a]; });
+  var critMax = [critKeys[0]].filter(Boolean).reduce(function(acc, k) { return critTally[k]; }, 1);
+  var critBars = document.getElementById('crit-bars');
+  critKeys.forEach(function(c) {
+    critBars.appendChild(makeBar(formatCriterion(c), Math.round((critTally[c] / critMax) * 100), '#7c6fcd'));
+  });
+  [critKeys.length].filter(function(n) { return n === 0; }).forEach(function() {
+    critBars.innerHTML = '<p style="font-size:0.8em;color:#ccc;">No criteria yet.</p>';
+  });
+}
+
 getAllEvents(function(events) {
   var journal = document.getElementById('journal');
-  NO_EVENTS[String(!events.length)](journal, events);
+  NO_EVENTS[String(events.length === 0)](journal, events);
+  var seen = {};
+  var lids = [];
+  events.forEach(function(ev) {
+    var lid = [ev.learning_id, ev.lessonId].filter(Boolean)[0];
+    [lid].filter(Boolean).filter(function(id) { return seen[id] === undefined; }).forEach(function(id) {
+      seen[id] = true;
+      lids.push(id);
+    });
+  });
+  var loaded = {};
+  var remaining = lids.length;
+  function onAllLoaded() { renderBreakdown(events, loaded); }
+  [lids.length].filter(function(n) { return n === 0; }).forEach(onAllLoaded);
+  lids.forEach(function(lid) {
+    fetchLearning(lid, function(learning) {
+      [learning].filter(Boolean).forEach(function(l) { loaded[lid] = l; });
+      remaining -= 1;
+      [remaining].filter(function(r) { return r === 0; }).forEach(onAllLoaded);
+    });
+  });
 });
 </script>
 </body>
