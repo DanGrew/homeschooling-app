@@ -214,13 +214,13 @@ function pairsGameLayoutKey(state, mode) {
 
 var PAIRS_GAME_RENDERERS = {
   passplay: function(container, state, onFlip) {
-    container.appendChild(buildPlayerTraySection(state, state.turnIndex));
+    container.appendChild(buildPlayerTraySection(state, state.turnIndex, 'pairs-trays'));
     container.appendChild(buildGrid(state, onFlip));
   },
   '2p': function(container, state, onFlip) {
     container.appendChild(buildPlayerTraySection(state, 1));
     container.appendChild(buildGrid(state, onFlip));
-    container.appendChild(buildPlayerTraySection(state, 0));
+    container.appendChild(buildPlayerTraySection(state, 0, 'pairs-trays'));
   },
   '3p': function(container, state, onFlip) {
     container.appendChild(buildTraysRow(state));
@@ -233,10 +233,11 @@ function renderPairsGame(container, state, mode, onFlip) {
   PAIRS_GAME_RENDERERS[pairsGameLayoutKey(state, mode)](container, state, onFlip);
 }
 
-function buildPlayerTraySection(state, playerIdx) {
+function buildPlayerTraySection(state, playerIdx, testId) {
   var p = state.players[playerIdx];
   var wrap = document.createElement('div');
   wrap.className = 'pairs-tray-wrap';
+  [testId].filter(Boolean).forEach(function(id) { wrap.setAttribute('data-testid', id); });
 
   var labelDiv = document.createElement('div');
   labelDiv.className = 'pairs-tray-label' + PAIRS_ACTIVE[String(state.turnIndex === playerIdx)];
