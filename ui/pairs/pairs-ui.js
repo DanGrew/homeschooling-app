@@ -70,6 +70,7 @@ function buildCountSection(playerCount, onChange) {
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'How many players?';
+  pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
   [2, 3].forEach(function(n) {
     var btn = document.createElement('button');
@@ -97,6 +98,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
 
   var label = document.createElement('p');
   label.textContent = 'Player ' + (idx + 1);
+  pairsMakeSpeak(label, label.textContent);
   header.appendChild(label);
 
   var roleSelect = document.createElement('select');
@@ -128,6 +130,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
   var avatarLabel = document.createElement('p');
   avatarLabel.textContent = 'Pick an avatar:';
   avatarLabel.style.cssText = 'font-weight:normal;font-size:13px;margin:6px 0 4px';
+  pairsMakeSpeak(avatarLabel, avatarLabel.textContent);
   panel.appendChild(avatarLabel);
 
   var grid = document.createElement('div');
@@ -166,6 +169,7 @@ function buildSizeSection(gridSize, onChange) {
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'Grid size:';
+  pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
   var sizes = [
     { size: 16, label: '4\u00d74 \u2014 Easy',   speak: '4 by 4, Easy' },
@@ -189,6 +193,7 @@ function buildModeSection(mode, onChange) {
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'Screen mode:';
+  pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
   var modes = [{ value: 'shared', label: 'Shared screen' }, { value: 'passplay', label: 'Pass \u0026 Play' }];
   modes.forEach(function(m) {
