@@ -3,6 +3,8 @@
   "title": "Things That Go",
   "number": 5,
   "guide": "dog",
+  "filter": "vehicles",
+  "words": ["bus", "train", "truck", "digger", "tractor"],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",

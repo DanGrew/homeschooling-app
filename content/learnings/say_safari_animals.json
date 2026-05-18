@@ -3,6 +3,7 @@
   "title": "Safari Animals",
   "number": 2,
   "guide": "cat",
+  "filter": "animals",
   "source": "Say Words",
   "criteria": [
     "cl.topic-vocabulary",

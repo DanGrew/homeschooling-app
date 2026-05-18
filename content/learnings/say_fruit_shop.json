@@ -3,6 +3,7 @@
   "title": "Fruit Shop",
   "number": 4,
   "guide": "cat",
+  "filter": "fruit",
   "source": "Say Words",
   "criteria": [
     "cl.topic-vocabulary",

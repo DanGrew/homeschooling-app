@@ -3,6 +3,8 @@
   "title": "Wild Animals",
   "number": 2,
   "guide": "cat",
+  "filter": "animals",
+  "words": ["lion", "tiger", "zebra", "camel", "turtle"],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",

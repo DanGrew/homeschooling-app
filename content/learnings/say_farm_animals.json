@@ -3,6 +3,7 @@
   "title": "Farm Animals",
   "number": 1,
   "guide": "dog",
+  "filter": "animals",
   "source": "Say Words",
   "criteria": [
     "cl.topic-vocabulary",

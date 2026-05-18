@@ -3,6 +3,7 @@
   "title": "How Are You Feeling?",
   "number": 3,
   "guide": "cat",
+  "filter": "emotions",
   "source": "Say Words",
   "criteria": [
     "cl.feeling-vocabulary",

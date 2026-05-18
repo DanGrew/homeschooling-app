@@ -3,6 +3,7 @@
   "title": "Things That Go",
   "number": 5,
   "guide": "dog",
+  "filter": "vehicles",
   "source": "Say Words",
   "criteria": [
     "cl.topic-vocabulary",

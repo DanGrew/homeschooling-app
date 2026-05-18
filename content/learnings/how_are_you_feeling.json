@@ -3,6 +3,8 @@
   "title": "How Are You Feeling?",
   "number": 3,
   "guide": "cat",
+  "filter": "emotions",
+  "words": ["sad", "shy", "smile", "angry", "worried"],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",

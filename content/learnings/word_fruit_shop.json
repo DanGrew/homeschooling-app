@@ -3,6 +3,8 @@
   "title": "Fruit Shop",
   "number": 4,
   "guide": "cat",
+  "filter": "fruit",
+  "words": ["apple", "pear", "kiwi", "mango", "lemon"],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",

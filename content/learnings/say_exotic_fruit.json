@@ -3,6 +3,7 @@
   "title": "Exotic Fruits",
   "number": 6,
   "guide": "cat",
+  "filter": "fruit",
   "source": "Say Words",
   "criteria": [
     "cl.topic-vocabulary",

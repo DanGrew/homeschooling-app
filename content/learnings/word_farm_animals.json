@@ -3,6 +3,8 @@
   "title": "Farm Animals",
   "number": 1,
   "guide": "dog",
+  "filter": "animals",
+  "words": ["cow", "dog", "duck", "cat", "horse"],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",
