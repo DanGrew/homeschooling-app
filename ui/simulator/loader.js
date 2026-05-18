@@ -4,6 +4,7 @@ import '../../components/speech/speakable.js';
 async function startSim(simId) {
   const spec = await fetch(`../../../content/simulator/sims/${simId}.json`).then(r => r.json());
 
+  window.LEARNING_ID = spec.simulation.learning_id;
   document.title = spec.simulation.title;
   document.querySelector('.activity-title').textContent = spec.simulation.title;
   document.querySelector('.activity-instruction').textContent = [spec.simulation.instructions, ''][+!spec.simulation.instructions];

@@ -1,0 +1,7 @@
+{
+  "id": "grow-tomatoes-level-1",
+  "title": "Grow Tomatoes (Level 1)",
+  "guide": "horse",
+  "source": "Simulator",
+  "criteria": ["uw.cause-effect", "cl.topic-vocabulary", "maths.counting-5"]
+}
