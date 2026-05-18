@@ -5,6 +5,10 @@ var PAIRS_ROLES = [
   { value: 'child', label: 'Child' }
 ];
 
+var PAIRS_SEL    = { 'true': ' selected',    'false': '' };
+var PAIRS_ACTIVE = { 'true': ' active-turn', 'false': '' };
+var PAIRS_NOOP   = function() {};
+
 function pairsImgSrc(id) {
   return window.DICT_BASE + id + '/' + id + '.svg';
 }
@@ -40,14 +44,17 @@ function buildSetupRoot(cfg, animalEntries, onChange, onStart) {
 
   root.appendChild(buildCountSection(cfg.playerCount, onChange));
 
-  for (var i = 0; i < cfg.playerCount; i++) {
-    root.appendChild(buildPlayerPanel(i, cfg.players[i], animalEntries, cfg.players, onChange));
-  }
+  cfg.players.slice(0, cfg.playerCount).forEach(function(player, i) {
+    root.appendChild(buildPlayerPanel(i, player, animalEntries, cfg.players, onChange));
+  });
 
   root.appendChild(buildSizeSection(cfg.gridSize, onChange));
-  if (cfg.playerCount === 2) root.appendChild(buildModeSection(cfg.mode, onChange));
-  root.appendChild(buildStartButton(cfg, onStart));
 
+  [buildModeSection(cfg.mode, onChange)]
+    .filter(function() { return cfg.playerCount === 2; })
+    .forEach(function(el) { root.appendChild(el); });
+
+  root.appendChild(buildStartButton(cfg, onStart));
   return root;
 }
 
@@ -60,7 +67,7 @@ function buildCountSection(playerCount, onChange) {
   [2, 3].forEach(function(n) {
     var btn = document.createElement('button');
     btn.textContent = n + ' players';
-    btn.className = 'pairs-count-btn' + (playerCount === n ? ' selected' : '');
+    btn.className = 'pairs-count-btn' + PAIRS_SEL[String(playerCount === n)];
     btn.setAttribute('data-testid', 'player-count-' + n);
     btn.addEventListener('click', function() { onChange({ playerCount: n }); });
     section.appendChild(btn);
@@ -69,7 +76,9 @@ function buildCountSection(playerCount, onChange) {
 }
 
 function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
-  var takenIcons = allPlayers.map(function(p, i) { return i !== idx ? p.icon : null; }).filter(Boolean);
+  var takenIcons = allPlayers.filter(function(p, i) { return i !== idx; })
+    .map(function(p) { return p.icon; })
+    .filter(Boolean);
 
   var panel = document.createElement('div');
   panel.className = 'pairs-player-panel';
@@ -117,12 +126,12 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
   grid.className = 'pairs-avatar-grid';
 
   animalEntries.forEach(function(entry) {
-    var isTaken = takenIcons.indexOf(entry.id) !== -1;
+    var isTaken   = takenIcons.indexOf(entry.id) !== -1;
     var isSelected = player.icon === entry.id;
     var btn = document.createElement('button');
-    btn.className = 'pairs-avatar-btn' + (isSelected ? ' selected' : '');
+    btn.className = 'pairs-avatar-btn' + PAIRS_SEL[String(isSelected)];
     btn.disabled = isTaken;
-    btn.style.opacity = isTaken ? '0.3' : '';
+    btn.style.opacity = ['0.3', ''][Number(!isTaken)];
     btn.setAttribute('data-testid', 'avatar-' + idx + '-' + entry.id);
     var img = document.createElement('img');
     img.src = pairsImgSrc(entry.id);
@@ -130,9 +139,9 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
     btn.appendChild(img);
     btn.addEventListener('click', function() {
       var newPlayers = allPlayers.map(function(p, j) {
-        if (j !== idx) return p;
-        var name = p.name || (entry.name || entry.id);
-        return Object.assign({}, p, { icon: entry.id, name: name });
+        var nameDefault = [p.name, entry.name, entry.id].filter(Boolean)[0];
+        var updates = [{ icon: entry.id, name: nameDefault }].filter(function() { return j === idx; });
+        return Object.assign.apply(Object, [{}].concat([p], updates));
       });
       onChange({ players: newPlayers });
     });
@@ -157,7 +166,7 @@ function buildSizeSection(gridSize, onChange) {
   sizes.forEach(function(o) {
     var btn = document.createElement('button');
     btn.textContent = o.label;
-    btn.className = 'pairs-size-btn' + (gridSize === o.size ? ' selected' : '');
+    btn.className = 'pairs-size-btn' + PAIRS_SEL[String(gridSize === o.size)];
     btn.setAttribute('data-testid', 'grid-size-' + o.size);
     btn.addEventListener('click', function() { onChange({ gridSize: o.size }); });
     section.appendChild(btn);
@@ -175,7 +184,7 @@ function buildModeSection(mode, onChange) {
   modes.forEach(function(m) {
     var btn = document.createElement('button');
     btn.textContent = m.label;
-    btn.className = 'pairs-size-btn' + (mode === m.value ? ' selected' : '');
+    btn.className = 'pairs-size-btn' + PAIRS_SEL[String(mode === m.value)];
     btn.setAttribute('data-testid', 'mode-' + m.value);
     btn.addEventListener('click', function() { onChange({ mode: m.value }); });
     section.appendChild(btn);
@@ -196,21 +205,32 @@ function buildStartButton(cfg, onStart) {
 
 // ---- Game ----
 
-function renderPairsGame(container, state, mode, onFlip) {
-  container.innerHTML = '';
-  var is2Player = state.players.length === 2;
+// arch: allow-pure-fn
+function pairsGameLayoutKey(state, mode) {
+  var modeIs2p = state.players.length === 2;
+  var keyMap = { passplay: 'passplay', 'true': '2p', 'false': '3p' };
+  return [keyMap[mode]].filter(Boolean).concat([keyMap[String(modeIs2p)]])[0];
+}
 
-  if (mode === 'passplay') {
+var PAIRS_GAME_RENDERERS = {
+  passplay: function(container, state, onFlip) {
     container.appendChild(buildPlayerTraySection(state, state.turnIndex));
     container.appendChild(buildGrid(state, onFlip));
-  } else if (is2Player) {
+  },
+  '2p': function(container, state, onFlip) {
     container.appendChild(buildPlayerTraySection(state, 1));
     container.appendChild(buildGrid(state, onFlip));
     container.appendChild(buildPlayerTraySection(state, 0));
-  } else {
+  },
+  '3p': function(container, state, onFlip) {
     container.appendChild(buildTraysRow(state));
     container.appendChild(buildGrid(state, onFlip));
   }
+};
+
+function renderPairsGame(container, state, mode, onFlip) {
+  container.innerHTML = '';
+  PAIRS_GAME_RENDERERS[pairsGameLayoutKey(state, mode)](container, state, onFlip);
 }
 
 function buildPlayerTraySection(state, playerIdx) {
@@ -220,15 +240,16 @@ function buildPlayerTraySection(state, playerIdx) {
   wrap.setAttribute('data-testid', 'pairs-trays');
 
   var labelDiv = document.createElement('div');
-  labelDiv.className = 'pairs-tray-label' + (state.turnIndex === playerIdx ? ' active-turn' : '');
+  labelDiv.className = 'pairs-tray-label' + PAIRS_ACTIVE[String(state.turnIndex === playerIdx)];
   labelDiv.setAttribute('data-testid', 'tray-label-' + p.id);
 
-  if (p.icon) {
+  [p.icon].filter(Boolean).forEach(function(icon) {
     var iconImg = document.createElement('img');
-    iconImg.src = pairsImgSrc(p.icon);
+    iconImg.src = pairsImgSrc(icon);
     iconImg.alt = p.name;
     labelDiv.appendChild(iconImg);
-  }
+  });
+
   var nameSpan = document.createElement('span');
   nameSpan.textContent = p.name;
   labelDiv.appendChild(nameSpan);
@@ -253,15 +274,16 @@ function buildTraysRow(state) {
     trayWrap.className = 'pairs-tray-wrap';
 
     var labelDiv = document.createElement('div');
-    labelDiv.className = 'pairs-tray-label' + (state.turnIndex === i ? ' active-turn' : '');
+    labelDiv.className = 'pairs-tray-label' + PAIRS_ACTIVE[String(state.turnIndex === i)];
     labelDiv.setAttribute('data-testid', 'tray-label-' + p.id);
 
-    if (p.icon) {
+    [p.icon].filter(Boolean).forEach(function(icon) {
       var iconImg = document.createElement('img');
-      iconImg.src = pairsImgSrc(p.icon);
+      iconImg.src = pairsImgSrc(icon);
       iconImg.alt = p.name;
       labelDiv.appendChild(iconImg);
-    }
+    });
+
     var nameSpan = document.createElement('span');
     nameSpan.textContent = p.name;
     labelDiv.appendChild(nameSpan);
@@ -286,7 +308,7 @@ function makeTrayImg(contentId) {
 }
 
 function buildGrid(state, onFlip) {
-  var cols = PAIRS_GRID_COLS[state.gridSize] || 4;
+  var cols = PAIRS_GRID_COLS[state.gridSize];
   var rows = state.cards.length / cols;
   var grid = document.createElement('div');
   grid.className = 'pairs-grid';
@@ -306,13 +328,27 @@ function buildGrid(state, onFlip) {
 }
 
 function pairsMeasureCards(container) {
-  if (!container) return;
-  var grid = container.querySelector('.pairs-grid');
-  if (!grid) return;
-  var cols = parseInt(grid.getAttribute('data-cols'), 10) || 4;
-  var rows = parseInt(grid.getAttribute('data-rows'), 10) || cols;
+  [container].filter(Boolean)
+    .map(function(c) { return c.querySelector('.pairs-grid'); })
+    .filter(Boolean)
+    .forEach(pairsMeasureGrid);
+}
+
+function pairsMeasureGrid(grid) {
+  var cols = pairsParseAttr(grid, 'data-cols', 4);
+  var rows = pairsParseAttr(grid, 'data-rows', cols);
   var rect = grid.getBoundingClientRect();
-  if (rect.width === 0 || rect.height === 0) return;
+  [rect].filter(function(r) { return r.width * r.height > 0; })
+    .forEach(function(r) { pairsSetCardSize(grid, cols, rows, r); });
+}
+
+// arch: allow-pure-fn
+function pairsParseAttr(el, attr, fallback) {
+  var v = parseInt(el.getAttribute(attr), 10);
+  return [v].filter(function(n) { return n > 0; }).concat([fallback])[0];
+}
+
+function pairsSetCardSize(grid, cols, rows, rect) {
   var gap = 5;
   var size = Math.floor(Math.min(
     (rect.width  - (cols - 1) * gap) / cols,
@@ -321,9 +357,11 @@ function pairsMeasureCards(container) {
   grid.style.setProperty('--card-size', size + 'px');
 }
 
+var PAIRS_CARD_CLASS = { revealed: 'face-up', matched: 'matched', hidden: '' };
+
 function buildCardEl(card, idx) {
   var cardEl = document.createElement('div');
-  cardEl.className = 'pairs-card' + (card.state !== 'hidden' ? ' ' + PAIRS_CARD_CLASS[card.state] : '');
+  cardEl.className = ['pairs-card', PAIRS_CARD_CLASS[card.state]].filter(Boolean).join(' ');
   cardEl.setAttribute('data-testid', 'card-' + idx);
   cardEl.setAttribute('data-content', card.contentId);
 
@@ -346,54 +384,54 @@ function buildCardEl(card, idx) {
   return cardEl;
 }
 
-var PAIRS_CARD_CLASS = { revealed: 'face-up', matched: 'matched', hidden: '' };
-
 // ---- Incremental DOM updates ----
 
 function pairsApplyReveal(container, cardIndex) {
   var el = container.querySelector('[data-testid="card-' + cardIndex + '"]');
-  if (el) el.className = 'pairs-card face-up';
+  [el].filter(Boolean).forEach(function(e) { e.className = 'pairs-card face-up'; });
 }
 
 function pairsApplyMatch(container, cardIndices) {
-  cardIndices.forEach(function(i) {
-    var el = container.querySelector('[data-testid="card-' + i + '"]');
-    if (el) el.className = 'pairs-card matched';
-  });
+  cardIndices.forEach(function(i) { pairsSetCardClass(container, i, 'pairs-card matched'); });
 }
 
 function pairsApplyMismatch(container, cardIndices) {
-  cardIndices.forEach(function(i) {
-    var el = container.querySelector('[data-testid="card-' + i + '"]');
-    if (el) el.className = 'pairs-card';
-  });
+  cardIndices.forEach(function(i) { pairsSetCardClass(container, i, 'pairs-card'); });
+}
+
+function pairsSetCardClass(container, i, cls) {
+  var el = container.querySelector('[data-testid="card-' + i + '"]');
+  [el].filter(Boolean).forEach(function(e) { e.className = cls; });
 }
 
 function pairsApplyTrayUpdate(container, playerId, contentId) {
   var tray = container.querySelector('[data-testid="tray-' + playerId + '"]');
-  if (tray) tray.appendChild(makeTrayImg(contentId));
+  [tray].filter(Boolean).forEach(function(t) { t.appendChild(makeTrayImg(contentId)); });
 }
 
 function pairsApplyTurnChange(container, players, nextTurnIndex) {
-  players.forEach(function(p, i) {
-    var label = container.querySelector('[data-testid="tray-label-' + p.id + '"]');
-    if (!label) return;
-    label.className = 'pairs-tray-label' + (i === nextTurnIndex ? ' active-turn' : '');
+  players.forEach(function(p, i) { pairsUpdateTrayLabel(container, p, i === nextTurnIndex); });
+}
+
+function pairsUpdateTrayLabel(container, p, isActive) {
+  var label = container.querySelector('[data-testid="tray-label-' + p.id + '"]');
+  [label].filter(Boolean).forEach(function(el) {
+    el.className = 'pairs-tray-label' + PAIRS_ACTIVE[String(isActive)];
   });
 }
 
 function pairsFlashInvalid(container, cardIndex) {
   var el = container.querySelector('[data-testid="card-' + cardIndex + '"]');
-  if (!el) return;
-  el.classList.add('flash-invalid');
-  el.addEventListener('animationend', function() { el.classList.remove('flash-invalid'); }, { once: true });
+  [el].filter(Boolean).forEach(function(e) {
+    e.classList.add('flash-invalid');
+    e.addEventListener('animationend', function() { e.classList.remove('flash-invalid'); }, { once: true });
+  });
 }
 
 // ---- Handover ----
 
 function renderPairsHandover(container, playerName, onReady) {
-  var existing = container.querySelector('.pairs-handover');
-  if (existing) existing.remove();
+  [container.querySelector('.pairs-handover')].filter(Boolean).forEach(function(e) { e.remove(); });
 
   var overlay = document.createElement('div');
   overlay.className = 'pairs-handover';
@@ -408,10 +446,7 @@ function renderPairsHandover(container, playerName, onReady) {
   btn.textContent = 'Ready';
   btn.className = 'pairs-handover-btn';
   btn.setAttribute('data-testid', 'pairs-handover-ready');
-  btn.addEventListener('click', function() {
-    overlay.remove();
-    onReady();
-  });
+  btn.addEventListener('click', function() { overlay.remove(); onReady(); });
   overlay.appendChild(btn);
 
   container.appendChild(overlay);
@@ -433,14 +468,15 @@ function renderPairsSummary(container, state, onPlayAgain) {
     row.className = 'pairs-summary-row';
     row.setAttribute('data-testid', 'summary-row-' + p.id);
 
-    if (p.icon) {
+    [p.icon].filter(Boolean).forEach(function(icon) {
       var img = document.createElement('img');
-      img.src = pairsImgSrc(p.icon);
+      img.src = pairsImgSrc(icon);
       img.alt = p.name;
       row.appendChild(img);
-    }
+    });
+
     var text = document.createElement('span');
-    text.textContent = p.name + ' \u2014 ' + p.pairs.length + ' pair' + (p.pairs.length !== 1 ? 's' : '');
+    text.textContent = p.name + ' \u2014 ' + p.pairs.length + ' pair' + ['s', ''][Number(p.pairs.length === 1)];
     row.appendChild(text);
     inner.appendChild(row);
   });
