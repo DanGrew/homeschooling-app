@@ -32,6 +32,7 @@ import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js'
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
 import { init, startRound, setMode, togglePicture } from '../../../ui/word-builder/word-builder-ui.js';
 import { speak } from '../../../components/speech/speech-ui.js';
+import { makeSpeakable } from '../../../components/speech/speakable.js';
 
 Dictionary.init('../../../content/dictionary/');
 var all = [];
@@ -74,6 +75,10 @@ function setModeUI(mode) {
 modeD.addEventListener('click', function() { setModeUI('distractors'); });
 modeA.addEventListener('click', function() { setModeUI('alphabet'); });
 picBtn.addEventListener('click', function() { togglePicture(); });
+
+makeSpeakable(modeD, 'Word Letters');
+makeSpeakable(modeA, 'All Letters');
+makeSpeakable(picBtn, function() { return picBtn.textContent; });
 </script>
 <script>window.ACTIVITY_ID = 'word-builder';</script>
 <script type="module">import '../../../components/speech/speakable.js';
