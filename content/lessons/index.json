@@ -4,6 +4,10 @@
     "activity": "Colour Wheel"
   },
   {
+    "file": "logic-gates.json",
+    "activity": "Logic Gates"
+  },
+  {
     "file": "number-interaction.json",
     "activity": "Numbers"
   },

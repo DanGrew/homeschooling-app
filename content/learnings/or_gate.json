@@ -1,0 +1,13 @@
+{
+  "id": "or_gate",
+  "title": "OR Gate",
+  "number": 2,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["uw.cause-effect"],
+  "steps": [
+    { "text": "Can you turn switch A on?", "expect": "SWITCH_A_ON", "feedback": "Fan spins! OR only needs one switch. Turn A off." },
+    { "expect": "SWITCH_A_OFF", "feedback": "Fan stops. Now turn B on instead." },
+    { "expect": "SWITCH_B_ON", "feedback": "B alone works too! OR turns on when either switch is on." }
+  ]
+}

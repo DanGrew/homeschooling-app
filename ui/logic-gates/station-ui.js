@@ -183,10 +183,18 @@ function buildStation(config, onToggle) {
     return active;
   }
 
+  const inputLabelMap = {};
+  config.inputs.forEach(function(inp) { inputLabelMap[inp.id] = inp.label; });
+  const STATE_SUFFIX = { 'true': 'ON', 'false': 'OFF' };
+  const OUTPUT_EVENT = { 'true': 'OUTPUT_ON', 'false': 'OUTPUT_OFF' };
+
   function handleToggle(id) {
     inputStates[id] = !inputStates[id];
     switchMetas[id].meta.applyState(inputStates[id]);
-    config.onUpdate(inputStates, evaluate());
+    const output = evaluate();
+    window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'SWITCH_' + inputLabelMap[id] + '_' + STATE_SUFFIX[String(inputStates[id])] } }));
+    window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: OUTPUT_EVENT[String(output)] } }));
+    config.onUpdate(inputStates, output);
   }
 
   svg._handleToggle = handleToggle;

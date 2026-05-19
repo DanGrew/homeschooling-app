@@ -2,88 +2,118 @@ const { test, expect } = require('@playwright/test');
 
 const URL = '/homeschooling-app/app/activities/logic-gates/sandbox.html';
 
-test('page loads with station container', async ({ page }) => {
+async function waitForStation(page) {
+  await page.waitForSelector('[data-switch]', { state: 'attached' });
+}
+
+test('page loads with puzzle area', async ({ page }) => {
   await page.goto(URL);
-  await expect(page.locator('#stations-container')).toBeVisible();
+  await waitForStation(page);
+  await expect(page.locator('#puzzle-area')).toBeVisible();
 });
 
-test('at least one gate heading is rendered', async ({ page }) => {
+test('SVG station is rendered in puzzle area', async ({ page }) => {
   await page.goto(URL);
-  await page.waitForSelector('#stations-container h2');
-  await expect(page.locator('#stations-container h2').first()).toBeVisible();
-});
-
-test('AND gate heading is present', async ({ page }) => {
-  await page.goto(URL);
-  await page.waitForSelector('#stations-container h2');
-  await expect(page.locator('#stations-container h2').first()).toContainText('gate');
-});
-
-test('SVG station is rendered inside container', async ({ page }) => {
-  await page.goto(URL);
-  await page.waitForSelector('#stations-container svg');
-  await expect(page.locator('#stations-container svg').first()).toBeVisible();
+  await waitForStation(page);
+  await expect(page.locator('#puzzle-area svg')).toBeVisible();
 });
 
 test('switch elements are rendered', async ({ page }) => {
   await page.goto(URL);
-  await page.waitForSelector('[data-switch]');
-  const switches = page.locator('[data-switch]');
-  await expect(switches.first()).toBeVisible();
+  await waitForStation(page);
+  expect(await page.locator('[data-switch]').count()).toBeGreaterThan(0);
 });
 
-test('multiple gate stations are rendered', async ({ page }) => {
+test('paginator bar is rendered', async ({ page }) => {
   await page.goto(URL);
-  await page.waitForSelector('#stations-container svg');
-  const stations = page.locator('#stations-container svg');
-  await expect(stations).toHaveCount(await stations.count());
-  expect(await stations.count()).toBeGreaterThan(1);
+  await waitForStation(page);
+  await expect(page.locator('#paginator-bar')).toBeVisible();
 });
 
-test('separators appear between stations', async ({ page }) => {
+test('filter bar has Primitives, Linear, Converging buttons', async ({ page }) => {
   await page.goto(URL);
-  await page.waitForSelector('#stations-container hr');
-  await expect(page.locator('#stations-container hr').first()).toBeVisible();
+  await expect(page.locator('#nav-filter-slot button[data-value="primitive"]')).toBeVisible();
+  await expect(page.locator('#nav-filter-slot button[data-value="linear"]')).toBeVisible();
+  await expect(page.locator('#nav-filter-slot button[data-value="converging"]')).toBeVisible();
+});
+
+test('All filter button active on load', async ({ page }) => {
+  await page.goto(URL);
+  await expect(page.locator('#nav-filter-slot button[data-value="all"]')).toHaveCSS('background-color', 'rgb(52, 152, 219)');
+});
+
+test('clicking Primitives filter marks it active', async ({ page }) => {
+  await page.goto(URL);
+  await page.locator('#nav-filter-slot button[data-value="primitive"]').click();
+  await expect(page.locator('#nav-filter-slot button[data-value="primitive"]')).toHaveCSS('background-color', 'rgb(52, 152, 219)');
+  await expect(page.locator('#nav-filter-slot button[data-value="all"]')).not.toHaveCSS('background-color', 'rgb(52, 152, 219)');
 });
 
 test('clicking a switch does not throw', async ({ page }) => {
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.goto(URL);
-  await page.waitForSelector('[data-switch]');
+  await waitForStation(page);
   await page.locator('[data-switch]').first().click();
   expect(errors).toHaveLength(0);
 });
 
 test('clicking a switch updates wire colour', async ({ page }) => {
   await page.goto(URL);
-  await page.waitForSelector('[data-wire]');
-
-  const wireBefore = await page.locator('[data-wire]').first().getAttribute('stroke');
-
+  await waitForStation(page);
+  const before = await page.locator('[data-wire]').first().getAttribute('stroke');
   await page.locator('[data-switch]').first().click();
-
-  const wireAfter = await page.locator('[data-wire]').first().getAttribute('stroke');
-  expect(wireAfter).not.toBe('#ccc');
-  expect(wireAfter).not.toBe(wireBefore);
-});
-
-test('gate pills are clickable and do not throw', async ({ page }) => {
-  const errors = [];
-  page.on('pageerror', e => errors.push(e.message));
-  await page.goto(URL);
-  await page.waitForSelector('[data-gate-pill]');
-  await page.locator('[data-gate-pill]').first().click();
-  expect(errors).toHaveLength(0);
+  const after = await page.locator('[data-wire]').first().getAttribute('stroke');
+  expect(after).not.toBe(before);
 });
 
 test('clicking switch twice returns wire to inactive colour', async ({ page }) => {
   await page.goto(URL);
-  await page.waitForSelector('[data-wire]');
-
+  await waitForStation(page);
   await page.locator('[data-switch]').first().click();
   await page.locator('[data-switch]').first().click();
+  const colour = await page.locator('[data-wire]').first().getAttribute('stroke');
+  expect(colour).toBe('#ccc');
+});
 
-  const wireColour = await page.locator('[data-wire]').first().getAttribute('stroke');
-  expect(wireColour).toBe('#ccc');
+test('Lessons button is present in nav', async ({ page }) => {
+  await page.goto(URL);
+  await expect(page.locator('.nav-lesson-btn')).toBeVisible();
+});
+
+test('Exercises button is present in nav', async ({ page }) => {
+  await page.goto(URL);
+  await expect(page.locator('.nav-exercise-btn')).toBeVisible();
+});
+
+test('Lessons popout lists 5 lessons', async ({ page }) => {
+  await page.goto(URL);
+  await page.locator('.nav-lesson-btn').click();
+  const items = page.locator('.nav-lesson-item');
+  await expect(items).toHaveCount(5);
+});
+
+test('Exercises popout lists 1 exercise', async ({ page }) => {
+  await page.goto(URL);
+  await page.locator('.nav-exercise-btn').click();
+  const items = page.locator('.nav-exercise-item');
+  await expect(items).toHaveCount(1);
+});
+
+test('switching to Converging filter shows puzzle with switches', async ({ page }) => {
+  await page.goto(URL);
+  await page.locator('#nav-filter-slot button[data-value="converging"]').click();
+  await waitForStation(page);
+  expect(await page.locator('[data-switch]').count()).toBeGreaterThan(0);
+});
+
+test('paginator next advances to next item', async ({ page }) => {
+  await page.goto(URL);
+  await waitForStation(page);
+  const indicator = page.locator('#paginator-bar span');
+  const before = await indicator.textContent();
+  await page.locator('#paginator-bar button').last().click();
+  await waitForStation(page);
+  const after = await indicator.textContent();
+  expect(after).not.toBe(before);
 });

@@ -1,0 +1,13 @@
+{
+  "id": "and_gate",
+  "title": "AND Gate",
+  "number": 1,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["uw.cause-effect"],
+  "steps": [
+    { "text": "Can you turn switch A on?", "expect": "SWITCH_A_ON", "feedback": "A is on! Now turn B on too." },
+    { "expect": "SWITCH_B_ON", "feedback": "Both on — the lamp lights up! AND needs them both. Turn A off." },
+    { "expect": "SWITCH_A_OFF", "feedback": "The lamp goes out. AND only works when both switches are on." }
+  ]
+}
