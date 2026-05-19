@@ -168,7 +168,7 @@
       ]
     },
     {
-      "id": "find-primary",
+      "id": "colour-wheel-lesson-find_primary",
       "number": 4,
       "title": "Find Primary Colours",
       "guide": "cat",
@@ -200,7 +200,7 @@
       ]
     },
     {
-      "id": "find-secondary",
+      "id": "colour-wheel-lesson-find_secondary",
       "number": 5,
       "title": "Find Secondary Colours",
       "guide": "cat",
@@ -231,7 +231,7 @@
       ]
     },
     {
-      "id": "find-tertiary",
+      "id": "colour-wheel-lesson-find_tertiary",
       "number": 6,
       "title": "Find Tertiary Colours",
       "guide": "cat",
@@ -275,7 +275,7 @@
       ]
     },
     {
-      "id": "find-warm",
+      "id": "colour-wheel-lesson-find_warm",
       "number": 7,
       "title": "Warm Colours",
       "guide": "cat",
@@ -319,7 +319,7 @@
       ]
     },
     {
-      "id": "find-cool",
+      "id": "colour-wheel-lesson-find_cool",
       "number": 8,
       "title": "Cool Colours",
       "guide": "cat",
