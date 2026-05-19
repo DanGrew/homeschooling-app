@@ -83,10 +83,10 @@ test('lesson button opens popout with lesson title', async ({ page }) => {
   await expect(page.locator('.nav-lesson-item').first()).toContainText('Lesson 1: Make Orange')
 })
 
-test('lesson popout shows all 13 lessons', async ({ page }) => {
+test('lesson popout shows all 14 lessons', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.nav-lesson-btn').click()
-  await expect(page.locator('.nav-lesson-item')).toHaveCount(13)
+  await expect(page.locator('.nav-lesson-item')).toHaveCount(14)
 })
 
 test('lesson 9 make vermillion starts with correct intro', async ({ page }) => {

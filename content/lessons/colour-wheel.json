@@ -168,108 +168,203 @@
       ]
     },
     {
-      "id": "find_primaries",
+      "id": "colour-wheel-lesson-find_primary",
       "number": 4,
-      "title": "Primary Colours",
+      "title": "Find Primary Colours",
       "guide": "cat",
       "criteria": [
+        "ead.colour-recognition",
         "cl.technical-vocab",
-        "ead.colour-recognition"
+        "cl.listening",
+        "cl.sequencing-language"
       ],
       "steps": [
         {
-          "text": "Find red — it's a primary colour.",
-          "expect": "RED_TAPPED",
-          "feedback": "Primary colour number one! Now find yellow."
+          "text": "Let's find the primary colours on the colour wheel. Tap red!",
+          "expect": "RED_TAPPED"
         },
         {
-          "expect": "YELLOW_TAPPED",
-          "feedback": "Primary colour number two! Now find blue."
+          "text": "Tap yellow!",
+          "expect": "YELLOW_TAPPED"
         },
         {
-          "expect": "BLUE_TAPPED",
-          "feedback": "Primary colour number three — you found them all!"
+          "text": "Tap blue!",
+          "expect": "BLUE_TAPPED"
+        },
+        {
+          "text": "Red, yellow, blue — those are the primary colours!",
+          "badge": "PRIMARY",
+          "expect": "BADGE_TAPPED",
+          "feedback": "You found them all — well done!"
         }
       ]
     },
     {
-      "id": "find_secondaries",
+      "id": "colour-wheel-lesson-find_secondary",
       "number": 5,
-      "title": "Secondary Colours",
+      "title": "Find Secondary Colours",
       "guide": "cat",
       "criteria": [
+        "ead.colour-recognition",
         "cl.technical-vocab",
-        "ead.colour-recognition"
+        "cl.listening"
       ],
       "steps": [
         {
-          "text": "Find orange — made from red and yellow!",
-          "expect": "ORANGE_TAPPED",
-          "feedback": "Secondary colour number one! Now find green."
+          "text": "Let's find the secondary colours — the ones we made by mixing. Tap orange!",
+          "expect": "ORANGE_TAPPED"
         },
         {
-          "expect": "GREEN_TAPPED",
-          "feedback": "Secondary colour number two! Now find purple."
+          "text": "Tap green!",
+          "expect": "GREEN_TAPPED"
         },
         {
-          "expect": "PURPLE_TAPPED",
-          "feedback": "Secondary colour number three — all three secondaries!"
+          "text": "Tap purple!",
+          "expect": "PURPLE_TAPPED"
+        },
+        {
+          "text": "Orange, green, purple — those are the secondary colours!",
+          "badge": "SECONDARY",
+          "expect": "BADGE_TAPPED",
+          "feedback": "You found them all — well done!"
         }
       ]
     },
     {
-      "id": "warm_colours",
+      "id": "colour-wheel-lesson-find_tertiary",
       "number": 6,
+      "title": "Find Tertiary Colours",
+      "guide": "cat",
+      "criteria": [
+        "ead.colour-recognition",
+        "cl.technical-vocab",
+        "cl.topic-vocabulary",
+        "cl.listening"
+      ],
+      "steps": [
+        {
+          "text": "These are the tertiary colours — each one made by mixing a primary and a secondary. Tap vermillion!",
+          "expect": "RED_ORANGE_TAPPED"
+        },
+        {
+          "text": "Tap amber!",
+          "expect": "YELLOW_ORANGE_TAPPED"
+        },
+        {
+          "text": "Tap chartreuse!",
+          "expect": "YELLOW_GREEN_TAPPED"
+        },
+        {
+          "text": "Tap teal!",
+          "expect": "BLUE_GREEN_TAPPED"
+        },
+        {
+          "text": "Tap indigo!",
+          "expect": "BLUE_PURPLE_TAPPED"
+        },
+        {
+          "text": "Tap magenta!",
+          "expect": "RED_PURPLE_TAPPED"
+        },
+        {
+          "text": "You found all six — those are the tertiary colours!",
+          "badge": "TERTIARY",
+          "expect": "BADGE_TAPPED",
+          "feedback": "You found them all — well done!"
+        }
+      ]
+    },
+    {
+      "id": "colour-wheel-lesson-find_warm",
+      "number": 7,
       "title": "Warm Colours",
       "guide": "cat",
       "criteria": [
-        "cl.descriptive-vocab",
-        "ead.colour-families"
+        "ead.colour-families",
+        "ead.colour-recognition",
+        "cl.technical-vocab",
+        "cl.listening"
       ],
       "steps": [
         {
-          "text": "Find red — a warm colour.",
-          "expect": "RED_TAPPED",
-          "feedback": "Warm like fire! Now find orange."
+          "text": "Warm colours remind us of fire and sunshine. Let's find them all. Tap red!",
+          "expect": "RED_TAPPED"
         },
         {
-          "expect": "ORANGE_TAPPED",
-          "feedback": "Warm like the setting sun! Now find yellow."
+          "text": "Tap orange!",
+          "expect": "ORANGE_TAPPED"
         },
         {
-          "expect": "YELLOW_TAPPED",
-          "feedback": "Warm like sunshine — all three warm colours found!"
+          "text": "Tap yellow!",
+          "expect": "YELLOW_TAPPED"
+        },
+        {
+          "text": "Tap vermillion!",
+          "expect": "RED_ORANGE_TAPPED"
+        },
+        {
+          "text": "Tap amber!",
+          "expect": "YELLOW_ORANGE_TAPPED"
+        },
+        {
+          "text": "Tap magenta!",
+          "expect": "RED_PURPLE_TAPPED"
+        },
+        {
+          "text": "Red, orange, yellow, vermillion, amber, magenta — those are the warm colours. They all feel like fire and sunshine.",
+          "badge": "WARM",
+          "expect": "BADGE_TAPPED",
+          "feedback": "You found all the warm colours!"
         }
       ]
     },
     {
-      "id": "cool_colours",
-      "number": 7,
+      "id": "colour-wheel-lesson-find_cool",
+      "number": 8,
       "title": "Cool Colours",
       "guide": "cat",
       "criteria": [
-        "cl.descriptive-vocab",
-        "ead.colour-families"
+        "ead.colour-families",
+        "ead.colour-recognition",
+        "cl.technical-vocab",
+        "cl.listening"
       ],
       "steps": [
         {
-          "text": "Find blue — cool like the ocean.",
-          "expect": "BLUE_TAPPED",
-          "feedback": "Cool like the sea! Now find green."
+          "text": "Cool colours remind us of water and ice. Let's find them all. Tap blue!",
+          "expect": "BLUE_TAPPED"
         },
         {
-          "expect": "GREEN_TAPPED",
-          "feedback": "Cool like leaves and grass! Now find purple."
+          "text": "Tap green!",
+          "expect": "GREEN_TAPPED"
         },
         {
-          "expect": "PURPLE_TAPPED",
-          "feedback": "Cool and mysterious — all three cool colours!"
+          "text": "Tap purple!",
+          "expect": "PURPLE_TAPPED"
+        },
+        {
+          "text": "Tap teal!",
+          "expect": "BLUE_GREEN_TAPPED"
+        },
+        {
+          "text": "Tap indigo!",
+          "expect": "BLUE_PURPLE_TAPPED"
+        },
+        {
+          "text": "Tap chartreuse!",
+          "expect": "YELLOW_GREEN_TAPPED"
+        },
+        {
+          "text": "Blue, green, purple, teal, indigo, chartreuse — those are the cool colours. They all feel like water and ice.",
+          "badge": "COOL",
+          "expect": "BADGE_TAPPED",
+          "feedback": "You found all the cool colours!"
         }
       ]
     },
     {
       "id": "colour-wheel-lesson-make_teal",
-      "number": 8,
+      "number": 9,
       "title": "Make Teal",
       "guide": "cat",
       "criteria": [
@@ -324,7 +419,7 @@
     },
     {
       "id": "colour-wheel-lesson-make_vermillion",
-      "number": 9,
+      "number": 10,
       "title": "Make Vermillion",
       "guide": "cat",
       "criteria": [
@@ -379,7 +474,7 @@
     },
     {
       "id": "colour-wheel-lesson-make_amber",
-      "number": 10,
+      "number": 11,
       "title": "Make Amber",
       "guide": "cat",
       "criteria": [
@@ -434,7 +529,7 @@
     },
     {
       "id": "colour-wheel-lesson-make_chartreuse",
-      "number": 11,
+      "number": 12,
       "title": "Make Chartreuse",
       "guide": "cat",
       "criteria": [
@@ -489,7 +584,7 @@
     },
     {
       "id": "colour-wheel-lesson-make_indigo",
-      "number": 12,
+      "number": 13,
       "title": "Make Indigo",
       "guide": "cat",
       "criteria": [
@@ -544,7 +639,7 @@
     },
     {
       "id": "colour-wheel-lesson-make_magenta",
-      "number": 13,
+      "number": 14,
       "title": "Make Magenta",
       "guide": "cat",
       "criteria": [

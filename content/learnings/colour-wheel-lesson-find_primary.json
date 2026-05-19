@@ -1,0 +1,33 @@
+{
+  "id": "colour-wheel-lesson-find_primary",
+  "title": "Find Primary Colours",
+  "number": 4,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-recognition",
+    "cl.technical-vocab",
+    "cl.listening",
+    "cl.sequencing-language"
+  ],
+  "steps": [
+    {
+      "text": "Let's find the primary colours on the colour wheel. Tap red!",
+      "expect": "RED_TAPPED"
+    },
+    {
+      "text": "Tap yellow!",
+      "expect": "YELLOW_TAPPED"
+    },
+    {
+      "text": "Tap blue!",
+      "expect": "BLUE_TAPPED"
+    },
+    {
+      "text": "Red, yellow, blue — those are the primary colours!",
+      "badge": "PRIMARY",
+      "expect": "BADGE_TAPPED",
+      "feedback": "You found them all — well done!"
+    }
+  ]
+}
