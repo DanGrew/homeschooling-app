@@ -11,8 +11,8 @@
     {"text": "Tap blue!", "expect": "BLUE_TAPPED"},
     {"text": "Red, yellow, blue — those are the primary colours.", "badge": "PRIMARY", "expect": "BADGE_TAPPED"},
     {"text": "Now we're going to mix yellow and green. What do you think they'll make? Tap your guess on the wheel!", "expect": "YELLOW_GREEN_TAPPED"},
-    {"text": "Let's find out! Tap yellow to put it in the mixer.", "expect": "SLOT_A_LOADED"},
-    {"text": "Now tap green.", "expect": "SLOT_B_LOADED"},
+    {"text": "Let's find out! Tap yellow to put it in the mixer.", "expect": "YELLOW_LOADED_A"},
+    {"text": "Now tap green.", "expect": "GREEN_LOADED_B"},
     {"text": "Chartreuse! Because yellow and green mixed together — they made chartreuse. Chartreuse is a tertiary colour.", "badge": "TERTIARY", "expect": "BADGE_TAPPED"},
     {"text": "Now tap chartreuse on the colour wheel!", "expect": "YELLOW_GREEN_TAPPED", "feedback": "You mixed it. You found it."}
   ]

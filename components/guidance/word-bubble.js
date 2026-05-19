@@ -1,4 +1,4 @@
-import { speak } from '../speech/speech-ui.js';
+import { queue } from '../speech/speech-ui.js';
 
 var _styleInjected = false;
 function _injectStyle() {
@@ -20,7 +20,7 @@ WordBubble.prototype.build = function(parent) {
   var self = this;
 
   var wrap = document.createElement('div');
-  wrap.style.cssText = 'position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);display:none;flex-direction:column;align-items:center;gap:3px;cursor:pointer;z-index:100;';
+  wrap.style.cssText = 'position:absolute;bottom:calc(100% + 6px);left:0;display:none;flex-direction:column;align-items:center;gap:3px;cursor:pointer;z-index:100;';
 
   var bubble = document.createElement('div');
   bubble.style.cssText = 'background:#fff8e7;border:3px solid #f0c060;border-radius:20px;padding:8px 18px;font-size:1.1em;font-weight:900;color:#b06000;white-space:nowrap;animation:wbPulse 1.4s ease-in-out infinite;';
@@ -41,10 +41,10 @@ WordBubble.prototype.build = function(parent) {
 
   wrap.addEventListener('click', function() {
     [self._word].filter(Boolean).forEach(function(w) {
-      speak(w);
+      queue(w.toLowerCase());
       setTimeout(function() {
         window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'BADGE_TAPPED' } }));
-      }, 900);
+      }, 1200);
     });
   });
 };

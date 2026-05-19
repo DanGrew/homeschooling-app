@@ -11,8 +11,8 @@
     {"text": "Tap blue!", "expect": "BLUE_TAPPED"},
     {"text": "Red, yellow, blue — those are the primary colours.", "badge": "PRIMARY", "expect": "BADGE_TAPPED"},
     {"text": "Now we're going to mix yellow and orange. What do you think they'll make? Tap your guess on the wheel!", "expect": "YELLOW_ORANGE_TAPPED"},
-    {"text": "Let's find out! Tap yellow to put it in the mixer.", "expect": "SLOT_A_LOADED"},
-    {"text": "Now tap orange.", "expect": "SLOT_B_LOADED"},
+    {"text": "Let's find out! Tap yellow to put it in the mixer.", "expect": "YELLOW_LOADED_A"},
+    {"text": "Now tap orange.", "expect": "ORANGE_LOADED_B"},
     {"text": "Amber! Because yellow and orange mixed together — they made amber. Amber is a tertiary colour.", "badge": "TERTIARY", "expect": "BADGE_TAPPED"},
     {"text": "Now tap amber on the colour wheel!", "expect": "YELLOW_ORANGE_TAPPED", "feedback": "You mixed it. You found it."}
   ]
