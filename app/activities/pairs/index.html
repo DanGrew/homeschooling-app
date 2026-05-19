@@ -76,8 +76,12 @@ function handleTurnChange() {
       setTimeout(function() { renderPairsHandover(gameScreen, player.name, reRenderGame); }, delay);
     },
     shared: function() {
-      pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
-      applyRotation();
+      var delay = handoverDelay;
+      handoverDelay = 0;
+      setTimeout(function() {
+        pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
+        applyRotation();
+      }, delay);
     }
   };
   [TURN_HANDLERS[gameMode]].filter(Boolean).concat([TURN_HANDLERS.shared])[0]();
