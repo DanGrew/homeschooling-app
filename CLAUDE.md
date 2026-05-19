@@ -86,6 +86,7 @@ See `TESTING.md` for full ways of working. Summary:
 | Puzzle | `app/activities/puzzle/index.html` | core/puzzle, ui/puzzle |
 | Pairs memory | `app/activities/pairs/index.html` | core/pairs, ui/pairs |
 | Word lesson | `app/activities/word-lesson/index.html` | ui/word-lesson, components/guidance |
+| Word builder | `app/activities/word-builder/index.html` | core/word-builder, ui/word-builder, components/speech, components/success-banner |
 | Word match | `app/activities/word-match/index.html` | core/word-match, ui/word-match |
 | Primary colours | `app/activities/primary-colours/index.html` | core/shapes, ui/shared |
 | Secondary colours | `app/activities/secondary-colours/index.html` | core/shapes, ui/shared |
@@ -140,6 +141,7 @@ See `TESTING.md` for full ways of working. Summary:
 | `core/simulator/simulator-core.js` | State machines, animations, conditions (evalCond, applyStateAction, resolveScene) |
 | `core/story-time/story-time-core.js` | Story audio playback control |
 | `core/word-lesson/word-lesson-core.js` | Word vocabulary lessons |
+| `core/word-builder/word-builder-core.js` | Word builder: parseWord, buildTileSet, validateLetter, isWordComplete, pickWord |
 | `core/word-match/word-match-core.js` | Word matching game |
 
 ### ui/
@@ -175,6 +177,7 @@ See `TESTING.md` for full ways of working. Summary:
 | `ui/story-time/player.js` | Audio story player UI |
 | `ui/trace/trace-ui.js` | Trace canvas/feedback UI |
 | `ui/word-lesson/word-lesson-ui.js` | Word lesson UI |
+| `ui/word-builder/word-builder-ui.js` | Word builder: slot/tile render, placement feedback, TTS, banner |
 | `ui/word-match/word-match-ui.js` | Word matching UI |
 
 ### components/

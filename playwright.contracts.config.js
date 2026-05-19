@@ -8,7 +8,7 @@ module.exports = defineConfig({
   webServer: {
     command: 'node test-server-contracts.js',
     url: 'http://localhost:3001',
-    reuseExistingServer: false,
+    reuseExistingServer: true,
   },
   projects: [
     { name: 'chromium', use: { browserName: 'chromium' } }
