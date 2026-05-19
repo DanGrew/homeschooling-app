@@ -28,12 +28,13 @@
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["expect", "feedback"],
+              "required": ["expect"],
               "additionalProperties": false,
               "properties": {
                 "text": { "type": "string" },
                 "expect": { "type": "string" },
-                "feedback": { "type": "string" }
+                "feedback": { "type": "string" },
+                "badge": { "type": "string" }
               }
             }
           }
