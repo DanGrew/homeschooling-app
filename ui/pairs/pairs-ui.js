@@ -371,9 +371,11 @@ function pairsParseAttr(el, attr, fallback) {
 
 function pairsSetCardSize(grid, cols, rows, rect) {
   var gap = 5;
+  var hPad = 16;
+  var vPad = 12;
   var size = Math.floor(Math.min(
-    (rect.width  - (cols - 1) * gap) / cols,
-    (rect.height - (rows - 1) * gap) / rows
+    (rect.width  - hPad - (cols - 1) * gap) / cols,
+    (rect.height - vPad - (rows - 1) * gap) / rows
   ));
   grid.style.setProperty('--card-size', size + 'px');
 }

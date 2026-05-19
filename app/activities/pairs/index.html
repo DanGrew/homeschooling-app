@@ -56,11 +56,6 @@ function showScreen(name) {
   });
 }
 
-function applyRotation() {
-  var conditions = [gameMode === 'shared', gameState.players.length === 2, gameState.turnIndex === 1];
-  var rotate = conditions.filter(Boolean).length === conditions.length;
-  gameScreen.classList.toggle('pairs-game--rotated', rotate);
-}
 
 function reRenderGame() {
   renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
@@ -80,7 +75,6 @@ function handleTurnChange() {
       handoverDelay = 0;
       setTimeout(function() {
         pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
-        applyRotation();
       }, delay);
     }
   };
@@ -116,7 +110,7 @@ function startGame(cfg) {
   renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
   var START_ACTIONS = {
     passplay: function() { renderPairsHandover(gameScreen, gameState.players[0].name, reRenderGame); },
-    shared: applyRotation
+    shared: PAIRS_NOOP
   };
   [START_ACTIONS[gameMode]].filter(Boolean).concat([START_ACTIONS.shared])[0]();
 }
@@ -167,7 +161,6 @@ function applyEvent(ev, cardIndex) {
     },
     game_complete: function() {
       setTimeout(function() {
-        gameScreen.classList.remove('pairs-game--rotated');
         showScreen('summary');
         renderPairsSummary(summaryScreen, gameState, function() {
           showScreen('setup');
