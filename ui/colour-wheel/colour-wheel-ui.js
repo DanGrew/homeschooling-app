@@ -151,16 +151,16 @@ el('lsn-slot-a').addEventListener('click',function(){handleSlot('a');});
 el('lsn-slot-b').addEventListener('click',function(){handleSlot('b');});
 makeInteractive(el('lsn-result'),function(){[getMixResult()].filter(Boolean).forEach(function(c){speak(c.label);});});
 
-window.addEventListener('page:control',function(e){
-  ({
-    'HIDE_COLOUR_WHEEL':function(){var c=el('wheel-svg').parentElement;if(c)c.style.display='none';},
-    'HIDE_MIXER':function(){var m=el('lsn-mixer');if(m)m.style.display='none';},
-    'LOCK_SLOT_A':function(){_slotALocked=true;},
-    'LOCK_SLOT_B':function(){_slotBLocked=true;},
-    'PAGE_CONTROL_RESET':function(){
-      var c=el('wheel-svg').parentElement;if(c)c.style.display='flex';
-      var m=el('lsn-mixer');if(m)m.style.display='flex';
-      _slotALocked=false;_slotBLocked=false;
-    }
-  }[e.detail.type]||function(){})();
-});
+var PAGE_CTRL={
+  'HIDE_COLOUR_WHEEL':function(){el('wheel-svg').parentElement.style.display='none';},
+  'HIDE_MIXER':function(){el('lsn-mixer').style.display='none';},
+  'LOCK_SLOT_A':function(){_slotALocked=true;},
+  'LOCK_SLOT_B':function(){_slotBLocked=true;},
+  'PAGE_CONTROL_RESET':function(){
+    el('wheel-svg').parentElement.style.display='flex';
+    el('lsn-mixer').style.display='flex';
+    _slotALocked=false;_slotBLocked=false;
+  }
+};
+var PAGE_CTRL_DISPATCH={'true':function(t){PAGE_CTRL[t]();},'false':function(){}};
+window.addEventListener('page:control',function(e){PAGE_CTRL_DISPATCH[String(e.detail.type in PAGE_CTRL)](e.detail.type);});
