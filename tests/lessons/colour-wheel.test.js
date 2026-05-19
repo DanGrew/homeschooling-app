@@ -138,7 +138,7 @@ async function completeLesson(page) {
   await page.locator('#wheel-svg path[fill="#F1C40F"]').click({ force: true })
   await page.locator('#wheel-svg path[fill="#3498DB"]').click({ force: true })
   // tap PRIMARY badge (step 4) — wait for BADGE_TAPPED timer
-  await page.locator('#guidance-overlay').getByText('PRIMARY', { exact: true }).evaluate(el => el.click())
+  await page.locator('#guidance-overlay').getByText('PRIMARY', { exact: true }).first().evaluate(el => el.click())
   await page.waitForTimeout(1300)
   // guess orange on wheel (step 5)
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
@@ -149,7 +149,7 @@ async function completeLesson(page) {
   await page.locator('#lsn-sw-yellow').click()
   await page.locator('#lsn-slot-b').click()
   // tap SECONDARY badge (step 8)
-  await page.locator('#guidance-overlay').getByText('SECONDARY', { exact: true }).evaluate(el => el.click())
+  await page.locator('#guidance-overlay').getByText('SECONDARY', { exact: true }).first().evaluate(el => el.click())
   await page.waitForTimeout(1300)
   // tap orange on wheel (step 9)
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
