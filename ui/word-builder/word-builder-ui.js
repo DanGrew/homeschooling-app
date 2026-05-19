@@ -56,7 +56,7 @@ function currentTargetIndex() { return state.slots.findIndex(isActiveSlot); }
 
 var PLACE_ACTION = {
   'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); state.speakFn(letter, 'letter'); },
-  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); slot.error = true; }
+  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); slot.error = true; state.speakFn(letter, 'letter'); }
 };
 
 var COMPLETE_ACTION = {
