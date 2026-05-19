@@ -104,7 +104,8 @@ test('completing a lesson via colour-wheel then visiting journal shows entry', a
   await page.locator('#wheel-svg path[fill="#F1C40F"]').click({ force: true })
   await page.locator('#wheel-svg path[fill="#3498DB"]').click({ force: true })
   // step 4: PRIMARY badge
-  await page.locator('#guidance-overlay').getByText('PRIMARY', { exact: true }).first().evaluate(el => el.click())
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await page.locator('[data-word-bubble]').evaluate(el => el.click())
   await page.waitForTimeout(1300)
   // step 5: guess orange
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
@@ -114,7 +115,8 @@ test('completing a lesson via colour-wheel then visiting journal shows entry', a
   await page.locator('#lsn-sw-yellow').click()
   await page.locator('#lsn-slot-b').click()
   // step 8: SECONDARY badge
-  await page.locator('#guidance-overlay').getByText('SECONDARY', { exact: true }).first().evaluate(el => el.click())
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await page.locator('[data-word-bubble]').evaluate(el => el.click())
   await page.waitForTimeout(1300)
   // step 9: tap orange
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })

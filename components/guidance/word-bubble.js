@@ -20,6 +20,7 @@ WordBubble.prototype.build = function(parent) {
   var self = this;
 
   var wrap = document.createElement('div');
+  wrap.setAttribute('data-word-bubble', '');
   wrap.style.cssText = 'position:absolute;bottom:calc(100% + 6px);left:0;display:none;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;z-index:100;';
 
   var bubble = document.createElement('div');
