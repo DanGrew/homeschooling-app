@@ -1,7 +1,10 @@
 const { defineConfig } = require('@playwright/test')
+const fs = require('fs')
+const path = require('path')
 
-const PORT = Number(process.env.TEST_PORT ||
-  (process.env.TEST_PORT = String(3000 + Math.floor(Math.random() * 1000))));
+const portFile = path.join(__dirname, '.port')
+const PORT = process.env.PORT ||
+  (fs.existsSync(portFile) ? fs.readFileSync(portFile, 'utf8').trim() : '3000')
 
 module.exports = defineConfig({
   testDir: './tests',
@@ -13,7 +16,7 @@ module.exports = defineConfig({
     command: 'node test-server.js',
     url: `http://localhost:${PORT}`,
     env: { PORT: String(PORT) },
-    reuseExistingServer: false,
+    reuseExistingServer: !process.env.CI,
   },
   projects: [
     { name: 'chromium', use: { browserName: 'chromium' } }
