@@ -9,7 +9,8 @@
 <link rel="stylesheet" href="../../../styles/speakable.css">
 <script src="../../../components/menu.js" defer></script>
 <style>
-#title-bar{display:flex;justify-content:center;align-items:center;padding:6px 16px 8px;border-bottom:2px solid #eee;flex-shrink:0;}
+#title-bar{display:flex;justify-content:center;align-items:center;padding:6px 16px 8px;border-bottom:2px solid #eee;flex-shrink:0;position:relative;}
+#reset-btn{position:absolute;right:16px;font-size:0.85em;background:#eee;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;color:#555;}
 #pic-title{font-size:1em;font-weight:700;color:#666;line-height:1.5;cursor:pointer;user-select:none;border:none;background:none;font-family:inherit;text-shadow:0 0 10px rgba(150,80,220,0.85);}
 #layout{flex:1;display:flex;flex-direction:row;overflow:hidden;min-height:0;}
 #canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -60,6 +61,7 @@
 <div class="game-area">
   <div id="title-bar">
     <button id="pic-title"></button>
+    <button id="reset-btn" style="display:none;">↺ Reset</button>
   </div>
   <div id="layout">
     <div id="ref-panel">
@@ -98,7 +100,6 @@
 </div>
 
 <script src="../../../ui/colouring/colouring-common.js"></script>
-<script type="module" src="../../../components/success-banner.js"></script>
 <script type="module" src="../../../components/speech/speech-ui.js"></script>
 <script>var pictures=[];</script>
 <script src="../../../assets/colouring/pictures/sun.js"></script>
