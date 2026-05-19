@@ -54,7 +54,7 @@ var SILENT_CHECK = {
 };
 
 var SILENT_ADVANCE = {
-  'true':  function(svc) { svc._stepIdx++; },
+  'true':  function(svc) { svc._stepIdx++; svc._collected = []; },
   'false': function()    {}
 };
 
