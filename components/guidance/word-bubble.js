@@ -39,7 +39,7 @@ WordBubble.prototype.build = function(parent) {
   this._el = wrap;
   parent.appendChild(wrap);
 
-  wrap.addEventListener('click', function() {
+  bubble.addEventListener('click', function() {
     [self._word].filter(Boolean).forEach(function(w) {
       queue(w.toLowerCase());
       setTimeout(function() {
