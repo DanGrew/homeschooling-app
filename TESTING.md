@@ -11,6 +11,31 @@ Both run in CI on every PR. Both must pass.
 
 ---
 
+## Playwright — local setup
+
+Playwright uses a persistent local server rather than spinning one up per run. This keeps pre-push fast even for a few tests.
+
+**First time / new terminal:**
+```bash
+PORT=3000 node test-server.js &
+```
+Leave it running. Playwright will reuse it on every subsequent run.
+
+**Multiple worktrees:** each worktree needs its own port. Add a `.port` file in the worktree root (gitignored):
+```
+3001
+```
+The pre-push hook reads it automatically. Start that worktree's server:
+```bash
+PORT=3001 node test-server.js &
+```
+
+**CI** always starts a fresh server — no action needed.
+
+**If tests fail to connect:** server has died. Restart it with the correct `PORT` for that worktree.
+
+---
+
 ## Playwright — what it covers
 
 User journeys that require a real browser:
