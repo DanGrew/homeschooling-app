@@ -1,0 +1,19 @@
+{
+  "id": "colour-wheel-lesson-make_indigo",
+  "title": "Make Indigo",
+  "number": 12,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": ["ead.colour-mixing", "uw.cause-effect", "cl.technical-vocab"],
+  "steps": [
+    {"text": "You know the secondary colours — now let's mix even further. Tap red on the colour wheel!", "expect": "RED_TAPPED"},
+    {"text": "Tap yellow!", "expect": "YELLOW_TAPPED"},
+    {"text": "Tap blue!", "expect": "BLUE_TAPPED"},
+    {"text": "Red, yellow, blue — those are the primary colours.", "badge": "PRIMARY", "expect": "BADGE_TAPPED"},
+    {"text": "Now we're going to mix blue and purple. What do you think they'll make? Tap your guess on the wheel!", "expect": "BLUE_PURPLE_TAPPED"},
+    {"text": "Let's find out! Tap blue to put it in the mixer.", "expect": "SLOT_A_LOADED"},
+    {"text": "Now tap purple.", "expect": "SLOT_B_LOADED"},
+    {"text": "Indigo! Because blue and purple mixed together — they made indigo. Indigo is a tertiary colour.", "badge": "TERTIARY", "expect": "BADGE_TAPPED"},
+    {"text": "Now tap indigo on the colour wheel!", "expect": "BLUE_PURPLE_TAPPED", "feedback": "You mixed it. You found it."}
+  ]
+}
