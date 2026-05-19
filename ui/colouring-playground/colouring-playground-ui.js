@@ -17,7 +17,7 @@ var ACTIVE_OUTLINE = {true:'4px solid #2ECC71', false:'none'};
 
 export function initColouringPlayground() {
   var mode='magic',selectedColour=null,mixA=null,mixB=null,refVisible=true;
-  var currentPic=null,paginator,filled=0,total=0,popBase=null,filledEls=new Set();
+  var currentPic=null,paginator,filled=0,total=0,popBase=null,filledEls=new Set(),eventFired=false;
   var shadePop=document.getElementById('shade-pop');
   var refToggleEl=document.getElementById('ref-toggle');
   makeSpeakable(refToggleEl,function(){return refToggleEl.textContent;});
@@ -25,6 +25,8 @@ export function initColouringPlayground() {
   var mixAEl=document.getElementById('mix-a');
   var mixBEl=document.getElementById('mix-b');
   var mixResultEl=document.getElementById('mix-result');
+  var resetBtn=document.getElementById('reset-btn');
+  makeSpeakable(resetBtn,'Reset');
 
   function setActive(c) {
     selectedColour=c;
@@ -60,6 +62,7 @@ export function initColouringPlayground() {
     shadePop.style.left=Math.max(4,Math.min(window.innerWidth-popW-4,r.left+r.width/2-popW/2))+'px';
     shadePop.style.top=Math.max(4,r.top-72)+'px';
     shadePop.classList.add('open');
+    setActive(bc.base);
   }
 
   function bothMixSet(){return[mixA,mixB].every(Boolean);}
@@ -144,23 +147,25 @@ export function initColouringPlayground() {
   }
 
   var MAGIC_ADVANCE={
-    true:function(){showBanner(function(){paginator.next();});},
+    true:function(){},
     false:function(){}
   };
 
   var COMPLETE_FN={
     guided:function(){
       recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-guided',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID});
-      showBanner(function(){paginator.next();});
+      eventFired=true;resetBtn.style.display='';
     },
     free:function(){
       recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-free',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID});
-      showBanner(function(){paginator.next();});
+      eventFired=true;resetBtn.style.display='';
     }
   };
 
+  var FIRE_COMPLETE={true:function(){COMPLETE_FN[mode]();},false:function(){}};
+
   var COLOUR_ADVANCE={
-    true:function(){COMPLETE_FN[mode]();},
+    true:function(){FIRE_COMPLETE[String(!eventFired)]();},
     false:function(){}
   };
 
@@ -187,12 +192,17 @@ export function initColouringPlayground() {
     false:function(el,s){el.style.cursor='pointer';el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});}
   };
 
+  resetBtn.addEventListener('click',function(){
+    filledEls.forEach(function(el){el.setAttribute('fill','url(#dots)');});
+    filledEls=new Set();eventFired=false;resetBtn.style.display='none';
+  });
+
   function renderPicture(pic){
-    currentPic=pic;closePop();filled=0;filledEls=new Set();
+    currentPic=pic;closePop();filled=0;filledEls=new Set();eventFired=false;
+    resetBtn.style.display='none';
     var titleBtn=document.getElementById('pic-title');
     titleBtn.textContent=pic.name;
     makeSpeakable(titleBtn,pic.name);
-    hideBanner();
     total=pic.shapes.filter(function(s){return !s.noColour;}).length;
     var svg=document.getElementById('svg');
     svg.innerHTML='';svg.setAttribute('viewBox',pic.vb);

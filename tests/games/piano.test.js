@@ -31,8 +31,10 @@ test('lesson page songs popout opens when button clicked', async ({ page }) => {
 test('lesson page songs popout uses fixed positioning', async ({ page }) => {
   await page.goto(LESSON_URL)
   await page.waitForLoadState('networkidle')
+  const popout = page.locator('.nav-custom-popout')
   await page.locator('.nav-bar .nav-btn-container button').click()
-  const pos = await page.locator('.nav-custom-popout').evaluate(el => getComputedStyle(el).position)
+  await expect(popout).toBeVisible()
+  const pos = await popout.evaluate(el => getComputedStyle(el).position)
   expect(pos).toBe('fixed')
 })
 
