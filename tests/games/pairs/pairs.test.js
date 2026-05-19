@@ -134,6 +134,40 @@ test('summary screen shows after all pairs matched', async ({ page }) => {
   await expect(page.locator('#pairs-summary')).toBeVisible({ timeout: 5000 })
 })
 
+test('passplay shows handover on game start', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('avatar-0-cat').click()
+  await page.getByTestId('avatar-1-dog').click()
+  await page.getByTestId('mode-passplay').click()
+  await page.getByTestId('pairs-start-btn').click()
+  await expect(page.getByTestId('pairs-handover')).toBeVisible()
+})
+
+test('passplay handover shows again after a match', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('grid-size-16').click()
+  await page.getByTestId('avatar-0-cat').click()
+  await page.getByTestId('avatar-1-dog').click()
+  await page.getByTestId('mode-passplay').click()
+  await page.getByTestId('pairs-start-btn').click()
+  await page.getByTestId('pairs-handover-ready').click()
+
+  const cards = await page.locator('[data-testid^="card-"]').all()
+  const contents = await Promise.all(cards.map(function(c) { return c.getAttribute('data-content'); }))
+  var contentMap = {}
+  contents.forEach(function(id, i) {
+    if (!contentMap[id]) contentMap[id] = []
+    contentMap[id].push(i)
+  })
+  var firstPair = contentMap[Object.keys(contentMap)[0]]
+  await page.getByTestId('card-' + firstPair[0]).click()
+  await page.getByTestId('card-' + firstPair[1]).click()
+
+  await expect(page.getByTestId('pairs-handover')).toBeVisible({ timeout: 3000 })
+})
+
 test('play again returns to setup', async ({ page }) => {
   await page.goto(URL)
   await page.waitForLoadState('networkidle')

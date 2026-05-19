@@ -14,6 +14,7 @@ test('has all category headings', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Puzzles' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Time' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'World' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Multiplayer' })).toBeVisible()
 })
 
 test('Words section has Word Match', async ({ page }) => {
@@ -54,6 +55,17 @@ test('World section has shopping games', async ({ page }) => {
   await page.goto('/homeschooling-app/app/games/')
   await expect(page.getByRole('link', { name: 'Shopping Play' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Shopping Scan' })).toBeVisible()
+})
+
+test('Multiplayer section has Pairs', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/games/')
+  await expect(page.getByRole('link', { name: 'Pairs' })).toBeVisible()
+})
+
+test('Pairs is not in Puzzles section', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/games/')
+  const puzzlesSection = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Puzzles' }) })
+  await expect(puzzlesSection.getByRole('link', { name: 'Pairs' })).not.toBeVisible()
 })
 
 test('Say It is not on the games page', async ({ page }) => {
