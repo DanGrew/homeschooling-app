@@ -26,6 +26,7 @@ export function initColouringPlayground() {
   var mixBEl=document.getElementById('mix-b');
   var mixResultEl=document.getElementById('mix-result');
   var resetBtn=document.getElementById('reset-btn');
+  makeSpeakable(resetBtn,'Reset');
 
   function setActive(c) {
     selectedColour=c;
