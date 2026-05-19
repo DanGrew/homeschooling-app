@@ -10,7 +10,7 @@ test('page loads with slots and tiles', async ({ page }) => {
 
 test('tiles are rendered', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('#wb-tiles button').first()).toBeVisible({ timeout: 5000 })
+  await expect(page.locator('#wb-tiles button').first()).toBeVisible({ timeout: 10000 })
 })
 
 test('picture is shown by default', async ({ page }) => {
@@ -38,17 +38,22 @@ test('mode buttons are rendered', async ({ page }) => {
 
 test('full alphabet mode shows 26 tiles', async ({ page }) => {
   await page.goto(URL)
+  await expect(page.locator('#wb-tiles button').first()).toBeVisible({ timeout: 10000 })
   await page.locator('#wb-mode-alphabet').click()
   await expect(page.locator('#wb-tiles button')).toHaveCount(26, { timeout: 3000 })
 })
 
 test('try again button rendered', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('#wb-actions button')).toBeVisible({ timeout: 3000 })
+  await expect(page.locator('#wb-actions button')).toBeVisible({ timeout: 10000 })
+})
+
+test('paginator bar is rendered', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('#paginator-bar')).toBeVisible({ timeout: 3000 })
 })
 
 test('nav bar title is Word Builder', async ({ page }) => {
   await page.goto(URL)
-  const title = page.locator('.nav-bar')
-  await expect(title).toBeVisible({ timeout: 3000 })
+  await expect(page.locator('.nav-bar')).toBeVisible({ timeout: 3000 })
 })

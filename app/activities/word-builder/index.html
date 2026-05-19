@@ -10,7 +10,7 @@
 <script src="../../../components/menu.js" defer></script>
 </head>
 <body>
-<div class="nav-bar" data-home="../../lessons/" data-title="Word Builder" data-instruction="Build the word you hear" data-links='[{"href":"../word-lesson/","label":"Word Lesson"},{"href":"../say-words/","label":"Say Words"}]' data-links-icon="lesson"></div>
+<div class="nav-bar" data-home="../../lessons/" data-title="Word Builder" data-instruction="Build the word you hear" data-no-links="lesson links coming soon"></div>
 <div class="game-area" style="display:flex;flex-direction:column;align-items:center;gap:clamp(12px,3vmin,24px);padding:clamp(12px,3vmin,24px) 16px;">
   <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
     <button id="wb-mode-distractors" style="padding:8px 18px;border-radius:20px;border:2px solid #1976d2;background:#1976d2;color:#fff;font-size:clamp(0.85em,2.5vmin,1.1em);font-weight:bold;cursor:pointer;">Distractors</button>
@@ -23,17 +23,31 @@
   <div id="wb-slots" style="display:flex;flex-wrap:wrap;gap:clamp(6px,2vmin,12px);justify-content:center;align-items:center;"></div>
   <div id="wb-tiles" style="display:flex;flex-wrap:wrap;gap:clamp(6px,1.5vmin,10px);justify-content:center;max-width:600px;"></div>
   <div id="wb-actions" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;"></div>
+  <div id="paginator-bar"></div>
 </div>
 <script type="module">
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
-import { init, setMode, togglePicture } from '../../../ui/word-builder/word-builder-ui.js';
+import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
+import { createPaginator } from '../../../components/pagination/paginator-ui.js';
+import { init, startRound, setMode, togglePicture } from '../../../ui/word-builder/word-builder-ui.js';
 import { speak } from '../../../components/speech/speech-ui.js';
 
 Dictionary.init('../../../content/dictionary/');
-var allItems = [];
-loadImages(allItems, function() {
-  init(allItems, function(text) { speak(text); });
+var all = [];
+
+var paginator = createPaginator({
+  container: document.getElementById('paginator-bar'),
+  items: [],
+  perPage: 1,
+  wrap: true,
+  onRender: function(item) { startRound(item); }
+});
+
+init(function(text) { speak(text); }, function() { paginator.next(); });
+
+loadImages(all, function() {
+  buildFilterBar(all, function(f) { paginator.reset(f); });
 });
 
 var modeD = document.getElementById('wb-mode-distractors');
@@ -49,9 +63,7 @@ var MODE_BTNS = {
   alphabet:    { active: function() { return modeA; }, inactive: function() { return modeD; } }
 };
 
-function applyBtn(btn, isActive) {
-  Object.assign(btn.style, MODE_STYLES[String(isActive)]);
-}
+function applyBtn(btn, isActive) { Object.assign(btn.style, MODE_STYLES[String(isActive)]); }
 
 function setModeUI(mode) {
   applyBtn(MODE_BTNS[mode].active(), true);
@@ -64,7 +76,6 @@ modeA.addEventListener('click', function() { setModeUI('alphabet'); });
 picBtn.addEventListener('click', function() { togglePicture(); });
 </script>
 <script>window.ACTIVITY_ID = 'word-builder';</script>
-<script type="module" src="../../../components/success-banner.js"></script>
 <script type="module">import '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';</script>
 </body>

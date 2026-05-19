@@ -1,55 +1,46 @@
-import { parseWord, buildTileSet, validateLetter, isWordComplete, pickWord } from '../../core/word-builder/word-builder-core.js';
-import { showBanner as _showBanner, hideBanner } from '../../components/success-banner.js';
+import { parseWord, buildTileSet, validateLetter, isWordComplete } from '../../core/word-builder/word-builder-core.js';
 
 var NO_ITEM = { name: '', url: '' };
 
 var state = {
-  items: [],
   mode: 'distractors',
   slots: [],
   tiles: [],
   showPicture: true,
   currentItem: NO_ITEM,
   speakFn: function() {},
+  onNextWord: function() {},
 };
 
-var PICK_ITEM = { 'true': function(item) { return item; }, 'false': function() { return NO_ITEM; } };
-
-function showBanner() {
-  _showBanner({ buttons: [{ label: 'Next \u2192', onClick: function() { hideBanner(); nextWord(); } }] });
+export function init(speakFn, onNextWord) {
+  state.speakFn = speakFn;
+  state.onNextWord = onNextWord;
 }
 
-export function init(items, speakFn) {
-  state.items = items;
-  state.speakFn = speakFn;
-  nextWord();
+var START_DISPATCH = {
+  'true': function(item) {
+    state.currentItem = item;
+    var word = item.name;
+    state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false, display: '' }); });
+    state.tiles = buildTileSet(word, state.mode);
+    render();
+    state.speakFn(word, 'word');
+  },
+  'false': function() {}
+};
+
+export function startRound(item) {
+  START_DISPATCH[String(item !== undefined)](item);
 }
 
 export function setMode(mode) {
   state.mode = mode;
-  nextWord();
+  startRound(state.currentItem);
 }
 
 export function togglePicture() {
   state.showPicture = !state.showPicture;
   renderPicture();
-}
-
-var NEXT_WORD_FN = {
-  'true': function() {},
-  'false': function() {
-    var word = state.currentItem.name;
-    state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false, display: '' }); });
-    state.tiles = buildTileSet(word, state.mode);
-    render();
-    state.speakFn(word, 'word');
-  }
-};
-
-export function nextWord() {
-  var item = pickWord(state.items);
-  state.currentItem = PICK_ITEM[String(item !== null)](item);
-  NEXT_WORD_FN[String(state.currentItem === NO_ITEM)]();
 }
 
 export function reset() {
@@ -71,7 +62,7 @@ var PLACE_ACTION = {
 var COMPLETE_ACTION = {
   'true': function() {
     var word = state.currentItem.name;
-    setTimeout(function() { showBanner(); state.speakFn(word, 'word'); }, 300);
+    setTimeout(function() { state.speakFn(word, 'word'); }, 300);
     renderActions(true);
   },
   'false': function() {}
@@ -167,7 +158,7 @@ var NEXT_BTN = {
     var btn = document.createElement('button');
     btn.textContent = 'Next word';
     btn.style.cssText = BTN_STYLE + 'background:#4caf50;color:#fff;margin-right:12px;';
-    btn.addEventListener('click', nextWord);
+    btn.addEventListener('click', function() { state.onNextWord(); });
     el.appendChild(btn);
   },
   'false': function() {}
