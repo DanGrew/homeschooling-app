@@ -9,6 +9,15 @@ var PAIRS_SEL    = { 'true': ' selected',    'false': '' };
 var PAIRS_ACTIVE = { 'true': ' active-turn', 'false': '' };
 var PAIRS_NOOP   = function() {};
 
+function pairsSpeak(text) {
+  [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
+}
+function pairsMakeSpeak(el, text) {
+  el.classList.add('speakable');
+  el.setAttribute('data-speak', text);
+  [window.__makeSpeakable].filter(Boolean).forEach(function(fn) { fn(el, text); });
+}
+
 function pairsImgSrc(id) {
   return window.DICT_BASE + id + '/' + id + '.svg';
 }
@@ -63,6 +72,7 @@ function buildCountSection(playerCount, onChange) {
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'How many players?';
+  pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
   [2, 3].forEach(function(n) {
     var btn = document.createElement('button');
@@ -70,6 +80,7 @@ function buildCountSection(playerCount, onChange) {
     btn.className = 'pairs-count-btn' + PAIRS_SEL[String(playerCount === n)];
     btn.setAttribute('data-testid', 'player-count-' + n);
     btn.addEventListener('click', function() { onChange({ playerCount: n }); });
+    pairsMakeSpeak(btn, btn.textContent);
     section.appendChild(btn);
   });
   return section;
@@ -89,6 +100,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
 
   var label = document.createElement('p');
   label.textContent = 'Player ' + (idx + 1);
+  pairsMakeSpeak(label, label.textContent);
   header.appendChild(label);
 
   var roleSelect = document.createElement('select');
@@ -120,6 +132,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
   var avatarLabel = document.createElement('p');
   avatarLabel.textContent = 'Pick an avatar:';
   avatarLabel.style.cssText = 'font-weight:normal;font-size:13px;margin:6px 0 4px';
+  pairsMakeSpeak(avatarLabel, avatarLabel.textContent);
   panel.appendChild(avatarLabel);
 
   var grid = document.createElement('div');
@@ -137,6 +150,7 @@ function buildPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
     img.src = pairsImgSrc(entry.id);
     img.alt = [entry.name, entry.id].filter(Boolean)[0];
     btn.appendChild(img);
+    pairsMakeSpeak(btn, img.alt);
     btn.addEventListener('click', function() {
       var newPlayers = allPlayers.map(function(p, j) {
         var nameDefault = [p.name, entry.name, entry.id].filter(Boolean)[0];
@@ -157,11 +171,12 @@ function buildSizeSection(gridSize, onChange) {
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'Grid size:';
+  pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
   var sizes = [
-    { size: 16, label: '4\u00d74 \u2014 Easy' },
-    { size: 36, label: '6\u00d76 \u2014 Medium' },
-    { size: 64, label: '8\u00d78 \u2014 Hard' }
+    { size: 16, label: '4\u00d74 \u2014 Easy',   speak: '4 by 4, Easy' },
+    { size: 36, label: '6\u00d76 \u2014 Medium', speak: '6 by 6, Medium' },
+    { size: 64, label: '8\u00d78 \u2014 Hard',   speak: '8 by 8, Hard' }
   ];
   sizes.forEach(function(o) {
     var btn = document.createElement('button');
@@ -169,6 +184,7 @@ function buildSizeSection(gridSize, onChange) {
     btn.className = 'pairs-size-btn' + PAIRS_SEL[String(gridSize === o.size)];
     btn.setAttribute('data-testid', 'grid-size-' + o.size);
     btn.addEventListener('click', function() { onChange({ gridSize: o.size }); });
+    pairsMakeSpeak(btn, o.speak);
     section.appendChild(btn);
   });
   return section;
@@ -179,6 +195,7 @@ function buildModeSection(mode, onChange) {
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'Screen mode:';
+  pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
   var modes = [{ value: 'shared', label: 'Shared screen' }, { value: 'passplay', label: 'Pass \u0026 Play' }];
   modes.forEach(function(m) {
@@ -187,6 +204,7 @@ function buildModeSection(mode, onChange) {
     btn.className = 'pairs-size-btn' + PAIRS_SEL[String(mode === m.value)];
     btn.setAttribute('data-testid', 'mode-' + m.value);
     btn.addEventListener('click', function() { onChange({ mode: m.value }); });
+    pairsMakeSpeak(btn, btn.textContent);
     section.appendChild(btn);
   });
   return section;
@@ -200,6 +218,7 @@ function buildStartButton(cfg, onStart) {
   btn.disabled = !allSet;
   btn.setAttribute('data-testid', 'pairs-start-btn');
   btn.addEventListener('click', onStart);
+  pairsMakeSpeak(btn, 'Start Game');
   return btn;
 }
 
@@ -254,6 +273,7 @@ function buildPlayerTraySection(state, playerIdx, testId) {
   nameSpan.textContent = p.name;
   labelDiv.appendChild(nameSpan);
   wrap.appendChild(labelDiv);
+  pairsMakeSpeak(labelDiv, p.name);
 
   var tray = document.createElement('div');
   tray.className = 'pairs-tray';
@@ -288,6 +308,7 @@ function buildTraysRow(state) {
     nameSpan.textContent = p.name;
     labelDiv.appendChild(nameSpan);
     trayWrap.appendChild(labelDiv);
+    pairsMakeSpeak(labelDiv, p.name);
 
     var tray = document.createElement('div');
     tray.className = 'pairs-tray';
@@ -441,12 +462,15 @@ function renderPairsHandover(container, playerName, onReady) {
   msg.className = 'pairs-handover-name';
   msg.textContent = playerName + '\u2019s turn';
   overlay.appendChild(msg);
+  pairsMakeSpeak(msg, msg.textContent);
+  pairsSpeak(msg.textContent);
 
   var btn = document.createElement('button');
   btn.textContent = 'Ready';
   btn.className = 'pairs-handover-btn';
   btn.setAttribute('data-testid', 'pairs-handover-ready');
   btn.addEventListener('click', function() { overlay.remove(); onReady(); });
+  pairsMakeSpeak(btn, 'Ready');
   overlay.appendChild(btn);
 
   container.appendChild(overlay);
@@ -462,6 +486,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
   var heading = document.createElement('h2');
   heading.textContent = 'All pairs found!';
   inner.appendChild(heading);
+  pairsSpeak('All pairs found!');
 
   state.players.forEach(function(p) {
     var row = document.createElement('div');
@@ -478,6 +503,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
     var text = document.createElement('span');
     text.textContent = p.name + ' \u2014 ' + p.pairs.length + ' pair' + ['s', ''][Number(p.pairs.length === 1)];
     row.appendChild(text);
+    pairsMakeSpeak(row, text.textContent);
     inner.appendChild(row);
   });
 
@@ -486,6 +512,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
   btn.className = 'pairs-play-again';
   btn.setAttribute('data-testid', 'pairs-play-again');
   btn.addEventListener('click', onPlayAgain);
+  pairsMakeSpeak(btn, 'Play again');
   inner.appendChild(btn);
 
   container.appendChild(inner);
