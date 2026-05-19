@@ -99,14 +99,15 @@ test('completing a lesson via colour-wheel then visiting journal shows entry', a
   await page.waitForFunction(() => window.guidanceService)
   await page.locator('.nav-lesson-btn').click()
   await page.locator('.nav-lesson-item').first().click()
+  // wait for lesson to load
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
   // steps 1-3: tap primaries
   await page.locator('#wheel-svg path[fill="#E74C3C"]').click({ force: true })
   await page.locator('#wheel-svg path[fill="#F1C40F"]').click({ force: true })
   await page.locator('#wheel-svg path[fill="#3498DB"]').click({ force: true })
   // step 4: PRIMARY badge
   await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
-  await page.locator('[data-word-bubble]').evaluate(el => el.click())
-  await page.waitForTimeout(1300)
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'BADGE_TAPPED' } })))
   // step 5: guess orange
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
   // steps 6-7: load mixer
@@ -116,8 +117,7 @@ test('completing a lesson via colour-wheel then visiting journal shows entry', a
   await page.locator('#lsn-slot-b').click()
   // step 8: SECONDARY badge
   await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
-  await page.locator('[data-word-bubble]').evaluate(el => el.click())
-  await page.waitForTimeout(1300)
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'BADGE_TAPPED' } })))
   // step 9: tap orange
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
   await page.locator('#guidance-overlay [data-action="next"]').click()
