@@ -108,6 +108,7 @@ function renderPicture() {
 var SLOT_BG = { locked: '#c8f7c5', error: '#ffd0cc', target: '#fff9c4', default: '#f0f0f0' };
 var SLOT_BORDER = { locked: '3px solid #4caf50', error: '3px solid #e53935', target: '3px solid #f9a825', default: '3px solid #ccc' };
 
+// arch: allow-pure-fn
 function slotKey(slot, isTarget) {
   var keys = [['locked', slot.locked], ['error', slot.error], ['target', isTarget], ['default', true]];
   return keys.find(function(k) { return k[1]; })[0];
