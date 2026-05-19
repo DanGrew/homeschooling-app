@@ -39,7 +39,7 @@ var NEXT_WORD_FN = {
   'true': function() {},
   'false': function() {
     var word = state.currentItem.name;
-    state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false }); });
+    state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false, display: '' }); });
     state.tiles = buildTileSet(word, state.mode);
     render();
     state.speakFn(word, 'word');
@@ -54,18 +54,18 @@ export function nextWord() {
 
 export function reset() {
   var word = state.currentItem.name;
-  state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false }); });
+  state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false, display: '' }); });
   render();
   state.speakFn(word, 'word');
 }
 
-function currentTargetIndex() {
-  return state.slots.findIndex(function(s) { return s.type === 'letter' && !s.locked; });
-}
+var SLOT_ACTIVE = { letter: function(s) { return !s.locked; }, space: function() { return false; }, apostrophe: function() { return false; } };
+function isActiveSlot(s) { return SLOT_ACTIVE[s.type](s); }
+function currentTargetIndex() { return state.slots.findIndex(isActiveSlot); }
 
 var PLACE_ACTION = {
-  'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); state.speakFn(letter, 'letter'); },
-  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.error = true; }
+  'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); state.speakFn(letter, 'letter'); },
+  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); slot.error = true; }
 };
 
 var COMPLETE_ACTION = {
@@ -130,8 +130,7 @@ var SLOT_RENDER = {
     var key = slotKey(slot, isTarget);
     var div = document.createElement('div');
     div.style.cssText = 'width:clamp(40px,10vmin,72px);height:clamp(48px,12vmin,88px);border-radius:10px;background:' + SLOT_BG[key] + ';border:' + SLOT_BORDER[key] + ';display:flex;align-items:center;justify-content:center;font-size:clamp(1.8em,7vmin,3.5em);font-weight:bold;color:#333;transition:background 0.2s,border 0.2s;user-select:none;';
-    var SHOW_TEXT = { 'true': slot.placed || '', 'false': '' };
-    div.textContent = SHOW_TEXT[String(slot.locked || slot.error)];
+    div.textContent = slot.display;
     el.appendChild(div);
   }
 };
