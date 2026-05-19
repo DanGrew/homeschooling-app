@@ -76,17 +76,28 @@ var NO_EVENTS = {
   'false': function(j, e) { renderGroups(j, e); }
 };
 
+function colouringMeta(vm) {
+  return { key: 'variant_id', label: 'Variant', val: [vm.variantId, 'None'].find(Boolean) };
+}
+
+var EXTRA_META = {
+  'colouring-guided': colouringMeta,
+  'colouring-free':   colouringMeta
+};
+
+function extraMetaTags(vm, event) {
+  return [EXTRA_META[event.learning_id]].filter(Boolean).map(function(fn) { return fn(vm); });
+}
+
 function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);
   var div = document.createElement('div');
   div.className = 'entry';
-  var isColouring = (event.learning_id || '').indexOf('colouring') !== -1;
-  var metaTags = [
-    isColouring ? { key: 'variant_id', label: 'Variant', val: vm.variantId || 'None' } : null,
-    { key: 'difficulty', label: 'Difficulty', val: vm.difficulty }
-  ].filter(function(m) { return m !== null && m.val !== undefined; })
-   .map(function(m) { return '<span class="meta-tag">' + m.label + ': ' + m.val + '</span>'; })
-   .join('');
+  var metaTags = extraMetaTags(vm, event)
+    .concat([{ key: 'difficulty', label: 'Difficulty', val: vm.difficulty }])
+    .filter(function(m) { return m.val !== undefined; })
+    .map(function(m) { return '<span class="meta-tag">' + m.label + ': ' + m.val + '</span>'; })
+    .join('');
   div.innerHTML =
     '<div class="entry-time">' + vm.timeStr + '</div>' +
     '<div class="entry-source">' + vm.sourceStr + '</div>' +
