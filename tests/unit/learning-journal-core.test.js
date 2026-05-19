@@ -7,7 +7,8 @@ import {
   buildEntryViewModel,
   sortAndGroupEvents,
   GROUP_LABELS,
-  fetchLearning
+  fetchLearning,
+  extraMetaTags
 } from '../../core/telemetry/learning-journal-core.js';
 
 describe('formatCriterion', () => {
@@ -176,5 +177,37 @@ describe('fetchLearning', () => {
     await new Promise(resolve => fetchLearning('cached_one', resolve));
     await new Promise(resolve => fetchLearning('cached_one', resolve));
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('extraMetaTags', () => {
+  it('returns variant tag for colouring-guided with variant', () => {
+    var result = extraMetaTags({ variantId: 'avocado' }, { learning_id: 'colouring-guided' });
+    expect(result).toEqual([{ key: 'variant_id', label: 'Variant', val: 'avocado' }]);
+  });
+
+  it('returns variant tag for colouring-free with variant', () => {
+    var result = extraMetaTags({ variantId: 'cat' }, { learning_id: 'colouring-free' });
+    expect(result).toEqual([{ key: 'variant_id', label: 'Variant', val: 'cat' }]);
+  });
+
+  it('falls back to None when variant missing for colouring-guided', () => {
+    var result = extraMetaTags({ variantId: undefined }, { learning_id: 'colouring-guided' });
+    expect(result).toEqual([{ key: 'variant_id', label: 'Variant', val: 'None' }]);
+  });
+
+  it('falls back to None when variant missing for colouring-free', () => {
+    var result = extraMetaTags({ variantId: undefined }, { learning_id: 'colouring-free' });
+    expect(result).toEqual([{ key: 'variant_id', label: 'Variant', val: 'None' }]);
+  });
+
+  it('returns empty array for non-colouring learning', () => {
+    var result = extraMetaTags({ variantId: 'something' }, { learning_id: 'some-other-learning' });
+    expect(result).toEqual([]);
+  });
+
+  it('returns empty array when learning_id is undefined', () => {
+    var result = extraMetaTags({ variantId: 'something' }, {});
+    expect(result).toEqual([]);
   });
 });

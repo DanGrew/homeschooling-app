@@ -57,7 +57,7 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 </div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion, extraMetaTags } from '../../core/telemetry/learning-journal-core.js';
 
 var ZERO_CLASS = { 'true': ' bar-row-zero', 'false': '' };
 
@@ -76,16 +76,16 @@ var NO_EVENTS = {
   'false': function(j, e) { renderGroups(j, e); }
 };
 
+
 function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);
   var div = document.createElement('div');
   div.className = 'entry';
-  var metaTags = [
-    { key: 'variant_id', label: 'Variant', val: vm.variantId },
-    { key: 'difficulty', label: 'Difficulty', val: vm.difficulty }
-  ].filter(function(m) { return m.val !== undefined; })
-   .map(function(m) { return '<span class="meta-tag">' + m.label + ': ' + m.val + '</span>'; })
-   .join('');
+  var metaTags = extraMetaTags(vm, event)
+    .concat([{ key: 'difficulty', label: 'Difficulty', val: vm.difficulty }])
+    .filter(function(m) { return m.val !== undefined; })
+    .map(function(m) { return '<span class="meta-tag">' + m.label + ': ' + m.val + '</span>'; })
+    .join('');
   div.innerHTML =
     '<div class="entry-time">' + vm.timeStr + '</div>' +
     '<div class="entry-source">' + vm.sourceStr + '</div>' +
