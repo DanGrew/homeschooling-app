@@ -43,7 +43,7 @@ test('full alphabet mode shows 26 tiles', async ({ page }) => {
   await expect(page.locator('#wb-tiles button')).toHaveCount(26, { timeout: 3000 })
 })
 
-test('try again button rendered', async ({ page }) => {
+test('speak button rendered', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('#wb-actions button')).toBeVisible({ timeout: 10000 })
 })

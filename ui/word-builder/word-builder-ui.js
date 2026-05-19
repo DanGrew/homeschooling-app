@@ -63,7 +63,7 @@ var COMPLETE_ACTION = {
   'true': function() {
     var word = state.currentItem.name;
     setTimeout(function() { state.speakFn(word, 'word'); }, 300);
-    renderActions(true);
+    renderActions();
   },
   'false': function() {}
 };
@@ -80,7 +80,7 @@ var VALID_SLOT = {
 
 function tryPlace(letter) { VALID_SLOT[String(currentTargetIndex() === -1)](letter); }
 
-function render() { renderPicture(); renderSlots(); renderTiles(); renderActions(false); }
+function render() { renderPicture(); renderSlots(); renderTiles(); renderActions(); }
 
 var PICTURE_DISPLAY = { 'true': 'flex', 'false': 'none' };
 var IMG_DISPLAY = { 'true': '', 'false': 'none' };
@@ -153,24 +153,12 @@ function renderTiles() {
 
 var BTN_STYLE = 'padding:clamp(8px,2vmin,14px) clamp(20px,5vmin,40px);border-radius:12px;border:none;font-size:clamp(1em,3vmin,1.5em);font-weight:bold;cursor:pointer;touch-action:manipulation;';
 
-var NEXT_BTN = {
-  'true': function(el) {
-    var btn = document.createElement('button');
-    btn.textContent = 'Next word';
-    btn.style.cssText = BTN_STYLE + 'background:#4caf50;color:#fff;margin-right:12px;';
-    btn.addEventListener('click', function() { state.onNextWord(); });
-    el.appendChild(btn);
-  },
-  'false': function() {}
-};
-
-function renderActions(complete) {
+function renderActions() {
   var el = document.getElementById('wb-actions');
   el.innerHTML = '';
-  NEXT_BTN[String(complete)](el);
-  var rst = document.createElement('button');
-  rst.textContent = 'Try again';
-  rst.style.cssText = BTN_STYLE + 'background:#e0e0e0;color:#333;';
-  rst.addEventListener('click', reset);
-  el.appendChild(rst);
+  var spk = document.createElement('button');
+  spk.textContent = 'Speak';
+  spk.style.cssText = BTN_STYLE + 'background:#e0e0e0;color:#333;';
+  spk.addEventListener('click', function() { state.speakFn(state.currentItem.name, 'word'); });
+  el.appendChild(spk);
 }
