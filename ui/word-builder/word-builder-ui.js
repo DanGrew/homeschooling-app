@@ -1,4 +1,5 @@
 import { parseWord, buildTileSet, validateLetter, isWordComplete } from '../../core/word-builder/word-builder-core.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
 
 var NO_ITEM = { name: '', url: '' };
 
@@ -55,8 +56,8 @@ function isActiveSlot(s) { return SLOT_ACTIVE[s.type](s); }
 function currentTargetIndex() { return state.slots.findIndex(isActiveSlot); }
 
 var PLACE_ACTION = {
-  'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); state.speakFn(letter, 'letter'); },
-  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); slot.error = true; state.speakFn(letter, 'letter'); }
+  'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); },
+  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); slot.error = true; }
 };
 
 var COMPLETE_ACTION = {
@@ -139,6 +140,7 @@ function makeTile(letter) {
   var btn = document.createElement('button');
   btn.textContent = letter;
   btn.style.cssText = TILE_STYLE;
+  makeSpeakable(btn, letter);
   btn.addEventListener('pointerdown', function() { btn.style.transform = 'scale(0.9)'; btn.style.background = '#e3f2fd'; });
   btn.addEventListener('pointerup', function() { btn.style.transform = ''; btn.style.background = '#fff'; tryPlace(letter); });
   btn.addEventListener('pointerleave', function() { btn.style.transform = ''; btn.style.background = '#fff'; });
@@ -159,6 +161,6 @@ function renderActions() {
   var spk = document.createElement('button');
   spk.textContent = 'Speak';
   spk.style.cssText = BTN_STYLE + 'background:#e0e0e0;color:#333;';
-  spk.addEventListener('click', function() { state.speakFn(state.currentItem.name, 'word'); });
+  makeSpeakable(spk, function() { return state.currentItem.name; });
   el.appendChild(spk);
 }
