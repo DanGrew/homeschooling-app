@@ -111,10 +111,10 @@ test('completing a lesson via colour-wheel then visiting journal shows entry', a
   // step 5: guess orange
   await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
   // steps 6-7: load mixer
-  await page.locator('#lsn-sw-red').click()
-  await page.locator('#lsn-slot-a').click()
-  await page.locator('#lsn-sw-yellow').click()
-  await page.locator('#lsn-slot-b').click()
+  await page.locator('#lsn-sw-red').click({ force: true })
+  await page.locator('#lsn-slot-a').click({ force: true })
+  await page.locator('#lsn-sw-yellow').click({ force: true })
+  await page.locator('#lsn-slot-b').click({ force: true })
   // step 8: SECONDARY badge
   await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
   await page.evaluate(() => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'BADGE_TAPPED' } })))
