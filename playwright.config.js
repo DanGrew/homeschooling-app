@@ -1,6 +1,7 @@
 const { defineConfig } = require('@playwright/test')
 
-const PORT = 3000 + Math.floor(Math.random() * 1000);
+const PORT = Number(process.env.TEST_PORT ||
+  (process.env.TEST_PORT = String(3000 + Math.floor(Math.random() * 1000))));
 
 module.exports = defineConfig({
   testDir: './tests',
