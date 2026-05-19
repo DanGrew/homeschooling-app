@@ -39,14 +39,22 @@ var modeD = document.getElementById('wb-mode-distractors');
 var modeA = document.getElementById('wb-mode-alphabet');
 var picBtn = document.getElementById('wb-picture-toggle');
 
+var MODE_STYLES = {
+  'true':  { background: '#1976d2', color: '#fff', borderColor: '#1976d2' },
+  'false': { background: '#fff',    color: '#555', borderColor: '#bbb' }
+};
+var MODE_BTNS = {
+  distractors: { active: function() { return modeD; }, inactive: function() { return modeA; } },
+  alphabet:    { active: function() { return modeA; }, inactive: function() { return modeD; } }
+};
+
+function applyBtn(btn, isActive) {
+  Object.assign(btn.style, MODE_STYLES[String(isActive)]);
+}
+
 function setModeUI(mode) {
-  if (mode === 'distractors') {
-    modeD.style.background = '#1976d2'; modeD.style.color = '#fff'; modeD.style.borderColor = '#1976d2';
-    modeA.style.background = '#fff'; modeA.style.color = '#555'; modeA.style.borderColor = '#bbb';
-  } else {
-    modeA.style.background = '#1976d2'; modeA.style.color = '#fff'; modeA.style.borderColor = '#1976d2';
-    modeD.style.background = '#fff'; modeD.style.color = '#555'; modeD.style.borderColor = '#bbb';
-  }
+  applyBtn(MODE_BTNS[mode].active(), true);
+  applyBtn(MODE_BTNS[mode].inactive(), false);
   setMode(mode);
 }
 
