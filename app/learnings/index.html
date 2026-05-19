@@ -57,7 +57,7 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 </div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion, extraMetaTags } from '../../core/telemetry/learning-journal-core.js';
 
 var ZERO_CLASS = { 'true': ' bar-row-zero', 'false': '' };
 
@@ -76,18 +76,6 @@ var NO_EVENTS = {
   'false': function(j, e) { renderGroups(j, e); }
 };
 
-function colouringMeta(vm) {
-  return { key: 'variant_id', label: 'Variant', val: [vm.variantId, 'None'].find(Boolean) };
-}
-
-var EXTRA_META = {
-  'colouring-guided': colouringMeta,
-  'colouring-free':   colouringMeta
-};
-
-function extraMetaTags(vm, event) {
-  return [EXTRA_META[event.learning_id]].filter(Boolean).map(function(fn) { return fn(vm); });
-}
 
 function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);

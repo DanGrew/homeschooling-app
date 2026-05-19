@@ -79,6 +79,19 @@ export function sortAndGroupEvents(events) {
   return { groups: groups, order: order };
 }
 
+function colouringMeta(vm) {
+  return { key: 'variant_id', label: 'Variant', val: [vm.variantId, 'None'].find(Boolean) };
+}
+
+var EXTRA_META = {
+  'colouring-guided': colouringMeta,
+  'colouring-free':   colouringMeta
+};
+
+export function extraMetaTags(vm, event) {
+  return [EXTRA_META[event.learning_id]].filter(Boolean).map(function(fn) { return fn(vm); });
+}
+
 export function fetchLearning(learningId, cb) {
   if (!learningId) { cb(null); return; }
   if (_learningCache[learningId]) { cb(_learningCache[learningId]); return; }
