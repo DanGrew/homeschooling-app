@@ -57,3 +57,23 @@ test('nav bar title is Word Builder', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('.nav-bar')).toBeVisible({ timeout: 3000 })
 })
+
+test('mode buttons have correct labels', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('#wb-mode-distractors')).toHaveText('Word Letters', { timeout: 3000 })
+  await expect(page.locator('#wb-mode-alphabet')).toHaveText('All Letters')
+})
+
+test('picture toggle shows Hide picture by default', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('#wb-picture-toggle')).toHaveText('Hide picture', { timeout: 5000 })
+})
+
+test('picture toggle label updates after click', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('#wb-picture-toggle')).toHaveText('Hide picture', { timeout: 5000 })
+  await page.locator('#wb-picture-toggle').click()
+  await expect(page.locator('#wb-picture-toggle')).toHaveText('Show picture')
+  await page.locator('#wb-picture-toggle').click()
+  await expect(page.locator('#wb-picture-toggle')).toHaveText('Hide picture')
+})
