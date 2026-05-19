@@ -132,31 +132,23 @@ test('tapping red wheel segment advances to tap-yellow step', async ({ page }) =
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-async function dispatchBadge(page) {
-  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
-  await page.evaluate(() => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'BADGE_TAPPED' } })))
+function fire(page, type) {
+  return page.evaluate(t => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: t } })), type)
 }
 
 async function completeLesson(page) {
-  // wait for lesson to load before interacting
   await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
-  // tap red, yellow, blue (steps 1-3)
-  await page.locator('#wheel-svg path[fill="#E74C3C"]').click({ force: true })
-  await page.locator('#wheel-svg path[fill="#F1C40F"]').click({ force: true })
-  await page.locator('#wheel-svg path[fill="#3498DB"]').click({ force: true })
-  // step 4: PRIMARY badge
-  await dispatchBadge(page)
-  // step 5: guess orange
-  await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
-  // steps 6-7: load mixer
-  await page.locator('#lsn-sw-red').click({ force: true })
-  await page.locator('#lsn-slot-a').click({ force: true })
-  await page.locator('#lsn-sw-yellow').click({ force: true })
-  await page.locator('#lsn-slot-b').click({ force: true })
-  // step 8: SECONDARY badge
-  await dispatchBadge(page)
-  // step 9: tap orange
-  await page.locator('#wheel-svg path[fill="#E67E22"]').click({ force: true })
+  await fire(page, 'RED_TAPPED')
+  await fire(page, 'YELLOW_TAPPED')
+  await fire(page, 'BLUE_TAPPED')
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await fire(page, 'BADGE_TAPPED')
+  await fire(page, 'ORANGE_TAPPED')
+  await fire(page, 'RED_LOADED_A')
+  await fire(page, 'YELLOW_LOADED_B')
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await fire(page, 'BADGE_TAPPED')
+  await fire(page, 'ORANGE_TAPPED')
 }
 
 test('success step has green background', async ({ page }) => {
