@@ -70,6 +70,7 @@ var SLOT_ASSIGN={
   'b':function(){slotB=sel;}
 };
 
+// arch: allow-pure-fn
 function slotEvent(slot,colour){return colour.replace(/-/g,'_').toUpperCase()+'_LOADED_'+slot.toUpperCase();}
 
 function getMixResult(){
