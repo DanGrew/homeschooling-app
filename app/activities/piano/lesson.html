@@ -49,7 +49,7 @@ makeSpeakable(document.getElementById('btn-prev'),'Previous');
 makeSpeakable(document.getElementById('btn-next'),'Next');
 var _sd=document.getElementById('section-display');
 function _wire(){
-  _sd.querySelectorAll('.lyric:not(.speakable),.note-chip:not(.speakable)').forEach(function(el){
+  _sd.querySelectorAll('.lyric:not(.speakable)').forEach(function(el){
     makeSpeakable(el,function(){return el.textContent;});
   });
 }

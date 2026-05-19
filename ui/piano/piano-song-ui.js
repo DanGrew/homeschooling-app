@@ -19,6 +19,7 @@ var SONG_NOTE_MAP = {
 
 var _NO_NOTE_INFO = {note: null, color: '#ccc'};
 var _CHIP_CLASS = {'true': 'note-chip playable', 'false': 'note-chip no-audio'};
+var _chipCounter = 0;
 var _DOT_CLASS = {'true': 'verse-dot active', 'false': 'verse-dot'};
 
 var _lessonSongs = [];
@@ -47,6 +48,7 @@ function makeSongChip(token) {
   var suffix = ['*'].filter(function() { return info.simplified; }).join('');
   var chip = document.createElement('span');
   chip.className = _CHIP_CLASS[String(!!info.note)];
+  chip.id = 'note-chip-' + (_chipCounter++);
   var label = ([info.displayToken].filter(Boolean).concat([token]))[0];
   chip.textContent = label.replace('^', '\u2191') + suffix;
   chip.style.background = info.color;

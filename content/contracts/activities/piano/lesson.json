@@ -1,6 +1,7 @@
 {
   "opt-outs": {
     "speakable-text": [
+      "note-chip-*",
       "key-C4",
       "key-D4",
       "key-E4",

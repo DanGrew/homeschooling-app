@@ -1,14 +1,18 @@
 const { defineConfig } = require('@playwright/test')
 
+const PORT = Number(process.env.TEST_PORT ||
+  (process.env.TEST_PORT = String(3000 + Math.floor(Math.random() * 1000))));
+
 module.exports = defineConfig({
   testDir: './tests',
   testIgnore: ['**/unit/**', '**/contracts/**'],
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: `http://localhost:${PORT}`,
   },
   webServer: {
     command: 'node test-server.js',
-    url: 'http://localhost:3000',
+    url: `http://localhost:${PORT}`,
+    env: { PORT: String(PORT) },
     reuseExistingServer: false,
   },
   projects: [

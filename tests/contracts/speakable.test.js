@@ -39,7 +39,9 @@ const UNWIRED_BUTTONS_SELECTOR = 'button:not(.speakable)';
 // avoid flagging wrapper containers and double-counting nested elements.
 // excludedIds: element IDs declared in the page's opt-out profile.
 function findUnwiredText(page, excludedIds) {
-  return page.evaluate((excluded) => {
+  const patternSources = excludedIds.map(id => '^' + id.replace(/\*/g, '.*') + '$');
+  return page.evaluate(({ excluded, patternSources }) => {
+    const patterns = patternSources.map(s => new RegExp(s));
     const candidates = document.querySelectorAll(
       'p, span, h1, h2, h3, h4, label, li, td, div'
     );
@@ -50,14 +52,14 @@ function findUnwiredText(page, excludedIds) {
       if (el.closest('[data-speakable-container]')) continue;
       if (getComputedStyle(el).display === 'none') continue;
       if (getComputedStyle(el).visibility === 'hidden') continue;
-      if (el.id && excluded.includes(el.id)) continue;
+      if (el.id && (excluded.includes(el.id) || patterns.some(p => p.test(el.id)))) continue;
       const hasDirectText = Array.from(el.childNodes).some(
         n => n.nodeType === Node.TEXT_NODE && n.textContent.trim().length > 0
       );
       if (hasDirectText) results.push(el.textContent.trim().slice(0, 60));
     }
     return results;
-  }, excludedIds);
+  }, { excluded: excludedIds, patternSources });
 }
 
 // SVG elements that haven't been made speakable (directly or via ancestor).
