@@ -58,3 +58,12 @@ npm run test:unit || fail "unit tests"
 echo "[pre-push] e2e skipped (runs in CI)"
 
 echo "[pre-push] all checks passed"
+
+# Remind to update CLAUDE.md index if pages/modules changed
+changed_modules=$(git diff --name-only origin/main...HEAD 2>/dev/null | grep -E '^(app|ui|core|components)/' || true)
+if [ -n "$changed_modules" ]; then
+  echo ""
+  echo "WARNING: Pages/modules changed -- does CLAUDE.md index need updating?"
+  echo "   (CLAUDE.md > Page Index / Module Index)"
+  echo ""
+fi
