@@ -20,7 +20,7 @@ WordBubble.prototype.build = function(parent) {
   var self = this;
 
   var wrap = document.createElement('div');
-  wrap.style.cssText = 'position:absolute;bottom:calc(100% + 6px);left:0;display:none;flex-direction:column;align-items:center;gap:3px;cursor:pointer;z-index:100;';
+  wrap.style.cssText = 'position:absolute;bottom:calc(100% + 6px);left:0;display:none;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;z-index:100;';
 
   var bubble = document.createElement('div');
   bubble.style.cssText = 'background:#fff8e7;border:3px solid #f0c060;border-radius:20px;padding:8px 18px;font-size:1.1em;font-weight:900;color:#b06000;white-space:nowrap;animation:wbPulse 1.4s ease-in-out infinite;';
@@ -28,7 +28,7 @@ WordBubble.prototype.build = function(parent) {
 
   var dots = document.createElement('div');
   dots.style.cssText = 'display:flex;gap:4px;align-items:flex-end;';
-  [7, 5, 3].forEach(function(sz) {
+  [3, 5, 7].forEach(function(sz) {
     var d = document.createElement('div');
     d.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;border-radius:50%;background:#f0c060;flex-shrink:0;';
     dots.appendChild(d);
