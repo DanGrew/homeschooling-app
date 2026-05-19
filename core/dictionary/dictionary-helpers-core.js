@@ -5,7 +5,7 @@ function onErr(onError,callback){return function(err){if(onError)onError(err);el
 export function loadColouringPictures(pictures,callback,onError){
   Dictionary.loadManifest('colouring').then(function(items){
     items.forEach(function(item){
-      pictures.push({name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.shapes});
+      pictures.push({id:item.id,name:item.name,tags:item.tags,vb:item.viewBox,shapes:item.shapes});
     });
     callback();
   }).catch(onErr(onError,callback));

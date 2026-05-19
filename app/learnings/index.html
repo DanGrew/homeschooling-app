@@ -80,10 +80,11 @@ function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);
   var div = document.createElement('div');
   div.className = 'entry';
+  var isColouring = (event.learning_id || '').indexOf('colouring') !== -1;
   var metaTags = [
-    { key: 'variant_id', label: 'Variant', val: vm.variantId },
+    isColouring ? { key: 'variant_id', label: 'Variant', val: vm.variantId || 'None' } : null,
     { key: 'difficulty', label: 'Difficulty', val: vm.difficulty }
-  ].filter(function(m) { return m.val !== undefined; })
+  ].filter(function(m) { return m !== null && m.val !== undefined; })
    .map(function(m) { return '<span class="meta-tag">' + m.label + ': ' + m.val + '</span>'; })
    .join('');
   div.innerHTML =
