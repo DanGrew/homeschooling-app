@@ -161,8 +161,10 @@ export function initColouringPlayground() {
     }
   };
 
+  var FIRE_COMPLETE={true:function(){COMPLETE_FN[mode]();},false:function(){}};
+
   var COLOUR_ADVANCE={
-    true:function(){if(!eventFired)COMPLETE_FN[mode]();},
+    true:function(){FIRE_COMPLETE[String(!eventFired)]();},
     false:function(){}
   };
 
