@@ -1,4 +1,5 @@
 import { makeLongPress } from '../../ui/shared/long-press.js';
+import { WordBubble } from './word-bubble.js';
 
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
 var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };
@@ -15,6 +16,7 @@ export function GuidanceOverlay() {
   this._progressEl = null;
   this._nextBtn = null;
   this._charEl = null;
+  this._wordBubble = null;
   this._onNext = null;
   this._onReplay = null;
 }
@@ -30,9 +32,16 @@ GuidanceOverlay.prototype._build = function(onStop) {
   bubble.style.cssText = 'background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,0.12);padding:10px 14px;display:flex;align-items:stretch;gap:12px;transition:background 0.3s;';
   this._bubbleEl = bubble;
 
+  var charWrap = document.createElement('div');
+  charWrap.style.cssText = 'position:relative;flex-shrink:0;align-self:center;width:48px;height:48px;';
+
   var char = document.createElement('img');
-  char.style.cssText = 'width:48px;height:48px;object-fit:contain;flex-shrink:0;border-radius:50%;background:#f5f5f5;align-self:center;';
+  char.style.cssText = 'width:48px;height:48px;object-fit:contain;border-radius:50%;background:#f5f5f5;display:block;';
   this._charEl = char;
+  charWrap.appendChild(char);
+
+  this._wordBubble = new WordBubble();
+  this._wordBubble.build(charWrap);
 
   var body = document.createElement('div');
   body.style.cssText = 'flex:1;display:flex;flex-direction:column;gap:6px;min-width:0;';
@@ -99,7 +108,7 @@ GuidanceOverlay.prototype._build = function(onStop) {
   body.appendChild(text);
   body.appendChild(dots);
   body.appendChild(footer);
-  bubble.appendChild(char);
+  bubble.appendChild(charWrap);
   bubble.appendChild(body);
   el.appendChild(bubble);
   document.body.appendChild(el);
@@ -120,6 +129,8 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
   this._nextBtn.classList.toggle('speakable', showNext);
   this._renderDots(step.dots || 0, 0);
+  var wb = this._wordBubble;
+  [wb].filter(Boolean).forEach(function() { step.badge ? wb.show(step.badge) : wb.hide(); });
   this._el.style.display = '';
 };
 
@@ -142,4 +153,5 @@ GuidanceOverlay.prototype.setDots = function(ticked, total) {
 
 GuidanceOverlay.prototype.hide = function() {
   [this._el].filter(Boolean).forEach(function(el) { el.style.display = 'none'; });
+  [this._wordBubble].filter(Boolean).forEach(function(wb) { wb.hide(); });
 };

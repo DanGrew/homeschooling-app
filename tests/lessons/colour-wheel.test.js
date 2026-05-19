@@ -94,7 +94,7 @@ test('lesson 9 make vermillion starts with correct intro', async ({ page }) => {
   await page.waitForFunction(() => window.guidanceService)
   await page.locator('.nav-lesson-btn').click()
   await page.locator('.nav-lesson-item').nth(8).click()
-  await expect(page.locator('#guidance-overlay')).toContainText('Vermillion')
+  await expect(page.locator('#guidance-overlay')).toContainText('mix even further')
 })
 
 test('clicking outside closes popout', async ({ page }) => {
@@ -120,22 +120,35 @@ test('clicking lesson item shows guidance overlay', async ({ page }) => {
 test('first step shows find-red instruction and no Next button', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await expect(page.locator('#guidance-overlay')).toContainText('Can you spot red')
+  await expect(page.locator('#guidance-overlay')).toContainText('Tap red')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-test('tapping red wheel segment shows feedback', async ({ page }) => {
+test('tapping red wheel segment advances to tap-yellow step', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
   await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
-  await expect(page.locator('#guidance-overlay')).toContainText('Warm and bright!')
+  await expect(page.locator('#guidance-overlay')).toContainText('Tap yellow')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
+function fire(page, type) {
+  return page.evaluate(t => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: t } })), type)
+}
+
 async function completeLesson(page) {
-  await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
-  await page.locator('#wheel-svg path[fill="#F1C40F"]').click()
-  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('click')
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'RED_TAPPED')
+  await fire(page, 'YELLOW_TAPPED')
+  await fire(page, 'BLUE_TAPPED')
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await fire(page, 'BADGE_TAPPED')
+  await fire(page, 'ORANGE_TAPPED')
+  await fire(page, 'RED_LOADED_A')
+  await fire(page, 'YELLOW_LOADED_B')
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await fire(page, 'BADGE_TAPPED')
+  await fire(page, 'ORANGE_TAPPED')
 }
 
 test('success step has green background', async ({ page }) => {
@@ -185,7 +198,7 @@ test('completing a lesson records a learning event in IndexedDB', async ({ page 
     req.onerror = () => resolve([])
     req.onupgradeneeded = () => resolve([])
   }))
-  const evt = events.find(e => e.learning_id === 'make_orange')
+  const evt = events.find(e => e.learning_id === 'colour-wheel-lesson-make_orange')
   expect(evt).toBeTruthy()
   expect(evt.type).toBe('learning_completed')
   expect(evt.activity_id).toBe('colour-wheel')

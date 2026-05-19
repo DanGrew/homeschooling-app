@@ -1,0 +1,56 @@
+{
+  "id": "colour-wheel-lesson-make_amber",
+  "title": "Make Amber",
+  "number": 10,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-mixing",
+    "cl.listening",
+    "cl.prediction",
+    "cl.technical-vocab",
+    "uw.cause-effect",
+    "cl.sequencing-language"
+  ],
+  "steps": [
+    {
+      "text": "You know the secondary colours — now let's mix even further. Tap red on the colour wheel!",
+      "expect": "RED_TAPPED"
+    },
+    {
+      "text": "Tap yellow!",
+      "expect": "YELLOW_TAPPED"
+    },
+    {
+      "text": "Tap blue!",
+      "expect": "BLUE_TAPPED"
+    },
+    {
+      "text": "Red, yellow, blue — those are the primary colours.",
+      "badge": "PRIMARY",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Now we're going to mix yellow and orange. What do you think they'll make? Tap your guess on the wheel!",
+      "expect": "YELLOW_ORANGE_TAPPED"
+    },
+    {
+      "text": "Let's find out! Tap yellow to put it in the mixer.",
+      "expect": "YELLOW_LOADED_A"
+    },
+    {
+      "text": "Now tap orange.",
+      "expect": "ORANGE_LOADED_B"
+    },
+    {
+      "text": "Amber! Because yellow and orange mixed together — they made amber. Amber is a tertiary colour.",
+      "badge": "TERTIARY",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Now tap amber on the colour wheel!",
+      "expect": "YELLOW_ORANGE_TAPPED",
+      "feedback": "You mixed it. You found it."
+    }
+  ]
+}

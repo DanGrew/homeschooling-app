@@ -1,0 +1,56 @@
+{
+  "id": "colour-wheel-lesson-make_green",
+  "title": "Make Green",
+  "number": 2,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-mixing",
+    "cl.listening",
+    "cl.prediction",
+    "cl.technical-vocab",
+    "uw.cause-effect",
+    "cl.sequencing-language"
+  ],
+  "steps": [
+    {
+      "text": "Today we're going to mix two colours and make a brand new one. Tap red on the colour wheel!",
+      "expect": "RED_TAPPED"
+    },
+    {
+      "text": "Tap yellow!",
+      "expect": "YELLOW_TAPPED"
+    },
+    {
+      "text": "Tap blue!",
+      "expect": "BLUE_TAPPED"
+    },
+    {
+      "text": "Red, yellow, blue — those are the primary colours.",
+      "badge": "PRIMARY",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Now we're going to mix blue and yellow. What do you think they'll make? Tap your guess on the wheel!",
+      "expect": "GREEN_TAPPED"
+    },
+    {
+      "text": "Let's find out! Tap blue to put it in the mixer.",
+      "expect": "BLUE_LOADED_A"
+    },
+    {
+      "text": "Now tap yellow.",
+      "expect": "YELLOW_LOADED_B"
+    },
+    {
+      "text": "Green! Because blue and yellow mixed together — they made green. Green is a secondary colour.",
+      "badge": "SECONDARY",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Now tap green on the colour wheel!",
+      "expect": "GREEN_TAPPED",
+      "feedback": "You mixed it. You found it."
+    }
+  ]
+}

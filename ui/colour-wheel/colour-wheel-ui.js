@@ -70,6 +70,11 @@ var SLOT_ASSIGN={
   'b':function(){slotB=sel;}
 };
 
+var SLOT_GET={'a':function(){return slotA;},'b':function(){return slotB;}};
+
+// arch: allow-pure-fn
+function slotEvent(slot,colour){return colour.replace(/-/g,'_').toUpperCase()+'_LOADED_'+slot.toUpperCase();}
+
 function getMixResult(){
   return [slotA,slotB].filter(Boolean)
     .filter(function(_,i,a){return a.length===2;})
@@ -91,6 +96,7 @@ function doSlot(slot){
   el('lsn-slot-b').style.background=[slotB].filter(Boolean).map(function(c){return hex(c,LSN_COLOURS);}).concat(['#f0f0f0'])[0];
   renderPalette();
   updateResult();
+  [SLOT_GET[slot]()].filter(Boolean).forEach(function(c){window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:slotEvent(slot,c)}}));});
 }
 
 function handleSlot(slot){

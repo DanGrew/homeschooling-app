@@ -28,7 +28,7 @@ var SHOW_STEP = {
     var text = _resolveText(step.text);
     svc._overlay.show(
       svc._guideSrc(),
-      { text: text, auto: step.auto, success: step.success, dots: Array.isArray(step.expect) ? step.expect.length : 0 },
+      { text: text, auto: step.auto, success: step.success, dots: Array.isArray(step.expect) ? step.expect.length : 0, badge: step.badge },
       svc._stepIdx + 1, svc._lesson.steps.length,
       function() { svc._advance(); },
       function() { interrupt(text); },

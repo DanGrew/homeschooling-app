@@ -54,29 +54,7 @@ node scripts/check-untested.js || fail "check-untested"
 echo "[pre-push] unit tests..."
 npm run test:unit || fail "unit tests"
 
-echo "[pre-push] e2e (changed files only)..."
-git fetch origin main --quiet 2>/dev/null || true
-CHANGED=$(git diff --name-only "origin/main...HEAD" 2>/dev/null || git diff --name-only HEAD~1 2>/dev/null || true)
-
-TEST_FILES=""
-while IFS= read -r f; do
-  # ui/<topic>/anything.js → topic
-  topic=$(echo "$f" | sed -n 's|^ui/\([^/]*\)/.*|\1|p')
-  if [ -n "$topic" ]; then
-    while IFS= read -r match; do
-      [ -n "$match" ] && TEST_FILES="$TEST_FILES $match"
-    done < <(find tests -name "${topic}.test.js" -o -name "${topic}-*.test.js" 2>/dev/null)
-  fi
-done <<< "$CHANGED"
-
-# deduplicate
-TEST_FILES=$(echo "$TEST_FILES" | tr ' ' '\n' | sort -u | grep -v '^$' | tr '\n' ' ' || true)
-
-if [ -n "$TEST_FILES" ]; then
-  echo "[pre-push] e2e targets: $TEST_FILES"
-  npx playwright test $TEST_FILES || fail "e2e"
-else
-  echo "[pre-push] no mapped e2e tests for changed files, skipping"
-fi
+# e2e tests run in CI, not locally
+echo "[pre-push] e2e skipped (runs in CI)"
 
 echo "[pre-push] all checks passed"

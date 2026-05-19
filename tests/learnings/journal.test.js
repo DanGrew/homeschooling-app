@@ -30,7 +30,7 @@ test('shows entry after seeding an event', async ({ page }) => {
     version: 1,
     type: 'lesson_completed',
     timestamp: Date.now(),
-    lessonId: 'make_orange',
+    lessonId: 'colour-wheel-lesson-make_orange',
     activityId: 'colour-wheel'
   })
   await page.reload()
@@ -44,7 +44,7 @@ test('entry resolves lesson title from activity JSON', async ({ page }) => {
     version: 1,
     type: 'lesson_completed',
     timestamp: Date.now(),
-    lessonId: 'make_orange',
+    lessonId: 'colour-wheel-lesson-make_orange',
     activityId: 'colour-wheel'
   })
   await page.reload()
@@ -58,7 +58,7 @@ test('entry shows activity source and lesson number', async ({ page }) => {
     version: 1,
     type: 'lesson_completed',
     timestamp: Date.now(),
-    lessonId: 'make_orange',
+    lessonId: 'colour-wheel-lesson-make_orange',
     activityId: 'colour-wheel'
   })
   await page.reload()
@@ -73,7 +73,7 @@ test('entry shows EYFS criteria tags', async ({ page }) => {
     version: 1,
     type: 'lesson_completed',
     timestamp: Date.now(),
-    lessonId: 'make_orange',
+    lessonId: 'colour-wheel-lesson-make_orange',
     activityId: 'colour-wheel'
   })
   await page.reload()
@@ -87,7 +87,7 @@ test('today group header shown for recent event', async ({ page }) => {
     version: 1,
     type: 'lesson_completed',
     timestamp: Date.now(),
-    lessonId: 'make_orange',
+    lessonId: 'colour-wheel-lesson-make_orange',
     activityId: 'colour-wheel'
   })
   await page.reload()
@@ -99,9 +99,19 @@ test('completing a lesson via colour-wheel then visiting journal shows entry', a
   await page.waitForFunction(() => window.guidanceService)
   await page.locator('.nav-lesson-btn').click()
   await page.locator('.nav-lesson-item').first().click()
-  await page.locator('#wheel-svg path[fill="#E74C3C"]').click()
-  await page.locator('#wheel-svg path[fill="#F1C40F"]').click()
-  await page.locator('#wheel-svg path[fill="#E67E22"]').dispatchEvent('click')
+  const fire = t => page.evaluate(type => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type } })), t)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire('RED_TAPPED')
+  await fire('YELLOW_TAPPED')
+  await fire('BLUE_TAPPED')
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await fire('BADGE_TAPPED')
+  await fire('ORANGE_TAPPED')
+  await fire('RED_LOADED_A')
+  await fire('YELLOW_LOADED_B')
+  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
+  await fire('BADGE_TAPPED')
+  await fire('ORANGE_TAPPED')
   await page.locator('#guidance-overlay [data-action="next"]').click()
   await page.waitForTimeout(300)
   await page.goto(URL)
