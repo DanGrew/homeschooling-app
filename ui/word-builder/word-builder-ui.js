@@ -84,7 +84,7 @@ function render() { renderPicture(); renderSlots(); renderTiles(); renderActions
 
 var PICTURE_DISPLAY = { 'true': 'flex', 'false': 'none' };
 var IMG_DISPLAY = { 'true': '', 'false': 'none' };
-var BTN_LABEL = { 'true': 'Hide picture', 'false': 'Show picture' };
+var BTN_LABEL = { 'true': 'Show picture', 'false': 'Hide picture' };
 
 function renderPicture() {
   var src = state.currentItem.url;
