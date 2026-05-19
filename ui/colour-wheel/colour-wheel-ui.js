@@ -158,8 +158,8 @@ window.addEventListener('page:control',function(e){
     'LOCK_SLOT_A':function(){_slotALocked=true;},
     'LOCK_SLOT_B':function(){_slotBLocked=true;},
     'PAGE_CONTROL_RESET':function(){
-      var c=el('wheel-svg').parentElement;if(c)c.style.display='';
-      var m=el('lsn-mixer');if(m)m.style.display='';
+      var c=el('wheel-svg').parentElement;if(c)c.style.display='flex';
+      var m=el('lsn-mixer');if(m)m.style.display='flex';
       _slotALocked=false;_slotBLocked=false;
     }
   }[e.detail.type]||function(){})();
