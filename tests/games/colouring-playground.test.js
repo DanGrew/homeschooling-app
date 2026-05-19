@@ -78,24 +78,14 @@ test('magic: clicking a shape colours it', async ({ page }) => {
   await expect(shape).not.toHaveAttribute('fill', fillBefore)
 })
 
-test('magic: colouring all shapes shows success banner', async ({ page }) => {
-  await page.goto(URL)
-  await waitForPicture(page)
-  const shapes = page.locator('#svg [style*="cursor"]')
-  const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).click()
-  await expect(page.getByTestId('success-banner')).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)', { timeout: 2000 })
-})
-
-test('magic: next button on banner advances picture', async ({ page }) => {
+test('magic: colouring all shapes stays on same picture — no auto-advance', async ({ page }) => {
   await page.goto(URL)
   await waitForPicture(page)
   const titleBefore = await page.locator('#pic-title').textContent()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
   for (let i = 0; i < count; i++) await shapes.nth(i).click()
-  await page.getByTestId('success-banner').getByRole('button', { name: /Next/ }).click()
-  await expect(page.locator('#pic-title')).not.toHaveText(titleBefore, { timeout: 2000 })
+  await expect(page.locator('#pic-title')).toHaveText(titleBefore)
 })
 
 // ── Guided mode ────────────────────────────────────────────────────────────
@@ -168,6 +158,34 @@ test('guided: selected colour persists across picture navigation', async ({ page
   expect(colourAfter).toBe(colourBefore)
 })
 
+test('guided: reset button appears when all shapes coloured', async ({ page }) => {
+  await page.goto(URL)
+  await waitForPicture(page)
+  await page.locator('button[data-mode-btn="guided"]').click()
+  await expect(page.locator('#reset-btn')).toBeHidden()
+  const swatch = page.locator('#guided-pal .swatch').first()
+  await swatch.click()
+  const shapes = page.locator('#svg [style*="cursor"]')
+  const count = await shapes.count()
+  for (let i = 0; i < count; i++) await shapes.nth(i).click()
+  await expect(page.locator('#reset-btn')).toBeVisible()
+})
+
+test('guided: reset button clears all fills and hides itself', async ({ page }) => {
+  await page.goto(URL)
+  await waitForPicture(page)
+  await page.locator('button[data-mode-btn="guided"]').click()
+  const swatch = page.locator('#guided-pal .swatch').first()
+  await swatch.click()
+  const shapes = page.locator('#svg [style*="cursor"]')
+  const count = await shapes.count()
+  for (let i = 0; i < count; i++) await shapes.nth(i).click()
+  await page.locator('#reset-btn').click()
+  await expect(page.locator('#reset-btn')).toBeHidden()
+  const fill = await shapes.first().getAttribute('fill')
+  expect(fill).toContain('dots')
+})
+
 // ── Free mode ──────────────────────────────────────────────────────────────
 
 test('free: shows 10 base palette swatches', async ({ page }) => {
@@ -183,6 +201,17 @@ test('free: clicking a base swatch opens shade popout', async ({ page }) => {
   await page.locator('button[data-mode-btn="free"]').click()
   await page.locator('#base-palette .swatch').first().click()
   await expect(page.locator('#shade-pop')).toHaveClass(/open/)
+})
+
+test('free: clicking a base swatch auto-selects the base shade', async ({ page }) => {
+  await page.goto(URL)
+  await waitForPicture(page)
+  await page.locator('button[data-mode-btn="free"]').click()
+  const swatch = page.locator('#base-palette .swatch').first()
+  const swatchColour = await swatch.evaluate(el => window.getComputedStyle(el).backgroundColor)
+  await swatch.click()
+  const curColour = await page.locator('#cur-colour').evaluate(el => window.getComputedStyle(el).backgroundColor)
+  expect(curColour).toBe(swatchColour)
 })
 
 test('free: shade popout has three options', async ({ page }) => {
