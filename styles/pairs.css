@@ -203,9 +203,6 @@
   touch-action: manipulation;
 }
 
-/* ---- Rotation (shared 2-player) ---- */
-.pairs-game--rotated { transform: rotate(180deg); }
-
 /* ---- Handover overlay (pass & play) ---- */
 .pairs-handover {
   position: absolute;
