@@ -1,0 +1,45 @@
+{
+  "id": "find-cool",
+  "title": "Cool Colours",
+  "number": 8,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-families",
+    "ead.colour-recognition",
+    "cl.technical-vocab",
+    "cl.listening"
+  ],
+  "steps": [
+    {
+      "text": "Cool colours remind us of water and ice. Let's find them all. Tap blue!",
+      "expect": "BLUE_TAPPED"
+    },
+    {
+      "text": "Tap green!",
+      "expect": "GREEN_TAPPED"
+    },
+    {
+      "text": "Tap purple!",
+      "expect": "PURPLE_TAPPED"
+    },
+    {
+      "text": "Tap teal!",
+      "expect": "BLUE_GREEN_TAPPED"
+    },
+    {
+      "text": "Tap indigo!",
+      "expect": "BLUE_PURPLE_TAPPED"
+    },
+    {
+      "text": "Tap chartreuse!",
+      "expect": "YELLOW_GREEN_TAPPED"
+    },
+    {
+      "text": "Blue, green, purple, teal, indigo, chartreuse — those are the cool colours. They all feel like water and ice.",
+      "badge": "COOL",
+      "expect": "BADGE_TAPPED",
+      "feedback": "You found all the cool colours!"
+    }
+  ]
+}

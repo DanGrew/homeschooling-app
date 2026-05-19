@@ -1,0 +1,45 @@
+{
+  "id": "find-warm",
+  "title": "Warm Colours",
+  "number": 7,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-families",
+    "ead.colour-recognition",
+    "cl.technical-vocab",
+    "cl.listening"
+  ],
+  "steps": [
+    {
+      "text": "Warm colours remind us of fire and sunshine. Let's find them all. Tap red!",
+      "expect": "RED_TAPPED"
+    },
+    {
+      "text": "Tap orange!",
+      "expect": "ORANGE_TAPPED"
+    },
+    {
+      "text": "Tap yellow!",
+      "expect": "YELLOW_TAPPED"
+    },
+    {
+      "text": "Tap vermillion!",
+      "expect": "RED_ORANGE_TAPPED"
+    },
+    {
+      "text": "Tap amber!",
+      "expect": "YELLOW_ORANGE_TAPPED"
+    },
+    {
+      "text": "Tap magenta!",
+      "expect": "RED_PURPLE_TAPPED"
+    },
+    {
+      "text": "Red, orange, yellow, vermillion, amber, magenta — those are the warm colours. They all feel like fire and sunshine.",
+      "badge": "WARM",
+      "expect": "BADGE_TAPPED",
+      "feedback": "You found all the warm colours!"
+    }
+  ]
+}

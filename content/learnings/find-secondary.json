@@ -1,0 +1,32 @@
+{
+  "id": "find-secondary",
+  "title": "Find Secondary Colours",
+  "number": 5,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-recognition",
+    "cl.technical-vocab",
+    "cl.listening"
+  ],
+  "steps": [
+    {
+      "text": "Let's find the secondary colours — the ones we made by mixing. Tap orange!",
+      "expect": "ORANGE_TAPPED"
+    },
+    {
+      "text": "Tap green!",
+      "expect": "GREEN_TAPPED"
+    },
+    {
+      "text": "Tap purple!",
+      "expect": "PURPLE_TAPPED"
+    },
+    {
+      "text": "Orange, green, purple — those are the secondary colours!",
+      "badge": "SECONDARY",
+      "expect": "BADGE_TAPPED",
+      "feedback": "You found them all — well done!"
+    }
+  ]
+}
