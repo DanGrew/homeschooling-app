@@ -1,3 +1,8 @@
 [
-  {"id": "exercise_2-AND_2-AND-AND", "source": "Logic Gates"}
+  {"id": "exercise_2-AND_2-AND-AND", "source": "Logic Gates"},
+  {"id": "colour-wheel-exercise-primary", "source": "Colour Wheel"},
+  {"id": "colour-wheel-exercise-secondary", "source": "Colour Wheel"},
+  {"id": "colour-wheel-exercise-tertiary", "source": "Colour Wheel"},
+  {"id": "colour-wheel-exercise-warm", "source": "Colour Wheel"},
+  {"id": "colour-wheel-exercise-cool", "source": "Colour Wheel"}
 ]

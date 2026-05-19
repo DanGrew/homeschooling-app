@@ -41,7 +41,7 @@ var LSN_MIXES={
   'green+purple':'green-purple-mix',  'purple+green':'green-purple-mix'
 };
 
-var PALETTE=['red','yellow','blue','orange','green','purple'];
+var PALETTE=['red','yellow','blue','orange','green','purple','red-orange','yellow-orange','yellow-green','blue-green','blue-purple','red-purple'];
 
 var PRIMARIES   =[{c:'red',start:-60},{c:'yellow',start:60},{c:'blue',start:180}];
 var SECONDARIES =[{c:'orange',start:0},{c:'green',start:120},{c:'purple',start:240}];
@@ -51,6 +51,7 @@ var TERTIARIES  =[
 ];
 
 var slotA=null,slotB=null,sel=null;
+var _slotALocked=false,_slotBLocked=false;
 
 function el(id){return document.getElementById(id);}
 
@@ -99,8 +100,9 @@ function doSlot(slot){
   [SLOT_GET[slot]()].filter(Boolean).forEach(function(c){window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:slotEvent(slot,c)}}));});
 }
 
+var SLOT_LOCKED={'a':function(){return _slotALocked;},'b':function(){return _slotBLocked;}};
 function handleSlot(slot){
-  [sel].filter(Boolean).forEach(function(){doSlot(slot);});
+  [sel].filter(Boolean).filter(function(){return !SLOT_LOCKED[slot]();}).forEach(function(){doSlot(slot);});
 }
 
 (function buildWheel(){
@@ -136,7 +138,11 @@ function handleSlot(slot){
     var sw=document.createElement('div');
     sw.id='lsn-sw-'+c;
     sw.style.cssText='width:56px;height:56px;border-radius:50%;background:'+hex(c,LSN_COLOURS)+';cursor:pointer;border:4px solid transparent;transition:transform 0.1s;';
-    makeInteractive(sw,function(){handleSwatch(c);speak(LSN_COLOURS[c].label);});
+    makeInteractive(sw,function(){
+      handleSwatch(c);
+      speak(LSN_COLOURS[c].label);
+      window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:c.replace(/-/g,'_').toUpperCase()+'_TAPPED'}}));
+    });
     pal.appendChild(sw);
   });
 })();
@@ -144,3 +150,17 @@ function handleSlot(slot){
 el('lsn-slot-a').addEventListener('click',function(){handleSlot('a');});
 el('lsn-slot-b').addEventListener('click',function(){handleSlot('b');});
 makeInteractive(el('lsn-result'),function(){[getMixResult()].filter(Boolean).forEach(function(c){speak(c.label);});});
+
+window.addEventListener('page:control',function(e){
+  ({
+    'HIDE_COLOUR_WHEEL':function(){var c=el('wheel-svg').parentElement;if(c)c.style.display='none';},
+    'HIDE_MIXER':function(){var m=el('lsn-mixer');if(m)m.style.display='none';},
+    'LOCK_SLOT_A':function(){_slotALocked=true;},
+    'LOCK_SLOT_B':function(){_slotBLocked=true;},
+    'PAGE_CONTROL_RESET':function(){
+      var c=el('wheel-svg').parentElement;if(c)c.style.display='';
+      var m=el('lsn-mixer');if(m)m.style.display='';
+      _slotALocked=false;_slotBLocked=false;
+    }
+  }[e.detail.type]||function(){})();
+});

@@ -1,0 +1,20 @@
+{
+  "id": "colour-wheel-exercise-warm",
+  "title": "Find Warm Colours",
+  "number": 4,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-families",
+    "ead.colour-recognition",
+    "cl.listening"
+  ],
+  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER"],
+  "steps": [
+    {
+      "text": "Find all the warm colours.",
+      "expect": ["RED_TAPPED", "ORANGE_TAPPED", "YELLOW_TAPPED", "RED_ORANGE_TAPPED", "YELLOW_ORANGE_TAPPED", "RED_PURPLE_TAPPED"],
+      "feedback": "You found all the warm colours!"
+    }
+  ]
+}
