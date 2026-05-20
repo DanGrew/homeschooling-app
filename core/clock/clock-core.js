@@ -34,6 +34,23 @@ export function nextDegrees(fromHour, toHour) {
   return delta <= 0 ? delta + 360 : delta;
 }
 
+export function parseTime(timeStr) {
+  var parts = timeStr.split(':');
+  return { hour: parseInt(parts[0], 10), minute: parseInt(parts[1], 10) };
+}
+
+export function numeralToMinuteDeg(n) {
+  return (n % 12) * 30;
+}
+
+export function nextMinuteDeg(fromMin, toMin) {
+  if (fromMin === toMin) return 0;
+  var from = fromMin / 60 * 360;
+  var to   = toMin   / 60 * 360;
+  var delta = to - from;
+  return delta < 0 ? delta + 360 : delta;
+}
+
 export function generateChoices(presets, correctIdx, n) {
   var indices = [correctIdx];
   var pool = presets.map(function(_, i) { return i; }).filter(function(i) { return i !== correctIdx; });
