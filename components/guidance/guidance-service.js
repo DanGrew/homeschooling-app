@@ -83,7 +83,10 @@ GuidanceService.prototype.start = function(lesson) {
       [1].filter(function() { return req === self._startReq; }).forEach(function() {
         self._lesson = data;
         self._stepIdx = 0;
-        window.dispatchEvent(new CustomEvent('guidance:start'));
+        window.dispatchEvent(new CustomEvent('guidance:start', { detail: { lesson: data } }));
+        (data.pageControls || []).forEach(function(ctrl) {
+          window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));
+        });
         self._showStep();
       });
     });
@@ -94,6 +97,7 @@ GuidanceService.prototype.stop = function() {
   this._overlay.hide();
   stop();
   window.dispatchEvent(new CustomEvent('guidance:stop'));
+  window.dispatchEvent(new CustomEvent('page:control', { detail: { type: 'PAGE_CONTROL_RESET' } }));
 };
 
 GuidanceService.prototype.complete = function() {
@@ -146,6 +150,9 @@ GuidanceService.prototype._guideSrc = function() {
 GuidanceService.prototype._showStep = function() {
   this._collected = [];
   var step = this._lesson.steps[this._stepIdx];
+  (step.pageControls || []).forEach(function(ctrl) {
+    window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));
+  });
   SHOW_STEP[String(!step.text)](this, step);
 };
 

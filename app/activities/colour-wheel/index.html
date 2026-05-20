@@ -18,7 +18,7 @@
     <svg id="wheel-svg" viewBox="0 0 300 300" style="width:100%;height:100%;max-width:320px;max-height:320px;"></svg>
   </div>
   <div style="flex-shrink:0;background:#fff;border-top:2px solid #eee;padding:14px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;">
-    <div style="display:flex;align-items:center;gap:10px;">
+    <div id="lsn-mixer" style="display:flex;align-items:center;gap:10px;">
       <div style="display:flex;flex-direction:column;align-items:center;gap:3px;">
         <div id="lsn-slot-a" style="width:72px;height:72px;border-radius:50%;border:4px solid #ddd;background:#f0f0f0;cursor:pointer;"></div>
         <span id="lsn-label-a" style="font-size:0.8em;color:#bbb;font-weight:bold;">A</span>
@@ -57,7 +57,13 @@
     {id:'colour-wheel-lesson-make_indigo',number:13,title:'Make Indigo'},
     {id:'colour-wheel-lesson-make_magenta',number:14,title:'Make Magenta'}
   ];
-  window.EXERCISES=[];
+  window.EXERCISES=[
+    {id:'colour-wheel-exercise-primary',number:1,title:'Find Primary Colours'},
+    {id:'colour-wheel-exercise-secondary',number:2,title:'Find Secondary Colours'},
+    {id:'colour-wheel-exercise-tertiary',number:3,title:'Find Tertiary Colours'},
+    {id:'colour-wheel-exercise-warm',number:4,title:'Find Warm Colours'},
+    {id:'colour-wheel-exercise-cool',number:5,title:'Find Cool Colours'}
+  ];
 </script>
 <script src="../../../components/menu.js" defer></script>
 <script type="module" src="../../../ui/colour-wheel/colour-wheel-ui.js"></script>

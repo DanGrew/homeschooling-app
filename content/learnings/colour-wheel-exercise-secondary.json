@@ -1,0 +1,19 @@
+{
+  "id": "colour-wheel-exercise-secondary",
+  "title": "Find Secondary Colours",
+  "number": 2,
+  "guide": "cat",
+  "source": "Colour Wheel",
+  "criteria": [
+    "ead.colour-recognition",
+    "cl.listening"
+  ],
+  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER"],
+  "steps": [
+    {
+      "text": "Find all the secondary colours.",
+      "expect": ["ORANGE_TAPPED", "GREEN_TAPPED", "PURPLE_TAPPED"],
+      "feedback": "You found all the secondary colours!"
+    }
+  ]
+}

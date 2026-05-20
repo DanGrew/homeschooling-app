@@ -24,7 +24,7 @@ test('games popout shows Primary and Secondary Colours links', async ({ page }) 
 test('page loads with colour wheel and palette', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('#wheel-svg path')).toHaveCount(12)
-  await expect(page.locator('#lsn-palette div')).toHaveCount(6)
+  await expect(page.locator('#lsn-palette div')).toHaveCount(12)
 })
 
 test('clicking a swatch selects it', async ({ page }) => {
@@ -175,6 +175,82 @@ test('close button stops lesson and hides overlay', async ({ page }) => {
   await expect(page.locator('#guidance-overlay')).toBeVisible()
   await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
+})
+
+async function startExercise(page, idx) {
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-exercise-btn').click()
+  await page.locator('.nav-exercise-item').nth(idx || 0).click()
+}
+
+test('exercise button is visible in nav', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.nav-exercise-btn')).toBeVisible()
+})
+
+test('exercise popout shows 5 exercises', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.nav-exercise-btn').click()
+  await expect(page.locator('.nav-exercise-item')).toHaveCount(5)
+})
+
+test('exercise popout shows correct titles', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.nav-exercise-btn').click()
+  await expect(page.locator('.nav-exercise-item').nth(0)).toContainText('Find Primary Colours')
+  await expect(page.locator('.nav-exercise-item').nth(4)).toContainText('Find Cool Colours')
+})
+
+test('starting exercise hides colour wheel', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await expect(page.locator('#wheel-svg')).not.toBeVisible()
+})
+
+test('starting exercise hides mixer', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await expect(page.locator('#lsn-mixer')).not.toBeVisible()
+})
+
+test('starting exercise shows guidance overlay with task text', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await expect(page.locator('#guidance-overlay')).toContainText('Find all the primary colours')
+})
+
+test('palette swatch tap fires guidance event', async ({ page }) => {
+  await page.goto(URL)
+  await page.evaluate(() => { window.__lastGuidanceEvent = null; window.addEventListener('guidance:event', function(e) { window.__lastGuidanceEvent = e.detail.type; }); })
+  await page.locator('#lsn-sw-red').click()
+  const type = await page.evaluate(() => window.__lastGuidanceEvent)
+  expect(type).toBe('RED_TAPPED')
+})
+
+test('tertiary swatch tap fires correct guidance event', async ({ page }) => {
+  await page.goto(URL)
+  await page.evaluate(() => { window.__lastGuidanceEvent = null; window.addEventListener('guidance:event', function(e) { window.__lastGuidanceEvent = e.detail.type; }); })
+  await page.locator('#lsn-sw-red-orange').click()
+  const type = await page.evaluate(() => window.__lastGuidanceEvent)
+  expect(type).toBe('RED_ORANGE_TAPPED')
+})
+
+test('completing primary exercise shows completion feedback', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'RED_TAPPED')
+  await fire(page, 'YELLOW_TAPPED')
+  await fire(page, 'BLUE_TAPPED')
+  await expect(page.locator('#guidance-overlay')).toContainText('found all the primary colours')
+})
+
+test('stopping exercise restores wheel and mixer', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
+  await expect(page.locator('#wheel-svg')).toBeVisible()
+  await expect(page.locator('#lsn-mixer')).toBeVisible()
 })
 
 test('completing a lesson records a learning event in IndexedDB', async ({ page }) => {
