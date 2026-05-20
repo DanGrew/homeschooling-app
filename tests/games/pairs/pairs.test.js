@@ -168,6 +168,65 @@ test('passplay handover shows again after a match', async ({ page }) => {
   await expect(page.getByTestId('pairs-handover')).toBeVisible({ timeout: 3000 })
 })
 
+test('1 player button visible', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await expect(page.getByTestId('player-count-1')).toBeVisible()
+})
+
+test('selecting 1 player shows only one player panel', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('player-count-1').click()
+  await expect(page.getByTestId('player-panel-0')).toBeVisible()
+  await expect(page.getByTestId('player-panel-1')).toBeHidden()
+})
+
+test('1 player game starts after single avatar selected', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('player-count-1').click()
+  await page.getByTestId('avatar-0-cat').click()
+  await expect(page.getByTestId('pairs-start-btn')).toBeEnabled()
+  await page.getByTestId('pairs-start-btn').click()
+  await expect(page.locator('#pairs-game')).toBeVisible()
+})
+
+test('1 player game renders grid and tray', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('player-count-1').click()
+  await page.getByTestId('avatar-0-cat').click()
+  await page.getByTestId('pairs-start-btn').click()
+  await expect(page.getByTestId('pairs-grid')).toBeVisible()
+  await expect(page.getByTestId('pairs-trays')).toBeVisible()
+})
+
+test('1 player summary shows after all pairs matched', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('player-count-1').click()
+  await page.getByTestId('grid-size-16').click()
+  await page.getByTestId('avatar-0-cat').click()
+  await page.getByTestId('pairs-start-btn').click()
+
+  const cards = await page.locator('[data-testid^="card-"]').all()
+  const contents = await Promise.all(cards.map(function(c) { return c.getAttribute('data-content'); }))
+  var contentMap = {}
+  contents.forEach(function(id, i) {
+    if (!contentMap[id]) contentMap[id] = []
+    contentMap[id].push(i)
+  })
+  for (var id in contentMap) {
+    var pair = contentMap[id]
+    await page.getByTestId('card-' + pair[0]).click()
+    await page.getByTestId('card-' + pair[1]).click()
+    await page.waitForTimeout(100)
+  }
+
+  await expect(page.locator('#pairs-summary')).toBeVisible({ timeout: 5000 })
+})
+
 test('play again returns to setup', async ({ page }) => {
   await page.goto(URL)
   await page.waitForLoadState('networkidle')

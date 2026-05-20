@@ -293,6 +293,52 @@ describe('resolveFlip', () => {
   });
 });
 
+describe('1-player mode', () => {
+  function solo(contentSet) {
+    return createGame([{ id: 'p0', name: 'Alice' }], 16, contentSet || ['apple', 'banana']);
+  }
+
+  it('creates game with one player', () => {
+    expect(solo().players).toHaveLength(1);
+  });
+
+  it('turn stays at 0 after match', () => {
+    const s = solo(['apple']);
+    const [first, second] = matchingPair(s);
+    const s2 = flipCard(flipCard(s, first).state, second).state;
+    expect(s2.turnIndex).toBe(0);
+  });
+
+  it('pair credited to solo player', () => {
+    const s = solo(['apple']);
+    const [first, second] = matchingPair(s);
+    const s2 = flipCard(flipCard(s, first).state, second).state;
+    expect(s2.players[0].pairs).toContain('apple');
+  });
+
+  it('turn stays at 0 after mismatch resolves', () => {
+    const s = solo();
+    const [first, second] = mismatchedPair(s);
+    const resolving = flipCard(flipCard(s, first).state, second).state;
+    expect(resolveFlip(resolving).state.turnIndex).toBe(0);
+  });
+
+  it('turn_start event references solo player', () => {
+    const s = solo(['apple', 'banana']);
+    const [first, second] = matchingPair(s);
+    const { events } = flipCard(flipCard(s, first).state, second);
+    const ev = events.find(function(e) { return e.type === 'turn_start'; });
+    expect(ev.data.playerId).toBe('p0');
+  });
+
+  it('game completes when all pairs found', () => {
+    const s = solo(['apple']);
+    const [first, second] = matchingPair(s);
+    const s2 = flipCard(flipCard(s, first).state, second).state;
+    expect(s2.phase).toBe('complete');
+  });
+});
+
 describe('getPairCounts', () => {
   it('returns 0 pairs initially', () => {
     getPairCounts(game()).forEach(function(c) { expect(c.count).toBe(0); });
