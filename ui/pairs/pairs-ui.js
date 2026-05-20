@@ -74,9 +74,10 @@ function buildCountSection(playerCount, onChange) {
   label.textContent = 'How many players?';
   pairsMakeSpeak(label, label.textContent);
   section.appendChild(label);
-  [2, 3].forEach(function(n) {
+  var PAIRS_COUNT_LABEL = { 1: '1 player', 2: '2 players', 3: '3 players' };
+  [1, 2, 3].forEach(function(n) {
     var btn = document.createElement('button');
-    btn.textContent = n + ' players';
+    btn.textContent = PAIRS_COUNT_LABEL[n];
     btn.className = 'pairs-count-btn' + PAIRS_SEL[String(playerCount === n)];
     btn.setAttribute('data-testid', 'player-count-' + n);
     btn.addEventListener('click', function() { onChange({ playerCount: n }); });
@@ -226,12 +227,18 @@ function buildStartButton(cfg, onStart) {
 
 // arch: allow-pure-fn
 function pairsGameLayoutKey(state, mode) {
+  var countMap = { 1: '1p' };
   var modeIs2p = state.players.length === 2;
   var keyMap = { passplay: 'passplay', 'true': '2p', 'false': '3p' };
-  return [keyMap[mode]].filter(Boolean).concat([keyMap[String(modeIs2p)]])[0];
+  return [countMap[state.players.length]].filter(Boolean)
+    .concat([[keyMap[mode]].filter(Boolean).concat([keyMap[String(modeIs2p)]])[0]])[0];
 }
 
 var PAIRS_GAME_RENDERERS = {
+  '1p': function(container, state, onFlip) {
+    container.appendChild(buildGrid(state, onFlip));
+    container.appendChild(buildPlayerTraySection(state, 0, 'pairs-trays'));
+  },
   passplay: function(container, state, onFlip) {
     container.appendChild(buildPlayerTraySection(state, state.turnIndex, 'pairs-trays'));
     container.appendChild(buildGrid(state, onFlip));
