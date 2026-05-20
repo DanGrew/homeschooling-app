@@ -245,6 +245,27 @@ test('completing primary exercise shows completion feedback', async ({ page }) =
   await expect(page.locator('#guidance-overlay')).toContainText('found all the primary colours')
 })
 
+test('exercise shows 3 empty cross boxes on start', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  const crosses = await page.locator('#guidance-overlay span').evaluateAll(spans =>
+    spans.filter(s => s.style.borderColor.includes('187') || s.textContent === '').length
+  )
+  expect(crosses).toBeGreaterThanOrEqual(3)
+})
+
+test('1 wrong tap fills first cross box red', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_ONE')
+  const filledCross = await page.locator('#guidance-overlay span').evaluateAll(spans =>
+    spans.filter(s => s.textContent === '\u2717').length
+  )
+  expect(filledCross).toBe(1)
+})
+
 test('3 wrong taps trigger failure overlay with amber background', async ({ page }) => {
   await page.goto(URL)
   await startExercise(page)

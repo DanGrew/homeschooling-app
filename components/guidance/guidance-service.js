@@ -28,7 +28,7 @@ var SHOW_STEP = {
     var text = _resolveText(step.text);
     svc._overlay.show(
       svc._guideSrc(),
-      { text: text, auto: step.auto, success: step.success, dots: Array.isArray(step.expect) ? step.expect.length : 0, badge: step.badge },
+      { text: text, auto: step.auto, success: step.success, dots: Array.isArray(step.expect) ? step.expect.length : 0, failDots: step.maxFailures || 0, badge: step.badge },
       svc._stepIdx + 1, svc._lesson.steps.length,
       function() { svc._advance(); },
       function() { interrupt(text); },
@@ -136,6 +136,7 @@ GuidanceService.prototype._handle = function(type) {
       }
     } else if (step.expect.indexOf(type) === -1 && step.maxFailures) {
       self._failureCount++;
+      self._overlay.setFailureDots(self._failureCount, step.maxFailures);
       FAILURE_ACTION[String(self._failureCount >= step.maxFailures)](self, step);
     }
   } else {
