@@ -245,6 +245,22 @@ test('completing primary exercise shows completion feedback', async ({ page }) =
   await expect(page.locator('#guidance-overlay')).toContainText('found all the primary colours')
 })
 
+test('starting exercise shuffles palette but all swatches remain', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await expect(page.locator('#lsn-palette div')).toHaveCount(12)
+  await expect(page.locator('#lsn-sw-red')).toBeAttached()
+  await expect(page.locator('#lsn-sw-red-orange')).toBeAttached()
+})
+
+test('stopping exercise restores palette to original order', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
+  const firstSwatchId = await page.locator('#lsn-palette div').first().getAttribute('id')
+  expect(firstSwatchId).toBe('lsn-sw-red')
+})
+
 test('exercise shows 3 empty cross boxes on start', async ({ page }) => {
   await page.goto(URL)
   await startExercise(page)

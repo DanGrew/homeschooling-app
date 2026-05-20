@@ -9,7 +9,7 @@
     "ead.colour-recognition",
     "cl.listening"
   ],
-  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER"],
+  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER", "SHUFFLE_PALETTE"],
   "steps": [
     {
       "text": "Find all the cool colours.",
