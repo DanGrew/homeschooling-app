@@ -112,15 +112,19 @@ makeInteractive(document.getElementById('digital-12h'),     function() { speak(c
 makeInteractive(document.getElementById('digital-24h'),     function() { speak(currentSpoken24); });
 makeInteractive(document.getElementById('clock-container'), function() { speak(currentSpoken); });
 
+// arch: allow-pure-fn
+function presetHour(preset) { return parseInt(preset.time.split(':')[0], 10); }
+
 function pressPreset(preset) {
-  totalDeg += nextDegrees(currentHour, preset.hour);
-  currentHour = preset.hour;
-  currentSpoken = preset.spoken;
-  currentSpoken24 = preset.spoken24;
+  var hour = presetHour(preset);
+  totalDeg += nextDegrees(currentHour, hour);
+  currentHour = hour;
+  currentSpoken = preset.spoken || preset.label;
+  currentSpoken24 = preset.spoken24 || preset.time;
   setHandDeg(totalDeg, 0);
-  skyRender(hourToSky(preset.hour));
-  digitalRender(preset.hour);
-  emit('PRESET_' + preset.label.toUpperCase() + '_SELECTED');
+  skyRender(hourToSky(hour));
+  digitalRender(hour);
+  emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
 fetch('../../../content/clock/presets.json')

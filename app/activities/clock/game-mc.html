@@ -101,14 +101,18 @@ var CORRECT = {
   }
 };
 
+// arch: allow-pure-fn
+function presetHour(preset) { return parseInt(preset.time.split(':')[0], 10); }
+
 function showPreset(preset) {
-  totalDeg += nextDegrees(currentHour, preset.hour);
-  currentHour = preset.hour;
-  currentSpoken = preset.spoken;
-  currentSpoken24 = preset.spoken24;
+  var hour = presetHour(preset);
+  totalDeg += nextDegrees(currentHour, hour);
+  currentHour = hour;
+  currentSpoken = preset.spoken || preset.label;
+  currentSpoken24 = preset.spoken24 || preset.time;
   setHandDeg(totalDeg, 0);
-  skyRender(hourToSky(preset.hour));
-  digitalRender(preset.hour);
+  skyRender(hourToSky(hour));
+  digitalRender(hour);
 }
 
 function nextRound() {

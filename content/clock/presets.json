@@ -1,13 +1,13 @@
 [
-  { "label": "Morning",   "hour": 7,  "emoji": "🌅", "spoken": "Seven o'clock in the morning",    "spoken24": "Oh seven hundred"    },
-  { "label": "Work",      "hour": 8,  "emoji": "💼", "spoken": "Eight o'clock in the morning",    "spoken24": "Oh eight hundred"    },
-  { "label": "Breakfast", "hour": 10, "emoji": "🍳", "spoken": "Ten o'clock in the morning",      "spoken24": "Ten hundred"         },
-  { "label": "Noon",      "hour": 12, "emoji": "🌞", "spoken": "Twelve o'clock, noon",             "spoken24": "Twelve hundred"      },
-  { "label": "Lunch",     "hour": 13, "emoji": "🥪", "spoken": "One o'clock in the afternoon",    "spoken24": "Thirteen hundred"    },
-  { "label": "Afternoon", "hour": 15, "emoji": "⛅", "spoken": "Three o'clock in the afternoon",  "spoken24": "Fifteen hundred"     },
-  { "label": "Dinner",    "hour": 18, "emoji": "🍽️", "spoken": "Six o'clock in the evening",      "spoken24": "Eighteen hundred"    },
-  { "label": "Pudding",   "hour": 19, "emoji": "🍮", "spoken": "Seven o'clock in the evening",    "spoken24": "Nineteen hundred"    },
-  { "label": "Bedtime",   "hour": 21, "emoji": "🛏️", "spoken": "Nine o'clock at night",            "spoken24": "Twenty-one hundred"  },
-  { "label": "Nighttime", "hour": 22, "emoji": "🌙", "spoken": "Ten o'clock at night",             "spoken24": "Twenty-two hundred"  },
-  { "label": "Midnight",  "hour": 0,  "emoji": "🌃", "spoken": "Twelve o'clock, midnight",         "spoken24": "Zero zero hundred"   }
+  { "id": "morning",   "label": "Morning",   "time": "07:00", "tags": ["time-of-day", "morning"], "emoji": "🌅", "spoken": "Seven o'clock in the morning",   "spoken24": "Oh seven hundred"   },
+  { "id": "work",      "label": "Work",      "time": "08:00", "tags": ["time-of-day", "morning"], "emoji": "💼", "spoken": "Eight o'clock in the morning",   "spoken24": "Oh eight hundred"   },
+  { "id": "breakfast", "label": "Breakfast", "time": "10:00", "tags": ["time-of-day", "morning"], "emoji": "🍳", "spoken": "Ten o'clock in the morning",     "spoken24": "Ten hundred"        },
+  { "id": "noon",      "label": "Noon",      "time": "12:00", "tags": ["time-of-day", "midday"],  "emoji": "🌞", "spoken": "Twelve o'clock, noon",           "spoken24": "Twelve hundred"     },
+  { "id": "lunch",     "label": "Lunch",     "time": "13:00", "tags": ["time-of-day", "afternoon"],"emoji": "🥪", "spoken": "One o'clock in the afternoon",  "spoken24": "Thirteen hundred"   },
+  { "id": "afternoon", "label": "Afternoon", "time": "15:00", "tags": ["time-of-day", "afternoon"],"emoji": "⛅", "spoken": "Three o'clock in the afternoon","spoken24": "Fifteen hundred"    },
+  { "id": "dinner",    "label": "Dinner",    "time": "18:00", "tags": ["time-of-day", "evening"], "emoji": "🍽️", "spoken": "Six o'clock in the evening",    "spoken24": "Eighteen hundred"   },
+  { "id": "pudding",   "label": "Pudding",   "time": "19:00", "tags": ["time-of-day", "evening"], "emoji": "🍮", "spoken": "Seven o'clock in the evening",  "spoken24": "Nineteen hundred"   },
+  { "id": "bedtime",   "label": "Bedtime",   "time": "21:00", "tags": ["time-of-day", "night"],   "emoji": "🛏️", "spoken": "Nine o'clock at night",          "spoken24": "Twenty-one hundred" },
+  { "id": "nighttime", "label": "Nighttime", "time": "22:00", "tags": ["time-of-day", "night"],   "emoji": "🌙", "spoken": "Ten o'clock at night",           "spoken24": "Twenty-two hundred" },
+  { "id": "midnight",  "label": "Midnight",  "time": "00:00", "tags": ["time-of-day", "night"],   "emoji": "🌃", "spoken": "Twelve o'clock, midnight",       "spoken24": "Zero zero hundred"  }
 ]
