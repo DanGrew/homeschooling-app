@@ -114,13 +114,15 @@ makeInteractive(document.getElementById('clock-container'), function() { speak(c
 
 // arch: allow-pure-fn
 function presetHour(preset) { return parseInt(preset.time.split(':')[0], 10); }
+var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
+var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
 
 function pressPreset(preset) {
   var hour = presetHour(preset);
   totalDeg += nextDegrees(currentHour, hour);
   currentHour = hour;
-  currentSpoken = preset.spoken || preset.label;
-  currentSpoken24 = preset.spoken24 || preset.time;
+  currentSpoken   = PRESET_SPOKEN[String(!!preset.spoken)](preset);
+  currentSpoken24 = PRESET_SPOKEN24[String(!!preset.spoken24)](preset);
   setHandDeg(totalDeg, 0);
   skyRender(hourToSky(hour));
   digitalRender(hour);
