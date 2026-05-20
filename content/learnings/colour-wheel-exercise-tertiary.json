@@ -9,11 +9,13 @@
     "cl.topic-vocabulary",
     "cl.listening"
   ],
-  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER"],
+  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER", "SHUFFLE_PALETTE"],
   "steps": [
     {
       "text": "Find all the tertiary colours.",
       "expect": ["RED_ORANGE_TAPPED", "YELLOW_ORANGE_TAPPED", "YELLOW_GREEN_TAPPED", "BLUE_GREEN_TAPPED", "BLUE_PURPLE_TAPPED", "RED_PURPLE_TAPPED"],
+      "maxFailures": 3,
+      "failureFeedback": "Not quite — try again!",
       "feedback": "You found all the tertiary colours!"
     }
   ]

@@ -2,8 +2,8 @@ import { makeLongPress } from '../../ui/shared/long-press.js';
 import { WordBubble } from './word-bubble.js';
 
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
-var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };
-var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222'    };
+var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8', 'failure': '#FAD7A0' };
+var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222',    'failure': '#222'    };
 var BUBBLE_KEY    = { 'true-true': 'success', 'true-false': 'success', 'false-true': 'auto', 'false-false': 'expect' };
 var SUCCESS_TEXT  = { 'true': function(t) { return '\u2B50 ' + t; }, 'false': function(t) { return t; } };
 var BUILD_ACTION  = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
@@ -13,6 +13,7 @@ export function GuidanceOverlay() {
   this._bubbleEl = null;
   this._textEl = null;
   this._dotsEl = null;
+  this._failDotsEl = null;
   this._progressEl = null;
   this._nextBtn = null;
   this._charEl = null;
@@ -105,8 +106,13 @@ GuidanceOverlay.prototype._build = function(onStop) {
   dots.style.cssText = 'display:none;flex-direction:row;gap:8px;justify-content:center;padding-top:4px;';
   this._dotsEl = dots;
 
+  var failDots = document.createElement('div');
+  failDots.style.cssText = 'display:none;flex-direction:row;gap:8px;justify-content:center;padding-top:4px;';
+  this._failDotsEl = failDots;
+
   body.appendChild(text);
   body.appendChild(dots);
+  body.appendChild(failDots);
   body.appendChild(footer);
   bubble.appendChild(charWrap);
   bubble.appendChild(body);
@@ -129,6 +135,7 @@ GuidanceOverlay.prototype.show = function(guideSrc, step, idx, total, onNext, on
   this._nextBtn.style.display = AUTO_DISPLAY[String(showNext)];
   this._nextBtn.classList.toggle('speakable', showNext);
   this._renderDots(step.dots || 0, 0);
+  this._renderFailDots(step.failDots || 0, 0);
   var wb = this._wordBubble;
   [wb].filter(Boolean).forEach(function() { step.badge ? wb.show(step.badge) : wb.hide(); });
   this._el.style.display = '';
@@ -147,8 +154,40 @@ GuidanceOverlay.prototype._renderDots = function(total, ticked) {
 };
 
 GuidanceOverlay.prototype.setDots = function(ticked, total) {
-  [this._dotsEl].filter(Boolean).forEach(function() {});
   this._renderDots(total, ticked);
+};
+
+GuidanceOverlay.prototype._renderFailDots = function(total, crossed) {
+  this._failDotsEl.innerHTML = '';
+  this._failDotsEl.style.display = total > 0 ? 'flex' : 'none';
+  for (var i = 0; i < total; i++) {
+    var box = document.createElement('span');
+    var filled = i < crossed;
+    box.style.cssText = 'width:18px;height:18px;border-radius:4px;border:2px solid ' + (filled ? '#E74C3C' : '#bbb') + ';background:' + (filled ? '#E74C3C' : 'transparent') + ';display:inline-flex;align-items:center;justify-content:center;transition:background 0.2s,border-color 0.2s;box-sizing:border-box;font-size:0.85em;color:#fff;font-weight:bold;';
+    box.textContent = filled ? '\u2717' : '';
+    this._failDotsEl.appendChild(box);
+  }
+};
+
+GuidanceOverlay.prototype.setFailureDots = function(crossed, total) {
+  this._renderFailDots(total, crossed);
+};
+
+GuidanceOverlay.prototype.showFailure = function(guideSrc, text, onStop) {
+  BUILD_ACTION[String(!!this._el)](this, onStop);
+  this._charEl.src = guideSrc;
+  this._onNext = onStop;
+  this._onReplay = null;
+  this._bubbleEl.style.background = BUBBLE_BG['failure'];
+  this._textEl.style.color = BUBBLE_COLOR['failure'];
+  this._textEl.textContent = text;
+  this._progressEl.textContent = '';
+  this._nextBtn.style.display = '';
+  this._nextBtn.classList.toggle('speakable', true);
+  this._renderDots(0, 0);
+  this._renderFailDots(0, 0);
+  [this._wordBubble].filter(Boolean).forEach(function(wb) { wb.hide(); });
+  this._el.style.display = '';
 };
 
 GuidanceOverlay.prototype.hide = function() {

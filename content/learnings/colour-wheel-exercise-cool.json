@@ -9,11 +9,13 @@
     "ead.colour-recognition",
     "cl.listening"
   ],
-  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER"],
+  "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER", "SHUFFLE_PALETTE"],
   "steps": [
     {
       "text": "Find all the cool colours.",
       "expect": ["BLUE_TAPPED", "GREEN_TAPPED", "PURPLE_TAPPED", "YELLOW_GREEN_TAPPED", "BLUE_GREEN_TAPPED", "BLUE_PURPLE_TAPPED"],
+      "maxFailures": 3,
+      "failureFeedback": "Not quite — try again!",
       "feedback": "You found all the cool colours!"
     }
   ]

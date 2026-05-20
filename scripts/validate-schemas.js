@@ -100,6 +100,12 @@ const MAPPINGS = [
     match: (name) => name === 'colour-wheel.json'
   },
   {
+    label: 'content/learnings',
+    schema: 'content/schemas/content/learnings.schema.json',
+    searchDir: 'content/learnings',
+    match: (name) => name.endsWith('.json')
+  },
+  {
     label: 'content/logic-gates',
     schema: 'content/schemas/content/logic-gates.schema.json',
     searchDir: 'content/logic-gates',

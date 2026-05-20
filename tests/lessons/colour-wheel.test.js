@@ -245,6 +245,88 @@ test('completing primary exercise shows completion feedback', async ({ page }) =
   await expect(page.locator('#guidance-overlay')).toContainText('found all the primary colours')
 })
 
+test('starting exercise shuffles palette but all swatches remain', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await expect(page.locator('#lsn-palette div')).toHaveCount(12)
+  await expect(page.locator('#lsn-sw-red')).toBeAttached()
+  await expect(page.locator('#lsn-sw-red-orange')).toBeAttached()
+})
+
+test('stopping exercise restores palette to original order', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
+  const firstSwatchId = await page.locator('#lsn-palette div').first().getAttribute('id')
+  expect(firstSwatchId).toBe('lsn-sw-red')
+})
+
+test('exercise shows 3 empty cross boxes on start', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  const crosses = await page.locator('#guidance-overlay span').evaluateAll(spans =>
+    spans.filter(s => s.style.borderColor.includes('187') || s.textContent === '').length
+  )
+  expect(crosses).toBeGreaterThanOrEqual(3)
+})
+
+test('1 wrong tap fills first cross box red', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_ONE')
+  const filledCross = await page.locator('#guidance-overlay span').evaluateAll(spans =>
+    spans.filter(s => s.textContent === '\u2717').length
+  )
+  expect(filledCross).toBe(1)
+})
+
+test('3 wrong taps trigger failure overlay with amber background', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_COLOUR_ONE')
+  await fire(page, 'WRONG_COLOUR_TWO')
+  await fire(page, 'WRONG_COLOUR_THREE')
+  const bg = await page.locator('#guidance-overlay').evaluate(el => {
+    const bubble = el.querySelector('div')
+    return bubble ? bubble.style.background : ''
+  })
+  expect(bg).toBe('rgb(250, 215, 160)')
+})
+
+test('failure overlay shows try again text', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_COLOUR_ONE')
+  await fire(page, 'WRONG_COLOUR_TWO')
+  await fire(page, 'WRONG_COLOUR_THREE')
+  await expect(page.locator('#guidance-overlay')).toContainText('try again')
+})
+
+test('2 wrong taps do not trigger failure', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_COLOUR_ONE')
+  await fire(page, 'WRONG_COLOUR_TWO')
+  await expect(page.locator('#guidance-overlay')).toContainText('primary colours')
+})
+
+test('failure overlay next button closes overlay and resets page', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'X1')
+  await fire(page, 'X2')
+  await fire(page, 'X3')
+  await page.locator('#guidance-overlay [data-action="next"]').click()
+  await expect(page.locator('#guidance-overlay')).not.toBeVisible()
+  await expect(page.locator('#wheel-svg')).toBeVisible()
+})
+
 test('stopping exercise restores wheel and mixer', async ({ page }) => {
   await page.goto(URL)
   await startExercise(page)
