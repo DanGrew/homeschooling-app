@@ -45,6 +45,33 @@ See `TESTING.md` for full ways of working. Summary:
 **gh CLI:** not on PATH in bash — always use full path: `"/c/Program Files/GitHub CLI/gh.exe"`
 **Parallel agents:** `gh pr create` is blocked in the agent sandbox — PR creation must always be done from the main session after agents complete.
 
+## Guidance + Page Control Pattern
+
+Activities that use the guidance system (`components/guidance/guidance-service.js`) communicate with the page via two custom events on `window`:
+
+**`guidance:event`** — page → guidance. Fired by the page when the child does something (taps, selects, etc.). Guidance checks against the current step's `expect` and advances if matched.
+```js
+window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'PRESET_WAKE_UP_SELECTED' } }));
+```
+
+**`page:control`** — guidance → page. Fired by guidance to instruct the page to change state. Two sources:
+- `lesson.pageControls[]` — fires once on lesson start
+- `step.pageControls[]` — fires on each step load
+- `PAGE_CONTROL_RESET` — always fires on lesson stop
+
+The page registers a `PAGE_CTRL` map and listens:
+```js
+var PAGE_CTRL = {
+  'HIDE_SOMETHING': function() { ... },
+  'PAGE_CONTROL_RESET': function() { ... }
+};
+window.addEventListener('page:control', function(e) {
+  if (e.detail.type in PAGE_CTRL) PAGE_CTRL[e.detail.type]();
+});
+```
+
+**Rule:** never modify `guidance-service.js` to add new behaviour. All page-specific logic goes in the page's `PAGE_CTRL` map. New controls are just new string keys.
+
 ## Token Efficiency
 
 **Caveman** is installed globally. Use Lite mode by default for collaborative sessions. Use Full/Ultra for pure generation tasks (SVG, HTML, Markdown).
