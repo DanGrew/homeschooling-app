@@ -63,12 +63,18 @@ var NEXT_CB = {
   'false': function(svc) { return function() { svc._advance(); }; }
 };
 
+var FAILURE_ACTION = {
+  'true':  function(svc, step) { svc._showFailure(step.failureFeedback || 'Not quite — try again!'); },
+  'false': function() {}
+};
+
 export function GuidanceService() {
   this._overlay = new GuidanceOverlay();
   this._lesson = null;
   this._stepIdx = 0;
   this._startReq = 0;
   this._collected = [];
+  this._failureCount = 0;
   var self = this;
   window.addEventListener('guidance:event', function(e) { self._handle(e.detail.type); });
 }
@@ -128,6 +134,9 @@ GuidanceService.prototype._handle = function(type) {
       if (self._collected.length === step.expect.length) {
         STEP_REACTION[String(!!step.feedback)](self, step);
       }
+    } else if (step.expect.indexOf(type) === -1 && step.maxFailures) {
+      self._failureCount++;
+      FAILURE_ACTION[String(self._failureCount >= step.maxFailures)](self, step);
     }
   } else {
     [step].filter(function(s) { return s.expect === type; })
@@ -147,8 +156,16 @@ GuidanceService.prototype._guideSrc = function() {
   return window.DICT_BASE + this._lesson.guide + '/' + this._lesson.guide + '.svg';
 };
 
+GuidanceService.prototype._showFailure = function(text) {
+  var self = this;
+  var resolved = _resolveText(text);
+  this._overlay.showFailure(this._guideSrc(), resolved, function() { self.stop(); });
+  setTimeout(function() { interrupt(resolved); }, 0);
+};
+
 GuidanceService.prototype._showStep = function() {
   this._collected = [];
+  this._failureCount = 0;
   var step = this._lesson.steps[this._stepIdx];
   (step.pageControls || []).forEach(function(ctrl) {
     window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));

@@ -13,6 +13,8 @@
     {
       "text": "Find all the secondary colours.",
       "expect": ["ORANGE_TAPPED", "GREEN_TAPPED", "PURPLE_TAPPED"],
+      "maxFailures": 3,
+      "failureFeedback": "Not quite — try again!",
       "feedback": "You found all the secondary colours!"
     }
   ]

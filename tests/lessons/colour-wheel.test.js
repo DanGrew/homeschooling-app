@@ -245,6 +245,51 @@ test('completing primary exercise shows completion feedback', async ({ page }) =
   await expect(page.locator('#guidance-overlay')).toContainText('found all the primary colours')
 })
 
+test('3 wrong taps trigger failure overlay with amber background', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_COLOUR_ONE')
+  await fire(page, 'WRONG_COLOUR_TWO')
+  await fire(page, 'WRONG_COLOUR_THREE')
+  const bg = await page.locator('#guidance-overlay').evaluate(el => {
+    const bubble = el.querySelector('div')
+    return bubble ? bubble.style.background : ''
+  })
+  expect(bg).toBe('rgb(250, 215, 160)')
+})
+
+test('failure overlay shows try again text', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_COLOUR_ONE')
+  await fire(page, 'WRONG_COLOUR_TWO')
+  await fire(page, 'WRONG_COLOUR_THREE')
+  await expect(page.locator('#guidance-overlay')).toContainText('try again')
+})
+
+test('2 wrong taps do not trigger failure', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'WRONG_COLOUR_ONE')
+  await fire(page, 'WRONG_COLOUR_TWO')
+  await expect(page.locator('#guidance-overlay')).toContainText('primary colours')
+})
+
+test('failure overlay next button closes overlay and resets page', async ({ page }) => {
+  await page.goto(URL)
+  await startExercise(page)
+  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
+  await fire(page, 'X1')
+  await fire(page, 'X2')
+  await fire(page, 'X3')
+  await page.locator('#guidance-overlay [data-action="next"]').click()
+  await expect(page.locator('#guidance-overlay')).not.toBeVisible()
+  await expect(page.locator('#wheel-svg')).toBeVisible()
+})
+
 test('stopping exercise restores wheel and mixer', async ({ page }) => {
   await page.goto(URL)
   await startExercise(page)

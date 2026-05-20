@@ -2,8 +2,8 @@ import { makeLongPress } from '../../ui/shared/long-press.js';
 import { WordBubble } from './word-bubble.js';
 
 var AUTO_DISPLAY  = { 'true': '',        'false': 'none'  };
-var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8' };
-var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222'    };
+var BUBBLE_BG     = { 'success': '#2ECC71', 'auto': '#D5F5E3', 'expect': '#D6EAF8', 'failure': '#FAD7A0' };
+var BUBBLE_COLOR  = { 'success': '#fff',    'auto': '#222',    'expect': '#222',    'failure': '#222'    };
 var BUBBLE_KEY    = { 'true-true': 'success', 'true-false': 'success', 'false-true': 'auto', 'false-false': 'expect' };
 var SUCCESS_TEXT  = { 'true': function(t) { return '\u2B50 ' + t; }, 'false': function(t) { return t; } };
 var BUILD_ACTION  = { 'true': function() {}, 'false': function(o, s) { o._build(s); } };
@@ -149,6 +149,22 @@ GuidanceOverlay.prototype._renderDots = function(total, ticked) {
 GuidanceOverlay.prototype.setDots = function(ticked, total) {
   [this._dotsEl].filter(Boolean).forEach(function() {});
   this._renderDots(total, ticked);
+};
+
+GuidanceOverlay.prototype.showFailure = function(guideSrc, text, onStop) {
+  BUILD_ACTION[String(!!this._el)](this, onStop);
+  this._charEl.src = guideSrc;
+  this._onNext = onStop;
+  this._onReplay = null;
+  this._bubbleEl.style.background = BUBBLE_BG['failure'];
+  this._textEl.style.color = BUBBLE_COLOR['failure'];
+  this._textEl.textContent = text;
+  this._progressEl.textContent = '';
+  this._nextBtn.style.display = '';
+  this._nextBtn.classList.toggle('speakable', true);
+  this._renderDots(0, 0);
+  [this._wordBubble].filter(Boolean).forEach(function(wb) { wb.hide(); });
+  this._el.style.display = '';
 };
 
 GuidanceOverlay.prototype.hide = function() {
