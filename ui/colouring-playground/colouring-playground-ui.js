@@ -271,7 +271,7 @@ var MODES=[
     MODES.forEach(function(m){
       var b=document.createElement('button');
       b.setAttribute('data-mode-btn',m.mode);
-      b.style.cssText=modeBtn(m.mode===mode);
+      b.style.cssText=MODE_BTN_ACTIVE[String(m.mode===mode)];
       var icon=document.createElement('span');
       icon.textContent=m.icon;
       var lbl=document.createElement('span');
@@ -283,7 +283,7 @@ var MODES=[
       b.addEventListener('click',function(){
         mode=m.mode;selectedColour=null;
         slot.querySelectorAll('button[data-mode-btn]').forEach(function(x){
-          x.style.cssText=modeBtn(x.getAttribute('data-mode-btn')===mode);
+          x.style.cssText=MODE_BTN_ACTIVE[String(x.getAttribute('data-mode-btn')===mode)];
         });
         [currentPic].filter(Boolean).forEach(renderPicture);
       });
@@ -301,9 +301,6 @@ var MODES=[
     true:'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;background:#F39C12;color:#fff;',
     false:'display:flex;flex-direction:column;align-items:center;width:100%;padding:6px 4px;border:none;border-radius:8px;cursor:pointer;gap:2px;font-size:1.1em;background:none;color:#888;'
   };
-
-  // arch: allow-pure-fn
-  function modeBtn(on){return MODE_BTN_ACTIVE[String(on)];}
 
   buildBasePalette();
   applyLayout();
