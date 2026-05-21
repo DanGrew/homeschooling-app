@@ -1,12 +1,16 @@
-var PAIRS_SIZES = [
-  { size: 16, label: '4\u00d74 \u2014 Easy',   speak: '4 by 4, Easy' },
-  { size: 36, label: '6\u00d76 \u2014 Medium', speak: '6 by 6, Medium' },
-  { size: 64, label: '8\u00d78 \u2014 Hard',   speak: '8 by 8, Hard' }
+var SHOPPING_SIZES = [
+  { size: 16, label: '4\u00d74', speak: '4 by 4' },
+  { size: 25, label: '5\u00d75', speak: '5 by 5' },
+  { size: 36, label: '6\u00d76', speak: '6 by 6' },
+  { size: 49, label: '7\u00d77', speak: '7 by 7' },
+  { size: 64, label: '8\u00d78', speak: '8 by 8' }
 ];
+
+var SHOPPING_FOUND_CLASS = { 'true': ' found', 'false': '' };
 
 // ---- Setup ----
 
-function renderPairsSetup(container, allEntries, animalEntries, onStart) {
+function renderShoppingSetup(container, allEntries, animalEntries, onStart) {
   var availableTags = getAvailableTags(allEntries);
   var cfg = {
     playerCount: 2,
@@ -22,7 +26,7 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
 
   function redraw() {
     container.innerHTML = '';
-    container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
+    container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, animalEntries, function(patch) {
       Object.assign(cfg, patch);
       redraw();
     }, function() { onStart(cfg); }));
@@ -31,9 +35,9 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
   redraw();
 }
 
-// ---- Pairs tray ----
+// ---- Shopping tray ----
 
-function buildPairsTray(state, playerIdx, testId) {
+function buildShoppingTray(state, playerIdx, testId) {
   var p = state.players[playerIdx];
   var wrap = document.createElement('div');
   wrap.className = 'pairs-tray-wrap';
@@ -56,72 +60,82 @@ function buildPairsTray(state, playerIdx, testId) {
   wrap.appendChild(labelDiv);
   cgMakeSpeak(labelDiv, p.name);
 
-  var tray = document.createElement('div');
-  tray.className = 'pairs-tray';
-  tray.setAttribute('data-testid', 'tray-' + p.id);
-  p.pairs.forEach(function(contentId) { tray.appendChild(cgMakeTrayImg(contentId)); });
-  wrap.appendChild(tray);
+  var foundSet = {};
+  p.found.forEach(function(id) { foundSet[id] = true; });
 
+  var tray = document.createElement('div');
+  tray.className = 'shopping-tray';
+  tray.setAttribute('data-testid', 'tray-' + p.id);
+
+  p.list.forEach(function(contentId) {
+    var item = document.createElement('div');
+    item.className = 'shopping-list-item' + SHOPPING_FOUND_CLASS[String(!!foundSet[contentId])];
+    item.setAttribute('data-testid', 'list-item-' + p.id + '-' + contentId);
+    var img = document.createElement('img');
+    img.src = cgImgSrc(contentId);
+    img.alt = contentId;
+    item.appendChild(img);
+    tray.appendChild(item);
+  });
+
+  wrap.appendChild(tray);
   return wrap;
 }
 
 // ---- Game ----
 
-var PAIRS_GAME_RENDERERS = cgMakeGameRenderers(buildPairsTray);
+var SHOPPING_GAME_RENDERERS = cgMakeGameRenderers(buildShoppingTray);
 
-function renderPairsGame(container, state, mode, onFlip) {
+function renderShoppingGame(container, state, mode, onFlip) {
   container.innerHTML = '';
-  PAIRS_GAME_RENDERERS[cgGameLayoutKey(state, mode)](container, state, onFlip);
+  SHOPPING_GAME_RENDERERS[cgGameLayoutKey(state, mode)](container, state, onFlip);
 }
 
 // ---- Incremental updates ----
 
-function pairsApplyReveal(container, cardIndex) {
+function shoppingApplyReveal(container, cardIndex) {
   cgApplyReveal(container, cardIndex);
 }
 
-function pairsApplyMatch(container, cardIndices) {
-  cgApplyMatch(container, cardIndices);
+function shoppingApplyFound(container, cardIndex, playerId, contentId) {
+  cgApplyFound(container, cardIndex);
+  var item = container.querySelector('[data-testid="list-item-' + playerId + '-' + contentId + '"]');
+  [item].filter(Boolean).forEach(function(el) { el.className = 'shopping-list-item found'; });
 }
 
-function pairsApplyMismatch(container, cardIndices) {
-  cgApplyMismatch(container, cardIndices);
+function shoppingApplyMismatch(container, cardIndex) {
+  cgApplySingleMismatch(container, cardIndex);
 }
 
-function pairsApplyTrayUpdate(container, playerId, contentId) {
-  var tray = container.querySelector('[data-testid="tray-' + playerId + '"]');
-  [tray].filter(Boolean).forEach(function(t) { t.appendChild(cgMakeTrayImg(contentId)); });
-}
-
-function pairsApplyTurnChange(container, players, nextTurnIndex) {
+function shoppingApplyTurnChange(container, players, nextTurnIndex) {
   cgApplyTurnChange(container, players, nextTurnIndex);
 }
 
-function pairsFlashInvalid(container, cardIndex) {
+function shoppingFlashInvalid(container, cardIndex) {
   cgFlashInvalid(container, cardIndex);
 }
 
-function pairsMeasureCards(container) {
+function shoppingMeasureCards(container) {
   cgMeasureCards(container);
 }
 
 // ---- Handover ----
 
-function renderPairsHandover(container, playerName, onReady) {
+function renderShoppingHandover(container, playerName, onReady) {
   renderCgHandover(container, playerName, onReady);
 }
 
 // ---- Summary ----
 
-function renderPairsSummary(container, state, onPlayAgain) {
+function renderShoppingSummary(container, state, onPlayAgain) {
   container.innerHTML = '';
   var inner = document.createElement('div');
   inner.className = 'pairs-summary-inner';
 
   var heading = document.createElement('h2');
-  heading.textContent = 'All pairs found!';
+  heading.textContent = 'Shopping done!';
   inner.appendChild(heading);
-  cgSpeak('All pairs found!');
+  cgSpeak('Shopping done!');
 
   state.players.forEach(function(p) {
     var row = document.createElement('div');
@@ -136,7 +150,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
     });
 
     var text = document.createElement('span');
-    text.textContent = p.name + ' \u2014 ' + p.pairs.length + ' pair' + ['s', ''][Number(p.pairs.length === 1)];
+    text.textContent = p.name + ' \u2014 ' + p.found.length + ' / ' + p.list.length + ' found';
     row.appendChild(text);
     cgMakeSpeak(row, text.textContent);
     inner.appendChild(row);
@@ -145,7 +159,7 @@ function renderPairsSummary(container, state, onPlayAgain) {
   var btn = document.createElement('button');
   btn.textContent = 'Play again';
   btn.className = 'pairs-play-again';
-  btn.setAttribute('data-testid', 'pairs-play-again');
+  btn.setAttribute('data-testid', 'shopping-play-again');
   btn.addEventListener('click', onPlayAgain);
   cgMakeSpeak(btn, 'Play again');
   inner.appendChild(btn);
