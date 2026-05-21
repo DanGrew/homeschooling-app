@@ -11,12 +11,15 @@
   window.ACTIVITY_ID = 'clock';
   window.DICT_BASE = '../../../content/dictionary/entries/';
   window.LESSONS = [
-    {id:'count_the_clock',  number:1, title:'Count the Clock'},
-    {id:'find_the_number',  number:2, title:'Find the Number'},
-    {id:'long_and_short',   number:3, title:'Long Hand, Short Hand'},
-    {id:'times_of_day',     number:4, title:'Times of Day'},
-    {id:'morning_to_night', number:5, title:'Morning to Night'},
-    {id:'what_comes_after', number:8, title:'What Comes After?'}
+    {id:'count_the_clock',  number:1,  title:'Count the Clock'},
+    {id:'find_the_number',  number:2,  title:'Find the Number'},
+    {id:'long_and_short',   number:3,  title:'Long Hand, Short Hand'},
+    {id:'clock-lesson-name_the_time', number:4,  title:'Name the Time'},
+    {id:'clock-lesson-sun_and_moon',  number:5,  title:'Sun and Moon'},
+    {id:'clock-lesson-bakers_day',    number:7,  title:"The Baker's Day"},
+    {id:'clock-lesson-farmers_day',   number:8,  title:"The Farmer's Day"},
+    {id:'clock-lesson-doctors_day',   number:9,  title:"The Doctor's Day"},
+    {id:'what_comes_after', number:10, title:'What Comes After?'}
   ];
 </script>
 <script src="../../../components/menu.js" defer></script>
@@ -32,6 +35,8 @@
 #digital{display:flex;gap:16px;align-items:center;}
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
 #digital-24h{border-left:2px solid rgba(255,255,255,0.5);padding-left:16px;}
+#preset-panel{flex:1;display:flex;flex-direction:column;}
+#profile-title{width:100%;text-align:center;font-weight:bold;color:#fff;font-size:clamp(1em,3.5vw,1.3em);padding:6px 8px;cursor:pointer;user-select:none;-webkit-touch-callout:none;}
 #preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
 .preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
@@ -40,7 +45,8 @@
   #clock-panel{flex:0 0 auto;width:100%;}
   #arc-zone{flex:0 0 22%;}
   #clock-content{flex:0 0 auto;padding:8px 16px;}
-  #preset-buttons{flex:0 0 auto;width:100%;padding:8px 16px 16px;align-content:flex-start;}
+  #preset-panel{flex:0 0 auto;width:100%;}
+  #preset-buttons{padding:4px 16px 16px;align-content:flex-start;}
   .preset-btn{width:auto;padding:10px 12px;}
 }
 </style>
@@ -54,6 +60,7 @@
       <div id="sky-moon"></div>
       <div id="arc-zone"></div>
       <div id="clock-content">
+        <div id="profile-title" class="speakable"></div>
         <div id="clock-container"></div>
         <div id="digital">
           <span id="digital-12h">--:-- --</span>
@@ -61,7 +68,9 @@
         </div>
       </div>
     </div>
-    <div id="preset-buttons"></div>
+    <div id="preset-panel">
+      <div id="preset-buttons"></div>
+    </div>
     <div id="multi-choice-container" style="display:none;flex:1;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;"></div>
   </div>
 </div>
@@ -74,6 +83,7 @@ import {makeSpeakable, makeInteractive} from '../../../components/speech/speakab
 import {speak} from '../../../components/speech/speech-ui.js';
 import {GuidanceService} from '../../../components/guidance/guidance-service.js';
 import {renderMultiChoiceOptions} from '../../../ui/clock/choice-ui.js';
+import {buildSimpleFilterBar} from '../../../components/filter-bar/filter-bar-ui.js';
 
 var currentHour = 0;
 var currentMinute = 0;
@@ -82,6 +92,8 @@ var totalMinuteDeg = 0;
 var currentSpoken = 'Twelve o\'clock';
 var currentSpoken24 = 'Twelve hundred';
 var defaultPresets = [];
+var currentPresets = [];
+var presetFilter = null;
 var PAGE_CTRL = {};
 
 function emit(type) {
@@ -156,10 +168,17 @@ function pressPreset(preset) {
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
+var _APPLY_FILTER = {
+  'true':  function(presets) { return presets.filter(function(p) { return p.tags.some(function(t) { return presetFilter.has(t); }); }); },
+  'false': function(presets) { return presets; }
+};
+
 function renderPresetButtons(presets) {
+  currentPresets = presets;
+  var show = _APPLY_FILTER[String(!!presetFilter)](presets);
   var btns = document.getElementById('preset-buttons');
   btns.innerHTML = '';
-  presets.forEach(function(preset) {
+  show.forEach(function(preset) {
     var btn = document.createElement('button');
     btn.className = 'preset-btn';
     btn.textContent = [preset.emoji, preset.label].filter(Boolean).join(' ');
@@ -175,6 +194,7 @@ PAGE_CTRL['SHOW_DIGITAL_DISPLAY'] = function() { document.getElementById('digita
 PAGE_CTRL['HIDE_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = 'hidden'; };
 PAGE_CTRL['SHOW_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = ''; };
 PAGE_CTRL['PAGE_CONTROL_RESET']   = function() {
+  presetFilter = null;
   document.getElementById('digital').style.visibility = '';
   document.getElementById('preset-buttons').style.visibility = '';
   renderPresetButtons(defaultPresets);
@@ -188,6 +208,23 @@ window.addEventListener('page:control', function(e) { PAGE_CTRL[e.detail.type]()
 
 var DEFAULT_PROFILE = 'times_of_day';
 var PROFILE_IDS = ['times_of_day', 'child-day', 'baker', 'farmer', 'doctor'];
+var PROFILE_OPTIONS = [
+  {value: 'times_of_day', label: 'Times of Day', icon: '🕐'},
+  {value: 'child-day',    label: "Child's Day",   icon: '🧒'},
+  {value: 'baker',        label: 'Baker',          icon: '🍞'},
+  {value: 'farmer',       label: 'Farmer',         icon: '🌾'},
+  {value: 'doctor',       label: 'Doctor',         icon: '🏥'}
+];
+
+function buildProfileFilter() {
+  buildSimpleFilterBar(PROFILE_OPTIONS, function(profileId) {
+    PAGE_CTRL['LOAD_PROFILE_' + profileId.toUpperCase().replace(/-/g, '_')]();
+    [PROFILE_OPTIONS.find(function(o) { return o.value === profileId; })].filter(Boolean).forEach(function(o) {
+      profileTitleEl.textContent = o.label;
+    });
+  }, DEFAULT_PROFILE);
+  profileTitleEl.textContent = PROFILE_OPTIONS[0].label;
+}
 
 PROFILE_IDS.forEach(function(id) {
   var key = 'LOAD_PROFILE_' + id.toUpperCase().replace(/-/g, '_');
@@ -206,10 +243,13 @@ fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
     profile.presets.forEach(function(preset) {
       PAGE_CTRL['LOAD_PRESET_' + preset.id.toUpperCase()] = function() { pressPreset(preset); };
     });
+    buildProfileFilter();
   });
 
 var mcContainer = document.getElementById('multi-choice-container');
 var presetButtonsEl = document.getElementById('preset-buttons');
+var profileTitleEl = document.getElementById('profile-title');
+makeInteractive(profileTitleEl, function() { speak(profileTitleEl.textContent); });
 var _profileCache = {};
 
 function _storeProfile(profileId, data, cb) {
@@ -292,10 +332,20 @@ var _GUIDANCE_START_MODE = {
 };
 
 window.addEventListener('guidance:start', function(e) {
+  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.display = 'none'; });
+  profileTitleEl.style.display = 'none';
   [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
+  [e.detail.lesson.filter].filter(Boolean).forEach(function(filter) {
+    presetFilter = new Set([].concat(filter));
+    renderPresetButtons(currentPresets);
+  });
 });
 
 window.addEventListener('guidance:stop', function() {
+  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.display = ''; });
+  profileTitleEl.style.display = '';
+  buildProfileFilter();
+  presetFilter = null;
   presetButtonsEl.style.display = '';
   mcContainer.style.display = 'none';
   mcContainer.innerHTML = '';
