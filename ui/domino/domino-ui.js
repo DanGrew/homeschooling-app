@@ -85,7 +85,7 @@ function buildDominoPlayerPanel(idx, player, animalEntries, allPlayers, onChange
     var btn = document.createElement('button');
     btn.className = 'pairs-avatar-btn' + CG_SEL[String(isSelected)];
     btn.disabled = isTaken;
-    btn.style.opacity = isTaken ? '0.3' : '1';
+    btn.style.opacity = ['1', '0.3'][Number(isTaken)];
     btn.setAttribute('data-testid', 'avatar-' + idx + '-' + entry.id);
     var img = document.createElement('img');
     img.src = cgImgSrc(entry.id);
@@ -95,7 +95,7 @@ function buildDominoPlayerPanel(idx, player, animalEntries, allPlayers, onChange
     btn.addEventListener('click', function() {
       var newPlayers = allPlayers.map(function(p, j) {
         var nameDefault = [p.name, entry.name, entry.id].filter(Boolean)[0];
-        var updates = j === idx ? [{ icon: entry.id, name: nameDefault }] : [];
+        var updates = [{ icon: entry.id, name: nameDefault }].filter(function() { return j === idx; });
         return Object.assign.apply(Object, [{}].concat([p], updates));
       });
       onChange({ players: newPlayers });

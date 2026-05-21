@@ -32,10 +32,12 @@ var setupScreen   = document.getElementById('domino-setup');
 var gameScreen    = document.getElementById('domino-game');
 var summaryScreen = document.getElementById('domino-summary');
 
+var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
   Object.keys(screens).forEach(function(k) {
-    screens[k].className = 'pairs-screen' + (k === name ? ' active' : '');
+    screens[k].className = 'pairs-screen' + DOMINO_SCREEN_ACTIVE[String(k === name)];
   });
 }
 
