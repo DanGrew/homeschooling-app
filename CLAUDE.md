@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## STOP — Read Before Implementing
 
-This repo has tight CI quality checks. Read `TESTING.md` before writing any code.
+Before any implementation:
+1. Pull `main` and create a new branch off it
+2. Read `TESTING.md` — this repo has tight CI quality checks; skipping this causes refactor cycles
 
 ## Project
 
