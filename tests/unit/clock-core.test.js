@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hourToAngles, hourToSky, nextDegrees, generateChoices } from '../../core/clock/clock-core.js'
+import { hourToAngles, hourToSky, nextDegrees, generateChoices, parseTime, numeralToMinuteDeg, nextMinuteDeg } from '../../core/clock/clock-core.js'
 
 describe('hourToAngles', () => {
   it('returns zero degrees for hour 0 (12 o\'clock)', () => {
@@ -136,6 +136,38 @@ describe('nextDegrees', () => {
   it('treats 24h hours correctly (15 same as 3 on clock)', () => {
     expect(nextDegrees(12, 15)).toBe(nextDegrees(12, 3))
   })
+})
+
+describe('parseTime', () => {
+  it('parses hour and minute from HH:MM string', () => {
+    expect(parseTime('07:30')).toEqual({ hour: 7, minute: 30 })
+  })
+  it('handles midnight', () => {
+    expect(parseTime('00:00')).toEqual({ hour: 0, minute: 0 })
+  })
+  it('handles noon with minutes', () => {
+    expect(parseTime('12:45')).toEqual({ hour: 12, minute: 45 })
+  })
+  it('handles hour-only times', () => {
+    expect(parseTime('09:00')).toEqual({ hour: 9, minute: 0 })
+  })
+})
+
+describe('numeralToMinuteDeg', () => {
+  it('numeral 12 returns 0 degrees', () => { expect(numeralToMinuteDeg(12)).toBe(0) })
+  it('numeral 3 returns 90 degrees',  () => { expect(numeralToMinuteDeg(3)).toBe(90) })
+  it('numeral 6 returns 180 degrees', () => { expect(numeralToMinuteDeg(6)).toBe(180) })
+  it('numeral 9 returns 270 degrees', () => { expect(numeralToMinuteDeg(9)).toBe(270) })
+  it('numeral 1 returns 30 degrees',  () => { expect(numeralToMinuteDeg(1)).toBe(30) })
+})
+
+describe('nextMinuteDeg', () => {
+  it('same minute returns 0',                 () => { expect(nextMinuteDeg(15, 15)).toBe(0) })
+  it('0 to 0 returns 0',                      () => { expect(nextMinuteDeg(0, 0)).toBe(0) })
+  it('forward advance returns correct degrees', () => { expect(nextMinuteDeg(0, 30)).toBe(180) })
+  it('15 to 45 forward is 180 degrees',       () => { expect(nextMinuteDeg(15, 45)).toBe(180) })
+  it('crossing 12 returns degrees through 360', () => { expect(nextMinuteDeg(45, 15)).toBe(180) })
+  it('55 min to 0 min (step to 12) is 30 degrees', () => { expect(nextMinuteDeg(55, 0)).toBeCloseTo(30) })
 })
 
 describe('generateChoices', () => {
