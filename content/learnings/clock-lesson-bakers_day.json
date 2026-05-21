@@ -1,0 +1,48 @@
+{
+  "id": "clock-lesson-bakers_day",
+  "title": "The Baker's Day",
+  "number": 7,
+  "guide": "dog",
+  "source": "Clock",
+  "pageControls": ["LOAD_PROFILE_BAKER"],
+  "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
+  "steps": [
+    {
+      "text": "Bakers make bread and cakes for everyone. They start work very, very early — before the sun even comes up!",
+      "badge": "baker",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Four o'clock in the morning! It is still dark. The baker is already hard at work while everyone else is asleep. Press Start baking.",
+      "expect": "PRESET_BAKER_START_SELECTED"
+    },
+    {
+      "text": "After a few hours, the bread is ready. Then the shop opens so people can buy it.",
+      "badge": "then",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Seven o'clock — the sun is up and the shop is open. Fresh bread, ready to go! Press Shop opens!",
+      "expect": "PRESET_BAKER_OPEN_SELECTED"
+    },
+    {
+      "text": "Next comes the busy morning — lots of customers!",
+      "badge": "next",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Ten o'clock — the shop is full! Everyone wants bread for lunch. Press Busy morning.",
+      "expect": "PRESET_BAKER_BUSY_SELECTED"
+    },
+    {
+      "text": "Last of all, the baker closes the shop and goes home to rest.",
+      "badge": "last",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Press Shop closes.",
+      "expect": "PRESET_BAKER_CLOSE_SELECTED",
+      "feedback": "Two o'clock and the baker is done! Start baking, open the shop, busy morning, then home. That is the baker's whole day."
+    }
+  ]
+}
