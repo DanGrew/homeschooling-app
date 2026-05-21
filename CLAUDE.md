@@ -84,7 +84,8 @@ See `TESTING.md` for full ways of working. Summary:
 | Piano lesson | `app/activities/piano/lesson.html` | core/piano, ui/piano |
 | Piano songs | `app/activities/piano/songs.html` | core/piano, ui/piano, content/audio/songs |
 | Puzzle | `app/activities/puzzle/index.html` | core/puzzle, ui/puzzle |
-| Pairs memory | `app/activities/pairs/index.html` | core/pairs, ui/pairs |
+| Pairs memory | `app/activities/pairs/index.html` | core/pairs, ui/pairs, core/card-game, ui/card-game |
+| Shopping game | `app/activities/shopping-game/index.html` | core/shopping-game, ui/shopping-game, core/card-game, ui/card-game |
 | Word lesson | `app/activities/word-lesson/index.html` | ui/word-lesson, components/guidance |
 | Word builder | `app/activities/word-builder/index.html` | core/word-builder, ui/word-builder, components/speech, components/success-banner |
 | Word match | `app/activities/word-match/index.html` | core/word-match, ui/word-match |
@@ -129,8 +130,10 @@ See `TESTING.md` for full ways of working. Summary:
 | `core/match-colour-shape/match-colour-shape-core.js` | Colour+shape matching game logic |
 | `core/move-blocks/move-blocks-core.js` | Block puzzle solver |
 | `core/number-interaction/number-interaction-core.js` | Number recognition/counting |
+| `core/card-game/card-game-engine.js` | Shared card-game engine: shuffle, create, flip, resolve, layout key |
 | `core/pairs/pairs-core.js` | Pairs memory game logic |
-| `core/pairs/pairs-content.js` | Pairs content loader |
+| `core/pairs/pairs-content.js` | Pairs content loader + tag filtering |
+| `core/shopping-game/shopping-game-core.js` | Shopping game: list assignment, flip logic, scoring |
 | `core/pagination/paginator-core.js` | Page navigation logic |
 | `core/piano/piano-core.js` | Note data, song parsing, key mapping |
 | `core/physical/physical-activity-core.js` | Physical activity coordination |
@@ -163,7 +166,9 @@ See `TESTING.md` for full ways of working. Summary:
 | `ui/match-colour-shape/match-colour-shape-ui.js` | Match game UI |
 | `ui/move-blocks/move-blocks-ui.js` | Block puzzle UI |
 | `ui/number-interaction/number-interaction-ui.js` | Number UI |
+| `ui/card-game/card-game-ui.js` | Shared card-game UI: setup sections, grid, cards, trays, handover |
 | `ui/pairs/pairs-ui.js` | Pairs game UI |
+| `ui/shopping-game/shopping-game-ui.js` | Shopping game UI: shopping tray, list items, summary |
 | `ui/piano/piano-ui.js` | Piano keyboard UI |
 | `ui/piano/piano-game-ui.js` | Piano game mode UI |
 | `ui/piano/piano-song-ui.js` | Piano song player UI |
