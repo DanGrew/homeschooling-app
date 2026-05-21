@@ -11,12 +11,15 @@
   window.ACTIVITY_ID = 'clock';
   window.DICT_BASE = '../../../content/dictionary/entries/';
   window.LESSONS = [
-    {id:'count_the_clock',  number:1, title:'Count the Clock'},
-    {id:'find_the_number',  number:2, title:'Find the Number'},
-    {id:'long_and_short',   number:3, title:'Long Hand, Short Hand'},
-    {id:'times_of_day',     number:4, title:'Times of Day'},
-    {id:'morning_to_night', number:5, title:'Morning to Night'},
-    {id:'what_comes_after', number:8, title:'What Comes After?'}
+    {id:'count_the_clock',  number:1,  title:'Count the Clock'},
+    {id:'find_the_number',  number:2,  title:'Find the Number'},
+    {id:'long_and_short',   number:3,  title:'Long Hand, Short Hand'},
+    {id:'name_the_time',    number:4,  title:'Name the Time'},
+    {id:'sun_and_moon',     number:5,  title:'Sun and Moon'},
+    {id:'bakers_day',       number:7,  title:"The Baker's Day"},
+    {id:'farmers_day',      number:8,  title:"The Farmer's Day"},
+    {id:'doctors_day',      number:9,  title:"The Doctor's Day"},
+    {id:'what_comes_after', number:10, title:'What Comes After?'}
   ];
 </script>
 <script src="../../../components/menu.js" defer></script>
@@ -82,6 +85,8 @@ var totalMinuteDeg = 0;
 var currentSpoken = 'Twelve o\'clock';
 var currentSpoken24 = 'Twelve hundred';
 var defaultPresets = [];
+var currentPresets = [];
+var presetFilter = null;
 var PAGE_CTRL = {};
 
 function emit(type) {
@@ -157,9 +162,13 @@ function pressPreset(preset) {
 }
 
 function renderPresetButtons(presets) {
+  currentPresets = presets;
+  var show = presetFilter
+    ? presets.filter(function(p) { return p.tags && p.tags.some(function(t) { return presetFilter.has(t); }); })
+    : presets;
   var btns = document.getElementById('preset-buttons');
   btns.innerHTML = '';
-  presets.forEach(function(preset) {
+  show.forEach(function(preset) {
     var btn = document.createElement('button');
     btn.className = 'preset-btn';
     btn.textContent = [preset.emoji, preset.label].filter(Boolean).join(' ');
@@ -175,6 +184,7 @@ PAGE_CTRL['SHOW_DIGITAL_DISPLAY'] = function() { document.getElementById('digita
 PAGE_CTRL['HIDE_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = 'hidden'; };
 PAGE_CTRL['SHOW_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = ''; };
 PAGE_CTRL['PAGE_CONTROL_RESET']   = function() {
+  presetFilter = null;
   document.getElementById('digital').style.visibility = '';
   document.getElementById('preset-buttons').style.visibility = '';
   renderPresetButtons(defaultPresets);
@@ -293,9 +303,15 @@ var _GUIDANCE_START_MODE = {
 
 window.addEventListener('guidance:start', function(e) {
   [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
+  var filter = e.detail.lesson.filter;
+  if (filter && filter.length) {
+    presetFilter = new Set(filter);
+    if (currentPresets.length) renderPresetButtons(currentPresets);
+  }
 });
 
 window.addEventListener('guidance:stop', function() {
+  presetFilter = null;
   presetButtonsEl.style.display = '';
   mcContainer.style.display = 'none';
   mcContainer.innerHTML = '';

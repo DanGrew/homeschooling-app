@@ -1,0 +1,41 @@
+{
+  "id": "doctors_day",
+  "title": "The Doctor's Day",
+  "number": 9,
+  "guide": "cat",
+  "source": "Clock",
+  "pageControls": ["LOAD_PROFILE_DOCTOR"],
+  "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
+  "steps": [
+    {
+      "text": "Doctors help people who are poorly and make them feel better. They work at a hospital. Press Arrive at hospital!",
+      "badge": "doctor",
+      "expect": "PRESET_DOCTOR_ARRIVE_SELECTED",
+      "feedback": "Eight o'clock — the doctor arrives and gets ready. There are lots of people to help today!"
+    },
+    {
+      "text": "Then the doctor sees patients — people who need help. Press See patients!",
+      "badge": "then",
+      "expect": "PRESET_DOCTOR_MORNING_SELECTED",
+      "feedback": "Ten o'clock — the doctor listens carefully to each person and helps them feel better. That is very important work."
+    },
+    {
+      "text": "After a busy morning, the doctor has a lunch break. Press Lunch break!",
+      "badge": "after",
+      "expect": "PRESET_DOCTOR_LUNCH_SELECTED",
+      "feedback": "One o'clock — even doctors need to eat and rest. Just a short break before the afternoon!"
+    },
+    {
+      "text": "Next, the doctor checks on all the patients in the afternoon. Press Afternoon ward!",
+      "badge": "next",
+      "expect": "PRESET_DOCTOR_AFTERNOON_SELECTED",
+      "feedback": "Three o'clock — the doctor walks around checking everyone is getting better."
+    },
+    {
+      "text": "Last of all, the doctor goes home to rest. Press Go home!",
+      "badge": "last",
+      "expect": "PRESET_DOCTOR_HOME_SELECTED",
+      "feedback": "Six o'clock — the doctor's day is done. Arrive, see patients, lunch, afternoon rounds, then home. Doctors work so hard to help us all!"
+    }
+  ]
+}

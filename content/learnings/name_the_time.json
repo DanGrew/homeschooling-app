@@ -1,0 +1,36 @@
+{
+  "id": "name_the_time",
+  "title": "Name the Time",
+  "number": 4,
+  "guide": "dog",
+  "source": "Clock",
+  "filter": ["named-time"],
+  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
+  "criteria": ["cl.topic-vocabulary", "cl.sequencing-language"],
+  "steps": [
+    {
+      "text": "The time of day has a name. Early in the day, when you wake up, is called morning. Press Wake up!",
+      "badge": "morning",
+      "expect": "PRESET_WAKE_UP_SELECTED",
+      "feedback": "Morning! The sun is low and the sky is bright. It is morning time."
+    },
+    {
+      "text": "When the sun is right at the top of the sky, it is called midday. Press Lunch!",
+      "badge": "midday",
+      "expect": "PRESET_LUNCH_SELECTED",
+      "feedback": "Midday — the sun is at its highest. That is why lunchtime feels so bright!"
+    },
+    {
+      "text": "Later, when the sun starts to go down, it is called evening. Press Dinner!",
+      "badge": "evening",
+      "expect": "PRESET_DINNER_SELECTED",
+      "feedback": "Evening — the sky turns orange and the sun gets low. Evening is dinner time."
+    },
+    {
+      "text": "When it is dark and the moon is out, it is called night. Press Bedtime!",
+      "badge": "night",
+      "expect": "PRESET_BEDTIME_SELECTED",
+      "feedback": "Night time — the moon is out and the stars appear. Morning, midday, evening, night — you know them all!"
+    }
+  ]
+}

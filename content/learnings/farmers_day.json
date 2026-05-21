@@ -1,0 +1,35 @@
+{
+  "id": "farmers_day",
+  "title": "The Farmer's Day",
+  "number": 8,
+  "guide": "dog",
+  "source": "Clock",
+  "pageControls": ["LOAD_PROFILE_FARMER"],
+  "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
+  "steps": [
+    {
+      "text": "Farmers grow food and look after animals so we can eat. They start work very early! First, the animals need feeding. Press Feed the animals!",
+      "badge": "farmer",
+      "expect": "PRESET_FARMER_START_SELECTED",
+      "feedback": "Half past five in the morning! It is nearly dark and the farmer is already up. The animals are hungry and cannot wait!"
+    },
+    {
+      "text": "After feeding the animals, the farmer goes out to work in the fields. Press Work the fields!",
+      "badge": "after",
+      "expect": "PRESET_FARMER_MORNING_SELECTED",
+      "feedback": "Eight o'clock — the sun is up! The farmer is planting, digging, and watering. There is so much to do."
+    },
+    {
+      "text": "At midday, the farmer stops to rest and eat. Press Rest at midday!",
+      "badge": "midday",
+      "expect": "PRESET_FARMER_MIDDAY_SELECTED",
+      "feedback": "Twelve o'clock — time for a rest. Farming is hard work and the farmer needs energy for the afternoon!"
+    },
+    {
+      "text": "Then, as the sun goes down, it is time to bring the animals safely inside. Press Bring animals in!",
+      "badge": "then",
+      "expect": "PRESET_FARMER_EVE_SELECTED",
+      "feedback": "Five o'clock — the animals are safe inside for the night. Feed the animals, work the fields, rest at midday, then home. That is the farmer's day!"
+    }
+  ]
+}
