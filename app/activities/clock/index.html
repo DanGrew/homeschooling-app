@@ -66,7 +66,7 @@
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, shuffle} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
@@ -167,15 +167,6 @@ function loadMCProfile(profileId, cb) {
     });
 }
 
-function shuffled(arr) {
-  var a = arr.slice();
-  for (var i = a.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-  }
-  return a;
-}
-
 var PAGE_CTRL = {
   'PAGE_CONTROL_RESET': function() {},
   'RENDER_MULTI_CHOICE': function() {
@@ -194,7 +185,7 @@ var PAGE_CTRL = {
           return { preset: profile[id], correct: id === step.correct };
         });
       }
-      renderMultiChoiceOptions(mcContainer, shuffled(options), function(tile, isCorrect) {
+      renderMultiChoiceOptions(mcContainer, shuffle(options), function(tile, isCorrect) {
         if (isCorrect) {
           var opt = options.find(function(o) { return o.correct; });
           if (opt && opt.preset) { pressPreset(opt.preset); }
