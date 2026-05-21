@@ -101,13 +101,11 @@ var CORRECT = {
   }
 };
 
-// arch: allow-pure-fn
-function presetHour(preset) { return parseInt(preset.time.split(':')[0], 10); }
 var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
 var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
 
 function showPreset(preset) {
-  var hour = presetHour(preset);
+  var hour = parseInt(preset.time.split(':')[0], 10);
   totalDeg += nextDegrees(currentHour, hour);
   currentHour = hour;
   currentSpoken   = PRESET_SPOKEN[String(!!preset.spoken)](preset);
@@ -129,10 +127,12 @@ function nextRound() {
   );
 }
 
-fetch('../../../content/clock/presets.json')
+var DEFAULT_PROFILE = 'times_of_day';
+
+fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
   .then(function(r) { return r.json(); })
-  .then(function(data) {
-    presets = data;
+  .then(function(profile) {
+    presets = profile.presets;
     nextRound();
   });
 </script>
