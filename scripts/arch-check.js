@@ -263,7 +263,7 @@ if (rule === 'no-md-outside-docs') {
       }
       const ext = path.extname(entry.name).toLowerCase();
       if (ext === '.md' || ext === '.txt') {
-        if (depth === 0 && ALLOWED_ROOT_FILES.has(entry.name)) { exceptions.push(rel); return; }
+        if (depth === 0 && ALLOWED_ROOT_FILES.has(entry.name)) return;
         scanned.push(rel);
         violations.push(`${rel} — .md/.txt files must live under docs/`);
       }
