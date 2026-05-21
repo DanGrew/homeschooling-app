@@ -46,21 +46,12 @@ function findMatches(content, regex) {
 }
 
 let violations = [];
-let exceptions = [];
 let scanned = [];
-
-function hasAllow(content, tag) {
-  return content.includes(`arch: ${tag}`);
-}
 
 if (rule === 'no-dom-in-core') {
   const files = getAllFiles(path.join(ROOT, 'core'));
   files.forEach(file => {
     const content = read(file);
-    if (hasAllow(content, 'allow-dom')) {
-      exceptions.push(file);
-      return;
-    }
     scanned.push(file);
     if (/\bdocument\b/.test(content) || /\bwindow\b/.test(content)) {
       violations.push(`${file} uses DOM globals`);
@@ -72,10 +63,6 @@ if (rule === 'no-ui-imports') {
   const files = getAllFiles(path.join(ROOT, 'core'));
   files.forEach(file => {
     const content = read(file);
-    if (hasAllow(content, 'allow-import')) {
-      exceptions.push(file);
-      return;
-    }
     scanned.push(file);
     if (content.match(/from ['"].*\/ui\//)) {
       violations.push(`${file} imports from /ui`);
@@ -121,7 +108,6 @@ if (rule === 'no-guard-chain') {
   getAllFiles(path.join(ROOT, 'ui'), ['.js']).forEach(file => {
     const content = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(content, 'allow-guard-chain')) { exceptions.push(rel); return; }
     scanned.push(rel);
     checkGuardChain(content.split('\n'), rel);
   });
@@ -129,7 +115,6 @@ if (rule === 'no-guard-chain') {
   getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
     const html = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(html, 'allow-guard-chain')) { exceptions.push(rel); return; }
     extractInlineScripts(html).forEach((script, blockIdx) => {
       const label = `${rel} (block ${blockIdx + 1})`;
       scanned.push(label);
@@ -142,10 +127,6 @@ if (rule === 'no-app-exports') {
   const files = getAllFiles(path.join(ROOT, 'app'));
   files.forEach(file => {
     const content = read(file);
-    if (hasAllow(content, 'allow-export')) {
-      exceptions.push(file);
-      return;
-    }
     scanned.push(file);
     if (/^export\s/m.test(content)) {
       violations.push(`${path.relative(ROOT, file).replace(/\\/g, '/')} exports from app/ (move to core/ or ui/)`);
@@ -172,7 +153,6 @@ if (rule === 'no-filter-conditional') {
   getAllFiles(path.join(ROOT, 'ui'), ['.js']).forEach(file => {
     const content = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(content, 'allow-filter-conditional')) { exceptions.push(rel); return; }
     scanned.push(rel);
     checkContent(content, rel);
   });
@@ -180,7 +160,6 @@ if (rule === 'no-filter-conditional') {
   getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
     const html = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(html, 'allow-filter-conditional')) { exceptions.push(rel); return; }
     extractInlineScripts(html).forEach((script, i) => {
       scanned.push(rel + ' (block ' + (i + 1) + ')');
       checkContent(script, rel);
@@ -296,8 +275,6 @@ if (rule === 'no-md-outside-docs') {
 if (rule === 'no-pure-fn-outside-core') {
   // Named function declarations outside core/ with params + return + no DOM access belong in core/.
   // Once in core/, check:untested enforces unit tests exist.
-  // Per-function escape hatch: add // arch: allow-pure-fn on the line before the function.
-  // File-level escape hatch: arch: allow-pure-fn anywhere in the file.
   const DOM_PATTERN = /\b(document|window|navigator|location|requestAnimationFrame|cancelAnimationFrame|fetch|decodeAudioBuffer|decodeAudioData)\b|\.(?:classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|insertBefore\b|addEventListener\b|removeEventListener\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b|createElementNS\b|createBufferSource\b|createGain\b|resume\b|decodeAudioData\b)/;
   const THIN_DISPATCHER = /^\s*return\s+\w+\[.*\]\s*\(.*\)\s*;?\s*$/s;
 
@@ -327,9 +304,8 @@ if (rule === 'no-pure-fn-outside-core') {
         i++;
       }
       const body = content.slice(bodyStart, i - 1);
-      const preceding = content.slice(Math.max(0, m.index - 150), m.index);
       const line = content.slice(0, m.index).split('\n').length;
-      results.push({ name, body, preceding, line });
+      results.push({ name, body, line });
     }
     return results;
   }
@@ -337,14 +313,12 @@ if (rule === 'no-pure-fn-outside-core') {
   function checkJsFile(file) {
     const content = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(content, 'allow-pure-fn')) { exceptions.push(rel); return; }
     scanned.push(rel);
-    extractFunctions(content).forEach(({ name, body, preceding, line }) => {
-      if (preceding.includes('arch: allow-pure-fn')) return;
+    extractFunctions(content).forEach(({ name, body, line }) => {
       if (DOM_PATTERN.test(body)) return;
       if (!hasTopLevelReturn(body)) return;
       if (THIN_DISPATCHER.test(body)) return;
-      violations.push(`${rel}:${line} — '${name}' has no DOM access; move to core/ (or add // arch: allow-pure-fn before the function)`);
+      violations.push(`${rel}:${line} — '${name}' has no DOM access; move to core/`);
     });
   }
 
@@ -355,16 +329,14 @@ if (rule === 'no-pure-fn-outside-core') {
   getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
     const html = read(file);
     const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-    if (hasAllow(html, 'allow-pure-fn')) { exceptions.push(rel); return; }
     extractInlineScripts(html).forEach((script, i) => {
       const label = rel + ' (block ' + (i + 1) + ')';
       scanned.push(label);
-      extractFunctions(script).forEach(({ name, body, preceding, line }) => {
-        if (preceding.includes('arch: allow-pure-fn')) return;
+      extractFunctions(script).forEach(({ name, body, line }) => {
         if (DOM_PATTERN.test(body)) return;
         if (!hasTopLevelReturn(body)) return;
         if (THIN_DISPATCHER.test(body)) return;
-        violations.push(`${label}:${line} — '${name}' has no DOM access; move to core/ (or add // arch: allow-pure-fn before the function)`);
+        violations.push(`${label}:${line} — '${name}' has no DOM access; move to core/`);
       });
     });
   });
@@ -377,11 +349,6 @@ if (violations.length === 0) {
 } else {
   output += `❌ Violations (scanned ${scanned.length} files):\n`;
   violations.forEach(v => output += `- ${v}\n`);
-}
-
-if (exceptions.length > 0) {
-  output += "\n⚠️ Exceptions:\n";
-  exceptions.forEach(e => output += `- ${e}\n`);
 }
 
 output += `\nSUMMARY: ${violations.length === 0 ? '✅' : '❌'} ${violations.length} / ${scanned.length} files\n`;

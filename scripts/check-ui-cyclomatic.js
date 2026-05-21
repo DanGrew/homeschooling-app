@@ -45,7 +45,6 @@ async function run() {
   const touched = getTouchedFiles();
   const prViolations = [];
   const backlogViolations = [];
-  const exceptions = [];
   let scanned = 0;
 
   function addViolation(rel, msg) {
@@ -56,9 +55,7 @@ async function run() {
   // ui/**/*.js
   const uiResults = await eslint.lintFiles([path.join(ROOT, 'ui/**/*.js')]);
   uiResults.forEach(result => {
-    const content = fs.readFileSync(result.filePath, 'utf8');
     const rel = path.relative(ROOT, result.filePath).replace(/\\/g, '/');
-    if (content.includes('arch: allow-complexity')) { exceptions.push(rel); return; }
     scanned++;
     result.messages.forEach(msg => { if (msg.ruleId === 'complexity') addViolation(rel, msg); });
   });
@@ -69,7 +66,6 @@ async function run() {
     const rel = path.relative(ROOT, htmlFile).replace(/\\/g, '/');
     const blocks = extractInlineScripts(fs.readFileSync(htmlFile, 'utf8'));
     for (const code of blocks) {
-      if (code.includes('arch: allow-complexity')) { exceptions.push(rel + ' (inline script)'); continue; }
       scanned++;
       const results = await eslint.lintText(code, { filePath: path.join(ROOT, 'virtual.js') });
       results[0].messages.forEach(msg => { if (msg.ruleId === 'complexity') addViolation(rel, msg); });
@@ -93,11 +89,6 @@ async function run() {
       output += `\n### 📋 Backlog (${backlogViolations.length} violation${backlogViolations.length > 1 ? 's' : ''} — pre-existing, not blocking):\n`;
       backlogViolations.forEach(v => output += `- ${v}\n`);
     }
-  }
-
-  if (exceptions.length > 0) {
-    output += `\n⚠️ Exceptions (pending fix):\n`;
-    exceptions.forEach(e => output += `- ${e}\n`);
   }
 
   const icon = total === 0 ? '✅' : '❌';
