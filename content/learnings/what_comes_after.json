@@ -17,7 +17,7 @@
       "pageControls": ["RENDER_MULTI_CHOICE"]
     },
     {
-      "text": "After breakfast comes lunch! Now — what comes after lunch?",
+      "text": "After breakfast comes lunch — first breakfast, then lunch! Now what comes after lunch?",
       "preset_shown": "lunch",
       "correct": "afternoon",
       "distractors": ["wake_up", "breakfast", "bedtime"],
@@ -25,12 +25,12 @@
       "pageControls": ["RENDER_MULTI_CHOICE"]
     },
     {
-      "text": "After lunch comes afternoon! Now — what comes after afternoon?",
+      "text": "After lunch comes afternoon — lunch, then afternoon! Now what comes after afternoon?",
       "preset_shown": "afternoon",
       "correct": "dinner",
       "distractors": ["wake_up", "lunch", "bedtime"],
       "expect": "PRESET_DINNER_SELECTED",
-      "feedback": "After afternoon comes dinner time. Breakfast, lunch, afternoon, dinner — you know the whole day!",
+      "feedback": "After afternoon comes dinner time. The day is nearly done!",
       "pageControls": ["RENDER_MULTI_CHOICE"]
     }
   ]
