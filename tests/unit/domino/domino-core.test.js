@@ -1,4 +1,4 @@
-const { generateTiles, dealHands, validatePlacement, checkCompletion, DOMINO_VALUES } = require('../../../core/domino/domino-core')
+const { generateTiles, dealHands, validatePlacement, checkCompletion, DOMINO_VALUES } = require('../../../core/domino/domino-core.js')
 
 // ---- generateTiles ----
 
