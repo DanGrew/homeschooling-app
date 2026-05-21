@@ -58,7 +58,7 @@
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees, generateChoices} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, generateChoices, parseTime, nextMinuteDeg} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
@@ -68,7 +68,9 @@ import {speak} from '../../../components/speech/speech-ui.js';
 import {showBanner, hideBanner} from '../../../components/success-banner.js';
 
 var currentHour = 0;
+var currentMinute = 0;
 var totalDeg = 0;
+var totalMinuteDeg = 0;
 var currentSpoken = 'Twelve o\'clock';
 var currentSpoken24 = 'Twelve hundred';
 var locked = false;
@@ -105,14 +107,19 @@ var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': functio
 var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
 
 function showPreset(preset) {
-  var hour = parseInt(preset.time.split(':')[0], 10);
+  var parsed = parseTime(preset.time);
+  var hour = parsed.hour;
+  var minute = parsed.minute;
   totalDeg += nextDegrees(currentHour, hour);
   currentHour = hour;
+  var minuteDelta = nextMinuteDeg(currentMinute, minute);
+  currentMinute = minute;
+  totalMinuteDeg += minuteDelta;
   currentSpoken   = PRESET_SPOKEN[String(!!preset.spoken)](preset);
   currentSpoken24 = PRESET_SPOKEN24[String(!!preset.spoken24)](preset);
-  setHandDeg(totalDeg, 0);
+  setHandDeg(totalDeg, totalMinuteDeg);
   skyRender(hourToSky(hour));
-  digitalRender(hour);
+  digitalRender(hour, minute);
 }
 
 function nextRound() {

@@ -66,7 +66,7 @@
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees, shuffle} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, shuffle} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
@@ -76,9 +76,13 @@ import {GuidanceService} from '../../../components/guidance/guidance-service.js'
 import {renderMultiChoiceOptions} from '../../../ui/clock/choice-ui.js';
 
 var currentHour = 0;
+var currentMinute = 0;
 var totalDeg = 0;
+var totalMinuteDeg = 0;
 var currentSpoken = 'Twelve o\'clock';
 var currentSpoken24 = 'Twelve hundred';
+var defaultPresets = [];
+var PAGE_CTRL = {};
 
 function emit(type) {
   window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: type}}));
@@ -91,11 +95,24 @@ var SPEAK_NUM = {
   '1': function()    {}
 };
 
+function tapNumeral(n) {
+  var targetMin = (parseInt(n, 10) % 12) * 5;
+  var prevRev = Math.floor(totalMinuteDeg / 360);
+  totalMinuteDeg += nextMinuteDeg(currentMinute, targetMin);
+  currentMinute = targetMin;
+  var hourSteps = Math.floor(totalMinuteDeg / 360) - prevRev;
+  totalDeg += hourSteps * 30;
+  currentHour = (currentHour + hourSteps) % 24;
+  setHandDeg(totalDeg, totalMinuteDeg);
+  digitalRender(currentHour, currentMinute);
+}
+
 document.querySelectorAll('[data-num]').forEach(function(el) {
   makeInteractive(el, function() {
     var n = [window.guidanceService].filter(Boolean).map(function(s) { return s._lesson; }).filter(Boolean).length;
     SPEAK_NUM[String(n)](el.dataset.num);
-    emit('NUMBER_' + el.dataset.num + '_TAPPED');
+    tapNumeral(el.dataset.num);
+    emit('NUMERAL_' + el.dataset.num + '_TAPPED');
   });
   el.addEventListener('click', function(e) { e.stopPropagation(); });
 });
@@ -119,14 +136,19 @@ var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': functio
 var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
 
 function showPresetTime(preset) {
-  var hour = parseInt(preset.time.split(':')[0], 10);
+  var parsed = parseTime(preset.time);
+  var hour = parsed.hour;
+  var minute = parsed.minute;
   totalDeg += nextDegrees(currentHour, hour);
   currentHour = hour;
+  var minuteDelta = nextMinuteDeg(currentMinute, minute);
+  currentMinute = minute;
+  totalMinuteDeg += minuteDelta;
   currentSpoken   = PRESET_SPOKEN[String(!!preset.spoken)](preset);
   currentSpoken24 = PRESET_SPOKEN24[String(!!preset.spoken24)](preset);
-  setHandDeg(totalDeg, 0);
+  setHandDeg(totalDeg, totalMinuteDeg);
   skyRender(hourToSky(hour));
-  digitalRender(hour);
+  digitalRender(hour, minute);
 }
 
 function pressPreset(preset) {
@@ -134,19 +156,55 @@ function pressPreset(preset) {
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
+function renderPresetButtons(presets) {
+  var btns = document.getElementById('preset-buttons');
+  btns.innerHTML = '';
+  presets.forEach(function(preset) {
+    var btn = document.createElement('button');
+    btn.className = 'preset-btn';
+    btn.textContent = [preset.emoji, preset.label].filter(Boolean).join(' ');
+    makeSpeakable(btn, preset.label);
+    btn.addEventListener('click', function() { pressPreset(preset); });
+    btns.appendChild(btn);
+    PAGE_CTRL['LOAD_PRESET_' + preset.id.toUpperCase()] = function() { pressPreset(preset); };
+  });
+}
+
+PAGE_CTRL['HIDE_DIGITAL_DISPLAY'] = function() { document.getElementById('digital').style.visibility = 'hidden'; };
+PAGE_CTRL['SHOW_DIGITAL_DISPLAY'] = function() { document.getElementById('digital').style.visibility = ''; };
+PAGE_CTRL['HIDE_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = 'hidden'; };
+PAGE_CTRL['SHOW_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = ''; };
+PAGE_CTRL['PAGE_CONTROL_RESET']   = function() {
+  document.getElementById('digital').style.visibility = '';
+  document.getElementById('preset-buttons').style.visibility = '';
+  renderPresetButtons(defaultPresets);
+};
+
+window.addEventListener('page:control', function(e) { PAGE_CTRL[e.detail.type](); });
+
+[1,2,3,4,5,6,7,8,9,10,11,12].forEach(function(n) {
+  PAGE_CTRL['LOAD_MINUTE_' + n] = function() { tapNumeral(String(n)); };
+});
+
 var DEFAULT_PROFILE = 'times_of_day';
+var PROFILE_IDS = ['times_of_day', 'child-day', 'baker', 'farmer', 'doctor'];
+
+PROFILE_IDS.forEach(function(id) {
+  var key = 'LOAD_PROFILE_' + id.toUpperCase().replace(/-/g, '_');
+  PAGE_CTRL[key] = function() {
+    fetch('../../../content/clock/profiles/' + id + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(profile) { renderPresetButtons(profile.presets); });
+  };
+});
 
 fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
   .then(function(r) { return r.json(); })
   .then(function(profile) {
-    var btns = document.getElementById('preset-buttons');
+    defaultPresets = profile.presets;
+    renderPresetButtons(defaultPresets);
     profile.presets.forEach(function(preset) {
-      var btn = document.createElement('button');
-      btn.className = 'preset-btn';
-      btn.textContent = [preset.emoji, preset.label].filter(Boolean).join(' ');
-      makeSpeakable(btn, preset.label);
-      btn.addEventListener('click', function() { pressPreset(preset); });
-      btns.appendChild(btn);
+      PAGE_CTRL['LOAD_PRESET_' + preset.id.toUpperCase()] = function() { pressPreset(preset); };
     });
   });
 
@@ -224,12 +282,9 @@ var _WITH_PROFILE = {
   'false': function(lesson, step) { _renderMCStep(step, null); }
 };
 
-var PAGE_CTRL = {
-  'PAGE_CONTROL_RESET': function() {},
-  'RENDER_MULTI_CHOICE': function() {
-    var svc = window.guidanceService;
-    _WITH_PROFILE[String(!!svc._lesson.profile)](svc._lesson, svc._lesson.steps[svc._stepIdx]);
-  }
+PAGE_CTRL['RENDER_MULTI_CHOICE'] = function() {
+  var svc = window.guidanceService;
+  _WITH_PROFILE[String(!!svc._lesson.profile)](svc._lesson, svc._lesson.steps[svc._stepIdx]);
 };
 
 var _GUIDANCE_START_MODE = {
@@ -244,10 +299,6 @@ window.addEventListener('guidance:stop', function() {
   presetButtonsEl.style.display = '';
   mcContainer.style.display = 'none';
   mcContainer.innerHTML = '';
-});
-
-window.addEventListener('page:control', function(e) {
-  [PAGE_CTRL[e.detail.type]].filter(Boolean).forEach(function(fn) { fn(); });
 });
 
 window.LEARNINGS_BASE = '../../../content/learnings/';
