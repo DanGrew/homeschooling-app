@@ -9,7 +9,18 @@
   "criteria": ["cl.sequencing-language", "cl.prediction"],
   "steps": [
     {
-      "text": "The clock shows lunchtime. What comes after lunch?",
+      "text": "The clock shows breakfast. What comes after breakfast?",
+      "auto": true,
+      "preset_shown": "breakfast",
+      "correct": "lunch",
+      "distractors": ["wake_up", "dinner", "bedtime"],
+      "expect": "PRESET_LUNCH_SELECTED",
+      "feedback": "After breakfast comes lunch! First breakfast, then lunch.",
+      "pageControls": ["RENDER_MULTI_CHOICE"]
+    },
+    {
+      "text": "Now the clock shows lunchtime. What comes after lunch?",
+      "auto": true,
       "preset_shown": "lunch",
       "correct": "afternoon",
       "distractors": ["wake_up", "breakfast", "bedtime"],
@@ -19,20 +30,12 @@
     },
     {
       "text": "Now the clock shows afternoon. What comes after afternoon?",
+      "auto": true,
       "preset_shown": "afternoon",
       "correct": "dinner",
       "distractors": ["wake_up", "lunch", "bedtime"],
       "expect": "PRESET_DINNER_SELECTED",
       "feedback": "After afternoon comes dinner time. The day is nearly done!",
-      "pageControls": ["RENDER_MULTI_CHOICE"]
-    },
-    {
-      "text": "The clock shows breakfast. What comes after breakfast?",
-      "preset_shown": "breakfast",
-      "correct": "lunch",
-      "distractors": ["wake_up", "dinner", "bedtime"],
-      "expect": "PRESET_LUNCH_SELECTED",
-      "feedback": "After breakfast comes lunch! First breakfast, then lunch.",
       "pageControls": ["RENDER_MULTI_CHOICE"]
     }
   ]
