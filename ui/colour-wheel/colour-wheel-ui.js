@@ -1,6 +1,6 @@
 import { makeSpeakable, makeInteractive } from '../../components/speech/speakable.js';
 import { speak } from '../../components/speech/speech-ui.js';
-import { w2r, pieSeg, annulusSeg, hex, lsnMix } from '../../core/colour-wheel/colour-wheel-core.js';
+import { w2r, pieSeg, annulusSeg, hex, lsnMix, slotEvent, shuffled } from '../../core/colour-wheel/colour-wheel-core.js';
 
 var LSN_COLOURS={
   red:            {hex:'#E74C3C',label:'Red'},
@@ -73,8 +73,6 @@ var SLOT_ASSIGN={
 
 var SLOT_GET={'a':function(){return slotA;},'b':function(){return slotB;}};
 
-// arch: allow-pure-fn
-function slotEvent(slot,colour){return colour.replace(/-/g,'_').toUpperCase()+'_LOADED_'+slot.toUpperCase();}
 
 function getMixResult(){
   return [slotA,slotB].filter(Boolean)
@@ -148,7 +146,6 @@ function renderPaletteOrder(order){
   });
 }
 
-function shuffled(arr){return arr.slice().sort(function(){return Math.random()-0.5;});}
 
 renderPaletteOrder(PALETTE);
 

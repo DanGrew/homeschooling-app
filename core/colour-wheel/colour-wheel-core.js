@@ -20,3 +20,7 @@ export function annulusSeg(cx,cy,ro,ri,a1deg,a2deg,gap){
 export function hex(id,colours){return colours[id].hex;}
 
 export function lsnMix(a,b,mixes){return [mixes[a+'+'+b],a].filter(Boolean)[0];}
+
+export function slotEvent(slot,colour){return colour.replace(/-/g,'_').toUpperCase()+'_LOADED_'+slot.toUpperCase();}
+
+export function shuffled(arr){return arr.slice().sort(function(){return Math.random()-0.5;});}

@@ -40,4 +40,9 @@ function shuffle(arr) {
   return a;
 }
 
-if (typeof module !== 'undefined') module.exports = { parseWord, buildTileSet, validateLetter, isWordComplete, pickWord };
+export function slotKey(slot, isTarget) {
+  var keys = [['locked', slot.locked], ['error', slot.error], ['target', isTarget], ['default', true]];
+  return keys.find(function(k) { return k[1]; })[0];
+}
+
+if (typeof module !== 'undefined') module.exports = { parseWord, buildTileSet, validateLetter, isWordComplete, pickWord, slotKey };
