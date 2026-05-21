@@ -161,11 +161,14 @@ function pressPreset(preset) {
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
+var _APPLY_FILTER = {
+  'true':  function(presets) { return presets.filter(function(p) { return p.tags.some(function(t) { return presetFilter.has(t); }); }); },
+  'false': function(presets) { return presets; }
+};
+
 function renderPresetButtons(presets) {
   currentPresets = presets;
-  var show = presetFilter
-    ? presets.filter(function(p) { return p.tags && p.tags.some(function(t) { return presetFilter.has(t); }); })
-    : presets;
+  var show = _APPLY_FILTER[String(!!presetFilter)](presets);
   var btns = document.getElementById('preset-buttons');
   btns.innerHTML = '';
   show.forEach(function(preset) {
@@ -303,11 +306,10 @@ var _GUIDANCE_START_MODE = {
 
 window.addEventListener('guidance:start', function(e) {
   [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
-  var filter = e.detail.lesson.filter;
-  if (filter) {
-    presetFilter = new Set(Array.isArray(filter) ? filter : [filter]);
-    if (currentPresets.length) renderPresetButtons(currentPresets);
-  }
+  [e.detail.lesson.filter].filter(Boolean).forEach(function(filter) {
+    presetFilter = new Set([].concat(filter));
+    renderPresetButtons(currentPresets);
+  });
 });
 
 window.addEventListener('guidance:stop', function() {
