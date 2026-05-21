@@ -34,6 +34,15 @@ export function nextDegrees(fromHour, toHour) {
   return delta <= 0 ? delta + 360 : delta;
 }
 
+export function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
 export function parseTime(timeStr) {
   var parts = timeStr.split(':');
   return { hour: parseInt(parts[0], 10), minute: parseInt(parts[1], 10) };

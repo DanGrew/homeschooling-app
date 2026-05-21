@@ -15,7 +15,8 @@
     {id:'find_the_number',  number:2, title:'Find the Number'},
     {id:'long_and_short',   number:3, title:'Long Hand, Short Hand'},
     {id:'times_of_day',     number:4, title:'Times of Day'},
-    {id:'morning_to_night', number:5, title:'Morning to Night'}
+    {id:'morning_to_night', number:5, title:'Morning to Night'},
+    {id:'what_comes_after', number:8, title:'What Comes After?'}
   ];
 </script>
 <script src="../../../components/menu.js" defer></script>
@@ -61,16 +62,18 @@
       </div>
     </div>
     <div id="preset-buttons"></div>
+    <div id="multi-choice-container" style="display:none;flex:1;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;"></div>
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees, parseTime, nextMinuteDeg} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, shuffle} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
 import {makeSpeakable, makeInteractive} from '../../../components/speech/speakable.js';
 import {speak} from '../../../components/speech/speech-ui.js';
 import {GuidanceService} from '../../../components/guidance/guidance-service.js';
+import {renderMultiChoiceOptions} from '../../../ui/clock/choice-ui.js';
 
 var currentHour = 0;
 var currentMinute = 0;
@@ -132,7 +135,7 @@ makeInteractive(document.getElementById('clock-container'), function() { speak(c
 var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
 var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
 
-function pressPreset(preset) {
+function showPresetTime(preset) {
   var parsed = parseTime(preset.time);
   var hour = parsed.hour;
   var minute = parsed.minute;
@@ -146,6 +149,10 @@ function pressPreset(preset) {
   setHandDeg(totalDeg, totalMinuteDeg);
   skyRender(hourToSky(hour));
   digitalRender(hour, minute);
+}
+
+function pressPreset(preset) {
+  showPresetTime(preset);
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
@@ -200,6 +207,99 @@ fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
       PAGE_CTRL['LOAD_PRESET_' + preset.id.toUpperCase()] = function() { pressPreset(preset); };
     });
   });
+
+var mcContainer = document.getElementById('multi-choice-container');
+var presetButtonsEl = document.getElementById('preset-buttons');
+var _profileCache = {};
+
+function _storeProfile(profileId, data, cb) {
+  _profileCache[profileId] = {};
+  data.presets.forEach(function(p) { _profileCache[profileId][p.id] = p; });
+  cb(_profileCache[profileId]);
+}
+
+function _fetchProfile(profileId, cb) {
+  fetch('../../../content/clock/profiles/' + profileId + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) { _storeProfile(profileId, data, cb); });
+}
+
+var _LOAD_MC = {
+  'true':  function(profileId, cb) { cb(_profileCache[profileId]); },
+  'false': function(profileId, cb) { _fetchProfile(profileId, cb); }
+};
+
+function loadMCProfile(profileId, cb) {
+  _LOAD_MC[String(!!_profileCache[profileId])](profileId, cb);
+}
+
+function _applyPresetShown(profile, key) {
+  [profile].filter(Boolean).forEach(function(p) {
+    [p[key]].filter(Boolean).forEach(showPresetTime);
+  });
+}
+
+var _RESOLVE_OPTIONS = {
+  'true':  function(step) {
+    return step.answers.map(function(a) { return { label: a, correct: a === step.correct }; });
+  },
+  'false': function(step, profile) {
+    return [step.correct].concat(step.distractors).map(function(id) {
+      return { preset: profile[id], correct: id === step.correct };
+    });
+  }
+};
+
+function _onMCCorrect(options) {
+  [options.find(function(o) { return o.correct; })].filter(Boolean).forEach(function(opt) {
+    [opt.preset].filter(Boolean).forEach(pressPreset);
+    [1].filter(function() { return !opt.preset; }).forEach(function() { emit('MULTI_CHOICE_CORRECT'); });
+  });
+}
+
+function _onMCWrong(tile) {
+  speak('Try again!');
+  var orig = tile.style.border;
+  tile.style.border = '3px solid rgba(255,80,80,0.9)';
+  setTimeout(function() { tile.style.border = orig; }, 600);
+}
+
+var _ON_PICK = {
+  'true':  function(options) { _onMCCorrect(options); },
+  'false': function(options, tile) { _onMCWrong(tile); }
+};
+
+function _renderMCStep(step, profile) {
+  _applyPresetShown(profile, step.preset_shown);
+  var options = _RESOLVE_OPTIONS[String(!!step.answers)](step, profile);
+  renderMultiChoiceOptions(mcContainer, shuffle(options), function(tile, isCorrect) {
+    _ON_PICK[String(isCorrect)](options, tile);
+  });
+}
+
+var _WITH_PROFILE = {
+  'true':  function(lesson, step) { loadMCProfile(lesson.profile, function(p) { _renderMCStep(step, p); }); },
+  'false': function(lesson, step) { _renderMCStep(step, null); }
+};
+
+PAGE_CTRL['RENDER_MULTI_CHOICE'] = function() {
+  var svc = window.guidanceService;
+  _WITH_PROFILE[String(!!svc._lesson.profile)](svc._lesson, svc._lesson.steps[svc._stepIdx]);
+};
+
+var _GUIDANCE_START_MODE = {
+  'multi-choice': function() { presetButtonsEl.style.display = 'none'; mcContainer.style.display = 'flex'; }
+};
+
+window.addEventListener('guidance:start', function(e) {
+  [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
+});
+
+window.addEventListener('guidance:stop', function() {
+  presetButtonsEl.style.display = '';
+  mcContainer.style.display = 'none';
+  mcContainer.innerHTML = '';
+});
 
 window.LEARNINGS_BASE = '../../../content/learnings/';
 window.guidanceService = new GuidanceService();
