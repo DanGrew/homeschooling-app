@@ -10,32 +10,27 @@
   "steps": [
     {
       "text": "The clock shows breakfast. What comes after breakfast?",
-      "auto": true,
       "preset_shown": "breakfast",
       "correct": "lunch",
       "distractors": ["wake_up", "dinner", "bedtime"],
       "expect": "PRESET_LUNCH_SELECTED",
-      "feedback": "After breakfast comes lunch! First breakfast, then lunch.",
       "pageControls": ["RENDER_MULTI_CHOICE"]
     },
     {
-      "text": "Now the clock shows lunchtime. What comes after lunch?",
-      "auto": true,
+      "text": "After breakfast comes lunch! Now — what comes after lunch?",
       "preset_shown": "lunch",
       "correct": "afternoon",
       "distractors": ["wake_up", "breakfast", "bedtime"],
       "expect": "PRESET_AFTERNOON_SELECTED",
-      "feedback": "That is right — after lunch comes afternoon! Lunch, then afternoon.",
       "pageControls": ["RENDER_MULTI_CHOICE"]
     },
     {
-      "text": "Now the clock shows afternoon. What comes after afternoon?",
-      "auto": true,
+      "text": "After lunch comes afternoon! Now — what comes after afternoon?",
       "preset_shown": "afternoon",
       "correct": "dinner",
       "distractors": ["wake_up", "lunch", "bedtime"],
       "expect": "PRESET_DINNER_SELECTED",
-      "feedback": "After afternoon comes dinner time. The day is nearly done!",
+      "feedback": "After afternoon comes dinner time. Breakfast, lunch, afternoon, dinner — you know the whole day!",
       "pageControls": ["RENDER_MULTI_CHOICE"]
     }
   ]
