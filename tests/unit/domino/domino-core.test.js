@@ -1,4 +1,4 @@
-const { generateTiles, dealHands, validatePlacement, checkCompletion, DOMINO_VALUES } = require('../../../core/domino/domino-core.js')
+const { generateTiles, dealHands, validatePlacement, checkCompletion, createInitialBoard, createDominoGame, DOMINO_VALUES } = require('../../../core/domino/domino-core.js')
 
 // ---- generateTiles ----
 
@@ -131,10 +131,12 @@ test('each player has at least one tile playable vs starting tile', () => {
 
 // ---- checkCompletion ----
 
+const ep = (value) => ({ value, col: 0, row: 0 })
+
 test('not complete when draw pile has tiles', () => {
   const state = {
     drawPile: [{ id: 'x', left: 'red', right: 'blue' }],
-    board: { endpoints: ['green', 'green'] },
+    board: { endpoints: [ep('green'), ep('green')] },
     players: [{ id: 'p0' }],
     hands: { p0: [] }
   }
@@ -145,7 +147,7 @@ test('not complete when draw empty but a player can place', () => {
   const tile = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
   const state = {
     drawPile: [],
-    board: { endpoints: ['red', 'green'] },
+    board: { endpoints: [ep('red'), ep('green')] },
     players: [{ id: 'p0' }, { id: 'p1' }],
     hands: { p0: [tile], p1: [] }
   }
@@ -155,7 +157,7 @@ test('not complete when draw empty but a player can place', () => {
 test('complete when draw empty and no player can place', () => {
   const state = {
     drawPile: [],
-    board: { endpoints: ['purple', 'purple'] },
+    board: { endpoints: [ep('purple'), ep('purple')] },
     players: [{ id: 'p0' }, { id: 'p1' }],
     hands: {
       p0: [{ id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }],
@@ -168,9 +170,73 @@ test('complete when draw empty and no player can place', () => {
 test('complete with empty hands and empty draw pile', () => {
   const state = {
     drawPile: [],
-    board: { endpoints: ['red', 'blue'] },
+    board: { endpoints: [ep('red'), ep('blue')] },
     players: [{ id: 'p0' }, { id: 'p1' }],
     hands: { p0: [], p1: [] }
   }
   expect(checkCompletion(state)).toBe(true)
+})
+
+// ---- createInitialBoard ----
+
+test('initial board has one placed tile', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  expect(board.tiles).toHaveLength(1)
+  expect(board.tiles[0].tile).toBe(tile)
+  expect(board.tiles[0].col).toBe(0)
+  expect(board.tiles[0].row).toBe(0)
+})
+
+test('initial board has two endpoints', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  expect(board.endpoints).toHaveLength(2)
+})
+
+test('initial board endpoint values match tile halves', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  const values = board.endpoints.map(ep => ep.value)
+  expect(values).toContain('red')
+  expect(values).toContain('blue')
+})
+
+test('initial board endpoints have position properties', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  board.endpoints.forEach(ep => {
+    expect(typeof ep.col).toBe('number')
+    expect(typeof ep.row).toBe('number')
+  })
+})
+
+// ---- createDominoGame ----
+
+test('createDominoGame returns correct phase and turnIndex', () => {
+  const setup = { players: [{ name: 'A', icon: 'cat', role: 'child_primary' }, { name: 'B', icon: 'dog', role: 'adult_observer' }], matchType: 'colours' }
+  const game = createDominoGame(setup)
+  expect(game.phase).toBe('playing')
+  expect(game.turnIndex).toBe(0)
+})
+
+test('createDominoGame assigns player ids', () => {
+  const setup = { players: [{ name: 'A', icon: 'cat', role: 'child_primary' }, { name: 'B', icon: 'dog', role: 'adult_observer' }], matchType: 'colours' }
+  const game = createDominoGame(setup)
+  expect(game.players[0].id).toBe('p0')
+  expect(game.players[1].id).toBe('p1')
+})
+
+test('createDominoGame board has starting tile and endpoints', () => {
+  const setup = { players: [{ name: 'A', icon: 'cat', role: 'child_primary' }, { name: 'B', icon: 'dog', role: 'adult_observer' }], matchType: 'colours' }
+  const game = createDominoGame(setup)
+  expect(game.board.tiles).toHaveLength(1)
+  expect(game.board.endpoints).toHaveLength(2)
+})
+
+test('createDominoGame hands contain 7 tiles each', () => {
+  const setup = { players: [{ name: 'A', icon: 'cat', role: 'child_primary' }, { name: 'B', icon: 'dog', role: 'adult_observer' }], matchType: 'colours' }
+  const game = createDominoGame(setup)
+  expect(game.hands['p0']).toHaveLength(7)
+  expect(game.hands['p1']).toHaveLength(7)
 })
