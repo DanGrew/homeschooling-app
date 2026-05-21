@@ -179,9 +179,7 @@ if (rule === 'no-json-in-repo') {
       if (entry.isDirectory()) {
         if (!EXCLUDED_DIRS.has(entry.name)) walkJson(full);
       } else if (entry.name.endsWith('.json')) {
-        if (ALLOWED_FILES.has(rel)) {
-          exceptions.push(rel);
-        } else {
+        if (!ALLOWED_FILES.has(rel)) {
           scanned.push(rel);
           violations.push(`${rel} — JSON must live under content/`);
         }
