@@ -4,7 +4,7 @@
   "number": 5,
   "guide": "cat",
   "source": "Clock",
-  "filter": ["sky-change"],
+  "filter": "sky-change",
   "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
   "criteria": ["uw.cause-effect", "cl.prediction", "cl.topic-vocabulary"],
   "steps": [

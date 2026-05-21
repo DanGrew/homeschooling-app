@@ -304,8 +304,8 @@ var _GUIDANCE_START_MODE = {
 window.addEventListener('guidance:start', function(e) {
   [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
   var filter = e.detail.lesson.filter;
-  if (filter && filter.length) {
-    presetFilter = new Set(filter);
+  if (filter) {
+    presetFilter = new Set(Array.isArray(filter) ? filter : [filter]);
     if (currentPresets.length) renderPresetButtons(currentPresets);
   }
 });

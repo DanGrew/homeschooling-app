@@ -4,7 +4,7 @@
   "number": 4,
   "guide": "dog",
   "source": "Clock",
-  "filter": ["named-time"],
+  "filter": "named-time",
   "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
   "criteria": ["cl.topic-vocabulary", "cl.sequencing-language"],
   "steps": [
