@@ -1,0 +1,11 @@
+{
+  "id": "doctor",
+  "label": "Doctor's Day",
+  "presets": [
+    { "id": "doctor_arrive",    "label": "Arrive at hospital", "time": "08:00", "tags": ["doctor", "community"] },
+    { "id": "doctor_morning",   "label": "See patients",       "time": "10:00", "tags": ["doctor", "community"] },
+    { "id": "doctor_lunch",     "label": "Lunch break",        "time": "13:00", "tags": ["doctor", "community"] },
+    { "id": "doctor_afternoon", "label": "Afternoon ward",     "time": "15:00", "tags": ["doctor", "community"] },
+    { "id": "doctor_home",      "label": "Go home",            "time": "18:00", "tags": ["doctor", "community"] }
+  ]
+}

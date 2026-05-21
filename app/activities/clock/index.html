@@ -112,25 +112,31 @@ makeInteractive(document.getElementById('digital-12h'),     function() { speak(c
 makeInteractive(document.getElementById('digital-24h'),     function() { speak(currentSpoken24); });
 makeInteractive(document.getElementById('clock-container'), function() { speak(currentSpoken); });
 
+var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
+var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
+
 function pressPreset(preset) {
-  totalDeg += nextDegrees(currentHour, preset.hour);
-  currentHour = preset.hour;
-  currentSpoken = preset.spoken;
-  currentSpoken24 = preset.spoken24;
+  var hour = parseInt(preset.time.split(':')[0], 10);
+  totalDeg += nextDegrees(currentHour, hour);
+  currentHour = hour;
+  currentSpoken   = PRESET_SPOKEN[String(!!preset.spoken)](preset);
+  currentSpoken24 = PRESET_SPOKEN24[String(!!preset.spoken24)](preset);
   setHandDeg(totalDeg, 0);
-  skyRender(hourToSky(preset.hour));
-  digitalRender(preset.hour);
-  emit('PRESET_' + preset.label.toUpperCase() + '_SELECTED');
+  skyRender(hourToSky(hour));
+  digitalRender(hour);
+  emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
-fetch('../../../content/clock/presets.json')
+var DEFAULT_PROFILE = 'times_of_day';
+
+fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
   .then(function(r) { return r.json(); })
-  .then(function(presets) {
+  .then(function(profile) {
     var btns = document.getElementById('preset-buttons');
-    presets.forEach(function(preset) {
+    profile.presets.forEach(function(preset) {
       var btn = document.createElement('button');
       btn.className = 'preset-btn';
-      btn.textContent = preset.emoji + ' ' + preset.label;
+      btn.textContent = [preset.emoji, preset.label].filter(Boolean).join(' ');
       makeSpeakable(btn, preset.label);
       btn.addEventListener('click', function() { pressPreset(preset); });
       btns.appendChild(btn);

@@ -1,0 +1,10 @@
+{
+  "id": "baker",
+  "label": "Baker's Day",
+  "presets": [
+    { "id": "baker_start", "label": "Start baking", "time": "04:00", "tags": ["baker", "community"] },
+    { "id": "baker_open",  "label": "Shop opens",   "time": "07:00", "tags": ["baker", "community"] },
+    { "id": "baker_busy",  "label": "Busy morning", "time": "10:00", "tags": ["baker", "community"] },
+    { "id": "baker_close", "label": "Shop closes",  "time": "14:00", "tags": ["baker", "community"] }
+  ]
+}

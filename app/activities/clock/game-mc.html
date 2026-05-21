@@ -101,14 +101,18 @@ var CORRECT = {
   }
 };
 
+var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
+var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
+
 function showPreset(preset) {
-  totalDeg += nextDegrees(currentHour, preset.hour);
-  currentHour = preset.hour;
-  currentSpoken = preset.spoken;
-  currentSpoken24 = preset.spoken24;
+  var hour = parseInt(preset.time.split(':')[0], 10);
+  totalDeg += nextDegrees(currentHour, hour);
+  currentHour = hour;
+  currentSpoken   = PRESET_SPOKEN[String(!!preset.spoken)](preset);
+  currentSpoken24 = PRESET_SPOKEN24[String(!!preset.spoken24)](preset);
   setHandDeg(totalDeg, 0);
-  skyRender(hourToSky(preset.hour));
-  digitalRender(preset.hour);
+  skyRender(hourToSky(hour));
+  digitalRender(hour);
 }
 
 function nextRound() {
@@ -123,10 +127,12 @@ function nextRound() {
   );
 }
 
-fetch('../../../content/clock/presets.json')
+var DEFAULT_PROFILE = 'times_of_day';
+
+fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
   .then(function(r) { return r.json(); })
-  .then(function(data) {
-    presets = data;
+  .then(function(profile) {
+    presets = profile.presets;
     nextRound();
   });
 </script>

@@ -1,0 +1,10 @@
+{
+  "id": "farmer",
+  "label": "Farmer's Day",
+  "presets": [
+    { "id": "farmer_start",   "label": "Feed the animals", "time": "05:30", "tags": ["farmer", "community"] },
+    { "id": "farmer_morning", "label": "Work the fields",  "time": "08:00", "tags": ["farmer", "community"] },
+    { "id": "farmer_midday",  "label": "Rest at midday",   "time": "12:00", "tags": ["farmer", "community"] },
+    { "id": "farmer_eve",     "label": "Bring animals in", "time": "17:00", "tags": ["farmer", "community"] }
+  ]
+}
