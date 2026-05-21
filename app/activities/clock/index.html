@@ -36,7 +36,7 @@
 #digital-12h,#digital-24h{font-size:clamp(1.1em,4vw,1.8em);font-weight:bold;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,0.5);cursor:pointer;border-radius:8px;padding:2px 8px;}
 #digital-24h{border-left:2px solid rgba(255,255,255,0.5);padding-left:16px;}
 #preset-panel{flex:1;display:flex;flex-direction:column;}
-#profile-title{text-align:center;font-weight:bold;color:rgba(255,255,255,0.85);font-size:0.85em;padding:8px 8px 0;cursor:pointer;user-select:none;-webkit-touch-callout:none;min-height:1.5em;}
+#profile-title{width:100%;text-align:center;font-weight:bold;color:#fff;font-size:clamp(1em,3.5vw,1.3em);padding:6px 8px;cursor:pointer;user-select:none;-webkit-touch-callout:none;text-shadow:0 1px 6px rgba(0,0,0,0.5);}
 #preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
 .preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
@@ -60,6 +60,7 @@
       <div id="sky-moon"></div>
       <div id="arc-zone"></div>
       <div id="clock-content">
+        <div id="profile-title"></div>
         <div id="clock-container"></div>
         <div id="digital">
           <span id="digital-12h">--:-- --</span>
@@ -68,7 +69,6 @@
       </div>
     </div>
     <div id="preset-panel">
-      <div id="profile-title"></div>
       <div id="preset-buttons"></div>
     </div>
     <div id="multi-choice-container" style="display:none;flex:1;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;"></div>
