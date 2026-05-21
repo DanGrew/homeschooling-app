@@ -59,6 +59,14 @@ describe('clock lessons', () => {
         it('step ' + i + ' has expect field', () => {
           expect(step.expect).toBeDefined()
         })
+        it('step ' + i + ' with badge expects BADGE_TAPPED', () => {
+          if (!lesson.id.startsWith('clock-lesson-')) return
+          if (step.badge !== undefined) expect(step.expect).toBe('BADGE_TAPPED')
+        })
+        it('step ' + i + ' feedback only on last step', () => {
+          if (!lesson.id.startsWith('clock-lesson-')) return
+          if (i < lesson.steps.length - 1) expect(step.feedback).toBeUndefined()
+        })
       })
 
       it('pageControls reference known profile ids when present', () => {
