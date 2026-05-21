@@ -121,7 +121,6 @@ window.addEventListener('resize', function() {
   [gameState].filter(Boolean).forEach(function() { pairsMeasureCards(gameScreen); });
 });
 
-// arch: allow-pure-fn
 function handleFlip(cardIndex) {
   [gameState].filter(Boolean).filter(function(s) { return !PAIRS_BLOCKED_PHASES[s.phase]; }).forEach(function(s) {
     var result = flipCard(s, cardIndex);

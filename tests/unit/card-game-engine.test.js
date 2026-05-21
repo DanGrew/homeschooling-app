@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
-const { cardGameShuffle, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip } = require('../../core/card-game/card-game-engine.js')
+const { cardGameShuffle, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip, cgGameLayoutKey } = require('../../core/card-game/card-game-engine.js')
 
 const PLAYERS = [{ id: 'p0', name: 'Alice', icon: 'cat', role: 'child' }, { id: 'p1', name: 'Bob', icon: 'dog', role: 'adult' }]
 
@@ -142,5 +142,20 @@ describe('cardGameResolveFlip', function() {
     var state = makeState({ phase: 'resolving', flipped: [0, 1] })
     var result = cardGameResolveFlip(state)
     expect(result.state.flipped).toEqual([])
+  })
+})
+
+describe('cgGameLayoutKey', function() {
+  test('1 player returns 1p', function() {
+    expect(cgGameLayoutKey({ players: [{}] }, 'shared')).toBe('1p')
+  })
+  test('2 player shared returns 2p', function() {
+    expect(cgGameLayoutKey({ players: [{},{}] }, 'shared')).toBe('2p')
+  })
+  test('2 player passplay returns passplay', function() {
+    expect(cgGameLayoutKey({ players: [{},{}] }, 'passplay')).toBe('passplay')
+  })
+  test('3 player shared returns 3p', function() {
+    expect(cgGameLayoutKey({ players: [{},{},{}] }, 'shared')).toBe('3p')
   })
 })

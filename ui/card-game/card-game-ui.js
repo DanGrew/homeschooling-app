@@ -1,8 +1,3 @@
-// arch: allow-complexity
-// cgMakeGameRenderers: factory returns game-specific layout closures — each captures buildTray.
-// buildCgSetupRoot: redraw closure captures cfg by reference; forEach on cfg.players slice avoids branches.
-// cgGameLayoutKey: pure function needed in UI for layout dispatch (no DOM call, but decision belongs here).
-
 var CG_SEL    = { 'true': ' selected', 'false': '' };
 var CG_ACTIVE = { 'true': ' active-turn', 'false': '' };
 var CG_NOOP   = function() {};
@@ -163,7 +158,7 @@ function buildCgSizeSection(sizes, selectedSize, onChange) {
     btn.className = 'pairs-size-btn' + CG_SEL[String(selectedSize === o.size)];
     btn.setAttribute('data-testid', 'grid-size-' + o.size);
     btn.addEventListener('click', function() { onChange({ gridSize: o.size }); });
-    cgMakeSpeak(btn, o.speak || o.label);
+    cgMakeSpeak(btn, [o.speak, o.label].filter(Boolean)[0]);
     section.appendChild(btn);
   });
   return section;
@@ -226,10 +221,6 @@ function buildCgSetupRoot(cfg, sizeDefs, availableTags, animalEntries, onChange,
 
 // ---- Grid & Cards ----
 
-function cgGridCols(gridSize) {
-  return Math.round(Math.sqrt(gridSize));
-}
-
 var CG_CARD_CLASS = { revealed: 'face-up', matched: 'matched', found: 'found', hidden: '' };
 
 function buildCgCardEl(card, idx) {
@@ -268,15 +259,11 @@ function cgSetCardSize(grid, cols, rows, rect) {
   grid.style.setProperty('--card-size', size + 'px');
 }
 
-// arch: allow-pure-fn
-function cgParseAttr(el, attr, fallback) {
-  var v = parseInt(el.getAttribute(attr), 10);
-  return [v].filter(function(n) { return n > 0; }).concat([fallback])[0];
-}
-
 function cgMeasureGrid(grid) {
-  var cols = cgParseAttr(grid, 'data-cols', 4);
-  var rows = cgParseAttr(grid, 'data-rows', cols);
+  var colsRaw = parseInt(grid.getAttribute('data-cols'), 10);
+  var rowsRaw = parseInt(grid.getAttribute('data-rows'), 10);
+  var cols = [colsRaw].filter(function(n) { return n > 0; }).concat([4])[0];
+  var rows = [rowsRaw].filter(function(n) { return n > 0; }).concat([cols])[0];
   var rect = grid.getBoundingClientRect();
   [rect].filter(function(r) { return r.width * r.height > 0; })
     .forEach(function(r) { cgSetCardSize(grid, cols, rows, r); });
@@ -290,7 +277,7 @@ function cgMeasureCards(container) {
 }
 
 function buildCgGrid(state, onFlip) {
-  var cols = cgGridCols(state.gridSize);
+  var cols = Math.round(Math.sqrt(state.gridSize));
   var rows = state.cards.length / cols;
   var grid = document.createElement('div');
   grid.className = 'pairs-grid';
@@ -389,15 +376,6 @@ function renderCgHandover(container, playerName, onReady) {
 }
 
 // ---- Layout helpers ----
-
-// arch: allow-pure-fn
-function cgGameLayoutKey(state, mode) {
-  var countMap = { 1: '1p' };
-  var modeIs2p = state.players.length === 2;
-  var keyMap = { passplay: 'passplay', 'true': '2p', 'false': '3p' };
-  return [countMap[state.players.length]].filter(Boolean)
-    .concat([[keyMap[mode]].filter(Boolean).concat([keyMap[String(modeIs2p)]])[0]])[0];
-}
 
 function buildCgTraysRow(state, buildTray) {
   var wrap = document.createElement('div');

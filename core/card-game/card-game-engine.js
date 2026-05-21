@@ -67,4 +67,12 @@ function cardGameResolveFlip(state) {
   };
 }
 
-if (typeof module !== 'undefined') module.exports = { cardGameShuffle, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip };
+function cgGameLayoutKey(state, mode) {
+  var countMap = { 1: '1p' };
+  var modeIs2p = state.players.length === 2;
+  var keyMap = { passplay: 'passplay', 'true': '2p', 'false': '3p' };
+  return [countMap[state.players.length]].filter(Boolean)
+    .concat([[keyMap[mode]].filter(Boolean).concat([keyMap[String(modeIs2p)]])[0]])[0];
+}
+
+if (typeof module !== 'undefined') module.exports = { cardGameShuffle, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip, cgGameLayoutKey };
