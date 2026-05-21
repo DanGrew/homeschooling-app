@@ -127,7 +127,9 @@
   align-content: center;
 }
 .pairs-grid[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
+.pairs-grid[data-cols="5"] { grid-template-columns: repeat(5, 1fr); }
 .pairs-grid[data-cols="6"] { grid-template-columns: repeat(6, 1fr); }
+.pairs-grid[data-cols="7"] { grid-template-columns: repeat(7, 1fr); }
 .pairs-grid[data-cols="8"] { grid-template-columns: repeat(8, 1fr); }
 
 /* ---- Card flip ---- */
@@ -168,6 +170,9 @@
 .pairs-card-front img { width: 82%; height: 82%; object-fit: contain; }
 .pairs-card.matched .pairs-card-back,
 .pairs-card.matched .pairs-card-front { border-color: #2ecc71; }
+.pairs-card.found .pairs-card-inner { transform: rotateY(180deg); }
+.pairs-card.found .pairs-card-back,
+.pairs-card.found .pairs-card-front { border-color: #2ecc71; }
 
 @keyframes pairs-flash-invalid {
   0%, 100% { outline: none; }

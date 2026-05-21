@@ -3,29 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Pairs</title>
+<title>Shopping Game</title>
 <link rel="stylesheet" href="../../../styles/theme.css">
 <link rel="stylesheet" href="../../../styles/style.css">
 <link rel="stylesheet" href="../../../styles/speakable.css">
 <link rel="stylesheet" href="../../../styles/pairs.css">
+<link rel="stylesheet" href="../../../styles/shopping-game.css">
 <script src="../../../components/menu.js" defer></script>
 <script type="module" src="../../../components/success-banner.js"></script>
 <script src="../../../core/pairs/pairs-content.js"></script>
 <script src="../../../core/card-game/card-game-engine.js"></script>
-<script src="../../../core/pairs/pairs-core.js"></script>
+<script src="../../../core/shopping-game/shopping-game-core.js"></script>
 <script src="../../../ui/card-game/card-game-ui.js"></script>
-<script src="../../../ui/pairs/pairs-ui.js"></script>
+<script src="../../../ui/shopping-game/shopping-game-ui.js"></script>
 </head>
 <body>
-<div class="nav-bar" data-home="../../games/" data-title="Pairs" data-instruction="Find the matching pairs" data-no-links="standalone game"></div>
+<div class="nav-bar" data-home="../../games/" data-title="Shopping Game" data-instruction="Find all the items on your list" data-no-links="standalone game"></div>
 
 <div class="game-area" style="flex-direction:column;overflow:hidden;">
-  <div id="pairs-setup" class="pairs-screen active"></div>
-  <div id="pairs-game" class="pairs-screen"></div>
-  <div id="pairs-summary" class="pairs-screen"></div>
+  <div id="shopping-setup" class="pairs-screen active"></div>
+  <div id="shopping-game" class="pairs-screen"></div>
+  <div id="shopping-summary" class="pairs-screen"></div>
 </div>
 
-<script>window.ACTIVITY_ID = 'pairs';</script>
+<script>window.ACTIVITY_ID = 'shopping-game';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 
 <script>
@@ -37,9 +38,9 @@ var MATCH_HANDOVER_DELAY = 1200;
 
 var handoverDelay = 0;
 
-var setupScreen   = document.getElementById('pairs-setup');
-var gameScreen    = document.getElementById('pairs-game');
-var summaryScreen = document.getElementById('pairs-summary');
+var setupScreen   = document.getElementById('shopping-setup');
+var gameScreen    = document.getElementById('shopping-game');
+var summaryScreen = document.getElementById('shopping-summary');
 
 var gameState;
 var gameMode = 'shared';
@@ -47,21 +48,20 @@ var allEntries;
 var animalEntries;
 var conceptNames = {};
 
-var PAIRS_NOOP = function() {};
-var PAIRS_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
-var PAIRS_BLOCKED_PHASES = { resolving: true, complete: true };
+var SG_NOOP = function() {};
+var SG_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+var SG_BLOCKED_PHASES = { resolving: true, complete: true };
 
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
   Object.keys(screens).forEach(function(k) {
-    screens[k].className = 'pairs-screen' + PAIRS_SCREEN_ACTIVE[String(k === name)];
+    screens[k].className = 'pairs-screen' + SG_SCREEN_ACTIVE[String(k === name)];
   });
 }
 
-
 function reRenderGame() {
-  renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
-  pairsMeasureCards(gameScreen);
+  renderShoppingGame(gameScreen, gameState, gameMode, handleFlip);
+  shoppingMeasureCards(gameScreen);
 }
 
 function handleTurnChange() {
@@ -70,13 +70,13 @@ function handleTurnChange() {
       var player = gameState.players[gameState.turnIndex];
       var delay = handoverDelay;
       handoverDelay = 0;
-      setTimeout(function() { renderPairsHandover(gameScreen, player.name, reRenderGame); }, delay);
+      setTimeout(function() { renderShoppingHandover(gameScreen, player.name, reRenderGame); }, delay);
     },
     shared: function() {
       var delay = handoverDelay;
       handoverDelay = 0;
       setTimeout(function() {
-        pairsApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
+        shoppingApplyTurnChange(gameScreen, gameState.players, gameState.turnIndex);
       }, delay);
     }
   };
@@ -94,36 +94,36 @@ fetch('../../../content/dictionary/dictionary.json')
     concepts.forEach(function(c) { conceptNames[c.id] = [c.name, c.id].filter(Boolean)[0]; });
     allEntries    = concepts;
     animalEntries = filterByTag(concepts, 'animals');
-    renderPairsSetup(setupScreen, allEntries, animalEntries, function(cfg) {
+    renderShoppingSetup(setupScreen, allEntries, animalEntries, function(cfg) {
       startGame(cfg);
     });
   });
 
 function startGame(cfg) {
   var contentEntries = filterByTags(allEntries, cfg.tags);
-  var contentSet = buildContentSet(contentEntries, GRID_PAIRS[cfg.gridSize]);
+  var contentSet = buildContentSet(contentEntries, cfg.gridSize);
   var players = cfg.players.slice(0, cfg.playerCount).map(function(p, i) {
     return { id: 'p' + i, name: [p.name, 'Player ' + (i + 1)].filter(Boolean)[0], icon: p.icon, role: p.role };
   });
   gameMode = [cfg.mode, 'shared'].filter(Boolean)[0];
   handoverDelay = 0;
-  gameState = createGame(players, cfg.gridSize, contentSet);
+  gameState = createShoppingGame(players, cfg.gridSize, contentSet);
   showScreen('game');
-  renderPairsGame(gameScreen, gameState, gameMode, handleFlip);
+  renderShoppingGame(gameScreen, gameState, gameMode, handleFlip);
   var START_ACTIONS = {
-    passplay: function() { renderPairsHandover(gameScreen, gameState.players[0].name, reRenderGame); },
-    shared: PAIRS_NOOP
+    passplay: function() { renderShoppingHandover(gameScreen, gameState.players[0].name, reRenderGame); },
+    shared: SG_NOOP
   };
   [START_ACTIONS[gameMode]].filter(Boolean).concat([START_ACTIONS.shared])[0]();
 }
 
 window.addEventListener('resize', function() {
-  [gameState].filter(Boolean).forEach(function() { pairsMeasureCards(gameScreen); });
+  [gameState].filter(Boolean).forEach(function() { shoppingMeasureCards(gameScreen); });
 });
 
 function handleFlip(cardIndex) {
-  [gameState].filter(Boolean).filter(function(s) { return !PAIRS_BLOCKED_PHASES[s.phase]; }).forEach(function(s) {
-    var result = flipCard(s, cardIndex);
+  [gameState].filter(Boolean).filter(function(s) { return !SG_BLOCKED_PHASES[s.phase]; }).forEach(function(s) {
+    var result = flipShoppingCard(s, cardIndex);
     gameState = result.state;
     result.events.forEach(function(ev) { applyEvent(ev, cardIndex); });
   });
@@ -132,47 +132,45 @@ function handleFlip(cardIndex) {
 function applyEvent(ev, cardIndex) {
   var HANDLERS = {
     card_reveal: function() {
-      pairsApplyReveal(gameScreen, ev.data.cardIndex);
+      shoppingApplyReveal(gameScreen, ev.data.cardIndex);
       speakCard(ev.data.cardIndex);
     },
-    match_success: function() {
-      pairsApplyMatch(gameScreen, ev.data.cardIndices);
+    item_found: function() {
+      shoppingApplyFound(gameScreen, ev.data.cardIndex, ev.data.playerId, ev.data.contentId);
       handoverDelay = MATCH_HANDOVER_DELAY;
     },
-    tray_update: function() {
-      pairsApplyTrayUpdate(gameScreen, ev.data.playerId, ev.data.contentId);
-    },
+    tray_update: SG_NOOP,
     turn_start: function() {
       handleTurnChange();
     },
-    match_fail: function() {
-      var indices = ev.data.cardIndices;
+    not_found: function() {
+      var idx = ev.data.cardIndex;
       setTimeout(function() {
-        var result = resolveFlip(gameState);
+        var result = resolveShoppingFlip(gameState);
         gameState = result.state;
-        pairsApplyMismatch(gameScreen, indices);
+        shoppingApplyMismatch(gameScreen, idx);
         result.events.forEach(function(e2) {
           var RESOLVE_HANDLERS = { turn_start: handleTurnChange };
-          [RESOLVE_HANDLERS[e2.type]].filter(Boolean).concat([PAIRS_NOOP])[0]();
+          [RESOLVE_HANDLERS[e2.type]].filter(Boolean).concat([SG_NOOP])[0]();
         });
       }, MISMATCH_DELAY);
     },
     invalid_action: function() {
-      pairsFlashInvalid(gameScreen, cardIndex);
+      shoppingFlashInvalid(gameScreen, cardIndex);
     },
     game_complete: function() {
       setTimeout(function() {
         showScreen('summary');
-        renderPairsSummary(summaryScreen, gameState, function() {
+        renderShoppingSummary(summaryScreen, gameState, function() {
           showScreen('setup');
-          renderPairsSetup(setupScreen, allEntries, animalEntries, function(cfg) {
+          renderShoppingSetup(setupScreen, allEntries, animalEntries, function(cfg) {
             startGame(cfg);
           });
         });
       }, COMPLETE_DELAY);
     }
   };
-  [HANDLERS[ev.type]].filter(Boolean).concat([PAIRS_NOOP])[0]();
+  [HANDLERS[ev.type]].filter(Boolean).concat([SG_NOOP])[0]();
 }
 
 function speakCard(cardIndex) {
