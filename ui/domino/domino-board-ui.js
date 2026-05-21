@@ -1,10 +1,6 @@
 var DOMINO_CELL   = 52;
 var DOMINO_ORIGIN = 2000;
 
-function dominoBoardPx(gridCoord) {
-  return (DOMINO_ORIGIN + gridCoord * DOMINO_CELL) + 'px';
-}
-
 function buildDominoHalfEl(value) {
   var el = document.createElement('div');
   el.className = 'domino-half';
@@ -23,8 +19,8 @@ function buildDominoTileEl(placedTile) {
   var tile = placedTile.tile;
   var el = document.createElement('div');
   el.className = 'domino-tile domino-tile-' + tile.orientation;
-  el.style.left = dominoBoardPx(placedTile.col);
-  el.style.top  = dominoBoardPx(placedTile.row);
+  el.style.left = (DOMINO_ORIGIN + placedTile.col * DOMINO_CELL) + 'px';
+  el.style.top  = (DOMINO_ORIGIN + placedTile.row * DOMINO_CELL) + 'px';
   el.setAttribute('data-testid', 'domino-tile-' + tile.id);
   el.appendChild(buildDominoHalfEl(tile.left));
   el.appendChild(buildDominoDividerEl());
@@ -37,8 +33,8 @@ function buildDominoEndpointEl(endpoint) {
   el.className = 'domino-endpoint';
   el.setAttribute('data-testid', 'domino-endpoint');
   el.setAttribute('data-value', endpoint.value);
-  el.style.left = dominoBoardPx(endpoint.col);
-  el.style.top  = dominoBoardPx(endpoint.row);
+  el.style.left = (DOMINO_ORIGIN + endpoint.col * DOMINO_CELL) + 'px';
+  el.style.top  = (DOMINO_ORIGIN + endpoint.row * DOMINO_CELL) + 'px';
   return el;
 }
 
