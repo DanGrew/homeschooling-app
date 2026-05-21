@@ -35,12 +35,14 @@ export function renderChoices(container, presets, indices, correctIdx, onPick) {
   });
 }
 
+var BUILD_TILE_FN = {
+  'true':  function(opt, onPick) { return buildTile(opt.preset, opt.correct, onPick); },
+  'false': function(opt, onPick) { return buildTextTile(opt.label, opt.correct, onPick); }
+};
+
 export function renderMultiChoiceOptions(container, options, onPick) {
   container.innerHTML = '';
   options.forEach(function(opt) {
-    var tile = opt.preset
-      ? buildTile(opt.preset, opt.correct, onPick)
-      : buildTextTile(opt.label, opt.correct, onPick);
-    container.appendChild(tile);
+    container.appendChild(BUILD_TILE_FN[String(!!opt.preset)](opt, onPick));
   });
 }
