@@ -118,6 +118,7 @@ window.addEventListener('page:control', function(e) {
 | Piano songs | `app/activities/piano/songs.html` | core/piano, ui/piano, content/audio/songs |
 | Puzzle | `app/activities/puzzle/index.html` | core/puzzle, ui/puzzle |
 | Pairs memory | `app/activities/pairs/index.html` | core/pairs, ui/pairs, core/card-game, ui/card-game |
+| Domino match | `app/activities/domino/index.html` | core/pairs (filterByTag), ui/domino, ui/card-game |
 | Shopping game | `app/activities/shopping-game/index.html` | core/shopping-game, ui/shopping-game, core/card-game, ui/card-game |
 | Word lesson | `app/activities/word-lesson/index.html` | ui/word-lesson, components/guidance |
 | Word builder | `app/activities/word-builder/index.html` | core/word-builder, ui/word-builder, components/speech, components/success-banner |
@@ -234,6 +235,7 @@ function onReset() {
 | `ui/number-interaction/number-interaction-ui.js` | Number UI |
 | `ui/card-game/card-game-ui.js` | Shared card-game UI: setup sections, grid, cards, trays, handover |
 | `ui/pairs/pairs-ui.js` | Pairs game UI |
+| `ui/domino/domino-ui.js` | Domino setup screen UI |
 | `ui/shopping-game/shopping-game-ui.js` | Shopping game UI: shopping tray, list items, summary |
 | `ui/piano/piano-ui.js` | Piano keyboard UI |
 | `ui/piano/piano-game-ui.js` | Piano game mode UI |
