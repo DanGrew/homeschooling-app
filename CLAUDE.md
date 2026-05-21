@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## STOP — Read Before Implementing
+
+Before any implementation:
+1. Pull `main` and create a new branch off it
+2. Read `TESTING.md` — this repo has tight CI quality checks; skipping this causes refactor cycles
+
 ## Project
 
 Public-facing homeschooling app. Activities built for a child aged 3–4. This repo contains only the app shell and HTML/SVG activities — curriculum thinking and EYFS reference material lives in the private `homeschooling` repo.
@@ -129,6 +135,39 @@ window.addEventListener('page:control', function(e) {
 | Character worksheet | `app/worksheets/character-worksheet/index.html` | core/character-worksheet, ui/character-worksheet |
 | Colouring sheets | `app/worksheets/colouring-sheets/index.html` | core/dictionary, ui/colouring |
 | Physical activities | `app/physical/activities/_shell.html` + variants | core/physical |
+
+## Telemetry Pattern
+
+All activities record a `learning_completed` event at session end using `recordLearningEvent` from `core/telemetry/learning-events.js`. Reference implementation: `ui/colouring-playground/colouring-playground-ui.js`.
+
+```js
+import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
+
+var eventFired = false;
+
+function onActivityComplete() {
+  if (eventFired) return;
+  eventFired = true;
+  recordLearningEvent({
+    version: 1,
+    type: 'learning_completed',
+    timestamp: Date.now(),
+    learning_id: 'activity-id',   // stable string identifying the activity/mode
+    variant_id: variantId,        // e.g. content pack, puzzle id, catalog — omit if no variant
+    activity_id: 'activity-id'    // same as learning_id unless activity has sub-modes
+  });
+}
+
+function onReset() {
+  eventFired = false;  // allow re-fire after reset/play-again
+}
+```
+
+**Rules:**
+- One event per completed session — guard with `eventFired` flag
+- Reset flag on play-again / reset
+- No intermediate events (taps, matches, etc.) — completion only
+- Events stored in IndexedDB; visible on learnings page (`app/learnings/index.html`)
 
 ## Module Index
 
