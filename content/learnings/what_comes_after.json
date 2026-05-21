@@ -1,0 +1,39 @@
+{
+  "id": "what_comes_after",
+  "title": "What Comes After?",
+  "number": 8,
+  "guide": "dog",
+  "source": "Clock",
+  "mode": "multi-choice",
+  "profile": "child-day",
+  "criteria": ["cl.sequencing-language", "cl.prediction"],
+  "steps": [
+    {
+      "text": "The clock shows lunchtime. What comes after lunch?",
+      "preset_shown": "lunch",
+      "correct": "afternoon",
+      "distractors": ["wake_up", "breakfast", "bedtime"],
+      "expect": "PRESET_AFTERNOON_SELECTED",
+      "feedback": "That is right — after lunch comes afternoon! Lunch, then afternoon.",
+      "pageControls": ["RENDER_MULTI_CHOICE"]
+    },
+    {
+      "text": "Now the clock shows afternoon. What comes after afternoon?",
+      "preset_shown": "afternoon",
+      "correct": "dinner",
+      "distractors": ["wake_up", "lunch", "bedtime"],
+      "expect": "PRESET_DINNER_SELECTED",
+      "feedback": "After afternoon comes dinner time. The day is nearly done!",
+      "pageControls": ["RENDER_MULTI_CHOICE"]
+    },
+    {
+      "text": "The clock shows breakfast. What comes after breakfast?",
+      "preset_shown": "breakfast",
+      "correct": "lunch",
+      "distractors": ["wake_up", "dinner", "bedtime"],
+      "expect": "PRESET_LUNCH_SELECTED",
+      "feedback": "After breakfast comes lunch! First breakfast, then lunch.",
+      "pageControls": ["RENDER_MULTI_CHOICE"]
+    }
+  ]
+}

@@ -15,7 +15,8 @@
     {id:'find_the_number',  number:2, title:'Find the Number'},
     {id:'long_and_short',   number:3, title:'Long Hand, Short Hand'},
     {id:'times_of_day',     number:4, title:'Times of Day'},
-    {id:'morning_to_night', number:5, title:'Morning to Night'}
+    {id:'morning_to_night', number:5, title:'Morning to Night'},
+    {id:'what_comes_after', number:8, title:'What Comes After?'}
   ];
 </script>
 <script src="../../../components/menu.js" defer></script>
@@ -61,6 +62,7 @@
       </div>
     </div>
     <div id="preset-buttons"></div>
+    <div id="multi-choice-container" style="display:none;flex:1;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;"></div>
   </div>
 </div>
 <script type="module">
@@ -71,6 +73,7 @@ import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
 import {makeSpeakable, makeInteractive} from '../../../components/speech/speakable.js';
 import {speak} from '../../../components/speech/speech-ui.js';
 import {GuidanceService} from '../../../components/guidance/guidance-service.js';
+import {renderMultiChoiceOptions} from '../../../ui/clock/choice-ui.js';
 
 var currentHour = 0;
 var totalDeg = 0;
@@ -115,7 +118,7 @@ makeInteractive(document.getElementById('clock-container'), function() { speak(c
 var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
 var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
 
-function pressPreset(preset) {
+function showPresetTime(preset) {
   var hour = parseInt(preset.time.split(':')[0], 10);
   totalDeg += nextDegrees(currentHour, hour);
   currentHour = hour;
@@ -124,6 +127,10 @@ function pressPreset(preset) {
   setHandDeg(totalDeg, 0);
   skyRender(hourToSky(hour));
   digitalRender(hour);
+}
+
+function pressPreset(preset) {
+  showPresetTime(preset);
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
 }
 
@@ -142,6 +149,85 @@ fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
       btns.appendChild(btn);
     });
   });
+
+var mcContainer = document.getElementById('multi-choice-container');
+var presetButtonsEl = document.getElementById('preset-buttons');
+var _mcProfile = null;
+var _mcProfileId = null;
+
+function loadMCProfile(profileId, cb) {
+  if (_mcProfileId === profileId && _mcProfile) { cb(_mcProfile); return; }
+  fetch('../../../content/clock/profiles/' + profileId + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      _mcProfileId = profileId;
+      _mcProfile = {};
+      data.presets.forEach(function(p) { _mcProfile[p.id] = p; });
+      cb(_mcProfile);
+    });
+}
+
+function shuffled(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+var PAGE_CTRL = {
+  'PAGE_CONTROL_RESET': function() {},
+  'RENDER_MULTI_CHOICE': function() {
+    var svc = window.guidanceService;
+    var lesson = svc._lesson;
+    var step = lesson.steps[svc._stepIdx];
+    function doRender(profile) {
+      if (step.preset_shown && profile && profile[step.preset_shown]) {
+        showPresetTime(profile[step.preset_shown]);
+      }
+      var options;
+      if (step.answers) {
+        options = step.answers.map(function(a) { return { label: a, correct: a === step.correct }; });
+      } else {
+        options = [step.correct].concat(step.distractors).map(function(id) {
+          return { preset: profile[id], correct: id === step.correct };
+        });
+      }
+      renderMultiChoiceOptions(mcContainer, shuffled(options), function(tile, isCorrect) {
+        if (isCorrect) {
+          var opt = options.find(function(o) { return o.correct; });
+          if (opt && opt.preset) { pressPreset(opt.preset); }
+          else { emit('MULTI_CHOICE_CORRECT'); }
+        } else {
+          speak('Try again!');
+          var orig = tile.style.border;
+          tile.style.border = '3px solid rgba(255,80,80,0.9)';
+          setTimeout(function() { tile.style.border = orig; }, 600);
+        }
+      });
+    }
+    if (lesson.profile) { loadMCProfile(lesson.profile, doRender); }
+    else { doRender(null); }
+  }
+};
+
+window.addEventListener('guidance:start', function(e) {
+  if (e.detail.lesson.mode === 'multi-choice') {
+    presetButtonsEl.style.display = 'none';
+    mcContainer.style.display = 'flex';
+  }
+});
+
+window.addEventListener('guidance:stop', function() {
+  presetButtonsEl.style.display = '';
+  mcContainer.style.display = 'none';
+  mcContainer.innerHTML = '';
+});
+
+window.addEventListener('page:control', function(e) {
+  if (e.detail.type in PAGE_CTRL) { PAGE_CTRL[e.detail.type](); }
+});
 
 window.LEARNINGS_BASE = '../../../content/learnings/';
 window.guidanceService = new GuidanceService();
