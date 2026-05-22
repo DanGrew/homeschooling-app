@@ -143,10 +143,11 @@ function onSubmitSuccess() {
 
 function onSubmit() {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
+    var rot = Number(turnState.previewRotation);
     [turnState.previewEndpointIndex].filter(function(idx) { return idx !== null; }).forEach(function(epIdx) {
       var playerId = gameState.players[gameState.turnIndex].id;
       dominoEmit('placement_submitted', { tile_id: tileId, location_id: 'endpoint_' + epIdx });
-      var result = placeTile(gameState, tileId, epIdx, turnState.previewRotation || 0);
+      var result = placeTile(gameState, tileId, epIdx, rot);
       var ON_RESULT = {
         'true': function() {
           dominoEmit('placement_success', { tile_id: tileId });
