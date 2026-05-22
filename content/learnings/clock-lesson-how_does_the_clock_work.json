@@ -16,7 +16,7 @@
       "expect": "NUMERAL_3_TAPPED"
     },
     {
-      "text": "Because you tapped 3, the hand moved to 3. The clock is now showing three o'clock. You made it move! Now tap number 6. What do you think will happen to the hand?",
+      "text": "Because you tapped 3, the big hand moved to 3. You made it move! Now tap number 6. What do you think will happen?",
       "expect": "NUMERAL_6_TAPPED"
     },
     {

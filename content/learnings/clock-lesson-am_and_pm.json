@@ -9,9 +9,8 @@
   "criteria": ["cl.technical-vocab", "uw.cause-effect"],
   "steps": [
     {
-      "text": "The clock shows seven in the morning. Look at the display — it says AM. AM means morning.",
+      "text": "The clock shows seven in the morning. Look at the display — it says AM. AM means morning. Tap AM!",
       "pageControls": ["BADGE_TARGET_AM"],
-      "badge": "AM",
       "expect": "BADGE_AM_TAPPED"
     },
     {
@@ -19,9 +18,8 @@
       "expect": "PRESET_LUNCH_SELECTED"
     },
     {
-      "text": "It changed to PM! Because lunchtime is after midday, the clock flipped from AM to PM. PM means afternoon and evening.",
+      "text": "It changed to PM! Because lunchtime is after midday, the clock flipped from AM to PM. PM means afternoon and evening. Tap PM!",
       "pageControls": ["BADGE_TARGET_PM"],
-      "badge": "PM",
       "expect": "BADGE_PM_TAPPED"
     },
     {

@@ -192,7 +192,9 @@ function showPresetTime(preset) {
 function pressPreset(preset) {
   showPresetTime(preset);
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
-  emit('ANY_PRESET_SELECTED');
+  var _svc = window.guidanceService;
+  var _step = _svc && _svc._lesson && _svc._lesson.steps[_svc._stepIdx];
+  if (_step && _step.expect === 'ANY_PRESET_SELECTED') emit('ANY_PRESET_SELECTED');
 }
 
 var _APPLY_FILTER = {
