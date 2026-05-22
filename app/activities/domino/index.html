@@ -46,6 +46,10 @@ var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
 var gameState;
 var turnState;
 
+function dominoEmit(type, detail) {
+  window.dispatchEvent(new CustomEvent('domino:' + type, { detail: Object(detail) }));
+}
+
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
   Object.keys(screens).forEach(function(k) {
@@ -62,6 +66,9 @@ function makeBoardOpts() {
 }
 
 function deselectTile() {
+  [turnState.selectedTileId].filter(Boolean).forEach(function(tid) {
+    dominoEmit('preview_cancelled', { tile_id: tid });
+  });
   turnState.selectedTileId = null;
   turnState.previewEndpointIndex = null;
   dominoTraySetSelected(trayEl, null);
@@ -73,6 +80,7 @@ function deselectTile() {
 function selectTile(tileId) {
   turnState.selectedTileId = tileId;
   turnState.previewEndpointIndex = null;
+  dominoEmit('tile_selected', { tile_id: tileId });
   dominoTraySetSelected(trayEl, tileId);
   dominoTraySetSubmitEnabled(trayEl, false);
   clearDominoPreview(boardViewport);
@@ -89,6 +97,7 @@ function onEndpointTap(endpointIndex) {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
     [getPreviewPlacement(gameState, tileId, endpointIndex)].filter(Boolean).forEach(function(preview) {
       turnState.previewEndpointIndex = endpointIndex;
+      dominoEmit('placement_preview', { tile_id: tileId, location_id: 'endpoint_' + endpointIndex });
       showDominoPreview(boardViewport, preview);
       dominoTraySetSubmitEnabled(trayEl, true);
     });
@@ -103,6 +112,7 @@ function flashTileRed(tileId) {
 }
 
 function showSummary() {
+  dominoEmit('game_complete', {});
   showScreen('summary');
   renderDominoSummary(summaryScreen, gameState, function() {
     showScreen('setup');
@@ -114,6 +124,7 @@ function afterTurn() {
   [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
     var player = gameState.players[gameState.turnIndex];
     renderDominoHandover(gameScreen, player, function() {
+      dominoEmit('turn_start', { player_id: player.id });
       renderDominoTray(trayEl, gameState, makeTrayOpts());
     });
   });
@@ -130,14 +141,28 @@ function onSubmitSuccess() {
 function onSubmit() {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
     [turnState.previewEndpointIndex].filter(function(idx) { return idx !== null; }).forEach(function(epIdx) {
+      var playerId = gameState.players[gameState.turnIndex].id;
+      dominoEmit('placement_submitted', { tile_id: tileId, location_id: 'endpoint_' + epIdx });
       var result = placeTile(gameState, tileId, epIdx);
-      var ON_RESULT = { 'true': onSubmitSuccess, 'false': function() { flashTileRed(tileId); } };
+      var ON_RESULT = {
+        'true': function() {
+          dominoEmit('placement_success', { tile_id: tileId });
+          dominoEmit('tile_removed_from_tray', { player_id: playerId, tile_id: tileId });
+          onSubmitSuccess();
+        },
+        'false': function() {
+          dominoEmit('placement_fail', { reason: 'invalid_placement', tile_id: tileId });
+          flashTileRed(tileId);
+        }
+      };
       ON_RESULT[String(result.success)]();
     });
   });
 }
 
-function onDrawSuccess() {
+function onDrawSuccess(r) {
+  var playerId = r.player_id;
+  dominoEmit('tile_drawn', { player_id: playerId, tile_id: r.tile.id });
   turnState.selectedTileId = null;
   turnState.previewEndpointIndex = null;
   clearDominoPreview(boardViewport);
@@ -146,7 +171,10 @@ function onDrawSuccess() {
 }
 
 function onDraw() {
-  [drawTile(gameState)].filter(function(r) { return r.success; }).forEach(onDrawSuccess);
+  var playerId = gameState.players[gameState.turnIndex].id;
+  [drawTile(gameState)].filter(function(r) { return r.success; }).forEach(function(r) {
+    onDrawSuccess(Object.assign({ player_id: playerId }, r));
+  });
 }
 
 fetch('../../../content/dictionary/dictionary.json')
@@ -166,10 +194,13 @@ fetch('../../../content/dictionary/dictionary.json')
 function startGame(setupState) {
   gameState = createDominoGame(setupState);
   turnState = { selectedTileId: null, previewEndpointIndex: null };
+  dominoEmit('game_start', { matchType: gameState.matchType, players: gameState.players.map(function(p) { return p.id; }) });
   showScreen('game');
   renderDominoBoard(boardViewport, gameState, makeBoardOpts());
   renderDominoTray(trayEl, gameState, makeTrayOpts());
-  renderDominoHandover(gameScreen, gameState.players[0], function() {});
+  renderDominoHandover(gameScreen, gameState.players[0], function() {
+    dominoEmit('turn_start', { player_id: gameState.players[0].id });
+  });
 }
 
 window.addEventListener('resize', function() {
@@ -182,11 +213,27 @@ window.addEventListener('resize', function() {
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import { speakInterrupt } from '../../../components/speech/speech-ui.js';
+import { recordLearningEvent } from '../../../core/telemetry/learning-events.js';
 document.querySelectorAll('[data-speak]').forEach(function(el) {
   makeSpeakable(el, el.getAttribute('data-speak'));
 });
 window.__makeSpeakable = makeSpeakable;
 window.__speakInterrupt = speakInterrupt;
+var learningEventFired = false;
+window.addEventListener('domino:game_start', function() { learningEventFired = false; });
+window.addEventListener('domino:game_complete', function() {
+  [learningEventFired].filter(function(fired) { return !fired; }).forEach(function() {
+    learningEventFired = true;
+    recordLearningEvent({
+      version: 1,
+      type: 'learning_completed',
+      timestamp: Date.now(),
+      learning_id: 'domino',
+      variant_id: window.gameState && window.gameState.matchType,
+      activity_id: window.ACTIVITY_ID
+    });
+  });
+});
 </script>
 </body>
 </html>
