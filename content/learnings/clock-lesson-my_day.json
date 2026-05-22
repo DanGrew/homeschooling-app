@@ -5,7 +5,7 @@
   "guide": "cat",
   "source": "Clock",
   "filter": "my-day",
-  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
+  "pageControls": ["LOAD_PROFILE_CHILD_DAY", "ENABLE_ANY_PRESET"],
   "criteria": ["psed.identity", "cl.topic-vocabulary", "cl.sequencing-language"],
   "steps": [
     {

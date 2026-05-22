@@ -189,12 +189,16 @@ function showPresetTime(preset) {
   digitalRender(hour, minute);
 }
 
+var _anyPresetEnabled = false;
+var _EMIT_ANY_PRESET = {
+  'true':  function() { emit('ANY_PRESET_SELECTED'); },
+  'false': function() {}
+};
+
 function pressPreset(preset) {
   showPresetTime(preset);
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
-  var _svc = window.guidanceService;
-  var _step = _svc && _svc._lesson && _svc._lesson.steps[_svc._stepIdx];
-  if (_step && _step.expect === 'ANY_PRESET_SELECTED') emit('ANY_PRESET_SELECTED');
+  _EMIT_ANY_PRESET[String(_anyPresetEnabled)]();
 }
 
 var _APPLY_FILTER = {
@@ -227,8 +231,10 @@ PAGE_CTRL['BADGE_TARGET_PM']           = function() { _setBadgeTarget(document.g
 PAGE_CTRL['BADGE_TARGET_24HR']         = function() { _setBadgeTarget(document.getElementById('digital-24h'), 'BADGE_24HR_TAPPED'); };
 PAGE_CTRL['BADGE_TARGET_PRESET_LABEL'] = function() { _setBadgeTarget(profileTitleEl, 'BADGE_PRESET_LABEL_TAPPED'); };
 PAGE_CTRL['BADGE_TARGET_NONE']         = function() { _clearBadgeTarget(); };
+PAGE_CTRL['ENABLE_ANY_PRESET']    = function() { _anyPresetEnabled = true; };
 PAGE_CTRL['PAGE_CONTROL_RESET']   = function() {
   _clearBadgeTarget();
+  _anyPresetEnabled = false;
   presetFilter = null;
   document.getElementById('digital').style.visibility = '';
   document.getElementById('preset-buttons').style.visibility = '';
