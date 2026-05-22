@@ -110,7 +110,7 @@ function onEndpointTap(endpointIndex) {
 function flashTileRed(tileId) {
   [trayEl.querySelector('[data-tile-id="' + tileId + '"]')].filter(Boolean).forEach(function(el) {
     el.classList.add('domino-tile-flash-red');
-    setTimeout(function() { el.classList.remove('domino-tile-flash-red'); }, 500);
+    setTimeout(el.classList.remove.bind(el.classList, 'domino-tile-flash-red'), 500);
   });
 }
 
