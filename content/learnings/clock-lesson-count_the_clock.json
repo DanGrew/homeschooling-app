@@ -1,0 +1,62 @@
+{
+  "id": "clock-lesson-count_the_clock",
+  "title": "Count the Clock",
+  "number": 1,
+  "guide": "cat",
+  "source": "Clock",
+  "criteria": [
+    "maths.counting-10",
+    "maths.number-order"
+  ],
+  "steps": [
+    {
+      "text": "This is a clock! Clocks have numbers all the way around. Can you tap the number 1?",
+      "expect": "NUMERAL_1_TAPPED"
+    },
+    {
+      "text": "One! Now tap 2!",
+      "expect": "NUMERAL_2_TAPPED"
+    },
+    {
+      "text": "Now tap 3!",
+      "expect": "NUMERAL_3_TAPPED"
+    },
+    {
+      "text": "Now tap 4!",
+      "expect": "NUMERAL_4_TAPPED"
+    },
+    {
+      "text": "Now tap 5!",
+      "expect": "NUMERAL_5_TAPPED"
+    },
+    {
+      "text": "Now tap 6 — it's at the very bottom!",
+      "expect": "NUMERAL_6_TAPPED"
+    },
+    {
+      "text": "Halfway around. Now tap 7!",
+      "expect": "NUMERAL_7_TAPPED"
+    },
+    {
+      "text": "Now tap 8!",
+      "expect": "NUMERAL_8_TAPPED"
+    },
+    {
+      "text": "Now tap 9!",
+      "expect": "NUMERAL_9_TAPPED"
+    },
+    {
+      "text": "Now tap 10!",
+      "expect": "NUMERAL_10_TAPPED"
+    },
+    {
+      "text": "Now tap 11!",
+      "expect": "NUMERAL_11_TAPPED"
+    },
+    {
+      "text": "Last one — tap 12 at the very top!",
+      "expect": "NUMERAL_12_TAPPED",
+      "feedback": "You counted all the way around!"
+    }
+  ]
+}
