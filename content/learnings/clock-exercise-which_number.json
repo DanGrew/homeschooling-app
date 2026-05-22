@@ -1,0 +1,33 @@
+{
+  "id": "clock-exercise-which_number",
+  "title": "Which Number?",
+  "number": 20,
+  "guide": "dog",
+  "source": "Clock",
+  "mode": "multi-choice",
+  "criteria": ["maths.numeral-recognition", "maths.number-order"],
+  "steps": [
+    {
+      "text": "The short hand is pointing to a number. Which number is it?",
+      "pageControls": ["LOAD_TIME_03_00", "RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "answers": ["3", "6", "9", "12"],
+      "correct": "3"
+    },
+    {
+      "text": "That is 3! The short hand points straight to 3 at three o'clock. Which number is it pointing to now?",
+      "pageControls": ["LOAD_TIME_07_00", "RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "answers": ["5", "6", "7", "8"],
+      "correct": "7"
+    },
+    {
+      "text": "7! The short hand is pointing right at 7. Which number now?",
+      "pageControls": ["LOAD_TIME_11_00", "RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "answers": ["9", "10", "11", "12"],
+      "correct": "11",
+      "feedback": "11! Nearly at the top — 12 is just one more."
+    }
+  ]
+}

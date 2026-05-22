@@ -1,0 +1,34 @@
+{
+  "id": "clock-exercise-whose_day_doctor",
+  "title": "The Doctor — Can You Remember?",
+  "number": 19,
+  "guide": "cat",
+  "source": "Clock",
+  "mode": "multi-choice",
+  "profile": "doctor",
+  "criteria": ["uw.community", "cl.sequencing-language"],
+  "steps": [
+    {
+      "text": "When does the doctor arrive at the hospital?",
+      "pageControls": ["RENDER_MULTI_CHOICE"],
+      "expect": "PRESET_DOCTOR_ARRIVE_SELECTED",
+      "correct": "doctor_arrive",
+      "distractors": ["doctor_morning", "doctor_lunch", "doctor_home"]
+    },
+    {
+      "text": "Eight o'clock — the doctor arrives ready for a busy day. What does the doctor do after the lunch break?",
+      "pageControls": ["RENDER_MULTI_CHOICE"],
+      "expect": "PRESET_DOCTOR_AFTERNOON_SELECTED",
+      "correct": "doctor_afternoon",
+      "distractors": ["doctor_arrive", "doctor_morning", "doctor_lunch"]
+    },
+    {
+      "text": "Afternoon ward — checking on all the patients! When does the doctor go home?",
+      "pageControls": ["RENDER_MULTI_CHOICE"],
+      "expect": "PRESET_DOCTOR_HOME_SELECTED",
+      "correct": "doctor_home",
+      "distractors": ["doctor_arrive", "doctor_morning", "doctor_afternoon"],
+      "feedback": "Six o'clock — the doctor's long day is finally done."
+    }
+  ]
+}
