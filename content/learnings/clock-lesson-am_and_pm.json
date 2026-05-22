@@ -1,0 +1,35 @@
+{
+  "id": "clock-lesson-am_and_pm",
+  "title": "AM and PM",
+  "number": 12,
+  "guide": "cat",
+  "source": "Clock",
+  "filter": "sky-change",
+  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
+  "criteria": ["cl.technical-vocab", "uw.cause-effect"],
+  "steps": [
+    {
+      "text": "The clock shows seven in the morning. Look at the display — it says AM. AM means morning. Tap AM!",
+      "pageControls": ["BADGE_TARGET_AM"],
+      "expect": "BADGE_AM_TAPPED"
+    },
+    {
+      "text": "AM — morning time! Any time before midday is AM. Now press Lunch. Watch what happens to AM!",
+      "expect": "PRESET_LUNCH_SELECTED"
+    },
+    {
+      "text": "It changed to PM! Because lunchtime is after midday, the clock flipped from AM to PM. PM means afternoon and evening. Tap PM!",
+      "pageControls": ["BADGE_TARGET_PM"],
+      "expect": "BADGE_PM_TAPPED"
+    },
+    {
+      "text": "PM — afternoon time. PM goes from midday all the way until midnight. Press Bedtime — is it still PM?",
+      "expect": "PRESET_BEDTIME_SELECTED"
+    },
+    {
+      "text": "Still PM! Bedtime is in the evening — that is still PM. PM lasts a long time. Now press Wake up. What will happen?",
+      "expect": "PRESET_WAKE_UP_SELECTED",
+      "feedback": "AM is back! Because wake-up time is in the morning, it flipped back to AM. Morning is always AM."
+    }
+  ]
+}

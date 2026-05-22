@@ -1,0 +1,32 @@
+{
+  "id": "clock-lesson-how_does_the_clock_work",
+  "title": "How Does the Clock Work?",
+  "number": 11,
+  "guide": "cat",
+  "source": "Clock",
+  "criteria": ["uw.technology", "uw.cause-effect"],
+  "steps": [
+    {
+      "text": "A clock is a machine — it tells us the time.",
+      "badge": "machine",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "It has a hand that moves to point at a number. Tap number 3 on the clock!",
+      "expect": "NUMERAL_3_TAPPED"
+    },
+    {
+      "text": "Because you tapped 3, the big hand moved to 3. You made it move! Now tap number 6. What do you think will happen?",
+      "expect": "NUMERAL_6_TAPPED"
+    },
+    {
+      "text": "Because you tapped 6, the hand moved all the way to 6. You are controlling the clock! Tap number 9 — then look at where the hand goes.",
+      "expect": "NUMERAL_9_TAPPED"
+    },
+    {
+      "text": "Because you tapped 9, the hand moved to 9. Every time you tap a number, the hand follows. Last — tap 12. That is where the clock starts every single day.",
+      "expect": "NUMERAL_12_TAPPED",
+      "feedback": "The hand is back at the top. 12 is where the clock begins. Tap a number, the hand moves — that is the clock doing its job!"
+    }
+  ]
+}

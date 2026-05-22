@@ -19,8 +19,12 @@
     {id:'clock-lesson-my_day',        number:6,  title:'My Day'},
     {id:'clock-lesson-bakers_day',    number:7,  title:"The Baker's Day"},
     {id:'clock-lesson-farmers_day',   number:8,  title:"The Farmer's Day"},
-    {id:'clock-lesson-doctors_day',   number:9,  title:"The Doctor's Day"},
-    {id:'what_comes_after', number:10, title:'What Comes After?'}
+    {id:'clock-lesson-doctors_day',        number:9,  title:"The Doctor's Day"},
+    {id:'clock-lesson-numbers_on_the_clock',   number:10, title:'Numbers on the Clock'},
+    {id:'clock-lesson-how_does_the_clock_work', number:11, title:'How Does the Clock Work?'},
+    {id:'clock-lesson-am_and_pm',               number:12, title:'AM and PM'},
+    {id:'clock-lesson-clock_counts_in_fives',   number:14, title:'The Clock Counts in Fives'},
+    {id:'what_comes_after', number:15, title:'What Comes After?'}
   ];
 </script>
 <script src="../../../components/menu.js" defer></script>
@@ -185,10 +189,16 @@ function showPresetTime(preset) {
   digitalRender(hour, minute);
 }
 
+var _anyPresetEnabled = false;
+var _EMIT_ANY_PRESET = {
+  'true':  function() { emit('ANY_PRESET_SELECTED'); },
+  'false': function() {}
+};
+
 function pressPreset(preset) {
   showPresetTime(preset);
   emit('PRESET_' + preset.id.toUpperCase() + '_SELECTED');
-  emit('ANY_PRESET_SELECTED');
+  _EMIT_ANY_PRESET[String(_anyPresetEnabled)]();
 }
 
 var _APPLY_FILTER = {
@@ -221,8 +231,10 @@ PAGE_CTRL['BADGE_TARGET_PM']           = function() { _setBadgeTarget(document.g
 PAGE_CTRL['BADGE_TARGET_24HR']         = function() { _setBadgeTarget(document.getElementById('digital-24h'), 'BADGE_24HR_TAPPED'); };
 PAGE_CTRL['BADGE_TARGET_PRESET_LABEL'] = function() { _setBadgeTarget(profileTitleEl, 'BADGE_PRESET_LABEL_TAPPED'); };
 PAGE_CTRL['BADGE_TARGET_NONE']         = function() { _clearBadgeTarget(); };
+PAGE_CTRL['ENABLE_ANY_PRESET']    = function() { _anyPresetEnabled = true; };
 PAGE_CTRL['PAGE_CONTROL_RESET']   = function() {
   _clearBadgeTarget();
+  _anyPresetEnabled = false;
   presetFilter = null;
   document.getElementById('digital').style.visibility = '';
   document.getElementById('preset-buttons').style.visibility = '';
@@ -362,7 +374,7 @@ var _GUIDANCE_START_MODE = {
 };
 
 window.addEventListener('guidance:start', function(e) {
-  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.display = 'none'; });
+  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.visibility = 'hidden'; });
   profileTitleEl.style.display = 'none';
   [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
   [e.detail.lesson.filter].filter(Boolean).forEach(function(filter) {
@@ -372,7 +384,7 @@ window.addEventListener('guidance:start', function(e) {
 });
 
 window.addEventListener('guidance:stop', function() {
-  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.display = ''; });
+  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.visibility = ''; });
   profileTitleEl.style.display = '';
   buildProfileFilter();
   presetFilter = null;

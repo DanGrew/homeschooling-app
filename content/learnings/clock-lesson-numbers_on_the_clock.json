@@ -1,0 +1,31 @@
+{
+  "id": "clock-lesson-numbers_on_the_clock",
+  "title": "Numbers on the Clock",
+  "number": 10,
+  "guide": "dog",
+  "source": "Clock",
+  "criteria": ["maths.numeral-recognition", "maths.number-order"],
+  "steps": [
+    {
+      "text": "The clock has numbers all the way around. Can you find number 1? Tap it on the clock!",
+      "expect": "NUMERAL_1_TAPPED"
+    },
+    {
+      "text": "There is 1! Watch the big hand — it swept round to 1. What number comes after 1? Find number 2 and tap it!",
+      "expect": "NUMERAL_2_TAPPED"
+    },
+    {
+      "text": "2 comes after 1. The numbers go around and around the clock! Now find number 3 — keep going around!",
+      "expect": "NUMERAL_3_TAPPED"
+    },
+    {
+      "text": "3 comes after 2. 1, 2, 3 — the clock is counting! Skip ahead — find number 6. It is right at the bottom of the clock.",
+      "expect": "NUMERAL_6_TAPPED"
+    },
+    {
+      "text": "6 is at the very bottom. Halfway around! The numbers have been going all the way from 1. Now find the biggest number on the clock — number 12. It is right at the top!",
+      "expect": "NUMERAL_12_TAPPED",
+      "feedback": "12 is at the top — that is where the clock always starts. 1, 2, 3 all the way to 12. That is how a clock counts!"
+    }
+  ]
+}
