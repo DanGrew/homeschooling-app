@@ -1,4 +1,4 @@
-const { generateTiles, dealHands, validatePlacement, checkCompletion, createInitialBoard, createDominoGame, DOMINO_VALUES } = require('../../../core/domino/domino-core.js')
+const { generateTiles, dealHands, validatePlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, DOMINO_VALUES } = require('../../../core/domino/domino-core.js')
 
 // ---- generateTiles ----
 
@@ -239,4 +239,264 @@ test('createDominoGame hands contain 7 tiles each', () => {
   const game = createDominoGame(setup)
   expect(game.hands['p0']).toHaveLength(7)
   expect(game.hands['p1']).toHaveLength(7)
+})
+
+// ---- createInitialBoard: side property ----
+
+test('initial board endpoints have side property', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  const sides = board.endpoints.map(ep => ep.side)
+  expect(sides).toContain('left')
+  expect(sides).toContain('right')
+})
+
+test('initial board starting tile has flipped false', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  expect(board.tiles[0].flipped).toBe(false)
+})
+
+// ---- advanceTurn ----
+
+function makeState(overrides) {
+  return Object.assign({
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [{ id: 'x', left: 'red', right: 'blue' }],
+    hands: { p0: [], p1: [] },
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+  }, overrides)
+}
+
+test('advanceTurn increments turnIndex', () => {
+  const state = makeState()
+  advanceTurn(state)
+  expect(state.turnIndex).toBe(1)
+})
+
+test('advanceTurn wraps around', () => {
+  const state = makeState({ turnIndex: 1 })
+  advanceTurn(state)
+  expect(state.turnIndex).toBe(0)
+})
+
+test('advanceTurn sets phase complete when game ends', () => {
+  const state = makeState({ drawPile: [], hands: { p0: [], p1: [] } })
+  advanceTurn(state)
+  expect(state.phase).toBe('complete')
+})
+
+// ---- placeTile ----
+
+function makePlayingState() {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileB = { id: 'blue-green', left: 'blue', right: 'green', orientation: 'horizontal' }
+  const tileC = { id: 'red-orange', left: 'red', right: 'orange', orientation: 'horizontal' }
+  const tileD = { id: 'green-yellow', left: 'green', right: 'yellow', orientation: 'horizontal' }
+  return {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [tileC],
+    hands: { p0: [tileB, tileD], p1: [tileD] },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
+      endpoints: [
+        { value: 'red',  col: -1, row: 0, side: 'left' },
+        { value: 'blue', col:  2, row: 0, side: 'right' }
+      ]
+    }
+  }
+}
+
+test('placeTile returns success for valid placement', () => {
+  const state = makePlayingState()
+  const result = placeTile(state, 'blue-green', 1)
+  expect(result.success).toBe(true)
+})
+
+test('placeTile removes tile from hand', () => {
+  const state = makePlayingState()
+  placeTile(state, 'blue-green', 1)
+  expect(state.hands['p0']).toHaveLength(1)
+})
+
+test('placeTile adds tile to board', () => {
+  const state = makePlayingState()
+  placeTile(state, 'blue-green', 1)
+  expect(state.board.tiles).toHaveLength(2)
+})
+
+test('placeTile updates endpoint on right side', () => {
+  const state = makePlayingState()
+  placeTile(state, 'blue-green', 1)
+  const rightEp = state.board.endpoints.find(ep => ep.side === 'right')
+  expect(rightEp.value).toBe('green')
+  expect(rightEp.col).toBe(4)
+})
+
+test('placeTile advances turn', () => {
+  const state = makePlayingState()
+  placeTile(state, 'blue-green', 1)
+  expect(state.turnIndex).toBe(1)
+})
+
+test('placeTile returns failure for invalid tile id', () => {
+  const state = makePlayingState()
+  expect(placeTile(state, 'no-tile', 1).success).toBe(false)
+})
+
+test('placeTile returns failure for invalid match', () => {
+  const state = makePlayingState()
+  const badTile = { id: 'purple-yellow', left: 'purple', right: 'yellow', orientation: 'horizontal' }
+  state.hands['p0'] = [badTile]
+  expect(placeTile(state, 'purple-yellow', 1).success).toBe(false)
+})
+
+test('placeTile sets phase complete when hand emptied', () => {
+  const state = makePlayingState()
+  state.drawPile = []
+  state.hands['p0'] = [state.hands['p0'][0]]
+  placeTile(state, 'blue-green', 1)
+  expect(state.phase).toBe('complete')
+})
+
+test('placeTile on left endpoint places at correct col', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileC = { id: 'green-red', left: 'green', right: 'red', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [tileC], p1: [] },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
+      endpoints: [
+        { value: 'red',  col: -1, row: 0, side: 'left' },
+        { value: 'blue', col:  2, row: 0, side: 'right' }
+      ]
+    }
+  }
+  placeTile(state, 'green-red', 0)
+  const placed = state.board.tiles.find(pt => pt.tile.id === 'green-red')
+  expect(placed.col).toBe(-2)
+  expect(placed.flipped).toBe(false)
+})
+
+// ---- drawTile ----
+
+test('drawTile adds tile to current player hand', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [tile],
+    hands: { p0: [], p1: [] },
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+  }
+  drawTile(state)
+  expect(state.hands['p0']).toHaveLength(1)
+  expect(state.hands['p0'][0].id).toBe('r-b')
+})
+
+test('drawTile removes tile from draw pile', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [tile],
+    hands: { p0: [], p1: [] },
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+  }
+  drawTile(state)
+  expect(state.drawPile).toHaveLength(0)
+})
+
+test('drawTile advances turn', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [tile],
+    hands: { p0: [], p1: [] },
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+  }
+  drawTile(state)
+  expect(state.turnIndex).toBe(1)
+})
+
+test('drawTile returns success and tile', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [tile],
+    hands: { p0: [], p1: [] },
+    board: { endpoints: [], tiles: [] }
+  }
+  const result = drawTile(state)
+  expect(result.success).toBe(true)
+  expect(result.tile.id).toBe('r-b')
+})
+
+test('drawTile returns failure on empty draw pile', () => {
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [] },
+    board: { endpoints: [], tiles: [] }
+  }
+  expect(drawTile(state).success).toBe(false)
+})
+
+// ---- getPreviewPlacement ----
+
+test('getPreviewPlacement returns tile, col, row, flipped for valid right placement', () => {
+  const state = makePlayingState()
+  const preview = getPreviewPlacement(state, 'blue-green', 1)
+  expect(preview).not.toBeNull()
+  expect(preview.tile.id).toBe('blue-green')
+  expect(preview.col).toBe(2)
+  expect(preview.row).toBe(0)
+  expect(preview.flipped).toBe(false)
+})
+
+test('getPreviewPlacement returns null for unknown tile id', () => {
+  const state = makePlayingState()
+  expect(getPreviewPlacement(state, 'no-tile', 1)).toBeNull()
+})
+
+test('getPreviewPlacement returns null for invalid endpoint index', () => {
+  const state = makePlayingState()
+  expect(getPreviewPlacement(state, 'blue-green', 99)).toBeNull()
+})
+
+test('getPreviewPlacement sets flipped true when tile right matches right endpoint', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileFlipped = { id: 'green-blue', left: 'green', right: 'blue', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [tileFlipped] },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
+      endpoints: [
+        { value: 'red',  col: -1, row: 0, side: 'left' },
+        { value: 'blue', col:  2, row: 0, side: 'right' }
+      ]
+    }
+  }
+  const preview = getPreviewPlacement(state, 'green-blue', 1)
+  expect(preview.flipped).toBe(true)
 })

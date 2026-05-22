@@ -17,14 +17,16 @@ function buildDominoDividerEl() {
 
 function buildDominoTileEl(placedTile) {
   var tile = placedTile.tile;
+  var halves = [tile.left, tile.right];
+  var fi = Number(placedTile.flipped);
   var el = document.createElement('div');
-  el.className = 'domino-tile domino-tile-' + tile.orientation;
+  el.className = 'domino-tile domino-tile-horizontal';
   el.style.left = (DOMINO_ORIGIN + placedTile.col * DOMINO_CELL) + 'px';
   el.style.top  = (DOMINO_ORIGIN + placedTile.row * DOMINO_CELL) + 'px';
   el.setAttribute('data-testid', 'domino-tile-' + tile.id);
-  el.appendChild(buildDominoHalfEl(tile.left));
+  el.appendChild(buildDominoHalfEl(halves[fi]));
   el.appendChild(buildDominoDividerEl());
-  el.appendChild(buildDominoHalfEl(tile.right));
+  el.appendChild(buildDominoHalfEl(halves[1 - fi]));
   return el;
 }
 
@@ -87,19 +89,30 @@ function initDominoPan(viewport, world) {
   return state;
 }
 
-function renderDominoBoard(viewport, gameState) {
+function attachEndpointHandler(el, handler, idx) {
+  el.addEventListener('click', function(e) { e.stopPropagation(); handler(idx); });
+  el.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); handler(idx); });
+}
+
+function renderDominoBoard(viewport, gameState, options) {
+  var opts = Object(options);
   viewport.innerHTML = '';
 
   var world = document.createElement('div');
   world.className = 'domino-board-world';
   world.setAttribute('data-testid', 'domino-board-world');
+  viewport._dominoWorld = world;
 
   gameState.board.tiles.forEach(function(pt) {
     world.appendChild(buildDominoTileEl(pt));
   });
 
-  gameState.board.endpoints.forEach(function(ep) {
-    world.appendChild(buildDominoEndpointEl(ep));
+  gameState.board.endpoints.forEach(function(ep, idx) {
+    var el = buildDominoEndpointEl(ep);
+    [opts.onEndpointTap].filter(Boolean).forEach(function(handler) {
+      attachEndpointHandler(el, handler, idx);
+    });
+    world.appendChild(el);
   });
 
   viewport.appendChild(world);
@@ -110,4 +123,30 @@ function renderDominoBoard(viewport, gameState) {
   panState.panX = panX;
   panState.panY = panY;
   world.style.transform = 'translate(' + panX + 'px, ' + panY + 'px)';
+}
+
+function setDominoEndpointsActive(viewport, active) {
+  [viewport._dominoWorld].filter(Boolean).forEach(function(world) {
+    world.querySelectorAll('.domino-endpoint').forEach(function(el) {
+      el.classList.toggle('domino-endpoint-active', Boolean(active));
+    });
+  });
+}
+
+function showDominoPreview(viewport, placedTile) {
+  clearDominoPreview(viewport);
+  [viewport._dominoWorld].filter(Boolean).forEach(function(world) {
+    var el = buildDominoTileEl(placedTile);
+    el.classList.add('domino-preview-tile');
+    el.setAttribute('data-testid', 'domino-preview-tile');
+    world.appendChild(el);
+  });
+}
+
+function clearDominoPreview(viewport) {
+  [viewport._dominoWorld].filter(Boolean).forEach(function(world) {
+    [world.querySelector('[data-testid="domino-preview-tile"]')].filter(Boolean).forEach(function(el) {
+      el.remove();
+    });
+  });
 }

@@ -96,12 +96,94 @@ function checkCompletion(state) {
 
 function createInitialBoard(startingTile) {
   return {
-    tiles: [{ tile: startingTile, col: 0, row: 0 }],
+    tiles: [{ tile: startingTile, col: 0, row: 0, flipped: false }],
     endpoints: [
-      { value: startingTile.left,  col: -1, row: 0 },
-      { value: startingTile.right, col:  2, row: 0 }
+      { value: startingTile.left,  col: -1, row: 0, side: 'left' },
+      { value: startingTile.right, col:  2, row: 0, side: 'right' }
     ]
   };
+}
+
+function advanceTurn(state) {
+  state.turnIndex = (state.turnIndex + 1) % state.players.length;
+  if (checkCompletion(state)) state.phase = 'complete';
+}
+
+function placeTile(state, tileId, endpointIndex) {
+  var player = state.players[state.turnIndex];
+  var hand = state.hands[player.id];
+  var tileIdx = -1;
+  for (var i = 0; i < hand.length; i++) {
+    if (hand[i].id === tileId) { tileIdx = i; break; }
+  }
+  if (tileIdx === -1) return { success: false };
+
+  var tile = hand[tileIdx];
+  var endpoint = state.board.endpoints[endpointIndex];
+  if (!endpoint) return { success: false };
+
+  var result = validatePlacement(tile, endpoint.value);
+  if (!result.valid) return { success: false };
+
+  var isRight = endpoint.side === 'right';
+  var placedCol = isRight ? endpoint.col : endpoint.col - 1;
+  var newEndpointCol = isRight ? endpoint.col + 2 : endpoint.col - 2;
+  var flipped = isRight ? result.orientation === 'vertical' : result.orientation === 'horizontal';
+  var newValue = tile.left === endpoint.value ? tile.right : tile.left;
+
+  state.board.tiles.push({ tile: tile, col: placedCol, row: 0, flipped: flipped });
+
+  var newEndpoints = [];
+  for (var e = 0; e < state.board.endpoints.length; e++) {
+    if (e === endpointIndex) {
+      newEndpoints.push({ value: newValue, col: newEndpointCol, row: 0, side: endpoint.side });
+    } else {
+      newEndpoints.push(state.board.endpoints[e]);
+    }
+  }
+  state.board.endpoints = newEndpoints;
+
+  var newHand = [];
+  for (var h = 0; h < hand.length; h++) {
+    if (h !== tileIdx) newHand.push(hand[h]);
+  }
+  state.hands[player.id] = newHand;
+
+  if (newHand.length === 0) {
+    state.phase = 'complete';
+  } else {
+    advanceTurn(state);
+  }
+  return { success: true };
+}
+
+function getPreviewPlacement(state, tileId, endpointIndex) {
+  var player = state.players[state.turnIndex];
+  var hand = state.hands[player.id];
+  var tile = null;
+  for (var i = 0; i < hand.length; i++) {
+    if (hand[i].id === tileId) { tile = hand[i]; break; }
+  }
+  if (!tile) return null;
+  var endpoint = state.board.endpoints[endpointIndex];
+  if (!endpoint) return null;
+  var result = validatePlacement(tile, endpoint.value);
+  var isRight = endpoint.side === 'right';
+  var placedCol = isRight ? endpoint.col : endpoint.col - 1;
+  var flipped = result.valid
+    ? (isRight ? result.orientation === 'vertical' : result.orientation === 'horizontal')
+    : false;
+  return { tile: tile, col: placedCol, row: 0, flipped: flipped };
+}
+
+function drawTile(state) {
+  if (state.drawPile.length === 0) return { success: false };
+  var player = state.players[state.turnIndex];
+  var drawn = state.drawPile[0];
+  state.drawPile = state.drawPile.slice(1);
+  state.hands[player.id] = state.hands[player.id].concat([drawn]);
+  advanceTurn(state);
+  return { success: true, tile: drawn };
 }
 
 function createDominoGame(setupState) {
@@ -127,5 +209,9 @@ if (typeof module !== 'undefined') module.exports = {
   checkCompletion,
   createInitialBoard,
   createDominoGame,
+  advanceTurn,
+  placeTile,
+  drawTile,
+  getPreviewPlacement,
   DOMINO_VALUES
 };
