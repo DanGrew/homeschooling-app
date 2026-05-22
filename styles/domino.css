@@ -109,6 +109,46 @@
   border-radius: 8px;
 }
 
+.domino-endpoint-active {
+  border-color: #16a34a;
+  background: rgba(22,163,74,0.15);
+  cursor: pointer;
+}
+
+.domino-preview-tile {
+  opacity: 0.6;
+  border-style: dashed;
+  pointer-events: none;
+}
+
+@keyframes domino-flash {
+  0%, 100% { outline-color: transparent; }
+  50% { outline-color: #e74c3c; }
+}
+.domino-tile-flash-red {
+  outline: 3px solid #e74c3c;
+  animation: domino-flash 0.5s ease;
+}
+
+.domino-tray-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.domino-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #fff;
+}
+.domino-btn-draw   { background: #6b7280; }
+.domino-btn-submit { background: #16a34a; }
+.domino-btn:disabled { opacity: 0.35; cursor: default; }
+
 .domino-half[data-value="red"]    { background: #e74c3c; color: #fff; }
 .domino-half[data-value="orange"] { background: #e67e22; color: #fff; }
 .domino-half[data-value="yellow"] { background: #f1c40f; color: #333; }

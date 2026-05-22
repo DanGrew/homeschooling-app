@@ -44,12 +44,98 @@ var trayEl        = document.getElementById('domino-tray');
 var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
 
 var gameState;
+var turnState;
 
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
   Object.keys(screens).forEach(function(k) {
     screens[k].className = 'pairs-screen' + DOMINO_SCREEN_ACTIVE[String(k === name)];
   });
+}
+
+function makeTrayOpts() {
+  return { onTileTap: onTileTap, onDraw: onDraw, onSubmit: onSubmit };
+}
+
+function makeBoardOpts() {
+  return { onEndpointTap: onEndpointTap };
+}
+
+function deselectTile() {
+  turnState.selectedTileId = null;
+  turnState.previewEndpointIndex = null;
+  dominoTraySetSelected(trayEl, null);
+  dominoTraySetSubmitEnabled(trayEl, false);
+  clearDominoPreview(boardViewport);
+  setDominoEndpointsActive(boardViewport, false);
+}
+
+function selectTile(tileId) {
+  turnState.selectedTileId = tileId;
+  turnState.previewEndpointIndex = null;
+  dominoTraySetSelected(trayEl, tileId);
+  dominoTraySetSubmitEnabled(trayEl, false);
+  clearDominoPreview(boardViewport);
+  setDominoEndpointsActive(boardViewport, true);
+}
+
+function onTileTap(tileId) {
+  var wasSelected = turnState.selectedTileId === tileId;
+  var TILE_TAP = { 'true': deselectTile, 'false': function() { selectTile(tileId); } };
+  TILE_TAP[String(wasSelected)]();
+}
+
+function onEndpointTap(endpointIndex) {
+  [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
+    [getPreviewPlacement(gameState, tileId, endpointIndex)].filter(Boolean).forEach(function(preview) {
+      turnState.previewEndpointIndex = endpointIndex;
+      showDominoPreview(boardViewport, preview);
+      dominoTraySetSubmitEnabled(trayEl, true);
+    });
+  });
+}
+
+function flashTileRed(tileId) {
+  [trayEl.querySelector('[data-tile-id="' + tileId + '"]')].filter(Boolean).forEach(function(el) {
+    el.classList.add('domino-tile-flash-red');
+    setTimeout(function() { el.classList.remove('domino-tile-flash-red'); }, 500);
+  });
+}
+
+function onSubmitSuccess() {
+  clearDominoPreview(boardViewport);
+  turnState.selectedTileId = null;
+  turnState.previewEndpointIndex = null;
+  renderDominoBoard(boardViewport, gameState, makeBoardOpts());
+  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(function() { showScreen('summary'); });
+  [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
+    renderDominoTray(trayEl, gameState, makeTrayOpts());
+  });
+}
+
+function onSubmit() {
+  [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
+    [turnState.previewEndpointIndex].filter(function(idx) { return idx !== null; }).forEach(function(epIdx) {
+      var result = placeTile(gameState, tileId, epIdx);
+      var ON_RESULT = { 'true': onSubmitSuccess, 'false': function() { flashTileRed(tileId); } };
+      ON_RESULT[String(result.success)]();
+    });
+  });
+}
+
+function onDrawSuccess() {
+  turnState.selectedTileId = null;
+  turnState.previewEndpointIndex = null;
+  clearDominoPreview(boardViewport);
+  setDominoEndpointsActive(boardViewport, false);
+  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(function() { showScreen('summary'); });
+  [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
+    renderDominoTray(trayEl, gameState, makeTrayOpts());
+  });
+}
+
+function onDraw() {
+  [drawTile(gameState)].filter(function(r) { return r.success; }).forEach(onDrawSuccess);
 }
 
 fetch('../../../content/dictionary/dictionary.json')
@@ -68,14 +154,15 @@ fetch('../../../content/dictionary/dictionary.json')
 
 function startGame(setupState) {
   gameState = createDominoGame(setupState);
+  turnState = { selectedTileId: null, previewEndpointIndex: null };
   showScreen('game');
-  renderDominoBoard(boardViewport, gameState);
-  renderDominoTray(trayEl, gameState);
+  renderDominoBoard(boardViewport, gameState, makeBoardOpts());
+  renderDominoTray(trayEl, gameState, makeTrayOpts());
 }
 
 window.addEventListener('resize', function() {
   [gameState].filter(Boolean).forEach(function() {
-    renderDominoBoard(boardViewport, gameState);
+    renderDominoBoard(boardViewport, gameState, makeBoardOpts());
   });
 });
 </script>
