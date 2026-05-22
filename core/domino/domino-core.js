@@ -132,6 +132,7 @@ function placeTile(state, tileId, endpointIndex) {
   var newValue = tile.left === endpoint.value ? tile.right : tile.left;
 
   state.board.tiles.push({ tile: tile, col: placedCol, row: 0, flipped: flipped });
+  state.stats[player.id].tilesPlaced += 1;
 
   var newEndpoints = [];
   for (var e = 0; e < state.board.endpoints.length; e++) {
@@ -189,14 +190,18 @@ function drawTile(state) {
 function createDominoGame(setupState) {
   var tiles = generateTiles(setupState.matchType);
   var dealt = dealHands(tiles, setupState.players.length);
+  var players = setupState.players.map(function(p, i) {
+    return { id: 'p' + i, name: p.name, icon: p.icon, role: p.role };
+  });
+  var stats = {};
+  players.forEach(function(p) { stats[p.id] = { tilesPlaced: 0 }; });
   return {
-    players: setupState.players.map(function(p, i) {
-      return { id: 'p' + i, name: p.name, icon: p.icon, role: p.role };
-    }),
+    players: players,
     matchType: setupState.matchType,
     hands: dealt.hands,
     drawPile: dealt.drawPile,
     board: createInitialBoard(dealt.startingTile),
+    stats: stats,
     turnIndex: 0,
     phase: 'playing'
   };

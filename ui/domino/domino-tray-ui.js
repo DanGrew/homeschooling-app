@@ -91,6 +91,49 @@ function dominoTraySetSubmitEnabled(container, enabled) {
   });
 }
 
+function renderDominoSummary(container, gameState, onPlayAgain) {
+  container.innerHTML = '';
+  var inner = document.createElement('div');
+  inner.className = 'pairs-summary-inner';
+
+  var heading = document.createElement('h2');
+  heading.textContent = 'Game over!';
+  inner.appendChild(heading);
+  cgSpeak('Game over!');
+
+  gameState.players.forEach(function(p) {
+    var row = document.createElement('div');
+    row.className = 'pairs-summary-row';
+    row.setAttribute('data-testid', 'domino-summary-row-' + p.id);
+
+    [p.icon].filter(Boolean).forEach(function(icon) {
+      var img = document.createElement('img');
+      img.src = cgImgSrc(icon);
+      img.alt = p.name;
+      row.appendChild(img);
+    });
+
+    var placed = gameState.stats[p.id].tilesPlaced;
+    var remaining = gameState.hands[p.id].length;
+    var text = document.createElement('span');
+    text.textContent = p.name + ' \u2014 placed ' + placed + ', ' + remaining + ' left';
+    text.setAttribute('data-testid', 'domino-summary-stats-' + p.id);
+    row.appendChild(text);
+    cgMakeSpeak(row, text.textContent);
+    inner.appendChild(row);
+  });
+
+  var btn = document.createElement('button');
+  btn.textContent = 'Play again';
+  btn.className = 'pairs-play-again';
+  btn.setAttribute('data-testid', 'domino-play-again');
+  btn.addEventListener('click', onPlayAgain);
+  cgMakeSpeak(btn, 'Play again');
+  inner.appendChild(btn);
+
+  container.appendChild(inner);
+}
+
 function renderDominoHandover(container, player, onReady) {
   [container.querySelector('.pairs-handover')].filter(Boolean).forEach(function(e) { e.remove(); });
 

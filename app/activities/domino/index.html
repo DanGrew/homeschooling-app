@@ -102,8 +102,15 @@ function flashTileRed(tileId) {
   });
 }
 
+function showSummary() {
+  showScreen('summary');
+  renderDominoSummary(summaryScreen, gameState, function() {
+    showScreen('setup');
+  });
+}
+
 function afterTurn() {
-  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(function() { showScreen('summary'); });
+  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(showSummary);
   [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
     var player = gameState.players[gameState.turnIndex];
     renderDominoHandover(gameScreen, player, function() {
