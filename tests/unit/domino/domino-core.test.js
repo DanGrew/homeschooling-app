@@ -301,6 +301,7 @@ function makePlayingState() {
     phase: 'playing',
     drawPile: [tileC],
     hands: { p0: [tileB, tileD], p1: [tileD] },
+    stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
     board: {
       tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
       endpoints: [
@@ -372,6 +373,7 @@ test('placeTile on left endpoint places at correct col', () => {
     phase: 'playing',
     drawPile: [],
     hands: { p0: [tileC], p1: [] },
+    stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
     board: {
       tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
       endpoints: [
@@ -499,4 +501,26 @@ test('getPreviewPlacement sets flipped true when tile right matches right endpoi
   }
   const preview = getPreviewPlacement(state, 'green-blue', 1)
   expect(preview.flipped).toBe(true)
+})
+
+// ---- stats ----
+
+test('createDominoGame initialises stats for each player', () => {
+  const setup = { matchType: 'colours', players: [{ name: 'A', icon: 'cat', role: 'child' }, { name: 'B', icon: 'dog', role: 'child' }] }
+  const state = createDominoGame(setup)
+  expect(state.stats['p0']).toEqual({ tilesPlaced: 0 })
+  expect(state.stats['p1']).toEqual({ tilesPlaced: 0 })
+})
+
+test('placeTile increments tilesPlaced for active player', () => {
+  const state = makePlayingState()
+  placeTile(state, 'blue-green', 1)
+  expect(state.stats['p0'].tilesPlaced).toBe(1)
+  expect(state.stats['p1'].tilesPlaced).toBe(0)
+})
+
+test('placeTile does not increment tilesPlaced on failure', () => {
+  const state = makePlayingState()
+  placeTile(state, 'bad-id', 1)
+  expect(state.stats['p0'].tilesPlaced).toBe(0)
 })
