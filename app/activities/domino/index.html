@@ -71,6 +71,7 @@ function deselectTile() {
   });
   turnState.selectedTileId = null;
   turnState.previewEndpointIndex = null;
+  turnState.previewRotation = null;
   dominoTraySetSelected(trayEl, null);
   dominoTraySetSubmitEnabled(trayEl, false);
   clearDominoPreview(boardViewport);
@@ -80,6 +81,7 @@ function deselectTile() {
 function selectTile(tileId) {
   turnState.selectedTileId = tileId;
   turnState.previewEndpointIndex = null;
+  turnState.previewRotation = null;
   dominoEmit('tile_selected', { tile_id: tileId });
   dominoTraySetSelected(trayEl, tileId);
   dominoTraySetSubmitEnabled(trayEl, false);
@@ -97,6 +99,7 @@ function onEndpointTap(endpointIndex) {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
     [getPreviewPlacement(gameState, tileId, endpointIndex)].filter(Boolean).forEach(function(preview) {
       turnState.previewEndpointIndex = endpointIndex;
+      turnState.previewRotation = preview.rotation;
       dominoEmit('placement_preview', { tile_id: tileId, location_id: 'endpoint_' + endpointIndex });
       showDominoPreview(boardViewport, preview);
       dominoTraySetSubmitEnabled(trayEl, true);
@@ -143,7 +146,7 @@ function onSubmit() {
     [turnState.previewEndpointIndex].filter(function(idx) { return idx !== null; }).forEach(function(epIdx) {
       var playerId = gameState.players[gameState.turnIndex].id;
       dominoEmit('placement_submitted', { tile_id: tileId, location_id: 'endpoint_' + epIdx });
-      var result = placeTile(gameState, tileId, epIdx);
+      var result = placeTile(gameState, tileId, epIdx, turnState.previewRotation || 0);
       var ON_RESULT = {
         'true': function() {
           dominoEmit('placement_success', { tile_id: tileId });
@@ -165,6 +168,7 @@ function onDrawSuccess(r) {
   dominoEmit('tile_drawn', { player_id: playerId, tile_id: r.tile.id });
   turnState.selectedTileId = null;
   turnState.previewEndpointIndex = null;
+  turnState.previewRotation = null;
   clearDominoPreview(boardViewport);
   setDominoEndpointsActive(boardViewport, false);
   afterTurn();
@@ -193,7 +197,7 @@ fetch('../../../content/dictionary/dictionary.json')
 
 function startGame(setupState) {
   gameState = createDominoGame(setupState);
-  turnState = { selectedTileId: null, previewEndpointIndex: null };
+  turnState = { selectedTileId: null, previewEndpointIndex: null, previewRotation: null };
   dominoEmit('game_start', { matchType: gameState.matchType, players: gameState.players.map(function(p) { return p.id; }) });
   showScreen('game');
   renderDominoBoard(boardViewport, gameState, makeBoardOpts());

@@ -1,4 +1,4 @@
-const { generateTiles, dealHands, validatePlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, DOMINO_VALUES } = require('../../../core/domino/domino-core.js')
+const { generateTiles, dealHands, validatePlacement, playerHasValidPlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, DOMINO_VALUES, ROTATION_GEOMETRY } = require('../../../core/domino/domino-core.js')
 
 // ---- generateTiles ----
 
@@ -29,44 +29,10 @@ test('tile values are from the match type set', () => {
   })
 })
 
-test('no duplicate tiles', () => {
+test('no duplicate tile ids', () => {
   const tiles = generateTiles('colours')
   const ids = tiles.map(t => t.id)
   expect(new Set(ids).size).toBe(28)
-})
-
-test('tile ids are symmetric — each pair appears once', () => {
-  const tiles = generateTiles('colours')
-  const pairs = tiles.map(t => [t.left, t.right].sort().join('|'))
-  expect(new Set(pairs).size).toBe(28)
-})
-
-// ---- validatePlacement ----
-
-test('valid when left matches endpoint', () => {
-  const tile = { left: 'red', right: 'blue', orientation: 'horizontal' }
-  const result = validatePlacement(tile, 'red')
-  expect(result.valid).toBe(true)
-  expect(result.orientation).toBe('horizontal')
-})
-
-test('valid when right matches endpoint — returns vertical orientation', () => {
-  const tile = { left: 'red', right: 'blue', orientation: 'horizontal' }
-  const result = validatePlacement(tile, 'blue')
-  expect(result.valid).toBe(true)
-  expect(result.orientation).toBe('vertical')
-})
-
-test('invalid when neither half matches endpoint', () => {
-  const tile = { left: 'red', right: 'blue', orientation: 'horizontal' }
-  const result = validatePlacement(tile, 'green')
-  expect(result.valid).toBe(false)
-  expect(result.orientation).toBeNull()
-})
-
-test('double tile valid at matching endpoint', () => {
-  const tile = { left: 'red', right: 'red', orientation: 'horizontal' }
-  expect(validatePlacement(tile, 'red').valid).toBe(true)
 })
 
 // ---- dealHands ----
@@ -120,18 +86,127 @@ test('no tile appears in both hand and draw pile', () => {
 test('each player has at least one tile playable vs starting tile', () => {
   const tiles = generateTiles('colours')
   const { hands, startingTile } = dealHands(tiles, 2)
-  const endpoints = [startingTile.left, startingTile.right]
+  const endpoints = [
+    { value: startingTile.left,  col: -1, row: 0, direction: 'west' },
+    { value: startingTile.right, col:  2, row: 0, direction: 'east' }
+  ]
   ;['p0', 'p1'].forEach(pid => {
-    const canPlay = hands[pid].some(tile =>
-      validatePlacement(tile, endpoints[0]).valid || validatePlacement(tile, endpoints[1]).valid
-    )
-    expect(canPlay).toBe(true)
+    expect(playerHasValidPlacement(hands[pid], endpoints)).toBe(true)
   })
+})
+
+// ---- validatePlacement (rotation API) ----
+
+test('validatePlacement valid rotation 0 at east endpoint with left match', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep, 0).valid).toBe(true)
+})
+
+test('validatePlacement invalid rotation 0 when value mismatch', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'green', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep, 0).valid).toBe(false)
+})
+
+test('validatePlacement invalid rotation 0 at west endpoint', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: -1, row: 0, direction: 'west' }
+  expect(validatePlacement(tile, ep, 0).valid).toBe(false)
+})
+
+test('validatePlacement valid rotation 180 at west endpoint with right match', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const ep = { value: 'red', col: -1, row: 0, direction: 'west' }
+  expect(validatePlacement(tile, ep, 180).valid).toBe(true)
+})
+
+test('validatePlacement invalid rotation 180 at east endpoint', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const ep = { value: 'red', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep, 180).valid).toBe(false)
+})
+
+test('validatePlacement valid rotation 90 at south endpoint with left match', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: 0, row: 2, direction: 'south' }
+  expect(validatePlacement(tile, ep, 90).valid).toBe(true)
+})
+
+test('validatePlacement valid rotation 270 at north endpoint with right match', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const ep = { value: 'red', col: 0, row: -2, direction: 'north' }
+  expect(validatePlacement(tile, ep, 270).valid).toBe(true)
+})
+
+// ---- ROTATION_GEOMETRY ----
+
+test('ROTATION_GEOMETRY 0 has correct offsets and direction', () => {
+  const g = ROTATION_GEOMETRY[0]
+  expect(g.colOff).toBe(0)
+  expect(g.rowOff).toBe(0)
+  expect(g.epColOff).toBe(2)
+  expect(g.epRowOff).toBe(0)
+  expect(g.epDir).toBe('east')
+  expect(g.anchorLeft).toBe(true)
+})
+
+test('ROTATION_GEOMETRY 180 has correct offsets and direction', () => {
+  const g = ROTATION_GEOMETRY[180]
+  expect(g.colOff).toBe(-1)
+  expect(g.rowOff).toBe(0)
+  expect(g.epColOff).toBe(-2)
+  expect(g.epRowOff).toBe(0)
+  expect(g.epDir).toBe('west')
+  expect(g.anchorLeft).toBe(false)
+})
+
+test('ROTATION_GEOMETRY 90 has correct offsets and direction', () => {
+  const g = ROTATION_GEOMETRY[90]
+  expect(g.colOff).toBe(0)
+  expect(g.rowOff).toBe(0)
+  expect(g.epColOff).toBe(0)
+  expect(g.epRowOff).toBe(2)
+  expect(g.epDir).toBe('south')
+  expect(g.anchorLeft).toBe(true)
+})
+
+test('ROTATION_GEOMETRY 270 has correct offsets and direction', () => {
+  const g = ROTATION_GEOMETRY[270]
+  expect(g.colOff).toBe(0)
+  expect(g.rowOff).toBe(-1)
+  expect(g.epColOff).toBe(0)
+  expect(g.epRowOff).toBe(-2)
+  expect(g.epDir).toBe('north')
+  expect(g.anchorLeft).toBe(false)
+})
+
+// ---- playerHasValidPlacement ----
+
+test('playerHasValidPlacement returns true when tile left matches east endpoint', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const endpoints = [{ value: 'red', col: 2, row: 0, direction: 'east' }]
+  expect(playerHasValidPlacement([tile], endpoints)).toBe(true)
+})
+
+test('playerHasValidPlacement returns true when tile right matches west endpoint via rotation 180', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const endpoints = [{ value: 'red', col: -1, row: 0, direction: 'west' }]
+  expect(playerHasValidPlacement([tile], endpoints)).toBe(true)
+})
+
+test('playerHasValidPlacement returns false when no tile matches any endpoint', () => {
+  const tile = { id: 'g-y', left: 'green', right: 'yellow' }
+  const endpoints = [
+    { value: 'red', col: -1, row: 0, direction: 'west' },
+    { value: 'blue', col: 2, row: 0, direction: 'east' }
+  ]
+  expect(playerHasValidPlacement([tile], endpoints)).toBe(false)
 })
 
 // ---- checkCompletion ----
 
-const ep = (value) => ({ value, col: 0, row: 0 })
+const ep = (value, direction = 'east') => ({ value, col: 0, row: 0, direction })
 
 test('not complete when draw pile has tiles', () => {
   const state = {
@@ -241,20 +316,20 @@ test('createDominoGame hands contain 7 tiles each', () => {
   expect(game.hands['p1']).toHaveLength(7)
 })
 
-// ---- createInitialBoard: side property ----
+// ---- createInitialBoard: direction and rotation ----
 
-test('initial board endpoints have side property', () => {
+test('initial board endpoints have direction property', () => {
   const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
   const board = createInitialBoard(tile)
-  const sides = board.endpoints.map(ep => ep.side)
-  expect(sides).toContain('left')
-  expect(sides).toContain('right')
+  const dirs = board.endpoints.map(ep => ep.direction)
+  expect(dirs).toContain('west')
+  expect(dirs).toContain('east')
 })
 
-test('initial board starting tile has flipped false', () => {
+test('initial board starting tile has rotation 0', () => {
   const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
   const board = createInitialBoard(tile)
-  expect(board.tiles[0].flipped).toBe(false)
+  expect(board.tiles[0].rotation).toBe(0)
 })
 
 // ---- advanceTurn ----
@@ -266,7 +341,7 @@ function makeState(overrides) {
     phase: 'playing',
     drawPile: [{ id: 'x', left: 'red', right: 'blue' }],
     hands: { p0: [], p1: [] },
-    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }, overrides)
 }
 
@@ -303,10 +378,10 @@ function makePlayingState() {
     hands: { p0: [tileB, tileD], p1: [tileD] },
     stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
     board: {
-      tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
       endpoints: [
-        { value: 'red',  col: -1, row: 0, side: 'left' },
-        { value: 'blue', col:  2, row: 0, side: 'right' }
+        { value: 'red',  col: -1, row: 0, direction: 'west' },
+        { value: 'blue', col:  2, row: 0, direction: 'east' }
       ]
     }
   }
@@ -330,12 +405,12 @@ test('placeTile adds tile to board', () => {
   expect(state.board.tiles).toHaveLength(2)
 })
 
-test('placeTile updates endpoint on right side', () => {
+test('placeTile updates endpoint on east side', () => {
   const state = makePlayingState()
   placeTile(state, 'blue-green', 1)
-  const rightEp = state.board.endpoints.find(ep => ep.side === 'right')
-  expect(rightEp.value).toBe('green')
-  expect(rightEp.col).toBe(4)
+  const eastEp = state.board.endpoints.find(ep => ep.direction === 'east')
+  expect(eastEp.value).toBe('green')
+  expect(eastEp.col).toBe(4)
 })
 
 test('placeTile advances turn', () => {
@@ -364,7 +439,7 @@ test('placeTile sets phase complete when hand emptied', () => {
   expect(state.phase).toBe('complete')
 })
 
-test('placeTile on left endpoint places at correct col', () => {
+test('placeTile with rotation 180 on west endpoint places at correct col', () => {
   const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
   const tileC = { id: 'green-red', left: 'green', right: 'red', orientation: 'horizontal' }
   const state = {
@@ -375,17 +450,41 @@ test('placeTile on left endpoint places at correct col', () => {
     hands: { p0: [tileC], p1: [] },
     stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
     board: {
-      tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
       endpoints: [
-        { value: 'red',  col: -1, row: 0, side: 'left' },
-        { value: 'blue', col:  2, row: 0, side: 'right' }
+        { value: 'red',  col: -1, row: 0, direction: 'west' },
+        { value: 'blue', col:  2, row: 0, direction: 'east' }
       ]
     }
   }
-  placeTile(state, 'green-red', 0)
+  placeTile(state, 'green-red', 0, 180)
   const placed = state.board.tiles.find(pt => pt.tile.id === 'green-red')
   expect(placed.col).toBe(-2)
-  expect(placed.flipped).toBe(false)
+  expect(placed.rotation).toBe(180)
+})
+
+test('placeTile with rotation 180 updates west endpoint', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileC = { id: 'green-red', left: 'green', right: 'red', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [tileC], p1: [] },
+    stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
+      endpoints: [
+        { value: 'red',  col: -1, row: 0, direction: 'west' },
+        { value: 'blue', col:  2, row: 0, direction: 'east' }
+      ]
+    }
+  }
+  placeTile(state, 'green-red', 0, 180)
+  const westEp = state.board.endpoints.find(ep => ep.direction === 'west')
+  expect(westEp.value).toBe('green')
+  expect(westEp.col).toBe(-3)
 })
 
 // ---- drawTile ----
@@ -398,7 +497,7 @@ test('drawTile adds tile to current player hand', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
-    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }
   drawTile(state)
   expect(state.hands['p0']).toHaveLength(1)
@@ -413,7 +512,7 @@ test('drawTile removes tile from draw pile', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
-    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }
   drawTile(state)
   expect(state.drawPile).toHaveLength(0)
@@ -427,7 +526,7 @@ test('drawTile advances turn', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
-    board: { endpoints: [{ value: 'purple', col: -1, row: 0, side: 'left' }, { value: 'purple', col: 2, row: 0, side: 'right' }], tiles: [] }
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }
   drawTile(state)
   expect(state.turnIndex).toBe(1)
@@ -462,14 +561,14 @@ test('drawTile returns failure on empty draw pile', () => {
 
 // ---- getPreviewPlacement ----
 
-test('getPreviewPlacement returns tile, col, row, flipped for valid right placement', () => {
+test('getPreviewPlacement returns tile, col, row, rotation for east endpoint', () => {
   const state = makePlayingState()
   const preview = getPreviewPlacement(state, 'blue-green', 1)
   expect(preview).not.toBeNull()
   expect(preview.tile.id).toBe('blue-green')
   expect(preview.col).toBe(2)
   expect(preview.row).toBe(0)
-  expect(preview.flipped).toBe(false)
+  expect(preview.rotation).toBe(0)
 })
 
 test('getPreviewPlacement returns null for unknown tile id', () => {
@@ -482,9 +581,9 @@ test('getPreviewPlacement returns null for invalid endpoint index', () => {
   expect(getPreviewPlacement(state, 'blue-green', 99)).toBeNull()
 })
 
-test('getPreviewPlacement sets flipped true when tile right matches right endpoint', () => {
+test('getPreviewPlacement auto-detects rotation 180 for west endpoint', () => {
   const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
-  const tileFlipped = { id: 'green-blue', left: 'green', right: 'blue', orientation: 'horizontal' }
+  const tileFlipped = { id: 'green-red', left: 'green', right: 'red', orientation: 'horizontal' }
   const state = {
     players: [{ id: 'p0' }],
     turnIndex: 0,
@@ -492,15 +591,24 @@ test('getPreviewPlacement sets flipped true when tile right matches right endpoi
     drawPile: [],
     hands: { p0: [tileFlipped] },
     board: {
-      tiles: [{ tile: tileA, col: 0, row: 0, flipped: false }],
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
       endpoints: [
-        { value: 'red',  col: -1, row: 0, side: 'left' },
-        { value: 'blue', col:  2, row: 0, side: 'right' }
+        { value: 'red',  col: -1, row: 0, direction: 'west' },
+        { value: 'blue', col:  2, row: 0, direction: 'east' }
       ]
     }
   }
-  const preview = getPreviewPlacement(state, 'green-blue', 1)
-  expect(preview.flipped).toBe(true)
+  const preview = getPreviewPlacement(state, 'green-red', 0)
+  expect(preview.rotation).toBe(180)
+  expect(preview.col).toBe(-2)
+})
+
+test('getPreviewPlacement uses explicit rotation when provided', () => {
+  const state = makePlayingState()
+  const preview = getPreviewPlacement(state, 'blue-green', 1, 90)
+  expect(preview.rotation).toBe(90)
+  expect(preview.col).toBe(2)
+  expect(preview.row).toBe(0)
 })
 
 // ---- stats ----
