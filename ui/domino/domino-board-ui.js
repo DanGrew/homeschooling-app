@@ -24,7 +24,7 @@ function buildDominoDividerEl() {
 
 function buildDominoTileEl(placedTile) {
   var tile = placedTile.tile;
-  var layout = ROTATION_LAYOUT[placedTile.rotation] || ROTATION_LAYOUT[0];
+  var layout = ROTATION_LAYOUT[placedTile.rotation];
   var halves = [tile.left, tile.right];
   var el = document.createElement('div');
   el.className = 'domino-tile ' + layout.cls;
