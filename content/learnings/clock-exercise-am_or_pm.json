@@ -1,0 +1,40 @@
+{
+  "id": "clock-exercise-am_or_pm",
+  "title": "AM or PM?",
+  "number": 23,
+  "guide": "dog",
+  "source": "Clock",
+  "mode": "multi-choice",
+  "profile": "child-day",
+  "pageControls": ["HIDE_DIGITAL_DISPLAY"],
+  "criteria": ["cl.technical-vocab", "uw.cause-effect"],
+  "steps": [
+    {
+      "text": "Look at the sky. Is this AM or PM?",
+      "pageControls": ["RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "preset_shown": "wake_up",
+      "answers": ["AM", "PM"],
+      "correct": "AM",
+      "feedback": "AM! It is morning — before midday. Morning is always AM."
+    },
+    {
+      "text": "AM or PM?",
+      "pageControls": ["RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "preset_shown": "dinner",
+      "answers": ["AM", "PM"],
+      "correct": "PM",
+      "feedback": "PM! Dinner is in the evening — after midday. Evening is always PM."
+    },
+    {
+      "text": "What about now?",
+      "pageControls": ["RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "preset_shown": "lunch",
+      "answers": ["AM", "PM"],
+      "correct": "PM",
+      "feedback": "PM! Lunchtime is just after midday — so it is PM. Midday is where AM ends and PM begins."
+    }
+  ]
+}

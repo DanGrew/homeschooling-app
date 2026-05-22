@@ -1,0 +1,35 @@
+{
+  "id": "clock-exercise-what_comes_next_fives",
+  "title": "What Comes Next?",
+  "number": 25,
+  "guide": "dog",
+  "source": "Clock",
+  "mode": "multi-choice",
+  "criteria": ["maths.pattern"],
+  "steps": [
+    {
+      "text": "The clock is counting in fives. It said five, ten — what comes next?",
+      "pageControls": ["LOAD_MINUTE_2", "RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "answers": ["twelve", "fifteen", "twenty", "thirty"],
+      "correct": "fifteen",
+      "feedback": "Fifteen! Five, ten, fifteen — always five more."
+    },
+    {
+      "text": "Five, ten, fifteen, twenty — what comes next?",
+      "pageControls": ["LOAD_MINUTE_4", "RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "answers": ["twenty-two", "twenty-four", "twenty-five", "thirty"],
+      "correct": "twenty-five",
+      "feedback": "Twenty-five! The pattern never changes — always five more each time."
+    },
+    {
+      "text": "Five, ten, fifteen, twenty, twenty-five — what comes next?",
+      "pageControls": ["LOAD_MINUTE_5", "RENDER_MULTI_CHOICE"],
+      "expect": "MULTI_CHOICE_CORRECT",
+      "answers": ["twenty-eight", "twenty-nine", "thirty", "thirty-five"],
+      "correct": "thirty",
+      "feedback": "Thirty! Halfway around the clock. The big hand counts in fives all the way round."
+    }
+  ]
+}
