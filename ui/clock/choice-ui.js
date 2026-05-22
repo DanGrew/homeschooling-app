@@ -14,8 +14,8 @@ function buildTile(preset, isCorrect, onPick) {
   lbl.textContent = preset.label;
   tile.appendChild(em);
   tile.appendChild(lbl);
-  tile.addEventListener('click', function() { onPick(tile, isCorrect); });
   makeSpeakable(tile, preset.label);
+  tile.addEventListener('click', function() { onPick(tile, isCorrect); });
   return tile;
 }
 
@@ -23,8 +23,8 @@ function buildTextTile(label, isCorrect, onPick) {
   var tile = document.createElement('button');
   tile.style.cssText = TILE_BASE + 'background:rgba(255,255,255,0.2);font-size:clamp(1em,3.5vw,1.3em);text-transform:capitalize;';
   tile.textContent = label;
-  tile.addEventListener('click', function() { onPick(tile, isCorrect); });
   makeSpeakable(tile, label);
+  tile.addEventListener('click', function() { onPick(tile, isCorrect); });
   return tile;
 }
 

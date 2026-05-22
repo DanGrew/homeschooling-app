@@ -374,7 +374,7 @@ var _GUIDANCE_START_MODE = {
 };
 
 window.addEventListener('guidance:start', function(e) {
-  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.display = 'none'; });
+  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.visibility = 'hidden'; });
   profileTitleEl.style.display = 'none';
   [_GUIDANCE_START_MODE[e.detail.lesson.mode]].filter(Boolean).forEach(function(fn) { fn(); });
   [e.detail.lesson.filter].filter(Boolean).forEach(function(filter) {
@@ -384,7 +384,7 @@ window.addEventListener('guidance:start', function(e) {
 });
 
 window.addEventListener('guidance:stop', function() {
-  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.display = ''; });
+  [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.visibility = ''; });
   profileTitleEl.style.display = '';
   buildProfileFilter();
   presetFilter = null;
