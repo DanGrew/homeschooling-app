@@ -26,7 +26,12 @@
       "expect": "NUMERAL_6_TAPPED"
     },
     {
-      "text": "Half past three! Big hand at the bottom — that always means half past. Let's try another. The clock shows seven. Tap 12 — make it seven o'clock!",
+      "text": "Half past three! Big hand at the bottom — that always means half past. Let's try another.",
+      "badge": "then",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "The clock now shows seven. Tap 12 — make it seven o'clock!",
       "pageControls": ["LOAD_TIME_07_00"],
       "expect": "NUMERAL_12_TAPPED"
     },
