@@ -11,19 +11,19 @@
   "steps": [
     {
       "text": "Some numbers on the clock have special jobs — they point in every direction. The 12 lives at the very top. Can you tap it?",
-      "expect": "NUMBER_12_TAPPED",
-      "feedback": "12 at the top — the clock always starts here! Now find the 6 at the bottom."
+      "expect": "NUMERAL_12_TAPPED"
     },
     {
-      "expect": "NUMBER_6_TAPPED",
-      "feedback": "At the bottom, opposite 12. Now find the 3!"
+      "text": "12 at the top — the clock always starts here! Now find the 6 at the bottom.",
+      "expect": "NUMERAL_6_TAPPED"
     },
     {
-      "expect": "NUMBER_3_TAPPED",
-      "feedback": "On the right side! Last one — find the 9!"
+      "text": "At the bottom, opposite 12. Now find the 3!",
+      "expect": "NUMERAL_3_TAPPED"
     },
     {
-      "expect": "NUMBER_9_TAPPED",
+      "text": "On the right side! Last one — find the 9!",
+      "expect": "NUMERAL_9_TAPPED",
       "feedback": "On the left. These four numbers point in every direction!"
     }
   ]

@@ -11,51 +11,51 @@
   "steps": [
     {
       "text": "This is a clock! Clocks have numbers all the way around. Can you tap the number 1?",
-      "expect": "NUMBER_1_TAPPED",
-      "feedback": "One! Now tap 2!"
+      "expect": "NUMERAL_1_TAPPED"
     },
     {
-      "expect": "NUMBER_2_TAPPED",
-      "feedback": "Now tap 3!"
+      "text": "One! Now tap 2!",
+      "expect": "NUMERAL_2_TAPPED"
     },
     {
-      "expect": "NUMBER_3_TAPPED",
-      "feedback": "Now tap 4!"
+      "text": "Now tap 3!",
+      "expect": "NUMERAL_3_TAPPED"
     },
     {
-      "expect": "NUMBER_4_TAPPED",
-      "feedback": "Now tap 5!"
+      "text": "Now tap 4!",
+      "expect": "NUMERAL_4_TAPPED"
     },
     {
-      "expect": "NUMBER_5_TAPPED",
-      "feedback": "Now tap 6 — it's at the very bottom!"
+      "text": "Now tap 5!",
+      "expect": "NUMERAL_5_TAPPED"
     },
     {
-      "expect": "NUMBER_6_TAPPED",
-      "feedback": "Halfway around. Now tap 7!"
+      "text": "Now tap 6 — it's at the very bottom!",
+      "expect": "NUMERAL_6_TAPPED"
     },
     {
-      "expect": "NUMBER_7_TAPPED",
-      "feedback": "Now tap 8!"
+      "text": "Halfway around. Now tap 7!",
+      "expect": "NUMERAL_7_TAPPED"
     },
     {
-      "expect": "NUMBER_8_TAPPED",
-      "feedback": "Now tap 9!"
+      "text": "Now tap 8!",
+      "expect": "NUMERAL_8_TAPPED"
     },
     {
-      "expect": "NUMBER_9_TAPPED",
-      "feedback": "Now tap 10!"
+      "text": "Now tap 9!",
+      "expect": "NUMERAL_9_TAPPED"
     },
     {
-      "expect": "NUMBER_10_TAPPED",
-      "feedback": "Now tap 11!"
+      "text": "Now tap 10!",
+      "expect": "NUMERAL_10_TAPPED"
     },
     {
-      "expect": "NUMBER_11_TAPPED",
-      "feedback": "Last one — tap 12 at the very top!"
+      "text": "Now tap 11!",
+      "expect": "NUMERAL_11_TAPPED"
     },
     {
-      "expect": "NUMBER_12_TAPPED",
+      "text": "Last one — tap 12 at the very top!",
+      "expect": "NUMERAL_12_TAPPED",
       "feedback": "You counted all the way around!"
     }
   ]
