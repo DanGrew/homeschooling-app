@@ -41,11 +41,13 @@ function buildDominoEndpointEl(endpoint) {
 }
 
 function initDominoPan(viewport, world) {
-  var state = { dragging: false, startX: 0, startY: 0, panX: 0, panY: 0 };
+  var state = { dragging: false, startX: 0, startY: 0, panX: 0, panY: 0, scale: 2 };
+  world.style.transformOrigin = '0 0';
 
   function applyPan() {
-    world.style.transform = 'translate(' + state.panX + 'px, ' + state.panY + 'px)';
+    world.style.transform = 'translate(' + state.panX + 'px, ' + state.panY + 'px) scale(' + state.scale + ')';
   }
+  state.applyPan = applyPan;
 
   viewport.addEventListener('mousedown', function(e) {
     state.dragging = true;
@@ -89,6 +91,38 @@ function initDominoPan(viewport, world) {
   return state;
 }
 
+function buildDominoZoomBtns(viewport, panState) {
+  var wrap = document.createElement('div');
+  wrap.className = 'domino-zoom-controls';
+  wrap.setAttribute('data-testid', 'domino-zoom-controls');
+
+  [
+    { text: '+', testid: 'domino-zoom-in', delta: 0.25 },
+    { text: '\u2212', testid: 'domino-zoom-out', delta: -0.25 }
+  ].forEach(function(cfg) {
+    var btn = document.createElement('button');
+    btn.className = 'domino-zoom-btn';
+    btn.setAttribute('data-testid', cfg.testid);
+    btn.setAttribute('type', 'button');
+    btn.textContent = cfg.text;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var box = viewport.getBoundingClientRect();
+      var cx = box.width / 2;
+      var cy = box.height / 2;
+      var worldX = (cx - panState.panX) / panState.scale;
+      var worldY = (cy - panState.panY) / panState.scale;
+      panState.scale = Math.min(4, Math.max(0.5, panState.scale + cfg.delta));
+      panState.panX = cx - worldX * panState.scale;
+      panState.panY = cy - worldY * panState.scale;
+      panState.applyPan();
+    });
+    wrap.appendChild(btn);
+  });
+
+  viewport.appendChild(wrap);
+}
+
 function attachEndpointHandler(el, handler, idx) {
   el.addEventListener('click', function(e) { e.stopPropagation(); handler(idx); });
   el.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); handler(idx); });
@@ -118,11 +152,11 @@ function renderDominoBoard(viewport, gameState, options) {
   viewport.appendChild(world);
 
   var panState = initDominoPan(viewport, world);
-  var panX = Math.round(viewport.clientWidth / 2) - DOMINO_ORIGIN - DOMINO_CELL;
-  var panY = Math.round(viewport.clientHeight / 2) - DOMINO_ORIGIN - Math.round(DOMINO_CELL / 2);
-  panState.panX = panX;
-  panState.panY = panY;
-  world.style.transform = 'translate(' + panX + 'px, ' + panY + 'px)';
+  var scale = panState.scale;
+  panState.panX = Math.round(viewport.clientWidth / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL) * scale);
+  panState.panY = Math.round(viewport.clientHeight / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL / 2) * scale);
+  panState.applyPan();
+  buildDominoZoomBtns(viewport, panState);
 }
 
 function setDominoEndpointsActive(viewport, active) {

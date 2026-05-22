@@ -149,6 +149,32 @@
 .domino-btn-submit { background: #16a34a; }
 .domino-btn:disabled { opacity: 0.35; cursor: default; }
 
+.domino-zoom-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+.domino-zoom-btn {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.92);
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
 .domino-half[data-value="red"]    { background: #e74c3c; color: #fff; }
 .domino-half[data-value="orange"] { background: #e67e22; color: #fff; }
 .domino-half[data-value="yellow"] { background: #f1c40f; color: #333; }

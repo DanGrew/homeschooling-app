@@ -66,3 +66,19 @@ test('pan moves the board world', async ({ page }) => {
 
   expect(after).not.toBe(before)
 })
+
+test('zoom in button increases scale', async ({ page }) => {
+  await startGame(page)
+  const before = await page.getByTestId('domino-board-world').evaluate(el => el.style.transform)
+  await page.getByTestId('domino-zoom-in').click()
+  const after = await page.getByTestId('domino-board-world').evaluate(el => el.style.transform)
+  expect(after).not.toBe(before)
+  expect(after).toMatch(/scale\(2\.25\)/)
+})
+
+test('zoom out button decreases scale', async ({ page }) => {
+  await startGame(page)
+  await page.getByTestId('domino-zoom-out').click()
+  const transform = await page.getByTestId('domino-board-world').evaluate(el => el.style.transform)
+  expect(transform).toMatch(/scale\(1\.75\)/)
+})
