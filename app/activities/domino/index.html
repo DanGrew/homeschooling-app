@@ -42,6 +42,7 @@ var boardViewport = document.getElementById('domino-board-viewport');
 var trayEl        = document.getElementById('domino-tray');
 
 var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+var NEXT_ROTATION = { 0: 90, 90: 180, 180: 270, 270: 0 };
 
 var gameState;
 var turnState;
@@ -62,7 +63,7 @@ function makeTrayOpts() {
 }
 
 function makeBoardOpts() {
-  return { onEndpointTap: onEndpointTap };
+  return { onEndpointTap: onEndpointTap, onPreviewRotate: onPreviewRotate };
 }
 
 function deselectTile() {
@@ -101,8 +102,20 @@ function onEndpointTap(endpointIndex) {
       turnState.previewEndpointIndex = endpointIndex;
       turnState.previewRotation = preview.rotation;
       dominoEmit('placement_preview', { tile_id: tileId, location_id: 'endpoint_' + endpointIndex });
-      showDominoPreview(boardViewport, preview);
+      showDominoPreview(boardViewport, preview, makeBoardOpts());
       dominoTraySetSubmitEnabled(trayEl, true);
+    });
+  });
+}
+
+function onPreviewRotate() {
+  [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
+    [turnState.previewEndpointIndex].filter(function(i) { return i !== null; }).forEach(function(epIdx) {
+      var nextRot = NEXT_ROTATION[Number(turnState.previewRotation)];
+      [getPreviewPlacement(gameState, tileId, epIdx, nextRot)].filter(Boolean).forEach(function(preview) {
+        turnState.previewRotation = nextRot;
+        showDominoPreview(boardViewport, preview, makeBoardOpts());
+      });
     });
   });
 }
