@@ -40,6 +40,8 @@
 #preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
 .preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
 .preset-btn:active{transform:scale(0.95);}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 2px #f0c060}50%{box-shadow:0 0 0 6px #f0c060,0 0 12px rgba(240,192,96,0.6)}}
+.badge-target-active{animation:badgePulse 1.2s ease-in-out infinite;}
 @media (max-width:560px){
   #sky-area{flex-direction:column;}
   #clock-panel{flex:0 0 auto;width:100%;}
@@ -95,6 +97,23 @@ var defaultPresets = [];
 var currentPresets = [];
 var presetFilter = null;
 var PAGE_CTRL = {};
+var _badgeTapEmit = null;
+var _badgeTargetEl = null;
+var _BADGE_EMIT    = { 'true': function() { emit(_badgeTapEmit); }, 'false': function() {} };
+var _BADGE_EL_CLR  = { 'true': function(el) { el.classList.remove('badge-target-active'); }, 'false': function() {} };
+
+function _clearBadgeTarget() {
+  _BADGE_EL_CLR[String(!!_badgeTargetEl)](_badgeTargetEl);
+  _badgeTapEmit = null;
+  _badgeTargetEl = null;
+}
+
+function _setBadgeTarget(el, evtType) {
+  _clearBadgeTarget();
+  _badgeTapEmit = evtType;
+  _badgeTargetEl = el;
+  el.classList.add('badge-target-active');
+}
 
 function emit(type) {
   window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: type}}));
@@ -143,6 +162,8 @@ makeSpeakable(document.getElementById('sky-moon'), 'Moon');
 makeInteractive(document.getElementById('digital-12h'),     function() { speak(currentSpoken); });
 makeInteractive(document.getElementById('digital-24h'),     function() { speak(currentSpoken24); });
 makeInteractive(document.getElementById('clock-container'), function() { speak(currentSpoken); });
+document.getElementById('digital-12h').addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
+document.getElementById('digital-24h').addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 
 var PRESET_SPOKEN   = {'true': function(p){return p.spoken;},   'false': function(p){return p.label;}};
 var PRESET_SPOKEN24 = {'true': function(p){return p.spoken24;}, 'false': function(p){return p.time;}};
@@ -193,7 +214,13 @@ PAGE_CTRL['HIDE_DIGITAL_DISPLAY'] = function() { document.getElementById('digita
 PAGE_CTRL['SHOW_DIGITAL_DISPLAY'] = function() { document.getElementById('digital').style.visibility = ''; };
 PAGE_CTRL['HIDE_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = 'hidden'; };
 PAGE_CTRL['SHOW_PRESET_LABEL']    = function() { document.getElementById('preset-buttons').style.visibility = ''; };
+PAGE_CTRL['BADGE_TARGET_AM']           = function() { _setBadgeTarget(document.getElementById('digital-12h'), 'BADGE_AM_TAPPED'); };
+PAGE_CTRL['BADGE_TARGET_PM']           = function() { _setBadgeTarget(document.getElementById('digital-12h'), 'BADGE_PM_TAPPED'); };
+PAGE_CTRL['BADGE_TARGET_24HR']         = function() { _setBadgeTarget(document.getElementById('digital-24h'), 'BADGE_24HR_TAPPED'); };
+PAGE_CTRL['BADGE_TARGET_PRESET_LABEL'] = function() { _setBadgeTarget(profileTitleEl, 'BADGE_PRESET_LABEL_TAPPED'); };
+PAGE_CTRL['BADGE_TARGET_NONE']         = function() { _clearBadgeTarget(); };
 PAGE_CTRL['PAGE_CONTROL_RESET']   = function() {
+  _clearBadgeTarget();
   presetFilter = null;
   document.getElementById('digital').style.visibility = '';
   document.getElementById('preset-buttons').style.visibility = '';
@@ -250,6 +277,7 @@ var mcContainer = document.getElementById('multi-choice-container');
 var presetButtonsEl = document.getElementById('preset-buttons');
 var profileTitleEl = document.getElementById('profile-title');
 makeInteractive(profileTitleEl, function() { speak(profileTitleEl.textContent); });
+profileTitleEl.addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 var _profileCache = {};
 
 function _storeProfile(profileId, data, cb) {
