@@ -92,10 +92,13 @@ test('valid placement adds tile to board and removes from tray', async ({ page }
     const player = state.players[state.turnIndex]
     const hand = state.hands[player.id]
     const endpoints = state.board.endpoints
+    const rots = [0, 90, 180, 270]
     for (let t = 0; t < hand.length; t++) {
       for (let e = 0; e < endpoints.length; e++) {
-        if (window.validatePlacement(hand[t], endpoints[e].value).valid) {
-          return { tileId: hand[t].id, endpointIndex: e }
+        for (let ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) {
+            return { tileId: hand[t].id, endpointIndex: e }
+          }
         }
       }
     }

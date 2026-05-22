@@ -5,6 +5,15 @@ var DOMINO_VALUES = {
   numbers: ['0', '1', '2', '3', '4', '5', '6']
 };
 
+var ROTATION_GEOMETRY = {
+  0:   { colOff: 0,  rowOff: 0,  epColOff: 2,  epRowOff: 0,  epDir: 'east',  blockDir: 'west',  anchorLeft: true  },
+  90:  { colOff: 0,  rowOff: 0,  epColOff: 0,  epRowOff: 2,  epDir: 'south', blockDir: 'north', anchorLeft: true  },
+  180: { colOff: -1, rowOff: 0,  epColOff: -2, epRowOff: 0,  epDir: 'west',  blockDir: 'east',  anchorLeft: false },
+  270: { colOff: 0,  rowOff: -1, epColOff: 0,  epRowOff: -2, epDir: 'north', blockDir: 'south', anchorLeft: false }
+};
+
+var OPPOSITE_DIR = { east: 'west', west: 'east', north: 'south', south: 'north' };
+
 function dominoShuffle(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
@@ -30,16 +39,20 @@ function generateTiles(matchType) {
   return tiles;
 }
 
-function validatePlacement(tile, endpoint) {
-  if (tile.left === endpoint) return { valid: true, orientation: 'horizontal' };
-  if (tile.right === endpoint) return { valid: true, orientation: 'vertical' };
-  return { valid: false, orientation: null };
+function validatePlacement(tile, endpoint, rotation) {
+  var geom = ROTATION_GEOMETRY[rotation === undefined ? 0 : rotation];
+  if (OPPOSITE_DIR[geom.blockDir] !== endpoint.direction) return { valid: false };
+  var connectValue = geom.anchorLeft ? tile.left : tile.right;
+  return { valid: connectValue === endpoint.value };
 }
 
 function playerHasValidPlacement(hand, endpoints) {
+  var rotations = [0, 90, 180, 270];
   for (var i = 0; i < hand.length; i++) {
     for (var e = 0; e < endpoints.length; e++) {
-      if (validatePlacement(hand[i], endpoints[e]).valid) return true;
+      for (var r = 0; r < rotations.length; r++) {
+        if (validatePlacement(hand[i], endpoints[e], rotations[r]).valid) return true;
+      }
     }
   }
   return false;
@@ -63,7 +76,10 @@ function dealHands(tiles, playerCount) {
     var remaining = shuffled.slice(playerCount * handSize);
     var startingTile = remaining[0];
     var drawPile = remaining.slice(1);
-    var endpoints = [startingTile.left, startingTile.right];
+    var endpoints = [
+      { value: startingTile.left,  col: -1, row: 0, direction: 'west' },
+      { value: startingTile.right, col:  2, row: 0, direction: 'east' }
+    ];
 
     var allPlayable = playerIds.every(function(pid) {
       return playerHasValidPlacement(hands[pid], endpoints);
@@ -88,18 +104,17 @@ function dealHands(tiles, playerCount) {
 
 function checkCompletion(state) {
   if (state.drawPile.length > 0) return false;
-  var endpointValues = state.board.endpoints.map(function(ep) { return ep.value; });
   return state.players.every(function(p) {
-    return !playerHasValidPlacement(state.hands[p.id], endpointValues);
+    return !playerHasValidPlacement(state.hands[p.id], state.board.endpoints);
   });
 }
 
 function createInitialBoard(startingTile) {
   return {
-    tiles: [{ tile: startingTile, col: 0, row: 0, flipped: false }],
+    tiles: [{ tile: startingTile, col: 0, row: 0, rotation: 0 }],
     endpoints: [
-      { value: startingTile.left,  col: -1, row: 0, side: 'left' },
-      { value: startingTile.right, col:  2, row: 0, side: 'right' }
+      { value: startingTile.left,  col: -1, row: 0, direction: 'west' },
+      { value: startingTile.right, col:  2, row: 0, direction: 'east' }
     ]
   };
 }
@@ -109,7 +124,8 @@ function advanceTurn(state) {
   if (checkCompletion(state)) state.phase = 'complete';
 }
 
-function placeTile(state, tileId, endpointIndex) {
+function placeTile(state, tileId, endpointIndex, rotation) {
+  var rot = rotation === undefined ? 0 : rotation;
   var player = state.players[state.turnIndex];
   var hand = state.hands[player.id];
   var tileIdx = -1;
@@ -122,22 +138,23 @@ function placeTile(state, tileId, endpointIndex) {
   var endpoint = state.board.endpoints[endpointIndex];
   if (!endpoint) return { success: false };
 
-  var result = validatePlacement(tile, endpoint.value);
+  var result = validatePlacement(tile, endpoint, rot);
   if (!result.valid) return { success: false };
 
-  var isRight = endpoint.side === 'right';
-  var placedCol = isRight ? endpoint.col : endpoint.col - 1;
-  var newEndpointCol = isRight ? endpoint.col + 2 : endpoint.col - 2;
-  var flipped = isRight ? result.orientation === 'vertical' : result.orientation === 'horizontal';
-  var newValue = tile.left === endpoint.value ? tile.right : tile.left;
+  var geom = ROTATION_GEOMETRY[rot];
+  var placedCol = endpoint.col + geom.colOff;
+  var placedRow = endpoint.row + geom.rowOff;
+  var newEndpointCol = endpoint.col + geom.epColOff;
+  var newEndpointRow = endpoint.row + geom.epRowOff;
+  var newValue = geom.anchorLeft ? tile.right : tile.left;
 
-  state.board.tiles.push({ tile: tile, col: placedCol, row: 0, flipped: flipped });
+  state.board.tiles.push({ tile: tile, col: placedCol, row: placedRow, rotation: rot });
   state.stats[player.id].tilesPlaced += 1;
 
   var newEndpoints = [];
   for (var e = 0; e < state.board.endpoints.length; e++) {
     if (e === endpointIndex) {
-      newEndpoints.push({ value: newValue, col: newEndpointCol, row: 0, side: endpoint.side });
+      newEndpoints.push({ value: newValue, col: newEndpointCol, row: newEndpointRow, direction: geom.epDir });
     } else {
       newEndpoints.push(state.board.endpoints[e]);
     }
@@ -158,7 +175,7 @@ function placeTile(state, tileId, endpointIndex) {
   return { success: true };
 }
 
-function getPreviewPlacement(state, tileId, endpointIndex) {
+function getPreviewPlacement(state, tileId, endpointIndex, rotation) {
   var player = state.players[state.turnIndex];
   var hand = state.hands[player.id];
   var tile = null;
@@ -168,13 +185,11 @@ function getPreviewPlacement(state, tileId, endpointIndex) {
   if (!tile) return null;
   var endpoint = state.board.endpoints[endpointIndex];
   if (!endpoint) return null;
-  var result = validatePlacement(tile, endpoint.value);
-  var isRight = endpoint.side === 'right';
-  var placedCol = isRight ? endpoint.col : endpoint.col - 1;
-  var flipped = result.valid
-    ? (isRight ? result.orientation === 'vertical' : result.orientation === 'horizontal')
-    : false;
-  return { tile: tile, col: placedCol, row: 0, flipped: flipped };
+  var rot = rotation !== undefined ? rotation : ([0, 90, 180, 270].find(function(r) {
+    return validatePlacement(tile, endpoint, r).valid;
+  }) || 0);
+  var geom = ROTATION_GEOMETRY[rot];
+  return { tile: tile, col: endpoint.col + geom.colOff, row: endpoint.row + geom.rowOff, rotation: rot };
 }
 
 function drawTile(state) {
@@ -211,6 +226,7 @@ if (typeof module !== 'undefined') module.exports = {
   generateTiles,
   dealHands,
   validatePlacement,
+  playerHasValidPlacement,
   checkCompletion,
   createInitialBoard,
   createDominoGame,
@@ -218,5 +234,6 @@ if (typeof module !== 'undefined') module.exports = {
   placeTile,
   drawTile,
   getPreviewPlacement,
-  DOMINO_VALUES
+  DOMINO_VALUES,
+  ROTATION_GEOMETRY
 };
