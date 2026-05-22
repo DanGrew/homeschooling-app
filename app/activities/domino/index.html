@@ -230,7 +230,7 @@ window.addEventListener('domino:game_complete', function() {
         type: 'learning_completed',
         timestamp: Date.now(),
         learning_id: 'domino',
-        variant_id: window.gameState && window.gameState.matchType,
+        variant_id: Object(window.gameState).matchType,
         activity_id: window.ACTIVITY_ID
       });
     },
