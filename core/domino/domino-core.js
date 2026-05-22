@@ -88,10 +88,36 @@ function dealHands(tiles, playerCount) {
 
 function checkCompletion(state) {
   if (state.drawPile.length > 0) return false;
-  var endpoints = state.board.endpoints;
+  var endpointValues = state.board.endpoints.map(function(ep) { return ep.value; });
   return state.players.every(function(p) {
-    return !playerHasValidPlacement(state.hands[p.id], endpoints);
+    return !playerHasValidPlacement(state.hands[p.id], endpointValues);
   });
+}
+
+function createInitialBoard(startingTile) {
+  return {
+    tiles: [{ tile: startingTile, col: 0, row: 0 }],
+    endpoints: [
+      { value: startingTile.left,  col: -1, row: 0 },
+      { value: startingTile.right, col:  2, row: 0 }
+    ]
+  };
+}
+
+function createDominoGame(setupState) {
+  var tiles = generateTiles(setupState.matchType);
+  var dealt = dealHands(tiles, setupState.players.length);
+  return {
+    players: setupState.players.map(function(p, i) {
+      return { id: 'p' + i, name: p.name, icon: p.icon, role: p.role };
+    }),
+    matchType: setupState.matchType,
+    hands: dealt.hands,
+    drawPile: dealt.drawPile,
+    board: createInitialBoard(dealt.startingTile),
+    turnIndex: 0,
+    phase: 'playing'
+  };
 }
 
 if (typeof module !== 'undefined') module.exports = {
@@ -99,5 +125,7 @@ if (typeof module !== 'undefined') module.exports = {
   dealHands,
   validatePlacement,
   checkCompletion,
+  createInitialBoard,
+  createDominoGame,
   DOMINO_VALUES
 };

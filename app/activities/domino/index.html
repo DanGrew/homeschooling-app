@@ -8,17 +8,22 @@
 <link rel="stylesheet" href="../../../styles/style.css">
 <link rel="stylesheet" href="../../../styles/speakable.css">
 <link rel="stylesheet" href="../../../styles/pairs.css">
+<link rel="stylesheet" href="../../../styles/domino.css">
 <script src="../../../components/menu.js" defer></script>
 <script src="../../../core/pairs/pairs-content.js"></script>
+<script src="../../../core/domino/domino-core.js"></script>
 <script src="../../../ui/card-game/card-game-ui.js"></script>
 <script src="../../../ui/domino/domino-ui.js"></script>
+<script src="../../../ui/domino/domino-board-ui.js"></script>
 </head>
 <body>
 <div class="nav-bar" data-home="../../games/" data-title="Dominoes" data-instruction="Match the tiles" data-no-links="standalone game"></div>
 
 <div class="game-area" style="flex-direction:column;overflow:hidden;">
   <div id="domino-setup" class="pairs-screen active"></div>
-  <div id="domino-game" class="pairs-screen"></div>
+  <div id="domino-game" class="pairs-screen" style="flex-direction:column;">
+    <div id="domino-board-viewport" class="domino-board-viewport" data-testid="domino-board-viewport"></div>
+  </div>
   <div id="domino-summary" class="pairs-screen"></div>
 </div>
 
@@ -31,8 +36,11 @@ window.DICT_BASE = '../../../content/dictionary/entries/';
 var setupScreen   = document.getElementById('domino-setup');
 var gameScreen    = document.getElementById('domino-game');
 var summaryScreen = document.getElementById('domino-summary');
+var boardViewport = document.getElementById('domino-board-viewport');
 
 var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+
+var gameState;
 
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
@@ -56,9 +64,16 @@ fetch('../../../content/dictionary/dictionary.json')
   });
 
 function startGame(setupState) {
+  gameState = createDominoGame(setupState);
   showScreen('game');
-  gameScreen.innerHTML = '<p data-testid="domino-game-placeholder" style="padding:24px;color:#555;">Game loading\u2026</p>';
+  renderDominoBoard(boardViewport, gameState);
 }
+
+window.addEventListener('resize', function() {
+  [gameState].filter(Boolean).forEach(function() {
+    renderDominoBoard(boardViewport, gameState);
+  });
+});
 </script>
 
 <script type="module">
