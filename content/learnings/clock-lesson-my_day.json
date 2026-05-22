@@ -1,0 +1,48 @@
+{
+  "id": "clock-lesson-my_day",
+  "title": "My Day",
+  "number": 6,
+  "guide": "cat",
+  "source": "Clock",
+  "filter": "my-day",
+  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
+  "criteria": ["psed.identity", "cl.topic-vocabulary", "cl.sequencing-language"],
+  "steps": [
+    {
+      "text": "Let's find out about YOUR day. When do you wake up? Press the time that feels right for you!",
+      "expect": "ANY_PRESET_SELECTED"
+    },
+    {
+      "text": "You wake up and your day begins. Morning is the start of everything! When do you eat breakfast? Press it!",
+      "expect": "ANY_PRESET_SELECTED"
+    },
+    {
+      "text": "Breakfast gives you energy for the whole morning. After morning comes lunchtime.",
+      "badge": "after",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Press the time you eat lunch!",
+      "expect": "ANY_PRESET_SELECTED"
+    },
+    {
+      "text": "After morning, lunch! The day is moving along. Then comes dinner.",
+      "badge": "then",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Press your dinner time!",
+      "expect": "ANY_PRESET_SELECTED"
+    },
+    {
+      "text": "Then dinner, as the sky gets darker. Last of all — bedtime.",
+      "badge": "last",
+      "expect": "BADGE_TAPPED"
+    },
+    {
+      "text": "Press when you go to sleep!",
+      "expect": "ANY_PRESET_SELECTED",
+      "feedback": "Wake up, breakfast, lunch, dinner, bedtime — that is YOUR whole day!"
+    }
+  ]
+}
