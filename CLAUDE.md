@@ -236,6 +236,8 @@ function onReset() {
 | `ui/card-game/card-game-ui.js` | Shared card-game UI: setup sections, grid, cards, trays, handover |
 | `ui/pairs/pairs-ui.js` | Pairs game UI |
 | `ui/domino/domino-ui.js` | Domino setup screen UI |
+| `ui/domino/domino-board-ui.js` | Domino board canvas: tile/endpoint rendering, pan |
+| `ui/domino/domino-tray-ui.js` | Domino player tray: active player hand tiles, draw/place updates |
 | `ui/shopping-game/shopping-game-ui.js` | Shopping game UI: shopping tray, list items, summary |
 | `ui/piano/piano-ui.js` | Piano keyboard UI |
 | `ui/piano/piano-game-ui.js` | Piano game mode UI |

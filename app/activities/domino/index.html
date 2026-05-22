@@ -15,6 +15,7 @@
 <script src="../../../ui/card-game/card-game-ui.js"></script>
 <script src="../../../ui/domino/domino-ui.js"></script>
 <script src="../../../ui/domino/domino-board-ui.js"></script>
+<script src="../../../ui/domino/domino-tray-ui.js"></script>
 </head>
 <body>
 <div class="nav-bar" data-home="../../games/" data-title="Dominoes" data-instruction="Match the tiles" data-no-links="standalone game"></div>
@@ -23,6 +24,7 @@
   <div id="domino-setup" class="pairs-screen active"></div>
   <div id="domino-game" class="pairs-screen" style="flex-direction:column;">
     <div id="domino-board-viewport" class="domino-board-viewport" data-testid="domino-board-viewport"></div>
+    <div id="domino-tray" class="domino-tray" data-testid="domino-tray"></div>
   </div>
   <div id="domino-summary" class="pairs-screen"></div>
 </div>
@@ -37,6 +39,7 @@ var setupScreen   = document.getElementById('domino-setup');
 var gameScreen    = document.getElementById('domino-game');
 var summaryScreen = document.getElementById('domino-summary');
 var boardViewport = document.getElementById('domino-board-viewport');
+var trayEl        = document.getElementById('domino-tray');
 
 var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
 
@@ -67,6 +70,7 @@ function startGame(setupState) {
   gameState = createDominoGame(setupState);
   showScreen('game');
   renderDominoBoard(boardViewport, gameState);
+  renderDominoTray(trayEl, gameState);
 }
 
 window.addEventListener('resize', function() {
