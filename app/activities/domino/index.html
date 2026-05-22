@@ -102,15 +102,22 @@ function flashTileRed(tileId) {
   });
 }
 
+function afterTurn() {
+  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(function() { showScreen('summary'); });
+  [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
+    var player = gameState.players[gameState.turnIndex];
+    renderDominoHandover(gameScreen, player, function() {
+      renderDominoTray(trayEl, gameState, makeTrayOpts());
+    });
+  });
+}
+
 function onSubmitSuccess() {
   clearDominoPreview(boardViewport);
   turnState.selectedTileId = null;
   turnState.previewEndpointIndex = null;
   renderDominoBoard(boardViewport, gameState, makeBoardOpts());
-  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(function() { showScreen('summary'); });
-  [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
-    renderDominoTray(trayEl, gameState, makeTrayOpts());
-  });
+  afterTurn();
 }
 
 function onSubmit() {
@@ -128,10 +135,7 @@ function onDrawSuccess() {
   turnState.previewEndpointIndex = null;
   clearDominoPreview(boardViewport);
   setDominoEndpointsActive(boardViewport, false);
-  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(function() { showScreen('summary'); });
-  [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
-    renderDominoTray(trayEl, gameState, makeTrayOpts());
-  });
+  afterTurn();
 }
 
 function onDraw() {
@@ -158,6 +162,7 @@ function startGame(setupState) {
   showScreen('game');
   renderDominoBoard(boardViewport, gameState, makeBoardOpts());
   renderDominoTray(trayEl, gameState, makeTrayOpts());
+  renderDominoHandover(gameScreen, gameState.players[0], function() {});
 }
 
 window.addEventListener('resize', function() {

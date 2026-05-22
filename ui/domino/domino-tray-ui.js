@@ -91,6 +91,41 @@ function dominoTraySetSubmitEnabled(container, enabled) {
   });
 }
 
+function renderDominoHandover(container, player, onReady) {
+  [container.querySelector('.pairs-handover')].filter(Boolean).forEach(function(e) { e.remove(); });
+
+  var overlay = document.createElement('div');
+  overlay.className = 'pairs-handover';
+  overlay.setAttribute('data-testid', 'domino-handover');
+
+  var img = document.createElement('img');
+  img.src = cgImgSrc(player.icon);
+  img.alt = player.name;
+  img.style.width = '64px';
+  img.style.height = '64px';
+  img.style.borderRadius = '50%';
+  img.style.objectFit = 'cover';
+  overlay.appendChild(img);
+
+  var msg = document.createElement('p');
+  msg.className = 'pairs-handover-name';
+  msg.textContent = player.name + '\u2019s turn';
+  msg.setAttribute('data-testid', 'domino-handover-name');
+  overlay.appendChild(msg);
+  cgMakeSpeak(msg, msg.textContent);
+  cgSpeak(msg.textContent);
+
+  var btn = document.createElement('button');
+  btn.textContent = 'Ready';
+  btn.className = 'pairs-handover-btn';
+  btn.setAttribute('data-testid', 'domino-handover-ready');
+  btn.addEventListener('click', function() { overlay.remove(); onReady(); });
+  cgMakeSpeak(btn, 'Ready');
+  overlay.appendChild(btn);
+
+  container.appendChild(overlay);
+}
+
 function dominoTrayApplyRemove(container, tileId) {
   var tilesEl = container.querySelector('[data-testid="domino-tray-tiles"]');
   var found = tilesEl.querySelector('[data-tile-id="' + tileId + '"]');

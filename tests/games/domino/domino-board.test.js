@@ -8,6 +8,7 @@ async function startGame(page) {
   await page.getByTestId('avatar-0-cat').click()
   await page.getByTestId('avatar-1-dog').click()
   await page.getByTestId('domino-start-btn').click()
+  await page.getByTestId('domino-handover-ready').click()
 }
 
 test('board viewport visible after game starts', async ({ page }) => {
