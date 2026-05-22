@@ -1,9 +1,10 @@
 {
   "id": "long_and_short",
   "title": "Long Hand, Short Hand",
-  "number": 3,
+  "number": 2,
   "guide": "cat",
   "source": "Clock",
+  "pageControls": ["LOAD_TIME_03_00"],
   "criteria": [
     "maths.size-measure",
     "cl.descriptive-vocab"
