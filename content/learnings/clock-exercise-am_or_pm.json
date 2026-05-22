@@ -15,20 +15,18 @@
       "expect": "MULTI_CHOICE_CORRECT",
       "preset_shown": "wake_up",
       "answers": ["AM", "PM"],
-      "correct": "AM",
-      "feedback": "AM! It is morning — before midday. Morning is always AM."
+      "correct": "AM"
     },
     {
-      "text": "AM or PM?",
+      "text": "AM! It is morning — before midday. Morning is always AM. AM or PM?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "MULTI_CHOICE_CORRECT",
       "preset_shown": "dinner",
       "answers": ["AM", "PM"],
-      "correct": "PM",
-      "feedback": "PM! Dinner is in the evening — after midday. Evening is always PM."
+      "correct": "PM"
     },
     {
-      "text": "What about now?",
+      "text": "PM! Dinner is in the evening — after midday. Evening is always PM. What about now?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "MULTI_CHOICE_CORRECT",
       "preset_shown": "lunch",

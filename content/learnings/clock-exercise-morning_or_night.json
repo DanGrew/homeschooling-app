@@ -14,20 +14,18 @@
       "expect": "MULTI_CHOICE_CORRECT",
       "preset_shown": "wake_up",
       "answers": ["morning", "night"],
-      "correct": "morning",
-      "feedback": "Morning! Because the sun is up, we know it is morning time."
+      "correct": "morning"
     },
     {
-      "text": "Look at the sky now. Morning or night?",
+      "text": "Morning! Because the sun is up, we know it is morning time. Look at the sky now. Morning or night?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "MULTI_CHOICE_CORRECT",
       "preset_shown": "bedtime",
       "answers": ["morning", "night"],
-      "correct": "night",
-      "feedback": "Night! Because the moon is out and the sky is dark, we know it is night time."
+      "correct": "night"
     },
     {
-      "text": "What about now?",
+      "text": "Night! Because the moon is out and the sky is dark, we know it is night time. What about now?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "MULTI_CHOICE_CORRECT",
       "preset_shown": "lunch",

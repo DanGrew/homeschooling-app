@@ -13,19 +13,17 @@
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_FARMER_START_SELECTED",
       "correct": "farmer_start",
-      "distractors": ["farmer_morning", "farmer_midday", "farmer_eve"],
-      "feedback": "Half past five in the morning! Before the sun is even up."
+      "distractors": ["farmer_morning", "farmer_midday", "farmer_eve"]
     },
     {
-      "text": "What does the farmer do after feeding the animals?",
+      "text": "Half past five in the morning! Before the sun is even up. What does the farmer do after feeding the animals?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_FARMER_MORNING_SELECTED",
       "correct": "farmer_morning",
-      "distractors": ["farmer_start", "farmer_midday", "farmer_eve"],
-      "feedback": "Work the fields! Planting, digging, and watering."
+      "distractors": ["farmer_start", "farmer_midday", "farmer_eve"]
     },
     {
-      "text": "When does the farmer bring the animals back inside?",
+      "text": "Work the fields! Planting, digging, and watering. When does the farmer bring the animals back inside?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_FARMER_EVE_SELECTED",
       "correct": "farmer_eve",

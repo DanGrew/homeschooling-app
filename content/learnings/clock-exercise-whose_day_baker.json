@@ -13,19 +13,17 @@
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_BAKER_START_SELECTED",
       "correct": "baker_start",
-      "distractors": ["baker_open", "baker_busy", "baker_close"],
-      "feedback": "Four in the morning! The baker starts before the sun comes up."
+      "distractors": ["baker_open", "baker_busy", "baker_close"]
     },
     {
-      "text": "What does the baker do after the bread is ready?",
+      "text": "Four in the morning! The baker starts before the sun comes up. What does the baker do after the bread is ready?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_BAKER_OPEN_SELECTED",
       "correct": "baker_open",
-      "distractors": ["baker_start", "baker_busy", "baker_close"],
-      "feedback": "Opens the shop! People can come and buy the fresh bread."
+      "distractors": ["baker_start", "baker_busy", "baker_close"]
     },
     {
-      "text": "When does the baker go home?",
+      "text": "Opens the shop! People can come and buy the fresh bread. When does the baker go home?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_BAKER_CLOSE_SELECTED",
       "correct": "baker_close",

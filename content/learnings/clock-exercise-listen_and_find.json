@@ -11,21 +11,18 @@
   "steps": [
     {
       "text": "Listen carefully — then press what I say. Ready? Press... wake up.",
-      "expect": "PRESET_WAKE_UP_SELECTED",
-      "feedback": "You listened and found it! Wake up — first thing in the morning."
+      "expect": "PRESET_WAKE_UP_SELECTED"
     },
     {
-      "text": "Listen again. Press... bedtime.",
-      "expect": "PRESET_BEDTIME_SELECTED",
-      "feedback": "You heard it and found it! Bedtime — last thing at night."
+      "text": "You listened and found it! Wake up — first thing in the morning. Listen again. Press... bedtime.",
+      "expect": "PRESET_BEDTIME_SELECTED"
     },
     {
-      "text": "This one is trickier. Listen first — then press. Press... dinner.",
-      "expect": "PRESET_DINNER_SELECTED",
-      "feedback": "Great listening! You remembered dinner."
+      "text": "You heard it and found it! Bedtime — last thing at night. This one is trickier. Listen first — then press. Press... dinner.",
+      "expect": "PRESET_DINNER_SELECTED"
     },
     {
-      "text": "Last one. Listen carefully. Press... lunch.",
+      "text": "Great listening! You remembered dinner. Last one. Listen carefully. Press... lunch.",
       "expect": "PRESET_LUNCH_SELECTED",
       "feedback": "You did it — you listened every time and found the right one. Brilliant listening!"
     }

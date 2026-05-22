@@ -13,19 +13,17 @@
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_DOCTOR_ARRIVE_SELECTED",
       "correct": "doctor_arrive",
-      "distractors": ["doctor_morning", "doctor_lunch", "doctor_home"],
-      "feedback": "Eight o'clock — the doctor arrives ready for a busy day."
+      "distractors": ["doctor_morning", "doctor_lunch", "doctor_home"]
     },
     {
-      "text": "What does the doctor do after the lunch break?",
+      "text": "Eight o'clock — the doctor arrives ready for a busy day. What does the doctor do after the lunch break?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_DOCTOR_AFTERNOON_SELECTED",
       "correct": "doctor_afternoon",
-      "distractors": ["doctor_arrive", "doctor_morning", "doctor_lunch"],
-      "feedback": "Afternoon ward — checking on all the patients!"
+      "distractors": ["doctor_arrive", "doctor_morning", "doctor_lunch"]
     },
     {
-      "text": "When does the doctor go home?",
+      "text": "Afternoon ward — checking on all the patients! When does the doctor go home?",
       "pageControls": ["RENDER_MULTI_CHOICE"],
       "expect": "PRESET_DOCTOR_HOME_SELECTED",
       "correct": "doctor_home",
