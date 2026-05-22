@@ -4,6 +4,7 @@
   "number": 8,
   "guide": "dog",
   "source": "Clock",
+  "type": "exercise",
   "mode": "multi-choice",
   "profile": "child-day",
   "criteria": ["cl.sequencing-language", "cl.prediction"],

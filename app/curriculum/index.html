@@ -156,21 +156,14 @@ function renderCoverageHeader() {
   head.appendChild(hr);
 }
 
-function attachActivity(entry) {
-  return fetch('../../content/lessons/' + entry.file)
-    .then(function(r) { return r.json(); })
-    .then(function(data) { return { lessons: data.lessons, activityLabel: entry.activity }; });
+function attachLearning(entry) {
+  return fetch('../../content/learnings/' + entry.id + '.json').then(function(r) { return r.json(); });
 }
 
 function attachPhysical(entry) {
   return fetch('../../content/physical/activities/' + entry.file)
     .then(function(r) { return r.json(); })
     .then(function(data) { return { data: data }; });
-}
-
-function attachExercise(entry) {
-  return fetch('../../content/learnings/' + entry.id + '.json')
-    .then(function(r) { return r.json(); });
 }
 
 function renderExerciseHeader() {
@@ -191,23 +184,23 @@ function renderExerciseBody(exerciseRows) {
 }
 
 async function init() {
-  var criteriaData     = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
-  var manifest         = await fetch('../../content/lessons/index.json').then(function(r) { return r.json(); });
-  var physicalManifest = await fetch('../../content/physical/activities/index.json').then(function(r) { return r.json(); });
-  var exerciseManifest = await fetch('../../content/exercises/index.json').then(function(r) { return r.json(); });
+  var criteriaData      = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
+  var learningsManifest = await fetch('../../content/learnings/manifest.json').then(function(r) { return r.json(); });
+  var physicalManifest  = await fetch('../../content/physical/activities/index.json').then(function(r) { return r.json(); });
   areas = criteriaData.areas;
   var criterionMap = buildCriterionMap(criteriaData);
   buildColKeyFns();
   renderGlossary();
-  var files         = await Promise.all(manifest.map(attachActivity));
+  var learningFiles = await Promise.all(learningsManifest.map(attachLearning));
   var physicalFiles = await Promise.all(physicalManifest.map(attachPhysical));
-  var exerciseFiles = await Promise.all(exerciseManifest.map(attachExercise));
-  rows = flattenLessons(files, criterionMap, areas).concat(flattenPhysical(physicalFiles, criterionMap, areas));
+  var allLearnings  = flattenLearnings(learningFiles, criterionMap, areas);
+  rows = allLearnings.filter(function(r) { return r.type !== 'exercise'; })
+           .concat(flattenPhysical(physicalFiles, criterionMap, areas));
   applySort();
   renderCoverageHeader();
   renderBody();
   renderExerciseHeader();
-  renderExerciseBody(flattenExercises(exerciseFiles, criterionMap, areas));
+  renderExerciseBody(allLearnings.filter(function(r) { return r.type === 'exercise'; }));
 }
 
 init();

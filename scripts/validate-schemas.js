@@ -103,7 +103,7 @@ const MAPPINGS = [
     label: 'content/learnings',
     schema: 'content/schemas/content/learnings.schema.json',
     searchDir: 'content/learnings',
-    match: (name) => name.endsWith('.json')
+    match: (name) => name.endsWith('.json') && name !== 'manifest.json'
   },
   {
     label: 'content/logic-gates',
