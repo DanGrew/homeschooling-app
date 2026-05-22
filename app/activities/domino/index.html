@@ -222,17 +222,21 @@ window.__speakInterrupt = speakInterrupt;
 var learningEventFired = false;
 window.addEventListener('domino:game_start', function() { learningEventFired = false; });
 window.addEventListener('domino:game_complete', function() {
-  [learningEventFired].filter(function(fired) { return !fired; }).forEach(function() {
-    learningEventFired = true;
-    recordLearningEvent({
-      version: 1,
-      type: 'learning_completed',
-      timestamp: Date.now(),
-      learning_id: 'domino',
-      variant_id: window.gameState && window.gameState.matchType,
-      activity_id: window.ACTIVITY_ID
-    });
-  });
+  var FIRE = {
+    'false': function() {
+      learningEventFired = true;
+      recordLearningEvent({
+        version: 1,
+        type: 'learning_completed',
+        timestamp: Date.now(),
+        learning_id: 'domino',
+        variant_id: window.gameState && window.gameState.matchType,
+        activity_id: window.ACTIVITY_ID
+      });
+    },
+    'true': function() {}
+  };
+  FIRE[String(learningEventFired)]();
 });
 </script>
 </body>
