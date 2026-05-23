@@ -90,6 +90,26 @@ describe('turn skipping', () => {
     expect(r.state.turnIndex).toBe(2)
   })
 
+  it('skips a completed player on miss (resolve path)', () => {
+    const state = {
+      cards: [
+        { contentId: 'cherry', state: 'hidden' },
+        { contentId: 'apple',  state: 'found'  },
+        { contentId: 'banana', state: 'hidden' }
+      ],
+      players: [
+        { id: 'p1', name: 'Alice', list: ['apple'],  found: ['apple'] },
+        { id: 'p2', name: 'Bob',   list: ['banana'], found: [] },
+        { id: 'p3', name: 'Carol', list: ['cherry'], found: [] }
+      ],
+      turnIndex: 1,
+      phase: 'resolving',
+      flipped: [0]
+    }
+    const r = resolveShoppingFlip(state)
+    expect(r.state.turnIndex).toBe(2)
+  })
+
   it('advances normally when next player still has items', () => {
     const state = {
       cards: [{ contentId: 'banana', state: 'hidden' }, { contentId: 'apple', state: 'hidden' }],
