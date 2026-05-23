@@ -17,6 +17,7 @@ var ROTATION_GEOMETRY = {
 };
 
 var HORIZONTAL_ROT = { 0: true, 45: true, 180: true, 225: true };
+var NEXT_ROTATION = { 0: 90, 90: 180, 180: 270, 270: 45, 45: 135, 135: 225, 225: 315, 315: 0 };
 var CONNECT_DELTA = { east: { dc: -1, dr: 0 }, west: { dc: 1, dr: 0 }, south: { dc: 0, dr: -1 }, north: { dc: 0, dr: 1 } };
 var NEIGHBOR_DIRS = [{ dc: 1, dr: 0 }, { dc: -1, dr: 0 }, { dc: 0, dr: 1 }, { dc: 0, dr: -1 }];
 
@@ -289,6 +290,17 @@ function createDominoGame(setupState) {
   };
 }
 
+function findNextPreviewRotation(currentRotation, tileId, endpointIndex, state) {
+  var endpoint = state.board.endpoints[endpointIndex];
+  var boardTiles = state.board.tiles;
+  var rot = currentRotation;
+  for (var i = 0; i < 8; i++) {
+    rot = NEXT_ROTATION[rot];
+    if (!hasCollision(endpoint, rot, boardTiles)) return rot;
+  }
+  return currentRotation;
+}
+
 var DOMINO_DICE_DOTS = {
   '0': [],
   '1': [[16,16]],
@@ -332,6 +344,8 @@ if (typeof module !== 'undefined') module.exports = {
   getPreviewPlacement,
   DOMINO_VALUES,
   ROTATION_GEOMETRY,
+  NEXT_ROTATION,
+  findNextPreviewRotation,
   buildDominoShapeSvg,
   buildDominoNumberSvg
 };

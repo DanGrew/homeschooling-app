@@ -12,21 +12,23 @@ var ROTATION_LAYOUT = {
   315: { cls: 'domino-tile-vertical',   fi: 1 }
 };
 
-function buildDominoHalfEl(value, matchType) {
-  var el = document.createElement('div');
-  el.className = 'domino-half';
-  el.setAttribute('data-value', value);
-  if (matchType === 'shapes') {
-    el.innerHTML = buildDominoShapeSvg(value);
-  } else if (matchType === 'icons') {
+var DOMINO_HALF_RENDER = {
+  shapes:  function(el, value) { el.innerHTML = buildDominoShapeSvg(value); },
+  numbers: function(el, value) { el.innerHTML = buildDominoNumberSvg(value); },
+  icons: function(el, value) {
     var img = document.createElement('img');
     img.src = cgImgSrc(value);
     img.alt = value;
     img.style.cssText = 'width:32px;height:32px;object-fit:contain;';
     el.appendChild(img);
-  } else if (matchType === 'numbers') {
-    el.innerHTML = buildDominoNumberSvg(value);
   }
+};
+
+function buildDominoHalfEl(value, matchType) {
+  var el = document.createElement('div');
+  el.className = 'domino-half';
+  el.setAttribute('data-value', value);
+  [DOMINO_HALF_RENDER[matchType]].filter(Boolean).forEach(function(render) { render(el, value); });
   return el;
 }
 
@@ -179,15 +181,12 @@ function renderDominoBoard(viewport, gameState, options) {
 
   var prevPan = viewport._dominoPanState;
   var panState = initDominoPan(viewport, world);
-  if (prevPan) {
-    panState.panX = prevPan.panX;
-    panState.panY = prevPan.panY;
-    panState.scale = prevPan.scale;
-  } else {
-    var scale = panState.scale;
-    panState.panX = Math.round(viewport.clientWidth / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL) * scale);
-    panState.panY = Math.round(viewport.clientHeight / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL / 2) * scale);
-  }
+  var scale = panState.scale;
+  panState.panX = Math.round(viewport.clientWidth / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL) * scale);
+  panState.panY = Math.round(viewport.clientHeight / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL / 2) * scale);
+  [prevPan].filter(Boolean).forEach(function(p) {
+    panState.panX = p.panX; panState.panY = p.panY; panState.scale = p.scale;
+  });
   panState.applyPan();
   viewport._dominoPanState = panState;
   buildDominoZoomBtns(viewport, panState);
