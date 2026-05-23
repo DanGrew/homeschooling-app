@@ -150,8 +150,7 @@ function renderDominoSetup(container, animalEntries, onStart) {
   };
 
   function redraw() {
-    var scrollTop = 0;
-    [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { scrollTop = el.scrollTop; });
+    cgPreserveScroll(container, function() {
     container.innerHTML = '';
     var root = document.createElement('div');
     root.className = 'pairs-setup-scroll';
@@ -188,7 +187,7 @@ function renderDominoSetup(container, animalEntries, onStart) {
     }));
 
     container.appendChild(root);
-    root.scrollTop = scrollTop;
+    });
   }
 
   redraw();

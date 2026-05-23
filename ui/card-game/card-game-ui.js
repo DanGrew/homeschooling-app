@@ -22,6 +22,13 @@ function cgImgSrc(id) {
 
 // ---- Setup shared sections ----
 
+function cgPreserveScroll(container, fn) {
+  var scrollTop = 0;
+  [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { scrollTop = el.scrollTop; });
+  fn();
+  [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { el.scrollTop = scrollTop; });
+}
+
 function buildCgCountSection(playerCount, onChange) {
   var section = document.createElement('div');
   section.className = 'pairs-setup-section';

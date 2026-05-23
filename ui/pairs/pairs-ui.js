@@ -21,15 +21,13 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
   };
 
   function redraw() {
-    var scrollTop = 0;
-    [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { scrollTop = el.scrollTop; });
-    container.innerHTML = '';
-    var newRoot = buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
-      Object.assign(cfg, patch);
-      redraw();
-    }, function() { onStart(cfg); });
-    container.appendChild(newRoot);
-    newRoot.scrollTop = scrollTop;
+    cgPreserveScroll(container, function() {
+      container.innerHTML = '';
+      container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
+        Object.assign(cfg, patch);
+        redraw();
+      }, function() { onStart(cfg); }));
+    });
   }
 
   redraw();
