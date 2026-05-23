@@ -72,14 +72,21 @@ var exSortCol = -1;
 var exSortAsc = true;
 
 var SORT_CLASS = { 'true': 'sort-asc', 'false': 'sort-desc' };
+var SORT_FNS = {
+  'true':  function(target) { target.sort(defaultCompare); },
+  'false': function(target, sc, sa) { target.sort(function(a, b) { return colCompare(a, b, sa, colKeyFns, sc); }); }
+};
+var SET_SORT_CLASS = {
+  'true':  function(th, sa) { th.classList.add(SORT_CLASS[String(sa)]); },
+  'false': function() {}
+};
 var CLICK_ACTION = {
   'true':  function(state) { state.asc = !state.asc; },
   'false': function(state, i) { state.col = i; state.asc = true; }
 };
 
 function applyGenericSort(target, sc, sa) {
-  if (sc === -1) { target.sort(defaultCompare); }
-  else { target.sort(function(a, b) { return colCompare(a, b, sa, colKeyFns, sc); }); }
+  SORT_FNS[String(sc === -1)](target, sc, sa);
 }
 
 function applySort() { applyGenericSort(rows, sortCol, sortAsc); }
@@ -126,7 +133,7 @@ function renderBody() {
 function updateHeaderThs(selector, sc, sa) {
   document.querySelectorAll(selector + ' th').forEach(function(th, i) {
     th.classList.remove('sort-asc', 'sort-desc');
-    if (i === sc) th.classList.add(SORT_CLASS[String(sa)]);
+    SET_SORT_CLASS[String(i === sc)](th, sa);
   });
 }
 
