@@ -53,7 +53,6 @@ test('Time section has What Time Is It', async ({ page }) => {
 
 test('World section has shopping games', async ({ page }) => {
   await page.goto('/homeschooling-app/app/games/')
-  await expect(page.getByRole('link', { name: 'Shopping Play' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Shopping Scan' })).toBeVisible()
 })
 

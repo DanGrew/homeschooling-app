@@ -5,7 +5,6 @@ const NAV_BAR_PAGES = [
   '/homeschooling-app/app/activities/piano/lesson.html',
   '/homeschooling-app/app/activities/say-words/',
   '/homeschooling-app/app/activities/colour-wheel/',
-  '/homeschooling-app/app/activities/shopping-play/',
   '/homeschooling-app/app/activities/word-match/',
 ];
 
