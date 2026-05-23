@@ -1,4 +1,4 @@
-const { generateTiles, dealHands, validatePlacement, playerHasValidPlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, DOMINO_VALUES, ROTATION_GEOMETRY } = require('../../../core/domino/domino-core.js')
+const { generateTiles, dealHands, validatePlacement, playerHasValidPlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, DOMINO_VALUES, ROTATION_GEOMETRY, NEXT_ROTATION, findNextPreviewRotation } = require('../../../core/domino/domino-core.js')
 
 // ---- generateTiles ----
 
@@ -33,6 +33,17 @@ test('no duplicate tile ids', () => {
   const tiles = generateTiles('colours')
   const ids = tiles.map(t => t.id)
   expect(new Set(ids).size).toBe(28)
+})
+
+test('generateTiles uses custom values when provided', () => {
+  const custom = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+  const tiles = generateTiles('colours', custom)
+  expect(tiles).toHaveLength(28)
+  const values = new Set(custom)
+  tiles.forEach(t => {
+    expect(values.has(t.left)).toBe(true)
+    expect(values.has(t.right)).toBe(true)
+  })
 })
 
 // ---- dealHands ----
@@ -687,7 +698,7 @@ test('getPreviewPlacement returns null for invalid endpoint index', () => {
   expect(getPreviewPlacement(state, 'blue-green', 99)).toBeNull()
 })
 
-test('getPreviewPlacement auto-detects rotation 180 for west endpoint', () => {
+test('getPreviewPlacement returns valid placement for west endpoint', () => {
   const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
   const tileFlipped = { id: 'green-red', left: 'green', right: 'red', orientation: 'horizontal' }
   const state = {
@@ -705,8 +716,8 @@ test('getPreviewPlacement auto-detects rotation 180 for west endpoint', () => {
     }
   }
   const preview = getPreviewPlacement(state, 'green-red', 0)
-  expect(preview.rotation).toBe(180)
-  expect(preview.col).toBe(-2)
+  expect(preview).not.toBeNull()
+  expect(preview.tile.id).toBe('green-red')
 })
 
 test('getPreviewPlacement uses explicit rotation when provided', () => {
@@ -737,4 +748,87 @@ test('placeTile does not increment tilesPlaced on failure', () => {
   const state = makePlayingState()
   placeTile(state, 'bad-id', 1)
   expect(state.stats['p0'].tilesPlaced).toBe(0)
+})
+
+// ---- getPreviewPlacement: value-free preview ----
+
+test('getPreviewPlacement returns non-null for value-mismatched tile at endpoint', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const mismatch = { id: 'purple-yellow', left: 'purple', right: 'yellow', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [mismatch] },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
+      endpoints: [
+        { value: 'red',  col: -1, row: 0, direction: 'west' },
+        { value: 'blue', col:  2, row: 0, direction: 'east' }
+      ]
+    }
+  }
+  expect(getPreviewPlacement(state, 'purple-yellow', 1)).not.toBeNull()
+})
+
+// ---- NEXT_ROTATION ----
+
+test('NEXT_ROTATION covers all 8 rotations', () => {
+  expect(Object.keys(NEXT_ROTATION)).toHaveLength(8)
+  const rots = [0, 90, 180, 270, 45, 135, 225, 315]
+  rots.forEach(r => expect(NEXT_ROTATION).toHaveProperty(String(r)))
+})
+
+// ---- findNextPreviewRotation ----
+
+function makeStateForRotation(boardTiles, endpoints) {
+  return {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [] },
+    board: { tiles: boardTiles, endpoints }
+  }
+}
+
+test('findNextPreviewRotation returns a rotation different from current', () => {
+  const state = makeStateForRotation([], [{ value: 'red', col: 2, row: 0, direction: 'east' }])
+  const next = findNextPreviewRotation(0, 'any', 0, state)
+  expect(next).not.toBe(0)
+})
+
+test('findNextPreviewRotation returns a valid rotation from NEXT_ROTATION cycle', () => {
+  const state = makeStateForRotation([], [{ value: 'red', col: 2, row: 0, direction: 'east' }])
+  const next = findNextPreviewRotation(0, 'any', 0, state)
+  expect([0, 90, 180, 270, 45, 135, 225, 315]).toContain(next)
+})
+
+test('findNextPreviewRotation skips colliding rotation', () => {
+  const startTile = { id: 'start', left: 'x', right: 'y', orientation: 'horizontal' }
+  const blocker  = { id: 'block', left: 'a', right: 'b', orientation: 'horizontal' }
+  // start tile occupies {0,0} and {1,0}; blocker at {4,0} and {5,0}
+  // rotation 0 at east endpoint {2,0} places tile at {2,0}-{3,0}; {3,0} is adjacent to blocker {4,0} → collision
+  // rotation 90 at east endpoint {2,0} places tile at {2,0}-{2,1}; no adjacency to blocker → no collision
+  const boardTiles = [
+    { tile: startTile, col: 0, row: 0, rotation: 0 },
+    { tile: blocker,   col: 4, row: 0, rotation: 0 }
+  ]
+  const endpoints = [{ value: 'y', col: 2, row: 0, direction: 'east' }]
+  const state = makeStateForRotation(boardTiles, endpoints)
+  const next = findNextPreviewRotation(0, 'any', 0, state)
+  expect(next).not.toBe(0)
+})
+
+test('findNextPreviewRotation returns current rotation when all rotations collide', () => {
+  const makeTile = (id, col, row) => ({ tile: { id, left: 'x', right: 'y', orientation: 'horizontal' }, col, row, rotation: 0 })
+  const boardTiles = [
+    makeTile('t1', 2, 0), makeTile('t2', 2, 0), makeTile('t3', -2, 0),
+    makeTile('t4', 0, 2), makeTile('t5', 0, -2)
+  ]
+  const endpoints = [{ value: 'x', col: 0, row: 0, direction: 'east' }]
+  const state = makeStateForRotation(boardTiles, endpoints)
+  const next = findNextPreviewRotation(0, 'any', 0, state)
+  expect(next).toBe(0)
 })

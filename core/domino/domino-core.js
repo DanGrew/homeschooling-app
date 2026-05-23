@@ -1,7 +1,7 @@
 var DOMINO_VALUES = {
   colours: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'],
   shapes:  ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'cross'],
-  icons:   ['cat', 'dog', 'bird', 'fish', 'rabbit', 'bear', 'frog'],
+  icons:   ['cat', 'dog', 'bird', 'fish', 'rabbit', 'lion', 'elephant'],
   numbers: ['0', '1', '2', '3', '4', '5', '6']
 };
 
@@ -17,6 +17,7 @@ var ROTATION_GEOMETRY = {
 };
 
 var HORIZONTAL_ROT = { 0: true, 45: true, 180: true, 225: true };
+var NEXT_ROTATION = { 0: 90, 90: 180, 180: 270, 270: 45, 45: 135, 135: 225, 225: 315, 315: 0 };
 var CONNECT_DELTA = { east: { dc: -1, dr: 0 }, west: { dc: 1, dr: 0 }, south: { dc: 0, dr: -1 }, north: { dc: 0, dr: 1 } };
 var NEIGHBOR_DIRS = [{ dc: 1, dr: 0 }, { dc: -1, dr: 0 }, { dc: 0, dr: 1 }, { dc: 0, dr: -1 }];
 
@@ -77,8 +78,8 @@ function dominoShuffle(arr) {
   return a;
 }
 
-function generateTiles(matchType) {
-  var values = DOMINO_VALUES[matchType];
+function generateTiles(matchType, customValues) {
+  var values = customValues || DOMINO_VALUES[matchType];
   var tiles = [];
   for (var i = 0; i < values.length; i++) {
     for (var j = i; j < values.length; j++) {
@@ -244,14 +245,17 @@ function getPreviewPlacement(state, tileId, endpointIndex, rotation) {
   var rot;
   if (rotation !== undefined) {
     rot = rotation;
+    if (hasCollision(endpoint, rot, state.board.tiles)) return null;
   } else {
     var ALL_ROTS = [0, 90, 180, 270, 45, 135, 225, 315];
+    var fallback;
     for (var ri = 0; ri < ALL_ROTS.length; ri++) {
-      if (validatePlacement(tile, endpoint, ALL_ROTS[ri], state.board.tiles).valid) {
-        rot = ALL_ROTS[ri];
-        break;
+      if (!hasCollision(endpoint, ALL_ROTS[ri], state.board.tiles)) {
+        if (validatePlacement(tile, endpoint, ALL_ROTS[ri]).valid) { rot = ALL_ROTS[ri]; break; }
+        if (fallback === undefined) fallback = ALL_ROTS[ri];
       }
     }
+    if (rot === undefined) rot = fallback;
     if (rot === undefined) return null;
   }
   var geom = ROTATION_GEOMETRY[rot];
@@ -269,7 +273,7 @@ function drawTile(state) {
 }
 
 function createDominoGame(setupState) {
-  var tiles = generateTiles(setupState.matchType);
+  var tiles = generateTiles(setupState.matchType, setupState.values);
   var dealt = dealHands(tiles, setupState.players.length);
   var players = setupState.players.map(function(p, i) {
     return { id: 'p' + i, name: p.name, icon: p.icon, role: p.role };
@@ -288,6 +292,46 @@ function createDominoGame(setupState) {
   };
 }
 
+function findNextPreviewRotation(currentRotation, tileId, endpointIndex, state) {
+  var endpoint = state.board.endpoints[endpointIndex];
+  var boardTiles = state.board.tiles;
+  var rot = currentRotation;
+  for (var i = 0; i < 8; i++) {
+    rot = NEXT_ROTATION[rot];
+    if (!hasCollision(endpoint, rot, boardTiles)) return rot;
+  }
+  return currentRotation;
+}
+
+var DOMINO_DICE_DOTS = {
+  '0': [],
+  '1': [[16,16]],
+  '2': [[8,8],[24,24]],
+  '3': [[8,8],[16,16],[24,24]],
+  '4': [[8,8],[24,8],[8,24],[24,24]],
+  '5': [[8,8],[24,8],[16,16],[8,24],[24,24]],
+  '6': [[8,8],[24,8],[8,16],[24,16],[8,24],[24,24]]
+};
+
+function buildDominoShapeSvg(shape) {
+  var s = '<svg viewBox="0 0 32 32" style="width:26px;height:26px;">';
+  if (shape === 'circle')        s += '<circle cx="16" cy="16" r="13" fill="#444"/>';
+  else if (shape === 'square')   s += '<rect x="3" y="3" width="26" height="26" rx="4" fill="#444"/>';
+  else if (shape === 'triangle') s += '<polygon points="16,3 29,29 3,29" fill="#444"/>';
+  else if (shape === 'star')     s += '<polygon points="16,2 19.5,11.5 29.5,11.5 21.5,17.5 24.5,27 16,21 7.5,27 10.5,17.5 2.5,11.5 12.5,11.5" fill="#444"/>';
+  else if (shape === 'heart')    s += '<path d="M16,28 C4,18 2,8 8,5 C11,3.5 14,6 16,10 C18,6 21,3.5 24,5 C30,8 28,18 16,28 Z" fill="#444"/>';
+  else if (shape === 'diamond')  s += '<polygon points="16,2 30,16 16,30 2,16" fill="#444"/>';
+  else if (shape === 'cross')    s += '<path d="M11,3 L21,3 L21,11 L29,11 L29,21 L21,21 L21,29 L11,29 L11,21 L3,21 L3,11 L11,11 Z" fill="#444"/>';
+  return s + '</svg>';
+}
+
+function buildDominoNumberSvg(value) {
+  var dots = DOMINO_DICE_DOTS[value] || [];
+  var s = '<svg viewBox="0 0 32 32" style="width:26px;height:26px;">';
+  dots.forEach(function(d) { s += '<circle cx="' + d[0] + '" cy="' + d[1] + '" r="4" fill="#333"/>'; });
+  return s + '</svg>';
+}
+
 if (typeof module !== 'undefined') module.exports = {
   generateTiles,
   dealHands,
@@ -301,5 +345,9 @@ if (typeof module !== 'undefined') module.exports = {
   drawTile,
   getPreviewPlacement,
   DOMINO_VALUES,
-  ROTATION_GEOMETRY
+  ROTATION_GEOMETRY,
+  NEXT_ROTATION,
+  findNextPreviewRotation,
+  buildDominoShapeSvg,
+  buildDominoNumberSvg
 };

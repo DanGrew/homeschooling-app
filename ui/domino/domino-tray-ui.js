@@ -16,14 +16,14 @@ function buildDominoTrayHeaderEl(player) {
   return el;
 }
 
-function buildDominoTrayTileEl(tile) {
+function buildDominoTrayTileEl(tile, matchType) {
   var el = document.createElement('div');
   el.className = 'domino-tile domino-tile-horizontal domino-tray-tile';
   el.setAttribute('data-testid', 'domino-tray-tile');
   el.setAttribute('data-tile-id', tile.id);
-  el.appendChild(buildDominoHalfEl(tile.left));
+  el.appendChild(buildDominoHalfEl(tile.left, matchType));
   el.appendChild(buildDominoDividerEl());
-  el.appendChild(buildDominoHalfEl(tile.right));
+  el.appendChild(buildDominoHalfEl(tile.right, matchType));
   return el;
 }
 
@@ -48,7 +48,7 @@ function renderDominoTray(container, gameState, options) {
   tilesEl.className = 'domino-tray-tiles';
   tilesEl.setAttribute('data-testid', 'domino-tray-tiles');
   hand.forEach(function(tile) {
-    var tileEl = buildDominoTrayTileEl(tile);
+    var tileEl = buildDominoTrayTileEl(tile, gameState.matchType);
     [opts.onTileTap].filter(Boolean).forEach(function(handler) {
       tileEl.addEventListener('click', function() { handler(tile.id); });
     });
@@ -175,7 +175,7 @@ function dominoTrayApplyRemove(container, tileId) {
   [found].filter(Boolean).forEach(function(el) { el.remove(); });
 }
 
-function dominoTrayApplyAdd(container, tile) {
+function dominoTrayApplyAdd(container, tile, matchType) {
   var tilesEl = container.querySelector('[data-testid="domino-tray-tiles"]');
-  tilesEl.appendChild(buildDominoTrayTileEl(tile));
+  tilesEl.appendChild(buildDominoTrayTileEl(tile, matchType));
 }

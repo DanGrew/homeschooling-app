@@ -12,11 +12,23 @@ var ROTATION_LAYOUT = {
   315: { cls: 'domino-tile-vertical',   fi: 1 }
 };
 
-function buildDominoHalfEl(value) {
+var DOMINO_HALF_RENDER = {
+  shapes:  function(el, value) { el.innerHTML = buildDominoShapeSvg(value); },
+  numbers: function(el, value) { el.innerHTML = buildDominoNumberSvg(value); },
+  icons: function(el, value) {
+    var img = document.createElement('img');
+    img.src = cgImgSrc(value);
+    img.alt = value;
+    img.style.cssText = 'width:32px;height:32px;object-fit:contain;';
+    el.appendChild(img);
+  }
+};
+
+function buildDominoHalfEl(value, matchType) {
   var el = document.createElement('div');
   el.className = 'domino-half';
   el.setAttribute('data-value', value);
-  el.textContent = value;
+  [DOMINO_HALF_RENDER[matchType]].filter(Boolean).forEach(function(render) { render(el, value); });
   return el;
 }
 
@@ -26,7 +38,7 @@ function buildDominoDividerEl() {
   return el;
 }
 
-function buildDominoTileEl(placedTile) {
+function buildDominoTileEl(placedTile, matchType) {
   var tile = placedTile.tile;
   var layout = ROTATION_LAYOUT[placedTile.rotation];
   var halves = [tile.left, tile.right];
@@ -35,9 +47,9 @@ function buildDominoTileEl(placedTile) {
   el.style.left = (DOMINO_ORIGIN + placedTile.col * DOMINO_CELL) + 'px';
   el.style.top  = (DOMINO_ORIGIN + placedTile.row * DOMINO_CELL) + 'px';
   el.setAttribute('data-testid', 'domino-tile-' + tile.id);
-  el.appendChild(buildDominoHalfEl(halves[layout.fi]));
+  el.appendChild(buildDominoHalfEl(halves[layout.fi], matchType));
   el.appendChild(buildDominoDividerEl());
-  el.appendChild(buildDominoHalfEl(halves[1 - layout.fi]));
+  el.appendChild(buildDominoHalfEl(halves[1 - layout.fi], matchType));
   return el;
 }
 
@@ -154,7 +166,7 @@ function renderDominoBoard(viewport, gameState, options) {
   viewport._dominoWorld = world;
 
   gameState.board.tiles.forEach(function(pt) {
-    world.appendChild(buildDominoTileEl(pt));
+    world.appendChild(buildDominoTileEl(pt, gameState.matchType));
   });
 
   gameState.board.endpoints.forEach(function(ep, idx) {
@@ -167,11 +179,16 @@ function renderDominoBoard(viewport, gameState, options) {
 
   viewport.appendChild(world);
 
+  var prevPan = viewport._dominoPanState;
   var panState = initDominoPan(viewport, world);
   var scale = panState.scale;
   panState.panX = Math.round(viewport.clientWidth / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL) * scale);
   panState.panY = Math.round(viewport.clientHeight / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL / 2) * scale);
+  [prevPan].filter(Boolean).forEach(function(p) {
+    panState.panX = p.panX; panState.panY = p.panY; panState.scale = p.scale;
+  });
   panState.applyPan();
+  viewport._dominoPanState = panState;
   buildDominoZoomBtns(viewport, panState);
 }
 
@@ -187,7 +204,7 @@ function showDominoPreview(viewport, placedTile, options) {
   clearDominoPreview(viewport);
   var opts = Object(options);
   [viewport._dominoWorld].filter(Boolean).forEach(function(world) {
-    var el = buildDominoTileEl(placedTile);
+    var el = buildDominoTileEl(placedTile, opts.matchType);
     el.classList.add('domino-preview-tile');
     el.setAttribute('data-testid', 'domino-preview-tile');
     [opts.onPreviewRotate].filter(Boolean).forEach(function(handler) {
