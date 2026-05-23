@@ -1,6 +1,9 @@
 function renderObjects(svgEl, state) {
-  var existing = svgEl.querySelectorAll('[data-obj]');
+  var layer = svgEl.querySelector('[data-layer]');
+  var existing = layer.querySelectorAll('[data-obj]');
   existing.forEach(function(el) { el.parentNode.removeChild(el); });
+
+  layer.setAttribute('transform', 'translate(' + (-state.viewport.x) + ',' + (-state.viewport.y) + ')');
 
   var sorted = state.objects.slice().sort(function(a, b) { return a.zIndex - b.zIndex; });
   sorted.forEach(function(obj) {
@@ -16,7 +19,7 @@ function renderObjects(svgEl, state) {
     [obj].filter(function(o) { return o.selected; }).forEach(function() {
       g.style.filter = 'drop-shadow(0 0 8px #fff) drop-shadow(0 0 4px #333)';
     });
-    svgEl.appendChild(g);
+    layer.appendChild(g);
   });
 }
 
@@ -40,6 +43,10 @@ function initObjectPlayground() {
   svgEl.setAttribute('width', state.world.width);
   svgEl.setAttribute('height', state.world.height);
 
+  var layer = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  layer.setAttribute('data-layer', '');
+  svgEl.appendChild(layer);
+
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
@@ -47,12 +54,46 @@ function initObjectPlayground() {
 
   redraw();
 
-  svgEl.addEventListener('click', function(e) {
-    var g = e.target.closest('[data-obj]');
-    [g].filter(Boolean).forEach(function(el) {
-      state = handleTap(state, el.getAttribute('data-obj'));
+  var panGesture = { active: false };
+
+  svgEl.addEventListener('pointerdown', function(e) {
+    svgEl.setPointerCapture(e.pointerId);
+    var tapTarget = e.target.closest('[data-obj]');
+    panGesture = {
+      active: true,
+      tapTarget: tapTarget,
+      onObj: !!tapTarget,
+      moved: false,
+      startX: e.clientX,
+      startY: e.clientY,
+      originX: state.viewport.x,
+      originY: state.viewport.y
+    };
+  });
+
+  svgEl.addEventListener('pointermove', function(e) {
+    var dx = e.clientX - panGesture.startX;
+    var dy = e.clientY - panGesture.startY;
+    getPanMoves(panGesture, dx, dy).forEach(function(move) {
+      panGesture = Object.assign({}, panGesture, { moved: true });
+      state = applyPan(state, move.x, move.y);
       redraw();
     });
+  });
+
+  svgEl.addEventListener('pointerup', function() {
+    var gesture = panGesture;
+    panGesture = { active: false };
+    getTapFlag(gesture).forEach(function() {
+      [gesture.tapTarget].filter(Boolean).forEach(function(el) {
+        state = handleTap(state, el.getAttribute('data-obj'));
+        redraw();
+      });
+    });
+  });
+
+  svgEl.addEventListener('pointercancel', function() {
+    panGesture = { active: false };
   });
 
   toolboxEl.addEventListener('click', function(e) {

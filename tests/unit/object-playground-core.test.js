@@ -3,6 +3,7 @@ const require = createRequire(import.meta.url);
 const {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
   OBJ_BASE_R, objPick, initObjectState,
+  PAN_THRESHOLD, getPanMoves, getTapFlag, applyPan,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildToolboxHTML
 } = require('../../core/object-playground/object-playground-core.js');
 
@@ -99,7 +100,12 @@ describe('initObjectState', () => {
   });
 
   it('viewport starts at origin', () => {
-    expect(state.viewport).toEqual({ x: 0, y: 0 });
+    expect(state.viewport).toMatchObject({ x: 0, y: 0 });
+  });
+
+  it('viewport stores dimensions', () => {
+    expect(state.viewport.width).toBe(800);
+    expect(state.viewport.height).toBe(600);
   });
 });
 
@@ -186,6 +192,89 @@ describe('handlePropertyCycle', () => {
     const before = state.objects.find(o => o.id === 'obj-0').shape;
     const next = handlePropertyCycle(state, 'shape');
     expect(next.objects.find(o => o.id === 'obj-0').shape).toBe(before);
+  });
+});
+
+describe('getPanMoves', () => {
+  const base = { active: true, onObj: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+
+  it('returns empty when gesture not active', () => {
+    expect(getPanMoves({ active: false }, 50, 50)).toHaveLength(0);
+  });
+
+  it('returns empty when gesture started on object', () => {
+    expect(getPanMoves(Object.assign({}, base, { onObj: true }), 50, 50)).toHaveLength(0);
+  });
+
+  it('returns empty when below threshold and not yet moved', () => {
+    expect(getPanMoves(base, PAN_THRESHOLD - 1, 0)).toHaveLength(0);
+  });
+
+  it('returns pan target when movement exceeds threshold', () => {
+    const moves = getPanMoves(base, 50, 30);
+    expect(moves).toHaveLength(1);
+    expect(moves[0]).toEqual({ x: -50, y: -30 });
+  });
+
+  it('returns pan target when already marked moved (even below threshold)', () => {
+    const moved = Object.assign({}, base, { moved: true });
+    expect(getPanMoves(moved, 1, 1)).toHaveLength(1);
+  });
+
+  it('offsets pan from gesture origin', () => {
+    const g = Object.assign({}, base, { originX: 100, originY: 200 });
+    const moves = getPanMoves(g, 50, 30);
+    expect(moves[0]).toEqual({ x: 50, y: 170 });
+  });
+});
+
+describe('getTapFlag', () => {
+  it('returns empty when not active', () => {
+    expect(getTapFlag({ active: false })).toHaveLength(0);
+  });
+
+  it('returns empty when gesture moved', () => {
+    expect(getTapFlag({ active: true, moved: true })).toHaveLength(0);
+  });
+
+  it('returns [true] for a clean tap', () => {
+    expect(getTapFlag({ active: true, moved: false })).toEqual([true]);
+  });
+});
+
+describe('applyPan', () => {
+  const state = initObjectState(800, 600);
+
+  it('updates viewport position', () => {
+    const next = applyPan(state, 100, 50);
+    expect(next.viewport.x).toBe(100);
+    expect(next.viewport.y).toBe(50);
+  });
+
+  it('clamps to minimum 0', () => {
+    const next = applyPan(state, -100, -100);
+    expect(next.viewport.x).toBe(0);
+    expect(next.viewport.y).toBe(0);
+  });
+
+  it('clamps to max world minus viewport', () => {
+    const maxX = state.world.width - state.viewport.width;
+    const maxY = state.world.height - state.viewport.height;
+    const next = applyPan(state, 99999, 99999);
+    expect(next.viewport.x).toBe(maxX);
+    expect(next.viewport.y).toBe(maxY);
+  });
+
+  it('does not mutate original state', () => {
+    applyPan(state, 100, 50);
+    expect(state.viewport.x).toBe(0);
+    expect(state.viewport.y).toBe(0);
+  });
+
+  it('preserves viewport dimensions', () => {
+    const next = applyPan(state, 100, 50);
+    expect(next.viewport.width).toBe(state.viewport.width);
+    expect(next.viewport.height).toBe(state.viewport.height);
   });
 });
 

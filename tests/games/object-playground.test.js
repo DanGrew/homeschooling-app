@@ -23,6 +23,36 @@ test('objects have data-shape attribute', async ({ page }) => {
   expect(shapes.size).toBeGreaterThan(1);
 });
 
+test('canvas has a layer group with initial translate(0,0)', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const transform = await page.locator('[data-layer]').getAttribute('transform');
+  expect(transform).toBe('translate(0,0)');
+});
+
+test('dragging from margin area pans the canvas', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const box = await page.locator('#obj-viewport').boundingBox();
+  // margin ~62px so (55,55) is guaranteed object-free; drag up-left 50px → pans right+down
+  await page.mouse.move(box.x + 55, box.y + 55);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 5, box.y + 5);
+  await page.mouse.up();
+  const transform = await page.locator('[data-layer]').getAttribute('transform');
+  expect(transform).not.toBe('translate(0,0)');
+});
+
+test('dragging starting on an object does not pan', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const obj = page.locator('[data-testid="object-obj-0"]');
+  const objBox = await obj.boundingBox();
+  await page.mouse.move(objBox.x + objBox.width / 2, objBox.y + objBox.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(objBox.x + objBox.width / 2 - 60, objBox.y + objBox.height / 2 - 60);
+  await page.mouse.up();
+  const transform = await page.locator('[data-layer]').getAttribute('transform');
+  expect(transform).toBe('translate(0,0)');
+});
+
 test('toolbox hidden on load', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   await expect(page.locator('#obj-toolbox')).toBeHidden();
