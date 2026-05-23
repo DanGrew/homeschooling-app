@@ -21,11 +21,15 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
   };
 
   function redraw() {
+    var prev = container.querySelector('.pairs-setup-scroll');
+    var scrollTop = prev ? prev.scrollTop : 0;
     container.innerHTML = '';
-    container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
+    var newRoot = buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
       Object.assign(cfg, patch);
       redraw();
-    }, function() { onStart(cfg); }));
+    }, function() { onStart(cfg); });
+    container.appendChild(newRoot);
+    newRoot.scrollTop = scrollTop;
   }
 
   redraw();
