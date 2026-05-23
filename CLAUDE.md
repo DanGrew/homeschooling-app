@@ -125,7 +125,6 @@ window.addEventListener('page:control', function(e) {
 | Word match | `app/activities/word-match/index.html` | core/word-match, ui/word-match |
 | Primary colours | `app/activities/primary-colours/index.html` | core/shapes, ui/shared |
 | Secondary colours | `app/activities/secondary-colours/index.html` | core/shapes, ui/shared |
-| Shopping play | `app/activities/shopping-play/index.html` | core/shopping, ui/shopping, content/shopping-play |
 | Shopping scan | `app/activities/shopping-scan/index.html` | core/shopping-scan, ui/shopping-scan |
 | Simulator | `app/activities/simulator/index.html` | core/simulator, ui/simulator |
 | Story time | `app/activities/story-time/index.html` | core/story-time, ui/story-time, content/story-time |
@@ -290,7 +289,6 @@ function onReset() {
 | `content/physical/activities/` | Physical activity descriptions |
 | `content/puzzle/manifest.json` | Puzzle piece definitions |
 | `content/routine/` | Schedule JSON variants |
-| `content/shopping-play/catalogs/` | Shopping item catalogs |
 | `content/shopping-scan/catalogs/` | Shopping scan item catalogs (real barcodes) |
 | `content/simulator/sims/` | Simulator state machine definitions |
 | `content/story-time/` | Bible story audio scripts and metadata |
