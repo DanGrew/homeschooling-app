@@ -4,8 +4,8 @@ var DOMINO_ORIGIN = 2000;
 var ROTATION_LAYOUT = {
   0:   { cls: 'domino-tile-horizontal', fi: 0 },
   90:  { cls: 'domino-tile-vertical',   fi: 0 },
-  180: { cls: 'domino-tile-horizontal', fi: 1 },
-  270: { cls: 'domino-tile-vertical',   fi: 1 }
+  180: { cls: 'domino-tile-horizontal', fi: 0 },
+  270: { cls: 'domino-tile-vertical',   fi: 0 }
 };
 
 function buildDominoHalfEl(value) {
