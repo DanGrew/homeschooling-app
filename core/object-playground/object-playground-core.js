@@ -36,7 +36,8 @@ function initObjectState(viewportW, viewportH) {
   return {
     world: { width: viewportW * 3, height: viewportH * 3 },
     viewport: { x: 0, y: 0, width: viewportW, height: viewportH },
-    objects: objects
+    objects: objects,
+    stackObjects: []
   };
 }
 
@@ -68,7 +69,7 @@ function renderObjectShape(shape, colour) {
 
 var PAN_THRESHOLD = 5;
 
-function buildGesture(state, tapTargetId, clientX, clientY, viewportX, viewportY) {
+function buildGesture(state, tapTargetId, clientX, clientY, viewportX, viewportY, tapWorldX, tapWorldY) {
   var matching = tapTargetId ? state.objects.filter(function(o) { return o.id === tapTargetId; }) : [];
   var selObj = matching[0];
   return {
@@ -81,7 +82,9 @@ function buildGesture(state, tapTargetId, clientX, clientY, viewportX, viewportY
     startX: clientX,
     startY: clientY,
     originX: viewportX,
-    originY: viewportY
+    originY: viewportY,
+    tapWorldX: tapWorldX || 0,
+    tapWorldY: tapWorldY || 0
   };
 }
 
@@ -155,6 +158,30 @@ function cycleProperty(obj, prop) {
   return updated;
 }
 
+function objectsAtPoint(state, worldX, worldY) {
+  return state.objects.filter(function(o) {
+    var r = OBJ_BASE_R * OBJ_SIZE_MAP[o.size];
+    var dx = o.x - worldX;
+    var dy = o.y - worldY;
+    return dx * dx + dy * dy <= r * r;
+  }).sort(function(a, b) { return b.zIndex - a.zIndex; });
+}
+
+function bringToFront(state, objId) {
+  var sorted = state.objects.slice().sort(function(a, b) { return a.zIndex - b.zIndex; });
+  var others = sorted.filter(function(o) { return o.id !== objId; });
+  var zMap = {};
+  others.forEach(function(o, i) { zMap[o.id] = i; });
+  zMap[objId] = others.length;
+  return Object.assign({}, state, {
+    objects: state.objects.map(function(o) { return Object.assign({}, o, { zIndex: zMap[o.id] }); })
+  });
+}
+
+function applyStackPick(state, objId) {
+  return bringToFront(selectObject(state, objId), objId);
+}
+
 function selectObject(state, objId) {
   return Object.assign({}, state, {
     objects: state.objects.map(function(o) {
@@ -171,10 +198,14 @@ function deselectAll(state) {
   });
 }
 
-function handleTap(state, objId) {
-  var obj = state.objects.filter(function(o) { return o.id === objId; })[0];
-  if (obj.selected) { return deselectAll(state); }
-  return selectObject(state, objId);
+function handleTap(state, worldX, worldY) {
+  var candidates = objectsAtPoint(state, worldX, worldY);
+  var stackIds = candidates.map(function(o) { return o.id; });
+  var withStack = Object.assign({}, deselectAll(state), { stackObjects: stackIds });
+  if (candidates.length === 1) {
+    return bringToFront(selectObject(withStack, candidates[0].id), candidates[0].id);
+  }
+  return withStack;
 }
 
 function handlePropertyCycle(state, prop) {
@@ -184,6 +215,14 @@ function handlePropertyCycle(state, prop) {
       return o;
     })
   });
+}
+
+function buildStackHTML(stackIds, allObjects) {
+  return stackIds.map(function(id) {
+    var obj = allObjects.filter(function(o) { return o.id === id; })[0];
+    var svgContent = renderObjectShape(obj.shape, obj.colour);
+    return '<div class="obj-stack-row" data-pick="' + id + '"><svg width="36" height="36" viewBox="-36 -36 72 72">' + svgContent + '</svg></div>';
+  }).join('');
 }
 
 function buildToolboxHTML(obj) {
@@ -204,5 +243,6 @@ if (typeof module !== 'undefined') module.exports = {
   objPick, initObjectState, renderObjectShape,
   PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
   getPanMoves, getTapFlag, applyPan,
-  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildToolboxHTML
+  objectsAtPoint, bringToFront, applyStackPick,
+  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML
 };

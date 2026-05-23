@@ -5,7 +5,8 @@ const {
   OBJ_BASE_R, objPick, initObjectState,
   PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
   getPanMoves, getTapFlag, applyPan,
-  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildToolboxHTML
+  objectsAtPoint, bringToFront, applyStackPick,
+  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML
 } = require('../../core/object-playground/object-playground-core.js');
 
 describe('constants', () => {
@@ -108,6 +109,10 @@ describe('initObjectState', () => {
     expect(state.viewport.width).toBe(800);
     expect(state.viewport.height).toBe(600);
   });
+
+  it('stackObjects starts empty', () => {
+    expect(state.stackObjects).toEqual([]);
+  });
 });
 
 describe('selectObject', () => {
@@ -137,24 +142,134 @@ describe('deselectAll', () => {
   });
 });
 
-describe('handleTap', () => {
-  it('selects an unselected object', () => {
+describe('objectsAtPoint', () => {
+  it('returns object whose center is at the point', () => {
     const state = initObjectState(800, 600);
-    const next = handleTap(state, 'obj-0');
+    const obj = state.objects[0];
+    const result = objectsAtPoint(state, obj.x, obj.y);
+    expect(result.map(o => o.id)).toContain(obj.id);
+  });
+
+  it('returns empty when point is far from all objects', () => {
+    const state = initObjectState(800, 600);
+    expect(objectsAtPoint(state, -9999, -9999)).toHaveLength(0);
+  });
+
+  it('returns objects sorted by zIndex descending', () => {
+    const base = initObjectState(800, 600);
+    const x = 400, y = 300;
+    const state = Object.assign({}, base, {
+      objects: base.objects.map((o, i) => Object.assign({}, o, { x, y, zIndex: i }))
+    });
+    const result = objectsAtPoint(state, x, y);
+    for (let i = 1; i < result.length; i++) {
+      expect(result[i - 1].zIndex).toBeGreaterThan(result[i].zIndex);
+    }
+  });
+});
+
+describe('bringToFront', () => {
+  it('gives target object the highest zIndex', () => {
+    const state = initObjectState(800, 600);
+    const next = bringToFront(state, 'obj-0');
+    const maxZ = Math.max(...next.objects.map(o => o.zIndex));
+    expect(next.objects.find(o => o.id === 'obj-0').zIndex).toBe(maxZ);
+  });
+
+  it('normalizes all zIndex values to 0–9', () => {
+    const state = bringToFront(bringToFront(initObjectState(800, 600), 'obj-3'), 'obj-7');
+    const zIndices = state.objects.map(o => o.zIndex).sort((a, b) => a - b);
+    expect(zIndices).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  });
+
+  it('preserves relative order of other objects', () => {
+    const state = initObjectState(800, 600);
+    const before = state.objects.filter(o => o.id !== 'obj-0').sort((a, b) => a.zIndex - b.zIndex).map(o => o.id);
+    const next = bringToFront(state, 'obj-0');
+    const after = next.objects.filter(o => o.id !== 'obj-0').sort((a, b) => a.zIndex - b.zIndex).map(o => o.id);
+    expect(after).toEqual(before);
+  });
+
+  it('does not mutate original state', () => {
+    const state = initObjectState(800, 600);
+    const origZ = state.objects.find(o => o.id === 'obj-0').zIndex;
+    bringToFront(state, 'obj-9');
+    expect(state.objects.find(o => o.id === 'obj-0').zIndex).toBe(origZ);
+  });
+});
+
+describe('applyStackPick', () => {
+  it('selects the picked object', () => {
+    const state = initObjectState(800, 600);
+    const next = applyStackPick(state, 'obj-3');
+    expect(next.objects.find(o => o.id === 'obj-3').selected).toBe(true);
+  });
+
+  it('brings the picked object to front', () => {
+    const state = initObjectState(800, 600);
+    const next = applyStackPick(state, 'obj-0');
+    const maxZ = Math.max(...next.objects.map(o => o.zIndex));
+    expect(next.objects.find(o => o.id === 'obj-0').zIndex).toBe(maxZ);
+  });
+
+  it('deselects all other objects', () => {
+    const state = selectObject(initObjectState(800, 600), 'obj-5');
+    const next = applyStackPick(state, 'obj-3');
+    next.objects.filter(o => o.id !== 'obj-3').forEach(o => expect(o.selected).toBe(false));
+  });
+});
+
+describe('handleTap', () => {
+  // Place obj-0 far from all others to guarantee exactly 1 hit
+  const makeIsolatedState = () => {
+    const base = initObjectState(800, 600);
+    return Object.assign({}, base, {
+      objects: base.objects.map((o, i) =>
+        i === 0 ? Object.assign({}, o, { x: 5000, y: 5000 }) : Object.assign({}, o, { x: 100 + i * 200, y: 100 })
+      )
+    });
+  };
+
+  it('selects object when exactly one at point', () => {
+    const state = makeIsolatedState();
+    const next = handleTap(state, 5000, 5000);
     expect(next.objects.find(o => o.id === 'obj-0').selected).toBe(true);
   });
 
-  it('deselects a selected object', () => {
-    const state = selectObject(initObjectState(800, 600), 'obj-0');
-    const next = handleTap(state, 'obj-0');
-    expect(next.objects.find(o => o.id === 'obj-0').selected).toBe(false);
+  it('brings object to front when exactly one at point', () => {
+    const state = makeIsolatedState();
+    const next = handleTap(state, 5000, 5000);
+    const maxZ = Math.max(...next.objects.map(o => o.zIndex));
+    expect(next.objects.find(o => o.id === 'obj-0').zIndex).toBe(maxZ);
   });
 
-  it('switches selection from one object to another', () => {
+  it('sets stackObjects to the object id when one hit', () => {
+    const state = makeIsolatedState();
+    const next = handleTap(state, 5000, 5000);
+    expect(next.stackObjects).toContain('obj-0');
+  });
+
+  it('deselects all when no objects at point', () => {
     const state = selectObject(initObjectState(800, 600), 'obj-0');
-    const next = handleTap(state, 'obj-5');
-    expect(next.objects.find(o => o.id === 'obj-5').selected).toBe(true);
-    expect(next.objects.find(o => o.id === 'obj-0').selected).toBe(false);
+    const next = handleTap(state, -9999, -9999);
+    next.objects.forEach(o => expect(o.selected).toBe(false));
+  });
+
+  it('clears stackObjects when no objects at point', () => {
+    const state = initObjectState(800, 600);
+    const next = handleTap(state, -9999, -9999);
+    expect(next.stackObjects).toEqual([]);
+  });
+
+  it('sets stack without auto-selecting when multiple objects at point', () => {
+    const base = initObjectState(800, 600);
+    const x = 400, y = 300;
+    const state = Object.assign({}, base, {
+      objects: base.objects.map(o => Object.assign({}, o, { x, y }))
+    });
+    const next = handleTap(state, x, y);
+    expect(next.stackObjects).toHaveLength(10);
+    next.objects.forEach(o => expect(o.selected).toBe(false));
   });
 });
 
@@ -283,40 +398,46 @@ describe('buildGesture', () => {
   const state = initObjectState(800, 600);
 
   it('onObj=false when no target id', () => {
-    const g = buildGesture(state, undefined, 0, 0, 0, 0);
+    const g = buildGesture(state, undefined, 0, 0, 0, 0, 0, 0);
     expect(g.onObj).toBe(false);
     expect(g.isSelected).toBe(false);
   });
 
   it('onObj=true, isSelected=false for unselected target', () => {
-    const g = buildGesture(state, 'obj-0', 0, 0, 0, 0);
+    const g = buildGesture(state, 'obj-0', 0, 0, 0, 0, 0, 0);
     expect(g.onObj).toBe(true);
     expect(g.isSelected).toBe(false);
   });
 
   it('isSelected=true for selected target', () => {
     const sel = selectObject(state, 'obj-0');
-    const g = buildGesture(sel, 'obj-0', 0, 0, 0, 0);
+    const g = buildGesture(sel, 'obj-0', 0, 0, 0, 0, 0, 0);
     expect(g.isSelected).toBe(true);
   });
 
   it('records originObjX/Y from object position', () => {
     const obj = state.objects.find(o => o.id === 'obj-2');
-    const g = buildGesture(state, 'obj-2', 50, 60, 10, 20);
+    const g = buildGesture(state, 'obj-2', 50, 60, 10, 20, 0, 0);
     expect(g.originObjX).toBe(obj.x);
     expect(g.originObjY).toBe(obj.y);
   });
 
   it('records viewport origin and client position', () => {
-    const g = buildGesture(state, undefined, 50, 60, 10, 20);
+    const g = buildGesture(state, undefined, 50, 60, 10, 20, 0, 0);
     expect(g.startX).toBe(50);
     expect(g.startY).toBe(60);
     expect(g.originX).toBe(10);
     expect(g.originY).toBe(20);
   });
 
+  it('records tap world coordinates', () => {
+    const g = buildGesture(state, undefined, 0, 0, 0, 0, 123, 456);
+    expect(g.tapWorldX).toBe(123);
+    expect(g.tapWorldY).toBe(456);
+  });
+
   it('starts with active=true, moved=false', () => {
-    const g = buildGesture(state, undefined, 0, 0, 0, 0);
+    const g = buildGesture(state, undefined, 0, 0, 0, 0, 0, 0);
     expect(g.active).toBe(true);
     expect(g.moved).toBe(false);
   });
@@ -434,6 +555,26 @@ describe('applyToolboxClick', () => {
     expect(result.objects.find(o => o.id === 'obj-1').y).toBe(sel.y);
     const expected = OBJ_SHAPES[(OBJ_SHAPES.indexOf(sel.shape) + 1) % OBJ_SHAPES.length];
     expect(result.objects.find(o => o.id === 'obj-1').shape).toBe(expected);
+  });
+});
+
+describe('buildStackHTML', () => {
+  const state = initObjectState(800, 600);
+
+  it('returns empty string for empty stack', () => {
+    expect(buildStackHTML([], state.objects)).toBe('');
+  });
+
+  it('produces a data-pick row for each id', () => {
+    const html = buildStackHTML(['obj-2', 'obj-5'], state.objects);
+    expect(html).toContain('data-pick="obj-2"');
+    expect(html).toContain('data-pick="obj-5"');
+  });
+
+  it('includes inline SVG preview', () => {
+    const html = buildStackHTML(['obj-0'], state.objects);
+    expect(html).toContain('<svg');
+    expect(html).toContain('viewBox="-36 -36 72 72"');
   });
 });
 

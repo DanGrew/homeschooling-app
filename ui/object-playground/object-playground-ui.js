@@ -24,10 +24,11 @@ function renderObjects(svgEl, state) {
 }
 
 function renderToolbox(toolboxEl, state) {
-  toolboxEl.style.display = 'none';
   var sel = state.objects.filter(function(o) { return o.selected; });
-  sel.forEach(function(obj) {
-    toolboxEl.innerHTML = buildToolboxHTML(obj);
+  var stackHtml = buildStackHTML(state.stackObjects, state.objects);
+  toolboxEl.innerHTML = stackHtml + sel.map(buildToolboxHTML).join('');
+  toolboxEl.style.display = 'none';
+  [state.stackObjects[0]].filter(Boolean).forEach(function() {
     toolboxEl.style.display = 'flex';
   });
 }
@@ -60,8 +61,10 @@ function initObjectPlayground() {
     svgEl.setPointerCapture(e.pointerId);
     var tapTarget = e.target.closest('[data-obj]');
     var tapIds = [tapTarget].filter(Boolean).map(function(el) { return el.getAttribute('data-obj'); });
-    panGesture = buildGesture(state, tapIds[0], e.clientX, e.clientY, state.viewport.x, state.viewport.y);
-    panGesture.tapTarget = tapTarget;
+    var svgRect = svgEl.getBoundingClientRect();
+    var tapWorldX = e.clientX - svgRect.left + state.viewport.x;
+    var tapWorldY = e.clientY - svgRect.top + state.viewport.y;
+    panGesture = buildGesture(state, tapIds[0], e.clientX, e.clientY, state.viewport.x, state.viewport.y, tapWorldX, tapWorldY);
   });
 
   svgEl.addEventListener('pointermove', function(e) {
@@ -85,10 +88,8 @@ function initObjectPlayground() {
     var gesture = panGesture;
     panGesture = { active: false };
     getTapFlag(gesture).forEach(function() {
-      [gesture.tapTarget].filter(Boolean).forEach(function(el) {
-        state = handleTap(state, el.getAttribute('data-obj'));
-        redraw();
-      });
+      state = handleTap(state, gesture.tapWorldX, gesture.tapWorldY);
+      redraw();
     });
   });
 
@@ -102,12 +103,17 @@ function initObjectPlayground() {
   });
 
   toolboxEl.addEventListener('click', function(e) {
-    var row = e.target.closest('[data-prop]');
+    var propRow = e.target.closest('[data-prop]');
+    var pickRow = e.target.closest('[data-pick]');
     var gesture = panGesture;
     panGesture = { active: false };
     toolboxEl.removeAttribute('data-dragging');
-    [row].filter(Boolean).forEach(function(el) {
+    [propRow].filter(Boolean).forEach(function(el) {
       state = applyToolboxClick(state, gesture, el.getAttribute('data-prop'));
+      redraw();
+    });
+    [pickRow].filter(Boolean).forEach(function(el) {
+      state = applyStackPick(state, el.getAttribute('data-pick'));
       redraw();
     });
   });
