@@ -1,35 +1,6 @@
 var DOMINO_CELL   = 52;
 var DOMINO_ORIGIN = 2000;
 
-var DOMINO_DICE_DOTS = {
-  '0': [],
-  '1': [[16,16]],
-  '2': [[8,8],[24,24]],
-  '3': [[8,8],[16,16],[24,24]],
-  '4': [[8,8],[24,8],[8,24],[24,24]],
-  '5': [[8,8],[24,8],[16,16],[8,24],[24,24]],
-  '6': [[8,8],[24,8],[8,16],[24,16],[8,24],[24,24]]
-};
-
-function buildDominoShapeSvg(shape) {
-  var s = '<svg viewBox="0 0 32 32" style="width:26px;height:26px;">';
-  if (shape === 'circle')        s += '<circle cx="16" cy="16" r="13" fill="#444"/>';
-  else if (shape === 'square')   s += '<rect x="3" y="3" width="26" height="26" rx="4" fill="#444"/>';
-  else if (shape === 'triangle') s += '<polygon points="16,3 29,29 3,29" fill="#444"/>';
-  else if (shape === 'star')     s += '<polygon points="16,2 19.5,11.5 29.5,11.5 21.5,17.5 24.5,27 16,21 7.5,27 10.5,17.5 2.5,11.5 12.5,11.5" fill="#444"/>';
-  else if (shape === 'heart')    s += '<path d="M16,28 C4,18 2,8 8,5 C11,3.5 14,6 16,10 C18,6 21,3.5 24,5 C30,8 28,18 16,28 Z" fill="#444"/>';
-  else if (shape === 'diamond')  s += '<polygon points="16,2 30,16 16,30 2,16" fill="#444"/>';
-  else if (shape === 'cross')    s += '<path d="M11,3 L21,3 L21,11 L29,11 L29,21 L21,21 L21,29 L11,29 L11,21 L3,21 L3,11 L11,11 Z" fill="#444"/>';
-  return s + '</svg>';
-}
-
-function buildDominoNumberSvg(value) {
-  var dots = DOMINO_DICE_DOTS[value] || [];
-  var s = '<svg viewBox="0 0 32 32" style="width:26px;height:26px;">';
-  dots.forEach(function(d) { s += '<circle cx="' + d[0] + '" cy="' + d[1] + '" r="4" fill="#333"/>'; });
-  return s + '</svg>';
-}
-
 var ROTATION_LAYOUT = {
   0:   { cls: 'domino-tile-horizontal', fi: 0 },
   90:  { cls: 'domino-tile-vertical',   fi: 0 },
