@@ -25,11 +25,13 @@ function renderShoppingSetup(container, allEntries, animalEntries, onStart) {
   };
 
   function redraw() {
-    container.innerHTML = '';
-    container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, animalEntries, function(patch) {
-      Object.assign(cfg, patch);
-      redraw();
-    }, function() { onStart(cfg); }));
+    cgPreserveScroll(container, function() {
+      container.innerHTML = '';
+      container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, animalEntries, function(patch) {
+        Object.assign(cfg, patch);
+        redraw();
+      }, function() { onStart(cfg); }));
+    });
   }
 
   redraw();
