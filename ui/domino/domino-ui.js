@@ -2,7 +2,7 @@
 var DOMINO_MATCH_TYPES = [
   { value: 'colours', label: 'Colours' },
   { value: 'shapes',  label: 'Shapes' },
-  { value: 'icons',   label: 'Icons' },
+  { value: 'icons',   label: 'Animals' },
   { value: 'numbers', label: 'Numbers' }
 ];
 

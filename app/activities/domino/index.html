@@ -46,6 +46,7 @@ var NEXT_ROTATION = { 0: 90, 90: 180, 180: 270, 270: 45, 45: 135, 135: 225, 225:
 
 var gameState;
 var turnState;
+var animalEntries = [];
 
 function dominoEmit(type, detail) {
   window.dispatchEvent(new CustomEvent('domino:' + type, { detail: Object(detail) }));
@@ -63,7 +64,7 @@ function makeTrayOpts() {
 }
 
 function makeBoardOpts() {
-  return { onEndpointTap: onEndpointTap, onPreviewRotate: onPreviewRotate };
+  return { onEndpointTap: onEndpointTap, onPreviewRotate: onPreviewRotate, matchType: gameState.matchType };
 }
 
 function deselectTile() {
@@ -111,11 +112,16 @@ function onEndpointTap(endpointIndex) {
 function onPreviewRotate() {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
     [turnState.previewEndpointIndex].filter(function(i) { return i !== null; }).forEach(function(epIdx) {
-      var nextRot = NEXT_ROTATION[Number(turnState.previewRotation)];
-      [getPreviewPlacement(gameState, tileId, epIdx, nextRot)].filter(Boolean).forEach(function(preview) {
-        turnState.previewRotation = nextRot;
-        showDominoPreview(boardViewport, preview, makeBoardOpts());
-      });
+      var rot = Number(turnState.previewRotation);
+      for (var i = 0; i < 8; i++) {
+        rot = NEXT_ROTATION[rot];
+        var preview = getPreviewPlacement(gameState, tileId, epIdx, rot);
+        if (preview) {
+          turnState.previewRotation = rot;
+          showDominoPreview(boardViewport, preview, makeBoardOpts());
+          break;
+        }
+      }
     });
   });
 }
@@ -203,15 +209,21 @@ fetch('../../../content/dictionary/dictionary.json')
     }));
   })
   .then(function(concepts) {
-    var animalEntries = filterByTag(concepts, 'animals');
+    animalEntries = filterByTag(concepts, 'animals');
     renderDominoSetup(setupScreen, animalEntries, function(setupState) {
       startGame(setupState);
     });
   });
 
 function startGame(setupState) {
+  if (setupState.matchType === 'icons' && animalEntries.length >= 7) {
+    var ids = animalEntries.map(function(e) { return e.id; });
+    var shuffled = ids.slice().sort(function() { return Math.random() - 0.5; });
+    setupState.values = shuffled.slice(0, 7);
+  }
   gameState = createDominoGame(setupState);
   turnState = { selectedTileId: null, previewEndpointIndex: null, previewRotation: null };
+  boardViewport._dominoPanState = null;
   dominoEmit('game_start', { matchType: gameState.matchType, players: gameState.players.map(function(p) { return p.id; }) });
   showScreen('game');
   renderDominoBoard(boardViewport, gameState, makeBoardOpts());

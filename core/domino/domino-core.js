@@ -1,7 +1,7 @@
 var DOMINO_VALUES = {
   colours: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'],
   shapes:  ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'cross'],
-  icons:   ['cat', 'dog', 'bird', 'fish', 'rabbit', 'bear', 'frog'],
+  icons:   ['cat', 'dog', 'bird', 'fish', 'rabbit', 'lion', 'elephant'],
   numbers: ['0', '1', '2', '3', '4', '5', '6']
 };
 
@@ -77,8 +77,8 @@ function dominoShuffle(arr) {
   return a;
 }
 
-function generateTiles(matchType) {
-  var values = DOMINO_VALUES[matchType];
+function generateTiles(matchType, customValues) {
+  var values = customValues || DOMINO_VALUES[matchType];
   var tiles = [];
   for (var i = 0; i < values.length; i++) {
     for (var j = i; j < values.length; j++) {
@@ -244,10 +244,11 @@ function getPreviewPlacement(state, tileId, endpointIndex, rotation) {
   var rot;
   if (rotation !== undefined) {
     rot = rotation;
+    if (hasCollision(endpoint, rot, state.board.tiles)) return null;
   } else {
     var ALL_ROTS = [0, 90, 180, 270, 45, 135, 225, 315];
     for (var ri = 0; ri < ALL_ROTS.length; ri++) {
-      if (validatePlacement(tile, endpoint, ALL_ROTS[ri], state.board.tiles).valid) {
+      if (!hasCollision(endpoint, ALL_ROTS[ri], state.board.tiles)) {
         rot = ALL_ROTS[ri];
         break;
       }
@@ -269,7 +270,7 @@ function drawTile(state) {
 }
 
 function createDominoGame(setupState) {
-  var tiles = generateTiles(setupState.matchType);
+  var tiles = generateTiles(setupState.matchType, setupState.values);
   var dealt = dealHands(tiles, setupState.players.length);
   var players = setupState.players.map(function(p, i) {
     return { id: 'p' + i, name: p.name, icon: p.icon, role: p.role };
