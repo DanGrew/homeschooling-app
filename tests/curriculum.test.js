@@ -126,3 +126,30 @@ test('Rope Rescue row has Climbing apparatus in PD column', async ({ page }) => 
   const pdCell = row.locator('td').nth(8)
   await expect(pdCell).toContainText('Climbing apparatus')
 })
+
+test('exercise table header has Exercise and Activity columns', async ({ page }) => {
+  await page.goto(URL)
+  const ths = page.locator('.exercises-coverage thead th')
+  await expect(ths.nth(0)).toHaveText('Exercise')
+  await expect(ths.nth(1)).toHaveText('Activity')
+})
+
+test('exercise table loads correct row count', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.exercises-coverage tbody tr')).toHaveCount(17)
+})
+
+test('exercise table default sort shows Clock first', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.exercises-coverage tbody .col-activity').first()).toHaveText('Clock')
+  await expect(page.locator('.exercises-coverage tbody .col-lesson').first()).toHaveText('01. What Comes After?')
+})
+
+test('exercise table clicking Exercise header shows sort indicator', async ({ page }) => {
+  await page.goto(URL)
+  const exerciseTh = page.locator('.exercises-coverage thead th').nth(0)
+  await exerciseTh.click()
+  await expect(exerciseTh).toHaveClass(/sort-asc/)
+  await exerciseTh.click()
+  await expect(exerciseTh).toHaveClass(/sort-desc/)
+})
