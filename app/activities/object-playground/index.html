@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Object Playground</title>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<script src="../../../components/menu.js" defer></script>
+<style>
+#obj-viewport{flex:1;position:relative;overflow:hidden;background:#fafafa;}
+#obj-world{position:absolute;top:0;left:0;}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-home="../../games/" data-title="Object Playground" data-instruction="Explore the shapes!" data-no-links="standalone freeplay activity"></div>
+<div class="game-area">
+  <div id="obj-viewport">
+    <svg id="obj-world" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+</div>
+<script src="../../../core/object-playground/object-playground-core.js"></script>
+<script src="../../../ui/object-playground/object-playground-ui.js"></script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+</script>
+<script>window.addEventListener('load', initObjectPlayground);</script>
+<script>window.ACTIVITY_ID='object-playground';</script>
+<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+</body>
+</html>
