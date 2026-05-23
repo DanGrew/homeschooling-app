@@ -26,10 +26,10 @@ tr:nth-child(even) td{background:#fafafa;}
 .glossary th:nth-child(2){width:80px;}
 .coverage th:first-child,.exercises-coverage th:first-child{width:160px;}
 .coverage th:nth-child(2),.exercises-coverage th:nth-child(2){width:110px;}
-.coverage th{cursor:pointer;user-select:none;}
-.coverage th:hover{background:#e4d5ff;}
-.coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
-.coverage th.sort-desc::after{content:' ▼';font-size:0.75em;color:#7c6fcd;}
+.coverage th,.exercises-coverage th{cursor:pointer;user-select:none;}
+.coverage th:hover,.exercises-coverage th:hover{background:#e4d5ff;}
+.coverage th.sort-asc::after,.exercises-coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
+.coverage th.sort-desc::after,.exercises-coverage th.sort-desc::after{content:' ▼';font-size:0.75em;color:#7c6fcd;}
 </style>
 </head>
 <body>
@@ -64,28 +64,26 @@ tr:nth-child(even) td{background:#fafafa;}
 <script>
 var areas = [];
 var rows = [];
+var exRows = [];
 var colKeyFns = [];
 var sortCol = -1;
 var sortAsc = true;
+var exSortCol = -1;
+var exSortAsc = true;
 
-var SORT_CLASS   = { 'true': 'sort-asc', 'false': 'sort-desc' };
-var SORT_DEFAULT = { '-1': true };
-var SORT_FN      = {
-  'true':  function() { rows.sort(defaultCompare); },
-  'false': function() { rows.sort(function(a, b) { return colCompare(a, b, sortAsc, colKeyFns, sortCol); }); }
-};
-var ADD_HEADER_CLASS = {
-  'true':  function(th) { th.classList.add(SORT_CLASS[String(sortAsc)]); },
-  'false': function() {}
-};
+var SORT_CLASS = { 'true': 'sort-asc', 'false': 'sort-desc' };
 var CLICK_ACTION = {
-  'true':  function() { sortAsc = !sortAsc; },
-  'false': function(i) { sortCol = i; sortAsc = true; }
+  'true':  function(state) { state.asc = !state.asc; },
+  'false': function(state, i) { state.col = i; state.asc = true; }
 };
 
-function applySort() {
-  SORT_FN[String(!!SORT_DEFAULT[String(sortCol)])]();
+function applyGenericSort(target, sc, sa) {
+  if (sc === -1) { target.sort(defaultCompare); }
+  else { target.sort(function(a, b) { return colCompare(a, b, sa, colKeyFns, sc); }); }
 }
+
+function applySort() { applyGenericSort(rows, sortCol, sortAsc); }
+function applyExSort() { applyGenericSort(exRows, exSortCol, exSortAsc); }
 
 function buildColKeyFns() {
   colKeyFns = [
@@ -125,34 +123,43 @@ function renderBody() {
   rows.forEach(function(row) { tbody.appendChild(buildCoverageRow(row)); });
 }
 
-function updateHeaderTh(th, i) {
-  th.classList.remove('sort-asc', 'sort-desc');
-  ADD_HEADER_CLASS[String(i === sortCol)](th);
+function updateHeaderThs(selector, sc, sa) {
+  document.querySelectorAll(selector + ' th').forEach(function(th, i) {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (i === sc) th.classList.add(SORT_CLASS[String(sa)]);
+  });
 }
 
-function renderHeaders() {
-  document.querySelectorAll('.coverage th').forEach(function(th, i) { updateHeaderTh(th, i); });
+function buildHeaderTh(label, i, onClick) {
+  var th = document.createElement('th');
+  th.textContent = label;
+  th.addEventListener('click', function() { onClick(i); });
+  return th;
 }
 
 function handleHeaderClick(i) {
-  CLICK_ACTION[String(sortCol === i)](i);
+  var state = { col: sortCol, asc: sortAsc };
+  CLICK_ACTION[String(sortCol === i)](state, i);
+  sortCol = state.col; sortAsc = state.asc;
   applySort();
   renderBody();
-  renderHeaders();
+  updateHeaderThs('.coverage', sortCol, sortAsc);
 }
 
-function buildHeaderTh(label, i) {
-  var th = document.createElement('th');
-  th.textContent = label;
-  th.addEventListener('click', function() { handleHeaderClick(i); });
-  return th;
+function handleExHeaderClick(i) {
+  var state = { col: exSortCol, asc: exSortAsc };
+  CLICK_ACTION[String(exSortCol === i)](state, i);
+  exSortCol = state.col; exSortAsc = state.asc;
+  applyExSort();
+  renderExerciseBody();
+  updateHeaderThs('.exercises-coverage', exSortCol, exSortAsc);
 }
 
 function renderCoverageHeader() {
   var head = document.getElementById('coverage-head');
   var hr = document.createElement('tr');
   ['Lesson', 'Activity'].concat(areas.map(function(a) { return a.shortLabel; }))
-    .forEach(function(label, i) { hr.appendChild(buildHeaderTh(label, i)); });
+    .forEach(function(label, i) { hr.appendChild(buildHeaderTh(label, i, handleHeaderClick)); });
   head.appendChild(hr);
 }
 
@@ -172,17 +179,14 @@ function renderExerciseHeader() {
   var head = document.getElementById('exercise-head');
   var hr = document.createElement('tr');
   ['Exercise', 'Activity'].concat(areas.map(function(a) { return a.shortLabel; }))
-    .forEach(function(label) {
-      var th = document.createElement('th');
-      th.textContent = label;
-      hr.appendChild(th);
-    });
+    .forEach(function(label, i) { hr.appendChild(buildHeaderTh(label, i, handleExHeaderClick)); });
   head.appendChild(hr);
 }
 
-function renderExerciseBody(exerciseRows) {
+function renderExerciseBody() {
   var tbody = document.getElementById('exercise-body');
-  exerciseRows.forEach(function(row) { tbody.appendChild(buildCoverageRow(row)); });
+  tbody.innerHTML = '';
+  exRows.forEach(function(row) { tbody.appendChild(buildCoverageRow(row)); });
 }
 
 async function init() {
@@ -196,13 +200,15 @@ async function init() {
   var learningFiles = await Promise.all(learningsManifest.map(attachLearning));
   var physicalFiles = await Promise.all(physicalManifest.map(attachPhysical));
   var allLearnings  = flattenLearnings(learningFiles, criterionMap, areas);
-  rows = allLearnings.filter(function(r) { return r.type !== 'exercise'; })
-           .concat(flattenPhysical(physicalFiles, criterionMap, areas));
+  rows   = allLearnings.filter(function(r) { return r.type !== 'exercise'; })
+             .concat(flattenPhysical(physicalFiles, criterionMap, areas));
+  exRows = allLearnings.filter(function(r) { return r.type === 'exercise'; });
   applySort();
+  applyExSort();
   renderCoverageHeader();
   renderBody();
   renderExerciseHeader();
-  renderExerciseBody(allLearnings.filter(function(r) { return r.type === 'exercise'; }));
+  renderExerciseBody();
 }
 
 init();
