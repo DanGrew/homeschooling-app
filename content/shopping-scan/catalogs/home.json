@@ -1,0 +1,16 @@
+{
+  "name": "Home Shopping",
+  "tags": ["home"],
+  "items": [
+    { "name": "Milk", "barcode": "00348188", "icon": "🥛" },
+    { "name": "Sauce - BBQ", "barcode": "00907897", "icon": "🥫" },
+    { "name": "Boule", "barcode": "00556293", "icon": "🍞" },
+    { "name": "Organic Butter", "barcode": "00580458", "icon": "🧈" },
+    { "name": "Crumpets", "barcode": "5010044005126", "icon": "🛒" },
+    { "name": "Beans", "barcode": "5000157150974", "icon": "🥫" },
+    { "name": "Orange Breakie", "barcode": "5060107330764", "icon": "🍊" },
+    { "name": "Purple Breakie", "barcode": "5060107330740", "icon": "🛒" },
+    { "name": "Pouch - Pulled Pork", "barcode": "5060503504073", "icon": "🥩" },
+    { "name": "Pouch - Cottage Pie", "barcode": "5060107337879", "icon": "🥣" }
+  ]
+}

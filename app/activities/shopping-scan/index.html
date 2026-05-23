@@ -91,8 +91,14 @@
 </div>
 <script type="module">
 import { init } from '../../../ui/shopping-scan/shopping-scan-ui.js';
-var CATALOGS=[{"name":"My Catalog","items":[{"barcode":"00348188","name":"Milk","icon":"🥛"},{"barcode":"00907897","name":"Sauce - BBQ","icon":"🥫"},{"barcode":"00556293","name":"Boule","icon":"🍞"},{"barcode":"00580458","name":"Organic Butter","icon":"🧈"},{"barcode":"5010044005126","name":"Crumpets","icon":"🛒"},{"barcode":"5000157150974","name":"Beans","icon":"🥫"},{"barcode":"5060107330764","name":"Orange Breakie","icon":"🍊"},{"barcode":"5060107330740","name":"Purple Breakie","icon":"🛒"},{"barcode":"5060503504073","name":"Pouch - Pulled Pork","icon":"🥩"},{"barcode":"5060107337879","name":"Pouch - Cottage Pie","icon":"🥣"}]}];
-window.addEventListener('load', function() { init(CATALOGS); });
+import { loadCatalog } from '../../../core/shopping-scan/shopping-scan-core.js';
+window.addEventListener('load', function() {
+  loadCatalog('../../../content/shopping-scan/catalogs/home.json').then(function(catalog) {
+    init([catalog]);
+  }).catch(function() {
+    document.getElementById('catalog-title').textContent = 'Could not load catalog. Please refresh.';
+  });
+});
 </script>
 <script>window.ACTIVITY_ID='shopping-scan';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { buildCatalogItems } from '../../core/shopping-scan/shopping-scan-core.js';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { buildCatalogItems, loadCatalog } from '../../core/shopping-scan/shopping-scan-core.js';
 
 const CATALOGS = [
   { name: 'Fruit', tags: ['food'], items: [{ name: 'Apple', barcode: '001', icon: '🍎' }, { name: 'Banana', barcode: '002', icon: '🍌' }] },
@@ -37,5 +37,31 @@ describe('buildCatalogItems', () => {
 
   it('returns empty array when filtered list is empty', () => {
     expect(buildCatalogItems([], CATALOGS)).toHaveLength(0);
+  });
+});
+
+describe('loadCatalog', () => {
+  afterEach(() => { vi.unstubAllGlobals(); });
+
+  it('returns catalog from valid JSON', async () => {
+    const catalog = { name: 'Groceries', tags: ['food'], items: [{ name: 'Milk', barcode: '001', icon: '🥛' }] };
+    vi.stubGlobal('fetch', () => Promise.resolve({ ok: true, json: () => Promise.resolve(catalog) }));
+    const result = await loadCatalog('/catalog.json');
+    expect(result).toEqual(catalog);
+  });
+
+  it('throws when items is missing', async () => {
+    vi.stubGlobal('fetch', () => Promise.resolve({ ok: true, json: () => Promise.resolve({ name: 'Empty' }) }));
+    await expect(loadCatalog('/catalog.json')).rejects.toThrow();
+  });
+
+  it('throws when items is empty', async () => {
+    vi.stubGlobal('fetch', () => Promise.resolve({ ok: true, json: () => Promise.resolve({ name: 'Empty', items: [] }) }));
+    await expect(loadCatalog('/catalog.json')).rejects.toThrow();
+  });
+
+  it('throws when fetch fails', async () => {
+    vi.stubGlobal('fetch', () => Promise.resolve({ ok: false, status: 404 }));
+    await expect(loadCatalog('/catalog.json')).rejects.toThrow();
   });
 });
