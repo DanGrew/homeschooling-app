@@ -80,6 +80,25 @@ test('entry shows EYFS criteria tags', async ({ page }) => {
   await expect(page.locator('.entry-criteria .tag').first()).toBeVisible()
 })
 
+test('entry renders all display fields for a learning_completed event', async ({ page }) => {
+  await page.goto(URL)
+  await seedEvent(page, {
+    id: 'journal-render-test-1',
+    version: 1,
+    type: 'learning_completed',
+    timestamp: Date.now(),
+    learning_id: 'colouring-free',
+    activity_id: 'colouring-free'
+  })
+  await page.reload()
+  await expect(page.locator('.entry-title')).toHaveText('Free Colouring')
+  await expect(page.locator('.entry-source')).toContainText('Colouring Playground')
+  await expect(page.locator('.entry-criteria .tag')).toHaveCount(2)
+  await expect(page.locator('.entry-criteria .tag').nth(0)).toHaveText('Expressive Arts — colour mixing')
+  await expect(page.locator('.entry-criteria .tag').nth(1)).toHaveText('Expressive Arts — colour recognition')
+  await expect(page.locator('.group-label').first()).toContainText('Today')
+})
+
 test('today group header shown for recent event', async ({ page }) => {
   await page.goto(URL)
   await seedEvent(page, {
