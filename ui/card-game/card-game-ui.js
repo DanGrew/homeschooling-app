@@ -7,6 +7,12 @@ var CG_ROLES = [
   { value: 'child', label: 'Child' }
 ];
 
+var CG_DEFAULT_PLAYERS = [
+  { name: '', icon: null, role: 'child' },
+  { name: '', icon: null, role: 'adult' },
+  { name: '', icon: null, role: 'adult' }
+];
+
 function cgSpeak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
@@ -21,6 +27,13 @@ function cgImgSrc(id) {
 }
 
 // ---- Setup shared sections ----
+
+function cgPreserveScroll(container, fn) {
+  var scrollTop = 0;
+  [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { scrollTop = el.scrollTop; });
+  fn();
+  [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { el.scrollTop = scrollTop; });
+}
 
 function buildCgCountSection(playerCount, onChange) {
   var section = document.createElement('div');

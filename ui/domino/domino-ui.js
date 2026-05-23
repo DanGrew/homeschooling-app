@@ -1,9 +1,3 @@
-var DOMINO_ROLES = [
-  { value: 'child_primary',   label: 'Child' },
-  { value: 'child_secondary', label: 'Child 2' },
-  { value: 'child_third',     label: 'Child 3' },
-  { value: 'adult_observer',  label: 'Adult' }
-];
 
 var DOMINO_MATCH_TYPES = [
   { value: 'colours', label: 'Colours' },
@@ -51,7 +45,7 @@ function buildDominoPlayerPanel(idx, player, animalEntries, allPlayers, onChange
   var roleSelect = document.createElement('select');
   roleSelect.className = 'pairs-role-select';
   roleSelect.setAttribute('data-testid', 'player-role-' + idx);
-  DOMINO_ROLES.forEach(function(r) {
+  CG_ROLES.forEach(function(r) {
     var opt = document.createElement('option');
     opt.value = r.value;
     opt.textContent = r.label;
@@ -142,14 +136,11 @@ function renderDominoSetup(container, animalEntries, onStart) {
   var cfg = {
     playerCount: 2,
     matchType: 'colours',
-    players: [
-      { name: '', icon: null, role: 'child_primary' },
-      { name: '', icon: null, role: 'adult_observer' },
-      { name: '', icon: null, role: 'child_secondary' }
-    ]
+    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p); })
   };
 
   function redraw() {
+    cgPreserveScroll(container, function() {
     container.innerHTML = '';
     var root = document.createElement('div');
     root.className = 'pairs-setup-scroll';
@@ -186,6 +177,7 @@ function renderDominoSetup(container, animalEntries, onStart) {
     }));
 
     container.appendChild(root);
+    });
   }
 
   redraw();

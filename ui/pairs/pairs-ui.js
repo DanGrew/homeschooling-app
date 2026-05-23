@@ -13,19 +13,17 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
     gridSize: 16,
     mode: 'shared',
     tags: availableTags.slice(),
-    players: [
-      { name: '', icon: null, role: 'adult' },
-      { name: '', icon: null, role: 'adult' },
-      { name: '', icon: null, role: 'adult' }
-    ]
+    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p); })
   };
 
   function redraw() {
-    container.innerHTML = '';
-    container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
-      Object.assign(cfg, patch);
-      redraw();
-    }, function() { onStart(cfg); }));
+    cgPreserveScroll(container, function() {
+      container.innerHTML = '';
+      container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
+        Object.assign(cfg, patch);
+        redraw();
+      }, function() { onStart(cfg); }));
+    });
   }
 
   redraw();
