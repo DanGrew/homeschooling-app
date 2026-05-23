@@ -1,5 +1,4 @@
 import { activeIndex } from '../../core/story-time/story-time-core.js';
-import { speak } from '../../components/speech/speech-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 
 (function () {
@@ -56,7 +55,7 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
     var dictOverlay = document.getElementById('dict-overlay');
 
     makeSpeakable(document.getElementById('dict-close'), 'Close');
-    makeSpeakable(document.getElementById('dict-speak'), 'Speak');
+    makeSpeakable(document.getElementById('dict-speak'), function() { return document.getElementById('dict-word-text').textContent; });
     var playbtn = document.getElementById('playbtn');
     var stopbtn = document.getElementById('stopbtn');
     makeSpeakable(playbtn, function () { return playbtn.textContent; });
@@ -164,9 +163,6 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
     document.getElementById('dict-close').addEventListener('click', closeDict);
     dictOverlay.addEventListener('click', function (e) {
       ({ 'true': closeDict, 'false': function () {} })[String(e.target === dictOverlay)]();
-    });
-    document.getElementById('dict-speak').addEventListener('click', function () {
-      speak(document.getElementById('dict-word-text').textContent);
     });
 
     function pauseForDict() {
