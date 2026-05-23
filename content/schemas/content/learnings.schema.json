@@ -28,6 +28,7 @@
       "minItems": 1,
       "items": {
         "type": "object",
+        "required": ["expect"],
         "additionalProperties": false,
         "properties": {
           "text":            { "type": "string" },
@@ -41,8 +42,6 @@
           "failureFeedback": { "type": "string" },
           "maxFailures":     { "type": "integer", "minimum": 1 },
           "badge":           { "type": "string" },
-          "auto":            { "type": "boolean" },
-          "success":         { "type": "boolean" },
           "preset_shown":    { "type": "string" },
           "correct":         { "type": "string" },
           "distractors": {
