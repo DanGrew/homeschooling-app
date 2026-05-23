@@ -144,7 +144,10 @@
     slot.style.width = `${slotW}px`;
     slot.style.height = `${slotH}px`;
     const landscapeCols = Math.min(allPieces.length, Math.floor((puzzleOuter.clientWidth - 40) / (tileW + 6)));
-    const trayColCount = [landscapeCols, Math.min(2, PUZZLE.grid.cols)][+isPortrait()];
+    const availTrayH = puzzleOuter.clientHeight;
+    const maxPortraitRows = Math.max(1, Math.floor((availTrayH - 30) / (tileH + 6)));
+    const portraitCols = Math.max(1, Math.ceil(allPieces.length / maxPortraitRows));
+    const trayColCount = [landscapeCols, portraitCols][+isPortrait()];
     trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
       PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
       trayColCount);
