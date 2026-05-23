@@ -68,6 +68,44 @@ describe('flipShoppingCard + resolveShoppingFlip', () => {
   })
 })
 
+describe('turn skipping', () => {
+  it('skips a completed player in the rotation', () => {
+    const state = {
+      cards: [
+        { contentId: 'banana', state: 'hidden' },
+        { contentId: 'apple',  state: 'found'  },
+        { contentId: 'cherry', state: 'hidden' }
+      ],
+      players: [
+        { id: 'p1', name: 'Alice', list: ['apple'],  found: ['apple'] },
+        { id: 'p2', name: 'Bob',   list: ['banana'], found: [] },
+        { id: 'p3', name: 'Carol', list: ['cherry'], found: [] }
+      ],
+      turnIndex: 1,
+      phase: 'waiting',
+      flipped: []
+    }
+    const r = flipShoppingCard(state, 0)
+    expect(r.events.some(e => e.type === 'item_found')).toBe(true)
+    expect(r.state.turnIndex).toBe(2)
+  })
+
+  it('advances normally when next player still has items', () => {
+    const state = {
+      cards: [{ contentId: 'banana', state: 'hidden' }, { contentId: 'apple', state: 'hidden' }],
+      players: [
+        { id: 'p1', name: 'Alice', list: ['apple'],  found: [] },
+        { id: 'p2', name: 'Bob',   list: ['banana'], found: [] }
+      ],
+      turnIndex: 1,
+      phase: 'waiting',
+      flipped: []
+    }
+    const r = flipShoppingCard(state, 0)
+    expect(r.state.turnIndex).toBe(0)
+  })
+})
+
 describe('getShoppingScores', () => {
   it('returns score entry per player', () => {
     const g = createShoppingGame([{id:'p1',name:'Alice'}], 16, CONTENT)

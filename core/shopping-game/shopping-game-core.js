@@ -22,8 +22,6 @@ var shoppingRules = {
     var cardIndex = state.flipped[0];
     var revealedId = state.cards[cardIndex].contentId;
     var currentPlayer = state.players[state.turnIndex];
-    var nextTurnIndex = (state.turnIndex + 1) % state.players.length;
-
     var isOnList = currentPlayer.list.indexOf(revealedId) !== -1;
     var alreadyFound = currentPlayer.found.indexOf(revealedId) !== -1;
 
@@ -37,6 +35,10 @@ var shoppingRules = {
           : p;
       });
       var allComplete = newPlayers.every(function(p) { return p.found.length === p.list.length; });
+
+      var n = newPlayers.length;
+      var rotated = newPlayers.map(function(_, i) { return (state.turnIndex + 1 + i) % n; });
+      var nextTurnIndex = rotated.filter(function(i) { return newPlayers[i].found.length < newPlayers[i].list.length; }).concat([(state.turnIndex + 1) % n])[0];
 
       events.push({ type: 'item_found', data: { contentId: revealedId, playerId: currentPlayer.id, cardIndex: cardIndex } });
       events.push({ type: 'tray_update', data: { playerId: currentPlayer.id, contentId: revealedId } });
