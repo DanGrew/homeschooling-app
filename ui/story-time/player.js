@@ -58,10 +58,11 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
     makeSpeakable(document.getElementById('dict-speak'), function() { return document.getElementById('dict-word-text').textContent; });
     var playbtn = document.getElementById('playbtn');
     var stopbtn = document.getElementById('stopbtn');
-    makeSpeakable(playbtn, function () { return playbtn.textContent; });
+    makeSpeakable(playbtn, function () { return playing ? 'Pause' : 'Play'; });
     makeSpeakable(stopbtn, 'Stop');
+    var SPEED_SPEAK = { '0.5': 'half speed', '0.75': 'three quarter speed', '1': 'normal speed' };
     document.querySelectorAll('.speed-btn').forEach(function (btn) {
-      makeSpeakable(btn, btn.textContent);
+      makeSpeakable(btn, SPEED_SPEAK[btn.dataset.speed] || btn.textContent);
       btn.addEventListener('click', function () {
         currentSpeed = parseFloat(this.dataset.speed);
         audio.playbackRate = currentSpeed;
