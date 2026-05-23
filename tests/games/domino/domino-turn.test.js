@@ -149,3 +149,93 @@ test('valid placement adds tile to board and removes from tray', async ({ page }
   const boardTilesAfter = await page.locator('[data-testid^="domino-tile-"]').count()
   expect(boardTilesAfter).toBeGreaterThan(boardTilesBefore)
 })
+
+test('endpoint tap shows preview for value-mismatched tile', async ({ page }) => {
+  await startGame(page)
+  const mismatch = await page.evaluate(function() {
+    var state = window.gameState
+    var hand = state.hands[state.players[state.turnIndex].id]
+    var endpoints = state.board.endpoints
+    var rots = [0, 90, 180, 270, 45, 135, 225, 315]
+    for (var t = 0; t < hand.length; t++) {
+      var isValid = false
+      for (var e = 0; e < endpoints.length; e++) {
+        for (var ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) { isValid = true; break }
+        }
+        if (isValid) break
+      }
+      if (!isValid) return { tileId: hand[t].id }
+    }
+    return null
+  })
+  if (!mismatch) return
+  await page.locator('[data-tile-id="' + mismatch.tileId + '"]').first().click()
+  await page.getByTestId('domino-endpoint').first().click()
+  await expect(page.getByTestId('domino-preview-tile')).toHaveCount(1)
+})
+
+test('placing mismatched tile does not add it to board', async ({ page }) => {
+  await startGame(page)
+  const mismatch = await page.evaluate(function() {
+    var state = window.gameState
+    var hand = state.hands[state.players[state.turnIndex].id]
+    var endpoints = state.board.endpoints
+    var rots = [0, 90, 180, 270, 45, 135, 225, 315]
+    for (var t = 0; t < hand.length; t++) {
+      var isValid = false
+      for (var e = 0; e < endpoints.length; e++) {
+        for (var ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) { isValid = true; break }
+        }
+        if (isValid) break
+      }
+      if (!isValid) return { tileId: hand[t].id }
+    }
+    return null
+  })
+  if (!mismatch) return
+  const boardBefore = await page.locator('[data-testid^="domino-tile-"]').count()
+  await page.locator('[data-tile-id="' + mismatch.tileId + '"]').first().click()
+  await page.getByTestId('domino-endpoint').first().click()
+  await page.getByTestId('domino-submit-btn').click()
+  const boardAfter = await page.locator('[data-testid^="domino-tile-"]').count()
+  expect(boardAfter).toBe(boardBefore)
+})
+
+test('zoom level preserved after valid tile placement', async ({ page }) => {
+  await startGame(page)
+
+  await page.getByTestId('domino-zoom-in').click()
+  const scaleBefore = await page.evaluate(function() {
+    return document.getElementById('domino-board-viewport')._dominoPanState.scale
+  })
+
+  const placed = await page.evaluate(function() {
+    var state = window.gameState
+    var hand = state.hands[state.players[state.turnIndex].id]
+    var endpoints = state.board.endpoints
+    var rots = [0, 90, 180, 270, 45, 135, 225, 315]
+    for (var t = 0; t < hand.length; t++) {
+      for (var e = 0; e < endpoints.length; e++) {
+        for (var ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) {
+            return { tileId: hand[t].id, endpointIndex: e }
+          }
+        }
+      }
+    }
+    return null
+  })
+  if (!placed) return
+
+  await page.locator('[data-tile-id="' + placed.tileId + '"]').first().click()
+  await page.getByTestId('domino-endpoint').nth(placed.endpointIndex).click()
+  await page.getByTestId('domino-submit-btn').click()
+  await page.getByTestId('domino-handover-ready').click()
+
+  const scaleAfter = await page.evaluate(function() {
+    return document.getElementById('domino-board-viewport')._dominoPanState.scale
+  })
+  expect(scaleAfter).toBe(scaleBefore)
+})

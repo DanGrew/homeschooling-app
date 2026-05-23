@@ -248,12 +248,14 @@ function getPreviewPlacement(state, tileId, endpointIndex, rotation) {
     if (hasCollision(endpoint, rot, state.board.tiles)) return null;
   } else {
     var ALL_ROTS = [0, 90, 180, 270, 45, 135, 225, 315];
+    var fallback;
     for (var ri = 0; ri < ALL_ROTS.length; ri++) {
       if (!hasCollision(endpoint, ALL_ROTS[ri], state.board.tiles)) {
-        rot = ALL_ROTS[ri];
-        break;
+        if (validatePlacement(tile, endpoint, ALL_ROTS[ri]).valid) { rot = ALL_ROTS[ri]; break; }
+        if (fallback === undefined) fallback = ALL_ROTS[ri];
       }
     }
+    if (rot === undefined) rot = fallback;
     if (rot === undefined) return null;
   }
   var geom = ROTATION_GEOMETRY[rot];
