@@ -21,8 +21,8 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
   };
 
   function redraw() {
-    var prev = container.querySelector('.pairs-setup-scroll');
-    var scrollTop = prev ? prev.scrollTop : 0;
+    var scrollTop = 0;
+    [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { scrollTop = el.scrollTop; });
     container.innerHTML = '';
     var newRoot = buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
       Object.assign(cfg, patch);

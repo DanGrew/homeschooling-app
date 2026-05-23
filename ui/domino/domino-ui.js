@@ -150,8 +150,8 @@ function renderDominoSetup(container, animalEntries, onStart) {
   };
 
   function redraw() {
-    var prev = container.querySelector('.pairs-setup-scroll');
-    var scrollTop = prev ? prev.scrollTop : 0;
+    var scrollTop = 0;
+    [container.querySelector('.pairs-setup-scroll')].filter(Boolean).forEach(function(el) { scrollTop = el.scrollTop; });
     container.innerHTML = '';
     var root = document.createElement('div');
     root.className = 'pairs-setup-scroll';
