@@ -17,7 +17,7 @@ async function startAndShowPreview(page) {
     const state = window.gameState
     const hand = state.hands[state.players[state.turnIndex].id]
     const endpoints = state.board.endpoints
-    const rots = [0, 90, 180, 270]
+    const rots = [0, 90, 180, 270, 45, 135, 225, 315]
     for (let t = 0; t < hand.length; t++) {
       for (let e = 0; e < endpoints.length; e++) {
         for (let ri = 0; ri < rots.length; ri++) {
@@ -66,11 +66,11 @@ test('tapping preview tile changes its orientation class', async ({ page }) => {
   expect(classAfter).not.toBe(classBefore)
 })
 
-test('tapping preview tile 4 times returns to original class', async ({ page }) => {
+test('tapping preview tile 8 times returns to original class', async ({ page }) => {
   const placed = await startAndShowPreview(page)
   if (!placed) return
   const classBefore = await page.getByTestId('domino-preview-tile').getAttribute('class')
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 8; i++) {
     await page.getByTestId('domino-preview-tile').click()
   }
   const classAfter = await page.getByTestId('domino-preview-tile').getAttribute('class')
