@@ -11,6 +11,11 @@
 <style>
 #obj-viewport{flex:1;position:relative;overflow:hidden;background:#fafafa;}
 #obj-world{position:absolute;top:0;left:0;}
+#obj-toolbox{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.72);border-radius:12px;padding:8px;display:none;flex-direction:column;gap:6px;z-index:10;}
+.obj-tool-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(255,255,255,0.15);border-radius:8px;cursor:pointer;min-width:120px;user-select:none;}
+.obj-tool-row:active{background:rgba(255,255,255,0.3);}
+.obj-tool-label{color:rgba(255,255,255,0.7);font-size:12px;flex:1;}
+.obj-tool-val{color:#fff;font-size:14px;font-weight:bold;text-transform:capitalize;}
 </style>
 </head>
 <body>
@@ -18,6 +23,7 @@
 <div class="game-area">
   <div id="obj-viewport">
     <svg id="obj-world" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="obj-toolbox"></div>
   </div>
 </div>
 <script src="../../../core/object-playground/object-playground-core.js"></script>
