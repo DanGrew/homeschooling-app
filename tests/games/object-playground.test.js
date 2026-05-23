@@ -87,7 +87,8 @@ test('clicking the same object again hides the toolbox', async ({ page }) => {
 
 test('dragging a selected object moves it', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
-  const obj = page.locator('[data-testid="object-obj-0"]');
+  // obj-9 has highest zIndex so is always topmost — never obscured by other objects
+  const obj = page.locator('[data-testid="object-obj-9"]');
   await obj.click();
   const before = await obj.getAttribute('transform');
   const box = await obj.boundingBox();
@@ -101,7 +102,7 @@ test('dragging a selected object moves it', async ({ page }) => {
 
 test('dragging an unselected object does not move it', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
-  const obj = page.locator('[data-testid="object-obj-0"]');
+  const obj = page.locator('[data-testid="object-obj-9"]');
   const before = await obj.getAttribute('transform');
   const box = await obj.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
@@ -114,8 +115,8 @@ test('dragging an unselected object does not move it', async ({ page }) => {
 
 test('toolbox shows as dragging during object drag', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
-  await page.locator('[data-testid="object-obj-0"]').click();
-  const obj = page.locator('[data-testid="object-obj-0"]');
+  await page.locator('[data-testid="object-obj-9"]').click();
+  const obj = page.locator('[data-testid="object-obj-9"]');
   const box = await obj.boundingBox();
   await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
   await page.mouse.down();
