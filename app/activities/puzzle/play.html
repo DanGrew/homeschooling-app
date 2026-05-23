@@ -185,7 +185,7 @@
       selectedPiece.correct.row, selectedPiece.correct.col);
     markCell(gridEl, row, col, correct);
     removeTrayPiece(trayEl, selectedPiece.id);
-    if (correct) { lockCell(gridEl, row, col); lockTrayPiece(trayEl, selectedPiece.id); }
+    [() => {}, () => { lockCell(gridEl, row, col); lockTrayPiece(trayEl, selectedPiece.id); }][+correct]();
     selectedPiece = null;
     clearSelectedSlot(slot);
     highlightTray(trayEl, null);

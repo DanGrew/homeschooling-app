@@ -23,11 +23,10 @@ export function removeTrayPiece(tray, id) {
 }
 
 export function lockTrayPiece(tray, id) {
-  const el = tray.querySelector(`#tray-${id}`);
-  if (el) el.dataset.locked = 'true';
+  tray.querySelector(`#tray-${id}`)?.setAttribute('data-locked', 'true');
 }
 
 export function restoreTrayPiece(tray, id) {
   const el = tray.querySelector(`#tray-${id}`);
-  if (el && !el.dataset.locked) el.style.setProperty('visibility', 'visible');
+  [() => el?.style.setProperty('visibility', 'visible'), () => {}][+(!!el?.getAttribute('data-locked'))]();
 }

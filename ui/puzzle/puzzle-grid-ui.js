@@ -5,7 +5,7 @@ function makeCell(r, c, onCellTap) {
   cell.dataset.row = r;
   cell.dataset.col = c;
   cell.style.cssText = 'border:2px solid #ddd;cursor:pointer;overflow:hidden;box-sizing:border-box;position:relative;';
-  cell.addEventListener('click', () => { if (!cell.dataset.locked) onCellTap(r, c); });
+  cell.addEventListener('click', () => [() => onCellTap(r, c), () => {}][+(!!cell.dataset.locked)]());
   return cell;
 }
 
