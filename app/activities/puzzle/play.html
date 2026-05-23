@@ -20,7 +20,7 @@
 .slot-label{font-size:0.75em;color:#999;text-align:center;}
 #selected-slot{border:3px dashed #ccc;border-radius:8px;overflow:hidden;background-repeat:no-repeat;}
 #tray-bar{flex-shrink:0;display:flex;gap:8px;padding:10px;background:#f5f5f5;border-top:2px solid #ddd;align-items:center;justify-content:center;flex-wrap:wrap;}
-.puzzle-outer.portrait #tray-bar{border-top:none;border-left:2px solid #ddd;overflow-y:auto;align-items:flex-start;justify-content:flex-start;align-self:stretch;}
+.puzzle-outer.portrait #tray-bar{border-top:none;border-left:2px solid #ddd;align-items:flex-start;justify-content:flex-start;align-self:stretch;}
 #ref-toggle{font-size:0.75em;padding:4px 10px;border:1px solid #ccc;border-radius:12px;background:#fff;cursor:pointer;color:#555;}
 #error-msg{display:none;padding:20px;color:#E74C3C;text-align:center;font-size:1em;}
 #puzzle-grid .feedback-correct,#puzzle-grid .feedback-wrong{outline:none;}
@@ -100,11 +100,11 @@
     gridArea.style.width = `${gridW}px`;
     gridArea.style.height = `${gridH}px`;
   }
-  window.addEventListener('resize', sizeGrid);
 
   const allPieces = derivePieces(PUZZLE.grid);
   let placements = {};
   let selectedPiece = null;
+  let shuffledPieces = [];
   let gridEl, trayEl;
   let refVisible = true;
   let locked = false;
@@ -128,15 +128,7 @@
     requestAnimationFrame(step);
   }
 
-  function start() {
-    locked = false;
-    placements = {};
-    selectedPiece = null;
-    refImg.style.zIndex = '';
-    refImg.style.opacity = ['0', '0.25'][+refVisible];
-    refToggle.disabled = false;
-    clearSelectedSlot(slot);
-    gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
+  function applyLayout() {
     tileH = Math.max(20, Math.floor(cellH / 2));
     tileW = Math.round(tileH * cellW / cellH);
     slotH = Math.max(80, Math.min(cellH, Math.floor(window.innerHeight * 0.20)));
@@ -144,10 +136,47 @@
     slot.style.width = `${slotW}px`;
     slot.style.height = `${slotH}px`;
     const landscapeCols = Math.min(allPieces.length, Math.floor((puzzleOuter.clientWidth - 40) / (tileW + 6)));
-    const trayColCount = [landscapeCols, PUZZLE.grid.cols][+isPortrait()];
-    trayEl = buildTray(trayContainer, shufflePieces(allPieces), onSelect,
+    const availTrayH = puzzleOuter.clientHeight;
+    const maxPortraitRows = Math.max(1, Math.floor((availTrayH - 30) / (tileH + 6)));
+    const portraitCols = Math.max(1, Math.ceil(allPieces.length / maxPortraitRows));
+    const trayColCount = [landscapeCols, portraitCols][+isPortrait()];
+    trayEl = buildTray(trayContainer, shuffledPieces, onSelect,
       PUZZLE.src, tileW * PUZZLE.grid.cols, tileH * PUZZLE.grid.rows, tileW, tileH,
       trayColCount);
+  }
+
+  function restorePlacements() {
+    Object.entries(placements).forEach(([key, { pieceId, correct }]) => {
+      const [r, c] = key.split('_').map(Number);
+      const piece = allPieces.find(p => p.id === pieceId);
+      placeInCell(gridEl, r, c, PUZZLE.src, cellW * PUZZLE.grid.cols, cellH * PUZZLE.grid.rows, cellW, cellH, piece.correct.row, piece.correct.col);
+      markCell(gridEl, r, c, correct);
+      removeTrayPiece(trayEl, pieceId);
+      [() => {}, () => { lockCell(gridEl, r, c); lockTrayPiece(trayEl, pieceId); }][+correct]();
+    });
+  }
+
+  function onResize() {
+    sizeGrid();
+    [() => {}, () => {
+      applyLayout();
+      restorePlacements();
+      [() => {}, () => fillSelectedSlot(slot, selectedPiece, PUZZLE.src, slotW * PUZZLE.grid.cols, slotH * PUZZLE.grid.rows, slotW, slotH)][+!!selectedPiece]();
+      highlightTray(trayEl, selectedPiece?.id);
+    }][+!!gridEl]();
+  }
+
+  function start() {
+    locked = false;
+    placements = {};
+    selectedPiece = null;
+    shuffledPieces = shufflePieces(allPieces);
+    refImg.style.zIndex = '';
+    refImg.style.opacity = ['0', '0.25'][+refVisible];
+    refToggle.disabled = false;
+    clearSelectedSlot(slot);
+    gridEl = buildGrid(gridContainer, PUZZLE.grid.rows, PUZZLE.grid.cols, onCellTap);
+    applyLayout();
   }
 
   function onSelect(pieceId) {
@@ -201,6 +230,7 @@
     [() => [liftPiece, tapUnoccupied][+!placements[key]](row, col, key), () => {}][+locked]();
   }
 
+  window.addEventListener('resize', onResize);
   window.__puzzleState = { getPieces: () => allPieces, getPlacements: () => placements };
 
   function showError(pixels) {
