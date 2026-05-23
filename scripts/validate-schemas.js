@@ -82,12 +82,6 @@ const MAPPINGS = [
     match: (name) => name === 'manifest.json'
   },
   {
-    label: 'activities/catalog',
-    schema: 'content/schemas/activities/catalog.schema.json',
-    searchDir: 'content/shopping-play/catalogs',
-    match: (name) => name.endsWith('.json')
-  },
-  {
     label: 'activities/shopping-scan-catalog',
     schema: 'content/schemas/activities/catalog.schema.json',
     searchDir: 'content/shopping-scan/catalogs',
