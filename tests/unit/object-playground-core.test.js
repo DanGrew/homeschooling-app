@@ -3,7 +3,8 @@ const require = createRequire(import.meta.url);
 const {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
   OBJ_BASE_R, objPick, initObjectState,
-  PAN_THRESHOLD, getPanMoves, getTapFlag, applyPan,
+  PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
+  getPanMoves, getTapFlag, applyPan,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildToolboxHTML
 } = require('../../core/object-playground/object-playground-core.js');
 
@@ -275,6 +276,164 @@ describe('applyPan', () => {
     const next = applyPan(state, 100, 50);
     expect(next.viewport.width).toBe(state.viewport.width);
     expect(next.viewport.height).toBe(state.viewport.height);
+  });
+});
+
+describe('buildGesture', () => {
+  const state = initObjectState(800, 600);
+
+  it('onObj=false when no target id', () => {
+    const g = buildGesture(state, undefined, 0, 0, 0, 0);
+    expect(g.onObj).toBe(false);
+    expect(g.isSelected).toBe(false);
+  });
+
+  it('onObj=true, isSelected=false for unselected target', () => {
+    const g = buildGesture(state, 'obj-0', 0, 0, 0, 0);
+    expect(g.onObj).toBe(true);
+    expect(g.isSelected).toBe(false);
+  });
+
+  it('isSelected=true for selected target', () => {
+    const sel = selectObject(state, 'obj-0');
+    const g = buildGesture(sel, 'obj-0', 0, 0, 0, 0);
+    expect(g.isSelected).toBe(true);
+  });
+
+  it('records originObjX/Y from object position', () => {
+    const obj = state.objects.find(o => o.id === 'obj-2');
+    const g = buildGesture(state, 'obj-2', 50, 60, 10, 20);
+    expect(g.originObjX).toBe(obj.x);
+    expect(g.originObjY).toBe(obj.y);
+  });
+
+  it('records viewport origin and client position', () => {
+    const g = buildGesture(state, undefined, 50, 60, 10, 20);
+    expect(g.startX).toBe(50);
+    expect(g.startY).toBe(60);
+    expect(g.originX).toBe(10);
+    expect(g.originY).toBe(20);
+  });
+
+  it('starts with active=true, moved=false', () => {
+    const g = buildGesture(state, undefined, 0, 0, 0, 0);
+    expect(g.active).toBe(true);
+    expect(g.moved).toBe(false);
+  });
+});
+
+describe('getDragMoves', () => {
+  const base = { active: true, onObj: true, isSelected: true, moved: false, originObjX: 100, originObjY: 200 };
+
+  it('returns empty when not active', () => {
+    expect(getDragMoves({ active: false }, 50, 50)).toHaveLength(0);
+  });
+
+  it('returns empty when not onObj', () => {
+    expect(getDragMoves(Object.assign({}, base, { onObj: false }), 50, 50)).toHaveLength(0);
+  });
+
+  it('returns empty when not isSelected', () => {
+    expect(getDragMoves(Object.assign({}, base, { isSelected: false }), 50, 50)).toHaveLength(0);
+  });
+
+  it('returns empty when below threshold and not yet moved', () => {
+    expect(getDragMoves(base, PAN_THRESHOLD - 1, 0)).toHaveLength(0);
+  });
+
+  it('returns new position when threshold exceeded', () => {
+    const moves = getDragMoves(base, 50, 30);
+    expect(moves).toHaveLength(1);
+    expect(moves[0]).toEqual({ x: 150, y: 230 });
+  });
+
+  it('returns position when already moved (even below threshold)', () => {
+    const moved = Object.assign({}, base, { moved: true });
+    expect(getDragMoves(moved, 1, 1)).toHaveLength(1);
+  });
+});
+
+describe('updateDragPosition', () => {
+  const state = selectObject(initObjectState(800, 600), 'obj-0');
+
+  it('moves selected object to new position', () => {
+    const next = updateDragPosition(state, 300, 400);
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(300);
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(400);
+  });
+
+  it('clamps position to world bounds', () => {
+    const obj = state.objects.find(o => o.id === 'obj-0');
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP[obj.size]);
+    const next = updateDragPosition(state, 99999, 99999);
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(state.world.width - margin);
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(state.world.height - margin);
+  });
+
+  it('clamps to minimum margin', () => {
+    const obj = state.objects.find(o => o.id === 'obj-0');
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP[obj.size]);
+    const next = updateDragPosition(state, 0, 0);
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(margin);
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(margin);
+  });
+
+  it('does not affect unselected objects', () => {
+    const before = state.objects.find(o => o.id === 'obj-5');
+    const next = updateDragPosition(state, 300, 400);
+    const after = next.objects.find(o => o.id === 'obj-5');
+    expect(after.x).toBe(before.x);
+    expect(after.y).toBe(before.y);
+  });
+
+  it('does not mutate original state', () => {
+    const orig = state.objects.find(o => o.id === 'obj-0').x;
+    updateDragPosition(state, 300, 400);
+    expect(state.objects.find(o => o.id === 'obj-0').x).toBe(orig);
+  });
+});
+
+describe('getDragCancelMoves', () => {
+  const base = { active: true, isSelected: true, moved: true, originObjX: 50, originObjY: 60 };
+
+  it('returns empty when not active', () => {
+    expect(getDragCancelMoves({ active: false })).toHaveLength(0);
+  });
+
+  it('returns empty when not isSelected', () => {
+    expect(getDragCancelMoves(Object.assign({}, base, { isSelected: false }))).toHaveLength(0);
+  });
+
+  it('returns empty when not moved', () => {
+    expect(getDragCancelMoves(Object.assign({}, base, { moved: false }))).toHaveLength(0);
+  });
+
+  it('returns origin when active+isSelected+moved', () => {
+    const result = getDragCancelMoves(base);
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({ x: 50, y: 60 });
+  });
+});
+
+describe('applyToolboxClick', () => {
+  it('cycles property when no drag active', () => {
+    const state = selectObject(initObjectState(800, 600), 'obj-1');
+    const sel = state.objects.find(o => o.id === 'obj-1');
+    const expected = OBJ_SHAPES[(OBJ_SHAPES.indexOf(sel.shape) + 1) % OBJ_SHAPES.length];
+    const result = applyToolboxClick(state, { active: false }, 'shape');
+    expect(result.objects.find(o => o.id === 'obj-1').shape).toBe(expected);
+  });
+
+  it('restores position and cycles property when drag active', () => {
+    const state = selectObject(initObjectState(800, 600), 'obj-1');
+    const sel = state.objects.find(o => o.id === 'obj-1');
+    const dragged = updateDragPosition(state, sel.x + 100, sel.y + 50);
+    const gesture = { active: true, isSelected: true, moved: true, originObjX: sel.x, originObjY: sel.y };
+    const result = applyToolboxClick(dragged, gesture, 'shape');
+    expect(result.objects.find(o => o.id === 'obj-1').x).toBe(sel.x);
+    expect(result.objects.find(o => o.id === 'obj-1').y).toBe(sel.y);
+    const expected = OBJ_SHAPES[(OBJ_SHAPES.indexOf(sel.shape) + 1) % OBJ_SHAPES.length];
+    expect(result.objects.find(o => o.id === 'obj-1').shape).toBe(expected);
   });
 });
 
