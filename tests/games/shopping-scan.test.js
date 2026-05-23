@@ -28,7 +28,7 @@ test('clicking Scan it shows the barcode stub input', async ({ page }) => {
 
 test('entering a barcode marks the item as found', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
-  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#tiles .ctile').filter({ hasText: 'Whole Milk' }).click()
   await page.locator('#btn-scan-it').click()
   await page.locator('#stub-input').fill('00348188')
   await page.locator('#stub-btn').click()
@@ -43,14 +43,14 @@ test('home nav button points to games index', async ({ page }) => {
 
 test('not here button is speakable', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
-  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#tiles .ctile').filter({ hasText: 'Whole Milk' }).click()
   await page.locator('#btn-scan-it').click()
   await expect(page.locator('.btn-not-here').first()).toHaveClass(/speakable/)
 })
 
 test('not here button crosses an item', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
-  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#tiles .ctile').filter({ hasText: 'Whole Milk' }).click()
   await page.locator('#btn-scan-it').click()
   await page.locator('.btn-not-here').first().click()
   await expect(page.locator('.sc-row.crossed')).toBeVisible()
@@ -58,7 +58,7 @@ test('not here button crosses an item', async ({ page }) => {
 
 test('crossing all items shows success banner', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
-  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#tiles .ctile').filter({ hasText: 'Whole Milk' }).click()
   await page.locator('#btn-scan-it').click()
   await page.locator('.btn-not-here').first().click()
   await expect(page.getByTestId('success-banner')).toBeVisible()
@@ -66,7 +66,7 @@ test('crossing all items shows success banner', async ({ page }) => {
 
 test('enter key in stub input submits barcode', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/shopping-scan/')
-  await page.locator('#tiles .ctile').filter({ hasText: 'Milk' }).click()
+  await page.locator('#tiles .ctile').filter({ hasText: 'Whole Milk' }).click()
   await page.locator('#btn-scan-it').click()
   await page.locator('#stub-input').fill('00348188')
   await page.locator('#stub-input').press('Enter')

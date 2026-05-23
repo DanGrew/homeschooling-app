@@ -88,6 +88,12 @@ const MAPPINGS = [
     match: (name) => name.endsWith('.json')
   },
   {
+    label: 'activities/shopping-scan-catalog',
+    schema: 'content/schemas/activities/catalog.schema.json',
+    searchDir: 'content/shopping-scan/catalogs',
+    match: (name) => name.endsWith('.json')
+  },
+  {
     label: 'activities/story-audio',
     schema: 'content/schemas/activities/story-audio.schema.json',
     searchDir: 'content/story-time',

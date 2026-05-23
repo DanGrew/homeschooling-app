@@ -288,6 +288,7 @@ function onReset() {
 | `content/puzzle/manifest.json` | Puzzle piece definitions |
 | `content/routine/` | Schedule JSON variants |
 | `content/shopping-play/catalogs/` | Shopping item catalogs |
+| `content/shopping-scan/catalogs/` | Shopping scan item catalogs (real barcodes) |
 | `content/simulator/sims/` | Simulator state machine definitions |
 | `content/story-time/` | Bible story audio scripts and metadata |
 | `content/contracts/` | Test contract schemas |
