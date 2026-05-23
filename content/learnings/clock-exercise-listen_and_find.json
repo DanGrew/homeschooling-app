@@ -1,13 +1,17 @@
 {
   "id": "clock-exercise-listen_and_find",
   "title": "Listen and Find",
-  "number": 21,
+  "number": 7,
   "guide": "dog",
   "source": "Clock",
   "profile": "child-day",
   "filter": "named-time",
-  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
-  "criteria": ["cl.listening"],
+  "pageControls": [
+    "LOAD_PROFILE_CHILD_DAY"
+  ],
+  "criteria": [
+    "cl.listening"
+  ],
   "steps": [
     {
       "text": "Listen carefully — then press what I say. Ready? Press... wake up.",

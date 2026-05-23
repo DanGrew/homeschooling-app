@@ -9,7 +9,7 @@ const LEARNINGS_DIR = path.join(ROOT, 'content', 'learnings');
 
 const REQUIRED = ['id', 'title', 'source', 'criteria'];
 
-const learningFiles = fs.readdirSync(LEARNINGS_DIR).filter(f => f.endsWith('.json'));
+const learningFiles = fs.readdirSync(LEARNINGS_DIR).filter(f => f.endsWith('.json') && f !== 'manifest.json');
 
 const errors = [];
 

@@ -72,3 +72,24 @@ var lessonIndex = fs.readdirSync(lessonsDir)
 
 fs.writeFileSync(path.join(lessonsDir, 'index.json'), JSON.stringify(lessonIndex, null, 2) + '\n');
 console.log('content/lessons/index.json: ' + lessonIndex.length + ' entries');
+
+var learningsDir = path.join(__dirname, '..', 'content/learnings');
+var learningsManifest = fs.readdirSync(learningsDir)
+  .filter(function(f) { return f.endsWith('.json') && f !== 'manifest.json'; })
+  .sort()
+  .map(function(f) {
+    try {
+      var data = JSON.parse(fs.readFileSync(path.join(learningsDir, f), 'utf8'));
+      var type = data.type || (f.includes('exercise') ? 'exercise' : 'lesson');
+      var entry = { id: data.id, source: data.source, title: data.title, type: type };
+      if (data.number != null) entry.number = data.number;
+      return entry;
+    } catch(e) { return null; }
+  })
+  .filter(Boolean);
+
+fs.writeFileSync(
+  path.join(learningsDir, 'manifest.json'),
+  JSON.stringify(learningsManifest, null, 2) + '\n'
+);
+console.log('content/learnings/manifest.json: ' + learningsManifest.length + ' entries');

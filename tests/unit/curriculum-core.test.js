@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, exerciseToRow, flattenExercises, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
+const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, exerciseToRow, flattenExercises, learningToRow, flattenLearnings, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
 
 const CRITERIA_DATA = {
   areas: [
@@ -156,6 +156,55 @@ describe('flattenExercises', () => {
     const rows = flattenExercises(exercises, map, AREAS);
     expect(rows).toHaveLength(2);
     expect(rows[0].type).toBe('exercise');
+  });
+});
+
+describe('learningToRow', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('prefixes title with zero-padded number', () => {
+    const row = learningToRow({ title: 'Count the Clock', number: 1, source: 'Clock', criteria: [] }, map, AREAS);
+    expect(row.title).toBe('01. Count the Clock');
+  });
+  it('pads two-digit number correctly', () => {
+    const row = learningToRow({ title: 'Big Lesson', number: 14, source: 'Clock', criteria: [] }, map, AREAS);
+    expect(row.title).toBe('14. Big Lesson');
+  });
+  it('no prefix when number absent', () => {
+    const row = learningToRow({ title: 'No Number', source: 'Clock', criteria: [] }, map, AREAS);
+    expect(row.title).toBe('No Number');
+  });
+  it('sets type to exercise when type field is exercise', () => {
+    const row = learningToRow({ title: 'E', source: 'S', criteria: [], type: 'exercise' }, map, AREAS);
+    expect(row.type).toBe('exercise');
+  });
+  it('defaults type to lesson', () => {
+    const row = learningToRow({ title: 'L', source: 'S', criteria: [] }, map, AREAS);
+    expect(row.type).toBe('lesson');
+  });
+  it('uses source as activity', () => {
+    const row = learningToRow({ title: 'T', source: 'Clock', criteria: [] }, map, AREAS);
+    expect(row.activity).toBe('Clock');
+  });
+  it('falls back to empty string when source absent', () => {
+    const row = learningToRow({ title: 'T', criteria: [] }, map, AREAS);
+    expect(row.activity).toBe('');
+  });
+});
+
+describe('flattenLearnings', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('maps each learning to a row', () => {
+    const learnings = [
+      { title: 'L1', number: 1, source: 'Clock', criteria: ['cl1'], type: 'lesson' },
+      { title: 'E1', source: 'Clock', criteria: [], type: 'exercise' }
+    ];
+    const result = flattenLearnings(learnings, map, AREAS);
+    expect(result).toHaveLength(2);
+    expect(result[0].type).toBe('lesson');
+    expect(result[1].type).toBe('exercise');
+  });
+  it('returns empty array for empty input', () => {
+    expect(flattenLearnings([], map, AREAS)).toEqual([]);
   });
 });
 

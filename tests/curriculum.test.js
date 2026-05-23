@@ -59,15 +59,15 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads lesson rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(39)
+  await expect(rows).toHaveCount(66)
 })
 
 test('rows are sorted by activity then lesson title', async ({ page }) => {
   await page.goto(URL)
   const firstActivity = page.locator('.coverage tbody .col-activity').first()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstActivity).toHaveText('Colour Wheel')
-  await expect(firstLesson).toHaveText('Cool Colours')
+  await expect(firstActivity).toHaveText('Clock')
+  await expect(firstLesson).toHaveText('01. Count the Clock')
 })
 
 test('Make Orange row has Colour mixing in EAD column', async ({ page }) => {
@@ -88,7 +88,7 @@ test('clicking Lesson header sorts rows ascending', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('AND Cascade')
+  await expect(firstLesson).toHaveText('01. AND Gate')
 })
 
 test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
@@ -96,7 +96,7 @@ test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
   await page.locator('.coverage thead th').nth(0).click()
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('XOR Gate')
+  await expect(firstLesson).toHaveText('The Long Way Round')
 })
 
 test('sorted column shows direction indicator', async ({ page }) => {
@@ -125,4 +125,31 @@ test('Rope Rescue row has Climbing apparatus in PD column', async ({ page }) => 
   const row = page.locator('.coverage tbody tr').filter({ hasText: 'Rope Rescue' })
   const pdCell = row.locator('td').nth(8)
   await expect(pdCell).toContainText('Climbing apparatus')
+})
+
+test('exercise table header has Exercise and Activity columns', async ({ page }) => {
+  await page.goto(URL)
+  const ths = page.locator('.exercises-coverage thead th')
+  await expect(ths.nth(0)).toHaveText('Exercise')
+  await expect(ths.nth(1)).toHaveText('Activity')
+})
+
+test('exercise table loads correct row count', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.exercises-coverage tbody tr')).toHaveCount(17)
+})
+
+test('exercise table default sort shows Clock first', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('.exercises-coverage tbody .col-activity').first()).toHaveText('Clock')
+  await expect(page.locator('.exercises-coverage tbody .col-lesson').first()).toHaveText('01. What Comes After?')
+})
+
+test('exercise table clicking Exercise header shows sort indicator', async ({ page }) => {
+  await page.goto(URL)
+  const exerciseTh = page.locator('.exercises-coverage thead th').nth(0)
+  await exerciseTh.click()
+  await expect(exerciseTh).toHaveClass(/sort-asc/)
+  await exerciseTh.click()
+  await expect(exerciseTh).toHaveClass(/sort-desc/)
 })
