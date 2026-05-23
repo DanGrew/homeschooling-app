@@ -77,12 +77,20 @@ test('clicking a toolbox row cycles the shape', async ({ page }) => {
   expect(after).not.toBe(before);
 });
 
-test('clicking the same object again hides the toolbox', async ({ page }) => {
+test('tapping empty space hides the toolbox', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
-  await page.locator('[data-testid="object-obj-0"]').click();
+  await page.locator('[data-testid="object-obj-9"]').click();
   await expect(page.locator('#obj-toolbox')).toBeVisible();
-  await page.locator('[data-testid="object-obj-0"]').click();
+  // Top-left corner is inside the margin zone (≥62px from objects)
+  const box = await page.locator('#obj-viewport').boundingBox();
+  await page.mouse.click(box.x + 5, box.y + 5);
   await expect(page.locator('#obj-toolbox')).toBeHidden();
+});
+
+test('clicking an object shows a stack picker entry', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  await page.locator('[data-testid="object-obj-9"]').click();
+  await expect(page.locator('[data-pick="obj-9"]')).toBeVisible();
 });
 
 test('dragging a selected object moves it', async ({ page }) => {
