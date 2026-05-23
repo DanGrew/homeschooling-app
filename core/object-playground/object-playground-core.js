@@ -35,7 +35,7 @@ function initObjectState(viewportW, viewportH) {
   }
   return {
     world: { width: viewportW * 3, height: viewportH * 3 },
-    viewport: { x: 0, y: 0 },
+    viewport: { x: 0, y: 0, width: viewportW, height: viewportH },
     objects: objects
   };
 }
@@ -64,6 +64,31 @@ function renderObjectShape(shape, colour) {
     return '<polygon points="0,-32 7.9,-10.9 30.4,-9.9 12.8,4.2 18.8,25.9 0,13.4 -18.8,25.9 -12.8,4.2 -30.4,-9.9 -7.9,-10.9" fill="' + fill + '" stroke="' + stroke + '" stroke-width="3"/><circle cx="0" cy="-24" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>';
   }
   return '<path d="M0,22 C-28,8 -30,-10 -16,-18 C-8,-22 -2,-16 0,-9 C2,-16 8,-22 16,-18 C30,-10 28,8 0,22 Z" fill="' + fill + '" stroke="' + stroke + '" stroke-width="3"/><circle cx="14" cy="-14" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>';
+}
+
+var PAN_THRESHOLD = 5;
+
+function getPanMoves(gesture, dx, dy) {
+  if (!gesture.active) return [];
+  if (gesture.onObj) return [];
+  if (!gesture.moved && Math.abs(dx) < PAN_THRESHOLD && Math.abs(dy) < PAN_THRESHOLD) return [];
+  return [{ x: gesture.originX - dx, y: gesture.originY - dy }];
+}
+
+function getTapFlag(gesture) {
+  if (!gesture.active) return [];
+  if (gesture.moved) return [];
+  return [true];
+}
+
+function applyPan(state, targetX, targetY) {
+  var maxX = state.world.width - state.viewport.width;
+  var maxY = state.world.height - state.viewport.height;
+  var x = Math.max(0, Math.min(targetX, maxX));
+  var y = Math.max(0, Math.min(targetY, maxY));
+  return Object.assign({}, state, {
+    viewport: Object.assign({}, state.viewport, { x: x, y: y })
+  });
 }
 
 function cycleProperty(obj, prop) {
@@ -123,5 +148,6 @@ if (typeof module !== 'undefined') module.exports = {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
   OBJ_COLOUR_FILL, OBJ_COLOUR_STROKE, OBJ_BASE_R,
   objPick, initObjectState, renderObjectShape,
+  PAN_THRESHOLD, getPanMoves, getTapFlag, applyPan,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildToolboxHTML
 };
