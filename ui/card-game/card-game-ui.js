@@ -7,6 +7,12 @@ var CG_ROLES = [
   { value: 'child', label: 'Child' }
 ];
 
+var CG_DEFAULT_PLAYERS = [
+  { name: '', icon: null, role: 'child' },
+  { name: '', icon: null, role: 'adult' },
+  { name: '', icon: null, role: 'adult' }
+];
+
 function cgSpeak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
