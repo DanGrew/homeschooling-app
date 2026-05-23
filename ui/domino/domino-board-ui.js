@@ -1,6 +1,17 @@
 var DOMINO_CELL   = 52;
 var DOMINO_ORIGIN = 2000;
 
+var ROTATION_LAYOUT = {
+  0:   { cls: 'domino-tile-horizontal', fi: 0 },
+  90:  { cls: 'domino-tile-vertical',   fi: 0 },
+  180: { cls: 'domino-tile-horizontal', fi: 0 },
+  270: { cls: 'domino-tile-vertical',   fi: 0 },
+  45:  { cls: 'domino-tile-horizontal', fi: 1 },
+  135: { cls: 'domino-tile-vertical',   fi: 1 },
+  225: { cls: 'domino-tile-horizontal', fi: 1 },
+  315: { cls: 'domino-tile-vertical',   fi: 1 }
+};
+
 function buildDominoHalfEl(value) {
   var el = document.createElement('div');
   el.className = 'domino-half';
@@ -17,16 +28,16 @@ function buildDominoDividerEl() {
 
 function buildDominoTileEl(placedTile) {
   var tile = placedTile.tile;
+  var layout = ROTATION_LAYOUT[placedTile.rotation];
   var halves = [tile.left, tile.right];
-  var fi = Number(placedTile.flipped);
   var el = document.createElement('div');
-  el.className = 'domino-tile domino-tile-horizontal';
+  el.className = 'domino-tile ' + layout.cls;
   el.style.left = (DOMINO_ORIGIN + placedTile.col * DOMINO_CELL) + 'px';
   el.style.top  = (DOMINO_ORIGIN + placedTile.row * DOMINO_CELL) + 'px';
   el.setAttribute('data-testid', 'domino-tile-' + tile.id);
-  el.appendChild(buildDominoHalfEl(halves[fi]));
+  el.appendChild(buildDominoHalfEl(halves[layout.fi]));
   el.appendChild(buildDominoDividerEl());
-  el.appendChild(buildDominoHalfEl(halves[1 - fi]));
+  el.appendChild(buildDominoHalfEl(halves[1 - layout.fi]));
   return el;
 }
 
@@ -128,6 +139,11 @@ function attachEndpointHandler(el, handler, idx) {
   el.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); handler(idx); });
 }
 
+function attachPreviewRotateHandler(el, handler) {
+  el.addEventListener('click', function(e) { e.stopPropagation(); handler(); });
+  el.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); handler(); });
+}
+
 function renderDominoBoard(viewport, gameState, options) {
   var opts = Object(options);
   viewport.innerHTML = '';
@@ -167,12 +183,16 @@ function setDominoEndpointsActive(viewport, active) {
   });
 }
 
-function showDominoPreview(viewport, placedTile) {
+function showDominoPreview(viewport, placedTile, options) {
   clearDominoPreview(viewport);
+  var opts = Object(options);
   [viewport._dominoWorld].filter(Boolean).forEach(function(world) {
     var el = buildDominoTileEl(placedTile);
     el.classList.add('domino-preview-tile');
     el.setAttribute('data-testid', 'domino-preview-tile');
+    [opts.onPreviewRotate].filter(Boolean).forEach(function(handler) {
+      attachPreviewRotateHandler(el, handler);
+    });
     world.appendChild(el);
   });
 }

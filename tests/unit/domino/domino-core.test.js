@@ -109,10 +109,10 @@ test('validatePlacement invalid rotation 0 when value mismatch', () => {
   expect(validatePlacement(tile, ep, 0).valid).toBe(false)
 })
 
-test('validatePlacement invalid rotation 0 at west endpoint', () => {
+test('validatePlacement valid rotation 0 at west endpoint when left matches', () => {
   const tile = { id: 'r-b', left: 'red', right: 'blue' }
   const ep = { value: 'red', col: -1, row: 0, direction: 'west' }
-  expect(validatePlacement(tile, ep, 0).valid).toBe(false)
+  expect(validatePlacement(tile, ep, 0).valid).toBe(true)
 })
 
 test('validatePlacement valid rotation 180 at west endpoint with right match', () => {
@@ -121,9 +121,15 @@ test('validatePlacement valid rotation 180 at west endpoint with right match', (
   expect(validatePlacement(tile, ep, 180).valid).toBe(true)
 })
 
-test('validatePlacement invalid rotation 180 at east endpoint', () => {
+test('validatePlacement valid rotation 180 at east endpoint when right matches', () => {
   const tile = { id: 'b-r', left: 'blue', right: 'red' }
   const ep = { value: 'red', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep, 180).valid).toBe(true)
+})
+
+test('validatePlacement invalid rotation 180 when right does not match endpoint', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const ep = { value: 'green', col: 2, row: 0, direction: 'east' }
   expect(validatePlacement(tile, ep, 180).valid).toBe(false)
 })
 
@@ -179,6 +185,70 @@ test('ROTATION_GEOMETRY 270 has correct offsets and direction', () => {
   expect(g.epRowOff).toBe(-2)
   expect(g.epDir).toBe('north')
   expect(g.anchorLeft).toBe(false)
+})
+
+test('ROTATION_GEOMETRY 45 has correct offsets and anchorLeft false', () => {
+  const g = ROTATION_GEOMETRY[45]
+  expect(g.colOff).toBe(0)
+  expect(g.rowOff).toBe(0)
+  expect(g.epColOff).toBe(2)
+  expect(g.epRowOff).toBe(0)
+  expect(g.epDir).toBe('east')
+  expect(g.anchorLeft).toBe(false)
+})
+
+test('ROTATION_GEOMETRY 135 has correct offsets and anchorLeft false', () => {
+  const g = ROTATION_GEOMETRY[135]
+  expect(g.colOff).toBe(0)
+  expect(g.rowOff).toBe(0)
+  expect(g.epColOff).toBe(0)
+  expect(g.epRowOff).toBe(2)
+  expect(g.epDir).toBe('south')
+  expect(g.anchorLeft).toBe(false)
+})
+
+test('ROTATION_GEOMETRY 225 has correct offsets and anchorLeft true', () => {
+  const g = ROTATION_GEOMETRY[225]
+  expect(g.colOff).toBe(-1)
+  expect(g.rowOff).toBe(0)
+  expect(g.epColOff).toBe(-2)
+  expect(g.epRowOff).toBe(0)
+  expect(g.epDir).toBe('west')
+  expect(g.anchorLeft).toBe(true)
+})
+
+test('ROTATION_GEOMETRY 315 has correct offsets and anchorLeft true', () => {
+  const g = ROTATION_GEOMETRY[315]
+  expect(g.colOff).toBe(0)
+  expect(g.rowOff).toBe(-1)
+  expect(g.epColOff).toBe(0)
+  expect(g.epRowOff).toBe(-2)
+  expect(g.epDir).toBe('north')
+  expect(g.anchorLeft).toBe(true)
+})
+
+test('validatePlacement valid rotation 45 when right matches endpoint', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const ep = { value: 'red', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep, 45).valid).toBe(true)
+})
+
+test('validatePlacement valid rotation 135 when right matches south endpoint', () => {
+  const tile = { id: 'b-r', left: 'blue', right: 'red' }
+  const ep = { value: 'red', col: 0, row: 2, direction: 'south' }
+  expect(validatePlacement(tile, ep, 135).valid).toBe(true)
+})
+
+test('validatePlacement valid rotation 225 when left matches west endpoint', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: -1, row: 0, direction: 'west' }
+  expect(validatePlacement(tile, ep, 225).valid).toBe(true)
+})
+
+test('validatePlacement valid rotation 315 when left matches north endpoint', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: 0, row: -2, direction: 'north' }
+  expect(validatePlacement(tile, ep, 315).valid).toBe(true)
 })
 
 // ---- playerHasValidPlacement ----

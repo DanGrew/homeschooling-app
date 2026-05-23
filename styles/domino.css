@@ -118,7 +118,7 @@
 .domino-preview-tile {
   opacity: 0.6;
   border-style: dashed;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 @keyframes domino-flash {

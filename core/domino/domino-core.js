@@ -6,13 +6,15 @@ var DOMINO_VALUES = {
 };
 
 var ROTATION_GEOMETRY = {
-  0:   { colOff: 0,  rowOff: 0,  epColOff: 2,  epRowOff: 0,  epDir: 'east',  blockDir: 'west',  anchorLeft: true  },
-  90:  { colOff: 0,  rowOff: 0,  epColOff: 0,  epRowOff: 2,  epDir: 'south', blockDir: 'north', anchorLeft: true  },
-  180: { colOff: -1, rowOff: 0,  epColOff: -2, epRowOff: 0,  epDir: 'west',  blockDir: 'east',  anchorLeft: false },
-  270: { colOff: 0,  rowOff: -1, epColOff: 0,  epRowOff: -2, epDir: 'north', blockDir: 'south', anchorLeft: false }
+  0:   { colOff: 0,  rowOff: 0,  epColOff: 2,  epRowOff: 0,  epDir: 'east',  anchorLeft: true  },
+  90:  { colOff: 0,  rowOff: 0,  epColOff: 0,  epRowOff: 2,  epDir: 'south', anchorLeft: true  },
+  180: { colOff: -1, rowOff: 0,  epColOff: -2, epRowOff: 0,  epDir: 'west',  anchorLeft: false },
+  270: { colOff: 0,  rowOff: -1, epColOff: 0,  epRowOff: -2, epDir: 'north', anchorLeft: false },
+  45:  { colOff: 0,  rowOff: 0,  epColOff: 2,  epRowOff: 0,  epDir: 'east',  anchorLeft: false },
+  135: { colOff: 0,  rowOff: 0,  epColOff: 0,  epRowOff: 2,  epDir: 'south', anchorLeft: false },
+  225: { colOff: -1, rowOff: 0,  epColOff: -2, epRowOff: 0,  epDir: 'west',  anchorLeft: true  },
+  315: { colOff: 0,  rowOff: -1, epColOff: 0,  epRowOff: -2, epDir: 'north', anchorLeft: true  }
 };
-
-var OPPOSITE_DIR = { east: 'west', west: 'east', north: 'south', south: 'north' };
 
 function dominoShuffle(arr) {
   var a = arr.slice();
@@ -41,13 +43,12 @@ function generateTiles(matchType) {
 
 function validatePlacement(tile, endpoint, rotation) {
   var geom = ROTATION_GEOMETRY[rotation === undefined ? 0 : rotation];
-  if (OPPOSITE_DIR[geom.blockDir] !== endpoint.direction) return { valid: false };
   var connectValue = geom.anchorLeft ? tile.left : tile.right;
   return { valid: connectValue === endpoint.value };
 }
 
 function playerHasValidPlacement(hand, endpoints) {
-  var rotations = [0, 90, 180, 270];
+  var rotations = [0, 90, 180, 270, 45, 135, 225, 315];
   for (var i = 0; i < hand.length; i++) {
     for (var e = 0; e < endpoints.length; e++) {
       for (var r = 0; r < rotations.length; r++) {
@@ -185,7 +186,7 @@ function getPreviewPlacement(state, tileId, endpointIndex, rotation) {
   if (!tile) return null;
   var endpoint = state.board.endpoints[endpointIndex];
   if (!endpoint) return null;
-  var rot = rotation !== undefined ? rotation : ([0, 90, 180, 270].find(function(r) {
+  var rot = rotation !== undefined ? rotation : ([0, 90, 180, 270, 45, 135, 225, 315].find(function(r) {
     return validatePlacement(tile, endpoint, r).valid;
   }) || 0);
   var geom = ROTATION_GEOMETRY[rot];
