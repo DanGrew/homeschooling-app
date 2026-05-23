@@ -220,26 +220,33 @@ describe('applyStackPick', () => {
 });
 
 describe('handleTap', () => {
-  it('selects object when exactly one at point', () => {
+  // Place obj-0 far from all others to guarantee exactly 1 hit
+  const makeIsolatedState = () => {
     const base = initObjectState(800, 600);
-    const obj = base.objects[0];
-    const next = handleTap(base, obj.x, obj.y);
-    expect(next.objects.find(o => o.id === obj.id).selected).toBe(true);
+    return Object.assign({}, base, {
+      objects: base.objects.map((o, i) =>
+        i === 0 ? Object.assign({}, o, { x: 5000, y: 5000 }) : Object.assign({}, o, { x: 100 + i * 200, y: 100 })
+      )
+    });
+  };
+
+  it('selects object when exactly one at point', () => {
+    const state = makeIsolatedState();
+    const next = handleTap(state, 5000, 5000);
+    expect(next.objects.find(o => o.id === 'obj-0').selected).toBe(true);
   });
 
   it('brings object to front when exactly one at point', () => {
-    const base = initObjectState(800, 600);
-    const obj = base.objects[0];
-    const next = handleTap(base, obj.x, obj.y);
+    const state = makeIsolatedState();
+    const next = handleTap(state, 5000, 5000);
     const maxZ = Math.max(...next.objects.map(o => o.zIndex));
-    expect(next.objects.find(o => o.id === obj.id).zIndex).toBe(maxZ);
+    expect(next.objects.find(o => o.id === 'obj-0').zIndex).toBe(maxZ);
   });
 
   it('sets stackObjects to the object id when one hit', () => {
-    const base = initObjectState(800, 600);
-    const obj = base.objects[0];
-    const next = handleTap(base, obj.x, obj.y);
-    expect(next.stackObjects).toContain(obj.id);
+    const state = makeIsolatedState();
+    const next = handleTap(state, 5000, 5000);
+    expect(next.stackObjects).toContain('obj-0');
   });
 
   it('deselects all when no objects at point', () => {
