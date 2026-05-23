@@ -22,8 +22,6 @@ var shoppingRules = {
     var cardIndex = state.flipped[0];
     var revealedId = state.cards[cardIndex].contentId;
     var currentPlayer = state.players[state.turnIndex];
-    var nextTurnIndex = (state.turnIndex + 1) % state.players.length;
-
     var isOnList = currentPlayer.list.indexOf(revealedId) !== -1;
     var alreadyFound = currentPlayer.found.indexOf(revealedId) !== -1;
 
@@ -37,6 +35,8 @@ var shoppingRules = {
           : p;
       });
       var allComplete = newPlayers.every(function(p) { return p.found.length === p.list.length; });
+
+      var nextTurnIndex = shoppingNextTurn(newPlayers, state.turnIndex);
 
       events.push({ type: 'item_found', data: { contentId: revealedId, playerId: currentPlayer.id, cardIndex: cardIndex } });
       events.push({ type: 'tray_update', data: { playerId: currentPlayer.id, contentId: revealedId } });
@@ -92,8 +92,22 @@ function flipShoppingCard(state, cardIndex) {
   return cardGameFlipCard(state, cardIndex, shoppingRules);
 }
 
+function shoppingNextTurn(players, turnIndex) {
+  var n = players.length;
+  var rotated = players.map(function(_, i) { return (turnIndex + 1 + i) % n; });
+  return rotated.filter(function(i) { return players[i].found.length < players[i].list.length; }).concat([(turnIndex + 1) % n])[0];
+}
+
 function resolveShoppingFlip(state) {
-  return cardGameResolveFlip(state);
+  if (state.phase !== 'resolving') return { state: state, events: [] };
+  var newCards = state.cards.map(function(c, i) {
+    return state.flipped.indexOf(i) !== -1 ? { contentId: c.contentId, state: 'hidden' } : c;
+  });
+  var nextTurnIndex = shoppingNextTurn(state.players, state.turnIndex);
+  return {
+    state: Object.assign({}, state, { cards: newCards, flipped: [], turnIndex: nextTurnIndex, phase: 'waiting' }),
+    events: [{ type: 'turn_start', data: { playerId: state.players[nextTurnIndex].id } }]
+  };
 }
 
 function getShoppingScores(state) {
