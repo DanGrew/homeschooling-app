@@ -85,6 +85,46 @@ test('clicking the same object again hides the toolbox', async ({ page }) => {
   await expect(page.locator('#obj-toolbox')).toBeHidden();
 });
 
+test('dragging a selected object moves it', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const obj = page.locator('[data-testid="object-obj-0"]');
+  await obj.click();
+  const before = await obj.getAttribute('transform');
+  const box = await obj.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2 + 80);
+  await page.mouse.up();
+  const after = await obj.getAttribute('transform');
+  expect(after).not.toBe(before);
+});
+
+test('dragging an unselected object does not move it', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const obj = page.locator('[data-testid="object-obj-0"]');
+  const before = await obj.getAttribute('transform');
+  const box = await obj.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2 + 80);
+  await page.mouse.up();
+  const after = await obj.getAttribute('transform');
+  expect(after).toBe(before);
+});
+
+test('toolbox shows as dragging during object drag', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  await page.locator('[data-testid="object-obj-0"]').click();
+  const obj = page.locator('[data-testid="object-obj-0"]');
+  const box = await obj.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 50, box.y + box.height / 2);
+  const dragging = await page.locator('#obj-toolbox').getAttribute('data-dragging');
+  await page.mouse.up();
+  expect(dragging).not.toBeNull();
+});
+
 test('refreshing produces a different layout', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform1 = await page.locator('[data-testid="object-obj-0"]').getAttribute('transform');

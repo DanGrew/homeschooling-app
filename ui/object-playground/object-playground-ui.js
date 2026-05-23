@@ -59,21 +59,20 @@ function initObjectPlayground() {
   svgEl.addEventListener('pointerdown', function(e) {
     svgEl.setPointerCapture(e.pointerId);
     var tapTarget = e.target.closest('[data-obj]');
-    panGesture = {
-      active: true,
-      tapTarget: tapTarget,
-      onObj: !!tapTarget,
-      moved: false,
-      startX: e.clientX,
-      startY: e.clientY,
-      originX: state.viewport.x,
-      originY: state.viewport.y
-    };
+    var tapIds = [tapTarget].filter(Boolean).map(function(el) { return el.getAttribute('data-obj'); });
+    panGesture = buildGesture(state, tapIds[0], e.clientX, e.clientY, state.viewport.x, state.viewport.y);
+    panGesture.tapTarget = tapTarget;
   });
 
   svgEl.addEventListener('pointermove', function(e) {
     var dx = e.clientX - panGesture.startX;
     var dy = e.clientY - panGesture.startY;
+    getDragMoves(panGesture, dx, dy).forEach(function(move) {
+      panGesture = Object.assign({}, panGesture, { moved: true });
+      state = updateDragPosition(state, move.x, move.y);
+      toolboxEl.setAttribute('data-dragging', '');
+      redraw();
+    });
     getPanMoves(panGesture, dx, dy).forEach(function(move) {
       panGesture = Object.assign({}, panGesture, { moved: true });
       state = applyPan(state, move.x, move.y);
@@ -82,6 +81,7 @@ function initObjectPlayground() {
   });
 
   svgEl.addEventListener('pointerup', function() {
+    toolboxEl.removeAttribute('data-dragging');
     var gesture = panGesture;
     panGesture = { active: false };
     getTapFlag(gesture).forEach(function() {
@@ -93,13 +93,21 @@ function initObjectPlayground() {
   });
 
   svgEl.addEventListener('pointercancel', function() {
+    toolboxEl.removeAttribute('data-dragging');
+    getDragCancelMoves(panGesture).forEach(function(origin) {
+      state = updateDragPosition(state, origin.x, origin.y);
+      redraw();
+    });
     panGesture = { active: false };
   });
 
   toolboxEl.addEventListener('click', function(e) {
     var row = e.target.closest('[data-prop]');
+    var gesture = panGesture;
+    panGesture = { active: false };
+    toolboxEl.removeAttribute('data-dragging');
     [row].filter(Boolean).forEach(function(el) {
-      state = handlePropertyCycle(state, el.getAttribute('data-prop'));
+      state = applyToolboxClick(state, gesture, el.getAttribute('data-prop'));
       redraw();
     });
   });

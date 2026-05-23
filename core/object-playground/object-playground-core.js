@@ -68,6 +68,60 @@ function renderObjectShape(shape, colour) {
 
 var PAN_THRESHOLD = 5;
 
+function buildGesture(state, tapTargetId, clientX, clientY, viewportX, viewportY) {
+  var matching = tapTargetId ? state.objects.filter(function(o) { return o.id === tapTargetId; }) : [];
+  var selObj = matching[0];
+  return {
+    active: true,
+    onObj: !!tapTargetId,
+    isSelected: !!(selObj && selObj.selected),
+    originObjX: selObj ? selObj.x : 0,
+    originObjY: selObj ? selObj.y : 0,
+    moved: false,
+    startX: clientX,
+    startY: clientY,
+    originX: viewportX,
+    originY: viewportY
+  };
+}
+
+function getDragMoves(gesture, dx, dy) {
+  if (!gesture.active) return [];
+  if (!gesture.onObj) return [];
+  if (!gesture.isSelected) return [];
+  if (!gesture.moved && Math.abs(dx) < PAN_THRESHOLD && Math.abs(dy) < PAN_THRESHOLD) return [];
+  return [{ x: gesture.originObjX + dx, y: gesture.originObjY + dy }];
+}
+
+function updateDragPosition(state, x, y) {
+  var selObjs = state.objects.filter(function(o) { return o.selected; });
+  return selObjs.reduce(function(s, sel) {
+    var margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP[sel.size]);
+    var cx = Math.max(margin, Math.min(x, s.world.width - margin));
+    var cy = Math.max(margin, Math.min(y, s.world.height - margin));
+    return Object.assign({}, s, {
+      objects: s.objects.map(function(o) {
+        if (o.selected) { return Object.assign({}, o, { x: cx, y: cy }); }
+        return o;
+      })
+    });
+  }, state);
+}
+
+function getDragCancelMoves(gesture) {
+  if (!gesture.active) return [];
+  if (!gesture.isSelected) return [];
+  if (!gesture.moved) return [];
+  return [{ x: gesture.originObjX, y: gesture.originObjY }];
+}
+
+function applyToolboxClick(state, gesture, prop) {
+  var base = getDragCancelMoves(gesture).reduce(function(s, origin) {
+    return updateDragPosition(s, origin.x, origin.y);
+  }, state);
+  return handlePropertyCycle(base, prop);
+}
+
 function getPanMoves(gesture, dx, dy) {
   if (!gesture.active) return [];
   if (gesture.onObj) return [];
@@ -148,6 +202,7 @@ if (typeof module !== 'undefined') module.exports = {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
   OBJ_COLOUR_FILL, OBJ_COLOUR_STROKE, OBJ_BASE_R,
   objPick, initObjectState, renderObjectShape,
-  PAN_THRESHOLD, getPanMoves, getTapFlag, applyPan,
+  PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
+  getPanMoves, getTapFlag, applyPan,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildToolboxHTML
 };
