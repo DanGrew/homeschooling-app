@@ -157,7 +157,9 @@ function renderCoverageHeader() {
 }
 
 function attachLearning(entry) {
-  return fetch('../../content/learnings/' + entry.id + '.json').then(function(r) { return r.json(); });
+  return fetch('../../content/learnings/' + entry.id + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) { return Object.assign({ type: entry.type }, data); });
 }
 
 function attachPhysical(entry) {
