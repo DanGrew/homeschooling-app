@@ -85,7 +85,7 @@ test('rotation 0 preview tile has horizontal class', async ({ page }) => {
     const endpoints = state.board.endpoints
     for (let t = 0; t < hand.length; t++) {
       for (let e = 0; e < endpoints.length; e++) {
-        if (window.validatePlacement(hand[t], endpoints[e], 0).valid) {
+        if (window.validatePlacement(hand[t], endpoints[e], 0, state.board.tiles).valid) {
           return { tileId: hand[t].id, endpointIndex: e }
         }
       }
