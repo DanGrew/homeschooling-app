@@ -136,6 +136,7 @@ window.addEventListener('page:control', function(e) {
 | Character worksheet | `app/worksheets/character-worksheet/index.html` | core/character-worksheet, ui/character-worksheet |
 | Colouring sheets | `app/worksheets/colouring-sheets/index.html` | core/dictionary, ui/colouring |
 | Physical activities | `app/physical/activities/_shell.html` + variants | core/physical |
+| Object Playground | `app/activities/object-playground/index.html` | core/object-playground, ui/object-playground |
 
 ## Telemetry Pattern
 
@@ -213,6 +214,7 @@ function onReset() {
 | `core/word-lesson/word-lesson-core.js` | Word vocabulary lessons |
 | `core/word-builder/word-builder-core.js` | Word builder: parseWord, buildTileSet, validateLetter, isWordComplete, pickWord |
 | `core/word-match/word-match-core.js` | Word matching game |
+| `core/object-playground/object-playground-core.js` | Object playground: state init, shape rendering, constants |
 
 ### ui/
 | Module | Purpose |
@@ -228,6 +230,7 @@ function onReset() {
 | `ui/colour-wheel/colour-wheel-ui.js` | Colour wheel renderer |
 | `ui/colouring/colouring-common.js` | Shared colouring canvas utilities |
 | `ui/colouring-playground/colouring-playground-ui.js` | Freeform painting UI |
+| `ui/object-playground/object-playground-ui.js` | Object playground: SVG canvas render, init |
 | `ui/logic-gates/puzzle-ui.js` | Logic puzzle board UI |
 | `ui/logic-gates/sandbox-ui.js` | Logic gate builder UI |
 | `ui/match-colour-shape/match-colour-shape-ui.js` | Match game UI |
