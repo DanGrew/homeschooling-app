@@ -24,3 +24,7 @@ export function checkPlacement(piece, cell) {
 export function isComplete(placements, total) {
   return Object.values(placements).filter(p => p.correct).length === total;
 }
+
+export function isLocked(pieceId, placements) {
+  return Object.values(placements).some(p => p.pieceId === pieceId && p.correct);
+}

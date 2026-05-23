@@ -5,7 +5,7 @@ function makeCell(r, c, onCellTap) {
   cell.dataset.row = r;
   cell.dataset.col = c;
   cell.style.cssText = 'border:2px solid #ddd;cursor:pointer;overflow:hidden;box-sizing:border-box;position:relative;';
-  cell.addEventListener('click', () => onCellTap(r, c));
+  cell.addEventListener('click', () => { if (!cell.dataset.locked) onCellTap(r, c); });
   return cell;
 }
 
@@ -42,6 +42,12 @@ export function clearCell(gridEl, row, col) {
   const cell = gridEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
   cell.style.backgroundImage = '';
   cell.classList.remove('feedback-correct', 'feedback-wrong');
+}
+
+export function lockCell(gridEl, row, col) {
+  const cell = gridEl.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  cell.dataset.locked = 'true';
+  cell.style.cursor = 'default';
 }
 
 export function markCell(gridEl, row, col, correct) {

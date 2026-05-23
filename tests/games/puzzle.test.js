@@ -113,10 +113,30 @@ test('tapping placed tile lifts it back to selected slot', async ({ page }) => {
   const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
   const p = pieces.find(p => p.correct.row === 1 && p.correct.col === 1)
   await page.locator(`#tray-${p.id}`).click()
-  await page.locator('[data-row="1"][data-col="1"]').click()
-  await page.locator('[data-row="1"][data-col="1"]').click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
   await slotHasPiece(page)
   await expect(page.locator(`#tray-${p.id}`)).toBeVisible()
+})
+
+test('correctly placed piece cannot be lifted', async ({ page }) => {
+  await page.goto(PLAY_URL)
+  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
+  const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
+  await page.locator(`#tray-${p.id}`).click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await slotEmpty(page)
+})
+
+test('correctly placed piece stays hidden in tray after lift attempt', async ({ page }) => {
+  await page.goto(PLAY_URL)
+  const pieces = await page.evaluate(() => window.__puzzleState.getPieces())
+  const p = pieces.find(p => p.correct.row === 0 && p.correct.col === 0)
+  await page.locator(`#tray-${p.id}`).click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await page.locator('[data-row="0"][data-col="0"]').click()
+  await expect(page.locator(`#tray-${p.id}`)).not.toBeVisible()
 })
 
 test('completing puzzle shows success banner', async ({ page }) => {
