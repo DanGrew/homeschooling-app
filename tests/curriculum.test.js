@@ -88,7 +88,7 @@ test('clicking Lesson header sorts rows ascending', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('01. Count the Clock')
+  await expect(firstLesson).toHaveText('01. AND Gate')
 })
 
 test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
@@ -96,7 +96,7 @@ test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
   await page.locator('.coverage thead th').nth(0).click()
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('XOR Gate')
+  await expect(firstLesson).toHaveText('The Long Way Round')
 })
 
 test('sorted column shows direction indicator', async ({ page }) => {
