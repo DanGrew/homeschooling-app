@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { derivePieces, shufflePieces, checkPlacement, isComplete } from '../../core/puzzle/puzzle-core.js'
+import { derivePieces, shufflePieces, checkPlacement, isComplete, isLocked } from '../../core/puzzle/puzzle-core.js'
 
 describe('derivePieces', () => {
   it('generates correct count for 1x1', () => {
@@ -108,5 +108,23 @@ describe('isComplete', () => {
 
   it('returns true for empty puzzle with total 0', () => {
     expect(isComplete({}, 0)).toBe(true)
+  })
+})
+
+describe('isLocked', () => {
+  it('returns true when piece is correctly placed', () => {
+    expect(isLocked('p_r0_c0', { '0_0': { pieceId: 'p_r0_c0', correct: true } })).toBe(true)
+  })
+
+  it('returns false when piece is incorrectly placed', () => {
+    expect(isLocked('p_r0_c0', { '0_0': { pieceId: 'p_r0_c0', correct: false } })).toBe(false)
+  })
+
+  it('returns false when piece is not in placements', () => {
+    expect(isLocked('p_r0_c0', {})).toBe(false)
+  })
+
+  it('returns false when a different piece is locked', () => {
+    expect(isLocked('p_r1_c1', { '0_0': { pieceId: 'p_r0_c0', correct: true } })).toBe(false)
   })
 })

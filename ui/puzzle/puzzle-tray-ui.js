@@ -22,6 +22,11 @@ export function removeTrayPiece(tray, id) {
   tray.querySelector(`#tray-${id}`)?.style.setProperty('visibility', 'hidden');
 }
 
+export function lockTrayPiece(tray, id) {
+  tray.querySelector(`#tray-${id}`)?.setAttribute('data-locked', 'true');
+}
+
 export function restoreTrayPiece(tray, id) {
-  tray.querySelector(`#tray-${id}`)?.style.setProperty('visibility', 'visible');
+  const el = tray.querySelector(`#tray-${id}`);
+  [() => el?.style.setProperty('visibility', 'visible'), () => {}][+(!!el?.getAttribute('data-locked'))]();
 }
