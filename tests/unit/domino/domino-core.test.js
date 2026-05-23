@@ -251,6 +251,42 @@ test('validatePlacement valid rotation 315 when left matches north endpoint', ()
   expect(validatePlacement(tile, ep, 315).valid).toBe(true)
 })
 
+// ---- validatePlacement collision detection ----
+
+test('validatePlacement skips collision check when boardTiles not provided', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep, 0).valid).toBe(true)
+})
+
+test('validatePlacement returns false when tile overlaps existing tile', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileB = { id: 'red-green', left: 'red', right: 'green', orientation: 'horizontal' }
+  const boardTiles = [{ tile: tileA, col: 0, row: 0, rotation: 0 }]
+  const ep = { value: 'red', col: -1, row: 0, direction: 'west' }
+  expect(validatePlacement(tileB, ep, 0, boardTiles).valid).toBe(false)
+})
+
+test('validatePlacement returns false when tile touches non-connecting tile', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileB = { id: 'blue-green', left: 'blue', right: 'green', orientation: 'horizontal' }
+  const tileC = { id: 'green-yellow', left: 'green', right: 'yellow', orientation: 'horizontal' }
+  const boardTiles = [
+    { tile: tileA, col: 0, row: 0, rotation: 0 },
+    { tile: tileC, col: 3, row: 1, rotation: 0 }
+  ]
+  const ep = { value: 'blue', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tileB, ep, 0, boardTiles).valid).toBe(false)
+})
+
+test('validatePlacement returns true when tile only touches connecting tile', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileB = { id: 'blue-green', left: 'blue', right: 'green', orientation: 'horizontal' }
+  const boardTiles = [{ tile: tileA, col: 0, row: 0, rotation: 0 }]
+  const ep = { value: 'blue', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tileB, ep, 0, boardTiles).valid).toBe(true)
+})
+
 // ---- playerHasValidPlacement ----
 
 test('playerHasValidPlacement returns true when tile left matches east endpoint', () => {

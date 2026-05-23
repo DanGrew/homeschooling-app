@@ -16,6 +16,58 @@ var ROTATION_GEOMETRY = {
   315: { colOff: 0,  rowOff: -1, epColOff: 0,  epRowOff: -2, epDir: 'north', anchorLeft: true  }
 };
 
+var HORIZONTAL_ROT = { 0: true, 45: true, 180: true, 225: true };
+var CONNECT_DELTA = { east: { dc: -1, dr: 0 }, west: { dc: 1, dr: 0 }, south: { dc: 0, dr: -1 }, north: { dc: 0, dr: 1 } };
+var NEIGHBOR_DIRS = [{ dc: 1, dr: 0 }, { dc: -1, dr: 0 }, { dc: 0, dr: 1 }, { dc: 0, dr: -1 }];
+
+function cellKey(col, row) { return col + ',' + row; }
+
+function placedTileCells(pt) {
+  if (HORIZONTAL_ROT[pt.rotation]) return [{ col: pt.col, row: pt.row }, { col: pt.col + 1, row: pt.row }];
+  return [{ col: pt.col, row: pt.row }, { col: pt.col, row: pt.row + 1 }];
+}
+
+function hasCollision(endpoint, rotation, boardTiles) {
+  var geom = ROTATION_GEOMETRY[rotation];
+  var tileCol = endpoint.col + geom.colOff;
+  var tileRow = endpoint.row + geom.rowOff;
+  var newCells = HORIZONTAL_ROT[rotation]
+    ? [{ col: tileCol, row: tileRow }, { col: tileCol + 1, row: tileRow }]
+    : [{ col: tileCol, row: tileRow }, { col: tileCol, row: tileRow + 1 }];
+
+  var cellToTile = {};
+  for (var bi = 0; bi < boardTiles.length; bi++) {
+    var bCells = placedTileCells(boardTiles[bi]);
+    for (var ci = 0; ci < bCells.length; ci++) {
+      cellToTile[cellKey(bCells[ci].col, bCells[ci].row)] = boardTiles[bi];
+    }
+  }
+
+  for (var oi = 0; oi < newCells.length; oi++) {
+    if (cellToTile[cellKey(newCells[oi].col, newCells[oi].row)]) return true;
+  }
+
+  var cd = CONNECT_DELTA[endpoint.direction];
+  var connectingTile = cellToTile[cellKey(endpoint.col + cd.dc, endpoint.row + cd.dr)];
+
+  var newCellKeys = {};
+  for (var nki = 0; nki < newCells.length; nki++) {
+    newCellKeys[cellKey(newCells[nki].col, newCells[nki].row)] = true;
+  }
+
+  for (var ai = 0; ai < newCells.length; ai++) {
+    for (var di = 0; di < NEIGHBOR_DIRS.length; di++) {
+      var nc = newCells[ai].col + NEIGHBOR_DIRS[di].dc;
+      var nr = newCells[ai].row + NEIGHBOR_DIRS[di].dr;
+      var nk = cellKey(nc, nr);
+      if (newCellKeys[nk]) continue;
+      var adjTile = cellToTile[nk];
+      if (adjTile && adjTile !== connectingTile) return true;
+    }
+  }
+  return false;
+}
+
 function dominoShuffle(arr) {
   var a = arr.slice();
   for (var i = a.length - 1; i > 0; i--) {
@@ -41,18 +93,21 @@ function generateTiles(matchType) {
   return tiles;
 }
 
-function validatePlacement(tile, endpoint, rotation) {
-  var geom = ROTATION_GEOMETRY[rotation === undefined ? 0 : rotation];
+function validatePlacement(tile, endpoint, rotation, boardTiles) {
+  var rot = rotation === undefined ? 0 : rotation;
+  var geom = ROTATION_GEOMETRY[rot];
   var connectValue = geom.anchorLeft ? tile.left : tile.right;
-  return { valid: connectValue === endpoint.value };
+  if (connectValue !== endpoint.value) return { valid: false };
+  if (!boardTiles) return { valid: true };
+  return { valid: !hasCollision(endpoint, rot, boardTiles) };
 }
 
-function playerHasValidPlacement(hand, endpoints) {
+function playerHasValidPlacement(hand, endpoints, boardTiles) {
   var rotations = [0, 90, 180, 270, 45, 135, 225, 315];
   for (var i = 0; i < hand.length; i++) {
     for (var e = 0; e < endpoints.length; e++) {
       for (var r = 0; r < rotations.length; r++) {
-        if (validatePlacement(hand[i], endpoints[e], rotations[r]).valid) return true;
+        if (validatePlacement(hand[i], endpoints[e], rotations[r], boardTiles).valid) return true;
       }
     }
   }
@@ -106,7 +161,7 @@ function dealHands(tiles, playerCount) {
 function checkCompletion(state) {
   if (state.drawPile.length > 0) return false;
   return state.players.every(function(p) {
-    return !playerHasValidPlacement(state.hands[p.id], state.board.endpoints);
+    return !playerHasValidPlacement(state.hands[p.id], state.board.endpoints, state.board.tiles);
   });
 }
 
@@ -139,7 +194,7 @@ function placeTile(state, tileId, endpointIndex, rotation) {
   var endpoint = state.board.endpoints[endpointIndex];
   if (!endpoint) return { success: false };
 
-  var result = validatePlacement(tile, endpoint, rot);
+  var result = validatePlacement(tile, endpoint, rot, state.board.tiles);
   if (!result.valid) return { success: false };
 
   var geom = ROTATION_GEOMETRY[rot];
@@ -186,9 +241,19 @@ function getPreviewPlacement(state, tileId, endpointIndex, rotation) {
   if (!tile) return null;
   var endpoint = state.board.endpoints[endpointIndex];
   if (!endpoint) return null;
-  var rot = rotation !== undefined ? rotation : ([0, 90, 180, 270, 45, 135, 225, 315].find(function(r) {
-    return validatePlacement(tile, endpoint, r).valid;
-  }) || 0);
+  var rot;
+  if (rotation !== undefined) {
+    rot = rotation;
+  } else {
+    var ALL_ROTS = [0, 90, 180, 270, 45, 135, 225, 315];
+    for (var ri = 0; ri < ALL_ROTS.length; ri++) {
+      if (validatePlacement(tile, endpoint, ALL_ROTS[ri], state.board.tiles).valid) {
+        rot = ALL_ROTS[ri];
+        break;
+      }
+    }
+    if (rot === undefined) return null;
+  }
   var geom = ROTATION_GEOMETRY[rot];
   return { tile: tile, col: endpoint.col + geom.colOff, row: endpoint.row + geom.rowOff, rotation: rot };
 }
