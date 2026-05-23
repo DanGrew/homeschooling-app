@@ -1,31 +1,58 @@
 {
   "id": "clock-exercise-whats_the_time",
   "title": "What's the Time?",
-  "number": 24,
+  "number": 10,
   "guide": "cat",
   "source": "Clock",
   "mode": "multi-choice",
-  "criteria": ["cl.technical-vocab", "maths.numeral-recognition"],
+  "criteria": [
+    "cl.technical-vocab",
+    "maths.numeral-recognition"
+  ],
   "steps": [
     {
       "text": "Look at both hands. What time does the clock show?",
-      "pageControls": ["LOAD_TIME_03_00", "RENDER_MULTI_CHOICE"],
+      "pageControls": [
+        "LOAD_TIME_03_00",
+        "RENDER_MULTI_CHOICE"
+      ],
       "expect": "MULTI_CHOICE_CORRECT",
-      "answers": ["three o'clock", "half past three", "six o'clock", "half past six"],
+      "answers": [
+        "three o'clock",
+        "half past three",
+        "six o'clock",
+        "half past six"
+      ],
       "correct": "three o'clock"
     },
     {
       "text": "Three o'clock! Big hand at 12, small hand at 3. What time now?",
-      "pageControls": ["LOAD_TIME_07_30", "RENDER_MULTI_CHOICE"],
+      "pageControls": [
+        "LOAD_TIME_07_30",
+        "RENDER_MULTI_CHOICE"
+      ],
       "expect": "MULTI_CHOICE_CORRECT",
-      "answers": ["seven o'clock", "half past six", "half past seven", "eight o'clock"],
+      "answers": [
+        "seven o'clock",
+        "half past six",
+        "half past seven",
+        "eight o'clock"
+      ],
       "correct": "half past seven"
     },
     {
       "text": "Half past seven! Big hand at 6, small hand between 7 and 8. And now?",
-      "pageControls": ["LOAD_TIME_09_00", "RENDER_MULTI_CHOICE"],
+      "pageControls": [
+        "LOAD_TIME_09_00",
+        "RENDER_MULTI_CHOICE"
+      ],
       "expect": "MULTI_CHOICE_CORRECT",
-      "answers": ["half past eight", "nine o'clock", "half past nine", "ten o'clock"],
+      "answers": [
+        "half past eight",
+        "nine o'clock",
+        "half past nine",
+        "ten o'clock"
+      ],
       "correct": "nine o'clock",
       "feedback": "Nine o'clock! Big hand at 12, small hand pointing straight at 9."
     }

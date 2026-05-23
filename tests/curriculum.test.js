@@ -59,15 +59,15 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads lesson rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(39)
+  await expect(rows).toHaveCount(66)
 })
 
 test('rows are sorted by activity then lesson title', async ({ page }) => {
   await page.goto(URL)
   const firstActivity = page.locator('.coverage tbody .col-activity').first()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstActivity).toHaveText('Colour Wheel')
-  await expect(firstLesson).toHaveText('Cool Colours')
+  await expect(firstActivity).toHaveText('Clock')
+  await expect(firstLesson).toHaveText('01. Count the Clock')
 })
 
 test('Make Orange row has Colour mixing in EAD column', async ({ page }) => {
@@ -88,7 +88,7 @@ test('clicking Lesson header sorts rows ascending', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('AND Cascade')
+  await expect(firstLesson).toHaveText('01. Count the Clock')
 })
 
 test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
