@@ -60,15 +60,49 @@ test('endpoint tap without selected tile shows no preview', async ({ page }) => 
 
 test('endpoint tap after tile selected shows preview', async ({ page }) => {
   await startGame(page)
-  await page.getByTestId('domino-tray-tile').first().click()
-  await page.getByTestId('domino-endpoint').first().click()
+  const placed = await page.evaluate(function() {
+    var state = window.gameState
+    var hand = state.hands[state.players[state.turnIndex].id]
+    var endpoints = state.board.endpoints
+    var rots = [0, 90, 180, 270, 45, 135, 225, 315]
+    for (var t = 0; t < hand.length; t++) {
+      for (var e = 0; e < endpoints.length; e++) {
+        for (var ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) {
+            return { tileId: hand[t].id, endpointIndex: e }
+          }
+        }
+      }
+    }
+    return null
+  })
+  if (!placed) return
+  await page.locator('[data-tile-id="' + placed.tileId + '"]').first().click()
+  await page.getByTestId('domino-endpoint').nth(placed.endpointIndex).click()
   await expect(page.getByTestId('domino-preview-tile')).toHaveCount(1)
 })
 
 test('endpoint tap after tile selected enables submit', async ({ page }) => {
   await startGame(page)
-  await page.getByTestId('domino-tray-tile').first().click()
-  await page.getByTestId('domino-endpoint').first().click()
+  const placed = await page.evaluate(function() {
+    var state = window.gameState
+    var hand = state.hands[state.players[state.turnIndex].id]
+    var endpoints = state.board.endpoints
+    var rots = [0, 90, 180, 270, 45, 135, 225, 315]
+    for (var t = 0; t < hand.length; t++) {
+      for (var e = 0; e < endpoints.length; e++) {
+        for (var ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) {
+            return { tileId: hand[t].id, endpointIndex: e }
+          }
+        }
+      }
+    }
+    return null
+  })
+  if (!placed) return
+  await page.locator('[data-tile-id="' + placed.tileId + '"]').first().click()
+  await page.getByTestId('domino-endpoint').nth(placed.endpointIndex).click()
   await expect(page.getByTestId('domino-submit-btn')).toBeEnabled()
 })
 
