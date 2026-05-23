@@ -32,10 +32,13 @@ test('canvas has a layer group with initial translate(0,0)', async ({ page }) =>
 test('dragging from margin area pans the canvas', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const box = await page.locator('#obj-viewport').boundingBox();
-  // margin ~62px so (55,55) is guaranteed object-free; drag up-left 50px → pans right+down
-  await page.mouse.move(box.x + 55, box.y + 55);
+  // 1px from right edge: objects have 62px center margin, x-large shapes extend ~59px → safe zone ≥2.9px
+  // drag left so viewport.x becomes positive (not clamped to 0)
+  const startX = box.x + box.width - 1;
+  const midY = box.y + Math.floor(box.height / 2);
+  await page.mouse.move(startX, midY);
   await page.mouse.down();
-  await page.mouse.move(box.x + 5, box.y + 5);
+  await page.mouse.move(startX - 100, midY);
   await page.mouse.up();
   const transform = await page.locator('[data-layer]').getAttribute('transform');
   expect(transform).not.toBe('translate(0,0)');
@@ -60,7 +63,9 @@ test('toolbox hidden on load', async ({ page }) => {
 
 test('clicking an object shows the toolbox', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
-  await page.locator('[data-testid="object-obj-0"]').click();
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
   await expect(page.locator('#obj-toolbox')).toBeVisible();
   await expect(page.locator('[data-prop="shape"]')).toBeVisible();
   await expect(page.locator('[data-prop="colour"]')).toBeVisible();
@@ -70,10 +75,13 @@ test('clicking an object shows the toolbox', async ({ page }) => {
 
 test('clicking a toolbox row cycles the shape', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
-  await page.locator('[data-testid="object-obj-0"]').click();
-  const before = await page.locator('[data-testid="object-obj-0"]').getAttribute('data-shape');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  const obj = page.locator('[data-testid="object-' + topId + '"]');
+  const before = await obj.getAttribute('data-shape');
   await page.locator('[data-prop="shape"]').click();
-  const after = await page.locator('[data-testid="object-obj-0"]').getAttribute('data-shape');
+  const after = await obj.getAttribute('data-shape');
   expect(after).not.toBe(before);
 });
 
