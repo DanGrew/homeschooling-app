@@ -56,6 +56,18 @@ describe('loadGraphemes', function() {
     expect(urls).toContain(AUDIO_BASE + 'alphasounds-b.mp3');
   });
 
+  it('uses import.meta.url-derived URLs when called with no args', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url.endsWith('graphemes.json')) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      if (url.endsWith('manifest.json')) return Promise.resolve({ json: () => Promise.resolve(MANIFEST) });
+      return Promise.resolve({ arrayBuffer: () => Promise.resolve(makeFakeBuffer()) });
+    });
+    await loadGraphemes();
+    var urls = global.fetch.mock.calls.map(function(c) { return c[0]; });
+    expect(urls.some(function(u) { return u.endsWith('graphemes.json'); })).toBe(true);
+    expect(urls.some(function(u) { return u.endsWith('manifest.json'); })).toBe(true);
+  });
+
   it('deduplicates clip fetches when multiple sounds share a clip', async function() {
     var sharedManifest = { 'alpha-a': 'alphasounds-a.mp3', 'alpha-a2': 'alphasounds-a.mp3' };
     global.fetch = vi.fn().mockImplementation(function(url) {
@@ -160,6 +172,24 @@ describe('loadRegistry', function() {
     global.fetch = vi.fn().mockResolvedValue({ json: () => Promise.resolve(REGISTRY) });
     await loadRegistry(REGISTRY_URL, '../../../');
     expect(getAssetPath('lower-z')).toBeNull();
+  });
+
+  it('uses import.meta.url-derived registry URL when called with no args', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url.endsWith('graphemes.json')) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      return Promise.reject(new Error('unexpected: ' + url));
+    });
+    await loadRegistry();
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch.mock.calls[0][0]).toMatch(/graphemes\.json$/);
+  });
+
+  it('getAssetPath prepends import.meta.url-derived base when called with no args', async function() {
+    global.fetch = vi.fn().mockResolvedValue({ json: () => Promise.resolve(REGISTRY) });
+    await loadRegistry();
+    var result = getAssetPath('lower-a');
+    expect(result).not.toBeNull();
+    expect(result).toMatch(/assets\/language-characters\/lower-a\.svg$/);
   });
 });
 
