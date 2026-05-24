@@ -23,10 +23,11 @@ test('objects have data-shape attribute', async ({ page }) => {
   expect(shapes.size).toBeGreaterThan(1);
 });
 
-test('canvas has a layer group with initial translate(0,0)', async ({ page }) => {
+test('canvas layer starts with viewport-centred offset', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform = await page.locator('[data-layer]').getAttribute('transform');
-  expect(transform).toBe('translate(0,0)');
+  expect(transform).not.toBe('translate(0,0)');
+  expect(transform).toMatch(/^translate\(-\d+,-\d+\)$/);
 });
 
 test('dragging from margin area pans the canvas', async ({ page }) => {
@@ -46,6 +47,7 @@ test('dragging from margin area pans the canvas', async ({ page }) => {
 
 test('dragging starting on an object does not pan', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const initialTransform = await page.locator('[data-layer]').getAttribute('transform');
   const obj = page.locator('[data-testid="object-obj-0"]');
   const objBox = await obj.boundingBox();
   await page.mouse.move(objBox.x + objBox.width / 2, objBox.y + objBox.height / 2);
@@ -53,7 +55,7 @@ test('dragging starting on an object does not pan', async ({ page }) => {
   await page.mouse.move(objBox.x + objBox.width / 2 - 60, objBox.y + objBox.height / 2 - 60);
   await page.mouse.up();
   const transform = await page.locator('[data-layer]').getAttribute('transform');
-  expect(transform).toBe('translate(0,0)');
+  expect(transform).toBe(initialTransform);
 });
 
 test('toolbox hidden on load', async ({ page }) => {
