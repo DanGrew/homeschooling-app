@@ -11,29 +11,64 @@
 <script src="../../../components/speech/speakable.js" defer></script>
 <script src="../../../components/speech/speech-ui.js" defer></script>
 <script src="../../../core/frogger/frogger-core.js"></script>
+<script src="../../../core/frogger/frogger-loader.js"></script>
 <script src="../../../ui/frogger/frogger-renderer.js"></script>
 <script type="module">
-import { makeSpeakable } from '../../../components/speech/speakable.js';
+import { makeSpeakable, makeSpeakableButton } from '../../../components/speech/speakable.js';
 window.__makeSpeakable = makeSpeakable;
-var SPEAKABLE_BTNS = [
+
+var CONTROL_BTNS = [
   { id: 'btn-up', label: 'up' }, { id: 'btn-down', label: 'down' },
   { id: 'btn-left', label: 'left' }, { id: 'btn-right', label: 'right' },
   { id: 'frogger-reset-btn', label: 'Try Again' }
 ];
-SPEAKABLE_BTNS.forEach(function(d) {
+CONTROL_BTNS.forEach(function(d) {
   [document.querySelector('[data-testid="' + d.id + '"]')].filter(Boolean)
     .forEach(function(b) { makeSpeakable(b, d.label); });
 });
 [document.querySelector('[data-testid="frogger-reset-msg"]')].filter(Boolean)
   .forEach(function(el) { makeSpeakable(el, 'Oops! Try a different way!'); });
+
+function showGame() {
+  document.getElementById('frogger-picker').style.display = 'none';
+  document.getElementById('frogger-container').style.removeProperty('display');
+  document.getElementById('frogger-controls').style.removeProperty('display');
+}
+
+function loadScenario(file) {
+  fetch('../../../content/frogger/scenarios/' + file)
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      var scenario = parseScenario(json);
+      showGame();
+      window.startGame(scenario);
+    });
+}
+
+var list = document.getElementById('frogger-scenario-list');
+fetch('../../../content/frogger/scenarios/index.json')
+  .then(function(r) { return r.json(); })
+  .then(function(index) {
+    index.forEach(function(entry) {
+      var btn = makeSpeakableButton(entry.title);
+      btn.setAttribute('data-testid', 'scenario-btn');
+      btn.setAttribute('data-scenario-file', entry.file);
+      btn.style.cssText = 'font-size:1.2rem;padding:16px 32px;border-radius:12px;border:none;background:#4488cc;color:#fff;cursor:pointer;font-weight:bold;min-width:200px;';
+      list.appendChild(btn);
+      btn.addEventListener('click', function() { loadScenario(entry.file); });
+    });
+  });
 </script>
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="Crossing Playground" data-no-links="standalone game" data-no-instruction="tap arrows to move"></div>
 
 <div class="game-area" style="flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:8px;">
-  <div id="frogger-container" data-testid="frogger-container" style="width:100%;max-width:600px;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;"></div>
-  <div id="frogger-controls" data-testid="frogger-controls" style="display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px;">
+  <div id="frogger-picker" data-testid="frogger-picker" style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;">
+    <div id="frogger-scenario-list" data-testid="frogger-scenario-list" style="display:flex;flex-direction:column;align-items:center;gap:12px;"></div>
+  </div>
+  <div id="frogger-container" data-testid="frogger-container" style="display:none;width:100%;max-width:600px;flex:1;min-height:0;align-items:center;justify-content:center;"></div>
+  <div id="frogger-controls" data-testid="frogger-controls" style="display:none;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px;">
     <div></div>
     <button data-testid="btn-up"    style="font-size:1.6rem;border-radius:10px;border:none;background:#e0e0e0;cursor:pointer;" aria-label="Up">▲</button>
     <div></div>
@@ -44,31 +79,6 @@ SPEAKABLE_BTNS.forEach(function(d) {
 </div>
 
 <script>
-var DEV_SCENARIO = {
-  id: 'dev',
-  title: 'Cross the Road',
-  grid: { rows: 8, cols: 10 },
-  resetPoints: [
-    { id: 'start', position: { x: 5, y: 7 } },
-    { id: 'mid',   position: { x: 5, y: 4 } }
-  ],
-  rows: [
-    { id: 'top',    y: 0, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
-    { id: 'river1', y: 1, baseTile: 'hazard', wrap: true,  movement: { direction: 'right', speed: 1.5 },
-      spawns: [{ entity: { type: 'platform', width: 3 }, every: 5 }] },
-    { id: 'river2', y: 2, baseTile: 'hazard', wrap: true,  movement: { direction: 'left',  speed: 1.0 },
-      spawns: [{ entity: { type: 'platform', width: 2 }, every: 4 }] },
-    { id: 'median', y: 3, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
-    { id: 'road1',  y: 4, baseTile: 'ground', wrap: true,  movement: { direction: 'right', speed: 2.0 },
-      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 6 }] },
-    { id: 'road2',  y: 5, baseTile: 'ground', wrap: true,  movement: { direction: 'left',  speed: 1.5 },
-      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 5 }] },
-    { id: 'verge',  y: 6, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
-    { id: 'start',  y: 7, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } }
-  ],
-  entities: {}
-};
-
 var DEV_THEME = {
   id: 'dev',
   assets: {},
@@ -83,27 +93,29 @@ var DEV_THEME = {
 var state, rState, animId;
 var lastTime = 0;
 var pendingReset = false;
+var activeScenario = null;
 var NOOP = function() {};
 var KEY_MAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
 
 function onResetClick() {
   hideResetPrompt(rState);
-  resetPlayer(state, DEV_SCENARIO, 'start');
+  resetPlayer(state, activeScenario, 'start');
   resumeSimulation(state);
   pendingReset = false;
 }
 
-function startGame() {
-  state = createSimulation(DEV_SCENARIO);
-  addPlayer(state, createPlayer(5, 7));
+window.startGame = function(scenario) {
+  activeScenario = scenario;
+  state = createSimulation(scenario);
+  addPlayer(state, createPlayer(scenario.resetPoints[0].position.x, scenario.resetPoints[0].position.y));
   var container = document.getElementById('frogger-container');
   container.innerHTML = '';
-  rState = initFroggerRenderer(container, DEV_SCENARIO, DEV_THEME);
+  rState = initFroggerRenderer(container, scenario, DEV_THEME);
   rState.resetBtn.addEventListener('click', onResetClick);
   lastTime = 0;
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
-}
+};
 
 function showResetOverlay() { showResetPrompt(rState); }
 
@@ -115,10 +127,10 @@ function onCollision(collision) {
 }
 
 function stepActive(dt) {
-  stepPlayer(state, DEV_SCENARIO, dt);
-  stepSimulation(state, DEV_SCENARIO, dt);
-  applyCarrying(state, DEV_SCENARIO, dt);
-  [detectCollisions(state, DEV_SCENARIO)].filter(Boolean).forEach(onCollision);
+  stepPlayer(state, activeScenario, dt);
+  stepSimulation(state, activeScenario, dt);
+  applyCarrying(state, activeScenario, dt);
+  [detectCollisions(state, activeScenario)].filter(Boolean).forEach(onCollision);
 }
 
 var LOOP_STEP = { 'true': NOOP, 'false': stepActive };
@@ -128,7 +140,7 @@ function loop(timestamp) {
   var dt = Math.min((timestamp - lastTime) / 1000, 0.05);
   LOOP_STEP[String(pendingReset)](dt);
   lastTime = timestamp;
-  renderFrogger(rState, state, DEV_SCENARIO, HOP_DURATION);
+  renderFrogger(rState, state, activeScenario, HOP_DURATION);
   animId = requestAnimationFrame(loop);
 }
 
@@ -144,7 +156,7 @@ function bindControls() {
     var btn = document.querySelector('[data-testid="' + id + '"]');
     btn.addEventListener('pointerdown', function(e) {
       e.preventDefault();
-      queueInput(state, dir);
+      [activeScenario].filter(Boolean).forEach(function() { queueInput(state, dir); });
     });
   });
   document.addEventListener('keydown', function(e) {
@@ -153,7 +165,6 @@ function bindControls() {
 }
 
 bindControls();
-startGame();
 </script>
 </body>
 </html>

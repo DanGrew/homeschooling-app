@@ -136,6 +136,7 @@ window.addEventListener('page:control', function(e) {
 | Colouring sheets | `app/worksheets/colouring-sheets/index.html` | core/dictionary, ui/colouring |
 | Physical activities | `app/physical/activities/_shell.html` + variants | core/physical |
 | Object Playground | `app/activities/object-playground/index.html` | core/object-playground, ui/object-playground |
+| Crossing Playground (Frogger) | `app/activities/frogger/index.html` | core/frogger, ui/frogger, content/frogger/scenarios |
 
 ## Telemetry Pattern
 
@@ -214,6 +215,8 @@ function onReset() {
 | `core/word-builder/word-builder-core.js` | Word builder: parseWord, buildTileSet, validateLetter, isWordComplete, pickWord |
 | `core/word-match/word-match-core.js` | Word matching game |
 | `core/object-playground/object-playground-core.js` | Object playground: state init, shape rendering, constants |
+| `core/frogger/frogger-core.js` | Frogger simulation: grid, lanes, entities, spawning, player, collision |
+| `core/frogger/frogger-loader.js` | Frogger scenario JSON parser + field validator |
 
 ### ui/
 | Module | Purpose |
@@ -230,6 +233,7 @@ function onReset() {
 | `ui/colouring/colouring-common.js` | Shared colouring canvas utilities |
 | `ui/colouring-playground/colouring-playground-ui.js` | Freeform painting UI |
 | `ui/object-playground/object-playground-ui.js` | Object playground: SVG canvas render, init |
+| `ui/frogger/frogger-renderer.js` | Frogger DOM renderer: grid, entities, player hop animation, collision highlight |
 | `ui/logic-gates/puzzle-ui.js` | Logic puzzle board UI |
 | `ui/logic-gates/sandbox-ui.js` | Logic gate builder UI |
 | `ui/match-colour-shape/match-colour-shape-ui.js` | Match game UI |
