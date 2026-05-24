@@ -1,5 +1,10 @@
 import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive, graphemeIdForChar as coreGraphemeIdForChar } from '../../core/phonics/phonics-core.js';
 
+var _DEFAULT_REGISTRY   = new URL('../../content/phonics/graphemes.json', import.meta.url).href;
+var _DEFAULT_MANIFEST   = new URL('../../content/phonics/manifest.json',   import.meta.url).href;
+var _DEFAULT_AUDIO_BASE = new URL('../../assets/audio/phonics/',            import.meta.url).href;
+var _DEFAULT_ASSET_BASE = new URL('../../',                                 import.meta.url).href;
+
 function _createCtx() {
   var Cls = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
   return new Cls();
@@ -25,17 +30,22 @@ export function initAudio() {
 }
 
 export function loadRegistry(registryPath, assetBasePath) {
-  return fetch(registryPath).then(function(r) { return r.json(); }).then(function(data) {
+  var rPath = registryPath !== undefined ? registryPath : _DEFAULT_REGISTRY;
+  var base  = assetBasePath !== undefined ? assetBasePath : _DEFAULT_ASSET_BASE;
+  return fetch(rPath).then(function(r) { return r.json(); }).then(function(data) {
     _graphemes = data;
     _soundIndex = buildSoundIndex(_graphemes);
-    _assetBase = assetBasePath !== undefined ? assetBasePath : '';
+    _assetBase = base;
   });
 }
 
 export function loadGraphemes(registryPath, manifestPath, audioBasePath) {
+  var rPath = registryPath !== undefined ? registryPath : _DEFAULT_REGISTRY;
+  var mPath = manifestPath !== undefined ? manifestPath : _DEFAULT_MANIFEST;
+  var aBase = audioBasePath !== undefined ? audioBasePath : _DEFAULT_AUDIO_BASE;
   return Promise.all([
-    fetch(registryPath).then(function(r) { return r.json(); }),
-    fetch(manifestPath).then(function(r) { return r.json(); })
+    fetch(rPath).then(function(r) { return r.json(); }),
+    fetch(mPath).then(function(r) { return r.json(); })
   ]).then(function(results) {
     _graphemes = results[0];
     _manifest = results[1];
@@ -47,7 +57,7 @@ export function loadGraphemes(registryPath, manifestPath, audioBasePath) {
       if (!seen[filename]) {
         seen[filename] = true;
         fetches.push(
-          fetch(audioBasePath + filename)
+          fetch(aBase + filename)
             .then(function(r) { return r.arrayBuffer(); })
             .then(function(buf) { _rawBuffers[filename] = buf; })
             .catch(function() {})

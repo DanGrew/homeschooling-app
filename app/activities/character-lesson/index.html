@@ -61,7 +61,7 @@ import { loadRegistry } from '../../../components/phonics/phonics-service.js';
 window.LEARNINGS_BASE = '../../../content/learnings/';
 window.addEventListener('load', function() {
   window.guidanceService = new GuidanceService();
-  loadRegistry('../../../content/phonics/graphemes.json', '../../../').then(function() { init(); });
+  loadRegistry().then(function() { init(); });
 });
 </script>
 <script>window.ACTIVITY_ID='character-lesson';</script>

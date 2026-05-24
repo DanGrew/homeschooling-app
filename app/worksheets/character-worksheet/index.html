@@ -86,7 +86,7 @@ input[type=text]:focus{outline:none;border-color:#3498DB;}
 <script type="module">
 import { init } from '../../../ui/character-worksheet/character-worksheet-ui.js';
 import { loadRegistry } from '../../../components/phonics/phonics-service.js';
-loadRegistry('../../../content/phonics/graphemes.json', '../../../').then(function() { init(); });
+loadRegistry().then(function() { init(); });
 </script>
 </body>
 </html>
