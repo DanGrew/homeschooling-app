@@ -1,0 +1,24 @@
+{
+  "id": "dev",
+  "title": "Cross the Road",
+  "grid": { "rows": 8, "cols": 10 },
+  "resetPoints": [
+    { "id": "start", "position": { "x": 5, "y": 7 } },
+    { "id": "mid",   "position": { "x": 5, "y": 4 } }
+  ],
+  "rows": [
+    { "id": "top",    "y": 0, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } },
+    { "id": "river1", "y": 1, "baseTile": "hazard", "wrap": true,  "movement": { "direction": "right", "speed": 1.5 },
+      "spawns": [{ "entity": { "type": "platform", "width": 3 }, "every": 5 }] },
+    { "id": "river2", "y": 2, "baseTile": "hazard", "wrap": true,  "movement": { "direction": "left",  "speed": 1.0 },
+      "spawns": [{ "entity": { "type": "platform", "width": 2 }, "every": 4 }] },
+    { "id": "median", "y": 3, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } },
+    { "id": "road1",  "y": 4, "baseTile": "ground", "wrap": true,  "movement": { "direction": "right", "speed": 2.0 },
+      "spawns": [{ "entity": { "type": "obstacle", "width": 1 }, "every": 6 }] },
+    { "id": "road2",  "y": 5, "baseTile": "ground", "wrap": true,  "movement": { "direction": "left",  "speed": 1.5 },
+      "spawns": [{ "entity": { "type": "obstacle", "width": 1 }, "every": 5 }] },
+    { "id": "verge",  "y": 6, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } },
+    { "id": "start",  "y": 7, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } }
+  ],
+  "entities": {}
+}
