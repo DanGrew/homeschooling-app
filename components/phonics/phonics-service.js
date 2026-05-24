@@ -1,4 +1,5 @@
 import { createAudioCtx, decodeAudioBuffer } from '../../ui/shared/audio-ctx.js';
+import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive } from '../../core/phonics/phonics-core.js';
 
 var _ctx = null;
 var _graphemes = {};
@@ -22,15 +23,7 @@ export function loadGraphemes(registryPath, manifestPath, audioBasePath) {
   ]).then(function(results) {
     _graphemes = results[0];
     _manifest = results[1];
-    _soundIndex = {};
-    Object.keys(_graphemes).forEach(function(gId) {
-      var g = _graphemes[gId];
-      (g.sounds || []).forEach(function(s) {
-        if (!_soundIndex[s.id]) {
-          _soundIndex[s.id] = { clipId: s.clip, characters: g.characters };
-        }
-      });
-    });
+    _soundIndex = buildSoundIndex(_graphemes);
     var seen = {};
     var fetches = [];
     Object.keys(_manifest).forEach(function(clipId) {
@@ -69,8 +62,8 @@ function _playBuffer(filename) {
 }
 
 function _tts(text) {
-  if (typeof speechSynthesis === 'undefined') return;
-  speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+  if (typeof window === 'undefined' || !window.speechSynthesis) return;
+  window.speechSynthesis.speak(new window.SpeechSynthesisUtterance(text));
 }
 
 export function playSound(soundId) {
@@ -89,17 +82,13 @@ export function playSequence(soundIds, gapMs) {
   });
 }
 
-export function getAssetPath(graphemeId) {
-  var g = _graphemes[graphemeId];
-  return g ? g.asset : null;
-}
+export var getAssetPath = function(graphemeId) {
+  return coreGetAssetPath(_graphemes, graphemeId);
+};
 
-export function deriveLetterSounds(word) {
-  return word.toLowerCase().split('').map(function(c) {
-    var g = _graphemes['lower-' + c];
-    return g ? g.defaultSound : null;
-  });
-}
+export var deriveLetterSounds = function(word) {
+  return coreDerive(_graphemes, word);
+};
 
 export function _reset() {
   _ctx = null;
