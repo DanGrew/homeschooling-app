@@ -1,0 +1,46 @@
+{
+  "id": "say-words-lesson-vehicles",
+  "title": "Things That Go",
+  "number": 5,
+  "guide": "dog",
+  "filter": "vehicles",
+  "source": "Say Words",
+  "criteria": [
+    "cl.topic-vocabulary",
+    "uw.community",
+    "cl.listening",
+    "maths.counting-5",
+    "cl.descriptive-vocab",
+    "cl.sequencing-language",
+    "cl.prediction",
+    "literacy.word-recognition",
+    "literacy.rhyme-awareness"
+  ],
+  "steps": [
+    {
+      "text": "First — I'm very long and I stop at bus stops. I carry lots of people to school and work at the same time.",
+      "expect": "BUS_SPOKEN",
+      "feedback": "Bus! Buses are great because one bus can carry 50 people at once."
+    },
+    {
+      "text": "I run on tracks, not roads. My name rhymes with 'rain'. Find me!",
+      "expect": "TRAIN_SPOKEN",
+      "feedback": "Train! Train rhymes with rain — same ending sound. Trains travel much further than buses."
+    },
+    {
+      "text": "This one goes incredibly fast — zoom! The driver wears a helmet and races to win. What do you think it is? Find it!",
+      "expect": "RACE_CAR_SPOKEN",
+      "feedback": "Race car! The fastest vehicle here."
+    },
+    {
+      "text": "This one digs big holes in the ground — for building roads, houses, and tunnels. Builders need it every day.",
+      "expect": "DIGGER_SPOKEN",
+      "feedback": "Digger! Diggers can move more earth in one scoop than 10 people with spades."
+    },
+    {
+      "text": "Last three — find the one that spins concrete round and round so it doesn't go hard, the big one that carries heavy loads on the road, and the farm one that pulls the plough!",
+      "expect": ["CEMENT_MIXER_SPOKEN", "TRUCK_SPOKEN", "TRACTOR_SPOKEN"],
+      "feedback": "Cement mixer, truck, and tractor — all seven vehicles!"
+    }
+  ]
+}
