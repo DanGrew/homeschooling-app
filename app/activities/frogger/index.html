@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Crossing Playground</title>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<script src="../../../components/menu.js" defer></script>
+<script src="../../../components/speech/speakable.js" defer></script>
+<script src="../../../components/speech/speech-ui.js" defer></script>
+<script src="../../../core/frogger/frogger-core.js"></script>
+<script src="../../../ui/frogger/frogger-renderer.js"></script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+window.__makeSpeakable = makeSpeakable;
+var SPEAKABLE_BTNS = [
+  { id: 'btn-up', label: 'up' }, { id: 'btn-down', label: 'down' },
+  { id: 'btn-left', label: 'left' }, { id: 'btn-right', label: 'right' },
+  { id: 'frogger-reset-btn', label: 'Try Again' }
+];
+SPEAKABLE_BTNS.forEach(function(d) {
+  [document.querySelector('[data-testid="' + d.id + '"]')].filter(Boolean)
+    .forEach(function(b) { makeSpeakable(b, d.label); });
+});
+[document.querySelector('[data-testid="frogger-reset-msg"]')].filter(Boolean)
+  .forEach(function(el) { makeSpeakable(el, 'Oops! Try a different way!'); });
+</script>
+</head>
+<body>
+<div class="nav-bar" data-home="../../lessons/" data-title="Crossing Playground" data-no-links="standalone game" data-no-instruction="tap arrows to move"></div>
+
+<div class="game-area" style="flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:8px;">
+  <div id="frogger-container" data-testid="frogger-container" style="width:100%;max-width:600px;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;"></div>
+  <div id="frogger-controls" data-testid="frogger-controls" style="display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:6px;">
+    <div></div>
+    <button data-testid="btn-up"    style="font-size:1.6rem;border-radius:10px;border:none;background:#e0e0e0;cursor:pointer;" aria-label="Up">▲</button>
+    <div></div>
+    <button data-testid="btn-left"  style="font-size:1.6rem;border-radius:10px;border:none;background:#e0e0e0;cursor:pointer;" aria-label="Left">◀</button>
+    <button data-testid="btn-down"  style="font-size:1.6rem;border-radius:10px;border:none;background:#e0e0e0;cursor:pointer;" aria-label="Down">▼</button>
+    <button data-testid="btn-right" style="font-size:1.6rem;border-radius:10px;border:none;background:#e0e0e0;cursor:pointer;" aria-label="Right">▶</button>
+  </div>
+</div>
+
+<script>
+var DEV_SCENARIO = {
+  id: 'dev',
+  title: 'Cross the Road',
+  grid: { rows: 8, cols: 10 },
+  resetPoints: [
+    { id: 'start', position: { x: 5, y: 7 } },
+    { id: 'mid',   position: { x: 5, y: 4 } }
+  ],
+  rows: [
+    { id: 'top',    y: 0, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
+    { id: 'river1', y: 1, baseTile: 'hazard', wrap: true,  movement: { direction: 'right', speed: 1.5 },
+      spawns: [{ entity: { type: 'platform', width: 3 }, every: 5 }] },
+    { id: 'river2', y: 2, baseTile: 'hazard', wrap: true,  movement: { direction: 'left',  speed: 1.0 },
+      spawns: [{ entity: { type: 'platform', width: 2 }, every: 4 }] },
+    { id: 'median', y: 3, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
+    { id: 'road1',  y: 4, baseTile: 'ground', wrap: true,  movement: { direction: 'right', speed: 2.0 },
+      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 6 }] },
+    { id: 'road2',  y: 5, baseTile: 'ground', wrap: true,  movement: { direction: 'left',  speed: 1.5 },
+      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 5 }] },
+    { id: 'verge',  y: 6, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
+    { id: 'start',  y: 7, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } }
+  ],
+  entities: {}
+};
+
+var DEV_THEME = {
+  id: 'dev',
+  assets: {},
+  tiles: {
+    ground:  { fill: '#7ec850' },
+    hazard:  { fill: '#4488cc' },
+    wall:    { fill: '#888888' }
+  },
+  map: { player: '', platform: '', obstacle: '', collectible: '' }
+};
+
+var state, rState, animId;
+var lastTime = 0;
+var pendingReset = false;
+var NOOP = function() {};
+var KEY_MAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+
+function onResetClick() {
+  hideResetPrompt(rState);
+  resetPlayer(state, DEV_SCENARIO, 'start');
+  resumeSimulation(state);
+  pendingReset = false;
+}
+
+function startGame() {
+  state = createSimulation(DEV_SCENARIO);
+  addPlayer(state, createPlayer(5, 7));
+  var container = document.getElementById('frogger-container');
+  container.innerHTML = '';
+  rState = initFroggerRenderer(container, DEV_SCENARIO, DEV_THEME);
+  rState.resetBtn.addEventListener('click', onResetClick);
+  lastTime = 0;
+  cancelAnimationFrame(animId);
+  animId = requestAnimationFrame(loop);
+}
+
+function showResetOverlay() { showResetPrompt(rState); }
+
+function onCollision(collision) {
+  pauseSimulation(state);
+  pendingReset = true;
+  showCollisionHighlight(rState, collision);
+  setTimeout(showResetOverlay, 400);
+}
+
+function stepActive(dt) {
+  stepPlayer(state, DEV_SCENARIO, dt);
+  stepSimulation(state, DEV_SCENARIO, dt);
+  applyCarrying(state, DEV_SCENARIO, dt);
+  [detectCollisions(state, DEV_SCENARIO)].filter(Boolean).forEach(onCollision);
+}
+
+var LOOP_STEP = { 'true': NOOP, 'false': stepActive };
+
+function loop(timestamp) {
+  lastTime = [lastTime, timestamp].filter(Boolean)[0];
+  var dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+  LOOP_STEP[String(pendingReset)](dt);
+  lastTime = timestamp;
+  renderFrogger(rState, state, DEV_SCENARIO, HOP_DURATION);
+  animId = requestAnimationFrame(loop);
+}
+
+function onKeyDown(e) {
+  e.preventDefault();
+  queueInput(state, KEY_MAP[e.key]);
+}
+
+function bindControls() {
+  var dirs = { 'btn-up': 'up', 'btn-down': 'down', 'btn-left': 'left', 'btn-right': 'right' };
+  Object.keys(dirs).forEach(function(id) {
+    var dir = dirs[id];
+    var btn = document.querySelector('[data-testid="' + id + '"]');
+    btn.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      queueInput(state, dir);
+    });
+  });
+  document.addEventListener('keydown', function(e) {
+    [KEY_MAP[e.key]].filter(Boolean).forEach(function() { onKeyDown(e); });
+  });
+}
+
+bindControls();
+startGame();
+</script>
+</body>
+</html>
