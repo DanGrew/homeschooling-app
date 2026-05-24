@@ -4,8 +4,10 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
+import { getAssetPathForChar } from '../../components/phonics/phonics-service.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
+var CHAR_URL = { 'true': function(p) { return p; }, 'false': function(_, c) { return CHAR_BASE + charFile(c); } };
 const DICT_BASE = (typeof window !== 'undefined' && window.DICT_BASE)
   ? window.DICT_BASE.replace(/entries\/$/, '')
   : '../../dictionary/';
@@ -133,7 +135,8 @@ function onFilterClick(tag) {
 }
 
 function fetchCharData(c) {
-  return fetch(CHAR_BASE + charFile(c))
+  var p = getAssetPathForChar(c);
+  return fetch(CHAR_URL[String(p != null)](p, c))
     .then(r => r.text())
     .then(svgText => {
       const doc = new DOMParser().parseFromString(svgText, 'image/svg+xml');
