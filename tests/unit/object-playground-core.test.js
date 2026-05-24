@@ -2,11 +2,12 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
-  OBJ_BASE_R, objPick, initObjectState,
+  OBJ_BASE_R, OBJ_MAX_COUNT, OBJ_SPAWN_RADIUS, objPick, initObjectState,
   PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
   getPanMoves, getTapFlag, applyPan,
   objectsAtPoint, bringToFront, applyStackPick,
-  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML
+  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
+  canAddObject, addObject, removeObject, restoreDeleted
 } = require('../../core/object-playground/object-playground-core.js');
 
 describe('constants', () => {
@@ -596,5 +597,136 @@ describe('buildToolboxHTML', () => {
     expect(html).toContain('red');
     expect(html).toContain('medium');
     expect(html).toContain('90');
+  });
+
+  it('includes delete row with data-action="delete"', () => {
+    expect(html).toContain('data-action="delete"');
+  });
+});
+
+describe('canAddObject', () => {
+  it('returns true when count below max and spawn clear', () => {
+    const state = initObjectState(800, 600);
+    expect(canAddObject(state, 0, 0)).toBe(true);
+  });
+
+  it('returns false when count at max', () => {
+    let state = initObjectState(800, 600);
+    const toAdd = OBJ_MAX_COUNT - state.objects.length;
+    for (let i = 0; i < toAdd; i++) {
+      state = addObject(state, i * 1000, i * 1000);
+    }
+    expect(state.objects.length).toBe(OBJ_MAX_COUNT);
+    expect(canAddObject(state, 9999, 9999)).toBe(false);
+  });
+
+  it('returns false when 2 or more objects within spawn radius', () => {
+    const state = initObjectState(800, 600);
+    const s1 = addObject(state, 0, 0);
+    const s2 = addObject(s1, 0, 0);
+    expect(canAddObject(s2, 0, 0)).toBe(false);
+  });
+
+  it('returns true when only 1 object within spawn radius', () => {
+    const state = initObjectState(800, 600);
+    const s1 = addObject(state, 0, 0);
+    expect(canAddObject(s1, 0, 0)).toBe(true);
+  });
+});
+
+describe('addObject', () => {
+  const state = initObjectState(800, 600);
+  const next = addObject(state, 400, 300);
+
+  it('increases object count by 1', () => {
+    expect(next.objects.length).toBe(state.objects.length + 1);
+  });
+
+  it('new object has given x/y', () => {
+    const added = next.objects[next.objects.length - 1];
+    expect(added.x).toBe(400);
+    expect(added.y).toBe(300);
+  });
+
+  it('new object has spawn-range size (small/medium/large)', () => {
+    const added = next.objects[next.objects.length - 1];
+    expect(OBJ_SIZES.slice(0, 3)).toContain(added.size);
+  });
+
+  it('new object has highest zIndex', () => {
+    const added = next.objects[next.objects.length - 1];
+    const maxZ = Math.max(...state.objects.map(o => o.zIndex));
+    expect(added.zIndex).toBe(maxZ + 1);
+  });
+
+  it('increments nextId', () => {
+    expect(next.nextId).toBe(state.nextId + 1);
+  });
+
+  it('does not mutate original state', () => {
+    expect(state.objects.length).toBe(10);
+  });
+});
+
+describe('removeObject', () => {
+  const state = selectObject(initObjectState(800, 600), 'obj-3');
+  const next = removeObject(state, 'obj-3');
+
+  it('removes the object from state', () => {
+    expect(next.objects.find(o => o.id === 'obj-3')).toBeUndefined();
+  });
+
+  it('stores removed object in deletedObject', () => {
+    expect(next.deletedObject).not.toBeNull();
+    expect(next.deletedObject.id).toBe('obj-3');
+  });
+
+  it('stores all properties in deletedObject', () => {
+    const orig = state.objects.find(o => o.id === 'obj-3');
+    expect(next.deletedObject.shape).toBe(orig.shape);
+    expect(next.deletedObject.x).toBe(orig.x);
+    expect(next.deletedObject.zIndex).toBe(orig.zIndex);
+  });
+
+  it('removes id from stackObjects', () => {
+    const withStack = Object.assign({}, state, { stackObjects: ['obj-3', 'obj-5'] });
+    const result = removeObject(withStack, 'obj-3');
+    expect(result.stackObjects).not.toContain('obj-3');
+  });
+
+  it('does not mutate original state', () => {
+    expect(state.objects.find(o => o.id === 'obj-3')).toBeDefined();
+  });
+});
+
+describe('restoreDeleted', () => {
+  it('restores deleted object back into objects', () => {
+    const state = removeObject(initObjectState(800, 600), 'obj-5');
+    const next = restoreDeleted(state);
+    expect(next.objects.find(o => o.id === 'obj-5')).toBeDefined();
+  });
+
+  it('clears deletedObject after restore', () => {
+    const state = removeObject(initObjectState(800, 600), 'obj-5');
+    const next = restoreDeleted(state);
+    expect(next.deletedObject).toBeNull();
+  });
+
+  it('restored object is unselected', () => {
+    const state = removeObject(selectObject(initObjectState(800, 600), 'obj-5'), 'obj-5');
+    const next = restoreDeleted(state);
+    expect(next.objects.find(o => o.id === 'obj-5').selected).toBe(false);
+  });
+
+  it('is a no-op when deletedObject is null', () => {
+    const state = initObjectState(800, 600);
+    const next = restoreDeleted(state);
+    expect(next.objects.length).toBe(state.objects.length);
+  });
+
+  it('does not mutate original state', () => {
+    const state = removeObject(initObjectState(800, 600), 'obj-5');
+    restoreDeleted(state);
+    expect(state.deletedObject).not.toBeNull();
   });
 });
