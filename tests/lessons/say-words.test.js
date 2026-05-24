@@ -96,7 +96,7 @@ test('tapping cow tile shows feedback', async ({ page }) => {
   await startLesson(page)
   await page.locator('.tile').filter({ hasText: 'Cow' }).click()
   await expect(page.locator('#guidance-overlay')).toContainText('The cow!')
-  await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
 })
 
 test('close button stops lesson and hides overlay', async ({ page }) => {
