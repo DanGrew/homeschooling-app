@@ -94,7 +94,7 @@ function stepSimulation(state, scenario, dt) {
             state.entities.forEach(function(ex) {
               if (ex.rowId !== rowDef.id || ex.type !== 'obstacle' || ex.collected) return;
               var dist = dir === 'right' ? ex.x - (-w) : cols - (ex.x + ex.width);
-              if (dist < MIN_OBSTACLE_GAP + w) tooClose = true;
+              if (dist <= MIN_OBSTACLE_GAP + w) tooClose = true;
             });
             if (tooClose) {
               finalAccum = 0;
