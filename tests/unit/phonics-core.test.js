@@ -1,0 +1,63 @@
+import { describe, it, expect } from 'vitest';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { buildSoundIndex, getAssetPath, deriveLetterSounds } = require('../../core/phonics/phonics-core.js');
+
+const GRAPHEMES = {
+  'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }, { id: 'a-long', label: 'long a', example: 'cake', clip: 'bt-a-long' }], defaultSound: 'a-short' },
+  'lower-c': { type: 'letter', characters: 'c', asset: 'assets/language-characters/lower-c.svg', sounds: [{ id: 'k', label: 'kuh', example: 'cat', clip: 'alpha-k' }, { id: 's-ss', label: 'ss', example: 'city', clip: 'alpha-s' }], defaultSound: 'k' },
+  'lower-s': { type: 'letter', characters: 's', asset: 'assets/language-characters/lower-s.svg', sounds: [{ id: 's-ss', label: 'ss', example: 'sun', clip: 'alpha-s' }], defaultSound: 's-ss' },
+  'upper-a': { type: 'letter', characters: 'A', asset: 'assets/language-characters/upper-a.svg', sounds: [], defaultSound: null },
+  'digraph-sh': { type: 'digraph', characters: 'sh', asset: null, sounds: [{ id: 'sh', label: 'sh', example: 'shop', clip: 'bt-sh' }], defaultSound: 'sh' },
+};
+
+describe('buildSoundIndex', function() {
+  it('maps each sound ID to its clipId and grapheme characters', function() {
+    var index = buildSoundIndex(GRAPHEMES);
+    expect(index['a-short']).toEqual({ clipId: 'alpha-a', characters: 'a' });
+    expect(index['k']).toEqual({ clipId: 'alpha-k', characters: 'c' });
+    expect(index['sh']).toEqual({ clipId: 'bt-sh', characters: 'sh' });
+  });
+
+  it('first-owner wins when multiple graphemes share a sound ID', function() {
+    var index = buildSoundIndex(GRAPHEMES);
+    expect(index['s-ss'].characters).toBe('c');
+  });
+
+  it('skips graphemes with empty sounds array', function() {
+    var index = buildSoundIndex(GRAPHEMES);
+    expect(Object.keys(index)).not.toContain('');
+  });
+});
+
+describe('getAssetPath', function() {
+  it('returns asset path for known grapheme', function() {
+    expect(getAssetPath(GRAPHEMES, 'lower-a')).toBe('assets/language-characters/lower-a.svg');
+  });
+
+  it('returns null for asset-less grapheme', function() {
+    expect(getAssetPath(GRAPHEMES, 'digraph-sh')).toBeNull();
+  });
+
+  it('returns null for unknown grapheme ID', function() {
+    expect(getAssetPath(GRAPHEMES, 'lower-z')).toBeNull();
+  });
+});
+
+describe('deriveLetterSounds', function() {
+  it('maps each character to defaultSound', function() {
+    expect(deriveLetterSounds(GRAPHEMES, 'ac')).toEqual(['a-short', 'k']);
+  });
+
+  it('returns null for characters not in registry', function() {
+    expect(deriveLetterSounds(GRAPHEMES, 'a1')).toEqual(['a-short', null]);
+  });
+
+  it('lowercases input before lookup', function() {
+    expect(deriveLetterSounds(GRAPHEMES, 'AC')).toEqual(['a-short', 'k']);
+  });
+
+  it('returns null for digits and other non-letter characters', function() {
+    expect(deriveLetterSounds(GRAPHEMES, '1')).toEqual([null]);
+  });
+});
