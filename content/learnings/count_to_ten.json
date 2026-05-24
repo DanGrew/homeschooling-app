@@ -13,11 +13,12 @@
     {
       "prompt": "Ten is a special number! Press + on both groups until the Total shows 10!",
       "expect": "TOTAL_10",
-      "feedback": "Ten! That's a full set. Now tap the Total and count all the way!"
+      "feedback": "Ten! That's a full set."
     },
     {
       "expect": "COUNT_ALL",
-      "feedback": "You counted all the way to ten!"
+      "feedback": "You counted all the way to ten!",
+      "prompt": "Tap the Total and count all the way!"
     }
   ]
 }

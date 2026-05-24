@@ -12,19 +12,22 @@
     {
       "prompt": "Different times of day have different names. Press Breakfast — what time do you eat breakfast?",
       "expect": "PRESET_BREAKFAST_SELECTED",
-      "feedback": "The short hand is near the 10. Now press Lunch!"
+      "feedback": "The short hand is near the 10."
     },
     {
       "expect": "PRESET_LUNCH_SELECTED",
-      "feedback": "The short hand has moved to the 1. Now press Dinner!"
+      "feedback": "The short hand has moved to the 1.",
+      "prompt": "Press Lunch!"
     },
     {
       "expect": "PRESET_DINNER_SELECTED",
-      "feedback": "It's getting dark outside! Now press Bedtime!"
+      "feedback": "It's getting dark outside!",
+      "prompt": "Press Dinner!"
     },
     {
       "expect": "PRESET_BEDTIME_SELECTED",
-      "feedback": "Time to sleep. You know your whole day!"
+      "feedback": "Time to sleep. You know your whole day!",
+      "prompt": "Press Bedtime!"
     }
   ]
 }

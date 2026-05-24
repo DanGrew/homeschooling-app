@@ -13,15 +13,17 @@
     {
       "prompt": "Press + on the {fruit_a_p} to add one!",
       "expect": "A_PLUS",
-      "feedback": "The {fruit_a_p} grew bigger! + adds one each time. Now press + on the {fruit_b_p}!"
+      "feedback": "The {fruit_a_p} grew bigger! + adds one each time."
     },
     {
       "expect": "B_PLUS",
-      "feedback": "The {fruit_b_p} grew too! Now press − on the {fruit_a_p} to take one away."
+      "feedback": "The {fruit_b_p} grew too!",
+      "prompt": "Press + on the {fruit_b_p}!"
     },
     {
       "expect": "A_MINUS",
-      "feedback": "The {fruit_a_p} got smaller! When a group has less we say it has fewer."
+      "feedback": "The {fruit_a_p} got smaller! When a group has less we say it has fewer.",
+      "prompt": "Press − on the {fruit_a_p} to take one away."
     }
   ]
 }

@@ -13,23 +13,27 @@
     {
       "prompt": "Some letters are extra special — they're called vowels. Every word needs at least one! Find a and trace it!",
       "expect": "CHAR_a_TRACED",
-      "feedback": "a! You'll find this in almost every word. Now find e!"
+      "feedback": "a! You'll find this in almost every word."
     },
     {
       "expect": "CHAR_e_TRACED",
-      "feedback": "e! The most common letter in English. Now find i!"
+      "feedback": "e! The most common letter in English.",
+      "prompt": "Find e!"
     },
     {
       "expect": "CHAR_i_TRACED",
-      "feedback": "i! Don't forget the dot on top. Now find o!"
+      "feedback": "i! Don't forget the dot on top.",
+      "prompt": "Find i!"
     },
     {
       "expect": "CHAR_o_TRACED",
-      "feedback": "o! A perfect circle. Last one — find u!"
+      "feedback": "o! A perfect circle.",
+      "prompt": "Find o!"
     },
     {
       "expect": "CHAR_u_TRACED",
-      "feedback": "u! Like a little cup. a, e, i, o, u — all five vowels!"
+      "feedback": "u! Like a little cup. a, e, i, o, u — all five vowels!",
+      "prompt": "Last one — find u!"
     }
   ]
 }

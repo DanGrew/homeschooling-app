@@ -12,11 +12,12 @@
     {
       "prompt": "Use + and − to make the {fruit_a_p} and {fruit_b_p} equal — the same number in each!",
       "expect": "GROUPS_EQUAL",
-      "feedback": "They match! When two groups are the same we say they're equal. Now tap the Total!"
+      "feedback": "They match! When two groups are the same we say they're equal."
     },
     {
       "expect": "COUNT_ALL",
-      "feedback": "You counted them all!"
+      "feedback": "You counted them all!",
+      "prompt": "Tap the Total!"
     }
   ]
 }

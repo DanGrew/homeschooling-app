@@ -4,7 +4,13 @@
   "number": 1,
   "guide": "dog",
   "filter": "animals",
-  "words": ["cow", "dog", "duck", "cat", "horse"],
+  "words": [
+    "cow",
+    "dog",
+    "duck",
+    "cat",
+    "horse"
+  ],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",
@@ -15,23 +21,27 @@
     {
       "prompt": "Let's write some animal names! Find cow and trace it!",
       "expect": "WORD_cow_TRACED",
-      "feedback": "Cow! Short and simple — three letters. Now find dog!"
+      "feedback": "Cow! Short and simple — three letters."
     },
     {
       "expect": "WORD_dog_TRACED",
-      "feedback": "Dog! Your fingers know that one well. Now find duck!"
+      "feedback": "Dog! Your fingers know that one well.",
+      "prompt": "Find dog!"
     },
     {
       "expect": "WORD_duck_TRACED",
-      "feedback": "Duck! Four letters — well done. Now find cat!"
+      "feedback": "Duck! Four letters — well done.",
+      "prompt": "Find duck!"
     },
     {
       "expect": "WORD_cat_TRACED",
-      "feedback": "Cat! Three letters, just like cow. Last one — find horse!"
+      "feedback": "Cat! Three letters, just like cow.",
+      "prompt": "Find cat!"
     },
     {
       "expect": "WORD_horse_TRACED",
-      "feedback": "Horse! Five letters — your longest word. You traced them all!"
+      "feedback": "Horse! Five letters — your longest word. You traced them all!",
+      "prompt": "Last one — find horse!"
     }
   ]
 }

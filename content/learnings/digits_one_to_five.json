@@ -13,23 +13,27 @@
     {
       "prompt": "Numbers have shapes too — let's trace them in order! Find 1 and trace it!",
       "expect": "CHAR_1_TRACED",
-      "feedback": "1! One straight line. Now find 2!"
+      "feedback": "1! One straight line."
     },
     {
       "expect": "CHAR_2_TRACED",
-      "feedback": "2! A curve and a slide. Now find 3!"
+      "feedback": "2! A curve and a slide.",
+      "prompt": "Find 2!"
     },
     {
       "expect": "CHAR_3_TRACED",
-      "feedback": "3! Two bumps facing right. Now find 4!"
+      "feedback": "3! Two bumps facing right.",
+      "prompt": "Find 3!"
     },
     {
       "expect": "CHAR_4_TRACED",
-      "feedback": "4! Down, across, then tall. Last one — find 5!"
+      "feedback": "4! Down, across, then tall.",
+      "prompt": "Find 4!"
     },
     {
       "expect": "CHAR_5_TRACED",
-      "feedback": "5! Straight down, belly out, hat on top. You wrote them all!"
+      "feedback": "5! Straight down, belly out, hat on top. You wrote them all!",
+      "prompt": "Last one — find 5!"
     }
   ]
 }

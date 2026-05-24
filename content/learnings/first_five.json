@@ -13,23 +13,27 @@
     {
       "prompt": "The alphabet has a special order. Let's trace the very first five letters! Find a — the first letter!",
       "expect": "CHAR_a_TRACED",
-      "feedback": "a! Right at the start. Now find b!"
+      "feedback": "a! Right at the start."
     },
     {
       "expect": "CHAR_b_TRACED",
-      "feedback": "b! A tall letter — the line goes up high. Now find c!"
+      "feedback": "b! A tall letter — the line goes up high.",
+      "prompt": "Find b!"
     },
     {
       "expect": "CHAR_c_TRACED",
-      "feedback": "c! The round one. Now find d!"
+      "feedback": "c! The round one.",
+      "prompt": "Find c!"
     },
     {
       "expect": "CHAR_d_TRACED",
-      "feedback": "d! Tall again, but faces the other way to b. Last one — find e!"
+      "feedback": "d! Tall again, but faces the other way to b.",
+      "prompt": "Find d!"
     },
     {
       "expect": "CHAR_e_TRACED",
-      "feedback": "e! a, b, c, d, e — five in a row!"
+      "feedback": "e! a, b, c, d, e — five in a row!",
+      "prompt": "Last one — find e!"
     }
   ]
 }

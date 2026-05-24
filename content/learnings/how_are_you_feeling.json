@@ -4,7 +4,13 @@
   "number": 3,
   "guide": "cat",
   "filter": "emotions",
-  "words": ["sad", "shy", "smile", "angry", "worried"],
+  "words": [
+    "sad",
+    "shy",
+    "smile",
+    "angry",
+    "worried"
+  ],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",
@@ -16,19 +22,22 @@
     {
       "prompt": "Feelings have names — and now we're going to write them! Find sad and trace it!",
       "expect": "WORD_sad_TRACED",
-      "feedback": "Sad. Three letters. Everyone feels sad sometimes. Now find shy!"
+      "feedback": "Sad. Three letters. Everyone feels sad sometimes."
     },
     {
       "expect": "WORD_shy_TRACED",
-      "feedback": "Shy! Just three letters — a quiet little word. Now find smile!"
+      "feedback": "Shy! Just three letters — a quiet little word.",
+      "prompt": "Find shy!"
     },
     {
       "expect": "WORD_smile_TRACED",
-      "feedback": "Smile! Five letters and a happy feeling. Now find angry!"
+      "feedback": "Smile! Five letters and a happy feeling.",
+      "prompt": "Find smile!"
     },
     {
       "expect": "WORD_angry_TRACED",
-      "feedback": "Angry. Five letters for a big feeling. Last one — find worried!"
+      "feedback": "Angry. Five letters for a big feeling. Last one — find worried!",
+      "prompt": "Find angry!"
     },
     {
       "expect": "WORD_worried_TRACED",

@@ -4,7 +4,13 @@
   "number": 5,
   "guide": "dog",
   "filter": "vehicles",
-  "words": ["bus", "train", "truck", "digger", "tractor"],
+  "words": [
+    "bus",
+    "train",
+    "truck",
+    "digger",
+    "tractor"
+  ],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",
@@ -16,23 +22,27 @@
     {
       "prompt": "Vroom! Let's write the names of things that go! Find bus and trace it!",
       "expect": "WORD_bus_TRACED",
-      "feedback": "Bus! Just three letters — short and fast. Now find train!"
+      "feedback": "Bus! Just three letters — short and fast."
     },
     {
       "expect": "WORD_train_TRACED",
-      "feedback": "Train! Five letters — it travels on rails. Now find truck!"
+      "feedback": "Train! Five letters — it travels on rails.",
+      "prompt": "Find train!"
     },
     {
       "expect": "WORD_truck_TRACED",
-      "feedback": "Truck! Five letters — carries heavy loads. Now find digger!"
+      "feedback": "Truck! Five letters — carries heavy loads.",
+      "prompt": "Find truck!"
     },
     {
       "expect": "WORD_digger_TRACED",
-      "feedback": "Digger! Six letters — scoops up earth. Last one — find tractor!"
+      "feedback": "Digger! Six letters — scoops up earth.",
+      "prompt": "Find digger!"
     },
     {
       "expect": "WORD_tractor_TRACED",
-      "feedback": "Tractor! Seven letters — your longest word. Vroom — you wrote them all!"
+      "feedback": "Tractor! Seven letters — your longest word. Vroom — you wrote them all!",
+      "prompt": "Last one — find tractor!"
     }
   ]
 }
