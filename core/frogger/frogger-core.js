@@ -1,3 +1,5 @@
+var HOP_DURATION = 300;
+
 function createPRNG(seed) {
   var s = (seed >>> 0) || 1;
   return function() {
@@ -12,14 +14,14 @@ function createSimulation(scenario, seed) {
   var rows = {};
   var entities = [];
   var spawnCounters = {};
-  var spawnSeeds = {};
   var prng = createPRNG(seed || 42);
 
   (scenario.rows || []).forEach(function(rowDef) {
     rows[rowDef.id] = { def: rowDef, travelAccum: 0 };
     spawnCounters[rowDef.id] = 0;
-    spawnSeeds[rowDef.id] = prng;
   });
+  // prng available for future use
+  void prng;
 
   var entityMap = scenario.entities || {};
   Object.keys(entityMap).forEach(function(rowId) {
@@ -41,7 +43,8 @@ function createSimulation(scenario, seed) {
     rows: rows,
     entities: entities,
     spawnCounters: spawnCounters,
-    _spawnIdCounter: 0
+    _spawnIdCounter: 0,
+    player: null
   };
 }
 
@@ -122,7 +125,171 @@ function collectEntity(state, entityId) {
   });
 }
 
+// ---- Player + Collision ----
+
+function createPlayer(x, y) {
+  return {
+    x: x,
+    y: y,
+    worldX: x,
+    hopState: 'idle',
+    hopTimer: 0,
+    hopFrom: null,
+    hopTo: null,
+    pendingInput: null
+  };
+}
+
+function addPlayer(state, player) {
+  state.player = player;
+}
+
+function getRowAtY(scenario, y) {
+  var rows = scenario.rows || [];
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].y === y) return rows[i];
+  }
+  return null;
+}
+
+function getRowById(scenario, rowId) {
+  var rows = scenario.rows || [];
+  for (var i = 0; i < rows.length; i++) {
+    if (rows[i].id === rowId) return rows[i];
+  }
+  return null;
+}
+
+function entityOverlapsPlayerTile(entity, playerX) {
+  return playerX + 1 > entity.x && playerX < entity.x + entity.width;
+}
+
+function isOnPlatform(state, scenario, player) {
+  var row = getRowAtY(scenario, player.y);
+  if (!row) return false;
+  var entities = state.entities;
+  for (var i = 0; i < entities.length; i++) {
+    var e = entities[i];
+    if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
+    if (entityOverlapsPlayerTile(e, player.x)) return true;
+  }
+  return false;
+}
+
+function attemptMove(state, scenario, direction) {
+  var player = state.player;
+  var dx = direction === 'left' ? -1 : direction === 'right' ? 1 : 0;
+  var dy = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
+  var nx = player.x + dx;
+  var ny = player.y + dy;
+
+  if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return false;
+  var destRow = getRowAtY(scenario, ny);
+  if (destRow && destRow.baseTile === 'wall') return false;
+
+  player.hopState = 'hopping';
+  player.hopTimer = HOP_DURATION;
+  player.hopFrom = { x: player.x, y: player.y };
+  player.hopTo = { x: nx, y: ny };
+  return true;
+}
+
+function queueInput(state, direction) {
+  if (!state.player) return;
+  state.player.pendingInput = direction;
+}
+
+function stepPlayer(state, scenario, dt) {
+  if (state.phase !== 'running') return;
+  var player = state.player;
+  if (!player) return;
+
+  if (player.hopState === 'hopping') {
+    player.hopTimer -= dt * 1000;
+    if (player.hopTimer <= 0) {
+      player.x = player.hopTo.x;
+      player.y = player.hopTo.y;
+      player.worldX = player.x;
+      player.hopState = 'idle';
+      player.hopFrom = null;
+      player.hopTo = null;
+      if (player.pendingInput) {
+        var pending = player.pendingInput;
+        player.pendingInput = null;
+        attemptMove(state, scenario, pending);
+      }
+    }
+  } else if (player.pendingInput) {
+    var input = player.pendingInput;
+    player.pendingInput = null;
+    attemptMove(state, scenario, input);
+  }
+}
+
+function applyCarrying(state, scenario, dt) {
+  if (state.phase !== 'running') return;
+  var player = state.player;
+  if (!player || player.hopState === 'hopping') return;
+
+  var row = getRowAtY(scenario, player.y);
+  if (!row || !row.movement || row.movement.direction === 'none') return;
+  if (!isOnPlatform(state, scenario, player)) return;
+
+  var dx = (row.movement.direction === 'right' ? 1 : -1) * row.movement.speed * dt;
+  player.worldX += dx;
+
+  var cols = state.grid.cols;
+  if (player.worldX < 0) player.worldX = 0;
+  if (player.worldX > cols - 1) player.worldX = cols - 1;
+  player.x = Math.floor(player.worldX);
+}
+
+function detectCollisions(state, scenario) {
+  if (state.phase !== 'running') return null;
+  var player = state.player;
+  if (!player || player.hopState === 'hopping') return null;
+
+  var entities = state.entities;
+  for (var i = 0; i < entities.length; i++) {
+    var e = entities[i];
+    if (e.type !== 'obstacle' || e.collected) continue;
+    var eRow = getRowById(scenario, e.rowId);
+    if (!eRow || eRow.y !== player.y) continue;
+    if (entityOverlapsPlayerTile(e, player.x)) {
+      return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
+    }
+  }
+
+  var row = getRowAtY(scenario, player.y);
+  if (row && row.baseTile === 'hazard' && !isOnPlatform(state, scenario, player)) {
+    return { type: 'hazard', playerX: player.x, playerY: player.y };
+  }
+
+  return null;
+}
+
+function resetPlayer(state, scenario, resetPointId) {
+  var player = state.player;
+  if (!player) return;
+  var resetPoints = scenario.resetPoints || [];
+  for (var i = 0; i < resetPoints.length; i++) {
+    if (resetPoints[i].id === resetPointId) {
+      var pos = resetPoints[i].position;
+      player.x = pos.x;
+      player.y = pos.y;
+      player.worldX = pos.x;
+      player.hopState = 'idle';
+      player.hopTimer = 0;
+      player.hopFrom = null;
+      player.hopTo = null;
+      player.pendingInput = null;
+      return;
+    }
+  }
+}
+
 if (typeof module !== 'undefined') module.exports = {
+  HOP_DURATION,
   createPRNG,
   createSimulation,
   stepSimulation,
@@ -130,5 +297,16 @@ if (typeof module !== 'undefined') module.exports = {
   resumeSimulation,
   getEntityTileX,
   getRowEntities,
-  collectEntity
+  collectEntity,
+  createPlayer,
+  addPlayer,
+  getRowAtY,
+  getRowById,
+  entityOverlapsPlayerTile,
+  isOnPlatform,
+  queueInput,
+  stepPlayer,
+  applyCarrying,
+  detectCollisions,
+  resetPlayer
 };
