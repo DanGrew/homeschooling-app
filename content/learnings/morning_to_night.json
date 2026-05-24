@@ -11,17 +11,17 @@
   ],
   "steps": [
     {
-      "text": "Let's watch the day go by — from the moment you wake up to when the stars come out! Press Morning!",
+      "prompt": "Let's watch the day go by — from the moment you wake up to when the stars come out! Press Morning!",
       "expect": "PRESET_MORNING_SELECTED",
-      "feedback": "The sun is just coming up. Now press Noon!"
+      "feedback": "The sun is just coming up."
     },
     {
       "expect": "PRESET_NOON_SELECTED",
-      "feedback": "The sun is right at the top of the sky! Now press Afternoon!"
+      "feedback": "The sun is right at the top of the sky!"
     },
     {
       "expect": "PRESET_AFTERNOON_SELECTED",
-      "feedback": "The sun starts moving down. Now press Nighttime!"
+      "feedback": "The sun starts moving down."
     },
     {
       "expect": "PRESET_NIGHTTIME_SELECTED",

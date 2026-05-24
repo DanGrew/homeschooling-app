@@ -11,19 +11,19 @@
   ],
   "steps": [
     {
-      "text": "Let's find the secondary colours — the ones we made by mixing. Tap orange!",
+      "prompt": "Let's find the secondary colours — the ones we made by mixing. Tap orange!",
       "expect": "ORANGE_TAPPED"
     },
     {
-      "text": "Tap green!",
+      "prompt": "Tap green!",
       "expect": "GREEN_TAPPED"
     },
     {
-      "text": "Tap purple!",
+      "prompt": "Tap purple!",
       "expect": "PURPLE_TAPPED"
     },
     {
-      "text": "Orange, green, purple — those are the secondary colours!",
+      "prompt": "Orange, green, purple — those are the secondary colours!",
       "badge": "SECONDARY",
       "expect": "BADGE_TAPPED",
       "feedback": "You found them all — well done!"

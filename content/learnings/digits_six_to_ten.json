@@ -11,17 +11,17 @@
   ],
   "steps": [
     {
-      "text": "You know 1 to 5 — now let's trace 6 all the way to 10! We use 0 for the zero in 10. Find 6 and trace it!",
+      "prompt": "You know 1 to 5 — now let's trace 6 all the way to 10! We use 0 for the zero in 10. Find 6 and trace it!",
       "expect": "CHAR_6_TRACED",
-      "feedback": "6! Curves round and closes at the bottom. Now find 7!"
+      "feedback": "6! Curves round and closes at the bottom."
     },
     {
       "expect": "CHAR_7_TRACED",
-      "feedback": "7! Across the top, then a diagonal line down. Now find 8!"
+      "feedback": "7! Across the top, then a diagonal line down."
     },
     {
       "expect": "CHAR_8_TRACED",
-      "feedback": "8! Two loops on top of each other. Now find 9!"
+      "feedback": "8! Two loops on top of each other."
     },
     {
       "expect": "CHAR_9_TRACED",

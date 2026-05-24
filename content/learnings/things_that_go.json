@@ -14,17 +14,17 @@
   ],
   "steps": [
     {
-      "text": "Vroom! Let's write the names of things that go! Find bus and trace it!",
+      "prompt": "Vroom! Let's write the names of things that go! Find bus and trace it!",
       "expect": "WORD_bus_TRACED",
-      "feedback": "Bus! Just three letters — short and fast. Now find train!"
+      "feedback": "Bus! Just three letters — short and fast."
     },
     {
       "expect": "WORD_train_TRACED",
-      "feedback": "Train! Five letters — it travels on rails. Now find truck!"
+      "feedback": "Train! Five letters — it travels on rails."
     },
     {
       "expect": "WORD_truck_TRACED",
-      "feedback": "Truck! Five letters — carries heavy loads. Now find digger!"
+      "feedback": "Truck! Five letters — carries heavy loads."
     },
     {
       "expect": "WORD_digger_TRACED",

@@ -6,7 +6,7 @@
   "source": "Logic Gates",
   "criteria": ["uw.cause-effect"],
   "steps": [
-    { "text": "Can you turn switch A on?", "expect": "SWITCH_A_ON", "feedback": "Fan spins! XOR works with just one. Turn B on too." },
+    { "prompt": "Can you turn switch A on?", "expect": "SWITCH_A_ON", "feedback": "Fan spins! XOR works with just one. Turn B on too." },
     { "expect": "SWITCH_B_ON", "feedback": "Fan stops! XOR only works when switches are different. Turn B off." },
     { "expect": "SWITCH_B_OFF", "feedback": "Fan spins again! XOR needs the switches to be different." }
   ]

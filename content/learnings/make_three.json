@@ -11,9 +11,9 @@
   ],
   "steps": [
     {
-      "text": "Keep pressing + until the Total shows 3!",
+      "prompt": "Keep pressing + until the Total shows 3!",
       "expect": "TOTAL_3",
-      "feedback": "Three {fruit_a_p}! Now tap the Total to count them all!"
+      "feedback": "Three {fruit_a_p}!"
     },
     {
       "expect": "COUNT_ALL",

@@ -13,7 +13,7 @@
   ],
   "steps": [
     {
-      "text": "The clock shows breakfast. What comes after breakfast?",
+      "prompt": "The clock shows breakfast. What comes after breakfast?",
       "preset_shown": "breakfast",
       "correct": "lunch",
       "distractors": [
@@ -27,7 +27,7 @@
       ]
     },
     {
-      "text": "After breakfast comes lunch — first breakfast, then lunch! Now what comes after lunch?",
+      "prompt": "After breakfast comes lunch — first breakfast, then lunch! Now what comes after lunch?",
       "preset_shown": "lunch",
       "correct": "afternoon",
       "distractors": [
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "text": "After lunch comes afternoon — lunch, then afternoon! Now what comes after afternoon?",
+      "prompt": "After lunch comes afternoon — lunch, then afternoon! Now what comes after afternoon?",
       "preset_shown": "afternoon",
       "correct": "dinner",
       "distractors": [

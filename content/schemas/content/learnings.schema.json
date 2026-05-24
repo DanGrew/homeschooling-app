@@ -32,7 +32,7 @@
         "required": ["expect"],
         "additionalProperties": false,
         "properties": {
-          "text":            { "type": "string" },
+          "prompt":          { "type": "string" },
           "expect": {
             "oneOf": [
               { "type": "string" },

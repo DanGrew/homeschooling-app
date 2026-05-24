@@ -8,48 +8,48 @@
   "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
   "steps": [
     {
-      "text": "Doctors help people who are poorly and make them feel better. They work at a hospital.",
+      "prompt": "Doctors help people who are poorly and make them feel better. They work at a hospital.",
       "badge": "doctor",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Eight o'clock — the doctor arrives and gets ready. There are lots of people to help today! Press Arrive at hospital!",
+      "prompt": "Eight o'clock — the doctor arrives and gets ready. There are lots of people to help today! Press Arrive at hospital!",
       "expect": "PRESET_DOCTOR_ARRIVE_SELECTED"
     },
     {
-      "text": "Then the doctor sees patients — people who need help.",
+      "prompt": "Then the doctor sees patients — people who need help.",
       "badge": "then",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Ten o'clock — the doctor listens carefully to each person and helps them feel better. That is very important work. Press See patients!",
+      "prompt": "Ten o'clock — the doctor listens carefully to each person and helps them feel better. That is very important work. Press See patients!",
       "expect": "PRESET_DOCTOR_MORNING_SELECTED"
     },
     {
-      "text": "After a busy morning, the doctor has a lunch break.",
+      "prompt": "After a busy morning, the doctor has a lunch break.",
       "badge": "after",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "One o'clock — even doctors need to eat and rest. Just a short break before the afternoon! Press Lunch break!",
+      "prompt": "One o'clock — even doctors need to eat and rest. Just a short break before the afternoon! Press Lunch break!",
       "expect": "PRESET_DOCTOR_LUNCH_SELECTED"
     },
     {
-      "text": "Next, the doctor checks on all the patients in the afternoon.",
+      "prompt": "Next, the doctor checks on all the patients in the afternoon.",
       "badge": "next",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Three o'clock — the doctor walks around checking everyone is getting better. Press Afternoon ward!",
+      "prompt": "Three o'clock — the doctor walks around checking everyone is getting better. Press Afternoon ward!",
       "expect": "PRESET_DOCTOR_AFTERNOON_SELECTED"
     },
     {
-      "text": "Last of all, the doctor goes home to rest.",
+      "prompt": "Last of all, the doctor goes home to rest.",
       "badge": "last",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Press Go home!",
+      "prompt": "Press Go home!",
       "expect": "PRESET_DOCTOR_HOME_SELECTED",
       "feedback": "Six o'clock — the doctor's day is done. Arrive, see patients, lunch, afternoon rounds, then home. Doctors work so hard to help us all!"
     }

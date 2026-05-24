@@ -12,7 +12,7 @@
   ],
   "steps": [
     {
-      "text": "When does the baker start baking?",
+      "prompt": "When does the baker start baking?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "text": "Four in the morning! The baker starts before the sun comes up. What does the baker do after the bread is ready?",
+      "prompt": "Four in the morning! The baker starts before the sun comes up. What does the baker do after the bread is ready?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -38,7 +38,7 @@
       ]
     },
     {
-      "text": "Opens the shop! People can come and buy the fresh bread. When does the baker go home?",
+      "prompt": "Opens the shop! People can come and buy the fresh bread. When does the baker go home?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],

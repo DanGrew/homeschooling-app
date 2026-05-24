@@ -10,17 +10,17 @@
   ],
   "steps": [
     {
-      "text": "These letters all start the same way — with a round curve going anti-clockwise. Find c and trace it — start at the top and go round!",
+      "prompt": "These letters all start the same way — with a round curve going anti-clockwise. Find c and trace it — start at the top and go round!",
       "expect": "CHAR_c_TRACED",
-      "feedback": "c! That curving stroke is the key. Now find o — all the way round!"
+      "feedback": "c! That curving stroke is the key."
     },
     {
       "expect": "CHAR_o_TRACED",
-      "feedback": "o! A full circle, anti-clockwise. Now find a — it starts just like c!"
+      "feedback": "o! A full circle, anti-clockwise."
     },
     {
       "expect": "CHAR_a_TRACED",
-      "feedback": "a! Round first, then the straight bit down. Now find d — round first, then tall!"
+      "feedback": "a! Round first, then the straight bit down."
     },
     {
       "expect": "CHAR_d_TRACED",

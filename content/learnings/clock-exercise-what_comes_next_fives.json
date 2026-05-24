@@ -10,7 +10,7 @@
   ],
   "steps": [
     {
-      "text": "The clock is counting in fives. It said five, ten — what comes next?",
+      "prompt": "The clock is counting in fives. It said five, ten — what comes next?",
       "pageControls": [
         "LOAD_MINUTE_2",
         "RENDER_MULTI_CHOICE"
@@ -25,7 +25,7 @@
       "correct": "fifteen"
     },
     {
-      "text": "Fifteen! Five, ten, fifteen — always five more. Five, ten, fifteen, twenty — what comes next?",
+      "prompt": "Fifteen! Five, ten, fifteen — always five more. Five, ten, fifteen, twenty — what comes next?",
       "pageControls": [
         "LOAD_MINUTE_4",
         "RENDER_MULTI_CHOICE"
@@ -40,7 +40,7 @@
       "correct": "twenty-five"
     },
     {
-      "text": "Twenty-five! The pattern never changes — always five more. Five, ten, fifteen, twenty, twenty-five — what comes next?",
+      "prompt": "Twenty-five! The pattern never changes — always five more. Five, ten, fifteen, twenty, twenty-five — what comes next?",
       "pageControls": [
         "LOAD_MINUTE_5",
         "RENDER_MULTI_CHOICE"

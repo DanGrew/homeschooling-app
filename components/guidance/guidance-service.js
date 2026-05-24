@@ -25,7 +25,7 @@ var ADVANCE_ACTION = {
 var SHOW_STEP = {
   'true':  function() {},
   'false': function(svc, step) {
-    var text = _resolveText(step.text);
+    var text = _resolveText(step.prompt);
     svc._overlay.show(
       svc._guideSrc(),
       { text: text, dots: Array.isArray(step.expect) ? step.expect.length : 0, failDots: step.maxFailures || 0, badge: step.badge },
@@ -38,30 +38,6 @@ var SHOW_STEP = {
   }
 };
 
-var TERMINAL_CHECK = {
-  'true':  function()   { return true; },
-  'false': function(ns) { return !ns.expect; }
-};
-
-var PRAISE_APPEND = {
-  'true':  function(text) { return text + '\n' + TERMINAL_PRAISE[Math.floor(Math.random() * TERMINAL_PRAISE.length)]; },
-  'false': function(text) { return text; }
-};
-
-var SILENT_CHECK = {
-  'true':  function()   { return false; },
-  'false': function(ns) { return !ns.text; }
-};
-
-var SILENT_ADVANCE = {
-  'true':  function(svc) { svc._stepIdx++; svc._collected = []; },
-  'false': function()    {}
-};
-
-var NEXT_CB = {
-  'true':  function()    { return null; },
-  'false': function(svc) { return function() { svc._advance(); }; }
-};
 
 var FAILURE_ACTION = {
   'true':  function(svc, step) { svc._showFailure(step.failureFeedback || 'Not quite — try again!'); },
@@ -171,25 +147,46 @@ GuidanceService.prototype._showStep = function() {
   (step.pageControls || []).forEach(function(ctrl) {
     window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));
   });
-  SHOW_STEP[String(!step.text)](this, step);
+  SHOW_STEP[String(!step.prompt)](this, step);
 };
 
 GuidanceService.prototype._showFeedback = function(rawText) {
   var self = this;
-  var text = _resolveText(rawText);
-  var displayIdx = this._stepIdx + 1;
+  var feedbackText = _resolveText(rawText);
   var nextStep = this._lesson.steps[this._stepIdx + 1];
-  var isTerminal = TERMINAL_CHECK[String(!nextStep)](nextStep);
-  text = PRAISE_APPEND[String(isTerminal)](text);
-  var nextSilent = SILENT_CHECK[String(isTerminal)](nextStep);
-  SILENT_ADVANCE[String(nextSilent)](this);
-  this._overlay.show(
-    this._guideSrc(),
-    { text: text, auto: !nextSilent, success: isTerminal },
-    displayIdx, this._lesson.steps.length,
-    NEXT_CB[String(nextSilent)](self),
-    function() { interrupt(text); },
-    function() { self.stop(); }
-  );
-  setTimeout(function() { interrupt(text); }, 0);
+  var displayIdx, text;
+
+  if (!nextStep) {
+    displayIdx = this._stepIdx + 1;
+    text = feedbackText + '\n' + TERMINAL_PRAISE[Math.floor(Math.random() * TERMINAL_PRAISE.length)];
+    this._overlay.show(
+      this._guideSrc(),
+      { text: text, auto: true, success: true },
+      displayIdx, this._lesson.steps.length,
+      function() { self._advance(); },
+      function() { interrupt(text); },
+      function() { self.stop(); }
+    );
+    setTimeout(function() { interrupt(text); }, 0);
+  } else {
+    this._stepIdx++;
+    this._collected = [];
+    this._failureCount = 0;
+    (nextStep.pageControls || []).forEach(function(ctrl) {
+      window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));
+    });
+    displayIdx = this._stepIdx + 1;
+    text = nextStep.prompt
+      ? feedbackText + '\n' + _resolveText(nextStep.prompt)
+      : feedbackText;
+    this._overlay.show(
+      this._guideSrc(),
+      { text: text, dots: Array.isArray(nextStep.expect) ? nextStep.expect.length : 0, failDots: nextStep.maxFailures || 0, badge: nextStep.badge },
+      displayIdx, this._lesson.steps.length,
+      null,
+      function() { interrupt(text); },
+      function() { self.stop(); }
+    );
+    interrupt(text);
+  }
 };

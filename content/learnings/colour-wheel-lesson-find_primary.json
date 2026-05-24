@@ -12,19 +12,19 @@
   ],
   "steps": [
     {
-      "text": "Let's find the primary colours on the colour wheel. Tap red!",
+      "prompt": "Let's find the primary colours on the colour wheel. Tap red!",
       "expect": "RED_TAPPED"
     },
     {
-      "text": "Tap yellow!",
+      "prompt": "Tap yellow!",
       "expect": "YELLOW_TAPPED"
     },
     {
-      "text": "Tap blue!",
+      "prompt": "Tap blue!",
       "expect": "BLUE_TAPPED"
     },
     {
-      "text": "Red, yellow, blue — those are the primary colours!",
+      "prompt": "Red, yellow, blue — those are the primary colours!",
       "badge": "PRIMARY",
       "expect": "BADGE_TAPPED",
       "feedback": "You found them all — well done!"

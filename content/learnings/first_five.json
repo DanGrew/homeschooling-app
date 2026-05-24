@@ -11,17 +11,17 @@
   ],
   "steps": [
     {
-      "text": "The alphabet has a special order. Let's trace the very first five letters! Find a — the first letter!",
+      "prompt": "The alphabet has a special order. Let's trace the very first five letters! Find a — the first letter!",
       "expect": "CHAR_a_TRACED",
-      "feedback": "a! Right at the start. Now find b!"
+      "feedback": "a! Right at the start."
     },
     {
       "expect": "CHAR_b_TRACED",
-      "feedback": "b! A tall letter — the line goes up high. Now find c!"
+      "feedback": "b! A tall letter — the line goes up high."
     },
     {
       "expect": "CHAR_c_TRACED",
-      "feedback": "c! The round one. Now find d!"
+      "feedback": "c! The round one."
     },
     {
       "expect": "CHAR_d_TRACED",

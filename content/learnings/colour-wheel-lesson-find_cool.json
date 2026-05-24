@@ -12,31 +12,31 @@
   ],
   "steps": [
     {
-      "text": "Cool colours remind us of water and ice. Let's find them all. Tap blue!",
+      "prompt": "Cool colours remind us of water and ice. Let's find them all. Tap blue!",
       "expect": "BLUE_TAPPED"
     },
     {
-      "text": "Tap green!",
+      "prompt": "Tap green!",
       "expect": "GREEN_TAPPED"
     },
     {
-      "text": "Tap purple!",
+      "prompt": "Tap purple!",
       "expect": "PURPLE_TAPPED"
     },
     {
-      "text": "Tap teal!",
+      "prompt": "Tap teal!",
       "expect": "BLUE_GREEN_TAPPED"
     },
     {
-      "text": "Tap indigo!",
+      "prompt": "Tap indigo!",
       "expect": "BLUE_PURPLE_TAPPED"
     },
     {
-      "text": "Tap chartreuse!",
+      "prompt": "Tap chartreuse!",
       "expect": "YELLOW_GREEN_TAPPED"
     },
     {
-      "text": "Blue, green, purple, teal, indigo, chartreuse — those are the cool colours. They all feel like water and ice.",
+      "prompt": "Blue, green, purple, teal, indigo, chartreuse — those are the cool colours. They all feel like water and ice.",
       "badge": "COOL",
       "expect": "BADGE_TAPPED",
       "feedback": "You found all the cool colours!"

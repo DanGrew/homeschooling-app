@@ -11,17 +11,17 @@
   ],
   "steps": [
     {
-      "text": "Numbers have shapes too — let's trace them in order! Find 1 and trace it!",
+      "prompt": "Numbers have shapes too — let's trace them in order! Find 1 and trace it!",
       "expect": "CHAR_1_TRACED",
-      "feedback": "1! One straight line. Now find 2!"
+      "feedback": "1! One straight line."
     },
     {
       "expect": "CHAR_2_TRACED",
-      "feedback": "2! A curve and a slide. Now find 3!"
+      "feedback": "2! A curve and a slide."
     },
     {
       "expect": "CHAR_3_TRACED",
-      "feedback": "3! Two bumps facing right. Now find 4!"
+      "feedback": "3! Two bumps facing right."
     },
     {
       "expect": "CHAR_4_TRACED",

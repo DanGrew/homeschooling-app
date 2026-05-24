@@ -11,17 +11,17 @@
   ],
   "steps": [
     {
-      "text": "Some letters are extra special — they're called vowels. Every word needs at least one! Find a and trace it!",
+      "prompt": "Some letters are extra special — they're called vowels. Every word needs at least one! Find a and trace it!",
       "expect": "CHAR_a_TRACED",
-      "feedback": "a! You'll find this in almost every word. Now find e!"
+      "feedback": "a! You'll find this in almost every word."
     },
     {
       "expect": "CHAR_e_TRACED",
-      "feedback": "e! The most common letter in English. Now find i!"
+      "feedback": "e! The most common letter in English."
     },
     {
       "expect": "CHAR_i_TRACED",
-      "feedback": "i! Don't forget the dot on top. Now find o!"
+      "feedback": "i! Don't forget the dot on top."
     },
     {
       "expect": "CHAR_o_TRACED",

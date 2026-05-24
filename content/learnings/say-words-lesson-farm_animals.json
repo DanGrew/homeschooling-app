@@ -18,32 +18,32 @@
   ],
   "steps": [
     {
-      "text": "First — I'm big, I say moo, and farmers use my milk. Who am I? Find me!",
+      "prompt": "First — I'm big, I say moo, and farmers use my milk. Who am I? Find me!",
       "expect": "COW_SPOKEN",
       "feedback": "The cow! Cows give us milk."
     },
     {
-      "text": "Next — I'm tall and strong. Farmers ride on my back and I help carry heavy things.",
+      "prompt": "Next — I'm tall and strong. Farmers ride on my back and I help carry heavy things.",
       "expect": "HORSE_SPOKEN",
       "feedback": "The horse! Horses are very powerful."
     },
     {
-      "text": "What sound do you think the next one makes — quack or woof? Find the duck and tap to hear!",
+      "prompt": "What sound do you think the next one makes — quack or woof? Find the duck and tap to hear!",
       "expect": "DUCK_SPOKEN",
       "feedback": "Quack! Ducks love splashing in puddles."
     },
     {
-      "text": "Now find these three — the one that barks and guards the farm, the one that hops and lives in a hutch, and the one that honks loudly!",
+      "prompt": "Now find these three — the one that barks and guards the farm, the one that hops and lives in a hutch, and the one that honks loudly!",
       "expect": ["DOG_SPOKEN", "RABBIT_SPOKEN", "GOOSE_SPOKEN"],
       "feedback": "Dog, rabbit, and goose — all found!"
     },
     {
-      "text": "Nearly there — find the big horned bull, the bird, the cat that keeps mice away, and the fish in the pond!",
+      "prompt": "Nearly there — find the big horned bull, the bird, the cat that keeps mice away, and the fish in the pond!",
       "expect": ["BULL_SPOKEN", "BIRD_SPOKEN", "CAT_SPOKEN", "FISH_SPOKEN"],
       "feedback": "Bull, bird, cat, and fish!"
     },
     {
-      "text": "Last one — find the animal that rhymes with 'house'!",
+      "prompt": "Last one — find the animal that rhymes with 'house'!",
       "expect": "MOUSE_SPOKEN",
       "feedback": "Mouse! Mouse rhymes with house — same ending sound."
     }

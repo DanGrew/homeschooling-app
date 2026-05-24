@@ -14,17 +14,17 @@
   ],
   "steps": [
     {
-      "text": "Feelings have names — and now we're going to write them! Find sad and trace it!",
+      "prompt": "Feelings have names — and now we're going to write them! Find sad and trace it!",
       "expect": "WORD_sad_TRACED",
-      "feedback": "Sad. Three letters. Everyone feels sad sometimes. Now find shy!"
+      "feedback": "Sad. Three letters. Everyone feels sad sometimes."
     },
     {
       "expect": "WORD_shy_TRACED",
-      "feedback": "Shy! Just three letters — a quiet little word. Now find smile!"
+      "feedback": "Shy! Just three letters — a quiet little word."
     },
     {
       "expect": "WORD_smile_TRACED",
-      "feedback": "Smile! Five letters and a happy feeling. Now find angry!"
+      "feedback": "Smile! Five letters and a happy feeling."
     },
     {
       "expect": "WORD_angry_TRACED",
