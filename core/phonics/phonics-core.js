@@ -23,4 +23,5 @@ function deriveLetterSounds(graphemes, word) {
   });
 }
 
+export { buildSoundIndex, getAssetPath, deriveLetterSounds };
 if (typeof module !== 'undefined') module.exports = { buildSoundIndex, getAssetPath, deriveLetterSounds };

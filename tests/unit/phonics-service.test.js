@@ -1,12 +1,5 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-
-vi.mock('../../ui/shared/audio-ctx.js', () => ({
-  createAudioCtx: vi.fn(),
-  decodeAudioBuffer: vi.fn(),
-}));
-
-import { createAudioCtx, decodeAudioBuffer } from '../../ui/shared/audio-ctx.js';
 import { initAudio, loadGraphemes, playSound, playSequence, getAssetPath, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
 
 const REGISTRY = {
@@ -22,16 +15,26 @@ var REGISTRY_URL = 'content/phonics/graphemes.json';
 var MANIFEST_URL = 'content/phonics/manifest.json';
 var AUDIO_BASE = 'assets/audio/phonics/';
 
+function makeCtx() {
+  var src = { buffer: null, connect: vi.fn(), start: vi.fn() };
+  var ctx = {
+    state: 'running',
+    resume: vi.fn(() => Promise.resolve()),
+    createBufferSource: vi.fn(() => src),
+    destination: {},
+    decodeAudioData: vi.fn(function(_buf, resolve) { resolve({ type: 'AudioBuffer' }); }),
+  };
+  return { ctx, src };
+}
+
 function setupLoaded() {
   global.fetch = vi.fn().mockImplementation(function(url) {
     if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
     if (url === MANIFEST_URL) return Promise.resolve({ json: () => Promise.resolve(MANIFEST) });
     return Promise.resolve({ arrayBuffer: () => Promise.resolve(makeFakeBuffer()) });
   });
-  var src = { buffer: null, connect: vi.fn(), start: vi.fn() };
-  var ctx = { state: 'running', resume: vi.fn(() => Promise.resolve()), createBufferSource: vi.fn(() => src), destination: {} };
-  createAudioCtx.mockReturnValue(ctx);
-  decodeAudioBuffer.mockResolvedValue({ type: 'AudioBuffer' });
+  var { ctx, src } = makeCtx();
+  window.AudioContext = vi.fn(function() { return ctx; });
   return { ctx, src };
 }
 
@@ -74,7 +77,7 @@ describe('playSound', function() {
     playSound('a-short');
     await ctx.resume();
     await new Promise(function(r) { setTimeout(r, 0); });
-    expect(decodeAudioBuffer).toHaveBeenCalled();
+    expect(ctx.decodeAudioData).toHaveBeenCalled();
   });
 
   it('calls speechSynthesis.speak with grapheme characters for unknown sound ID', function() {
@@ -90,7 +93,9 @@ describe('playSound', function() {
       if (url === MANIFEST_URL) return Promise.resolve({ json: () => Promise.resolve(MANIFEST) });
       return Promise.reject(new Error('network'));
     });
-    createAudioCtx.mockReturnValue({ state: 'running', resume: vi.fn(() => Promise.resolve()), createBufferSource: vi.fn(), destination: {} });
+    var { ctx } = makeCtx();
+    window.AudioContext = vi.fn(function() { return ctx; });
+    initAudio();
     await loadGraphemes(REGISTRY_URL, MANIFEST_URL, AUDIO_BASE);
     playSound('a-short');
     expect(speechSynthesis.speak).toHaveBeenCalled();
