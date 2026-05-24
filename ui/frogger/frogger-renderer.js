@@ -1,4 +1,5 @@
 var ENTITY_FALLBACK_FILL = { obstacle: '#cc3300', platform: '#886633', collectible: '#ffcc00' };
+var RENDERER_NOOP = function() {};
 
 function calcCellSize(container, cols, rows) {
   var cs = Math.floor(Math.min(container.offsetWidth / cols, container.offsetHeight / rows));
@@ -12,20 +13,48 @@ function assetImg(src) {
   return img;
 }
 
+function applyEntityFallback(el, entity) {
+  el.style.background = ENTITY_FALLBACK_FILL[entity.type] || '#888';
+  el.style.borderRadius = '4px';
+  el.style.boxSizing = 'border-box';
+}
+
+function applyEntityAsset(el, assetPath) {
+  el.appendChild(assetImg(assetPath));
+}
+
 function entityEl(entity, theme, cs) {
   var el = document.createElement('div');
   el.style.cssText = 'position:absolute;height:' + cs + 'px;';
   el.setAttribute('data-testid', 'frogger-entity-' + entity.type);
   var assetKey = theme.map && theme.map[entity.type];
   var assetPath = assetKey && theme.assets && theme.assets[assetKey];
-  if (assetPath) {
-    el.appendChild(assetImg(assetPath));
-  } else {
-    el.style.background = ENTITY_FALLBACK_FILL[entity.type] || '#888';
-    el.style.borderRadius = '4px';
-    el.style.boxSizing = 'border-box';
-  }
+  var APPLY = { 'true': applyEntityAsset.bind(null, el, assetPath), 'false': applyEntityFallback.bind(null, el, entity) };
+  APPLY[String(!!assetPath)]();
   return el;
+}
+
+function applyPlayerFallback(playerEl) {
+  playerEl.style.background = '#00cc44';
+  playerEl.style.borderRadius = '50%';
+  playerEl.style.boxSizing = 'border-box';
+}
+
+function buildPlayerEl(theme, cs) {
+  var playerEl = document.createElement('div');
+  playerEl.setAttribute('data-testid', 'frogger-player');
+  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;';
+  var playerAsset = theme.assets && theme.map && theme.assets[theme.map.player];
+  var BUILD = { 'true': function() { playerEl.appendChild(assetImg(playerAsset)); }, 'false': function() { applyPlayerFallback(playerEl); } };
+  BUILD[String(!!playerAsset)]();
+  return playerEl;
+}
+
+function buildLane(rowDef, theme, cs) {
+  var lane = document.createElement('div');
+  var tileCfg = (theme.tiles && theme.tiles[rowDef.baseTile]) || {};
+  lane.style.cssText = 'position:absolute;left:0;top:' + (rowDef.y * cs) + 'px;width:100%;height:' + cs + 'px;background:' + (tileCfg.fill || '#ccc') + ';';
+  return lane;
 }
 
 function initFroggerRenderer(container, scenario, theme) {
@@ -37,28 +66,13 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.setAttribute('data-testid', 'frogger-grid');
   grid.style.cssText = 'position:relative;width:' + (cols * cs) + 'px;height:' + (rows * cs) + 'px;overflow:hidden;margin:auto;';
 
-  (scenario.rows || []).forEach(function(rowDef) {
-    var lane = document.createElement('div');
-    var tileCfg = (theme.tiles && theme.tiles[rowDef.baseTile]) || {};
-    lane.style.cssText = 'position:absolute;left:0;top:' + (rowDef.y * cs) + 'px;width:100%;height:' + cs + 'px;background:' + (tileCfg.fill || '#ccc') + ';';
-    grid.appendChild(lane);
-  });
+  (scenario.rows || []).forEach(function(rowDef) { grid.appendChild(buildLane(rowDef, theme, cs)); });
 
   var entityLayer = document.createElement('div');
   entityLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
   grid.appendChild(entityLayer);
 
-  var playerEl = document.createElement('div');
-  playerEl.setAttribute('data-testid', 'frogger-player');
-  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;';
-  var playerAsset = theme.assets && theme.map && theme.assets[theme.map.player];
-  if (playerAsset) {
-    playerEl.appendChild(assetImg(playerAsset));
-  } else {
-    playerEl.style.background = '#00cc44';
-    playerEl.style.borderRadius = '50%';
-    playerEl.style.boxSizing = 'border-box';
-  }
+  var playerEl = buildPlayerEl(theme, cs);
   grid.appendChild(playerEl);
 
   var highlightEl = document.createElement('div');
@@ -82,20 +96,56 @@ function initFroggerRenderer(container, scenario, theme) {
   resetOverlay.appendChild(resetMsg);
   resetOverlay.appendChild(resetBtn);
   grid.appendChild(resetOverlay);
-
   container.appendChild(grid);
 
-  return {
-    grid: grid,
-    entityLayer: entityLayer,
-    playerEl: playerEl,
-    highlightEl: highlightEl,
-    resetOverlay: resetOverlay,
-    resetBtn: resetBtn,
-    entityEls: {},
-    cs: cs,
-    theme: theme
-  };
+  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, entityEls: {}, cs, theme };
+}
+
+function removeEntityEl(rState, e) {
+  [rState.entityEls[e.id]].filter(Boolean).forEach(function(el) { el.remove(); });
+  delete rState.entityEls[e.id];
+}
+
+function ensureEntityEl(rState, e, theme, cs) {
+  [e].filter(function(e) { return !rState.entityEls[e.id]; }).forEach(function(e) {
+    var el = entityEl(e, theme, cs);
+    rState.entityLayer.appendChild(el);
+    rState.entityEls[e.id] = el;
+  });
+}
+
+function positionEntityEl(rState, e, scenario, cs) {
+  var rowY = [getRowById(scenario, e.rowId)].filter(Boolean).reduce(function(_, r) { return r.y; }, 0);
+  rState.entityEls[e.id].style.left = (e.x * cs) + 'px';
+  rState.entityEls[e.id].style.top = (rowY * cs) + 'px';
+  rState.entityEls[e.id].style.width = (e.width * cs) + 'px';
+}
+
+function updateEntity(rState, e, scenario, cs, theme, seen) {
+  seen[e.id] = true;
+  ensureEntityEl(rState, e, theme, cs);
+  positionEntityEl(rState, e, scenario, cs);
+}
+
+function removeOrphanEl(rState, id) {
+  rState.entityEls[id].remove();
+  delete rState.entityEls[id];
+}
+
+var PLAYER_POS_FNS = {
+  hopping: function(player, HOP_DURATION) {
+    var progress = 1 - Math.max(0, player.hopTimer / HOP_DURATION);
+    return { x: player.hopFrom.x + (player.hopTo.x - player.hopFrom.x) * progress,
+             y: player.hopFrom.y + (player.hopTo.y - player.hopFrom.y) * progress };
+  },
+  idle: function(player) { return { x: player.x, y: player.y }; }
+};
+
+function applyPlayerPos(rState, player, HOP_DURATION) {
+  var pos = [PLAYER_POS_FNS[player.hopState]].filter(Boolean)
+    .reduce(function(_, fn) { return fn(player, HOP_DURATION); }, { x: player.x, y: player.y });
+  rState.playerEl.style.left = (pos.x * rState.cs) + 'px';
+  rState.playerEl.style.top = (pos.y * rState.cs) + 'px';
 }
 
 function renderFrogger(rState, simState, scenario, HOP_DURATION) {
@@ -103,67 +153,32 @@ function renderFrogger(rState, simState, scenario, HOP_DURATION) {
   var theme = rState.theme;
   var seen = {};
 
-  simState.entities.forEach(function(e) {
-    if (e.collected) {
-      if (rState.entityEls[e.id]) {
-        rState.entityEls[e.id].remove();
-        delete rState.entityEls[e.id];
-      }
-      return;
-    }
-    seen[e.id] = true;
-    var el = rState.entityEls[e.id];
-    if (!el) {
-      el = entityEl(e, theme, cs);
-      rState.entityLayer.appendChild(el);
-      rState.entityEls[e.id] = el;
-    }
-    var row = getRowById(scenario, e.rowId);
-    el.style.left = (e.x * cs) + 'px';
-    el.style.top = ((row ? row.y : 0) * cs) + 'px';
-    el.style.width = (e.width * cs) + 'px';
-  });
+  simState.entities.filter(function(e) { return e.collected; })
+    .forEach(function(e) { removeEntityEl(rState, e); });
 
-  Object.keys(rState.entityEls).forEach(function(id) {
-    if (!seen[id]) {
-      rState.entityEls[id].remove();
-      delete rState.entityEls[id];
-    }
-  });
+  simState.entities.filter(function(e) { return !e.collected; })
+    .forEach(function(e) { updateEntity(rState, e, scenario, cs, theme, seen); });
 
-  var player = simState.player;
-  if (player) {
-    var px, py;
-    if (player.hopState === 'hopping' && player.hopFrom && player.hopTo) {
-      var progress = 1 - Math.max(0, player.hopTimer / HOP_DURATION);
-      px = player.hopFrom.x + (player.hopTo.x - player.hopFrom.x) * progress;
-      py = player.hopFrom.y + (player.hopTo.y - player.hopFrom.y) * progress;
-    } else {
-      px = player.x;
-      py = player.y;
-    }
-    rState.playerEl.style.left = (px * cs) + 'px';
-    rState.playerEl.style.top = (py * cs) + 'px';
-  }
+  Object.keys(rState.entityEls).filter(function(id) { return !seen[id]; })
+    .forEach(function(id) { removeOrphanEl(rState, id); });
+
+  [simState.player].filter(Boolean)
+    .forEach(function(player) { applyPlayerPos(rState, player, HOP_DURATION); });
+}
+
+function fadeOutHighlight(hl) {
+  hl.style.transition = 'opacity 0.5s';
+  hl.style.opacity = '0';
 }
 
 function showCollisionHighlight(rState, collision) {
-  var cs = rState.cs;
   var hl = rState.highlightEl;
-  hl.style.left = (collision.playerX * cs) + 'px';
-  hl.style.top = (collision.playerY * cs) + 'px';
+  hl.style.left = (collision.playerX * rState.cs) + 'px';
+  hl.style.top = (collision.playerY * rState.cs) + 'px';
   hl.style.transition = 'none';
   hl.style.opacity = '1';
-  setTimeout(function() {
-    hl.style.transition = 'opacity 0.5s';
-    hl.style.opacity = '0';
-  }, 50);
+  setTimeout(fadeOutHighlight.bind(null, hl), 50);
 }
 
-function showResetPrompt(rState) {
-  rState.resetOverlay.style.display = 'flex';
-}
-
-function hideResetPrompt(rState) {
-  rState.resetOverlay.style.display = 'none';
-}
+function showResetPrompt(rState) { rState.resetOverlay.style.display = 'flex'; }
+function hideResetPrompt(rState) { rState.resetOverlay.style.display = 'none'; }
