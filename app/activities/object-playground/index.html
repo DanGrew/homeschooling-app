@@ -42,6 +42,8 @@
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
+makeSpeakable(document.getElementById('obj-add-btn'), 'Add object');
+makeSpeakable(document.getElementById('obj-undo-btn'), 'Undo delete');
 </script>
 <script>window.addEventListener('load', initObjectPlayground);</script>
 <script>window.ACTIVITY_ID='object-playground';</script>
