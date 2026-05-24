@@ -27,15 +27,15 @@ function initObjectState(viewportW, viewportH) {
       colour: objPick(OBJ_COLOURS),
       size: objPick(OBJ_SIZES),
       rotation: objPick(OBJ_ROTATIONS),
-      x: margin + Math.random() * (viewportW - margin * 2),
-      y: margin + Math.random() * (viewportH - margin * 2),
+      x: viewportW + margin + Math.random() * (viewportW - margin * 2),
+      y: viewportH + margin + Math.random() * (viewportH - margin * 2),
       selected: false,
       zIndex: i
     });
   }
   return {
     world: { width: viewportW * 3, height: viewportH * 3 },
-    viewport: { x: 0, y: 0, width: viewportW, height: viewportH },
+    viewport: { x: viewportW, y: viewportH, width: viewportW, height: viewportH },
     objects: objects,
     stackObjects: []
   };

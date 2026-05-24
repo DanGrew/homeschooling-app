@@ -16,9 +16,7 @@ function renderObjects(svgEl, state) {
       'translate(' + obj.x.toFixed(1) + ',' + obj.y.toFixed(1) + ') rotate(' + obj.rotation + ') scale(' + s + ')'
     );
     g.innerHTML = renderObjectShape(obj.shape, obj.colour);
-    [obj].filter(function(o) { return o.selected; }).forEach(function() {
-      g.style.filter = 'drop-shadow(0 0 8px #fff) drop-shadow(0 0 4px #333)';
-    });
+    if (obj.selected) { g.classList.add('obj-selected'); }
     layer.appendChild(g);
   });
 }
