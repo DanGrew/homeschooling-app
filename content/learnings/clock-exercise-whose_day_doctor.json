@@ -12,7 +12,7 @@
   ],
   "steps": [
     {
-      "text": "When does the doctor arrive at the hospital?",
+      "prompt": "When does the doctor arrive at the hospital?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "text": "Eight o'clock — the doctor arrives ready for a busy day. What does the doctor do after the lunch break?",
+      "prompt": "Eight o'clock — the doctor arrives ready for a busy day. What does the doctor do after the lunch break?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -38,7 +38,7 @@
       ]
     },
     {
-      "text": "Afternoon ward — checking on all the patients! When does the doctor go home?",
+      "prompt": "Afternoon ward — checking on all the patients! When does the doctor go home?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],

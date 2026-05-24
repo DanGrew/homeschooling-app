@@ -11,7 +11,7 @@
   ],
   "steps": [
     {
-      "text": "Ten is a special number! Press + on both groups until the Total shows 10!",
+      "prompt": "Ten is a special number! Press + on both groups until the Total shows 10!",
       "expect": "TOTAL_10",
       "feedback": "Ten! That's a full set. Now tap the Total and count all the way!"
     },

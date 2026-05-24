@@ -9,39 +9,39 @@
   "criteria": ["cl.topic-vocabulary", "cl.sequencing-language"],
   "steps": [
     {
-      "text": "The time of day has a name. Early in the day, when you wake up, is called morning.",
+      "prompt": "The time of day has a name. Early in the day, when you wake up, is called morning.",
       "badge": "morning",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Morning! The sun is low and the sky is bright. It is morning time. Press Wake up!",
+      "prompt": "Morning! The sun is low and the sky is bright. It is morning time. Press Wake up!",
       "expect": "PRESET_WAKE_UP_SELECTED"
     },
     {
-      "text": "When the sun is right at the top of the sky, it is called midday.",
+      "prompt": "When the sun is right at the top of the sky, it is called midday.",
       "badge": "midday",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Midday — the sun is at its highest. That is why lunchtime feels so bright! Press Lunch!",
+      "prompt": "Midday — the sun is at its highest. That is why lunchtime feels so bright! Press Lunch!",
       "expect": "PRESET_LUNCH_SELECTED"
     },
     {
-      "text": "Later, when the sun starts to go down, it is called evening.",
+      "prompt": "Later, when the sun starts to go down, it is called evening.",
       "badge": "evening",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Evening — the sky turns orange and the sun gets low. Evening is dinner time. Press Dinner!",
+      "prompt": "Evening — the sky turns orange and the sun gets low. Evening is dinner time. Press Dinner!",
       "expect": "PRESET_DINNER_SELECTED"
     },
     {
-      "text": "When it is dark and the moon is out, it is called night.",
+      "prompt": "When it is dark and the moon is out, it is called night.",
       "badge": "night",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Press Bedtime!",
+      "prompt": "Press Bedtime!",
       "expect": "PRESET_BEDTIME_SELECTED",
       "feedback": "Night time — the moon is out and the stars appear. Morning, midday, evening, night — you know them all!"
     }

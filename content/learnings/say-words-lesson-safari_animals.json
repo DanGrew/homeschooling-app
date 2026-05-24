@@ -19,37 +19,37 @@
   ],
   "steps": [
     {
-      "text": "First — I'm the biggest land animal in the world. I have a long trunk and huge ears. Find me!",
+      "prompt": "First — I'm the biggest land animal in the world. I have a long trunk and huge ears. Find me!",
       "expect": "ELEPHANT_SPOKEN",
       "feedback": "Elephant! Elephants live in Africa and Asia."
     },
     {
-      "text": "I'm the tallest animal on Earth. I have a very long neck and eat leaves from the tops of trees.",
+      "prompt": "I'm the tallest animal on Earth. I have a very long neck and eat leaves from the tops of trees.",
       "expect": "GIRAFFE_SPOKEN",
       "feedback": "Giraffe! They can reach leaves no other animal can."
     },
     {
-      "text": "This one is called the king of the jungle. Do you think it eats plants — or other animals? Find it!",
+      "prompt": "This one is called the king of the jungle. Do you think it eats plants — or other animals? Find it!",
       "expect": "LION_SPOKEN",
       "feedback": "Lion! Lions hunt other animals for food. They live in Africa."
     },
     {
-      "text": "Now find these two — the one that swings through trees, and the one with a hump on its back!",
+      "prompt": "Now find these two — the one that swings through trees, and the one with a hump on its back!",
       "expect": ["MONKEY_SPOKEN", "CAMEL_SPOKEN"],
       "feedback": "Monkey and camel!"
     },
     {
-      "text": "Find the black and white stripy one — its name starts with the /z/ sound. Zzz...",
+      "prompt": "Find the black and white stripy one — its name starts with the /z/ sound. Zzz...",
       "expect": "ZEBRA_SPOKEN",
       "feedback": "Zebra! /z/ — the last letter of the alphabet."
     },
     {
-      "text": "Find the big cat with orange and black stripes — not a lion, but just as fierce!",
+      "prompt": "Find the big cat with orange and black stripes — not a lion, but just as fierce!",
       "expect": "TIGER_SPOKEN",
       "feedback": "Tiger! Tigers are the largest cats in the world."
     },
     {
-      "text": "Last one — find the slow one that carries its home on its back!",
+      "prompt": "Last one — find the slow one that carries its home on its back!",
       "expect": "TURTLE_SPOKEN",
       "feedback": "Turtle — every safari animal found!"
     }

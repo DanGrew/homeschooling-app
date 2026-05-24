@@ -14,7 +14,7 @@
   ],
   "steps": [
     {
-      "text": "Feelings have names — and now we're going to write them! Find sad and trace it!",
+      "prompt": "Feelings have names — and now we're going to write them! Find sad and trace it!",
       "expect": "WORD_sad_TRACED",
       "feedback": "Sad. Three letters. Everyone feels sad sometimes. Now find shy!"
     },

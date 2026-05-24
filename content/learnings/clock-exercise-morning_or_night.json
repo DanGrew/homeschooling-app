@@ -12,7 +12,7 @@
   ],
   "steps": [
     {
-      "text": "Look at the sky. Is this morning or night?",
+      "prompt": "Look at the sky. Is this morning or night?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -25,7 +25,7 @@
       "correct": "morning"
     },
     {
-      "text": "Morning! Because the sun is up, we know it is morning time. Look at the sky now. Morning or night?",
+      "prompt": "Morning! Because the sun is up, we know it is morning time. Look at the sky now. Morning or night?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -38,7 +38,7 @@
       "correct": "night"
     },
     {
-      "text": "Night! Because the moon is out and the sky is dark, we know it is night time. What about now?",
+      "prompt": "Night! Because the moon is out and the sky is dark, we know it is night time. What about now?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],

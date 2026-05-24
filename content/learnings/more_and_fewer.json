@@ -11,7 +11,7 @@
   ],
   "steps": [
     {
-      "text": "Press + on the {fruit_a_p} to add one!",
+      "prompt": "Press + on the {fruit_a_p} to add one!",
       "expect": "A_PLUS",
       "feedback": "The {fruit_a_p} grew bigger! + adds one each time. Now press + on the {fruit_b_p}!"
     },

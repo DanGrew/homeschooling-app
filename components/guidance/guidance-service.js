@@ -25,7 +25,7 @@ var ADVANCE_ACTION = {
 var SHOW_STEP = {
   'true':  function() {},
   'false': function(svc, step) {
-    var text = _resolveText(step.text);
+    var text = _resolveText(step.prompt);
     svc._overlay.show(
       svc._guideSrc(),
       { text: text, dots: Array.isArray(step.expect) ? step.expect.length : 0, failDots: step.maxFailures || 0, badge: step.badge },
@@ -50,7 +50,7 @@ var PRAISE_APPEND = {
 
 var SILENT_CHECK = {
   'true':  function()   { return false; },
-  'false': function(ns) { return !ns.text; }
+  'false': function(ns) { return !ns.prompt; }
 };
 
 var SILENT_ADVANCE = {
@@ -171,7 +171,7 @@ GuidanceService.prototype._showStep = function() {
   (step.pageControls || []).forEach(function(ctrl) {
     window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));
   });
-  SHOW_STEP[String(!step.text)](this, step);
+  SHOW_STEP[String(!step.prompt)](this, step);
 };
 
 GuidanceService.prototype._showFeedback = function(rawText) {

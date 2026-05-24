@@ -14,7 +14,7 @@
   ],
   "steps": [
     {
-      "text": "Vroom! Let's write the names of things that go! Find bus and trace it!",
+      "prompt": "Vroom! Let's write the names of things that go! Find bus and trace it!",
       "expect": "WORD_bus_TRACED",
       "feedback": "Bus! Just three letters — short and fast. Now find train!"
     },

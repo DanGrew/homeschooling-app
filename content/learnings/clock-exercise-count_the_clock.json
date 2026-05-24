@@ -10,43 +10,43 @@
   ],
   "steps": [
     {
-      "text": "Let's count all the numbers on the clock! Start at 1 — tap it!",
+      "prompt": "Let's count all the numbers on the clock! Start at 1 — tap it!",
       "expect": "NUMERAL_1_TAPPED"
     },
     {
-      "text": "One! Two — tap it!",
+      "prompt": "One! Two — tap it!",
       "expect": "NUMERAL_2_TAPPED"
     },
     {
-      "text": "Two! Three!",
+      "prompt": "Two! Three!",
       "expect": "NUMERAL_3_TAPPED"
     },
     {
-      "text": "Three! Four!",
+      "prompt": "Three! Four!",
       "expect": "NUMERAL_4_TAPPED"
     },
     {
-      "text": "Four! Five!",
+      "prompt": "Four! Five!",
       "expect": "NUMERAL_5_TAPPED"
     },
     {
-      "text": "Five — halfway! Six!",
+      "prompt": "Five — halfway! Six!",
       "expect": "NUMERAL_6_TAPPED"
     },
     {
-      "text": "Six! Seven!",
+      "prompt": "Six! Seven!",
       "expect": "NUMERAL_7_TAPPED"
     },
     {
-      "text": "Seven! Eight!",
+      "prompt": "Seven! Eight!",
       "expect": "NUMERAL_8_TAPPED"
     },
     {
-      "text": "Eight! Nine!",
+      "prompt": "Eight! Nine!",
       "expect": "NUMERAL_9_TAPPED"
     },
     {
-      "text": "Nine! Ten — last one!",
+      "prompt": "Nine! Ten — last one!",
       "expect": "NUMERAL_10_TAPPED",
       "feedback": "Ten! One, two, three, four, five, six, seven, eight, nine, ten — you counted all the way to ten on the clock!"
     }

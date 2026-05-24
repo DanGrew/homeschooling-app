@@ -7,6 +7,6 @@
   "source": "Logic Gates",
   "criteria": ["uw.cause-effect"],
   "steps": [
-    { "text": "Can you turn the lamp on?", "expect": "PUZZLE_SOLVED", "feedback": "You did it! All four switches need to be on." }
+    { "prompt": "Can you turn the lamp on?", "expect": "PUZZLE_SOLVED", "feedback": "You did it! All four switches need to be on." }
   ]
 }

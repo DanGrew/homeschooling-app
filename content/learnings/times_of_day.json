@@ -10,7 +10,7 @@
   ],
   "steps": [
     {
-      "text": "Different times of day have different names. Press Breakfast — what time do you eat breakfast?",
+      "prompt": "Different times of day have different names. Press Breakfast — what time do you eat breakfast?",
       "expect": "PRESET_BREAKFAST_SELECTED",
       "feedback": "The short hand is near the 10. Now press Lunch!"
     },
