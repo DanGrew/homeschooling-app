@@ -17,10 +17,6 @@
   ],
   "steps": [
     {
-      "text": "These fruits come from warm countries far away — they travel a long way to reach our shops! Let's find them.",
-      "auto": true
-    },
-    {
       "text": "First — I'm big and spiky on the outside, yellow and sweet inside. I grow in hot countries like Brazil. Find me!",
       "expect": "PINEAPPLE_SPOKEN",
       "feedback": "Pineapple! They grow in tropical countries near the equator."

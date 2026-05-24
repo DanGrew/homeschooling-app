@@ -18,10 +18,6 @@
   ],
   "steps": [
     {
-      "text": "These are vehicles — machines that carry things or do important jobs. Listen to the clues and find them!",
-      "auto": true
-    },
-    {
       "text": "First — I'm very long and I stop at bus stops. I carry lots of people to school and work at the same time.",
       "expect": "BUS_SPOKEN",
       "feedback": "Bus! Buses are great because one bus can carry 50 people at once."
@@ -46,9 +42,5 @@
       "expect": ["CEMENT_MIXER_SPOKEN", "TRUCK_SPOKEN", "TRACTOR_SPOKEN"],
       "feedback": "Cement mixer, truck, and tractor — all seven vehicles!"
     },
-    {
-      "text": "Let's count the vehicles — hold up your fingers! Bus, train, race car, digger, cement mixer, truck, tractor. One, two, three, four, five, six, seven! Seven vehicles — all doing important jobs!",
-      "auto": true
-    }
   ]
 }

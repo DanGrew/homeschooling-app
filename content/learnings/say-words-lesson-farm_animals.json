@@ -18,10 +18,6 @@
   ],
   "steps": [
     {
-      "text": "Welcome to the farm! I'm going to describe the animals — listen carefully and find them.",
-      "auto": true
-    },
-    {
       "text": "First — I'm big, I say moo, and farmers use my milk. Who am I? Find me!",
       "expect": "COW_SPOKEN",
       "feedback": "The cow! Cows give us milk."
@@ -51,9 +47,5 @@
       "expect": "MOUSE_SPOKEN",
       "feedback": "Mouse! Mouse rhymes with house — same ending sound."
     },
-    {
-      "text": "Let's count them — hold up your fingers! Cow, horse, duck, dog, rabbit, goose, bull, bird, cat, fish, mouse. One, two, three, four, five, six, seven, eight, nine, ten, eleven! Eleven farm animals!",
-      "auto": true
-    }
   ]
 }

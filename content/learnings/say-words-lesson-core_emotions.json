@@ -16,10 +16,6 @@
   ],
   "steps": [
     {
-      "text": "These are feelings. Everyone has feelings — they change all the time. I'll describe them and you find them!",
-      "auto": true
-    },
-    {
       "text": "First — this face has a big smile. Everything feels good. Find it!",
       "expect": "SMILE_SPOKEN",
       "feedback": "Happy! What makes you feel happy?"
@@ -54,9 +50,5 @@
       "expect": ["EMBARRASSED_SPOKEN", "GOOD_SPOKEN", "WAVE_SPOKEN", "PLEASED_SPOKEN"],
       "feedback": "You know all twelve feelings!"
     },
-    {
-      "text": "Well done. Twelve feelings — and when you know their names, you can talk about them.",
-      "auto": true
-    }
   ]
 }

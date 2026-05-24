@@ -18,10 +18,6 @@
   ],
   "steps": [
     {
-      "text": "Welcome to the fruit shop! We're going to sort the fruit by colour. Listen for the clues!",
-      "auto": true
-    },
-    {
       "text": "First — find all the red fruits. There are three of them — small and soft, tiny with a stone, and small and round.",
       "expect": ["STRAWBERRY_SPOKEN", "CHERRY_SPOKEN", "RASPBERRY_SPOKEN"],
       "feedback": "Strawberry, cherry, and raspberry — all red!"
@@ -51,9 +47,5 @@
       "expect": "PEAR_SPOKEN",
       "feedback": "Pear! Pear rhymes with bear — same ending sound."
     },
-    {
-      "text": "Let's count the fruit shop! Hold up your fingers — strawberry, cherry, raspberry, orange, peach, banana, watermelon, blueberry, lemon, apple, pear. One, two, three, four, five — six, seven, eight, nine, ten, eleven! Eleven fruits!",
-      "auto": true
-    }
   ]
 }
