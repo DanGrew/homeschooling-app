@@ -33,8 +33,11 @@ import { createPaginator } from '../../../components/pagination/paginator-ui.js'
 import { init, startRound, setMode, togglePicture } from '../../../ui/word-builder/word-builder-ui.js';
 import { speak } from '../../../components/speech/speech-ui.js';
 import { makeSpeakable } from '../../../components/speech/speakable.js';
+import { initAudio, loadGraphemes } from '../../../components/phonics/phonics-service.js';
 
 Dictionary.init('../../../content/dictionary/');
+initAudio();
+loadGraphemes('../../../content/phonics/graphemes.json', '../../../content/phonics/manifest.json', '../../../assets/audio/phonics/');
 var all = [];
 
 var paginator = createPaginator({

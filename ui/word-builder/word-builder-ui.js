@@ -1,5 +1,6 @@
 import { parseWord, buildTileSet, validateLetter, isWordComplete, slotKey } from '../../core/word-builder/word-builder-core.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
+import { playSound, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
 
 var NO_ITEM = { name: '', url: '' };
 
@@ -131,11 +132,15 @@ function renderSlots() {
 
 var TILE_STYLE = 'width:clamp(36px,9vmin,64px);height:clamp(36px,9vmin,64px);border-radius:10px;background:#fff;border:2px solid #bbb;font-size:clamp(1.2em,4vmin,2.2em);font-weight:bold;color:#333;cursor:pointer;touch-action:manipulation;transition:transform 0.1s,background 0.1s;';
 
-function makeTile(letter) {
+function makeTile(letter, soundId) {
   var btn = document.createElement('button');
   btn.textContent = letter;
   btn.style.cssText = TILE_STYLE;
-  makeSpeakable(btn, letter);
+  if (soundId) {
+    btn.addEventListener('pointerup', function() { playSound(soundId); });
+  } else {
+    makeSpeakable(btn, letter);
+  }
   btn.addEventListener('pointerdown', function() { btn.style.transform = 'scale(0.9)'; btn.style.background = '#e3f2fd'; });
   btn.addEventListener('pointerup', function() { btn.style.transform = ''; btn.style.background = '#fff'; tryPlace(letter); });
   btn.addEventListener('pointerleave', function() { btn.style.transform = ''; btn.style.background = '#fff'; });
@@ -145,7 +150,10 @@ function makeTile(letter) {
 function renderTiles() {
   var el = document.getElementById('wb-tiles');
   el.innerHTML = '';
-  state.tiles.forEach(function(letter) { el.appendChild(makeTile(letter)); });
+  state.tiles.forEach(function(letter) {
+    var soundIds = deriveLetterSounds(letter);
+    el.appendChild(makeTile(letter, soundIds[0]));
+  });
 }
 
 var BTN_STYLE = 'padding:clamp(8px,2vmin,14px) clamp(20px,5vmin,40px);border-radius:12px;border:none;font-size:clamp(1em,3vmin,1.5em);font-weight:bold;cursor:pointer;touch-action:manipulation;';
