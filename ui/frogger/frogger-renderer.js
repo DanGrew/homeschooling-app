@@ -98,14 +98,6 @@ function initFroggerRenderer(container, scenario, theme) {
   };
 }
 
-function getRowY(scenario, rowId) {
-  var rows = scenario.rows || [];
-  for (var i = 0; i < rows.length; i++) {
-    if (rows[i].id === rowId) return rows[i].y;
-  }
-  return 0;
-}
-
 function renderFrogger(rState, simState, scenario, HOP_DURATION) {
   var cs = rState.cs;
   var theme = rState.theme;
@@ -126,8 +118,9 @@ function renderFrogger(rState, simState, scenario, HOP_DURATION) {
       rState.entityLayer.appendChild(el);
       rState.entityEls[e.id] = el;
     }
+    var row = getRowById(scenario, e.rowId);
     el.style.left = (e.x * cs) + 'px';
-    el.style.top = (getRowY(scenario, e.rowId) * cs) + 'px';
+    el.style.top = ((row ? row.y : 0) * cs) + 'px';
     el.style.width = (e.width * cs) + 'px';
   });
 
