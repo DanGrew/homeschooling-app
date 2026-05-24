@@ -8,7 +8,8 @@ const {
   resumeSimulation,
   getEntityTileX,
   getRowEntities,
-  collectEntity
+  collectEntity,
+  MIN_OBSTACLE_GAP
 } = require2('../../core/frogger/frogger-core.js')
 
 // ---- scenario helpers ----
@@ -333,4 +334,69 @@ test('PRNG produces different sequences for different seeds', () => {
   const seq1 = [rng1(), rng1(), rng1()]
   const seq2 = [rng2(), rng2(), rng2()]
   expect(seq1).not.toEqual(seq2)
+})
+
+// ---- obstacle minimum gap ----
+
+test('MIN_OBSTACLE_GAP is 2', () => {
+  expect(MIN_OBSTACLE_GAP).toBe(2)
+})
+
+test('obstacle spawn blocked when existing obstacle within gap (rightward)', () => {
+  // speed=1, dt=0.01 → entity at x=0 moves 0.01 tiles; post-move dist=1.01 < MIN_OBSTACLE_GAP+w=3
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 0, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+})
+
+test('obstacle spawn proceeds when existing obstacle beyond gap (rightward)', () => {
+  // speed=1, dt=0.01 → entity at x=5 stays at x=5.01; post-move dist=6.01 >= 3
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 5, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.entities.filter(e => e.rowId === 'r1').length).toBeGreaterThan(1)
+})
+
+test('obstacle spawn blocked when existing obstacle within gap (leftward)', () => {
+  // speed=1, dt=0.01 → entity at x=8.5 moves to x=8.49; right edge=9.49; dist=10-9.49=0.51 < 3
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'left', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 8.5, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+})
+
+test('gap check does not affect platform spawning', () => {
+  // platform at x=0 — gap check skipped for platforms; spawn proceeds
+  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'log1', type: 'platform', x: 0, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.entities.filter(e => e.rowId === 'r1').length).toBeGreaterThan(1)
+})
+
+test('counter resets to 0 when obstacle spawn blocked', () => {
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 0, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.spawnCounters['r1']).toBe(0)
 })
