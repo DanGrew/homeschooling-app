@@ -52,6 +52,6 @@
       "text": "Last one — find the slow one that carries its home on its back!",
       "expect": "TURTLE_SPOKEN",
       "feedback": "Turtle — every safari animal found!"
-    },
+    }
   ]
 }

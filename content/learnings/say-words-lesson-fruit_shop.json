@@ -46,6 +46,6 @@
       "text": "Last one — find the fruit that rhymes with 'bear'!",
       "expect": "PEAR_SPOKEN",
       "feedback": "Pear! Pear rhymes with bear — same ending sound."
-    },
+    }
   ]
 }

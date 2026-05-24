@@ -46,6 +46,6 @@
       "text": "Last one — find the animal that rhymes with 'house'!",
       "expect": "MOUSE_SPOKEN",
       "feedback": "Mouse! Mouse rhymes with house — same ending sound."
-    },
+    }
   ]
 }

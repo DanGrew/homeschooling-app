@@ -41,6 +41,6 @@
       "text": "Last three — find the one that spins concrete round and round so it doesn't go hard, the big one that carries heavy loads on the road, and the farm one that pulls the plough!",
       "expect": ["CEMENT_MIXER_SPOKEN", "TRUCK_SPOKEN", "TRACTOR_SPOKEN"],
       "feedback": "Cement mixer, truck, and tractor — all seven vehicles!"
-    },
+    }
   ]
 }
