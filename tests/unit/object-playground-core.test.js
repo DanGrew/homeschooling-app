@@ -86,13 +86,13 @@ describe('initObjectState', () => {
     expect(zIndices).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
 
-  it('all objects positioned within viewport bounds', () => {
+  it('all objects positioned within center viewport region', () => {
     const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['x-large']) + 4;
     state.objects.forEach(obj => {
-      expect(obj.x).toBeGreaterThanOrEqual(margin);
-      expect(obj.x).toBeLessThanOrEqual(800 - margin);
-      expect(obj.y).toBeGreaterThanOrEqual(margin);
-      expect(obj.y).toBeLessThanOrEqual(600 - margin);
+      expect(obj.x).toBeGreaterThanOrEqual(800 + margin);
+      expect(obj.x).toBeLessThanOrEqual(800 * 2 - margin);
+      expect(obj.y).toBeGreaterThanOrEqual(600 + margin);
+      expect(obj.y).toBeLessThanOrEqual(600 * 2 - margin);
     });
   });
 
@@ -101,8 +101,8 @@ describe('initObjectState', () => {
     expect(state.world.height).toBeGreaterThan(600);
   });
 
-  it('viewport starts at origin', () => {
-    expect(state.viewport).toMatchObject({ x: 0, y: 0 });
+  it('viewport starts centered in world', () => {
+    expect(state.viewport).toMatchObject({ x: 800, y: 600 });
   });
 
   it('viewport stores dimensions', () => {
@@ -382,9 +382,11 @@ describe('applyPan', () => {
   });
 
   it('does not mutate original state', () => {
-    applyPan(state, 100, 50);
-    expect(state.viewport.x).toBe(0);
-    expect(state.viewport.y).toBe(0);
+    const origX = state.viewport.x;
+    const origY = state.viewport.y;
+    applyPan(state, origX + 100, origY + 50);
+    expect(state.viewport.x).toBe(origX);
+    expect(state.viewport.y).toBe(origY);
   });
 
   it('preserves viewport dimensions', () => {

@@ -66,11 +66,20 @@ test('tapping preview tile changes its orientation class', async ({ page }) => {
   expect(classAfter).not.toBe(classBefore)
 })
 
-test('tapping preview tile 8 times returns to original class', async ({ page }) => {
+test('tapping preview tile cycles back to original class', async ({ page }) => {
   const placed = await startAndShowPreview(page)
   if (!placed) return
   const classBefore = await page.getByTestId('domino-preview-tile').getAttribute('class')
-  for (let i = 0; i < 8; i++) {
+  const cycleLen = await page.evaluate(({ epIdx }) => {
+    const startRot = Number(window.turnState.previewRotation)
+    let rot = startRot
+    for (let count = 1; count <= 8; count++) {
+      rot = window.findNextPreviewRotation(rot, null, epIdx, window.gameState)
+      if (rot === startRot) return count
+    }
+    return 8
+  }, { epIdx: placed.endpointIndex })
+  for (let i = 0; i < cycleLen; i++) {
     await page.getByTestId('domino-preview-tile').click()
   }
   const classAfter = await page.getByTestId('domino-preview-tile').getAttribute('class')
