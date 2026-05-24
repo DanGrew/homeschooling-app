@@ -1,0 +1,20 @@
+{
+  "id": "classic",
+  "assets": {
+    "frog": "../../../content/frogger/classic/frog.svg",
+    "log":  "../../../content/frogger/classic/log.svg",
+    "car":  "../../../content/frogger/classic/car.svg",
+    "star": "../../../content/frogger/classic/star.svg"
+  },
+  "tiles": {
+    "ground": { "fill": "#55aa44" },
+    "hazard": { "fill": "#3399ff" },
+    "wall":   { "fill": "#888888" }
+  },
+  "map": {
+    "player":      "frog",
+    "platform":    "log",
+    "obstacle":    "car",
+    "collectible": "star"
+  }
+}

@@ -1,3 +1,4 @@
 [
-  { "id": "dev", "title": "Cross the Road", "file": "dev.json" }
+  { "id": "classic", "title": "Cross the River", "file": "classic.json", "theme": "../classic/theme.json" },
+  { "id": "dev",     "title": "Cross the Road",  "file": "dev.json" }
 ]
