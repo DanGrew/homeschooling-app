@@ -132,15 +132,16 @@ function renderSlots() {
 
 var TILE_STYLE = 'width:clamp(36px,9vmin,64px);height:clamp(36px,9vmin,64px);border-radius:10px;background:#fff;border:2px solid #bbb;font-size:clamp(1.2em,4vmin,2.2em);font-weight:bold;color:#333;cursor:pointer;touch-action:manipulation;transition:transform 0.1s,background 0.1s;';
 
+var TILE_SOUND = {
+  'true':  function(btn, soundId) { btn.addEventListener('pointerup', function() { playSound(soundId); }); },
+  'false': function(btn, _, letter) { makeSpeakable(btn, letter); }
+};
+
 function makeTile(letter, soundId) {
   var btn = document.createElement('button');
   btn.textContent = letter;
   btn.style.cssText = TILE_STYLE;
-  if (soundId) {
-    btn.addEventListener('pointerup', function() { playSound(soundId); });
-  } else {
-    makeSpeakable(btn, letter);
-  }
+  TILE_SOUND[String(soundId != null)](btn, soundId, letter);
   btn.addEventListener('pointerdown', function() { btn.style.transform = 'scale(0.9)'; btn.style.background = '#e3f2fd'; });
   btn.addEventListener('pointerup', function() { btn.style.transform = ''; btn.style.background = '#fff'; tryPlace(letter); });
   btn.addEventListener('pointerleave', function() { btn.style.transform = ''; btn.style.background = '#fff'; });
