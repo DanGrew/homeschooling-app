@@ -1,5 +1,6 @@
 import { charToFile, clamp, buildPattern } from '../../core/character-worksheet/character-worksheet-core.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
+import { getAssetPathForChar } from '../../components/phonics/phonics-service.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const CHARS_BASE = '../../../assets/language-characters/';
@@ -9,7 +10,7 @@ var svgCache = {};
 
 var LOAD_CACHED = (file) => Promise.resolve(svgCache[file]);
 
-var FETCH_PATH = (file) => fetch(CHARS_BASE + file)
+var FETCH_PATH = (file, char) => fetch(getAssetPathForChar(char) || CHARS_BASE + file)
   .then(r => r.text())
   .then(text => {
     const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
@@ -20,7 +21,7 @@ var FETCH_PATH = (file) => fetch(CHARS_BASE + file)
 
 var LOAD_SOURCES = { 'true': LOAD_CACHED, 'false': FETCH_PATH };
 var NULL_PROMISE = () => Promise.resolve(null);
-var LOAD_FILE = (file) => LOAD_SOURCES[String(file in svgCache)](file);
+var LOAD_FILE = (file, char) => LOAD_SOURCES[String(file in svgCache)](file, char);
 var LOAD_DISPATCH = { 'true': NULL_PROMISE, 'false': LOAD_FILE };
 
 function makeSvgPath(d) {
@@ -55,7 +56,7 @@ var EMPTY_DISPLAY = { 'true': 'none', 'false': '' };
 async function renderCells(sheet, chars) {
   const paths = await Promise.all(buildPattern(chars.split(''), state.cols * state.rows).map(c => {
     const file = charToFile(c);
-    return LOAD_DISPATCH[String(!file)](file);
+    return LOAD_DISPATCH[String(!file)](file, c);
   }));
   paths.forEach(d => sheet.appendChild(makeCell(d)));
 }

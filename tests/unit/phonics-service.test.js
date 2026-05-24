@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { initAudio, loadGraphemes, playSound, playSequence, getAssetPath, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
+import { initAudio, loadGraphemes, loadRegistry, playSound, playSequence, getAssetPath, getAssetPathForChar, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
 
 const REGISTRY = {
   'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }], defaultSound: 'a-short' },
@@ -139,6 +139,54 @@ describe('getAssetPath', function() {
     setupLoaded();
     await loadGraphemes(REGISTRY_URL, MANIFEST_URL, AUDIO_BASE);
     expect(getAssetPath('lower-z')).toBeNull();
+  });
+});
+
+describe('loadRegistry', function() {
+  it('fetches only the registry JSON', async function() {
+    global.fetch = vi.fn().mockResolvedValue({ json: () => Promise.resolve(REGISTRY) });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(REGISTRY_URL);
+  });
+
+  it('getAssetPath prepends assetBasePath after loadRegistry', async function() {
+    global.fetch = vi.fn().mockResolvedValue({ json: () => Promise.resolve(REGISTRY) });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(getAssetPath('lower-a')).toBe('../../../assets/language-characters/lower-a.svg');
+  });
+
+  it('getAssetPath returns null for unknown grapheme after loadRegistry', async function() {
+    global.fetch = vi.fn().mockResolvedValue({ json: () => Promise.resolve(REGISTRY) });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(getAssetPath('lower-z')).toBeNull();
+  });
+});
+
+describe('getAssetPathForChar', function() {
+  async function setupRegistry() {
+    global.fetch = vi.fn().mockResolvedValue({ json: () => Promise.resolve(REGISTRY) });
+    await loadRegistry(REGISTRY_URL, '../../../');
+  }
+
+  it('returns asset path for lowercase letter', async function() {
+    await setupRegistry();
+    expect(getAssetPathForChar('a')).toBe('../../../assets/language-characters/lower-a.svg');
+  });
+
+  it('returns asset path for uppercase letter', async function() {
+    await setupRegistry();
+    expect(getAssetPathForChar('A')).toBe('../../../assets/language-characters/upper-a.svg');
+  });
+
+  it('returns null for char not in registry (digit)', async function() {
+    await setupRegistry();
+    expect(getAssetPathForChar('0')).toBeNull();
+  });
+
+  it('returns null for non-alphanumeric', async function() {
+    await setupRegistry();
+    expect(getAssetPathForChar('!')).toBeNull();
   });
 });
 

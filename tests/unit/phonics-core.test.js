@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { buildSoundIndex, getAssetPath, deriveLetterSounds } = require('../../core/phonics/phonics-core.js');
+const { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar } = require('../../core/phonics/phonics-core.js');
 
 const GRAPHEMES = {
   'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }, { id: 'a-long', label: 'long a', example: 'cake', clip: 'bt-a-long' }], defaultSound: 'a-short' },
@@ -59,5 +59,27 @@ describe('deriveLetterSounds', function() {
 
   it('returns null for digits and other non-letter characters', function() {
     expect(deriveLetterSounds(GRAPHEMES, '1')).toEqual([null]);
+  });
+});
+
+describe('graphemeIdForChar', function() {
+  it('maps lowercase to lower-X', function() {
+    expect(graphemeIdForChar('a')).toBe('lower-a');
+    expect(graphemeIdForChar('z')).toBe('lower-z');
+  });
+
+  it('maps uppercase to upper-x (lowercased)', function() {
+    expect(graphemeIdForChar('A')).toBe('upper-a');
+    expect(graphemeIdForChar('Z')).toBe('upper-z');
+  });
+
+  it('maps digits to digit-N', function() {
+    expect(graphemeIdForChar('0')).toBe('digit-0');
+    expect(graphemeIdForChar('9')).toBe('digit-9');
+  });
+
+  it('returns null for non-alphanumeric', function() {
+    expect(graphemeIdForChar('!')).toBeNull();
+    expect(graphemeIdForChar(' ')).toBeNull();
   });
 });

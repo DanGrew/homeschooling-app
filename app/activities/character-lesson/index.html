@@ -57,7 +57,9 @@
 <script type="module">
 import { init } from '../../../ui/character-lesson/character-lesson-ui.js';
 import { GuidanceService } from '../../../components/guidance/guidance-service.js';
+import { loadRegistry } from '../../../components/phonics/phonics-service.js';
 window.LEARNINGS_BASE = '../../../content/learnings/';
+loadRegistry('../../../content/phonics/graphemes.json', '../../../');
 window.addEventListener('load', function() {
   init();
   window.guidanceService = new GuidanceService();

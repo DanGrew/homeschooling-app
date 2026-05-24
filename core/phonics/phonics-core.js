@@ -23,5 +23,12 @@ function deriveLetterSounds(graphemes, word) {
   });
 }
 
-export { buildSoundIndex, getAssetPath, deriveLetterSounds };
-if (typeof module !== 'undefined') module.exports = { buildSoundIndex, getAssetPath, deriveLetterSounds };
+function graphemeIdForChar(char) {
+  if (char >= 'a' && char <= 'z') return 'lower-' + char;
+  if (char >= 'A' && char <= 'Z') return 'upper-' + char.toLowerCase();
+  if (char >= '0' && char <= '9') return 'digit-' + char;
+  return null;
+}
+
+export { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar };
+if (typeof module !== 'undefined') module.exports = { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar };
