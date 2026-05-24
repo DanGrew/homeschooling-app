@@ -1,8 +1,8 @@
 var OBJ_SHAPES = ['circle', 'square', 'triangle', 'rectangle', 'pentagon', 'star', 'heart'];
 var OBJ_COLOURS = ['red', 'yellow', 'blue', 'orange', 'green', 'purple'];
-var OBJ_SIZES = ['small', 'medium', 'large', 'x-large'];
+var OBJ_SIZES = ['small', 'medium', 'large', 'x-large', '2x-large', '3x-large', '4x-large'];
 var OBJ_ROTATIONS = [0, 45, 90, 135, 180, 225, 270, 315];
-var OBJ_SIZE_MAP = { small: 0.6, medium: 1.0, large: 1.4, 'x-large': 1.8 };
+var OBJ_SIZE_MAP = { small: 0.6, medium: 1.0, large: 1.4, 'x-large': 1.8, '2x-large': 2.2, '3x-large': 2.6, '4x-large': 3.0 };
 var OBJ_COLOUR_FILL = {
   red: '#E74C3C', yellow: '#F1C40F', blue: '#3498DB',
   orange: '#F39C12', green: '#2ECC71', purple: '#9B59B6'
@@ -18,7 +18,7 @@ function objPick(arr) {
 }
 
 function initObjectState(viewportW, viewportH) {
-  var margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['x-large']) + 4;
+  var margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['4x-large']) + 4;
   var objects = [];
   for (var i = 0; i < 10; i++) {
     objects.push({

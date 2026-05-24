@@ -22,9 +22,10 @@ describe('constants', () => {
     expect(OBJ_COLOURS).toContain('purple');
   });
 
-  it('OBJ_SIZES has 4 entries including x-large', () => {
-    expect(OBJ_SIZES).toHaveLength(4);
+  it('OBJ_SIZES has 7 entries including x-large and 4x-large', () => {
+    expect(OBJ_SIZES).toHaveLength(7);
     expect(OBJ_SIZES).toContain('x-large');
+    expect(OBJ_SIZES).toContain('4x-large');
   });
 
   it('OBJ_ROTATIONS has 8 entries at 45 degree increments', () => {
@@ -40,8 +41,11 @@ describe('OBJ_SIZE_MAP', () => {
     expect(OBJ_SIZE_MAP.large).toBe(1.4);
   });
 
-  it('maps x-large to 1.8', () => {
+  it('maps x-large to 1.8 and 4x-large to 3.0', () => {
     expect(OBJ_SIZE_MAP['x-large']).toBe(1.8);
+    expect(OBJ_SIZE_MAP['2x-large']).toBe(2.2);
+    expect(OBJ_SIZE_MAP['3x-large']).toBe(2.6);
+    expect(OBJ_SIZE_MAP['4x-large']).toBe(3.0);
   });
 });
 
@@ -87,7 +91,7 @@ describe('initObjectState', () => {
   });
 
   it('all objects positioned within center viewport region', () => {
-    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['x-large']) + 4;
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['4x-large']) + 4;
     state.objects.forEach(obj => {
       expect(obj.x).toBeGreaterThanOrEqual(800 + margin);
       expect(obj.x).toBeLessThanOrEqual(800 * 2 - margin);
