@@ -4,5 +4,6 @@
   "phonetic": "bird",
   "tags": [
     "animals"
-  ]
+  ],
+  "letterSounds": ["b", "i-short", "r", "d"]
 }

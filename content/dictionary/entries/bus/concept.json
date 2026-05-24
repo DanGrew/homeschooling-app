@@ -4,5 +4,6 @@
   "phonetic": "bus",
   "tags": [
     "vehicles"
-  ]
+  ],
+  "letterSounds": ["b", "u-short", "s-ss"]
 }
