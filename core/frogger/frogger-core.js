@@ -1,4 +1,5 @@
 var HOP_DURATION = 300;
+var MIN_OBSTACLE_GAP = 2;
 
 function createPRNG(seed) {
   var s = (seed >>> 0) || 1;
@@ -75,6 +76,7 @@ function stepSimulation(state, scenario, dt) {
     if (rowDef.spawns && rowDef.spawns.length > 0) {
       var prevAccum = state.spawnCounters[rowDef.id];
       var newAccum = prevAccum + absDx;
+      var finalAccum = newAccum;
 
       rowDef.spawns.forEach(function(spawnDef) {
         var every = spawnDef.every;
@@ -86,6 +88,20 @@ function stepSimulation(state, scenario, dt) {
           var eDef = spawnDef.entity;
           var w = eDef.width !== undefined ? eDef.width : 1;
           var spawnX = dir === 'right' ? -w : cols;
+
+          if (eDef.type === 'obstacle') {
+            var tooClose = false;
+            state.entities.forEach(function(ex) {
+              if (ex.rowId !== rowDef.id || ex.type !== 'obstacle' || ex.collected) return;
+              var dist = dir === 'right' ? ex.x - (-w) : cols - (ex.x + ex.width);
+              if (dist < MIN_OBSTACLE_GAP + w) tooClose = true;
+            });
+            if (tooClose) {
+              finalAccum = 0;
+              return;
+            }
+          }
+
           state._spawnIdCounter++;
           state.entities.push({
             id: rowDef.id + '_s' + state._spawnIdCounter,
@@ -98,7 +114,7 @@ function stepSimulation(state, scenario, dt) {
         }
       });
 
-      state.spawnCounters[rowDef.id] = newAccum;
+      state.spawnCounters[rowDef.id] = finalAccum;
     }
   });
 }
@@ -290,6 +306,7 @@ function resetPlayer(state, scenario, resetPointId) {
 
 if (typeof module !== 'undefined') module.exports = {
   HOP_DURATION,
+  MIN_OBSTACLE_GAP,
   createPRNG,
   createSimulation,
   stepSimulation,
