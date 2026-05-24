@@ -151,9 +151,11 @@ var SETUP_DOT_TRACE = {
 };
 
 var SET_TRACE_BTN_ENABLED = { 'true': () => {}, 'false': () => { document.getElementById('btn-trace').disabled = false; } };
+var LESSON_URL = { 'true': function(p) { return p; }, 'false': function(_, e) { return '../../../assets/language-characters/' + e.file; } };
 
 function loadChar(entry) {
-  fetch(getAssetPathForChar(entry.char) || '../../../assets/language-characters/' + entry.file)
+  var p = getAssetPathForChar(entry.char);
+  fetch(LESSON_URL[String(p != null)](p, entry))
     .then(r => r.text())
     .then(svgText => {
       const parser = new DOMParser();

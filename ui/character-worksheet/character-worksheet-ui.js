@@ -4,20 +4,21 @@ import { getAssetPathForChar } from '../../components/phonics/phonics-service.js
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const CHARS_BASE = '../../../assets/language-characters/';
+var SHEET_URL = { 'true': function(p) { return p; }, 'false': function(_, f) { return CHARS_BASE + f; } };
 
 var state = { cols: 4, rows: 3, cellSize: 120 };
 var svgCache = {};
 
 var LOAD_CACHED = (file) => Promise.resolve(svgCache[file]);
 
-var FETCH_PATH = (file, char) => fetch(getAssetPathForChar(char) || CHARS_BASE + file)
+var FETCH_PATH = (file, char) => { var p = getAssetPathForChar(char); return fetch(SHEET_URL[String(p != null)](p, file))
   .then(r => r.text())
   .then(text => {
     const doc = new DOMParser().parseFromString(text, 'image/svg+xml');
     svgCache[file] = doc.getElementById('trace-path')?.getAttribute('d');
     return svgCache[file];
   })
-  .catch(() => { svgCache[file] = null; return null; });
+  .catch(() => { svgCache[file] = null; return null; }); };
 
 var LOAD_SOURCES = { 'true': LOAD_CACHED, 'false': FETCH_PATH };
 var NULL_PROMISE = () => Promise.resolve(null);
