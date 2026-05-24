@@ -35,19 +35,23 @@ function showGame() {
   document.getElementById('frogger-controls').style.removeProperty('display');
 }
 
-function loadScenario(file) {
-  fetch('../../../content/frogger/scenarios/' + file)
-    .then(function(r) { return r.json(); })
-    .then(function(json) {
-      var scenario = parseScenario(json);
+function fetchJson(path) { return fetch(path).then(function(r) { return r.json(); }); }
+
+function loadEntry(entry) {
+  var themeFiles = [entry.theme].filter(Boolean);
+  Promise.all([
+    fetchJson('../../../content/frogger/scenarios/' + entry.file)
+  ].concat(themeFiles.map(function(t) { return fetchJson('../../../content/frogger/scenarios/' + t); })))
+    .then(function(results) {
+      var scenario = parseScenario(results[0]);
+      var theme = [results[1]].filter(Boolean)[0];
       showGame();
-      window.startGame(scenario);
+      window.startGame(scenario, theme);
     });
 }
 
 var list = document.getElementById('frogger-scenario-list');
-fetch('../../../content/frogger/scenarios/index.json')
-  .then(function(r) { return r.json(); })
+fetchJson('../../../content/frogger/scenarios/index.json')
   .then(function(index) {
     index.forEach(function(entry) {
       var btn = makeSpeakableButton(entry.title);
@@ -55,7 +59,7 @@ fetch('../../../content/frogger/scenarios/index.json')
       btn.setAttribute('data-scenario-file', entry.file);
       btn.style.cssText = 'font-size:1.2rem;padding:16px 32px;border-radius:12px;border:none;background:#4488cc;color:#fff;cursor:pointer;font-weight:bold;min-width:200px;';
       list.appendChild(btn);
-      btn.addEventListener('click', function() { loadScenario(entry.file); });
+      btn.addEventListener('click', function() { loadEntry(entry); });
     });
   });
 </script>
@@ -104,13 +108,14 @@ function onResetClick() {
   pendingReset = false;
 }
 
-window.startGame = function(scenario) {
+window.startGame = function(scenario, theme) {
   activeScenario = scenario;
+  var resolvedTheme = [theme, DEV_THEME].filter(Boolean)[0];
   state = createSimulation(scenario);
   addPlayer(state, createPlayer(scenario.resetPoints[0].position.x, scenario.resetPoints[0].position.y));
   var container = document.getElementById('frogger-container');
   container.innerHTML = '';
-  rState = initFroggerRenderer(container, scenario, DEV_THEME);
+  rState = initFroggerRenderer(container, scenario, resolvedTheme);
   rState.resetBtn.addEventListener('click', onResetClick);
   lastTime = 0;
   cancelAnimationFrame(animId);
