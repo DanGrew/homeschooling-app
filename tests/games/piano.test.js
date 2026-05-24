@@ -40,11 +40,12 @@ test('lesson page songs popout uses fixed positioning', async ({ page }) => {
 
 test('lesson page songs popout closes when clicking outside', async ({ page }) => {
   await page.goto(LESSON_URL)
+  await page.waitForLoadState('networkidle')
   const button = page.locator('.nav-bar .nav-btn-container button')
   await expect(button).toBeVisible()
   await button.click()
   await expect(page.locator('.nav-custom-popout')).toBeVisible()
-  await page.locator('.game-area').click()
+  await page.locator('.game-area').click({ position: { x: 10, y: 10 } })
   await expect(page.locator('.nav-custom-popout')).not.toBeVisible()
 })
 
