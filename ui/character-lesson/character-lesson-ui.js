@@ -1,4 +1,5 @@
 import { speak } from '../../components/speech/speech-ui.js';
+import { getAssetPathForChar } from '../../components/phonics/phonics-service.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
@@ -151,8 +152,11 @@ var SETUP_DOT_TRACE = {
 
 var SET_TRACE_BTN_ENABLED = { 'true': () => {}, 'false': () => { document.getElementById('btn-trace').disabled = false; } };
 
+var LESSON_URL = { 'true': function(p) { return p; }, 'false': function(_, e) { return '../../../assets/language-characters/' + e.file; } };
+
 function loadChar(entry) {
-  fetch('../../../assets/language-characters/' + entry.file)
+  var p = getAssetPathForChar(entry.char);
+  fetch(LESSON_URL[String(p != null)](p, entry))
     .then(r => r.text())
     .then(svgText => {
       const parser = new DOMParser();

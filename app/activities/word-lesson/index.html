@@ -68,7 +68,8 @@
 <script type="module">
 import { init } from '../../../ui/word-lesson/word-lesson-ui.js';
 import { GuidanceService } from '../../../components/guidance/guidance-service.js';
-init();
+import { loadRegistry } from '../../../components/phonics/phonics-service.js';
+loadRegistry('../../../content/phonics/graphemes.json', '../../../').then(function() { init(); });
 window.guidanceService = new GuidanceService();
 </script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>

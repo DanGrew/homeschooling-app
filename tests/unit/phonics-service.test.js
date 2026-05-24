@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { initAudio, loadGraphemes, playSound, playSequence, getAssetPath, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
+import { initAudio, loadGraphemes, loadRegistry, playSound, playSequence, getAssetPath, getAssetPathForChar, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
 
 const REGISTRY = {
   'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }], defaultSound: 'a-short' },
@@ -139,6 +139,55 @@ describe('getAssetPath', function() {
     setupLoaded();
     await loadGraphemes(REGISTRY_URL, MANIFEST_URL, AUDIO_BASE);
     expect(getAssetPath('lower-z')).toBeNull();
+  });
+});
+
+describe('loadRegistry', function() {
+  it('loads graphemes and sets asset base for path resolution', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      return Promise.reject(new Error('unexpected'));
+    });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(getAssetPath('lower-a')).toBe('../../../assets/language-characters/lower-a.svg');
+  });
+
+  it('prepends empty string when no assetBase given', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      return Promise.reject(new Error('unexpected'));
+    });
+    await loadRegistry(REGISTRY_URL);
+    expect(getAssetPath('lower-a')).toBe('assets/language-characters/lower-a.svg');
+  });
+});
+
+describe('getAssetPathForChar', function() {
+  it('returns resolved path for lowercase letter', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      return Promise.reject(new Error('unexpected'));
+    });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(getAssetPathForChar('a')).toBe('../../../assets/language-characters/lower-a.svg');
+  });
+
+  it('returns null for unregistered char', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      return Promise.reject(new Error('unexpected'));
+    });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(getAssetPathForChar('z')).toBeNull();
+  });
+
+  it('returns null for non-alphanumeric char', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      return Promise.reject(new Error('unexpected'));
+    });
+    await loadRegistry(REGISTRY_URL, '../../../');
+    expect(getAssetPathForChar('!')).toBeNull();
   });
 });
 

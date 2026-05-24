@@ -1,4 +1,4 @@
-import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive } from '../../core/phonics/phonics-core.js';
+import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive, graphemeIdForChar } from '../../core/phonics/phonics-core.js';
 
 function _createCtx() {
   var Cls = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
@@ -14,6 +14,7 @@ var _soundIndex = {};
 var _manifest = {};
 var _rawBuffers = {};
 var _decoded = {};
+var _assetBase = '';
 
 export function initAudio() {
   if (_ctx) return;
@@ -21,6 +22,14 @@ export function initAudio() {
   document.addEventListener('touchstart', function() {
     if (_ctx.state !== 'running') _ctx.resume();
   }, { passive: true });
+}
+
+export function loadRegistry(registryPath, assetBasePath) {
+  return fetch(registryPath).then(function(r) { return r.json(); }).then(function(data) {
+    _graphemes = data;
+    _soundIndex = buildSoundIndex(_graphemes);
+    _assetBase = assetBasePath !== undefined ? assetBasePath : '';
+  });
 }
 
 export function loadGraphemes(registryPath, manifestPath, audioBasePath) {
@@ -90,7 +99,13 @@ export function playSequence(soundIds, gapMs) {
 }
 
 export var getAssetPath = function(graphemeId) {
-  return coreGetAssetPath(_graphemes, graphemeId);
+  var path = coreGetAssetPath(_graphemes, graphemeId);
+  return path ? (_assetBase + path) : null;
+};
+
+export var getAssetPathForChar = function(char) {
+  var id = graphemeIdForChar(char);
+  return id ? getAssetPath(id) : null;
 };
 
 export var deriveLetterSounds = function(word) {
@@ -104,4 +119,5 @@ export function _reset() {
   _manifest = {};
   _rawBuffers = {};
   _decoded = {};
+  _assetBase = '';
 }
