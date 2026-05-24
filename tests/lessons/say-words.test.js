@@ -84,8 +84,8 @@ test('clicking lesson item shows guidance overlay', async ({ page }) => {
 test('first step shows farm intro and find-cow instruction, no Next button', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await expect(page.locator('#guidance-overlay')).toContainText("Let's visit the farm!")
-  await expect(page.locator('#guidance-overlay')).toContainText('Find the cow')
+  await expect(page.locator('#guidance-overlay')).toContainText("I'm big, I say moo")
+  await expect(page.locator('#guidance-overlay')).toContainText('Find me!')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
@@ -95,7 +95,7 @@ test('tapping cow tile shows feedback', async ({ page }) => {
   await page.locator('#tile-grid .tile').first().waitFor()
   await startLesson(page)
   await page.locator('.tile').filter({ hasText: 'Cow' }).click()
-  await expect(page.locator('#guidance-overlay')).toContainText('Moo!')
+  await expect(page.locator('#guidance-overlay')).toContainText('The cow!')
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
