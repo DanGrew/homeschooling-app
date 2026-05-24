@@ -1,5 +1,4 @@
 var ENTITY_FALLBACK_FILL = { obstacle: '#cc3300', platform: '#886633', collectible: '#ffcc00' };
-var RENDERER_NOOP = function() {};
 
 function calcCellSize(container, cols, rows) {
   var cs = Math.floor(Math.min(container.offsetWidth / cols, container.offsetHeight / rows));
@@ -14,7 +13,7 @@ function assetImg(src) {
 }
 
 function applyEntityFallback(el, entity) {
-  el.style.background = ENTITY_FALLBACK_FILL[entity.type] || '#888';
+  el.style.background = [ENTITY_FALLBACK_FILL[entity.type], '#888'].filter(Boolean)[0];
   el.style.borderRadius = '4px';
   el.style.boxSizing = 'border-box';
 }
@@ -27,8 +26,7 @@ function entityEl(entity, theme, cs) {
   var el = document.createElement('div');
   el.style.cssText = 'position:absolute;height:' + cs + 'px;';
   el.setAttribute('data-testid', 'frogger-entity-' + entity.type);
-  var assetKey = theme.map && theme.map[entity.type];
-  var assetPath = assetKey && theme.assets && theme.assets[assetKey];
+  var assetPath = theme.assets[theme.map[entity.type]];
   var APPLY = { 'true': applyEntityAsset.bind(null, el, assetPath), 'false': applyEntityFallback.bind(null, el, entity) };
   APPLY[String(!!assetPath)]();
   return el;
@@ -44,7 +42,7 @@ function buildPlayerEl(theme, cs) {
   var playerEl = document.createElement('div');
   playerEl.setAttribute('data-testid', 'frogger-player');
   playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;';
-  var playerAsset = theme.assets && theme.map && theme.assets[theme.map.player];
+  var playerAsset = theme.assets[theme.map.player];
   var BUILD = { 'true': function() { playerEl.appendChild(assetImg(playerAsset)); }, 'false': function() { applyPlayerFallback(playerEl); } };
   BUILD[String(!!playerAsset)]();
   return playerEl;
@@ -52,8 +50,8 @@ function buildPlayerEl(theme, cs) {
 
 function buildLane(rowDef, theme, cs) {
   var lane = document.createElement('div');
-  var tileCfg = (theme.tiles && theme.tiles[rowDef.baseTile]) || {};
-  lane.style.cssText = 'position:absolute;left:0;top:' + (rowDef.y * cs) + 'px;width:100%;height:' + cs + 'px;background:' + (tileCfg.fill || '#ccc') + ';';
+  var fill = theme.tiles[rowDef.baseTile].fill;
+  lane.style.cssText = 'position:absolute;left:0;top:' + (rowDef.y * cs) + 'px;width:100%;height:' + cs + 'px;background:' + fill + ';';
   return lane;
 }
 
@@ -66,7 +64,7 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.setAttribute('data-testid', 'frogger-grid');
   grid.style.cssText = 'position:relative;width:' + (cols * cs) + 'px;height:' + (rows * cs) + 'px;overflow:hidden;margin:auto;';
 
-  (scenario.rows || []).forEach(function(rowDef) { grid.appendChild(buildLane(rowDef, theme, cs)); });
+  scenario.rows.forEach(function(rowDef) { grid.appendChild(buildLane(rowDef, theme, cs)); });
 
   var entityLayer = document.createElement('div');
   entityLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
