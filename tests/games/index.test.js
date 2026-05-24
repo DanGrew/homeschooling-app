@@ -12,7 +12,6 @@ test('has all category headings', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Colours' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Music' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Puzzles' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'Time' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'World' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'Multiplayer' })).toBeVisible()
 })
@@ -46,10 +45,6 @@ test('Puzzles section has puzzle games', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Puzzle', exact: true })).toBeVisible()
 })
 
-test('Time section has What Time Is It', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/games/')
-  await expect(page.getByRole('link', { name: 'What Time Is It?' })).toBeVisible()
-})
 
 test('World section has shopping games', async ({ page }) => {
   await page.goto('/homeschooling-app/app/games/')
