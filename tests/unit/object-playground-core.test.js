@@ -22,9 +22,10 @@ describe('constants', () => {
     expect(OBJ_COLOURS).toContain('purple');
   });
 
-  it('OBJ_SIZES has 4 entries including x-large', () => {
-    expect(OBJ_SIZES).toHaveLength(4);
+  it('OBJ_SIZES has 5 entries including x-large and xx-large', () => {
+    expect(OBJ_SIZES).toHaveLength(5);
     expect(OBJ_SIZES).toContain('x-large');
+    expect(OBJ_SIZES).toContain('xx-large');
   });
 
   it('OBJ_ROTATIONS has 8 entries at 45 degree increments', () => {
@@ -34,14 +35,12 @@ describe('constants', () => {
 });
 
 describe('OBJ_SIZE_MAP', () => {
-  it('maps small/medium/large correctly', () => {
-    expect(OBJ_SIZE_MAP.small).toBe(0.6);
-    expect(OBJ_SIZE_MAP.medium).toBe(1.0);
-    expect(OBJ_SIZE_MAP.large).toBe(1.4);
-  });
-
-  it('maps x-large to 1.8', () => {
-    expect(OBJ_SIZE_MAP['x-large']).toBe(1.8);
+  it('maps all 5 tiers correctly', () => {
+    expect(OBJ_SIZE_MAP.small).toBe(1.0);
+    expect(OBJ_SIZE_MAP.medium).toBe(2.0);
+    expect(OBJ_SIZE_MAP.large).toBe(3.0);
+    expect(OBJ_SIZE_MAP['x-large']).toBe(4.0);
+    expect(OBJ_SIZE_MAP['xx-large']).toBe(5.0);
   });
 });
 
@@ -69,8 +68,9 @@ describe('initObjectState', () => {
     state.objects.forEach(obj => expect(OBJ_COLOURS).toContain(obj.colour));
   });
 
-  it('all objects have valid size', () => {
-    state.objects.forEach(obj => expect(OBJ_SIZES).toContain(obj.size));
+  it('all objects spawn with size up to large only', () => {
+    const spawnSizes = OBJ_SIZES.slice(0, 3);
+    state.objects.forEach(obj => expect(spawnSizes).toContain(obj.size));
   });
 
   it('all objects have valid rotation', () => {
@@ -87,7 +87,7 @@ describe('initObjectState', () => {
   });
 
   it('all objects positioned within center viewport region', () => {
-    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['x-large']) + 4;
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['xx-large']) + 4;
     state.objects.forEach(obj => {
       expect(obj.x).toBeGreaterThanOrEqual(800 + margin);
       expect(obj.x).toBeLessThanOrEqual(800 * 2 - margin);
