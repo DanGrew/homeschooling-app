@@ -8,39 +8,39 @@
   "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
   "steps": [
     {
-      "text": "Farmers grow food and look after animals so we can eat. They start work very early! First, the animals need feeding.",
+      "prompt": "Farmers grow food and look after animals so we can eat. They start work very early! First, the animals need feeding.",
       "badge": "farmer",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Half past five in the morning! It is nearly dark and the farmer is already up. The animals are hungry and cannot wait! Press Feed the animals!",
+      "prompt": "Half past five in the morning! It is nearly dark and the farmer is already up. The animals are hungry and cannot wait! Press Feed the animals!",
       "expect": "PRESET_FARMER_START_SELECTED"
     },
     {
-      "text": "After feeding the animals, the farmer goes out to work in the fields.",
+      "prompt": "After feeding the animals, the farmer goes out to work in the fields.",
       "badge": "after",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Eight o'clock — the sun is up! The farmer is planting, digging, and watering. There is so much to do. Press Work the fields!",
+      "prompt": "Eight o'clock — the sun is up! The farmer is planting, digging, and watering. There is so much to do. Press Work the fields!",
       "expect": "PRESET_FARMER_MORNING_SELECTED"
     },
     {
-      "text": "At midday, the farmer stops to rest and eat.",
+      "prompt": "At midday, the farmer stops to rest and eat.",
       "badge": "midday",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Twelve o'clock — time for a rest. Farming is hard work and the farmer needs energy for the afternoon! Press Rest at midday!",
+      "prompt": "Twelve o'clock — time for a rest. Farming is hard work and the farmer needs energy for the afternoon! Press Rest at midday!",
       "expect": "PRESET_FARMER_MIDDAY_SELECTED"
     },
     {
-      "text": "Then, as the sun goes down, it is time to bring the animals safely inside.",
+      "prompt": "Then, as the sun goes down, it is time to bring the animals safely inside.",
       "badge": "then",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Press Bring animals in!",
+      "prompt": "Press Bring animals in!",
       "expect": "PRESET_FARMER_EVE_SELECTED",
       "feedback": "Five o'clock — the animals are safe inside for the night. Feed the animals, work the fields, rest at midday, then home. That is the farmer's day!"
     }

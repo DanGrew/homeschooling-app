@@ -10,7 +10,7 @@
   ],
   "steps": [
     {
-      "text": "These letters all start the same way — with a round curve going anti-clockwise. Find c and trace it — start at the top and go round!",
+      "prompt": "These letters all start the same way — with a round curve going anti-clockwise. Find c and trace it — start at the top and go round!",
       "expect": "CHAR_c_TRACED",
       "feedback": "c! That curving stroke is the key. Now find o — all the way round!"
     },

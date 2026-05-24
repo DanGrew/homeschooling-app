@@ -15,7 +15,7 @@
   ],
   "steps": [
     {
-      "text": "Look at the sky. Is this AM or PM?",
+      "prompt": "Look at the sky. Is this AM or PM?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -28,7 +28,7 @@
       "correct": "AM"
     },
     {
-      "text": "AM! It is morning — before midday. Morning is always AM. AM or PM?",
+      "prompt": "AM! It is morning — before midday. Morning is always AM. AM or PM?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -41,7 +41,7 @@
       "correct": "PM"
     },
     {
-      "text": "PM! Dinner is in the evening — after midday. Evening is always PM. What about now?",
+      "prompt": "PM! Dinner is in the evening — after midday. Evening is always PM. What about now?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],

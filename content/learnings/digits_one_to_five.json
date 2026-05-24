@@ -11,7 +11,7 @@
   ],
   "steps": [
     {
-      "text": "Numbers have shapes too — let's trace them in order! Find 1 and trace it!",
+      "prompt": "Numbers have shapes too — let's trace them in order! Find 1 and trace it!",
       "expect": "CHAR_1_TRACED",
       "feedback": "1! One straight line. Now find 2!"
     },

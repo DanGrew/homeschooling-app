@@ -12,7 +12,7 @@
   "pageControls": ["HIDE_COLOUR_WHEEL", "HIDE_MIXER", "SHUFFLE_PALETTE"],
   "steps": [
     {
-      "text": "Find all the warm colours.",
+      "prompt": "Find all the warm colours.",
       "expect": ["RED_TAPPED", "ORANGE_TAPPED", "YELLOW_TAPPED", "RED_ORANGE_TAPPED", "YELLOW_ORANGE_TAPPED", "RED_PURPLE_TAPPED"],
       "maxFailures": 3,
       "failureFeedback": "Not quite — try again!",

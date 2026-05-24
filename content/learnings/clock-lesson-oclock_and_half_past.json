@@ -7,36 +7,36 @@
   "criteria": ["cl.technical-vocab", "maths.number-order"],
   "steps": [
     {
-      "text": "When the big hand points to 12, it is o'clock. The clock is showing three.",
+      "prompt": "When the big hand points to 12, it is o'clock. The clock is showing three.",
       "pageControls": ["LOAD_TIME_03_00"],
       "badge": "o'clock",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Tap 12 to make it three o'clock!",
+      "prompt": "Tap 12 to make it three o'clock!",
       "expect": "NUMERAL_12_TAPPED"
     },
     {
-      "text": "Three o'clock! Big hand at the top — that always means o'clock. When the big hand reaches the bottom, it is half past.",
+      "prompt": "Three o'clock! Big hand at the top — that always means o'clock. When the big hand reaches the bottom, it is half past.",
       "badge": "half past",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "Tap 6 — half of the clock has gone around!",
+      "prompt": "Tap 6 — half of the clock has gone around!",
       "expect": "NUMERAL_6_TAPPED"
     },
     {
-      "text": "Half past three! Big hand at the bottom — that always means half past. Let's try another.",
+      "prompt": "Half past three! Big hand at the bottom — that always means half past. Let's try another.",
       "badge": "then",
       "expect": "BADGE_TAPPED"
     },
     {
-      "text": "The clock now shows seven. Tap 12 — make it seven o'clock!",
+      "prompt": "The clock now shows seven. Tap 12 — make it seven o'clock!",
       "pageControls": ["LOAD_TIME_07_00"],
       "expect": "NUMERAL_12_TAPPED"
     },
     {
-      "text": "Seven o'clock! Big hand at the top again — o'clock is always 12. Now tap 6 — make it half past seven!",
+      "prompt": "Seven o'clock! Big hand at the top again — o'clock is always 12. Now tap 6 — make it half past seven!",
       "expect": "NUMERAL_6_TAPPED",
       "feedback": "Half past seven! O'clock, then half past — the big hand goes from 12 to 6. You know them both now!"
     }

@@ -13,7 +13,7 @@
   ],
   "steps": [
     {
-      "text": "Yum! Let's write the names of some fruits. Find apple and trace it!",
+      "prompt": "Yum! Let's write the names of some fruits. Find apple and trace it!",
       "expect": "WORD_apple_TRACED",
       "feedback": "Apple! Five letters — starts with a. Now find pear!"
     },

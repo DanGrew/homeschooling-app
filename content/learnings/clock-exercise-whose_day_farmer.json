@@ -12,7 +12,7 @@
   ],
   "steps": [
     {
-      "text": "When does the farmer feed the animals?",
+      "prompt": "When does the farmer feed the animals?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "text": "Half past five in the morning! Before the sun is even up. What does the farmer do after feeding the animals?",
+      "prompt": "Half past five in the morning! Before the sun is even up. What does the farmer do after feeding the animals?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],
@@ -38,7 +38,7 @@
       ]
     },
     {
-      "text": "Work the fields! Planting, digging, and watering. When does the farmer bring the animals back inside?",
+      "prompt": "Work the fields! Planting, digging, and watering. When does the farmer bring the animals back inside?",
       "pageControls": [
         "RENDER_MULTI_CHOICE"
       ],

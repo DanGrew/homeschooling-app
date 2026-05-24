@@ -12,31 +12,31 @@
   ],
   "steps": [
     {
-      "text": "Warm colours remind us of fire and sunshine. Let's find them all. Tap red!",
+      "prompt": "Warm colours remind us of fire and sunshine. Let's find them all. Tap red!",
       "expect": "RED_TAPPED"
     },
     {
-      "text": "Tap orange!",
+      "prompt": "Tap orange!",
       "expect": "ORANGE_TAPPED"
     },
     {
-      "text": "Tap yellow!",
+      "prompt": "Tap yellow!",
       "expect": "YELLOW_TAPPED"
     },
     {
-      "text": "Tap vermillion!",
+      "prompt": "Tap vermillion!",
       "expect": "RED_ORANGE_TAPPED"
     },
     {
-      "text": "Tap amber!",
+      "prompt": "Tap amber!",
       "expect": "YELLOW_ORANGE_TAPPED"
     },
     {
-      "text": "Tap magenta!",
+      "prompt": "Tap magenta!",
       "expect": "RED_PURPLE_TAPPED"
     },
     {
-      "text": "Red, orange, yellow, vermillion, amber, magenta — those are the warm colours. They all feel like fire and sunshine.",
+      "prompt": "Red, orange, yellow, vermillion, amber, magenta — those are the warm colours. They all feel like fire and sunshine.",
       "badge": "WARM",
       "expect": "BADGE_TAPPED",
       "feedback": "You found all the warm colours!"

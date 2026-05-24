@@ -11,7 +11,7 @@
   ],
   "steps": [
     {
-      "text": "Look at both hands. What time does the clock show?",
+      "prompt": "Look at both hands. What time does the clock show?",
       "pageControls": [
         "LOAD_TIME_03_00",
         "RENDER_MULTI_CHOICE"
@@ -26,7 +26,7 @@
       "correct": "three o'clock"
     },
     {
-      "text": "Three o'clock! Big hand at 12, small hand at 3. What time now?",
+      "prompt": "Three o'clock! Big hand at 12, small hand at 3. What time now?",
       "pageControls": [
         "LOAD_TIME_07_30",
         "RENDER_MULTI_CHOICE"
@@ -41,7 +41,7 @@
       "correct": "half past seven"
     },
     {
-      "text": "Half past seven! Big hand at 6, small hand between 7 and 8. And now?",
+      "prompt": "Half past seven! Big hand at 6, small hand between 7 and 8. And now?",
       "pageControls": [
         "LOAD_TIME_09_00",
         "RENDER_MULTI_CHOICE"
