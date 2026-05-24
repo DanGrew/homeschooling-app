@@ -31,10 +31,20 @@ function renderToolbox(toolboxEl, state) {
   });
 }
 
+function renderControls(addBtn, undoBtn, state) {
+  var spawnX = state.viewport.x + state.viewport.width / 2;
+  var spawnY = state.viewport.y + state.viewport.height / 2;
+  addBtn.disabled = !canAddObject(state, spawnX, spawnY);
+  undoBtn.style.display = 'none';
+  [state.deletedObject].filter(Boolean).forEach(function() { undoBtn.style.display = ''; });
+}
+
 function initObjectPlayground() {
   var wrap = document.getElementById('obj-viewport');
   var svgEl = document.getElementById('obj-world');
   var toolboxEl = document.getElementById('obj-toolbox');
+  var addBtn = document.getElementById('obj-add-btn');
+  var undoBtn = document.getElementById('obj-undo-btn');
   var w = wrap.clientWidth;
   var h = wrap.clientHeight;
   var state = initObjectState(w, h);
@@ -49,9 +59,24 @@ function initObjectPlayground() {
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
+    renderControls(addBtn, undoBtn, state);
   }
 
   redraw();
+
+  addBtn.addEventListener('click', function() {
+    var spawnX = state.viewport.x + state.viewport.width / 2;
+    var spawnY = state.viewport.y + state.viewport.height / 2;
+    [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
+      state = addObject(state, spawnX, spawnY);
+      redraw();
+    });
+  });
+
+  undoBtn.addEventListener('click', function() {
+    state = restoreDeleted(state);
+    redraw();
+  });
 
   var panGesture = { active: false };
 
@@ -103,6 +128,7 @@ function initObjectPlayground() {
   toolboxEl.addEventListener('click', function(e) {
     var propRow = e.target.closest('[data-prop]');
     var pickRow = e.target.closest('[data-pick]');
+    var deleteRow = e.target.closest('[data-action="delete"]');
     var gesture = panGesture;
     panGesture = { active: false };
     toolboxEl.removeAttribute('data-dragging');
@@ -113,6 +139,13 @@ function initObjectPlayground() {
     [pickRow].filter(Boolean).forEach(function(el) {
       state = applyStackPick(state, el.getAttribute('data-pick'));
       redraw();
+    });
+    [deleteRow].filter(Boolean).forEach(function() {
+      var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
+      [selIds[0]].filter(Boolean).forEach(function(id) {
+        state = removeObject(state, id);
+        redraw();
+      });
     });
   });
 }

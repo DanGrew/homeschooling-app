@@ -12,6 +12,8 @@ var OBJ_COLOUR_STROKE = {
   orange: '#D68910', green: '#27AE60', purple: '#7D3C98'
 };
 var OBJ_BASE_R = 32;
+var OBJ_MAX_COUNT = 20;
+var OBJ_SPAWN_RADIUS = OBJ_BASE_R * 2;
 
 function objPick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -37,7 +39,9 @@ function initObjectState(viewportW, viewportH) {
     world: { width: viewportW * 3, height: viewportH * 3 },
     viewport: { x: viewportW, y: viewportH, width: viewportW, height: viewportH },
     objects: objects,
-    stackObjects: []
+    stackObjects: [],
+    deletedObject: null,
+    nextId: 10
   };
 }
 
@@ -217,6 +221,55 @@ function handlePropertyCycle(state, prop) {
   });
 }
 
+function canAddObject(state, spawnX, spawnY) {
+  if (state.objects.length >= OBJ_MAX_COUNT) return false;
+  var nearby = state.objects.filter(function(o) {
+    var dx = o.x - spawnX;
+    var dy = o.y - spawnY;
+    return dx * dx + dy * dy <= OBJ_SPAWN_RADIUS * OBJ_SPAWN_RADIUS;
+  });
+  return nearby.length < 2;
+}
+
+function addObject(state, spawnX, spawnY) {
+  var maxZ = state.objects.reduce(function(m, o) { return Math.max(m, o.zIndex); }, -1);
+  var newObj = {
+    id: 'obj-' + state.nextId,
+    shape: objPick(OBJ_SHAPES),
+    colour: objPick(OBJ_COLOURS),
+    size: objPick(OBJ_SIZES.slice(0, 3)),
+    rotation: objPick(OBJ_ROTATIONS),
+    x: spawnX,
+    y: spawnY,
+    selected: false,
+    zIndex: maxZ + 1
+  };
+  return Object.assign({}, state, {
+    objects: state.objects.concat([newObj]),
+    nextId: state.nextId + 1
+  });
+}
+
+function removeObject(state, objId) {
+  var targets = state.objects.filter(function(o) { return o.id === objId; });
+  return targets.reduce(function(s, target) {
+    return Object.assign({}, s, {
+      objects: s.objects.filter(function(o) { return o.id !== objId; }),
+      stackObjects: s.stackObjects.filter(function(id) { return id !== objId; }),
+      deletedObject: { id: target.id, shape: target.shape, colour: target.colour, size: target.size, rotation: target.rotation, x: target.x, y: target.y, zIndex: target.zIndex }
+    });
+  }, state);
+}
+
+function restoreDeleted(state) {
+  return [state.deletedObject].filter(Boolean).reduce(function(s, del) {
+    return Object.assign({}, s, {
+      objects: s.objects.concat([Object.assign({}, del, { selected: false })]),
+      deletedObject: null
+    });
+  }, state);
+}
+
 function buildStackHTML(stackIds, allObjects) {
   return stackIds.map(function(id) {
     var obj = allObjects.filter(function(o) { return o.id === id; })[0];
@@ -232,17 +285,19 @@ function buildToolboxHTML(obj) {
     { prop: 'size', label: 'Size', val: obj.size },
     { prop: 'rotation', label: 'Rotation', val: obj.rotation + '\u00b0' }
   ];
-  return rows.map(function(r) {
+  var propHtml = rows.map(function(r) {
     return '<div class="obj-tool-row" data-prop="' + r.prop + '"><span class="obj-tool-label">' + r.label + '</span><span class="obj-tool-val">' + r.val + '</span></div>';
   }).join('');
+  return propHtml + '<div class="obj-tool-row obj-tool-delete" data-action="delete"><span class="obj-tool-label">Delete</span><span class="obj-tool-val">\u2715</span></div>';
 }
 
 if (typeof module !== 'undefined') module.exports = {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
-  OBJ_COLOUR_FILL, OBJ_COLOUR_STROKE, OBJ_BASE_R,
+  OBJ_COLOUR_FILL, OBJ_COLOUR_STROKE, OBJ_BASE_R, OBJ_MAX_COUNT, OBJ_SPAWN_RADIUS,
   objPick, initObjectState, renderObjectShape,
   PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
   getPanMoves, getTapFlag, applyPan,
   objectsAtPoint, bringToFront, applyStackPick,
-  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML
+  cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
+  canAddObject, addObject, removeObject, restoreDeleted
 };
