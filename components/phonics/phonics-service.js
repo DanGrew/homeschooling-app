@@ -1,5 +1,12 @@
-import { createAudioCtx, decodeAudioBuffer } from '../../ui/shared/audio-ctx.js';
 import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive } from '../../core/phonics/phonics-core.js';
+
+function _createCtx() {
+  var Cls = typeof window !== 'undefined' && (window.AudioContext || window.webkitAudioContext);
+  return new Cls();
+}
+function _decodeBuffer(ctx, buf) {
+  return new Promise(function(resolve, reject) { ctx.decodeAudioData(buf, resolve, reject); });
+}
 
 var _ctx = null;
 var _graphemes = {};
@@ -10,7 +17,7 @@ var _decoded = {};
 
 export function initAudio() {
   if (_ctx) return;
-  _ctx = createAudioCtx();
+  _ctx = _createCtx();
   document.addEventListener('touchstart', function() {
     if (_ctx.state !== 'running') _ctx.resume();
   }, { passive: true });
@@ -50,7 +57,7 @@ function _playBuffer(filename) {
     src.start();
     return;
   }
-  decodeAudioBuffer(_ctx, _rawBuffers[filename].slice(0))
+  _decodeBuffer(_ctx, _rawBuffers[filename].slice(0))
     .then(function(buf) {
       _decoded[filename] = buf;
       var src = _ctx.createBufferSource();
