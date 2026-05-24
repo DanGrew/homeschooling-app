@@ -1,0 +1,62 @@
+{
+  "id": "say-words-lesson-core_emotions",
+  "title": "How Are You Feeling?",
+  "number": 3,
+  "guide": "cat",
+  "filter": "emotions",
+  "source": "Say Words",
+  "criteria": [
+    "cl.feeling-vocabulary",
+    "psed.emotion-vocab",
+    "cl.listening",
+    "psed.self-regulation",
+    "cl.prediction",
+    "psed.independence",
+    "cl.sequencing-language"
+  ],
+  "steps": [
+    {
+      "text": "These are feelings. Everyone has feelings — they change all the time. I'll describe them and you find them!",
+      "auto": true
+    },
+    {
+      "text": "First — this face has a big smile. Everything feels good. Find it!",
+      "expect": "SMILE_SPOKEN",
+      "feedback": "Happy! What makes you feel happy?"
+    },
+    {
+      "text": "This face has tears. Something didn't go the way they wanted.",
+      "expect": "SAD_SPOKEN",
+      "feedback": "Sad. Feeling sad is normal — everyone feels sad sometimes."
+    },
+    {
+      "text": "This is a big hot feeling. Your face goes red and you might want to shout. What do you think it is? Find it!",
+      "expect": "ANGRY_SPOKEN",
+      "feedback": "Angry! When you feel angry, try this — breathe in slowly... and breathe out. That helps."
+    },
+    {
+      "text": "This face isn't sure if something bad is going to happen. They keep thinking about it.",
+      "expect": "WORRIED_SPOKEN",
+      "feedback": "Worried. Talking about worries helps make them smaller."
+    },
+    {
+      "text": "Now find these three — something unexpected just happened, something exciting is coming and you can't wait, and someone feels a little shy.",
+      "expect": ["SURPRISE_SPOKEN", "EXCITED_SPOKEN", "SHY_SPOKEN"],
+      "feedback": "Surprised, excited, and shy!"
+    },
+    {
+      "text": "Find the face that shows someone is feeling unwell.",
+      "expect": "POORLY_SPOKEN",
+      "feedback": "Poorly. When you feel poorly, rest and cuddles help."
+    },
+    {
+      "text": "Last ones — feeling a bit embarrassed, feeling really good, waving hello, and feeling pleased.",
+      "expect": ["EMBARRASSED_SPOKEN", "GOOD_SPOKEN", "WAVE_SPOKEN", "PLEASED_SPOKEN"],
+      "feedback": "You know all twelve feelings!"
+    },
+    {
+      "text": "Well done. Twelve feelings — and when you know their names, you can talk about them.",
+      "auto": true
+    }
+  ]
+}

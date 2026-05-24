@@ -448,42 +448,42 @@
     "number": 2
   },
   {
-    "id": "say_core_emotions",
+    "id": "say-words-lesson-core_emotions",
     "source": "Say Words",
     "title": "How Are You Feeling?",
     "type": "lesson",
     "number": 3
   },
   {
-    "id": "say_exotic_fruit",
+    "id": "say-words-lesson-exotic_fruit",
     "source": "Say Words",
     "title": "Exotic Fruits",
     "type": "lesson",
     "number": 6
   },
   {
-    "id": "say_farm_animals",
+    "id": "say-words-lesson-farm_animals",
     "source": "Say Words",
     "title": "Farm Animals",
     "type": "lesson",
     "number": 1
   },
   {
-    "id": "say_fruit_shop",
+    "id": "say-words-lesson-fruit_shop",
     "source": "Say Words",
     "title": "Fruit Shop",
     "type": "lesson",
     "number": 4
   },
   {
-    "id": "say_safari_animals",
+    "id": "say-words-lesson-safari_animals",
     "source": "Say Words",
     "title": "Safari Animals",
     "type": "lesson",
     "number": 2
   },
   {
-    "id": "say_vehicles",
+    "id": "say-words-lesson-vehicles",
     "source": "Say Words",
     "title": "Things That Go",
     "type": "lesson",
