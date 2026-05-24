@@ -65,48 +65,58 @@ var DEV_THEME = {
 var state, rState, animId;
 var lastTime = 0;
 var pendingReset = false;
+var NOOP = function() {};
+var KEY_MAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+
+function onResetClick() {
+  hideResetPrompt(rState);
+  resetPlayer(state, DEV_SCENARIO, 'start');
+  resumeSimulation(state);
+  pendingReset = false;
+}
 
 function startGame() {
   state = createSimulation(DEV_SCENARIO);
   addPlayer(state, createPlayer(5, 7));
-
   var container = document.getElementById('frogger-container');
   container.innerHTML = '';
   rState = initFroggerRenderer(container, DEV_SCENARIO, DEV_THEME);
-
-  rState.resetBtn.addEventListener('click', function() {
-    hideResetPrompt(rState);
-    resetPlayer(state, DEV_SCENARIO, 'start');
-    resumeSimulation(state);
-    pendingReset = false;
-  });
-
+  rState.resetBtn.addEventListener('click', onResetClick);
   lastTime = 0;
-  if (animId) cancelAnimationFrame(animId);
+  cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
+function showResetOverlay() { showResetPrompt(rState); }
+
+function onCollision(collision) {
+  pauseSimulation(state);
+  pendingReset = true;
+  showCollisionHighlight(rState, collision);
+  setTimeout(showResetOverlay, 400);
+}
+
+function stepActive(dt) {
+  stepPlayer(state, DEV_SCENARIO, dt);
+  stepSimulation(state, DEV_SCENARIO, dt);
+  applyCarrying(state, DEV_SCENARIO, dt);
+  [detectCollisions(state, DEV_SCENARIO)].filter(Boolean).forEach(onCollision);
+}
+
+var LOOP_STEP = { 'true': NOOP, 'false': stepActive };
+
 function loop(timestamp) {
-  if (!lastTime) lastTime = timestamp;
+  lastTime = [lastTime, timestamp].filter(Boolean)[0];
   var dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+  LOOP_STEP[String(pendingReset)](dt);
   lastTime = timestamp;
-
-  if (!pendingReset) {
-    stepPlayer(state, DEV_SCENARIO, dt);
-    stepSimulation(state, DEV_SCENARIO, dt);
-    applyCarrying(state, DEV_SCENARIO, dt);
-
-    var collision = detectCollisions(state, DEV_SCENARIO);
-    if (collision) {
-      pauseSimulation(state);
-      pendingReset = true;
-      showCollisionHighlight(rState, collision);
-      setTimeout(function() { showResetPrompt(rState); }, 400);
-    }
-  }
-
   renderFrogger(rState, state, DEV_SCENARIO, HOP_DURATION);
   animId = requestAnimationFrame(loop);
+}
+
+function onKeyDown(e) {
+  e.preventDefault();
+  queueInput(state, KEY_MAP[e.key]);
 }
 
 function bindControls() {
@@ -119,10 +129,8 @@ function bindControls() {
       queueInput(state, dir);
     });
   });
-
   document.addEventListener('keydown', function(e) {
-    var map = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
-    if (map[e.key]) { e.preventDefault(); queueInput(state, map[e.key]); }
+    [KEY_MAP[e.key]].filter(Boolean).forEach(function() { onKeyDown(e); });
   });
 }
 
