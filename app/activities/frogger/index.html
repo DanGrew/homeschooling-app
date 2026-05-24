@@ -12,6 +12,21 @@
 <script src="../../../components/speech/speech-ui.js" defer></script>
 <script src="../../../core/frogger/frogger-core.js"></script>
 <script src="../../../ui/frogger/frogger-renderer.js"></script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+window.__makeSpeakable = makeSpeakable;
+var SPEAKABLE_BTNS = [
+  { id: 'btn-up', label: 'up' }, { id: 'btn-down', label: 'down' },
+  { id: 'btn-left', label: 'left' }, { id: 'btn-right', label: 'right' },
+  { id: 'frogger-reset-btn', label: 'Try Again' }
+];
+SPEAKABLE_BTNS.forEach(function(d) {
+  [document.querySelector('[data-testid="' + d.id + '"]')].filter(Boolean)
+    .forEach(function(b) { makeSpeakable(b, d.label); });
+});
+[document.querySelector('[data-testid="frogger-reset-msg"]')].filter(Boolean)
+  .forEach(function(el) { makeSpeakable(el, 'Oops! Try a different way!'); });
+</script>
 </head>
 <body>
 <div class="nav-bar" data-home="../../lessons/" data-title="Crossing Playground" data-no-links="standalone game" data-no-instruction="tap arrows to move"></div>
@@ -45,9 +60,9 @@ var DEV_SCENARIO = {
       spawns: [{ entity: { type: 'platform', width: 2 }, every: 4 }] },
     { id: 'median', y: 3, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
     { id: 'road1',  y: 4, baseTile: 'ground', wrap: true,  movement: { direction: 'right', speed: 2.0 },
-      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 4 }] },
+      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 6 }] },
     { id: 'road2',  y: 5, baseTile: 'ground', wrap: true,  movement: { direction: 'left',  speed: 1.5 },
-      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 3 }] },
+      spawns: [{ entity: { type: 'obstacle', width: 1 }, every: 5 }] },
     { id: 'verge',  y: 6, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
     { id: 'start',  y: 7, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } }
   ],
