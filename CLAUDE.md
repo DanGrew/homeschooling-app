@@ -41,6 +41,8 @@ See `TESTING.md` for full ways of working. Summary:
 - **Playwright** (`npm test`) — user journeys, browser interactions, `tests/`
 - Both required to pass on every PR.
 
+**Never run the full Playwright suite (`npm test`) without explicit user permission.** Full suite takes ~4 minutes. Run only the specific test file for the feature under development: `npx playwright test tests/<file>.test.js`. CI runs the full suite on every PR.
+
 ## Git and GitHub
 
 **Branching:** Feature branches off `main`. Naming: `<topic>-<descriptor>`.
