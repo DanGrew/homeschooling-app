@@ -3,6 +3,8 @@ var paintBgCtx = null;
 var paintDrawCtx = null;
 var paintActiveTool = 'hand';
 var paintPrevBrush = null;
+var paintActiveColour = '#333333';
+var paintPaletteEnabled = true;
 
 var PAINT_ACTIVE_ATTR = {
   true: function(btn) { btn.setAttribute('data-active', ''); },
@@ -13,6 +15,8 @@ var PAINT_ON_SET_HAND = {
   true: function() { paintPrevBrush = paintActiveTool; },
   false: function() {}
 };
+
+var PAINT_PALETTE_OPACITY = { true: '1', false: '0.35' };
 
 function paintApplyViewport() {
   var left = -paintState.viewport.x + 'px';
@@ -29,9 +33,64 @@ function paintSetTool(tool) {
   paintRenderToolbar();
 }
 
+function paintSetPaletteEnabled(enabled) {
+  paintPaletteEnabled = enabled;
+  document.getElementById('paint-colour-slot').style.opacity = PAINT_PALETTE_OPACITY[String(enabled)];
+  document.getElementById('paint-colour-slot').style.pointerEvents = enabled ? '' : 'none';
+}
+
 function paintRenderToolbar() {
   document.querySelectorAll('[data-paint-tool]').forEach(function(btn) {
     PAINT_ACTIVE_ATTR[String(btn.getAttribute('data-paint-tool') === paintActiveTool)](btn);
+  });
+}
+
+function paintStrokeLine(ctx, x1, y1, x2, y2, colour, lineWidth, alpha, cap, join) {
+  ctx.save();
+  ctx.strokeStyle = colour;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = cap;
+  ctx.lineJoin = join;
+  ctx.globalAlpha = alpha;
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.restore();
+}
+
+var BRUSH_STROKE = {
+  pencil: function(ctx, x1, y1, x2, y2, colour) {
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 2, 0.9, 'round', 'round');
+  },
+  marker: function(ctx, x1, y1, x2, y2, colour) {
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 18, 1.0, 'square', 'miter');
+  },
+  paintbrush: function(ctx, x1, y1, x2, y2, colour) {
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 14, 0.75, 'round', 'round');
+  },
+  crayon: function(ctx, x1, y1, x2, y2, colour) {
+    CRAYON_PASSES.forEach(function(p) {
+      paintStrokeLine(ctx, x1 + p.ox, y1 + p.oy, x2 + p.ox, y2 + p.oy, colour, 14 * p.wf, p.a, 'round', 'round');
+    });
+  }
+};
+
+function paintBuildColourSlot(slot) {
+  PAINT_COLOURS.forEach(function(colour) {
+    var d = document.createElement('div');
+    d.className = 'paint-colour-swatch';
+    d.style.background = colour;
+    d.dataset.colour = colour;
+    d.addEventListener('click', function() {
+      [paintPaletteEnabled].filter(Boolean).forEach(function() {
+        paintActiveColour = colour;
+        document.querySelectorAll('.paint-colour-swatch').forEach(function(s) {
+          PAINT_ACTIVE_ATTR[String(s.dataset.colour === colour)](s);
+        });
+      });
+    });
+    slot.appendChild(d);
   });
 }
 
@@ -55,13 +114,16 @@ function initPaintPlayground() {
 
   paintApplyViewport();
   paintRenderToolbar();
+  paintBuildColourSlot(document.getElementById('paint-colour-slot'));
 
-  document.getElementById('paint-hand-btn').addEventListener('click', function() {
-    paintSetTool('hand');
+  document.querySelectorAll('[data-paint-tool]').forEach(function(btn) {
+    btn.addEventListener('click', function() { paintSetTool(btn.getAttribute('data-paint-tool')); });
   });
 
   var panActive = false;
   var panStartX = 0, panStartY = 0, panOriginX = 0, panOriginY = 0;
+  var isDrawing = false;
+  var lastX = 0, lastY = 0;
 
   var PAN_START = {
     hand: function(e) {
@@ -74,8 +136,19 @@ function initPaintPlayground() {
     }
   };
 
+  function toCanvasCoords(e) {
+    var r = wrap.getBoundingClientRect();
+    return { x: e.clientX - r.left + paintState.viewport.x, y: e.clientY - r.top + paintState.viewport.y };
+  }
+
   drawCanvas.addEventListener('pointerdown', function(e) {
     [PAN_START[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
+    [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function() {
+      drawCanvas.setPointerCapture(e.pointerId);
+      isDrawing = true;
+      var pt = toCanvasCoords(e);
+      lastX = pt.x; lastY = pt.y;
+    });
   });
 
   drawCanvas.addEventListener('pointermove', function(e) {
@@ -85,8 +158,15 @@ function initPaintPlayground() {
       paintState = applyPaintPan(paintState, panOriginX - dx, panOriginY - dy);
       paintApplyViewport();
     });
+    [isDrawing].filter(Boolean).forEach(function() {
+      var pt = toCanvasCoords(e);
+      [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function(fn) {
+        fn(paintDrawCtx, lastX, lastY, pt.x, pt.y, paintActiveColour);
+      });
+      lastX = pt.x; lastY = pt.y;
+    });
   });
 
-  drawCanvas.addEventListener('pointerup', function() { panActive = false; });
-  drawCanvas.addEventListener('pointercancel', function() { panActive = false; });
+  drawCanvas.addEventListener('pointerup', function() { panActive = false; isDrawing = false; });
+  drawCanvas.addEventListener('pointercancel', function() { panActive = false; isDrawing = false; });
 }

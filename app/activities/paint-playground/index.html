@@ -11,10 +11,13 @@
 <style>
 #paint-viewport{flex:1;position:relative;overflow:hidden;background:#f0f0f0;touch-action:none;}
 #paint-bg,#paint-draw{position:absolute;top:0;left:0;}
-#paint-toolbar{position:absolute;right:0;top:0;bottom:0;width:64px;background:rgba(0,0,0,0.75);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:8px;z-index:20;}
+#paint-toolbar{position:absolute;right:0;top:0;bottom:0;width:64px;background:rgba(0,0,0,0.75);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;z-index:20;}
 .paint-tool-btn{width:48px;height:48px;border:none;border-radius:10px;font-size:24px;cursor:pointer;background:none;color:#fff;display:flex;align-items:center;justify-content:center;}
 .paint-tool-btn[data-active]{background:#F39C12;}
-#paint-brush-slot{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;}
+#paint-brush-slot{display:flex;flex-direction:column;align-items:center;gap:6px;}
+#paint-colour-slot{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:4px;padding:4px 0;flex:1;align-content:flex-start;}
+.paint-colour-swatch{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
+.paint-colour-swatch[data-active]{border-color:#fff;}
 </style>
 </head>
 <body>
@@ -24,7 +27,13 @@
     <canvas id="paint-bg" data-testid="paint-bg"></canvas>
     <canvas id="paint-draw" data-testid="paint-draw"></canvas>
     <div id="paint-toolbar">
-      <div id="paint-brush-slot"></div>
+      <div id="paint-brush-slot">
+        <button class="paint-tool-btn" data-paint-tool="pencil" id="paint-pencil-btn" data-testid="paint-pencil-btn">&#9999;&#65039;</button>
+        <button class="paint-tool-btn" data-paint-tool="crayon" id="paint-crayon-btn" data-testid="paint-crayon-btn">&#128397;&#65039;</button>
+        <button class="paint-tool-btn" data-paint-tool="paintbrush" id="paint-paintbrush-btn" data-testid="paint-paintbrush-btn">&#128396;&#65039;</button>
+        <button class="paint-tool-btn" data-paint-tool="marker" id="paint-marker-btn" data-testid="paint-marker-btn">&#128394;&#65039;</button>
+      </div>
+      <div id="paint-colour-slot"></div>
       <button class="paint-tool-btn" data-paint-tool="hand" id="paint-hand-btn" data-testid="paint-hand-btn">&#9995;</button>
     </div>
   </div>
@@ -34,6 +43,10 @@
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
+makeSpeakable(document.getElementById('paint-pencil-btn'), 'Pencil');
+makeSpeakable(document.getElementById('paint-crayon-btn'), 'Crayon');
+makeSpeakable(document.getElementById('paint-paintbrush-btn'), 'Paint brush');
+makeSpeakable(document.getElementById('paint-marker-btn'), 'Marker');
 makeSpeakable(document.getElementById('paint-hand-btn'), 'Hand tool');
 </script>
 <script>window.addEventListener('load', initPaintPlayground);</script>
