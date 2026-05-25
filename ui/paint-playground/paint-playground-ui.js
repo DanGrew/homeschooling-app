@@ -5,6 +5,8 @@ var paintActiveTool = 'hand';
 var paintPrevBrush = null;
 var paintActiveColour = '#333333';
 var paintPaletteEnabled = true;
+var paintUndoStack = [];
+var PAINT_UNDO_MAX = 5;
 
 var PAINT_ACTIVE_ATTR = {
   true: function(btn) { btn.setAttribute('data-active', ''); },
@@ -24,7 +26,8 @@ var PAINT_PALETTE_OFF = function() { paintSetPaletteEnabled(false); };
 var PAINT_PALETTE_TOGGLE = {
   hand: PAINT_PALETTE_ON, pencil: PAINT_PALETTE_ON, crayon: PAINT_PALETTE_ON,
   paintbrush: PAINT_PALETTE_ON, marker: PAINT_PALETTE_ON,
-  glitter: PAINT_PALETTE_ON, stamp: PAINT_PALETTE_ON, rainbow: PAINT_PALETTE_OFF
+  glitter: PAINT_PALETTE_ON, stamp: PAINT_PALETTE_ON, rainbow: PAINT_PALETTE_OFF,
+  eraser: PAINT_PALETTE_ON
 };
 
 function paintApplyViewport() {
@@ -101,8 +104,31 @@ var BRUSH_STROKE = {
     var colour = PAINT_COLOURS[paintRainbowIdx % PAINT_COLOURS.length];
     paintRainbowIdx = (paintRainbowIdx + 1) % PAINT_COLOURS.length;
     paintStrokeLine(ctx, x1, y1, x2, y2, colour, 14, 1.0, 'round', 'round');
+  },
+  eraser: function(ctx, x1, y1, x2, y2) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    paintStrokeLine(ctx, x1, y1, x2, y2, 'rgba(0,0,0,1)', 24, 1.0, 'round', 'round');
+    ctx.restore();
   }
 };
+
+function paintPushUndo() {
+  var vp = paintState.viewport;
+  paintUndoStack.push({ data: paintDrawCtx.getImageData(vp.x, vp.y, vp.width, vp.height), x: vp.x, y: vp.y });
+  [paintUndoStack.length > PAINT_UNDO_MAX].filter(Boolean).forEach(function() { paintUndoStack.shift(); });
+}
+
+function paintUndo() {
+  [paintUndoStack.pop()].filter(Boolean).forEach(function(snap) {
+    paintDrawCtx.putImageData(snap.data, snap.x, snap.y);
+  });
+}
+
+function paintClearCanvas() {
+  paintDrawCtx.clearRect(0, 0, paintDrawCtx.canvas.width, paintDrawCtx.canvas.height);
+  paintUndoStack = [];
+}
 
 function paintBuildColourSlot(slot) {
   PAINT_COLOURS.forEach(function(colour) {
@@ -148,6 +174,8 @@ function initPaintPlayground() {
     btn.addEventListener('click', function() { paintSetTool(btn.getAttribute('data-paint-tool')); });
   });
 
+  document.getElementById('paint-undo-btn').addEventListener('click', paintUndo);
+
   var gestureRect = { left: 0, top: 0 };
   var panActive = false;
   var panStartX = 0, panStartY = 0, panOriginX = 0, panOriginY = 0;
@@ -169,6 +197,7 @@ function initPaintPlayground() {
   var TOOL_DOWN = {
     stamp: function(e) {
       drawCanvas.setPointerCapture(e.pointerId);
+      paintPushUndo();
       var pt = paintClientToCanvas(e.clientX, e.clientY, gestureRect.left, gestureRect.top, paintState.viewport.x, paintState.viewport.y);
       tapStartX = pt.x;
       tapStartY = pt.y;
@@ -195,6 +224,7 @@ function initPaintPlayground() {
     [PAN_START[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
     [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function() {
       drawCanvas.setPointerCapture(e.pointerId);
+      paintPushUndo();
       isDrawing = true;
       var pt = paintClientToCanvas(e.clientX, e.clientY, gestureRect.left, gestureRect.top, paintState.viewport.x, paintState.viewport.y);
       lastX = pt.x; lastY = pt.y;
