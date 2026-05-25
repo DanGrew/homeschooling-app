@@ -84,13 +84,12 @@ var NO_EVENTS = {
 };
 
 function buildTimeOptions(sel) {
-  for (var m = 0; m < 1440; m += 15) {
-    var h = Math.floor(m / 60), min = m % 60;
+  Array.from({ length: 96 }, function(_, i) {
     var opt = document.createElement('option');
-    opt.value = m;
-    opt.textContent = (h < 10 ? '0' + h : h) + ':' + (min < 10 ? '0' + min : min);
+    opt.value = i * 15;
+    opt.textContent = ('0' + Math.floor(i * 15 / 60)).slice(-2) + ':' + ('0' + (i * 15 % 60)).slice(-2);
     sel.appendChild(opt);
-  }
+  });
 }
 buildTimeOptions(document.getElementById('filter-from'));
 buildTimeOptions(document.getElementById('filter-to'));
