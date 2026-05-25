@@ -40,8 +40,29 @@ function applyPaintPan(state, targetX, targetY) {
   });
 }
 
+var GLITTER_OFFSETS = [
+  { dx:  0,   dy:  0,   r: 3.0 },
+  { dx: -8,   dy: -6,   r: 2.0 },
+  { dx: 10,   dy: -4,   r: 2.0 },
+  { dx: -5,   dy:  9,   r: 2.0 },
+  { dx:  8,   dy:  7,   r: 2.0 },
+  { dx: -12,  dy:  2,   r: 1.5 },
+  { dx:  6,   dy: -11,  r: 1.5 }
+];
+
 function paintClientToCanvas(clientX, clientY, rectLeft, rectTop, viewportX, viewportY) {
   return { x: clientX - rectLeft + viewportX, y: clientY - rectTop + viewportY };
 }
 
-if (typeof module !== 'undefined') module.exports = { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, initPaintState, applyPaintPan, paintClientToCanvas };
+function buildStarPath(cx, cy, outerR, innerR, points) {
+  var radii = [outerR, innerR];
+  var step = Math.PI / points;
+  var result = [];
+  for (var i = 0; i < points * 2; i++) {
+    var angle = i * step - Math.PI / 2;
+    result.push({ x: cx + Math.cos(angle) * radii[i % 2], y: cy + Math.sin(angle) * radii[i % 2] });
+  }
+  return result;
+}
+
+if (typeof module !== 'undefined') module.exports = { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, GLITTER_OFFSETS, initPaintState, applyPaintPan, paintClientToCanvas, buildStarPath };

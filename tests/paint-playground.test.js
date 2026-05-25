@@ -88,3 +88,60 @@ test('drawing on canvas with pencil produces pixels', async ({ page }) => {
   })
   expect(hasPixels).toBe(true)
 })
+
+test('all three special brush buttons visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="paint-glitter-btn"]')).toBeVisible()
+  await expect(page.locator('[data-testid="paint-stamp-btn"]')).toBeVisible()
+  await expect(page.locator('[data-testid="paint-rainbow-btn"]')).toBeVisible()
+})
+
+test('rainbow brush disables colour palette', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-rainbow-btn"]')
+  const opacity = await page.locator('#paint-colour-slot').evaluate(el => el.style.opacity)
+  expect(opacity).toBe('0.35')
+})
+
+test('switching from rainbow to pencil re-enables palette', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-rainbow-btn"]')
+  await page.click('[data-testid="paint-pencil-btn"]')
+  const opacity = await page.locator('#paint-colour-slot').evaluate(el => el.style.opacity)
+  expect(opacity).toBe('1')
+})
+
+test('star stamp places pixels on tap', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-stamp-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+  await page.mouse.click(cx, cy)
+  const hasPixels = await page.locator('[data-testid="paint-draw"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d');
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true; }
+    return false;
+  })
+  expect(hasPixels).toBe(true)
+})
+
+test('glitter brush produces pixels on drag', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-glitter-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+  await page.mouse.move(cx, cy)
+  await page.mouse.down()
+  await page.mouse.move(cx + 50, cy + 30)
+  await page.mouse.up()
+  const hasPixels = await page.locator('[data-testid="paint-draw"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d');
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true; }
+    return false;
+  })
+  expect(hasPixels).toBe(true)
+})
