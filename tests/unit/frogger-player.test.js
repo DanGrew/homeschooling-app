@@ -357,23 +357,41 @@ test('obstacle collision detects when player worldX is non-integer', () => {
   expect(event.type).toBe('obstacle')
 })
 
-test('platform detection uses centre-based check', () => {
+test('platform detection: majority on log (centre inside) is safe', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
-    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 2 }] }
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
-  const state = simWithPlayer(scenario, 5, 3)
-  applyInput(state, scenario, 'right') // worldX → 5.5, centre=6.0 inside [5,7]
+  const state = simWithPlayer(scenario, 5, 3) // worldX=5, centre=5.5 inside [5,6]
   expect(isOnPlatform(state, scenario, state.player)).toBe(true)
 })
 
-test('platform detection: centre just left of log edge is unsafe', () => {
+test('platform detection: left boundary (centre=log.x) is safe (left-inclusive)', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
-    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 2 }] }
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
   const state = simWithPlayer(scenario, 4, 3)
-  applyInput(state, scenario, 'right') // worldX → 4.5, centre=5.0, not strictly inside (5 < 5.0 is false)
+  applyInput(state, scenario, 'right') // worldX → 4.5, centre=5.0 = log.x → safe
+  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+})
+
+test('platform detection: right boundary (centre=log.x+width) is unsafe', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3, 'right', 1)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 5, 3)
+  applyInput(state, scenario, 'right') // worldX → 5.5, centre=6.0 = log.x+width → unsafe
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+test('platform detection: centre left of log is unsafe', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3, 'right', 1)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 3, 3) // worldX=3, centre=3.5, outside [5,6]
   expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 
