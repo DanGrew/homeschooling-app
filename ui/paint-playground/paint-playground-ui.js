@@ -232,7 +232,7 @@ function initPaintPlayground() {
   document.querySelectorAll('[data-paint-size]').forEach(function(btn) {
     btn.addEventListener('click', function() { paintSetSize(Number(btn.getAttribute('data-paint-size'))); });
   });
-  paintSetSize(1);
+  paintSetSize(2);
 
   document.getElementById('paint-undo-btn').addEventListener('click', paintUndo);
   document.getElementById('paint-bg-btn').addEventListener('click', paintOpenBgPanel);
