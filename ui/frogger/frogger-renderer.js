@@ -71,6 +71,10 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.appendChild(entityLayer);
 
   var playerEl = buildPlayerEl(theme, cs);
+  var dotR = Math.round(cs * 0.12);
+  var contactDotEl = document.createElement('div');
+  contactDotEl.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);border-radius:50%;left:' + (cs / 2 - dotR) + 'px;top:' + (cs / 2 - dotR) + 'px;width:' + (dotR * 2) + 'px;height:' + (dotR * 2) + 'px;pointer-events:none;z-index:11;';
+  playerEl.appendChild(contactDotEl);
   grid.appendChild(playerEl);
 
   var bboxLayer = document.createElement('div');
@@ -153,11 +157,6 @@ function bboxDivThick(x, y, w, h, color) {
   return el;
 }
 
-function contactDotDiv(x, y, r) {
-  var el = document.createElement('div');
-  el.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);border-radius:50%;left:' + (x - r) + 'px;top:' + (y - r) + 'px;width:' + (r * 2) + 'px;height:' + (r * 2) + 'px;';
-  return el;
-}
 
 function appendEntityBBox(layer, cs, scenario, e) {
   var cfg = BBOX_CFG[e.type];
@@ -173,12 +172,6 @@ function appendActivePlatformBBox(layer, cs, scenario, e) {
   });
 }
 
-function appendContactDot(layer, cs, scenario, player) {
-  var cx = (player.worldX + 0.5) * cs;
-  [getRowAtY(scenario, player.y)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(contactDotDiv(cx, row.y * cs + cs * 0.5, cs * 0.12));
-  });
-}
 
 function renderBBoxes(rState, simState, scenario) {
   var layer = rState.bboxLayer;
@@ -188,7 +181,6 @@ function renderBBoxes(rState, simState, scenario) {
     .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
     layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
-    appendContactDot(layer, cs, scenario, p);
     [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
       .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
   });
