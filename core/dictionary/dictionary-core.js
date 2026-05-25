@@ -24,11 +24,16 @@ var Dictionary=(function(){
         delete item.concept;
         if(rep.src){
           item.url=base+rep.src;
-          return fetchText(base+rep.src).then(function(svg){
-            item.svg=svg;
-            repCache[repPath]=item;
-            return item;
-          });
+          var isSvg=!rep.format||rep.format==='svg';
+          if(isSvg){
+            return fetchText(base+rep.src).then(function(svg){
+              item.svg=svg;
+              repCache[repPath]=item;
+              return item;
+            });
+          }
+          repCache[repPath]=item;
+          return item;
         }
         repCache[repPath]=item;
         return item;

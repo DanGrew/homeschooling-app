@@ -91,6 +91,24 @@ describe('loadManifest — rep with src (SVG fetch)', () => {
   });
 });
 
+describe('loadManifest — rep with src and format:png (no SVG fetch)', () => {
+  it('sets url but skips svg text fetch for non-svg format', async () => {
+    const concept = { name: 'Chase', tags: ['paw-patrol'] };
+    const rep = { concept: 'chase', src: 'entries/chase/chase.png', format: 'png' };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(['entries/chase/rep.json']) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(rep) })
+      .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve(concept) });
+    vi.stubGlobal('fetch', fetchMock);
+    const D = await freshDictionary();
+    D.init('/base/');
+    const [item] = await D.loadManifest('image');
+    expect(item.url).toBe('/base/entries/chase/chase.png');
+    expect(item.svg).toBeUndefined();
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+});
+
 describe('caching', () => {
   it('does not re-fetch a rep already loaded', async () => {
     const concept = { name: 'Fish', tags: [] };

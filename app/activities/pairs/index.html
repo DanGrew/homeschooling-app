@@ -13,6 +13,7 @@
 <script src="../../../core/pairs/pairs-content.js"></script>
 <script src="../../../core/card-game/card-game-engine.js"></script>
 <script src="../../../core/pairs/pairs-core.js"></script>
+<script src="../../../core/dictionary/image-service.js"></script>
 <script src="../../../ui/card-game/card-game-ui.js"></script>
 <script src="../../../ui/pairs/pairs-ui.js"></script>
 </head>
@@ -30,6 +31,7 @@
 
 <script>
 window.DICT_BASE = '../../../content/dictionary/entries/';
+ImageService.load('../../../content/dictionary/', function(){});
 
 var MISMATCH_DELAY = 1000;
 var COMPLETE_DELAY = 1200;
