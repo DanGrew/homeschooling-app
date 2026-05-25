@@ -18,19 +18,18 @@ function _onDismiss() {
 }
 
 export function showLearningMoment(message) {
-  if (_cooldown) return;
-
-  if (_dismissTimer) {
-    clearTimeout(_dismissTimer);
-    _dismissTimer = null;
+  if (!_cooldown) {
+    if (_dismissTimer) {
+      clearTimeout(_dismissTimer);
+      _dismissTimer = null;
+    }
+    show(message);
+    _active = true;
+    _dismissTimer = setTimeout(function() {
+      hide();
+      _onDismiss();
+    }, LEARNING_MOMENT_DURATION_MS);
   }
-
-  show(message);
-  _active = true;
-  _dismissTimer = setTimeout(function() {
-    hide();
-    _onDismiss();
-  }, LEARNING_MOMENT_DURATION_MS);
 }
 
 export { LEARNING_MOMENT_COOLDOWN_MS };
