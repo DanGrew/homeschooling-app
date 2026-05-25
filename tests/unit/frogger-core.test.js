@@ -400,3 +400,27 @@ test('counter resets to 0 when obstacle spawn blocked', () => {
   stepSimulation(state, scenario, 0.01)
   expect(state.spawnCounters['r1']).toBe(0)
 })
+
+test('obstacle spawn blocked when existing obstacle near wrap point (rightward)', () => {
+  // cols=10, entity at x=7.5 w=1: right edge=8.5, distWrap=10-8.5=1.5 <= MIN_OBSTACLE_GAP+w=3
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 7.5, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+})
+
+test('obstacle spawn blocked when existing obstacle near wrap point (leftward)', () => {
+  // cols=10, entity at x=0.5 w=1: left edge=0.5, distWrap=0.5+1=1.5 <= MIN_OBSTACLE_GAP+w=3
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'left', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 0.5, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.01)
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+})

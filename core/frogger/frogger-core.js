@@ -1,5 +1,5 @@
-var HOP_DURATION = 300;
 var MIN_OBSTACLE_GAP = 2;
+var STEP = 0.5;
 
 function createPRNG(seed) {
   var s = (seed >>> 0) || 1;
@@ -95,6 +95,8 @@ function stepSimulation(state, scenario, dt) {
               if (ex.rowId !== rowDef.id || ex.type !== 'obstacle' || ex.collected) return;
               var dist = dir === 'right' ? ex.x - (-w) : cols - (ex.x + ex.width);
               if (dist <= MIN_OBSTACLE_GAP + w) tooClose = true;
+              var distWrap = dir === 'right' ? cols - (ex.x + ex.width) : ex.x + ex.width;
+              if (wrap && distWrap <= MIN_OBSTACLE_GAP + w) tooClose = true;
             });
             if (tooClose) {
               finalAccum = 0;
@@ -148,11 +150,7 @@ function createPlayer(x, y) {
     x: x,
     y: y,
     worldX: x,
-    hopState: 'idle',
-    hopTimer: 0,
-    hopFrom: null,
-    hopTo: null,
-    pendingInput: null
+    worldY: y
   };
 }
 
@@ -187,65 +185,33 @@ function isOnPlatform(state, scenario, player) {
   for (var i = 0; i < entities.length; i++) {
     var e = entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
-    if (entityOverlapsPlayerTile(e, player.x)) return true;
+    var cx = player.worldX + 0.5;
+    if (e.x <= cx && cx < e.x + e.width) return true;
   }
   return false;
 }
 
-function attemptMove(state, scenario, direction) {
-  var player = state.player;
-  var dx = direction === 'left' ? -1 : direction === 'right' ? 1 : 0;
-  var dy = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
-  var nx = player.x + dx;
-  var ny = player.y + dy;
-
-  if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return false;
-  var destRow = getRowAtY(scenario, ny);
-  if (destRow && destRow.baseTile === 'wall') return false;
-
-  player.hopState = 'hopping';
-  player.hopTimer = HOP_DURATION;
-  player.hopFrom = { x: player.x, y: player.y };
-  player.hopTo = { x: nx, y: ny };
-  return true;
-}
-
-function queueInput(state, direction) {
-  if (!state.player) return;
-  state.player.pendingInput = direction;
-}
-
-function stepPlayer(state, scenario, dt) {
+function applyInput(state, scenario, direction) {
   if (state.phase !== 'running') return;
   var player = state.player;
   if (!player) return;
-
-  if (player.hopState === 'hopping') {
-    player.hopTimer -= dt * 1000;
-    if (player.hopTimer <= 0) {
-      player.x = player.hopTo.x;
-      player.y = player.hopTo.y;
-      player.worldX = player.x;
-      player.hopState = 'idle';
-      player.hopFrom = null;
-      player.hopTo = null;
-      if (player.pendingInput) {
-        var pending = player.pendingInput;
-        player.pendingInput = null;
-        attemptMove(state, scenario, pending);
-      }
-    }
-  } else if (player.pendingInput) {
-    var input = player.pendingInput;
-    player.pendingInput = null;
-    attemptMove(state, scenario, input);
-  }
+  var dx = direction === 'left' ? -STEP : direction === 'right' ? STEP : 0;
+  var dy = direction === 'up' ? -STEP : direction === 'down' ? STEP : 0;
+  var nx = player.worldX + dx;
+  var ny = player.worldY + dy;
+  if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return;
+  var destRow = getRowAtY(scenario, Math.floor(ny));
+  if (destRow && destRow.baseTile === 'wall') return;
+  player.worldX = nx;
+  player.worldY = ny;
+  player.x = Math.floor(nx);
+  player.y = Math.floor(ny);
 }
 
 function applyCarrying(state, scenario, dt) {
   if (state.phase !== 'running') return;
   var player = state.player;
-  if (!player || player.hopState === 'hopping') return;
+  if (!player) return;
 
   var row = getRowAtY(scenario, player.y);
   if (!row || !row.movement || row.movement.direction === 'none') return;
@@ -263,7 +229,7 @@ function applyCarrying(state, scenario, dt) {
 function detectCollisions(state, scenario) {
   if (state.phase !== 'running') return null;
   var player = state.player;
-  if (!player || player.hopState === 'hopping') return null;
+  if (!player) return null;
 
   var entities = state.entities;
   for (var i = 0; i < entities.length; i++) {
@@ -271,7 +237,7 @@ function detectCollisions(state, scenario) {
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
     if (!eRow || eRow.y !== player.y) continue;
-    if (entityOverlapsPlayerTile(e, player.x)) {
+    if (entityOverlapsPlayerTile(e, player.worldX)) {
       return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
     }
   }
@@ -294,19 +260,30 @@ function resetPlayer(state, scenario, resetPointId) {
       player.x = pos.x;
       player.y = pos.y;
       player.worldX = pos.x;
-      player.hopState = 'idle';
-      player.hopTimer = 0;
-      player.hopFrom = null;
-      player.hopTo = null;
-      player.pendingInput = null;
+      player.worldY = pos.y;
       return;
     }
   }
 }
 
+function activePlatformsInRow(state, rowId, cx) {
+  return state.entities
+    .filter(function(e) { return !e.collected; })
+    .filter(function(e) { return e.type === 'platform'; })
+    .filter(function(e) { return e.rowId === rowId; })
+    .filter(function(e) { return e.x <= cx; })
+    .filter(function(e) { return e.x + e.width > cx; });
+}
+
+function findCarryingPlatform(state, scenario, player) {
+  var cx = player.worldX + 0.5;
+  return [getRowAtY(scenario, player.y)].filter(Boolean)
+    .reduce(function(_, row) { return activePlatformsInRow(state, row.id, cx)[0]; }, null);
+}
+
 if (typeof module !== 'undefined') module.exports = {
-  HOP_DURATION,
   MIN_OBSTACLE_GAP,
+  STEP,
   createPRNG,
   createSimulation,
   stepSimulation,
@@ -321,9 +298,10 @@ if (typeof module !== 'undefined') module.exports = {
   getRowById,
   entityOverlapsPlayerTile,
   isOnPlatform,
-  queueInput,
-  stepPlayer,
+  applyInput,
   applyCarrying,
   detectCollisions,
-  resetPlayer
+  resetPlayer,
+  activePlatformsInRow,
+  findCarryingPlatform
 };

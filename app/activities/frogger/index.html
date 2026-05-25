@@ -133,7 +133,6 @@ function onCollision(collision) {
 }
 
 function stepActive(dt) {
-  stepPlayer(state, activeScenario, dt);
   stepSimulation(state, activeScenario, dt);
   applyCarrying(state, activeScenario, dt);
   [detectCollisions(state, activeScenario)].filter(Boolean).forEach(onCollision);
@@ -146,13 +145,13 @@ function loop(timestamp) {
   var dt = Math.min((timestamp - lastTime) / 1000, 0.05);
   LOOP_STEP[String(pendingReset)](dt);
   lastTime = timestamp;
-  renderFrogger(rState, state, activeScenario, HOP_DURATION);
+  renderFrogger(rState, state, activeScenario);
   animId = requestAnimationFrame(loop);
 }
 
 function onKeyDown(e) {
   e.preventDefault();
-  queueInput(state, KEY_MAP[e.key]);
+  applyInput(state, activeScenario, KEY_MAP[e.key]);
 }
 
 function bindControls() {
@@ -162,7 +161,7 @@ function bindControls() {
     var btn = document.querySelector('[data-testid="' + id + '"]');
     btn.addEventListener('pointerdown', function(e) {
       e.preventDefault();
-      [activeScenario].filter(Boolean).forEach(function() { queueInput(state, dir); });
+      [activeScenario].filter(Boolean).forEach(function() { applyInput(state, activeScenario, dir); });
     });
   });
   document.addEventListener('keydown', function(e) {

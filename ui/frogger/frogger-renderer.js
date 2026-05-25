@@ -41,7 +41,7 @@ function applyPlayerFallback(playerEl) {
 function buildPlayerEl(theme, cs) {
   var playerEl = document.createElement('div');
   playerEl.setAttribute('data-testid', 'frogger-player');
-  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;';
+  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;transition:left 0.08s linear,top 0.08s linear;';
   var playerAsset = theme.assets[theme.map.player];
   var BUILD = { 'true': function() { playerEl.appendChild(assetImg(playerAsset)); }, 'false': function() { applyPlayerFallback(playerEl); } };
   BUILD[String(!!playerAsset)]();
@@ -71,7 +71,16 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.appendChild(entityLayer);
 
   var playerEl = buildPlayerEl(theme, cs);
+  var dotR = Math.round(cs * 0.12);
+  var contactDotEl = document.createElement('div');
+  contactDotEl.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);border-radius:50%;left:' + (cs / 2 - dotR) + 'px;top:' + (cs / 2 - dotR) + 'px;width:' + (dotR * 2) + 'px;height:' + (dotR * 2) + 'px;pointer-events:none;z-index:11;';
+  playerEl.appendChild(contactDotEl);
   grid.appendChild(playerEl);
+
+  var bboxLayer = document.createElement('div');
+  bboxLayer.setAttribute('data-testid', 'frogger-bbox-layer');
+  bboxLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:15;';
+  grid.appendChild(bboxLayer);
 
   var highlightEl = document.createElement('div');
   highlightEl.setAttribute('data-testid', 'frogger-highlight');
@@ -96,7 +105,7 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.appendChild(resetOverlay);
   container.appendChild(grid);
 
-  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, entityEls: {}, cs, theme };
+  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, bboxLayer, entityEls: {}, cs, theme };
 }
 
 function removeEntityEl(rState, e) {
@@ -130,23 +139,59 @@ function removeOrphanEl(rState, id) {
   delete rState.entityEls[id];
 }
 
-var PLAYER_POS_FNS = {
-  hopping: function(player, HOP_DURATION) {
-    var progress = 1 - Math.max(0, player.hopTimer / HOP_DURATION);
-    return { x: player.hopFrom.x + (player.hopTo.x - player.hopFrom.x) * progress,
-             y: player.hopFrom.y + (player.hopTo.y - player.hopFrom.y) * progress };
-  },
-  idle: function(player) { return { x: player.x, y: player.y }; }
+var BBOX_CFG = {
+  obstacle:    { color: 'rgba(255,60,60,0.85)'  },
+  platform:    { color: 'rgba(60,220,60,0.85)'  },
+  collectible: { color: 'rgba(255,200,0,0.85)'  }
 };
 
-function applyPlayerPos(rState, player, HOP_DURATION) {
-  var pos = [PLAYER_POS_FNS[player.hopState]].filter(Boolean)
-    .reduce(function(_, fn) { return fn(player, HOP_DURATION); }, { x: player.x, y: player.y });
-  rState.playerEl.style.left = (pos.x * rState.cs) + 'px';
-  rState.playerEl.style.top = (pos.y * rState.cs) + 'px';
+function bboxDiv(x, y, w, h, color) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:absolute;box-sizing:border-box;border:2px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  return el;
 }
 
-function renderFrogger(rState, simState, scenario, HOP_DURATION) {
+function bboxDivThick(x, y, w, h, color) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:absolute;box-sizing:border-box;border:3px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  return el;
+}
+
+
+function appendEntityBBox(layer, cs, scenario, e) {
+  var cfg = BBOX_CFG[e.type];
+  [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
+    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, cfg.color));
+  });
+}
+
+
+function appendActivePlatformBBox(layer, cs, scenario, e) {
+  [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
+    layer.appendChild(bboxDivThick(e.x * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)'));
+  });
+}
+
+
+function renderBBoxes(rState, simState, scenario) {
+  var layer = rState.bboxLayer;
+  var cs = rState.cs;
+  layer.innerHTML = '';
+  simState.entities.filter(function(e) { return !e.collected; })
+    .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
+  [simState.player].filter(Boolean).forEach(function(p) {
+    layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
+    [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
+      .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
+  });
+}
+
+function applyPlayerPos(rState, player) {
+  rState.playerEl.style.left = (player.worldX * rState.cs) + 'px';
+  rState.playerEl.style.top  = (player.worldY * rState.cs) + 'px';
+}
+
+function renderFrogger(rState, simState, scenario) {
   var cs = rState.cs;
   var theme = rState.theme;
   var seen = {};
@@ -161,7 +206,9 @@ function renderFrogger(rState, simState, scenario, HOP_DURATION) {
     .forEach(function(id) { removeOrphanEl(rState, id); });
 
   [simState.player].filter(Boolean)
-    .forEach(function(player) { applyPlayerPos(rState, player, HOP_DURATION); });
+    .forEach(function(player) { applyPlayerPos(rState, player); });
+
+  renderBBoxes(rState, simState, scenario);
 }
 
 function fadeOutHighlight(hl) {
