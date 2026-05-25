@@ -181,11 +181,10 @@ function entityOverlapsPlayerTile(entity, playerX) {
 function isOnPlatform(state, scenario, player) {
   var row = getRowAtY(scenario, player.y);
   if (!row) return false;
-  var entities = state.entities;
-  for (var i = 0; i < entities.length; i++) {
-    var e = entities[i];
+  var cx = player.worldX + 0.5;
+  for (var i = 0; i < state.entities.length; i++) {
+    var e = state.entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
-    var cx = player.worldX + 0.5;
     if (e.x <= cx && cx < e.x + e.width) return true;
   }
   return false;
@@ -236,7 +235,7 @@ function detectCollisions(state, scenario) {
     var e = entities[i];
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
-    if (!eRow || eRow.y !== player.y) continue;
+    if (!eRow || player.worldY >= eRow.y + 1 || player.worldY + 1 <= eRow.y) continue;
     if (entityOverlapsPlayerTile(e, player.worldX)) {
       return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
     }
@@ -264,6 +263,37 @@ function resetPlayer(state, scenario, resetPointId) {
       return;
     }
   }
+}
+
+function isSafeMove(state, scenario, player, dx, dy) {
+  var nx = player.worldX + dx;
+  var ny = player.worldY + dy;
+  if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return false;
+  var destRow = getRowAtY(scenario, Math.floor(ny));
+  if (!destRow) return false;
+  if (destRow.baseTile === 'wall') return false;
+  if (destRow.baseTile === 'hazard') {
+    var cx = nx + 0.5;
+    if (activePlatformsInRow(state, destRow.id, cx).length === 0) return false;
+  }
+  var entities = state.entities;
+  for (var i = 0; i < entities.length; i++) {
+    var e = entities[i];
+    if (e.type !== 'obstacle' || e.collected) continue;
+    var eRow = getRowById(scenario, e.rowId);
+    if (!eRow || ny >= eRow.y + 1 || ny + 1 <= eRow.y) continue;
+    if (entityOverlapsPlayerTile(e, nx)) return false;
+  }
+  return true;
+}
+
+function getMovePreview(state, scenario, player) {
+  return {
+    left:  isSafeMove(state, scenario, player, -STEP, 0),
+    right: isSafeMove(state, scenario, player,  STEP, 0),
+    up:    isSafeMove(state, scenario, player, 0, -STEP),
+    down:  isSafeMove(state, scenario, player, 0,  STEP)
+  };
 }
 
 function activePlatformsInRow(state, rowId, cx) {
@@ -303,5 +333,7 @@ if (typeof module !== 'undefined') module.exports = {
   detectCollisions,
   resetPlayer,
   activePlatformsInRow,
-  findCarryingPlatform
+  findCarryingPlatform,
+  isSafeMove,
+  getMovePreview
 };
