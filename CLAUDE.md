@@ -139,6 +139,7 @@ window.addEventListener('page:control', function(e) {
 | Physical activities | `app/physical/activities/_shell.html` + variants | core/physical |
 | Object Playground | `app/activities/object-playground/index.html` | core/object-playground, ui/object-playground |
 | Crossing Playground (Frogger) | `app/activities/frogger/index.html` | core/frogger, ui/frogger, content/frogger/scenarios |
+| Paint Playground | `app/activities/paint-playground/index.html` | core/paint-playground, ui/paint-playground |
 
 ## Telemetry Pattern
 
@@ -219,6 +220,7 @@ function onReset() {
 | `core/object-playground/object-playground-core.js` | Object playground: state init, shape rendering, constants |
 | `core/frogger/frogger-core.js` | Frogger simulation: grid, lanes, entities, spawning, player, collision |
 | `core/frogger/frogger-loader.js` | Frogger scenario JSON parser + field validator |
+| `core/paint-playground/paint-playground-core.js` | Paint playground: canvas state init, viewport, pan bounds |
 
 ### ui/
 | Module | Purpose |
@@ -236,6 +238,7 @@ function onReset() {
 | `ui/colouring-playground/colouring-playground-ui.js` | Freeform painting UI |
 | `ui/object-playground/object-playground-ui.js` | Object playground: SVG canvas render, init |
 | `ui/frogger/frogger-renderer.js` | Frogger DOM renderer: grid, entities, player hop animation, collision highlight |
+| `ui/paint-playground/paint-playground-ui.js` | Paint playground: two-layer canvas init, viewport positioning |
 | `ui/logic-gates/puzzle-ui.js` | Logic puzzle board UI |
 | `ui/logic-gates/sandbox-ui.js` | Logic gate builder UI |
 | `ui/match-colour-shape/match-colour-shape-ui.js` | Match game UI |

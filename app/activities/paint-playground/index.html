@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Paint Playground</title>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<script src="../../../components/menu.js" defer></script>
+<style>
+#paint-viewport{flex:1;position:relative;overflow:hidden;background:#f0f0f0;touch-action:none;}
+#paint-bg,#paint-draw{position:absolute;top:0;left:0;}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-home="../../" data-title="Paint Playground" data-instruction="Paint and create!" data-no-links="standalone freeplay activity"></div>
+<div class="game-area">
+  <div id="paint-viewport">
+    <canvas id="paint-bg" data-testid="paint-bg"></canvas>
+    <canvas id="paint-draw" data-testid="paint-draw"></canvas>
+  </div>
+</div>
+<script src="../../../core/paint-playground/paint-playground-core.js"></script>
+<script src="../../../ui/paint-playground/paint-playground-ui.js"></script>
+<script type="module">
+import { makeSpeakable } from '../../../components/speech/speakable.js';
+import '../../../components/speech/speech-ui.js';
+</script>
+<script>window.addEventListener('load', initPaintPlayground);</script>
+<script>window.ACTIVITY_ID = 'paint-playground';</script>
+</body>
+</html>
