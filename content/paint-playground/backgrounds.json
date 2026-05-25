@@ -1,0 +1,34 @@
+[
+  {
+    "path": "../../../assets/puzzle/bluey-family/full.jpg",
+    "label": "Bluey Family"
+  },
+  {
+    "path": "../../../assets/puzzle/bluey-grannies/full.jpg",
+    "label": "Bluey Grannies"
+  },
+  {
+    "path": "../../../assets/puzzle/jurassic-park/full.jpg",
+    "label": "Jurassic Park"
+  },
+  {
+    "path": "../../../assets/puzzle/mmprs/full.jpg",
+    "label": "Mighty Morphin Power Rangers"
+  },
+  {
+    "path": "../../../assets/puzzle/paw-patrol/full.jpg",
+    "label": "Paw Patrol"
+  },
+  {
+    "path": "../../../assets/puzzle/spiderman/full.jpg",
+    "label": "Spiderman"
+  },
+  {
+    "path": "../../../assets/puzzle/spiderman-lizard/full.jpg",
+    "label": "Spiderman vs Lizard"
+  },
+  {
+    "path": "../../../assets/puzzle/the-mask/full.jpg",
+    "label": "The Mask"
+  }
+]

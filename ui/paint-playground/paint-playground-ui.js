@@ -130,6 +130,48 @@ function paintClearCanvas() {
   paintUndoStack = [];
 }
 
+function paintLoadBackground(src) {
+  var img = new Image();
+  img.addEventListener('load', function() {
+    var vp = paintState.viewport;
+    var vw = vp.width;
+    var vh = vp.height;
+    var scale = Math.max(vw / img.width, vh / img.height);
+    var sw = img.width * scale;
+    var sh = img.height * scale;
+    var dx = vp.x + (vw - sw) / 2;
+    var dy = vp.y + (vh - sh) / 2;
+    paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
+    paintBgCtx.filter = 'grayscale(1)';
+    paintBgCtx.drawImage(img, dx, dy, sw, sh);
+    paintBgCtx.filter = 'none';
+  });
+  img.src = src;
+}
+
+function paintOpenBgPanel() {
+  document.getElementById('paint-bg-panel').style.display = 'block';
+}
+
+function paintCloseBgPanel() {
+  document.getElementById('paint-bg-panel').style.display = 'none';
+}
+
+function paintBuildBgPanel(backgrounds) {
+  var grid = document.getElementById('paint-bg-grid');
+  backgrounds.forEach(function(bg) {
+    var img = document.createElement('img');
+    img.src = bg.path;
+    img.alt = bg.label;
+    img.style.cssText = 'width:120px;height:80px;object-fit:cover;cursor:pointer;border-radius:6px;border:3px solid transparent;display:block;';
+    img.addEventListener('click', function() {
+      paintLoadBackground(bg.path);
+      paintCloseBgPanel();
+    });
+    grid.appendChild(img);
+  });
+}
+
 function paintBuildColourSlot(slot) {
   PAINT_COLOURS.forEach(function(colour) {
     var d = document.createElement('div');
@@ -175,6 +217,12 @@ function initPaintPlayground() {
   });
 
   document.getElementById('paint-undo-btn').addEventListener('click', paintUndo);
+  document.getElementById('paint-bg-btn').addEventListener('click', paintOpenBgPanel);
+  document.getElementById('paint-bg-close-btn').addEventListener('click', paintCloseBgPanel);
+
+  fetch('../../../content/paint-playground/backgrounds.json')
+    .then(function(r) { return r.json(); })
+    .then(paintBuildBgPanel);
 
   var gestureRect = { left: 0, top: 0 };
   var panActive = false;

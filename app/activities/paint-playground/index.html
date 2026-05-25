@@ -11,13 +11,18 @@
 <style>
 #paint-viewport{flex:1;position:relative;overflow:hidden;background:#f0f0f0;touch-action:none;}
 #paint-bg,#paint-draw{position:absolute;top:0;left:0;}
-#paint-toolbar{position:absolute;right:0;top:0;bottom:0;width:64px;background:rgba(0,0,0,0.75);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;z-index:20;}
+#paint-toolbar{position:absolute;right:0;top:0;bottom:0;width:80px;background:rgba(0,0,0,0.75);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:6px;z-index:20;overflow-y:auto;scrollbar-width:none;}
+#paint-toolbar::-webkit-scrollbar{display:none;}
 .paint-tool-btn{width:48px;height:48px;border:none;border-radius:10px;font-size:24px;cursor:pointer;background:none;color:#fff;display:flex;align-items:center;justify-content:center;}
 .paint-tool-btn[data-active]{background:#F39C12;}
-#paint-brush-slot{display:flex;flex-direction:column;align-items:center;gap:6px;}
+#paint-brush-slot{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;width:100%;}
+#paint-brush-slot .paint-tool-btn{width:36px;height:36px;font-size:18px;}
 #paint-colour-slot{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:4px;padding:4px 0;flex:1;align-content:flex-start;}
 .paint-colour-swatch{width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid transparent;}
 .paint-colour-swatch[data-active]{border-color:#fff;}
+#paint-bg-panel{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.8);z-index:30;padding:12px;box-sizing:border-box;overflow-y:auto;}
+#paint-bg-panel-inner{display:flex;flex-direction:column;gap:10px;align-items:center;}
+#paint-bg-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
 </style>
 </head>
 <body>
@@ -26,6 +31,12 @@
   <div id="paint-viewport">
     <canvas id="paint-bg" data-testid="paint-bg"></canvas>
     <canvas id="paint-draw" data-testid="paint-draw"></canvas>
+    <div id="paint-bg-panel" data-testid="paint-bg-panel">
+      <div id="paint-bg-panel-inner">
+        <div id="paint-bg-grid"></div>
+        <button class="paint-tool-btn" id="paint-bg-close-btn" data-testid="paint-bg-close-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10005; Close</button>
+      </div>
+    </div>
     <div id="paint-toolbar">
       <div id="paint-brush-slot">
         <button class="paint-tool-btn" data-paint-tool="pencil" id="paint-pencil-btn" data-testid="paint-pencil-btn">&#9999;&#65039;</button>
@@ -39,6 +50,7 @@
       </div>
       <div id="paint-colour-slot"></div>
       <div id="paint-util-slot" style="display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.65;">
+        <button class="paint-tool-btn" id="paint-bg-btn" data-testid="paint-bg-btn">&#128444;&#65039;</button>
         <button class="paint-tool-btn" id="paint-undo-btn" data-testid="paint-undo-btn">&#8617;</button>
         <div style="position:relative;width:48px;height:48px;" data-speakable-container>
           <button class="paint-tool-btn" id="paint-clear-btn" data-testid="paint-clear-btn" style="position:absolute;top:0;left:0;">&#128465;</button>
@@ -65,6 +77,8 @@ makeSpeakable(document.getElementById('paint-rainbow-btn'), 'Rainbow brush');
 makeSpeakable(document.getElementById('paint-eraser-btn'), 'Eraser');
 makeSpeakable(document.getElementById('paint-undo-btn'), 'Undo');
 makeSpeakable(document.getElementById('paint-clear-btn'), 'Clear canvas');
+makeSpeakable(document.getElementById('paint-bg-btn'), 'Backgrounds');
+makeSpeakable(document.getElementById('paint-bg-close-btn'), 'Close backgrounds');
 makeSpeakable(document.getElementById('paint-hand-btn'), 'Hand tool');
 var _clearArc = document.querySelector('#paint-clear-arc circle');
 makeLongPress(document.getElementById('paint-clear-btn'), function() { paintClearCanvas(); }, 800,

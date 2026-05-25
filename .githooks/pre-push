@@ -27,7 +27,7 @@ node scripts/check-manifest-files.js "$TMPDIR_HOOK/manifests.txt" || fail "check
 
 echo "[pre-push] manifests up to date..."
 node scripts/generate-manifests.js
-git diff --exit-code content/dictionary/manifests/ content/lessons/index.json content/learnings/manifest.json || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
+git diff --exit-code content/dictionary/manifests/ content/lessons/index.json content/learnings/manifest.json content/paint-playground/backgrounds.json || fail "manifests stale — run 'node scripts/generate-manifests.js' and commit"
 
 echo "[pre-push] validate-json..."
 node scripts/validate-schemas.js "$TMPDIR_HOOK/validate-json.txt" || fail "validate-json"

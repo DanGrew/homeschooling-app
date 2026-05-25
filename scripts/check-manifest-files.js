@@ -94,6 +94,29 @@ function subdirs(dir) {
   });
 })();
 
+// --- paint backgrounds ---
+(function checkPaintBackgrounds() {
+  const manifestPath = path.join(ROOT, 'content/paint-playground/backgrounds.json');
+  const configPath = path.join(ROOT, 'content/paint-playground/backgrounds.config.json');
+  const config = exists(configPath) ? readJSON(configPath) : {};
+  const sourceRel = (config && config.source) || 'assets/paint-playground/backgrounds';
+  const bgDir = path.join(ROOT, sourceRel);
+  const manifest = readJSON(manifestPath);
+  if (!manifest) { violations.push('paint-playground/backgrounds.json — invalid JSON or missing'); return; }
+  manifest.forEach(entry => {
+    scanned++;
+    const filePath = path.join(ROOT, entry.path.replace('../../../', ''));
+    if (!exists(filePath)) violations.push(`${entry.path} — file missing`);
+  });
+  if (exists(bgDir)) {
+    const actualFiles = fs.readdirSync(bgDir).filter(f => /\.(png|jpe?g)$/i.test(f)).sort();
+    const manifestFiles = new Set(manifest.map(e => e.path.split('/').pop()));
+    actualFiles.forEach(f => {
+      if (!manifestFiles.has(f)) violations.push(`paint-playground/backgrounds/${f} — not in manifest`);
+    });
+  }
+})();
+
 let output = `## check-manifest-files\n`;
 if (violations.length === 0) {
   output += `✅ No issues (scanned ${scanned} entries)\n`;
