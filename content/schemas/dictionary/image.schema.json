@@ -5,7 +5,6 @@
   "required": [
     "concept",
     "type",
-    "viewBox",
     "src"
   ],
   "additionalProperties": false,
@@ -16,6 +15,10 @@
     "type": {
       "type": "string",
       "const": "image"
+    },
+    "format": {
+      "type": "string",
+      "enum": ["svg", "png", "webp"]
     },
     "viewBox": {
       "type": "string",

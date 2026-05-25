@@ -23,7 +23,7 @@ function cgMakeSpeak(el, text) {
 }
 
 function cgImgSrc(id) {
-  return window.DICT_BASE + id + '/' + id + '.svg';
+  return [window.ImageService].filter(Boolean).map(function(s){return s.getUrl(id);}).filter(Boolean).concat([window.DICT_BASE+id+'/'+id+'.svg'])[0];
 }
 
 // ---- Setup shared sections ----
