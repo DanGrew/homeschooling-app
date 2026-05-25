@@ -1,9 +1,8 @@
 const { createRequire } = require('module')
 const require2 = createRequire(import.meta.url)
 const {
-  HOP_DURATION,
+  STEP,
   createSimulation,
-  stepSimulation,
   pauseSimulation,
   createPlayer,
   addPlayer,
@@ -11,8 +10,7 @@ const {
   getRowById,
   entityOverlapsPlayerTile,
   isOnPlatform,
-  queueInput,
-  stepPlayer,
+  applyInput,
   applyCarrying,
   detectCollisions,
   resetPlayer
@@ -48,11 +46,6 @@ function simWithPlayer(scenario, px, py) {
   return state
 }
 
-function hopComplete(state, scenario) {
-  stepPlayer(state, scenario, 0.001) // starts hop from idle
-  stepPlayer(state, scenario, HOP_DURATION / 1000 + 0.001) // resolves
-}
-
 // ---- createPlayer ----
 
 test('createPlayer has correct initial state', () => {
@@ -60,11 +53,7 @@ test('createPlayer has correct initial state', () => {
   expect(p.x).toBe(3)
   expect(p.y).toBe(5)
   expect(p.worldX).toBe(3)
-  expect(p.hopState).toBe('idle')
-  expect(p.hopTimer).toBe(0)
-  expect(p.hopFrom).toBeNull()
-  expect(p.hopTo).toBeNull()
-  expect(p.pendingInput).toBeNull()
+  expect(p.worldY).toBe(5)
 })
 
 // ---- addPlayer ----
@@ -142,166 +131,107 @@ test('no platform entities in row returns false', () => {
   expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 
-// ---- queueInput ----
+// ---- applyInput ----
 
-test('queueInput sets pendingInput when idle', () => {
-  const scenario = makeScenario({ rows: [makeGroundRow('g', 7)] })
-  const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  expect(state.player.pendingInput).toBe('up')
+test('STEP is 0.5', () => {
+  expect(STEP).toBe(0.5)
 })
 
-test('queueInput overwrites pendingInput during hop', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)]
-  })
+test('applyInput moves player up by STEP', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)] })
   const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.001)
-  queueInput(state, 'left')
-  expect(state.player.pendingInput).toBe('left')
-})
-
-// ---- stepPlayer: hop mechanics ----
-
-test('idle player with input starts hop', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)]
-  })
-  const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.016)
-  expect(state.player.hopState).toBe('hopping')
-  expect(state.player.hopTo).toEqual({ x: 5, y: 6 })
-})
-
-test('hop timer decrements', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)]
-  })
-  const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.016) // starts hop
-  stepPlayer(state, scenario, 0.016) // decrements
-  const timerAfter = state.player.hopTimer
-  expect(timerAfter).toBeLessThan(HOP_DURATION)
-  expect(timerAfter).toBeGreaterThan(0)
-})
-
-test('hop resolves position after duration', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)]
-  })
-  const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  hopComplete(state, scenario)
-  expect(state.player.x).toBe(5)
-  expect(state.player.y).toBe(6)
-  expect(state.player.hopState).toBe('idle')
-  expect(state.player.hopFrom).toBeNull()
-  expect(state.player.hopTo).toBeNull()
-})
-
-test('queued input fires after hop resolves', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6), makeGroundRow('g5', 5)]
-  })
-  const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.001)
-  queueInput(state, 'up')
-  hopComplete(state, scenario)
-  expect(state.player.hopState).toBe('hopping')
-  expect(state.player.hopTo).toEqual({ x: 5, y: 5 })
-})
-
-// ---- stepPlayer: movement direction ----
-
-test('up moves y - 1', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)]
-  })
-  const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  hopComplete(state, scenario)
+  applyInput(state, scenario, 'up')
+  expect(state.player.worldY).toBeCloseTo(6.5)
   expect(state.player.y).toBe(6)
 })
 
-test('down moves y + 1', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g6', 6), makeGroundRow('g7', 7)]
-  })
+test('applyInput moves player down by STEP', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g6', 6), makeGroundRow('g7', 7)] })
   const state = simWithPlayer(scenario, 5, 6)
-  queueInput(state, 'down')
-  hopComplete(state, scenario)
-  expect(state.player.y).toBe(7)
+  applyInput(state, scenario, 'down')
+  expect(state.player.worldY).toBeCloseTo(6.5)
+  expect(state.player.y).toBe(6)
 })
 
-test('left moves x - 1', () => {
+test('applyInput moves player left by STEP', () => {
   const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
   const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'left')
-  hopComplete(state, scenario)
+  applyInput(state, scenario, 'left')
+  expect(state.player.worldX).toBeCloseTo(4.5)
   expect(state.player.x).toBe(4)
 })
 
-test('right moves x + 1', () => {
+test('applyInput moves player right by STEP', () => {
   const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
   const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'right')
-  hopComplete(state, scenario)
-  expect(state.player.x).toBe(6)
+  applyInput(state, scenario, 'right')
+  expect(state.player.worldX).toBeCloseTo(5.5)
+  expect(state.player.x).toBe(5)
 })
 
-// ---- stepPlayer: blocking ----
+test('applyInput two steps cross tile boundary', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  applyInput(state, scenario, 'up')
+  applyInput(state, scenario, 'up')
+  expect(state.player.worldY).toBeCloseTo(6)
+  expect(state.player.y).toBe(6)
+})
 
-test('move blocked by out-of-bounds top', () => {
+test('applyInput blocked at top boundary', () => {
   const scenario = makeScenario({ rows: [makeGroundRow('g0', 0)] })
   const state = simWithPlayer(scenario, 5, 0)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.016)
-  expect(state.player.hopState).toBe('idle')
+  applyInput(state, scenario, 'up')
+  expect(state.player.worldY).toBe(0)
   expect(state.player.y).toBe(0)
 })
 
-test('move blocked by out-of-bounds left', () => {
+test('applyInput blocked at bottom boundary', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  applyInput(state, scenario, 'down')
+  applyInput(state, scenario, 'down') // 7.5 → 8.0 blocked
+  expect(state.player.worldY).toBeCloseTo(7.5)
+})
+
+test('applyInput blocked at left boundary', () => {
   const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
   const state = simWithPlayer(scenario, 0, 7)
-  queueInput(state, 'left')
-  stepPlayer(state, scenario, 0.016)
-  expect(state.player.hopState).toBe('idle')
+  applyInput(state, scenario, 'left')
+  expect(state.player.worldX).toBe(0)
   expect(state.player.x).toBe(0)
 })
 
-test('move blocked by out-of-bounds right', () => {
+test('applyInput blocked at right boundary', () => {
   const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
   const state = simWithPlayer(scenario, 9, 7)
-  queueInput(state, 'right')
-  stepPlayer(state, scenario, 0.016)
-  expect(state.player.hopState).toBe('idle')
+  applyInput(state, scenario, 'right') // 9 → 9.5
+  applyInput(state, scenario, 'right') // 9.5 → 10 blocked
+  expect(state.player.worldX).toBeCloseTo(9.5)
 })
 
-test('move blocked by wall row', () => {
+test('applyInput blocked by wall row', () => {
   const scenario = makeScenario({
     rows: [makeGroundRow('g7', 7), makeWallRow('wall', 6)]
   })
   const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.016)
-  expect(state.player.hopState).toBe('idle')
+  applyInput(state, scenario, 'up')
+  expect(state.player.worldY).toBe(7)
   expect(state.player.y).toBe(7)
 })
 
-test('paused simulation does not move player', () => {
-  const scenario = makeScenario({
-    rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)]
-  })
+test('applyInput does nothing when paused', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)] })
   const state = simWithPlayer(scenario, 5, 7)
   pauseSimulation(state)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.016)
-  expect(state.player.hopState).toBe('idle')
-  expect(state.player.y).toBe(7)
+  applyInput(state, scenario, 'up')
+  expect(state.player.worldY).toBe(7)
+})
+
+test('applyInput does nothing when no player', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = createSimulation(scenario)
+  expect(() => applyInput(state, scenario, 'up')).not.toThrow()
 })
 
 // ---- applyCarrying ----
@@ -358,18 +288,6 @@ test('carrying clamps at left edge', () => {
   expect(state.player.x).toBe(0)
 })
 
-test('carrying skipped during hop', () => {
-  const scenario = makeScenario({
-    rows: [makeHazardRow('river', 3, 'right', 2), makeGroundRow('g4', 4)],
-    entities: { river: [{ id: 'log1', type: 'platform', x: 4, width: 3 }] }
-  })
-  const state = simWithPlayer(scenario, 4, 3)
-  queueInput(state, 'down')
-  stepPlayer(state, scenario, 0.001)
-  applyCarrying(state, scenario, 1)
-  expect(state.player.worldX).toBe(4)
-})
-
 // ---- detectCollisions ----
 
 test('obstacle at player tile triggers collision', () => {
@@ -418,14 +336,12 @@ test('ground row — no collision', () => {
   expect(detectCollisions(state, scenario)).toBeNull()
 })
 
-test('no collision during hop', () => {
+test('collision fires immediately without hop guard', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)]
   })
   const state = simWithPlayer(scenario, 4, 3)
-  queueInput(state, 'left')
-  stepPlayer(state, scenario, 0.001)
-  expect(detectCollisions(state, scenario)).toBeNull()
+  expect(detectCollisions(state, scenario)).not.toBeNull()
 })
 
 test('paused simulation does not detect collisions', () => {
@@ -460,20 +376,20 @@ test('reset moves player to named reset point', () => {
   expect(state.player.x).toBe(5)
   expect(state.player.y).toBe(7)
   expect(state.player.worldX).toBe(5)
+  expect(state.player.worldY).toBe(7)
 })
 
-test('reset clears hop state', () => {
+test('reset clears worldY', () => {
   const scenario = makeScenario({
     rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)],
     resetPoints: [{ id: 'start', position: { x: 5, y: 7 } }]
   })
   const state = simWithPlayer(scenario, 5, 7)
-  queueInput(state, 'up')
-  stepPlayer(state, scenario, 0.001)
-  expect(state.player.hopState).toBe('hopping')
+  applyInput(state, scenario, 'up')
+  expect(state.player.worldY).toBeCloseTo(6.5)
   resetPlayer(state, scenario, 'start')
-  expect(state.player.hopState).toBe('idle')
-  expect(state.player.pendingInput).toBeNull()
+  expect(state.player.worldY).toBe(7)
+  expect(state.player.y).toBe(7)
 })
 
 test('reset to mid point', () => {

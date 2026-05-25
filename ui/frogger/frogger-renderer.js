@@ -130,23 +130,12 @@ function removeOrphanEl(rState, id) {
   delete rState.entityEls[id];
 }
 
-var PLAYER_POS_FNS = {
-  hopping: function(player, HOP_DURATION) {
-    var progress = 1 - Math.max(0, player.hopTimer / HOP_DURATION);
-    return { x: player.hopFrom.x + (player.hopTo.x - player.hopFrom.x) * progress,
-             y: player.hopFrom.y + (player.hopTo.y - player.hopFrom.y) * progress };
-  },
-  idle: function(player) { return { x: player.x, y: player.y }; }
-};
-
-function applyPlayerPos(rState, player, HOP_DURATION) {
-  var pos = [PLAYER_POS_FNS[player.hopState]].filter(Boolean)
-    .reduce(function(_, fn) { return fn(player, HOP_DURATION); }, { x: player.x, y: player.y });
-  rState.playerEl.style.left = (pos.x * rState.cs) + 'px';
-  rState.playerEl.style.top = (pos.y * rState.cs) + 'px';
+function applyPlayerPos(rState, player) {
+  rState.playerEl.style.left = (player.worldX * rState.cs) + 'px';
+  rState.playerEl.style.top  = (player.worldY * rState.cs) + 'px';
 }
 
-function renderFrogger(rState, simState, scenario, HOP_DURATION) {
+function renderFrogger(rState, simState, scenario) {
   var cs = rState.cs;
   var theme = rState.theme;
   var seen = {};
@@ -161,7 +150,7 @@ function renderFrogger(rState, simState, scenario, HOP_DURATION) {
     .forEach(function(id) { removeOrphanEl(rState, id); });
 
   [simState.player].filter(Boolean)
-    .forEach(function(player) { applyPlayerPos(rState, player, HOP_DURATION); });
+    .forEach(function(player) { applyPlayerPos(rState, player); });
 }
 
 function fadeOutHighlight(hl) {
