@@ -8,7 +8,9 @@ import {
   sortAndGroupEvents,
   GROUP_LABELS,
   fetchLearning,
-  extraMetaTags
+  extraMetaTags,
+  getThreshold,
+  applyPreset
 } from '../../core/telemetry/learning-journal-core.js';
 
 describe('formatCriterion', () => {
@@ -177,6 +179,83 @@ describe('fetchLearning', () => {
     await new Promise(resolve => fetchLearning('cached_one', resolve));
     await new Promise(resolve => fetchLearning('cached_one', resolve));
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('getThreshold', () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('all returns 0', () => {
+    expect(getThreshold('all')).toBe(0);
+  });
+  it('last5 returns now minus 5 minutes', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    expect(getThreshold('last5')).toBe(Date.now() - 300000);
+  });
+  it('last15 returns now minus 15 minutes', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    expect(getThreshold('last15')).toBe(Date.now() - 900000);
+  });
+  it('last30 returns now minus 30 minutes', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    expect(getThreshold('last30')).toBe(Date.now() - 1800000);
+  });
+  it('last1h returns now minus 1 hour', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    expect(getThreshold('last1h')).toBe(Date.now() - 3600000);
+  });
+  it('last2h returns now minus 2 hours', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    expect(getThreshold('last2h')).toBe(Date.now() - 7200000);
+  });
+  it('lastweek returns now minus 7 days', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    expect(getThreshold('lastweek')).toBe(Date.now() - 604800000);
+  });
+  it('today returns start of current day', () => {
+    vi.setSystemTime(new Date('2026-01-15T14:30:00.000Z'));
+    var d = new Date('2026-01-15T14:30:00.000Z');
+    var expected = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    expect(getThreshold('today')).toBe(expected);
+  });
+});
+
+describe('applyPreset', () => {
+  beforeEach(() => { vi.useFakeTimers(); });
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('all returns all events unchanged', () => {
+    const events = [{ timestamp: 0 }, { timestamp: 1 }, { timestamp: 2 }];
+    expect(applyPreset(events, 'all')).toHaveLength(3);
+  });
+  it('returns empty array when no events', () => {
+    expect(applyPreset([], 'last1h')).toHaveLength(0);
+  });
+  it('includes events within window', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    const now = Date.now();
+    const events = [{ timestamp: now - 1000 }];
+    expect(applyPreset(events, 'last5')).toHaveLength(1);
+  });
+  it('excludes events outside window', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    const now = Date.now();
+    const events = [{ timestamp: now - 400000 }];
+    expect(applyPreset(events, 'last5')).toHaveLength(0);
+  });
+  it('includes event at exact threshold boundary', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    const threshold = Date.now() - 300000;
+    const events = [{ timestamp: threshold }];
+    expect(applyPreset(events, 'last5')).toHaveLength(1);
+  });
+  it('does not mutate original array', () => {
+    vi.setSystemTime(new Date('2026-01-01T12:00:00.000Z'));
+    const now = Date.now();
+    const events = [{ timestamp: now - 1000 }, { timestamp: now - 400000 }];
+    applyPreset(events, 'last5');
+    expect(events).toHaveLength(2);
   });
 });
 
