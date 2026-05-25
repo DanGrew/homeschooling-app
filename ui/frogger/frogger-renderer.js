@@ -143,9 +143,12 @@ function bboxDiv(x, y, w, h, color) {
   return el;
 }
 
+var BBOX_INSET = { platform: 0.5 };
+
 function appendEntityBBox(layer, cs, scenario, e) {
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, BBOX_STROKE[e.type]));
+    var inset = BBOX_INSET[e.type] || 0;
+    layer.appendChild(bboxDiv((e.x + inset) * cs, row.y * cs, (e.width - inset * 2) * cs, cs, BBOX_STROKE[e.type]));
   });
 }
 
