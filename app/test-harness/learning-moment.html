@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Learning Moment Harness</title><link rel="stylesheet" href="../../styles/theme.css"></head>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Learning Moment Harness</title>
+<link rel="stylesheet" href="../../styles/theme.css">
+<link rel="stylesheet" href="../../styles/style.css">
+<link rel="stylesheet" href="../../styles/speakable.css">
+</head>
 <body>
+<div class="nav-bar" data-home="../../app/" data-title="Learning Moment Harness"></div>
+<div class="game-area">
 <button id="trigger" style="margin:40px;padding:12px 24px;font-size:1em;">Show Learning Moment</button>
+</div>
+<script src="../../components/menu.js" defer></script>
 <script type="module">
 import { show } from '../../components/learning-moments/learning-moment.js';
-document.getElementById('trigger').addEventListener('click', function() {
+import '../../components/speech/speech-ui.js';
+import { makeSpeakable } from '../../components/speech/speakable.js';
+var btn = document.getElementById('trigger');
+makeSpeakable(btn, 'Show Learning Moment');
+btn.addEventListener('click', function() {
   show('You made orange!');
 });
 </script>
