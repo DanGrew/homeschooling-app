@@ -178,20 +178,13 @@ function entityOverlapsPlayerTile(entity, playerX) {
   return playerX + 1 > entity.x && playerX < entity.x + entity.width;
 }
 
-function southInclusiveRow(scenario, player) {
-  if (player.worldY !== Math.floor(player.worldY) || player.worldY === 0) return null;
-  return getRowAtY(scenario, player.worldY - 1);
-}
-
 function isOnPlatform(state, scenario, player) {
-  var rows = [getRowAtY(scenario, player.y), southInclusiveRow(scenario, player)].filter(Boolean);
-  var cx = player.worldX + 0.5;
-  var rowIds = rows.map(function(r) { return r.id; });
+  var row = getRowAtY(scenario, player.y);
+  if (!row) return false;
   for (var i = 0; i < state.entities.length; i++) {
     var e = state.entities[i];
-    if (e.type !== 'platform' || e.collected) continue;
-    if (rowIds.indexOf(e.rowId) === -1) continue;
-    if (e.x <= cx && cx <= e.x + e.width) return true;
+    if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
+    if (player.worldX < e.x + e.width && player.worldX + 1 > e.x) return true;
   }
   return false;
 }
@@ -213,21 +206,13 @@ function applyInput(state, scenario, direction) {
   player.y = Math.floor(ny);
 }
 
-function carryRowForPlayer(scenario, player) {
-  var primary = getRowAtY(scenario, player.y);
-  if (primary && primary.movement && primary.movement.direction !== 'none') return primary;
-  var secondary = southInclusiveRow(scenario, player);
-  if (secondary && secondary.movement && secondary.movement.direction !== 'none') return secondary;
-  return null;
-}
-
 function applyCarrying(state, scenario, dt) {
   if (state.phase !== 'running') return;
   var player = state.player;
   if (!player) return;
 
-  var row = carryRowForPlayer(scenario, player);
-  if (!row) return;
+  var row = getRowAtY(scenario, player.y);
+  if (!row || !row.movement || row.movement.direction === 'none') return;
   if (!isOnPlatform(state, scenario, player)) return;
 
   var dx = (row.movement.direction === 'right' ? 1 : -1) * row.movement.speed * dt;
@@ -287,8 +272,7 @@ function isSafeMove(state, scenario, player, dx, dy) {
   if (!destRow) return false;
   if (destRow.baseTile === 'wall') return false;
   if (destRow.baseTile === 'hazard') {
-    var cx = nx + 0.5;
-    if (activePlatformsInRow(state, destRow.id, cx).length === 0) return false;
+    if (activePlatformsInRow(state, destRow.id, nx).length === 0) return false;
   }
   var entities = state.entities;
   for (var i = 0; i < entities.length; i++) {
@@ -310,23 +294,18 @@ function getMovePreview(state, scenario, player) {
   };
 }
 
-function activePlatformsInRow(state, rowId, cx) {
+function activePlatformsInRow(state, rowId, worldX) {
   return state.entities
     .filter(function(e) { return !e.collected; })
     .filter(function(e) { return e.type === 'platform'; })
     .filter(function(e) { return e.rowId === rowId; })
-    .filter(function(e) { return e.x <= cx; })
-    .filter(function(e) { return e.x + e.width >= cx; });
+    .filter(function(e) { return worldX < e.x + e.width; })
+    .filter(function(e) { return worldX + 1 > e.x; });
 }
 
 function findCarryingPlatform(state, scenario, player) {
-  var cx = player.worldX + 0.5;
-  var rows = [getRowAtY(scenario, player.y), southInclusiveRow(scenario, player)].filter(Boolean);
-  for (var i = 0; i < rows.length; i++) {
-    var plat = activePlatformsInRow(state, rows[i].id, cx)[0];
-    if (plat) return plat;
-  }
-  return null;
+  return [getRowAtY(scenario, player.y)].filter(Boolean)
+    .reduce(function(_, row) { return activePlatformsInRow(state, row.id, player.worldX)[0]; }, null);
 }
 
 if (typeof module !== 'undefined') module.exports = {
@@ -352,7 +331,6 @@ if (typeof module !== 'undefined') module.exports = {
   resetPlayer,
   activePlatformsInRow,
   findCarryingPlatform,
-  southInclusiveRow,
   isSafeMove,
   getMovePreview
 };
