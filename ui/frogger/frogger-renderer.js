@@ -41,7 +41,7 @@ function applyPlayerFallback(playerEl) {
 function buildPlayerEl(theme, cs) {
   var playerEl = document.createElement('div');
   playerEl.setAttribute('data-testid', 'frogger-player');
-  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;';
+  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;transition:left 0.08s linear,top 0.08s linear;';
   var playerAsset = theme.assets[theme.map.player];
   var BUILD = { 'true': function() { playerEl.appendChild(assetImg(playerAsset)); }, 'false': function() { applyPlayerFallback(playerEl); } };
   BUILD[String(!!playerAsset)]();
@@ -153,9 +153,9 @@ function bboxDivThick(x, y, w, h, color) {
   return el;
 }
 
-function contactLineDiv(x, y, h) {
+function contactDotDiv(x, y, r) {
   var el = document.createElement('div');
-  el.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);left:' + x + 'px;top:' + y + 'px;width:2px;height:' + h + 'px;';
+  el.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);border-radius:50%;left:' + (x - r) + 'px;top:' + (y - r) + 'px;width:' + (r * 2) + 'px;height:' + (r * 2) + 'px;';
   return el;
 }
 
@@ -173,10 +173,10 @@ function appendActivePlatformBBox(layer, cs, scenario, e) {
   });
 }
 
-function appendContactLine(layer, cs, scenario, player) {
+function appendContactDot(layer, cs, scenario, player) {
   var cx = (player.worldX + 0.5) * cs;
   [getRowAtY(scenario, player.y)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(contactLineDiv(cx - 1, row.y * cs, cs));
+    layer.appendChild(contactDotDiv(cx, row.y * cs + cs * 0.5, cs * 0.12));
   });
 }
 
@@ -188,7 +188,7 @@ function renderBBoxes(rState, simState, scenario) {
     .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
     layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
-    appendContactLine(layer, cs, scenario, p);
+    appendContactDot(layer, cs, scenario, p);
     [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
       .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
   });
