@@ -143,18 +143,18 @@ function bboxDiv(x, y, w, h, color) {
   return el;
 }
 
+function appendEntityBBox(layer, cs, scenario, e) {
+  [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
+    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, BBOX_STROKE[e.type]));
+  });
+}
+
 function renderBBoxes(rState, simState, scenario) {
   var layer = rState.bboxLayer;
   var cs = rState.cs;
   layer.innerHTML = '';
-
-  simState.entities.filter(function(e) { return !e.collected; }).forEach(function(e) {
-    var row = getRowById(scenario, e.rowId);
-    if (!row) return;
-    var color = BBOX_STROKE[e.type] || 'rgba(200,200,200,0.7)';
-    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, color));
-  });
-
+  simState.entities.filter(function(e) { return !e.collected; })
+    .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
     layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
   });
