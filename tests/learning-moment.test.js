@@ -44,3 +44,26 @@ test('notification replaced mid-display when new call arrives', async ({ page })
   await page.evaluate(() => window._showLearningMoment('Second'))
   await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('Second')
 })
+
+test('recordLearningEvent with moment shows notification', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._recordLearningEvent(
+    { version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'test', activity_id: 'test' },
+    'You solved the puzzle!'
+  ))
+  await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('You solved the puzzle!')
+})
+
+test('recordLearningEvent without moment shows no notification', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._recordLearningEvent(
+    { version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'test', activity_id: 'test' }
+  ))
+  await page.waitForTimeout(200)
+  const el = page.locator('[data-testid="learning-moment"]')
+  const count = await el.count()
+  if (count > 0) {
+    const opacity = await el.evaluate(node => node.style.opacity)
+    expect(opacity).toBe('0')
+  }
+})
