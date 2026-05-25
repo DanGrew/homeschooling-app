@@ -48,6 +48,38 @@ function buildPlayerEl(theme, cs) {
   return playerEl;
 }
 
+var PREVIEW_DOT_COLOR = { 'true': 'rgba(60,220,60,1.0)', 'false': 'rgba(255,60,60,1.0)' };
+
+function previewDotEl(x, y, r) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:absolute;border-radius:50%;pointer-events:none;z-index:11;left:' + (x - r) + 'px;top:' + (y - r) + 'px;width:' + (r * 2) + 'px;height:' + (r * 2) + 'px;';
+  return el;
+}
+
+function buildPreviewDots(playerEl, cs, r) {
+  var mid = cs / 2;
+  var dots = { left: previewDotEl(0, mid, r), right: previewDotEl(cs, mid, r), up: previewDotEl(mid, 0, r), down: previewDotEl(mid, cs, r) };
+  playerEl.appendChild(dots.left);
+  playerEl.appendChild(dots.right);
+  playerEl.appendChild(dots.up);
+  playerEl.appendChild(dots.down);
+  return dots;
+}
+
+function applyPreviewColor(dotEl, safe) {
+  dotEl.style.background = PREVIEW_DOT_COLOR[String(safe)];
+}
+
+function updatePreviewDots(rState, simState, scenario) {
+  [simState.player].filter(Boolean).forEach(function(p) {
+    var preview = getMovePreview(simState, scenario, p);
+    applyPreviewColor(rState.previewDots.left,  preview.left);
+    applyPreviewColor(rState.previewDots.right, preview.right);
+    applyPreviewColor(rState.previewDots.up,    preview.up);
+    applyPreviewColor(rState.previewDots.down,  preview.down);
+  });
+}
+
 function buildLane(rowDef, theme, cs) {
   var lane = document.createElement('div');
   var fill = theme.tiles[rowDef.baseTile].fill;
@@ -75,6 +107,7 @@ function initFroggerRenderer(container, scenario, theme) {
   var contactDotEl = document.createElement('div');
   contactDotEl.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);border-radius:50%;left:' + (cs / 2 - dotR) + 'px;top:' + (cs / 2 - dotR) + 'px;width:' + (dotR * 2) + 'px;height:' + (dotR * 2) + 'px;pointer-events:none;z-index:11;';
   playerEl.appendChild(contactDotEl);
+  var previewDots = buildPreviewDots(playerEl, cs, dotR);
   grid.appendChild(playerEl);
 
   var bboxLayer = document.createElement('div');
@@ -105,7 +138,7 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.appendChild(resetOverlay);
   container.appendChild(grid);
 
-  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, bboxLayer, entityEls: {}, cs, theme };
+  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, bboxLayer, previewDots, entityEls: {}, cs, theme };
 }
 
 function removeEntityEl(rState, e) {
@@ -209,6 +242,7 @@ function renderFrogger(rState, simState, scenario) {
     .forEach(function(player) { applyPlayerPos(rState, player); });
 
   renderBBoxes(rState, simState, scenario);
+  updatePreviewDots(rState, simState, scenario);
 }
 
 function fadeOutHighlight(hl) {

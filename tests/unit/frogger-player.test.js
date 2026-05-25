@@ -13,7 +13,9 @@ const {
   applyInput,
   applyCarrying,
   detectCollisions,
-  resetPlayer
+  resetPlayer,
+  isSafeMove,
+  getMovePreview
 } = require2('../../core/frogger/frogger-core.js')
 
 // ---- helpers ----
@@ -466,4 +468,117 @@ test('reset with unknown id does nothing', () => {
   resetPlayer(state, scenario, 'nonexistent')
   expect(state.player.x).toBe(2)
   expect(state.player.y).toBe(2)
+})
+
+// ---- isSafeMove ----
+
+test('isSafeMove: safe move onto ground row', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g6', 6), makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  expect(isSafeMove(state, scenario, state.player, 0, -STEP)).toBe(true)
+})
+
+test('isSafeMove: blocked by out-of-bounds left', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 0, 7)
+  expect(isSafeMove(state, scenario, state.player, -STEP, 0)).toBe(false)
+})
+
+test('isSafeMove: blocked by out-of-bounds right', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 9.5, 7)
+  expect(isSafeMove(state, scenario, state.player, STEP, 0)).toBe(false)
+})
+
+test('isSafeMove: blocked by wall row', () => {
+  const scenario = makeScenario({ rows: [makeWallRow('w5', 5), makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 5, 6)
+  expect(isSafeMove(state, scenario, state.player, 0, -STEP)).toBe(false)
+})
+
+test('isSafeMove: hazard row with no platform is unsafe', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('h3', 3, 'right', 1), makeGroundRow('g4', 4)] })
+  const state = simWithPlayer(scenario, 5, 4)
+  expect(isSafeMove(state, scenario, state.player, 0, -STEP)).toBe(false)
+})
+
+test('isSafeMove: hazard row with platform under destination is safe', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('h3', 3, 'right', 1), makeGroundRow('g4', 4)],
+    entities: { h3: [{ id: 'p1', type: 'platform', x: 4.7, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 5, 4)
+  // player at worldX=5, moving up to y=3.5 → destRow y=3, cx = 5+0.5 = 5.5, platform 4.7..5.7 covers 5.5
+  expect(isSafeMove(state, scenario, state.player, 0, -STEP)).toBe(true)
+})
+
+test('isSafeMove: obstacle at destination is unsafe', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g6', 6), makeGroundRow('g7', 7)],
+    entities: { g6: [{ id: 'o1', type: 'obstacle', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 5, 7)
+  expect(isSafeMove(state, scenario, state.player, 0, -STEP)).toBe(false)
+})
+
+test('isSafeMove: obstacle on different row does not block', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g5', 5), makeGroundRow('g6', 6), makeGroundRow('g7', 7)],
+    entities: { g5: [{ id: 'o1', type: 'obstacle', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 5, 7)
+  expect(isSafeMove(state, scenario, state.player, 0, -STEP)).toBe(true)
+})
+
+// ---- getMovePreview ----
+
+test('getMovePreview: all directions safe on open ground', () => {
+  const scenario = makeScenario({
+    rows: [
+      makeGroundRow('g5', 5), makeGroundRow('g6', 6),
+      makeGroundRow('g7', 7), makeGroundRow('g6r', 6)
+    ]
+  })
+  const scenario2 = makeScenario({
+    rows: [makeGroundRow('g6', 6), makeGroundRow('g7', 7), makeGroundRow('g8', 8)]
+  })
+  const state = simWithPlayer(scenario2, 5, 7)
+  const preview = getMovePreview(state, scenario2, state.player)
+  expect(preview.left).toBe(true)
+  expect(preview.right).toBe(true)
+  expect(preview.up).toBe(true)
+  expect(preview.down).toBe(true)
+})
+
+test('getMovePreview: left blocked at left edge', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 0, 7)
+  const preview = getMovePreview(state, scenario, state.player)
+  expect(preview.left).toBe(false)
+})
+
+test('getMovePreview: right blocked at right edge', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 9.5, 7)
+  const preview = getMovePreview(state, scenario, state.player)
+  expect(preview.right).toBe(false)
+})
+
+test('getMovePreview: up blocked by hazard with no platform', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('h6', 6, 'right', 1), makeGroundRow('g7', 7)]
+  })
+  const state = simWithPlayer(scenario, 5, 7)
+  const preview = getMovePreview(state, scenario, state.player)
+  expect(preview.up).toBe(false)
+})
+
+test('getMovePreview: returns object with all four keys', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  const preview = getMovePreview(state, scenario, state.player)
+  expect(typeof preview.left).toBe('boolean')
+  expect(typeof preview.right).toBe('boolean')
+  expect(typeof preview.up).toBe('boolean')
+  expect(typeof preview.down).toBe('boolean')
 })

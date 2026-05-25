@@ -266,6 +266,37 @@ function resetPlayer(state, scenario, resetPointId) {
   }
 }
 
+function isSafeMove(state, scenario, player, dx, dy) {
+  var nx = player.worldX + dx;
+  var ny = player.worldY + dy;
+  if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return false;
+  var destRow = getRowAtY(scenario, Math.floor(ny));
+  if (!destRow) return false;
+  if (destRow.baseTile === 'wall') return false;
+  if (destRow.baseTile === 'hazard') {
+    var cx = nx + 0.5;
+    if (activePlatformsInRow(state, destRow.id, cx).length === 0) return false;
+  }
+  var entities = state.entities;
+  for (var i = 0; i < entities.length; i++) {
+    var e = entities[i];
+    if (e.type !== 'obstacle' || e.collected) continue;
+    var eRow = getRowById(scenario, e.rowId);
+    if (!eRow || eRow.y !== Math.floor(ny)) continue;
+    if (entityOverlapsPlayerTile(e, nx)) return false;
+  }
+  return true;
+}
+
+function getMovePreview(state, scenario, player) {
+  return {
+    left:  isSafeMove(state, scenario, player, -STEP, 0),
+    right: isSafeMove(state, scenario, player,  STEP, 0),
+    up:    isSafeMove(state, scenario, player, 0, -STEP),
+    down:  isSafeMove(state, scenario, player, 0,  STEP)
+  };
+}
+
 function activePlatformsInRow(state, rowId, cx) {
   return state.entities
     .filter(function(e) { return !e.collected; })
@@ -303,5 +334,7 @@ if (typeof module !== 'undefined') module.exports = {
   detectCollisions,
   resetPlayer,
   activePlatformsInRow,
-  findCarryingPlatform
+  findCarryingPlatform,
+  isSafeMove,
+  getMovePreview
 };
