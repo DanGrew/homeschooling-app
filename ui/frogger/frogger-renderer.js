@@ -136,21 +136,55 @@ function removeOrphanEl(rState, id) {
 }
 
 var BBOX_CFG = {
-  obstacle:   { color: 'rgba(255,60,60,0.85)',  inset: 0 },
-  platform:   { color: 'rgba(60,220,60,0.85)',  inset: 0.5 },
-  collectible:{ color: 'rgba(255,200,0,0.85)',  inset: 0 }
+  obstacle:    { color: 'rgba(255,60,60,0.85)'  },
+  platform:    { color: 'rgba(60,220,60,0.85)'  },
+  collectible: { color: 'rgba(255,200,0,0.85)'  }
 };
 
-function bboxDiv(x, y, w, h, color) {
+function bboxDiv(x, y, w, h, color, border) {
   var el = document.createElement('div');
-  el.style.cssText = 'position:absolute;box-sizing:border-box;border:2px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  el.style.cssText = 'position:absolute;box-sizing:border-box;border:' + (border || 2) + 'px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  return el;
+}
+
+function contactLineDiv(x, y, h) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:absolute;background:rgba(255,255,0,1.0);left:' + x + 'px;top:' + y + 'px;width:2px;height:' + h + 'px;';
   return el;
 }
 
 function appendEntityBBox(layer, cs, scenario, e) {
   var cfg = BBOX_CFG[e.type];
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(bboxDiv((e.x + cfg.inset) * cs, row.y * cs, (e.width - cfg.inset * 2) * cs, cs, cfg.color));
+    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, cfg.color));
+  });
+}
+
+function activePlatformsInRow(simState, rowId, cx) {
+  return simState.entities
+    .filter(function(e) { return !e.collected; })
+    .filter(function(e) { return e.type === 'platform'; })
+    .filter(function(e) { return e.rowId === rowId; })
+    .filter(function(e) { return e.x < cx; })
+    .filter(function(e) { return e.x + e.width > cx; });
+}
+
+function findCarryingPlatform(simState, scenario, player) {
+  var cx = player.worldX + 0.5;
+  return [getRowAtY(scenario, player.y)].filter(Boolean)
+    .reduce(function(_, row) { return activePlatformsInRow(simState, row.id, cx)[0]; }, null);
+}
+
+function appendActivePlatformBBox(layer, cs, scenario, e) {
+  [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
+    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)', 3));
+  });
+}
+
+function appendContactLine(layer, cs, scenario, player) {
+  var cx = (player.worldX + 0.5) * cs;
+  [getRowAtY(scenario, player.y)].filter(Boolean).forEach(function(row) {
+    layer.appendChild(contactLineDiv(cx - 1, row.y * cs, cs));
   });
 }
 
@@ -162,6 +196,9 @@ function renderBBoxes(rState, simState, scenario) {
     .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
     layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
+    appendContactLine(layer, cs, scenario, p);
+    [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
+      .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
   });
 }
 
