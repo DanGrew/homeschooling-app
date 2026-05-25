@@ -160,20 +160,6 @@ function appendEntityBBox(layer, cs, scenario, e) {
   });
 }
 
-function activePlatformsInRow(simState, rowId, cx) {
-  return simState.entities
-    .filter(function(e) { return !e.collected; })
-    .filter(function(e) { return e.type === 'platform'; })
-    .filter(function(e) { return e.rowId === rowId; })
-    .filter(function(e) { return e.x < cx; })
-    .filter(function(e) { return e.x + e.width > cx; });
-}
-
-function findCarryingPlatform(simState, scenario, player) {
-  var cx = player.worldX + 0.5;
-  return [getRowAtY(scenario, player.y)].filter(Boolean)
-    .reduce(function(_, row) { return activePlatformsInRow(simState, row.id, cx)[0]; }, null);
-}
 
 function appendActivePlatformBBox(layer, cs, scenario, e) {
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {

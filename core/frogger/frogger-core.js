@@ -266,6 +266,21 @@ function resetPlayer(state, scenario, resetPointId) {
   }
 }
 
+function activePlatformsInRow(state, rowId, cx) {
+  return state.entities
+    .filter(function(e) { return !e.collected; })
+    .filter(function(e) { return e.type === 'platform'; })
+    .filter(function(e) { return e.rowId === rowId; })
+    .filter(function(e) { return e.x < cx; })
+    .filter(function(e) { return e.x + e.width > cx; });
+}
+
+function findCarryingPlatform(state, scenario, player) {
+  var cx = player.worldX + 0.5;
+  return [getRowAtY(scenario, player.y)].filter(Boolean)
+    .reduce(function(_, row) { return activePlatformsInRow(state, row.id, cx)[0]; }, null);
+}
+
 if (typeof module !== 'undefined') module.exports = {
   MIN_OBSTACLE_GAP,
   STEP,
@@ -286,5 +301,7 @@ if (typeof module !== 'undefined') module.exports = {
   applyInput,
   applyCarrying,
   detectCollisions,
-  resetPlayer
+  resetPlayer,
+  activePlatformsInRow,
+  findCarryingPlatform
 };
