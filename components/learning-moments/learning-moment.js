@@ -1,4 +1,4 @@
-var LEARNING_MOMENT_DURATION_MS = 2000;
+var LEARNING_MOMENT_DURATION_MS = 4000;
 
 var _el = null;
 var _timer = null;

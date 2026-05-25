@@ -20,7 +20,7 @@ test('notification absent after 2 seconds', async ({ page }) => {
   await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
   await page.click('#trigger')
   await expect(page.locator('[data-testid="learning-moment"]')).toBeVisible()
-  await page.waitForTimeout(2500)
+  await page.waitForTimeout(4500)
   const el = page.locator('[data-testid="learning-moment"]')
   const opacity = await el.evaluate(node => node.style.opacity)
   expect(opacity).toBe('0')
