@@ -69,7 +69,7 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 </div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { fetchLearning, buildEntryViewModel, formatCriterion, extraMetaTags } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLearning, buildEntryViewModel, formatCriterion, extraMetaTags, applyPreset } from '../../core/telemetry/learning-journal-core.js';
 
 var ZERO_CLASS = { 'true': ' bar-row-zero', 'false': '' };
 
@@ -87,27 +87,6 @@ var NO_EVENTS = {
   'true':  function(j)      { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
   'false': function(j, evs) { evs.forEach(function(ev) { appendEntry(j, ev); }); }
 };
-
-function getThreshold(preset) {
-  var now = Date.now();
-  var d = new Date();
-  var THRESH = {
-    'last5':    now - 300000,
-    'last15':   now - 900000,
-    'last30':   now - 1800000,
-    'last1h':   now - 3600000,
-    'last2h':   now - 7200000,
-    'today':    new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(),
-    'lastweek': now - 604800000,
-    'all':      0
-  };
-  return THRESH[preset];
-}
-
-function applyPreset(events, preset) {
-  var threshold = getThreshold(preset);
-  return events.filter(function(e) { return e.timestamp >= threshold; });
-}
 
 function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);

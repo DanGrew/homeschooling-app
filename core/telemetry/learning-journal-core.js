@@ -92,6 +92,27 @@ export function extraMetaTags(vm, event) {
   return [EXTRA_META[event.learning_id]].filter(Boolean).map(function(fn) { return fn(vm); });
 }
 
+export function getThreshold(preset) {
+  var now = Date.now();
+  var d = new Date();
+  var THRESH = {
+    'last5':    now - 300000,
+    'last15':   now - 900000,
+    'last30':   now - 1800000,
+    'last1h':   now - 3600000,
+    'last2h':   now - 7200000,
+    'today':    new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(),
+    'lastweek': now - 604800000,
+    'all':      0
+  };
+  return THRESH[preset];
+}
+
+export function applyPreset(events, preset) {
+  var threshold = getThreshold(preset);
+  return events.filter(function(e) { return e.timestamp >= threshold; });
+}
+
 export function fetchLearning(learningId, cb) {
   if (!learningId) { cb(null); return; }
   if (_learningCache[learningId]) { cb(_learningCache[learningId]); return; }
