@@ -94,8 +94,11 @@ fs.writeFileSync(
 );
 console.log('content/learnings/manifest.json: ' + learningsManifest.length + ' entries');
 
-// paint backgrounds — scan assets folder, emit manifest with page-relative paths
-var paintBgDir = path.join(__dirname, '..', 'assets/paint-playground/backgrounds');
+// paint backgrounds — scan configured folder, emit manifest with page-relative paths
+var paintBgConfigPath = path.join(__dirname, '..', 'content/paint-playground/backgrounds.config.json');
+var paintBgConfig = fs.existsSync(paintBgConfigPath) ? JSON.parse(fs.readFileSync(paintBgConfigPath, 'utf8')) : {};
+var paintBgSourceRel = paintBgConfig.source || 'assets/paint-playground/backgrounds';
+var paintBgDir = path.join(__dirname, '..', paintBgSourceRel);
 var paintBgManifestPath = path.join(__dirname, '..', 'content/paint-playground/backgrounds.json');
 var paintBgEntries = fs.existsSync(paintBgDir)
   ? fs.readdirSync(paintBgDir)
@@ -103,7 +106,7 @@ var paintBgEntries = fs.existsSync(paintBgDir)
       .sort()
       .map(function(f) {
         var label = f.replace(/\.[^.]+$/, '');
-        return { path: '../../../assets/paint-playground/backgrounds/' + f, label: label[0].toUpperCase() + label.slice(1) };
+        return { path: '../../../' + paintBgSourceRel + '/' + f, label: label[0].toUpperCase() + label.slice(1) };
       })
   : [];
 if (!fs.existsSync(path.dirname(paintBgManifestPath))) {
