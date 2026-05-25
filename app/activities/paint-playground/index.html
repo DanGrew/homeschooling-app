@@ -34,7 +34,10 @@
     <div id="paint-bg-panel" data-testid="paint-bg-panel">
       <div id="paint-bg-panel-inner">
         <div id="paint-bg-grid"></div>
-        <button class="paint-tool-btn" id="paint-bg-close-btn" data-testid="paint-bg-close-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10005; Close</button>
+        <div style="display:flex;gap:8px;">
+          <button class="paint-tool-btn" id="paint-bg-clear-btn" data-testid="paint-bg-clear-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10006; Clear</button>
+          <button class="paint-tool-btn" id="paint-bg-close-btn" data-testid="paint-bg-close-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10005; Close</button>
+        </div>
       </div>
     </div>
     <div id="paint-toolbar">
@@ -86,6 +89,7 @@ makeSpeakable(document.querySelector('[data-testid="paint-size-lg-btn"]'), 'Larg
 makeSpeakable(document.getElementById('paint-undo-btn'), 'Undo');
 makeSpeakable(document.getElementById('paint-clear-btn'), 'Clear canvas');
 makeSpeakable(document.getElementById('paint-bg-btn'), 'Backgrounds');
+makeSpeakable(document.getElementById('paint-bg-clear-btn'), 'Clear background');
 makeSpeakable(document.getElementById('paint-bg-close-btn'), 'Close backgrounds');
 makeSpeakable(document.getElementById('paint-hand-btn'), 'Hand tool');
 var _clearArc = document.querySelector('#paint-clear-arc circle');

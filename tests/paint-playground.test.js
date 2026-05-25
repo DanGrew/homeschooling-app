@@ -270,6 +270,36 @@ test('close button hides background panel', async ({ page }) => {
   await expect(page.locator('[data-testid="paint-bg-panel"]')).toBeHidden()
 })
 
+test('clear background button visible in panel', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-bg-btn"]')
+  await expect(page.locator('[data-testid="paint-bg-clear-btn"]')).toBeVisible()
+})
+
+test('clear background removes bg pixels and closes panel', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-bg-btn"]')
+  await page.waitForSelector('#paint-bg-grid img')
+  await page.locator('#paint-bg-grid img').first().click()
+  await page.waitForFunction(function() {
+    var canvas = document.getElementById('paint-bg')
+    var ctx = canvas.getContext('2d')
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true }
+    return false
+  })
+  await page.click('[data-testid="paint-bg-btn"]')
+  await page.click('[data-testid="paint-bg-clear-btn"]')
+  await expect(page.locator('[data-testid="paint-bg-panel"]')).toBeHidden()
+  const hasPixels = await page.locator('[data-testid="paint-bg"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d')
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true }
+    return false
+  })
+  expect(hasPixels).toBe(false)
+})
+
 test('background panel shows tiles matching manifest', async ({ page }) => {
   await page.goto(URL)
   await page.click('[data-testid="paint-bg-btn"]')

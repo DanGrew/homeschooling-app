@@ -157,6 +157,11 @@ function paintLoadBackground(src) {
   img.src = src;
 }
 
+function paintClearBackground() {
+  paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
+  paintCloseBgPanel();
+}
+
 function paintOpenBgPanel() {
   document.getElementById('paint-bg-panel').style.display = 'block';
 }
@@ -232,6 +237,7 @@ function initPaintPlayground() {
   document.getElementById('paint-undo-btn').addEventListener('click', paintUndo);
   document.getElementById('paint-bg-btn').addEventListener('click', paintOpenBgPanel);
   document.getElementById('paint-bg-close-btn').addEventListener('click', paintCloseBgPanel);
+  document.getElementById('paint-bg-clear-btn').addEventListener('click', paintClearBackground);
 
   fetch('../../../content/paint-playground/backgrounds.json')
     .then(function(r) { return r.json(); })
