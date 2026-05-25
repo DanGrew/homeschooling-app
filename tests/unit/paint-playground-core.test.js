@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, initPaintState, applyPaintPan, paintClientToCanvas } = require('../../core/paint-playground/paint-playground-core.js');
+const { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, GLITTER_OFFSETS, initPaintState, applyPaintPan, paintClientToCanvas, buildStarPath } = require('../../core/paint-playground/paint-playground-core.js');
 
 describe('initPaintState', () => {
   test('world is PAINT_WORLD_SCALE times viewport', () => {
@@ -108,5 +108,50 @@ describe('paintClientToCanvas', () => {
     const pt = paintClientToCanvas(100, 100, 0, 0, 500, 300);
     expect(pt.x).toBe(600);
     expect(pt.y).toBe(400);
+  });
+});
+
+describe('GLITTER_OFFSETS', () => {
+  test('has at least 4 offsets', () => {
+    expect(GLITTER_OFFSETS.length).toBeGreaterThanOrEqual(4);
+  });
+
+  test('each offset has dx, dy, r', () => {
+    GLITTER_OFFSETS.forEach(g => {
+      expect(typeof g.dx).toBe('number');
+      expect(typeof g.dy).toBe('number');
+      expect(typeof g.r).toBe('number');
+      expect(g.r).toBeGreaterThan(0);
+    });
+  });
+});
+
+describe('buildStarPath', () => {
+  test('returns 2*points vertices', () => {
+    const path = buildStarPath(0, 0, 30, 12, 5);
+    expect(path.length).toBe(10);
+  });
+
+  test('all vertices are objects with x and y', () => {
+    const path = buildStarPath(100, 100, 30, 12, 5);
+    path.forEach(pt => {
+      expect(typeof pt.x).toBe('number');
+      expect(typeof pt.y).toBe('number');
+    });
+  });
+
+  test('centred on cx, cy', () => {
+    const path = buildStarPath(100, 200, 30, 12, 5);
+    const avgX = path.reduce((s, p) => s + p.x, 0) / path.length;
+    const avgY = path.reduce((s, p) => s + p.y, 0) / path.length;
+    expect(avgX).toBeCloseTo(100, 0);
+    expect(avgY).toBeCloseTo(200, 0);
+  });
+
+  test('outer points farther from centre than inner points', () => {
+    const path = buildStarPath(0, 0, 30, 12, 5);
+    const outerDist = Math.sqrt(path[0].x ** 2 + path[0].y ** 2);
+    const innerDist = Math.sqrt(path[1].x ** 2 + path[1].y ** 2);
+    expect(outerDist).toBeGreaterThan(innerDist);
   });
 });
