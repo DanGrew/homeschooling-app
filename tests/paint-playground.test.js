@@ -324,3 +324,25 @@ test('selecting background closes panel and preserves draw strokes', async ({ pa
   })
   expect(drawHasPixels).toBe(true)
 })
+
+test('three size buttons visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="paint-size-sm-btn"]')).toBeVisible()
+  await expect(page.locator('[data-testid="paint-size-md-btn"]')).toBeVisible()
+  await expect(page.locator('[data-testid="paint-size-lg-btn"]')).toBeVisible()
+})
+
+test('medium size active by default', async ({ page }) => {
+  await page.goto(URL)
+  const active = await page.locator('[data-testid="paint-size-md-btn"]').getAttribute('data-active')
+  expect(active).not.toBeNull()
+})
+
+test('clicking large size activates it and deactivates medium', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-size-lg-btn"]')
+  const lgActive = await page.locator('[data-testid="paint-size-lg-btn"]').getAttribute('data-active')
+  const mdActive = await page.locator('[data-testid="paint-size-md-btn"]').getAttribute('data-active')
+  expect(lgActive).not.toBeNull()
+  expect(mdActive).toBeNull()
+})

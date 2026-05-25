@@ -7,6 +7,7 @@ var paintActiveColour = '#333333';
 var paintPaletteEnabled = true;
 var paintUndoStack = [];
 var PAINT_UNDO_MAX = 5;
+var paintBrushSize = 1;
 
 var PAINT_ACTIVE_ATTR = {
   true: function(btn) { btn.setAttribute('data-active', ''); },
@@ -58,6 +59,13 @@ function paintRenderToolbar() {
   });
 }
 
+function paintSetSize(size) {
+  paintBrushSize = size;
+  document.querySelectorAll('[data-paint-size]').forEach(function(btn) {
+    PAINT_ACTIVE_ATTR[String(Number(btn.getAttribute('data-paint-size')) === paintBrushSize)](btn);
+  });
+}
+
 function paintStrokeLine(ctx, x1, y1, x2, y2, colour, lineWidth, alpha, cap, join) {
   ctx.save();
   ctx.strokeStyle = colour;
@@ -76,17 +84,17 @@ var paintRainbowIdx = 0;
 
 var BRUSH_STROKE = {
   pencil: function(ctx, x1, y1, x2, y2, colour) {
-    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 2, 0.9, 'round', 'round');
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 2 * paintBrushSize, 0.9, 'round', 'round');
   },
   marker: function(ctx, x1, y1, x2, y2, colour) {
-    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 18, 1.0, 'square', 'miter');
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 18 * paintBrushSize, 1.0, 'square', 'miter');
   },
   paintbrush: function(ctx, x1, y1, x2, y2, colour) {
-    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 14, 0.75, 'round', 'round');
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 14 * paintBrushSize, 0.75, 'round', 'round');
   },
   crayon: function(ctx, x1, y1, x2, y2, colour) {
     CRAYON_PASSES.forEach(function(p) {
-      paintStrokeLine(ctx, x1 + p.ox, y1 + p.oy, x2 + p.ox, y2 + p.oy, colour, 14 * p.wf, p.a, 'round', 'round');
+      paintStrokeLine(ctx, x1 + p.ox, y1 + p.oy, x2 + p.ox, y2 + p.oy, colour, 14 * p.wf * paintBrushSize, p.a, 'round', 'round');
     });
   },
   glitter: function(ctx, x1, y1, x2, y2, colour) {
@@ -95,7 +103,7 @@ var BRUSH_STROKE = {
     GLITTER_OFFSETS.forEach(function(g) {
       ctx.globalAlpha = 0.4 + g.r * 0.1;
       ctx.beginPath();
-      ctx.arc(x2 + g.dx, y2 + g.dy, g.r, 0, Math.PI * 2);
+      ctx.arc(x2 + g.dx * paintBrushSize, y2 + g.dy * paintBrushSize, g.r * paintBrushSize, 0, Math.PI * 2);
       ctx.fill();
     });
     ctx.restore();
@@ -103,12 +111,12 @@ var BRUSH_STROKE = {
   rainbow: function(ctx, x1, y1, x2, y2) {
     var colour = PAINT_COLOURS[paintRainbowIdx % PAINT_COLOURS.length];
     paintRainbowIdx = (paintRainbowIdx + 1) % PAINT_COLOURS.length;
-    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 14, 1.0, 'round', 'round');
+    paintStrokeLine(ctx, x1, y1, x2, y2, colour, 14 * paintBrushSize, 1.0, 'round', 'round');
   },
   eraser: function(ctx, x1, y1, x2, y2) {
     ctx.save();
     ctx.globalCompositeOperation = 'destination-out';
-    paintStrokeLine(ctx, x1, y1, x2, y2, 'rgba(0,0,0,1)', 24, 1.0, 'round', 'round');
+    paintStrokeLine(ctx, x1, y1, x2, y2, 'rgba(0,0,0,1)', 24 * paintBrushSize, 1.0, 'round', 'round');
     ctx.restore();
   }
 };
@@ -216,6 +224,11 @@ function initPaintPlayground() {
     btn.addEventListener('click', function() { paintSetTool(btn.getAttribute('data-paint-tool')); });
   });
 
+  document.querySelectorAll('[data-paint-size]').forEach(function(btn) {
+    btn.addEventListener('click', function() { paintSetSize(Number(btn.getAttribute('data-paint-size'))); });
+  });
+  paintSetSize(1);
+
   document.getElementById('paint-undo-btn').addEventListener('click', paintUndo);
   document.getElementById('paint-bg-btn').addEventListener('click', paintOpenBgPanel);
   document.getElementById('paint-bg-close-btn').addEventListener('click', paintCloseBgPanel);
@@ -254,7 +267,7 @@ function initPaintPlayground() {
 
   var BRUSH_TAP = {
     stamp: function() {
-      var path = buildStarPath(tapStartX, tapStartY, 30, 12, 5);
+      var path = buildStarPath(tapStartX, tapStartY, 30 * paintBrushSize, 12 * paintBrushSize, 5);
       paintDrawCtx.save();
       paintDrawCtx.fillStyle = paintActiveColour;
       paintDrawCtx.globalAlpha = 0.9;
