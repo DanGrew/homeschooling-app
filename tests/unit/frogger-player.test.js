@@ -346,6 +346,18 @@ test('collision fires immediately without hop guard', () => {
   expect(detectCollisions(state, scenario)).not.toBeNull()
 })
 
+test('obstacle in overlapping row hits player straddling rows', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('r5', 5), makeGroundRow('r6', 6)],
+    entities: { r6: [{ id: 'car1', type: 'obstacle', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  applyInput(state, scenario, 'down') // worldY → 5.5, player bbox [5.5,6.5] overlaps row 6 bbox [6,7]
+  const event = detectCollisions(state, scenario)
+  expect(event).not.toBeNull()
+  expect(event.type).toBe('obstacle')
+})
+
 test('obstacle collision detects when player worldX is non-integer', () => {
   const scenario = makeScenario({
     rows: [makeGroundRow('road', 5)],
@@ -378,13 +390,22 @@ test('platform detection: left boundary (centre=log.x) is safe (left-inclusive)'
   expect(isOnPlatform(state, scenario, state.player)).toBe(true)
 })
 
-test('platform detection: right boundary (centre=log.x+width) is unsafe', () => {
+test('platform detection: right boundary (centre=log.x+width) is safe (right-inclusive)', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
   const state = simWithPlayer(scenario, 5, 3)
-  applyInput(state, scenario, 'right') // worldX → 5.5, centre=6.0 = log.x+width → unsafe
+  applyInput(state, scenario, 'right') // worldX → 5.5, centre=6.0 = log.x+width → safe (inclusive)
+  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+})
+
+test('platform detection: centre past right boundary is unsafe', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3, 'right', 1)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 6, 3) // worldX=6, centre=6.5, past log.x+width=6
   expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 

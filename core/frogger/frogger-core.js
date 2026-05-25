@@ -186,7 +186,7 @@ function isOnPlatform(state, scenario, player) {
     var e = entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
     var cx = player.worldX + 0.5;
-    if (e.x <= cx && cx < e.x + e.width) return true;
+    if (e.x <= cx && cx <= e.x + e.width) return true;
   }
   return false;
 }
@@ -236,7 +236,7 @@ function detectCollisions(state, scenario) {
     var e = entities[i];
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
-    if (!eRow || eRow.y !== player.y) continue;
+    if (!eRow || player.worldY >= eRow.y + 1 || player.worldY + 1 <= eRow.y) continue;
     if (entityOverlapsPlayerTile(e, player.worldX)) {
       return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
     }
@@ -282,7 +282,7 @@ function isSafeMove(state, scenario, player, dx, dy) {
     var e = entities[i];
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
-    if (!eRow || eRow.y !== Math.floor(ny)) continue;
+    if (!eRow || ny >= eRow.y + 1 || ny + 1 <= eRow.y) continue;
     if (entityOverlapsPlayerTile(e, nx)) return false;
   }
   return true;
@@ -303,7 +303,7 @@ function activePlatformsInRow(state, rowId, cx) {
     .filter(function(e) { return e.type === 'platform'; })
     .filter(function(e) { return e.rowId === rowId; })
     .filter(function(e) { return e.x <= cx; })
-    .filter(function(e) { return e.x + e.width > cx; });
+    .filter(function(e) { return e.x + e.width >= cx; });
 }
 
 function findCarryingPlatform(state, scenario, player) {
