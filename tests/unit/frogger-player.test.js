@@ -14,6 +14,7 @@ const {
   applyCarrying,
   detectCollisions,
   resetPlayer,
+  southInclusiveRow,
   isSafeMove,
   getMovePreview
 } = require2('../../core/frogger/frogger-core.js')
@@ -398,6 +399,50 @@ test('platform detection: right boundary (centre=log.x+width) is safe (right-inc
   const state = simWithPlayer(scenario, 5, 3)
   applyInput(state, scenario, 'right') // worldX → 5.5, centre=6.0 = log.x+width → safe (inclusive)
   expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+})
+
+test('southInclusiveRow: returns row above at exact integer worldY', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river3', 3, 'right', 1), makeGroundRow('median', 4)] })
+  const state = simWithPlayer(scenario, 5, 4) // worldY=4, exactly at south of river3
+  const row = southInclusiveRow(scenario, state.player)
+  expect(row).not.toBeNull()
+  expect(row.id).toBe('river3')
+})
+
+test('southInclusiveRow: returns null at non-integer worldY', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river3', 3, 'right', 1)] })
+  const state = simWithPlayer(scenario, 5, 3)
+  applyInput(state, scenario, 'down') // worldY → 3.5
+  expect(southInclusiveRow(scenario, state.player)).toBeNull()
+})
+
+test('platform detection: south-inclusive — player at exact south boundary of log row is on platform', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river3', 3, 'right', 1), makeGroundRow('median', 4)],
+    entities: { river3: [{ id: 'log1', type: 'platform', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 4) // worldY=4, player.y=4 (median), south edge of river3
+  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+})
+
+test('platform detection: south-inclusive does not apply at non-integer worldY', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river3', 3, 'right', 1), makeGroundRow('median', 4)],
+    entities: { river3: [{ id: 'log1', type: 'platform', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 4)
+  applyInput(state, scenario, 'down') // worldY → 4.5, no longer touching river3
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+test('applyCarrying: carries player at south boundary of log row', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river3', 3, 'right', 1), makeGroundRow('median', 4)],
+    entities: { river3: [{ id: 'log1', type: 'platform', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 4) // worldY=4 — south boundary of river3
+  applyCarrying(state, scenario, 0.1)
+  expect(state.player.worldX).toBeGreaterThan(4) // carried by river3 log
 })
 
 test('platform detection: centre past right boundary is unsafe', () => {
