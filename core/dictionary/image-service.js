@@ -20,3 +20,5 @@ var ImageService = (function() {
 
   return { load: load, getUrl: getUrl };
 })();
+
+if (typeof module !== 'undefined') module.exports = ImageService;
