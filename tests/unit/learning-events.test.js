@@ -41,9 +41,9 @@ describe('recordLearningEvent', () => {
     expect(showLearningMoment).toHaveBeenCalledWith('You made orange!');
   });
 
-  it('does not call showLearningMoment when moment absent', () => {
+  it('calls showLearningMoment with default when moment absent', () => {
     recordLearningEvent({ version: 1, type: 'test', timestamp: 0 });
-    expect(showLearningMoment).not.toHaveBeenCalled();
+    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!');
   });
 
   it('records event even when moment provided', () => {
