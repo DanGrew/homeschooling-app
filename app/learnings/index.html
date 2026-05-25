@@ -13,8 +13,6 @@ body{background:#fff8f0;font-family:inherit;padding:24px 16px 48px;}
 a.back{display:inline-block;margin-bottom:20px;color:#7c6fcd;text-decoration:none;font-size:0.95em;}
 a.back:hover{text-decoration:underline;}
 h1{font-size:2em;color:#333;margin-bottom:28px;}
-.group-label{font-size:0.85em;font-weight:bold;color:#9ca3af;text-transform:uppercase;letter-spacing:0.08em;margin:32px 0 12px;}
-.group-label:first-of-type{margin-top:0;}
 .entry{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 6px rgba(0,0,0,0.07);}
 .entry-time{font-size:0.78em;color:#aaa;margin-bottom:4px;}
 .entry-source{font-size:0.78em;color:#bbb;margin-bottom:2px;}
@@ -35,9 +33,8 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 .entry-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
 .entry-meta:empty{display:none;}
 .meta-tag{font-size:0.72em;background:#f5f5f5;color:#888;border-radius:6px;padding:2px 8px;}
-.filter-bar{display:flex;gap:16px;align-items:center;margin-bottom:24px;flex-wrap:wrap;}
-.filter-bar label{font-size:0.85em;color:#555;display:flex;align-items:center;gap:6px;}
-.filter-bar select{font-family:inherit;font-size:0.85em;border:1px solid #ddd;border-radius:6px;padding:4px 8px;background:#fff;color:#333;}
+.filter-bar{margin-bottom:24px;}
+.filter-bar select{font-family:inherit;font-size:0.9em;border:1px solid #ddd;border-radius:6px;padding:6px 10px;background:#fff;color:#333;}
 </style>
 </head>
 <body>
@@ -46,8 +43,16 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
     <a class="back" href="../">← Home</a>
     <h1>Learnings</h1>
     <div class="filter-bar">
-      <label>From <select id="filter-from"><option value=""></option></select></label>
-      <label>To <select id="filter-to"><option value=""></option></select></label>
+      <select id="filter-preset">
+        <option value="last5">Last 5 minutes</option>
+        <option value="last15">Last 15 minutes</option>
+        <option value="last30">Last 30 minutes</option>
+        <option value="last1h" selected>Last hour</option>
+        <option value="last2h">Last 2 hours</option>
+        <option value="today">Today</option>
+        <option value="lastweek">Last week</option>
+        <option value="all">All time</option>
+      </select>
     </div>
     <div id="journal"></div>
   </div>
@@ -64,7 +69,7 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 </div>
 <script type="module">
 import { getAllEvents } from '../../core/telemetry/learning-db.js';
-import { fetchLearning, buildEntryViewModel, sortAndGroupEvents, formatCriterion, extraMetaTags } from '../../core/telemetry/learning-journal-core.js';
+import { fetchLearning, buildEntryViewModel, formatCriterion, extraMetaTags } from '../../core/telemetry/learning-journal-core.js';
 
 var ZERO_CLASS = { 'true': ' bar-row-zero', 'false': '' };
 
@@ -79,20 +84,30 @@ var AREA_META = [
 ];
 
 var NO_EVENTS = {
-  'true':  function(j)    { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
-  'false': function(j, e) { renderGroups(j, e); }
+  'true':  function(j)      { j.innerHTML = '<p class="empty">No learnings recorded yet.</p>'; },
+  'false': function(j, evs) { evs.forEach(function(ev) { appendEntry(j, ev); }); }
 };
 
-function buildTimeOptions(sel) {
-  Array.from({ length: 96 }, function(_, i) {
-    var opt = document.createElement('option');
-    opt.value = i * 15;
-    opt.textContent = ('0' + Math.floor(i * 15 / 60)).slice(-2) + ':' + ('0' + (i * 15 % 60)).slice(-2);
-    sel.appendChild(opt);
-  });
+function getThreshold(preset) {
+  var now = Date.now();
+  var d = new Date();
+  var THRESH = {
+    'last5':    now - 300000,
+    'last15':   now - 900000,
+    'last30':   now - 1800000,
+    'last1h':   now - 3600000,
+    'last2h':   now - 7200000,
+    'today':    new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime(),
+    'lastweek': now - 604800000,
+    'all':      0
+  };
+  return THRESH[preset];
 }
-buildTimeOptions(document.getElementById('filter-from'));
-buildTimeOptions(document.getElementById('filter-to'));
+
+function applyPreset(events, preset) {
+  var threshold = getThreshold(preset);
+  return events.filter(function(e) { return e.timestamp >= threshold; });
+}
 
 function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);
@@ -121,21 +136,6 @@ function appendEntry(wrap, event) {
   fetchLearning(lid, function(learning) {
     wrap.replaceChild(renderEntry(event, learning), placeholder);
   });
-}
-
-function renderGroup(journal, label, events) {
-  var h = document.createElement('div');
-  h.className = 'group-label';
-  h.textContent = label;
-  journal.appendChild(h);
-  var wrap = document.createElement('div');
-  journal.appendChild(wrap);
-  events.forEach(function(event) { appendEntry(wrap, event); });
-}
-
-function renderGroups(journal, events) {
-  var grouped = sortAndGroupEvents(events);
-  grouped.order.forEach(function(label) { renderGroup(journal, label, grouped.groups[label]); });
 }
 
 function makeBar(label, pct, color) {
@@ -179,16 +179,27 @@ function renderBreakdown(events, learnings) {
   });
 }
 
-var _allEvents = [];
-
-function renderJournal() {
-  var journal = document.getElementById('journal');
-  journal.innerHTML = '';
-  NO_EVENTS[String(_allEvents.length === 0)](journal, _allEvents);
+function refreshBreakdown(filtered) {
+  document.getElementById('area-bars').innerHTML = '';
+  document.getElementById('crit-bars').innerHTML = '';
+  renderBreakdown(filtered, _loadedLearnings);
 }
 
-document.getElementById('filter-from').addEventListener('change', renderJournal);
-document.getElementById('filter-to').addEventListener('change', renderJournal);
+var _allEvents = [];
+var _loadedLearnings = {};
+var _learningsReady = false;
+
+function renderJournal() {
+  var preset = document.getElementById('filter-preset').value;
+  var filtered = applyPreset(_allEvents, preset);
+  var sorted = filtered.slice().sort(function(a, b) { return b.timestamp - a.timestamp; });
+  var journal = document.getElementById('journal');
+  journal.innerHTML = '';
+  NO_EVENTS[String(sorted.length === 0)](journal, sorted);
+  [_learningsReady].filter(Boolean).forEach(function() { refreshBreakdown(filtered); });
+}
+
+document.getElementById('filter-preset').addEventListener('change', renderJournal);
 
 getAllEvents(function(events) {
   _allEvents = events;
@@ -204,7 +215,12 @@ getAllEvents(function(events) {
   });
   var loaded = {};
   var remaining = lids.length;
-  function onAllLoaded() { renderBreakdown(events, loaded); }
+  function onAllLoaded() {
+    _loadedLearnings = loaded;
+    _learningsReady = true;
+    var preset = document.getElementById('filter-preset').value;
+    refreshBreakdown(applyPreset(_allEvents, preset));
+  }
   [lids.length].filter(function(n) { return n === 0; }).forEach(onAllLoaded);
   lids.forEach(function(lid) {
     fetchLearning(lid, function(learning) {
