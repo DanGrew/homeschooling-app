@@ -64,6 +64,7 @@ function _playTing() {
 }
 
 export function show(message) {
+  if (typeof document === 'undefined') return;
   if (!_el) _create();
   _el.querySelector('[data-testid="learning-moment-msg"]').textContent = message;
 

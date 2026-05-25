@@ -16,6 +16,7 @@
 <script src="../../components/menu.js" defer></script>
 <script type="module">
 import { showLearningMoment } from '../../components/learning-moments/learning-moment-service.js';
+import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 import '../../components/speech/speech-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 var btn = document.getElementById('trigger');
@@ -24,6 +25,7 @@ btn.addEventListener('click', function() {
   showLearningMoment('You made orange!');
 });
 window._showLearningMoment = showLearningMoment;
+window._recordLearningEvent = recordLearningEvent;
 </script>
 </body>
 </html>

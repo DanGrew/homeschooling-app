@@ -4,7 +4,12 @@ vi.mock('../../core/telemetry/learning-db.js', () => ({
   saveEvent: vi.fn()
 }));
 
+vi.mock('../../components/learning-moments/learning-moment-service.js', () => ({
+  showLearningMoment: vi.fn()
+}));
+
 import { saveEvent } from '../../core/telemetry/learning-db.js';
+import { showLearningMoment } from '../../components/learning-moments/learning-moment-service.js';
 import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 
 beforeEach(() => { vi.clearAllMocks(); });
@@ -29,5 +34,20 @@ describe('recordLearningEvent', () => {
   it('does not throw when saveEvent throws', () => {
     saveEvent.mockImplementation(() => { throw new Error('db error'); });
     expect(() => recordLearningEvent({ version: 1, type: 'test', timestamp: 0 })).not.toThrow();
+  });
+
+  it('calls showLearningMoment when moment provided', () => {
+    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, 'You made orange!');
+    expect(showLearningMoment).toHaveBeenCalledWith('You made orange!');
+  });
+
+  it('calls showLearningMoment with default when moment absent', () => {
+    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 });
+    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!');
+  });
+
+  it('records event even when moment provided', () => {
+    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, 'You solved it!');
+    expect(saveEvent).toHaveBeenCalledOnce();
   });
 });
