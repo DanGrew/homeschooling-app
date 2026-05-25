@@ -278,6 +278,7 @@ function onReset() {
 | `components/speech/voice-service.js` | Voice synthesis (Web Speech API) |
 | `components/success-banner.js` | Success/reward animations |
 | `components/learning-moments/learning-moment.js` | Learning moment notification (show/hide, ting audio, auto-dismiss) |
+| `components/learning-moments/learning-moment-service.js` | Learning moment dispatch service (showLearningMoment, cooldown, replace-on-overlap) |
 
 ### content/
 | Path | Purpose |
