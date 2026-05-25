@@ -158,6 +158,10 @@ function attachPreviewRotateHandler(el, handler) {
 
 function renderDominoBoard(viewport, gameState, options) {
   var opts = Object(options);
+  var savedPan = null;
+  [viewport._dominoPanState].filter(Boolean).forEach(function(p) {
+    savedPan = { panX: p.panX, panY: p.panY, scale: p.scale };
+  });
   viewport.innerHTML = '';
 
   var world = document.createElement('div');
@@ -179,12 +183,11 @@ function renderDominoBoard(viewport, gameState, options) {
 
   viewport.appendChild(world);
 
-  var prevPan = viewport._dominoPanState;
   var panState = initDominoPan(viewport, world);
   var scale = panState.scale;
   panState.panX = Math.round(viewport.clientWidth / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL) * scale);
   panState.panY = Math.round(viewport.clientHeight / 2) - Math.round((DOMINO_ORIGIN + DOMINO_CELL / 2) * scale);
-  [prevPan].filter(Boolean).forEach(function(p) {
+  [savedPan].filter(Boolean).forEach(function(p) {
     panState.panX = p.panX; panState.panY = p.panY; panState.scale = p.scale;
   });
   panState.applyPan();
