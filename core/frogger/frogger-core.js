@@ -179,12 +179,11 @@ function entityOverlapsPlayerTile(entity, playerX) {
 function isOnPlatform(state, scenario, player) {
   var row = getRowAtY(scenario, player.y);
   if (!row) return false;
-  var cx = player.worldX + 0.5;
   var entities = state.entities;
   for (var i = 0; i < entities.length; i++) {
     var e = entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
-    if (e.x < cx && cx < e.x + e.width) return true;
+    if (entityOverlapsPlayerTile(e, player.worldX)) return true;
   }
   return false;
 }
@@ -235,7 +234,7 @@ function detectCollisions(state, scenario) {
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
     if (!eRow || eRow.y !== player.y) continue;
-    if (entityOverlapsPlayerTile(e, player.x)) {
+    if (entityOverlapsPlayerTile(e, player.worldX)) {
       return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
     }
   }

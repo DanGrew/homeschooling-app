@@ -73,6 +73,11 @@ function initFroggerRenderer(container, scenario, theme) {
   var playerEl = buildPlayerEl(theme, cs);
   grid.appendChild(playerEl);
 
+  var bboxLayer = document.createElement('div');
+  bboxLayer.setAttribute('data-testid', 'frogger-bbox-layer');
+  bboxLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:15;';
+  grid.appendChild(bboxLayer);
+
   var highlightEl = document.createElement('div');
   highlightEl.setAttribute('data-testid', 'frogger-highlight');
   highlightEl.style.cssText = 'position:absolute;background:rgba(255,0,0,0.55);opacity:0;transition:opacity 0.5s;pointer-events:none;z-index:20;width:' + cs + 'px;height:' + cs + 'px;';
@@ -96,7 +101,7 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.appendChild(resetOverlay);
   container.appendChild(grid);
 
-  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, entityEls: {}, cs, theme };
+  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, bboxLayer, entityEls: {}, cs, theme };
 }
 
 function removeEntityEl(rState, e) {
@@ -130,6 +135,31 @@ function removeOrphanEl(rState, id) {
   delete rState.entityEls[id];
 }
 
+var BBOX_STROKE = { obstacle: 'rgba(255,60,60,0.85)', platform: 'rgba(60,220,60,0.85)', collectible: 'rgba(255,200,0,0.85)' };
+
+function bboxDiv(x, y, w, h, color) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:absolute;box-sizing:border-box;border:2px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  return el;
+}
+
+function renderBBoxes(rState, simState, scenario) {
+  var layer = rState.bboxLayer;
+  var cs = rState.cs;
+  layer.innerHTML = '';
+
+  simState.entities.filter(function(e) { return !e.collected; }).forEach(function(e) {
+    var row = getRowById(scenario, e.rowId);
+    if (!row) return;
+    var color = BBOX_STROKE[e.type] || 'rgba(200,200,200,0.7)';
+    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, color));
+  });
+
+  [simState.player].filter(Boolean).forEach(function(p) {
+    layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
+  });
+}
+
 function applyPlayerPos(rState, player) {
   rState.playerEl.style.left = (player.worldX * rState.cs) + 'px';
   rState.playerEl.style.top  = (player.worldY * rState.cs) + 'px';
@@ -151,6 +181,8 @@ function renderFrogger(rState, simState, scenario) {
 
   [simState.player].filter(Boolean)
     .forEach(function(player) { applyPlayerPos(rState, player); });
+
+  renderBBoxes(rState, simState, scenario);
 }
 
 function fadeOutHighlight(hl) {

@@ -344,6 +344,30 @@ test('collision fires immediately without hop guard', () => {
   expect(detectCollisions(state, scenario)).not.toBeNull()
 })
 
+test('obstacle collision detects when player worldX is non-integer', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('road', 5)],
+    entities: { road: [{ id: 'car1', type: 'obstacle', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  applyInput(state, scenario, 'right') // worldX → 4.5, x = 4
+  // obstacle at x=5: overlaps [4.5, 5.5] ∩ [5, 6] → hit
+  const event = detectCollisions(state, scenario)
+  expect(event).not.toBeNull()
+  expect(event.type).toBe('obstacle')
+})
+
+test('platform detection uses worldX not tile x', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3, 'right', 1)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 2 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 3)
+  applyInput(state, scenario, 'right') // worldX → 4.5
+  // platform at x=5,w=2: entityOverlapsPlayerTile({x:5,w:2}, 4.5) → 5.5>5 && 4.5<7 → true
+  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+})
+
 test('paused simulation does not detect collisions', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)]
