@@ -34,7 +34,10 @@
     <div id="paint-bg-panel" data-testid="paint-bg-panel">
       <div id="paint-bg-panel-inner">
         <div id="paint-bg-grid"></div>
-        <button class="paint-tool-btn" id="paint-bg-close-btn" data-testid="paint-bg-close-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10005; Close</button>
+        <div style="display:flex;gap:8px;">
+          <button class="paint-tool-btn" id="paint-bg-clear-btn" data-testid="paint-bg-clear-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10006; Clear</button>
+          <button class="paint-tool-btn" id="paint-bg-close-btn" data-testid="paint-bg-close-btn" style="background:rgba(255,255,255,0.15);color:#fff;width:auto;padding:0 16px;font-size:16px;">&#10005; Close</button>
+        </div>
       </div>
     </div>
     <div id="paint-toolbar">
@@ -47,6 +50,11 @@
         <button class="paint-tool-btn" data-paint-tool="stamp" id="paint-stamp-btn" data-testid="paint-stamp-btn">&#11088;</button>
         <button class="paint-tool-btn" data-paint-tool="rainbow" id="paint-rainbow-btn" data-testid="paint-rainbow-btn">&#127752;</button>
         <button class="paint-tool-btn" data-paint-tool="eraser" id="paint-eraser-btn" data-testid="paint-eraser-btn">&#8955;</button>
+      </div>
+      <div id="paint-size-slot" style="display:flex;justify-content:center;gap:4px;padding:2px 0;">
+        <button class="paint-tool-btn" data-paint-size="0.5" data-testid="paint-size-sm-btn" style="width:28px;height:28px;"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="4" fill="currentColor"/></svg></button>
+        <button class="paint-tool-btn" data-paint-size="1" data-testid="paint-size-md-btn" style="width:28px;height:28px;"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="7" fill="currentColor"/></svg></button>
+        <button class="paint-tool-btn" data-paint-size="2" data-testid="paint-size-lg-btn" style="width:28px;height:28px;"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="10" fill="currentColor"/></svg></button>
       </div>
       <div id="paint-colour-slot"></div>
       <div id="paint-util-slot" style="display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.65;">
@@ -75,9 +83,13 @@ makeSpeakable(document.getElementById('paint-glitter-btn'), 'Glitter brush');
 makeSpeakable(document.getElementById('paint-stamp-btn'), 'Star stamp');
 makeSpeakable(document.getElementById('paint-rainbow-btn'), 'Rainbow brush');
 makeSpeakable(document.getElementById('paint-eraser-btn'), 'Eraser');
+makeSpeakable(document.querySelector('[data-testid="paint-size-sm-btn"]'), 'Small brush');
+makeSpeakable(document.querySelector('[data-testid="paint-size-md-btn"]'), 'Medium brush');
+makeSpeakable(document.querySelector('[data-testid="paint-size-lg-btn"]'), 'Large brush');
 makeSpeakable(document.getElementById('paint-undo-btn'), 'Undo');
 makeSpeakable(document.getElementById('paint-clear-btn'), 'Clear canvas');
 makeSpeakable(document.getElementById('paint-bg-btn'), 'Backgrounds');
+makeSpeakable(document.getElementById('paint-bg-clear-btn'), 'Clear background');
 makeSpeakable(document.getElementById('paint-bg-close-btn'), 'Close backgrounds');
 makeSpeakable(document.getElementById('paint-hand-btn'), 'Hand tool');
 var _clearArc = document.querySelector('#paint-clear-arc circle');
