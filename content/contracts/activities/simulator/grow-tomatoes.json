@@ -1,0 +1,6 @@
+{
+  "opt-outs": {
+    "nav-bar": "navigation hub — uses inline home link, no activity content",
+    "speakable": "navigation hub — no activity content"
+  }
+}

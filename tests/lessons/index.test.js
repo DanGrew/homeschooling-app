@@ -38,11 +38,9 @@ test('Music section has Piano', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Piano' })).toBeVisible()
 })
 
-test('World section has all three simulator levels', async ({ page }) => {
+test('World section has Grow Tomatoes hub tile', async ({ page }) => {
   await page.goto('/homeschooling-app/app/lessons/')
-  await expect(page.getByRole('link', { name: 'Grow Tomatoes [Level 1]' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Grow Tomatoes [Level 2]' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Grow Tomatoes [Level 3]' })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Grow Tomatoes' })).toBeVisible()
 })
 
 test('stories are not on the lessons page', async ({ page }) => {

@@ -129,6 +129,7 @@ window.addEventListener('page:control', function(e) {
 | Secondary colours | `app/activities/secondary-colours/index.html` | core/shapes, ui/shared |
 | Shopping scan | `app/activities/shopping-scan/index.html` | core/shopping-scan, ui/shopping-scan |
 | Simulator | `app/activities/simulator/index.html` | core/simulator, ui/simulator |
+| Grow Tomatoes hub | `app/activities/simulator/grow-tomatoes.html` | — |
 | Story time | `app/activities/story-time/index.html` | core/story-time, ui/story-time, content/story-time |
 | Say words | `app/activities/say-words/index.html` | ui/shared, components/speech |
 | Drawing dots | `app/activities/drawing-dots/index.html` | ui/shared |
