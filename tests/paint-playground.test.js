@@ -145,3 +145,108 @@ test('glitter brush produces pixels on drag', async ({ page }) => {
   })
   expect(hasPixels).toBe(true)
 })
+
+test('eraser button visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="paint-eraser-btn"]')).toBeVisible()
+})
+
+test('undo button visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="paint-undo-btn"]')).toBeVisible()
+})
+
+test('clear button visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="paint-clear-btn"]')).toBeVisible()
+})
+
+test('undo reverts last pencil stroke', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-pencil-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+  await page.mouse.move(cx, cy)
+  await page.mouse.down()
+  await page.mouse.move(cx + 60, cy)
+  await page.mouse.up()
+  await page.click('[data-testid="paint-undo-btn"]')
+  const hasPixels = await page.locator('[data-testid="paint-draw"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d');
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true; }
+    return false;
+  })
+  expect(hasPixels).toBe(false)
+})
+
+test('eraser removes drawn pixels', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-pencil-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+  await page.mouse.move(cx, cy)
+  await page.mouse.down()
+  await page.mouse.move(cx + 60, cy)
+  await page.mouse.up()
+  await page.click('[data-testid="paint-eraser-btn"]')
+  await page.mouse.move(cx - 5, cy)
+  await page.mouse.down()
+  await page.mouse.move(cx + 65, cy)
+  await page.mouse.up()
+  const hasPixels = await page.locator('[data-testid="paint-draw"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d');
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true; }
+    return false;
+  })
+  expect(hasPixels).toBe(false)
+})
+
+test('long-press clear wipes canvas', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-pencil-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+  await page.mouse.move(cx, cy)
+  await page.mouse.down()
+  await page.mouse.move(cx + 60, cy)
+  await page.mouse.up()
+  await page.locator('[data-testid="paint-clear-btn"]').evaluate(function(el) {
+    el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 99 }))
+  })
+  await page.waitForTimeout(900)
+  await page.locator('[data-testid="paint-clear-btn"]').evaluate(function(el) {
+    el.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 99 }))
+  })
+  const hasPixels = await page.locator('[data-testid="paint-draw"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d');
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true; }
+    return false;
+  })
+  expect(hasPixels).toBe(false)
+})
+
+test('short press clear does not wipe canvas', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-pencil-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+  await page.mouse.move(cx, cy)
+  await page.mouse.down()
+  await page.mouse.move(cx + 60, cy)
+  await page.mouse.up()
+  await page.click('[data-testid="paint-clear-btn"]')
+  const hasPixels = await page.locator('[data-testid="paint-draw"]').evaluate(function(canvas) {
+    var ctx = canvas.getContext('2d');
+    var data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (var i = 3; i < data.length; i += 4) { if (data[i] > 0) return true; }
+    return false;
+  })
+  expect(hasPixels).toBe(true)
+})

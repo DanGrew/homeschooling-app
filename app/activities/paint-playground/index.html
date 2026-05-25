@@ -35,8 +35,16 @@
         <button class="paint-tool-btn" data-paint-tool="glitter" id="paint-glitter-btn" data-testid="paint-glitter-btn">&#10024;</button>
         <button class="paint-tool-btn" data-paint-tool="stamp" id="paint-stamp-btn" data-testid="paint-stamp-btn">&#11088;</button>
         <button class="paint-tool-btn" data-paint-tool="rainbow" id="paint-rainbow-btn" data-testid="paint-rainbow-btn">&#127752;</button>
+        <button class="paint-tool-btn" data-paint-tool="eraser" id="paint-eraser-btn" data-testid="paint-eraser-btn">&#8955;</button>
       </div>
       <div id="paint-colour-slot"></div>
+      <div id="paint-util-slot" style="display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.65;">
+        <button class="paint-tool-btn" id="paint-undo-btn" data-testid="paint-undo-btn">&#8617;</button>
+        <div style="position:relative;width:48px;height:48px;" data-speakable-container>
+          <button class="paint-tool-btn" id="paint-clear-btn" data-testid="paint-clear-btn" style="position:absolute;top:0;left:0;">&#128465;</button>
+          <svg id="paint-clear-arc" style="position:absolute;top:-6px;left:-6px;width:60px;height:60px;pointer-events:none;transform:rotate(-90deg);" viewBox="0 0 60 60"><circle cx="30" cy="30" r="27" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-dasharray="170" stroke-dashoffset="170"/></svg>
+        </div>
+      </div>
       <button class="paint-tool-btn" data-paint-tool="hand" id="paint-hand-btn" data-testid="paint-hand-btn">&#9995;</button>
     </div>
   </div>
@@ -46,6 +54,7 @@
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
+import { makeLongPress } from '../../../ui/shared/long-press.js';
 makeSpeakable(document.getElementById('paint-pencil-btn'), 'Pencil');
 makeSpeakable(document.getElementById('paint-crayon-btn'), 'Crayon');
 makeSpeakable(document.getElementById('paint-paintbrush-btn'), 'Paint brush');
@@ -53,7 +62,15 @@ makeSpeakable(document.getElementById('paint-marker-btn'), 'Marker');
 makeSpeakable(document.getElementById('paint-glitter-btn'), 'Glitter brush');
 makeSpeakable(document.getElementById('paint-stamp-btn'), 'Star stamp');
 makeSpeakable(document.getElementById('paint-rainbow-btn'), 'Rainbow brush');
+makeSpeakable(document.getElementById('paint-eraser-btn'), 'Eraser');
+makeSpeakable(document.getElementById('paint-undo-btn'), 'Undo');
+makeSpeakable(document.getElementById('paint-clear-btn'), 'Clear canvas');
 makeSpeakable(document.getElementById('paint-hand-btn'), 'Hand tool');
+var _clearArc = document.querySelector('#paint-clear-arc circle');
+makeLongPress(document.getElementById('paint-clear-btn'), function() { paintClearCanvas(); }, 800,
+  function() { _clearArc.style.transition = 'stroke-dashoffset 800ms linear'; _clearArc.setAttribute('stroke-dashoffset', '0'); },
+  function() { _clearArc.style.transition = 'none'; _clearArc.setAttribute('stroke-dashoffset', '170'); }
+);
 </script>
 <script>window.addEventListener('load', initPaintPlayground);</script>
 <script>window.ACTIVITY_ID = 'paint-playground';</script>
