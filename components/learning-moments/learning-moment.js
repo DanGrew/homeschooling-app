@@ -28,10 +28,17 @@ function _create() {
   icon.dataset.testid = 'learning-moment-icon';
   icon.textContent = '\u2B50';
   icon.style.cssText = 'font-size:1.3em;flex-shrink:0;';
+  var text = document.createElement('div');
+  text.style.cssText = 'display:flex;flex-direction:column;gap:2px;';
   var msg = document.createElement('span');
   msg.dataset.testid = 'learning-moment-msg';
+  var activity = document.createElement('span');
+  activity.dataset.testid = 'learning-moment-activity';
+  activity.style.cssText = 'font-size:0.8em;color:#888;display:none;';
+  text.appendChild(msg);
+  text.appendChild(activity);
   _el.appendChild(icon);
-  _el.appendChild(msg);
+  _el.appendChild(text);
   document.body.appendChild(_el);
 }
 
@@ -63,10 +70,18 @@ function _playTing() {
   } catch (e) {}
 }
 
-export function show(message) {
+export function show(message, activity) {
   if (typeof document === 'undefined') return;
   if (!_el) _create();
   _el.querySelector('[data-testid="learning-moment-msg"]').textContent = message;
+  var actEl = _el.querySelector('[data-testid="learning-moment-activity"]');
+  if (activity) {
+    actEl.textContent = 'Activity: ' + activity;
+    actEl.style.display = '';
+  } else {
+    actEl.textContent = '';
+    actEl.style.display = 'none';
+  }
 
   if (_timer) { clearTimeout(_timer); _timer = null; }
 

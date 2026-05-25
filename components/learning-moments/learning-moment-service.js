@@ -17,13 +17,13 @@ function _onDismiss() {
   }, LEARNING_MOMENT_COOLDOWN_MS);
 }
 
-export function showLearningMoment(message) {
+export function showLearningMoment(message, activity) {
   if (!_cooldown) {
     if (_dismissTimer) {
       clearTimeout(_dismissTimer);
       _dismissTimer = null;
     }
-    show(message);
+    show(message, activity);
     _active = true;
     _dismissTimer = setTimeout(function() {
       hide();

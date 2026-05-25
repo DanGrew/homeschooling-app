@@ -97,4 +97,24 @@ describe('learning-moment', () => {
     expect(el.style.cssText).not.toContain('#e74c3c');
     expect(el.style.cssText).not.toContain('#c0392b');
   });
+
+  it('shows activity line when activity provided', () => {
+    show('Well done!', 'AND Gate');
+    var actEl = document.querySelector('[data-testid="learning-moment-activity"]');
+    expect(actEl.textContent).toBe('Activity: AND Gate');
+    expect(actEl.style.display).not.toBe('none');
+  });
+
+  it('hides activity line when no activity provided', () => {
+    show('Well done!');
+    var actEl = document.querySelector('[data-testid="learning-moment-activity"]');
+    expect(actEl.style.display).toBe('none');
+  });
+
+  it('clears activity line on subsequent call without activity', () => {
+    show('First', 'AND Gate');
+    show('Second');
+    var actEl = document.querySelector('[data-testid="learning-moment-activity"]');
+    expect(actEl.style.display).toBe('none');
+  });
 });

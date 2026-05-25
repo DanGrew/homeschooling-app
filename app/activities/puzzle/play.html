@@ -189,7 +189,7 @@
   function completionCheck() {
     locked = true;
     refToggle.disabled = true;
-    recordLearningEvent({ version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'puzzle', variant_id: puzzleId, difficulty: gridParam, activity_id: 'puzzle' });
+    recordLearningEvent({ version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'puzzle', variant_id: puzzleId, difficulty: gridParam, activity_id: 'puzzle' }, null, 'Puzzle');
     revealPicture(() => {
       showBanner({ buttons: [{ label: 'Choose another \u2192', onClick: function() { hideBanner(); location.href = './'; } }] });
     });

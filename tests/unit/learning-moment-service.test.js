@@ -35,7 +35,12 @@ describe('learning-moment-service', () => {
 
   it('calls show with correct message', () => {
     showLearningMoment('You made orange!');
-    expect(mockShow).toHaveBeenCalledWith('You made orange!');
+    expect(mockShow).toHaveBeenCalledWith('You made orange!', undefined);
+  });
+
+  it('passes activity to show', () => {
+    showLearningMoment('You made orange!', 'AND Gate');
+    expect(mockShow).toHaveBeenCalledWith('You made orange!', 'AND Gate');
   });
 
   it('calls hide after LEARNING_MOMENT_DURATION_MS', () => {
@@ -49,7 +54,7 @@ describe('learning-moment-service', () => {
     showLearningMoment('First');
     showLearningMoment('Second');
     expect(mockShow).toHaveBeenCalledTimes(2);
-    expect(mockShow).toHaveBeenLastCalledWith('Second');
+    expect(mockShow).toHaveBeenLastCalledWith('Second', undefined);
   });
 
   it('second call while displayed resets dismiss timer', () => {
@@ -76,6 +81,6 @@ describe('learning-moment-service', () => {
     vi.advanceTimersByTime(1000);
     showLearningMoment('After cooldown');
     expect(mockShow).toHaveBeenCalledTimes(2);
-    expect(mockShow).toHaveBeenLastCalledWith('After cooldown');
+    expect(mockShow).toHaveBeenLastCalledWith('After cooldown', undefined);
   });
 });

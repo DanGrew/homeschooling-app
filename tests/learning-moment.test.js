@@ -61,3 +61,17 @@ test('recordLearningEvent without moment shows default notification', async ({ p
   ))
   await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('Learning Moment! - Well Done!')
 })
+
+test('activity name shown below message when provided', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._showWithActivity('Learning Moment! - Well Done!', 'AND Gate'))
+  await expect(page.locator('[data-testid="learning-moment-activity"]')).toHaveText('Activity: AND Gate')
+})
+
+test('activity line hidden when no activity provided', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._showWithActivity('Learning Moment! - Well Done!'))
+  const actEl = page.locator('[data-testid="learning-moment-activity"]')
+  const display = await actEl.evaluate(el => el.style.display)
+  expect(display).toBe('none')
+})
