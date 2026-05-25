@@ -15,14 +15,15 @@
 </div>
 <script src="../../components/menu.js" defer></script>
 <script type="module">
-import { show } from '../../components/learning-moments/learning-moment.js';
+import { showLearningMoment } from '../../components/learning-moments/learning-moment-service.js';
 import '../../components/speech/speech-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 var btn = document.getElementById('trigger');
 makeSpeakable(btn, 'Show Learning Moment');
 btn.addEventListener('click', function() {
-  show('You made orange!');
+  showLearningMoment('You made orange!');
 });
+window._showLearningMoment = showLearningMoment;
 </script>
 </body>
 </html>
