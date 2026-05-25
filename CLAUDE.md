@@ -275,6 +275,7 @@ function onReset() {
 | `components/speech/speech-ui.js` | Speech UI controller |
 | `components/speech/voice-service.js` | Voice synthesis (Web Speech API) |
 | `components/success-banner.js` | Success/reward animations |
+| `components/learning-moments/learning-moment.js` | Learning moment notification (show/hide, ting audio, auto-dismiss) |
 
 ### content/
 | Path | Purpose |
