@@ -141,9 +141,15 @@ var BBOX_CFG = {
   collectible: { color: 'rgba(255,200,0,0.85)'  }
 };
 
-function bboxDiv(x, y, w, h, color, border) {
+function bboxDiv(x, y, w, h, color) {
   var el = document.createElement('div');
-  el.style.cssText = 'position:absolute;box-sizing:border-box;border:' + (border || 2) + 'px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  el.style.cssText = 'position:absolute;box-sizing:border-box;border:2px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
+  return el;
+}
+
+function bboxDivThick(x, y, w, h, color) {
+  var el = document.createElement('div');
+  el.style.cssText = 'position:absolute;box-sizing:border-box;border:3px solid ' + color + ';left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + h + 'px;';
   return el;
 }
 
@@ -163,7 +169,7 @@ function appendEntityBBox(layer, cs, scenario, e) {
 
 function appendActivePlatformBBox(layer, cs, scenario, e) {
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)', 3));
+    layer.appendChild(bboxDivThick(e.x * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)'));
   });
 }
 
