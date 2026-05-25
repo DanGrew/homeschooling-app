@@ -20,10 +20,17 @@ test('Words section has Say It, Trace Letters and Trace Words', async ({ page })
   await expect(page.getByRole('link', { name: 'Trace Words' })).toBeVisible()
 })
 
-test('Colours section has Colour Wheel and Colour Playground', async ({ page }) => {
+test('Colours section has Colour Wheel, Colour Playground and Paint', async ({ page }) => {
   await page.goto('/homeschooling-app/app/lessons/')
   await expect(page.getByRole('link', { name: 'Colour Wheel' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Colour Playground' })).toBeVisible()
+  await expect(page.locator('a[href*="activities/paint-playground/"]')).toBeVisible()
+})
+
+test('Paint tile navigates to paint playground', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/lessons/')
+  await page.click('a[href*="activities/paint-playground/"]')
+  await expect(page.locator('#paint-viewport')).toBeVisible()
 })
 
 test('Music section has Piano', async ({ page }) => {
