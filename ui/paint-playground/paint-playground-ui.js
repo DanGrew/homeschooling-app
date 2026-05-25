@@ -17,6 +17,7 @@ var PAINT_ON_SET_HAND = {
 };
 
 var PAINT_PALETTE_OPACITY = { true: '1', false: '0.35' };
+var PAINT_PALETTE_EVENTS = { true: '', false: 'none' };
 
 function paintApplyViewport() {
   var left = -paintState.viewport.x + 'px';
@@ -36,7 +37,7 @@ function paintSetTool(tool) {
 function paintSetPaletteEnabled(enabled) {
   paintPaletteEnabled = enabled;
   document.getElementById('paint-colour-slot').style.opacity = PAINT_PALETTE_OPACITY[String(enabled)];
-  document.getElementById('paint-colour-slot').style.pointerEvents = enabled ? '' : 'none';
+  document.getElementById('paint-colour-slot').style.pointerEvents = PAINT_PALETTE_EVENTS[String(enabled)];
 }
 
 function paintRenderToolbar() {
