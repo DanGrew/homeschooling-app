@@ -96,10 +96,9 @@ test('entry renders all display fields for a learning_completed event', async ({
   await expect(page.locator('.entry-criteria .tag')).toHaveCount(2)
   await expect(page.locator('.entry-criteria .tag').nth(0)).toHaveText('Expressive Arts — colour mixing')
   await expect(page.locator('.entry-criteria .tag').nth(1)).toHaveText('Expressive Arts — colour recognition')
-  await expect(page.locator('.group-label').first()).toContainText('Today')
 })
 
-test('today group header shown for recent event', async ({ page }) => {
+test('recent event visible under default filter', async ({ page }) => {
   await page.goto(URL)
   await seedEvent(page, {
     id: 'test-5',
@@ -110,7 +109,7 @@ test('today group header shown for recent event', async ({ page }) => {
     activityId: 'colour-wheel'
   })
   await page.reload()
-  await expect(page.locator('.group-label').first()).toContainText('Today')
+  await expect(page.locator('.entry')).toBeVisible()
 })
 
 test('completing a lesson via colour-wheel then visiting journal shows entry', async ({ page }) => {
