@@ -133,13 +133,18 @@ function paintClearCanvas() {
 function paintLoadBackground(src) {
   var img = new Image();
   img.addEventListener('load', function() {
-    var ww = paintBgCtx.canvas.width;
-    var wh = paintBgCtx.canvas.height;
-    var scale = Math.max(ww / img.width, wh / img.height);
+    var vp = paintState.viewport;
+    var vw = vp.width;
+    var vh = vp.height;
+    var scale = Math.max(vw / img.width, vh / img.height);
     var sw = img.width * scale;
     var sh = img.height * scale;
-    paintBgCtx.clearRect(0, 0, ww, wh);
-    paintBgCtx.drawImage(img, (ww - sw) / 2, (wh - sh) / 2, sw, sh);
+    var dx = vp.x + (vw - sw) / 2;
+    var dy = vp.y + (vh - sh) / 2;
+    paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
+    paintBgCtx.filter = 'grayscale(1)';
+    paintBgCtx.drawImage(img, dx, dy, sw, sh);
+    paintBgCtx.filter = 'none';
   });
   img.src = src;
 }
