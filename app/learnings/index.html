@@ -35,6 +35,9 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
 .entry-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
 .entry-meta:empty{display:none;}
 .meta-tag{font-size:0.72em;background:#f5f5f5;color:#888;border-radius:6px;padding:2px 8px;}
+.filter-bar{display:flex;gap:16px;align-items:center;margin-bottom:24px;flex-wrap:wrap;}
+.filter-bar label{font-size:0.85em;color:#555;display:flex;align-items:center;gap:6px;}
+.filter-bar select{font-family:inherit;font-size:0.85em;border:1px solid #ddd;border-radius:6px;padding:4px 8px;background:#fff;color:#333;}
 </style>
 </head>
 <body>
@@ -42,6 +45,10 @@ h1{font-size:2em;color:#333;margin-bottom:28px;}
   <div id="journal-col">
     <a class="back" href="../">← Home</a>
     <h1>Learnings</h1>
+    <div class="filter-bar">
+      <label>From <select id="filter-from"><option value=""></option></select></label>
+      <label>To <select id="filter-to"><option value=""></option></select></label>
+    </div>
     <div id="journal"></div>
   </div>
   <div id="breakdown-panel">
@@ -76,6 +83,17 @@ var NO_EVENTS = {
   'false': function(j, e) { renderGroups(j, e); }
 };
 
+function buildTimeOptions(sel) {
+  for (var m = 0; m < 1440; m += 15) {
+    var h = Math.floor(m / 60), min = m % 60;
+    var opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = (h < 10 ? '0' + h : h) + ':' + (min < 10 ? '0' + min : min);
+    sel.appendChild(opt);
+  }
+}
+buildTimeOptions(document.getElementById('filter-from'));
+buildTimeOptions(document.getElementById('filter-to'));
 
 function renderEntry(event, lesson) {
   var vm = buildEntryViewModel(event, lesson);
@@ -98,9 +116,11 @@ function renderEntry(event, lesson) {
 }
 
 function appendEntry(wrap, event) {
+  var placeholder = document.createElement('div');
+  wrap.appendChild(placeholder);
   var lid = [event.learning_id, event.lessonId].filter(Boolean)[0];
   fetchLearning(lid, function(learning) {
-    wrap.appendChild(renderEntry(event, learning));
+    wrap.replaceChild(renderEntry(event, learning), placeholder);
   });
 }
 
@@ -160,9 +180,20 @@ function renderBreakdown(events, learnings) {
   });
 }
 
-getAllEvents(function(events) {
+var _allEvents = [];
+
+function renderJournal() {
   var journal = document.getElementById('journal');
-  NO_EVENTS[String(events.length === 0)](journal, events);
+  journal.innerHTML = '';
+  NO_EVENTS[String(_allEvents.length === 0)](journal, _allEvents);
+}
+
+document.getElementById('filter-from').addEventListener('change', renderJournal);
+document.getElementById('filter-to').addEventListener('change', renderJournal);
+
+getAllEvents(function(events) {
+  _allEvents = events;
+  renderJournal();
   var seen = {};
   var lids = [];
   events.forEach(function(ev) {
