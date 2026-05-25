@@ -94,6 +94,27 @@ function subdirs(dir) {
   });
 })();
 
+// --- paint backgrounds ---
+(function checkPaintBackgrounds() {
+  const manifestPath = path.join(ROOT, 'content/paint-playground/backgrounds.json');
+  const bgDir = path.join(ROOT, 'assets/paint-playground/backgrounds');
+  const manifest = readJSON(manifestPath);
+  if (!manifest) { violations.push('paint-playground/backgrounds.json — invalid JSON or missing'); return; }
+  manifest.forEach(entry => {
+    scanned++;
+    const filename = entry.path.split('/').pop();
+    const filePath = path.join(bgDir, filename);
+    if (!exists(filePath)) violations.push(`paint-playground/backgrounds/${filename} — file missing`);
+  });
+  if (exists(bgDir)) {
+    const actualFiles = fs.readdirSync(bgDir).filter(f => /\.(png|jpe?g)$/i.test(f)).sort();
+    const manifestFiles = new Set(manifest.map(e => e.path.split('/').pop()));
+    actualFiles.forEach(f => {
+      if (!manifestFiles.has(f)) violations.push(`paint-playground/backgrounds/${f} — not in manifest`);
+    });
+  }
+})();
+
 let output = `## check-manifest-files\n`;
 if (violations.length === 0) {
   output += `✅ No issues (scanned ${scanned} entries)\n`;

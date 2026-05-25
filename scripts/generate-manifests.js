@@ -93,3 +93,21 @@ fs.writeFileSync(
   JSON.stringify(learningsManifest, null, 2) + '\n'
 );
 console.log('content/learnings/manifest.json: ' + learningsManifest.length + ' entries');
+
+// paint backgrounds — scan assets folder, emit manifest with page-relative paths
+var paintBgDir = path.join(__dirname, '..', 'assets/paint-playground/backgrounds');
+var paintBgManifestPath = path.join(__dirname, '..', 'content/paint-playground/backgrounds.json');
+var paintBgEntries = fs.existsSync(paintBgDir)
+  ? fs.readdirSync(paintBgDir)
+      .filter(function(f) { return /\.(png|jpe?g)$/i.test(f); })
+      .sort()
+      .map(function(f) {
+        var label = f.replace(/\.[^.]+$/, '');
+        return { path: '../../../assets/paint-playground/backgrounds/' + f, label: label[0].toUpperCase() + label.slice(1) };
+      })
+  : [];
+if (!fs.existsSync(path.dirname(paintBgManifestPath))) {
+  fs.mkdirSync(path.dirname(paintBgManifestPath), { recursive: true });
+}
+fs.writeFileSync(paintBgManifestPath, JSON.stringify(paintBgEntries, null, 2) + '\n');
+console.log('content/paint-playground/backgrounds.json: ' + paintBgEntries.length + ' entries');

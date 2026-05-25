@@ -1,0 +1,26 @@
+[
+  {
+    "path": "../../../assets/paint-playground/backgrounds/grass.png",
+    "label": "Grass"
+  },
+  {
+    "path": "../../../assets/paint-playground/backgrounds/night.png",
+    "label": "Night"
+  },
+  {
+    "path": "../../../assets/paint-playground/backgrounds/ocean.png",
+    "label": "Ocean"
+  },
+  {
+    "path": "../../../assets/paint-playground/backgrounds/sand.png",
+    "label": "Sand"
+  },
+  {
+    "path": "../../../assets/paint-playground/backgrounds/sky.png",
+    "label": "Sky"
+  },
+  {
+    "path": "../../../assets/paint-playground/backgrounds/sunset.png",
+    "label": "Sunset"
+  }
+]
