@@ -270,12 +270,15 @@ test('close button hides background panel', async ({ page }) => {
   await expect(page.locator('[data-testid="paint-bg-panel"]')).toBeHidden()
 })
 
-test('background panel shows 6 image tiles', async ({ page }) => {
+test('background panel shows tiles matching manifest', async ({ page }) => {
   await page.goto(URL)
   await page.click('[data-testid="paint-bg-btn"]')
   await page.waitForSelector('#paint-bg-grid img')
+  const manifestCount = require('fs').existsSync('content/paint-playground/backgrounds.json')
+    ? JSON.parse(require('fs').readFileSync('content/paint-playground/backgrounds.json', 'utf8')).length
+    : 0
   const count = await page.locator('#paint-bg-grid img').count()
-  expect(count).toBe(6)
+  expect(count).toBe(manifestCount)
 })
 
 test('selecting background renders pixels on bg canvas', async ({ page }) => {

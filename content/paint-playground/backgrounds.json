@@ -1,26 +1,34 @@
 [
   {
-    "path": "../../../assets/paint-playground/backgrounds/grass.png",
-    "label": "Grass"
+    "path": "../../../assets/puzzle/bluey-family/full.jpg",
+    "label": "Bluey Family"
   },
   {
-    "path": "../../../assets/paint-playground/backgrounds/night.png",
-    "label": "Night"
+    "path": "../../../assets/puzzle/bluey-grannies/full.jpg",
+    "label": "Bluey Grannies"
   },
   {
-    "path": "../../../assets/paint-playground/backgrounds/ocean.png",
-    "label": "Ocean"
+    "path": "../../../assets/puzzle/jurassic-park/full.jpg",
+    "label": "Jurassic Park"
   },
   {
-    "path": "../../../assets/paint-playground/backgrounds/sand.png",
-    "label": "Sand"
+    "path": "../../../assets/puzzle/mmprs/full.jpg",
+    "label": "Mighty Morphin Power Rangers"
   },
   {
-    "path": "../../../assets/paint-playground/backgrounds/sky.png",
-    "label": "Sky"
+    "path": "../../../assets/puzzle/paw-patrol/full.jpg",
+    "label": "Paw Patrol"
   },
   {
-    "path": "../../../assets/paint-playground/backgrounds/sunset.png",
-    "label": "Sunset"
+    "path": "../../../assets/puzzle/spiderman/full.jpg",
+    "label": "Spiderman"
+  },
+  {
+    "path": "../../../assets/puzzle/spiderman-lizard/full.jpg",
+    "label": "Spiderman vs Lizard"
+  },
+  {
+    "path": "../../../assets/puzzle/the-mask/full.jpg",
+    "label": "The Mask"
   }
 ]

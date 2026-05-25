@@ -100,15 +100,36 @@ var paintBgConfig = fs.existsSync(paintBgConfigPath) ? JSON.parse(fs.readFileSyn
 var paintBgSourceRel = paintBgConfig.source || 'assets/paint-playground/backgrounds';
 var paintBgDir = path.join(__dirname, '..', paintBgSourceRel);
 var paintBgManifestPath = path.join(__dirname, '..', 'content/paint-playground/backgrounds.json');
-var paintBgEntries = fs.existsSync(paintBgDir)
-  ? fs.readdirSync(paintBgDir)
+var paintBgEntries = [];
+if (fs.existsSync(paintBgDir)) {
+  var paintBgFilename = paintBgConfig.filename;
+  var paintBgLabelsRel = paintBgConfig.labels;
+  var paintBgLabelMap = {};
+  if (paintBgLabelsRel) {
+    var labelsData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', paintBgLabelsRel), 'utf8'));
+    labelsData.forEach(function(e) { paintBgLabelMap[e.id] = e.name; });
+  }
+  if (paintBgFilename) {
+    // subdirectory mode: each subdir contains a known filename
+    paintBgEntries = fs.readdirSync(paintBgDir)
+      .filter(function(d) { return fs.statSync(path.join(paintBgDir, d)).isDirectory(); })
+      .filter(function(d) { return fs.existsSync(path.join(paintBgDir, d, paintBgFilename)); })
+      .sort()
+      .map(function(d) {
+        var label = paintBgLabelMap[d] || (d[0].toUpperCase() + d.slice(1).replace(/-/g, ' '));
+        return { path: '../../../' + paintBgSourceRel + '/' + d + '/' + paintBgFilename, label: label };
+      });
+  } else {
+    // flat folder mode: direct PNG/JPG files
+    paintBgEntries = fs.readdirSync(paintBgDir)
       .filter(function(f) { return /\.(png|jpe?g)$/i.test(f); })
       .sort()
       .map(function(f) {
         var label = f.replace(/\.[^.]+$/, '');
         return { path: '../../../' + paintBgSourceRel + '/' + f, label: label[0].toUpperCase() + label.slice(1) };
-      })
-  : [];
+      });
+  }
+}
 if (!fs.existsSync(path.dirname(paintBgManifestPath))) {
   fs.mkdirSync(path.dirname(paintBgManifestPath), { recursive: true });
 }
