@@ -153,11 +153,11 @@ export function initColouringPlayground() {
 
   var COMPLETE_FN={
     guided:function(){
-      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-guided',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID});
+      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-guided',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID},null,'Guided Colouring');
       eventFired=true;resetBtn.style.display='';
     },
     free:function(){
-      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-free',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID});
+      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-free',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID},null,'Free Colouring');
       eventFired=true;resetBtn.style.display='';
     }
   };

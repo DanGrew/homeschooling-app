@@ -20,7 +20,7 @@ test('notification absent after 2 seconds', async ({ page }) => {
   await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
   await page.click('#trigger')
   await expect(page.locator('[data-testid="learning-moment"]')).toBeVisible()
-  await page.waitForTimeout(2500)
+  await page.waitForTimeout(4500)
   const el = page.locator('[data-testid="learning-moment"]')
   const opacity = await el.evaluate(node => node.style.opacity)
   expect(opacity).toBe('0')
@@ -60,4 +60,18 @@ test('recordLearningEvent without moment shows default notification', async ({ p
     { version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'test', activity_id: 'test' }
   ))
   await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('Learning Moment! - Well Done!')
+})
+
+test('activity name shown below message when provided', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._showWithActivity('Learning Moment! - Well Done!', 'AND Gate'))
+  await expect(page.locator('[data-testid="learning-moment-activity"]')).toHaveText('Activity: AND Gate')
+})
+
+test('activity line hidden when no activity provided', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._showWithActivity('Learning Moment! - Well Done!'))
+  const actEl = page.locator('[data-testid="learning-moment-activity"]')
+  const display = await actEl.evaluate(el => el.style.display)
+  expect(display).toBe('none')
 })

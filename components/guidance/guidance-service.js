@@ -85,6 +85,7 @@ GuidanceService.prototype.stop = function() {
 GuidanceService.prototype.complete = function() {
   var learningId = this._lesson && this._lesson.id;
   var activityId = window.ACTIVITY_ID || null;
+  var activityTitle = this._lesson && this._lesson.title;
   this.stop();
   try {
     recordLearningEvent({
@@ -93,7 +94,7 @@ GuidanceService.prototype.complete = function() {
       timestamp: Date.now(),
       learning_id: learningId,
       activity_id: activityId
-    });
+    }, null, activityTitle);
   } catch(e) {}
 };
 

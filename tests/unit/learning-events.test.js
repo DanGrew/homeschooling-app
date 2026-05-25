@@ -38,12 +38,17 @@ describe('recordLearningEvent', () => {
 
   it('calls showLearningMoment when moment provided', () => {
     recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, 'You made orange!');
-    expect(showLearningMoment).toHaveBeenCalledWith('You made orange!');
+    expect(showLearningMoment).toHaveBeenCalledWith('You made orange!', undefined);
   });
 
   it('calls showLearningMoment with default when moment absent', () => {
     recordLearningEvent({ version: 1, type: 'test', timestamp: 0 });
-    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!');
+    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!', undefined);
+  });
+
+  it('passes activity name to showLearningMoment', () => {
+    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, null, 'AND Gate');
+    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!', 'AND Gate');
   });
 
   it('records event even when moment provided', () => {

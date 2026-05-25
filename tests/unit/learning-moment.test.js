@@ -18,8 +18,8 @@ describe('learning-moment', () => {
     vi.useRealTimers();
   });
 
-  it('exports LEARNING_MOMENT_DURATION_MS as 2000', () => {
-    expect(LEARNING_MOMENT_DURATION_MS).toBe(2000);
+  it('exports LEARNING_MOMENT_DURATION_MS as 4000', () => {
+    expect(LEARNING_MOMENT_DURATION_MS).toBe(4000);
   });
 
   it('injects element into body on first show', () => {
@@ -75,7 +75,7 @@ describe('learning-moment', () => {
     show('First');
     vi.advanceTimersByTime(1000);
     show('Second');
-    vi.advanceTimersByTime(1500);
+    vi.advanceTimersByTime(3500);
     var el = document.querySelector('[data-testid="learning-moment"]');
     expect(el.style.opacity).toBe('1');
     vi.advanceTimersByTime(500);
@@ -96,5 +96,25 @@ describe('learning-moment', () => {
     expect(el.style.cssText).not.toContain('red');
     expect(el.style.cssText).not.toContain('#e74c3c');
     expect(el.style.cssText).not.toContain('#c0392b');
+  });
+
+  it('shows activity line when activity provided', () => {
+    show('Well done!', 'AND Gate');
+    var actEl = document.querySelector('[data-testid="learning-moment-activity"]');
+    expect(actEl.textContent).toBe('Activity: AND Gate');
+    expect(actEl.style.display).not.toBe('none');
+  });
+
+  it('hides activity line when no activity provided', () => {
+    show('Well done!');
+    var actEl = document.querySelector('[data-testid="learning-moment-activity"]');
+    expect(actEl.style.display).toBe('none');
+  });
+
+  it('clears activity line on subsequent call without activity', () => {
+    show('First', 'AND Gate');
+    show('Second');
+    var actEl = document.querySelector('[data-testid="learning-moment-activity"]');
+    expect(actEl.style.display).toBe('none');
   });
 });
