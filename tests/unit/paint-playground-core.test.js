@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, initPaintState, applyPaintPan } = require('../../core/paint-playground/paint-playground-core.js');
+const { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, initPaintState, applyPaintPan, paintClientToCanvas } = require('../../core/paint-playground/paint-playground-core.js');
 
 describe('initPaintState', () => {
   test('world is PAINT_WORLD_SCALE times viewport', () => {
@@ -94,5 +94,19 @@ describe('CRAYON_PASSES', () => {
       expect(typeof p.wf).toBe('number');
       expect(typeof p.a).toBe('number');
     });
+  });
+});
+
+describe('paintClientToCanvas', () => {
+  test('converts client coords to canvas coords', () => {
+    const pt = paintClientToCanvas(300, 200, 56, 0, 100, 50);
+    expect(pt.x).toBe(300 - 56 + 100);
+    expect(pt.y).toBe(200 - 0 + 50);
+  });
+
+  test('accounts for viewport offset', () => {
+    const pt = paintClientToCanvas(100, 100, 0, 0, 500, 300);
+    expect(pt.x).toBe(600);
+    expect(pt.y).toBe(400);
   });
 });

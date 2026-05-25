@@ -40,4 +40,8 @@ function applyPaintPan(state, targetX, targetY) {
   });
 }
 
-if (typeof module !== 'undefined') module.exports = { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, initPaintState, applyPaintPan };
+function paintClientToCanvas(clientX, clientY, rectLeft, rectTop, viewportX, viewportY) {
+  return { x: clientX - rectLeft + viewportX, y: clientY - rectTop + viewportY };
+}
+
+if (typeof module !== 'undefined') module.exports = { PAINT_WORLD_SCALE, PAINT_COLOURS, PAINT_BRUSHES, CRAYON_PASSES, initPaintState, applyPaintPan, paintClientToCanvas };

@@ -136,17 +136,13 @@ function initPaintPlayground() {
     }
   };
 
-  function toCanvasCoords(e) {
-    var r = wrap.getBoundingClientRect();
-    return { x: e.clientX - r.left + paintState.viewport.x, y: e.clientY - r.top + paintState.viewport.y };
-  }
-
   drawCanvas.addEventListener('pointerdown', function(e) {
     [PAN_START[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
     [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function() {
       drawCanvas.setPointerCapture(e.pointerId);
       isDrawing = true;
-      var pt = toCanvasCoords(e);
+      var r = wrap.getBoundingClientRect();
+      var pt = paintClientToCanvas(e.clientX, e.clientY, r.left, r.top, paintState.viewport.x, paintState.viewport.y);
       lastX = pt.x; lastY = pt.y;
     });
   });
@@ -159,7 +155,8 @@ function initPaintPlayground() {
       paintApplyViewport();
     });
     [isDrawing].filter(Boolean).forEach(function() {
-      var pt = toCanvasCoords(e);
+      var r = wrap.getBoundingClientRect();
+      var pt = paintClientToCanvas(e.clientX, e.clientY, r.left, r.top, paintState.viewport.x, paintState.viewport.y);
       [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function(fn) {
         fn(paintDrawCtx, lastX, lastY, pt.x, pt.y, paintActiveColour);
       });
