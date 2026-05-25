@@ -64,16 +64,22 @@ function stepSimulation(state, scenario, dt) {
     var wrap = rowDef.wrap !== false;
     var absDx = Math.abs(dx);
 
+    var hasSpawns = rowDef.spawns && rowDef.spawns.length > 0;
+
     state.entities.forEach(function(e) {
       if (e.rowId !== rowDef.id || e.collected) return;
       e.x += dx;
-      if (wrap) {
+      if (wrap && !hasSpawns) {
         if (dir === 'right' && e.x >= cols) e.x -= cols;
         if (dir === 'left' && e.x + e.width <= 0) e.x += cols;
       }
     });
 
-    if (rowDef.spawns && rowDef.spawns.length > 0) {
+    if (hasSpawns) {
+      state.entities = state.entities.filter(function(e) {
+        if (e.rowId !== rowDef.id || e.collected) return true;
+        return dir === 'right' ? e.x < cols : e.x + e.width > 0;
+      });
       var prevAccum = state.spawnCounters[rowDef.id];
       var newAccum = prevAccum + absDx;
       var finalAccum = newAccum;
@@ -185,7 +191,7 @@ function isOnPlatform(state, scenario, player) {
   for (var i = 0; i < state.entities.length; i++) {
     var e = state.entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
-    if (e.x <= cx && cx < e.x + e.width) return true;
+    if (e.x < cx && cx < e.x + e.width) return true;
   }
   return false;
 }
@@ -301,7 +307,7 @@ function activePlatformsInRow(state, rowId, cx) {
     .filter(function(e) { return !e.collected; })
     .filter(function(e) { return e.type === 'platform'; })
     .filter(function(e) { return e.rowId === rowId; })
-    .filter(function(e) { return e.x <= cx; })
+    .filter(function(e) { return e.x < cx; })
     .filter(function(e) { return e.x + e.width > cx; });
 }
 

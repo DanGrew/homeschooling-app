@@ -214,6 +214,38 @@ test('spawn accumulator is cumulative across steps', () => {
   expect(state.entities).toHaveLength(1)
 })
 
+test('spawning row: right-moving entity removed when x >= cols (not wrapped)', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 100 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 10), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'e1', type: 'platform', x: 9.5, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.1) // e1 moves to 10.5, past cols=10 → removed
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(0)
+})
+
+test('spawning row: left-moving entity removed when x+width <= 0 (not wrapped)', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 100 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'left', 10), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'e1', type: 'platform', x: -0.5, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.1) // e1 moves to -1.5, x+width=-0.5 <= 0 → removed
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(0)
+})
+
+test('non-spawning row wraps normally', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'right', 10)],
+    entities: { r1: [{ id: 'e1', type: 'platform', x: 9, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0.5)
+  expect(state.entities[0].x).toBeCloseTo(4) // wrapped back
+})
+
 // ---- pause / resume ----
 
 test('paused simulation does not move entities', () => {

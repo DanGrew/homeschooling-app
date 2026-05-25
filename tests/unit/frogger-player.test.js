@@ -380,14 +380,14 @@ test('platform detection: centre inside log — safe', () => {
   expect(isOnPlatform(state, scenario, state.player)).toBe(true)
 })
 
-test('platform detection: centre at left edge of log — safe (left-inclusive)', () => {
+test('platform detection: centre at left edge of log — unsafe (both exclusive)', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
   const state = simWithPlayer(scenario, 4, 3)
-  applyInput(state, scenario, 'right') // worldX → 4.5, cx=5.0=log.x → safe
-  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+  applyInput(state, scenario, 'right') // worldX → 4.5, cx=5.0=log.x → unsafe (strict)
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 
 test('platform detection: centre at right edge of log — unsafe (right-exclusive)', () => {
