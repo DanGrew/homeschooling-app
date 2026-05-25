@@ -135,7 +135,11 @@ function removeOrphanEl(rState, id) {
   delete rState.entityEls[id];
 }
 
-var BBOX_STROKE = { obstacle: 'rgba(255,60,60,0.85)', platform: 'rgba(60,220,60,0.85)', collectible: 'rgba(255,200,0,0.85)' };
+var BBOX_CFG = {
+  obstacle:   { color: 'rgba(255,60,60,0.85)',  inset: 0 },
+  platform:   { color: 'rgba(60,220,60,0.85)',  inset: 0.5 },
+  collectible:{ color: 'rgba(255,200,0,0.85)',  inset: 0 }
+};
 
 function bboxDiv(x, y, w, h, color) {
   var el = document.createElement('div');
@@ -143,12 +147,10 @@ function bboxDiv(x, y, w, h, color) {
   return el;
 }
 
-var BBOX_INSET = { platform: 0.5 };
-
 function appendEntityBBox(layer, cs, scenario, e) {
+  var cfg = BBOX_CFG[e.type];
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
-    var inset = BBOX_INSET[e.type] || 0;
-    layer.appendChild(bboxDiv((e.x + inset) * cs, row.y * cs, (e.width - inset * 2) * cs, cs, BBOX_STROKE[e.type]));
+    layer.appendChild(bboxDiv((e.x + cfg.inset) * cs, row.y * cs, (e.width - cfg.inset * 2) * cs, cs, cfg.color));
   });
 }
 
