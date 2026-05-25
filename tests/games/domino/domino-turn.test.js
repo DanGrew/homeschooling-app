@@ -239,3 +239,43 @@ test('zoom level preserved after valid tile placement', async ({ page }) => {
   })
   expect(scaleAfter).toBe(scaleBefore)
 })
+
+test('pan position preserved after valid tile placement', async ({ page }) => {
+  await startGame(page)
+
+  await page.evaluate(function() {
+    var state = document.getElementById('domino-board-viewport')._dominoPanState
+    state.panX = 400
+    state.panY = 300
+  })
+
+  const placed = await page.evaluate(function() {
+    var state = window.gameState
+    var hand = state.hands[state.players[state.turnIndex].id]
+    var endpoints = state.board.endpoints
+    var rots = [0, 90, 180, 270, 45, 135, 225, 315]
+    for (var t = 0; t < hand.length; t++) {
+      for (var e = 0; e < endpoints.length; e++) {
+        for (var ri = 0; ri < rots.length; ri++) {
+          if (window.validatePlacement(hand[t], endpoints[e], rots[ri]).valid) {
+            return { tileId: hand[t].id, endpointIndex: e }
+          }
+        }
+      }
+    }
+    return null
+  })
+  if (!placed) return
+
+  await page.locator('[data-tile-id="' + placed.tileId + '"]').first().click()
+  await page.getByTestId('domino-endpoint').nth(placed.endpointIndex).click()
+  await page.getByTestId('domino-submit-btn').click()
+  await page.getByTestId('domino-handover-ready').click()
+
+  const panAfter = await page.evaluate(function() {
+    var state = document.getElementById('domino-board-viewport')._dominoPanState
+    return { panX: state.panX, panY: state.panY }
+  })
+  expect(panAfter.panX).toBe(400)
+  expect(panAfter.panY).toBe(300)
+})
