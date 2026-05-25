@@ -371,50 +371,50 @@ test('obstacle collision detects when player worldX is non-integer', () => {
   expect(event.type).toBe('obstacle')
 })
 
-test('platform detection: player bbox overlaps log — safe', () => {
+test('platform detection: centre inside log — safe', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
-  const state = simWithPlayer(scenario, 5, 3) // player [5,6] overlaps log [5,6]
+  const state = simWithPlayer(scenario, 5, 3) // cx=5.5 inside [5,6]
   expect(isOnPlatform(state, scenario, state.player)).toBe(true)
 })
 
-test('platform detection: player bbox overlaps log left edge — safe', () => {
+test('platform detection: centre at left edge of log — safe (left-inclusive)', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
   const state = simWithPlayer(scenario, 4, 3)
-  applyInput(state, scenario, 'right') // worldX → 4.5, player [4.5,5.5] overlaps log [5,6]
+  applyInput(state, scenario, 'right') // worldX → 4.5, cx=5.0=log.x → safe
   expect(isOnPlatform(state, scenario, state.player)).toBe(true)
 })
 
-test('platform detection: player bbox overlaps log right edge — safe', () => {
+test('platform detection: centre at right edge of log — unsafe (right-exclusive)', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
   const state = simWithPlayer(scenario, 5, 3)
-  applyInput(state, scenario, 'right') // worldX → 5.5, player [5.5,6.5] overlaps log [5,6]
-  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
-})
-
-test('platform detection: player bbox right of log — unsafe', () => {
-  const scenario = makeScenario({
-    rows: [makeHazardRow('river', 3, 'right', 1)],
-    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
-  })
-  const state = simWithPlayer(scenario, 6, 3) // player [6,7] does not overlap log [5,6]
+  applyInput(state, scenario, 'right') // worldX → 5.5, cx=6.0=log.x+width → unsafe
   expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 
-test('platform detection: player bbox left of log — unsafe', () => {
+test('platform detection: centre right of log — unsafe', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
   })
-  const state = simWithPlayer(scenario, 3, 3) // player [3,4] does not overlap log [5,6]
+  const state = simWithPlayer(scenario, 6, 3) // cx=6.5, past log [5,6]
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+test('platform detection: centre left of log — unsafe', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3, 'right', 1)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 3, 3) // cx=3.5, before log [5,6]
   expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 
