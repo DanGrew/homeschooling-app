@@ -25,3 +25,22 @@ test('notification absent after 2 seconds', async ({ page }) => {
   const opacity = await el.evaluate(node => node.style.opacity)
   expect(opacity).toBe('0')
 })
+
+test('rapid successive calls show only one notification — latest message wins', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => {
+    window._showLearningMoment('First')
+    window._showLearningMoment('Second')
+    window._showLearningMoment('Third')
+  })
+  await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('Third')
+  expect(await page.locator('[data-testid="learning-moment"]').count()).toBe(1)
+})
+
+test('notification replaced mid-display when new call arrives', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/test-harness/learning-moment.html')
+  await page.evaluate(() => window._showLearningMoment('First'))
+  await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('First')
+  await page.evaluate(() => window._showLearningMoment('Second'))
+  await expect(page.locator('[data-testid="learning-moment-msg"]')).toHaveText('Second')
+})
