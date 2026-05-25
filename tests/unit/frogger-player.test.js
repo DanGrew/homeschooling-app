@@ -357,15 +357,24 @@ test('obstacle collision detects when player worldX is non-integer', () => {
   expect(event.type).toBe('obstacle')
 })
 
-test('platform detection uses worldX not tile x', () => {
+test('platform detection uses centre-based check', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3, 'right', 1)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 2 }] }
+  })
+  const state = simWithPlayer(scenario, 5, 3)
+  applyInput(state, scenario, 'right') // worldX → 5.5, centre=6.0 inside [5,7]
+  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+})
+
+test('platform detection: centre just left of log edge is unsafe', () => {
   const scenario = makeScenario({
     rows: [makeHazardRow('river', 3, 'right', 1)],
     entities: { river: [{ id: 'log1', type: 'platform', x: 5, width: 2 }] }
   })
   const state = simWithPlayer(scenario, 4, 3)
-  applyInput(state, scenario, 'right') // worldX → 4.5
-  // platform at x=5,w=2: entityOverlapsPlayerTile({x:5,w:2}, 4.5) → 5.5>5 && 4.5<7 → true
-  expect(isOnPlatform(state, scenario, state.player)).toBe(true)
+  applyInput(state, scenario, 'right') // worldX → 4.5, centre=5.0, not strictly inside (5 < 5.0 is false)
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
 })
 
 test('paused simulation does not detect collisions', () => {

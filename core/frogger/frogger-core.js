@@ -95,6 +95,8 @@ function stepSimulation(state, scenario, dt) {
               if (ex.rowId !== rowDef.id || ex.type !== 'obstacle' || ex.collected) return;
               var dist = dir === 'right' ? ex.x - (-w) : cols - (ex.x + ex.width);
               if (dist <= MIN_OBSTACLE_GAP + w) tooClose = true;
+              var distWrap = dir === 'right' ? cols - (ex.x + ex.width) : ex.x + ex.width;
+              if (wrap && distWrap <= MIN_OBSTACLE_GAP + w) tooClose = true;
             });
             if (tooClose) {
               finalAccum = 0;
@@ -183,7 +185,8 @@ function isOnPlatform(state, scenario, player) {
   for (var i = 0; i < entities.length; i++) {
     var e = entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
-    if (entityOverlapsPlayerTile(e, player.worldX)) return true;
+    var cx = player.worldX + 0.5;
+    if (e.x < cx && cx < e.x + e.width) return true;
   }
   return false;
 }
