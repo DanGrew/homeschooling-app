@@ -150,9 +150,7 @@ function paintLoadBackground(src) {
     var dx = vp.x + (vw - sw) / 2;
     var dy = vp.y + (vh - sh) / 2;
     paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
-    paintBgCtx.filter = 'grayscale(1)';
     paintBgCtx.drawImage(img, dx, dy, sw, sh);
-    paintBgCtx.filter = 'none';
   });
   img.src = src;
 }
@@ -220,6 +218,7 @@ function initPaintPlayground() {
 
   paintBgCtx = bgCanvas.getContext('2d');
   paintDrawCtx = drawCanvas.getContext('2d');
+  bgCanvas.style.filter = 'grayscale(1)';
 
   paintApplyViewport();
   paintRenderToolbar();
