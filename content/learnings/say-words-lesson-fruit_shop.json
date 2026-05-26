@@ -18,7 +18,7 @@
   ],
   "steps": [
     {
-      "prompt": "First — find all the red fruits. There are three of them — small and soft, tiny with a stone, and small and round.",
+      "prompt": "Find all the red fruits. There are three of them — small and soft, tiny with a stone, and small and round.",
       "expect": ["STRAWBERRY_SPOKEN", "CHERRY_SPOKEN", "RASPBERRY_SPOKEN"],
       "feedback": "Strawberry, cherry, and raspberry — all red!"
     },
@@ -27,25 +27,23 @@
       "expect": ["ORANGE_SPOKEN", "PEACH_SPOKEN"],
       "feedback": "Orange and peach — both orange coloured!"
     },
+    { "random": "items" },
+    { "random": "items" },
     {
-      "prompt": "The next one is yellow and monkeys love it. What do you think it is? Find it!",
-      "expect": "BANANA_SPOKEN",
-      "feedback": "Banana! Long, yellow, and sweet."
-    },
-    {
-      "prompt": "Find the really big one — green on the outside, pink and juicy inside. Great for hot days!",
-      "expect": "WATERMELON_SPOKEN",
-      "feedback": "Watermelon! The biggest fruit in the shop."
-    },
-    {
-      "prompt": "Nearly there — find the small blue ones, the bright yellow sour one, and the round red and green one.",
+      "prompt": "Find the small blue ones, the bright yellow sour one, and the round red and green one.",
       "expect": ["BLUEBERRY_SPOKEN", "LEMON_SPOKEN", "APPLE_SPOKEN"],
       "feedback": "Blueberry, lemon, and apple!"
     },
+    { "random": "items" }
+  ],
+  "randomPools": [
     {
-      "prompt": "Last one — find the fruit that rhymes with 'bear'!",
-      "expect": "PEAR_SPOKEN",
-      "feedback": "Pear! Pear rhymes with bear — same ending sound."
+      "id": "items",
+      "items": [
+        { "prompt": "This one is yellow and monkeys love it. What do you think it is? Find it!", "expect": "BANANA_SPOKEN", "feedback": "Banana! Long, yellow, and sweet." },
+        { "prompt": "Find the really big one — green on the outside, pink and juicy inside. Great for hot days!", "expect": "WATERMELON_SPOKEN", "feedback": "Watermelon! The biggest fruit in the shop." },
+        { "prompt": "Find the fruit that rhymes with 'bear'!", "expect": "PEAR_SPOKEN", "feedback": "Pear! Pear rhymes with bear — same ending sound." }
+      ]
     }
   ]
 }

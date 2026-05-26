@@ -180,6 +180,7 @@ function onReset() {
 ### core/
 | Module | Purpose |
 |--------|---------|
+| `core/guidance/lesson-pool.js` | Fisher-Yates shuffle + pool init for randomPools lesson steps |
 | `core/telemetry/learning-events.js` | Records learning events with UUID |
 | `core/telemetry/learning-db.js` | Persists events to IndexedDB |
 | `core/telemetry/learning-journal-core.js` | Aggregates events into journal data |
