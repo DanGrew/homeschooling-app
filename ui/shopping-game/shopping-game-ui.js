@@ -10,20 +10,20 @@ var SHOPPING_FOUND_CLASS = { 'true': ' found', 'false': '' };
 
 // ---- Setup ----
 
-function renderShoppingSetup(container, allEntries, animalEntries, onStart) {
+function renderShoppingSetup(container, allEntries, onStart) {
   var availableTags = getAvailableTags(allEntries);
   var cfg = {
     playerCount: 2,
     gridSize: 16,
     mode: 'shared',
-    tags: availableTags.slice(),
-    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p); })
+    tags: [],
+    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p, { avatarTab: availableTags[0] }); })
   };
 
   function redraw() {
     cgPreserveScroll(container, function() {
       container.innerHTML = '';
-      container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, animalEntries, function(patch) {
+      container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, allEntries, function(patch) {
         Object.assign(cfg, patch);
         redraw();
       }, function() { onStart(cfg); }));

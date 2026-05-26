@@ -24,6 +24,10 @@ var DOMINO_HALF_RENDER = {
   }
 };
 
+function registerDominoIconRenderer(tag) {
+  DOMINO_HALF_RENDER[tag] = DOMINO_HALF_RENDER.icons;
+}
+
 function buildDominoHalfEl(value, matchType) {
   var el = document.createElement('div');
   el.className = 'domino-half';

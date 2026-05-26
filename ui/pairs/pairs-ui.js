@@ -6,20 +6,20 @@ var PAIRS_SIZES = [
 
 // ---- Setup ----
 
-function renderPairsSetup(container, allEntries, animalEntries, onStart) {
+function renderPairsSetup(container, allEntries, onStart) {
   var availableTags = getAvailableTags(allEntries);
   var cfg = {
     playerCount: 2,
     gridSize: 16,
     mode: 'shared',
-    tags: availableTags.slice(),
-    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p); })
+    tags: [],
+    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p, { avatarTab: availableTags[0] }); })
   };
 
   function redraw() {
     cgPreserveScroll(container, function() {
       container.innerHTML = '';
-      container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
+      container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, allEntries, function(patch) {
         Object.assign(cfg, patch);
         redraw();
       }, function() { onStart(cfg); }));
