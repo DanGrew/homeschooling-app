@@ -1,17 +1,4 @@
 
-var DOMINO_STATIC_MATCH_TYPES = [
-  { value: 'colours', label: 'Colours' },
-  { value: 'shapes',  label: 'Shapes' },
-  { value: 'numbers', label: 'Numbers' }
-];
-
-function getDominoMatchTypes(allEntries) {
-  var tagTypes = getAvailableTags(allEntries).map(function(tag) {
-    return { value: tag, label: tag.charAt(0).toUpperCase() + tag.slice(1) };
-  });
-  return DOMINO_STATIC_MATCH_TYPES.concat(tagTypes);
-}
-
 function buildDominoCountSection(playerCount, onChange) {
   var section = document.createElement('div');
   section.className = 'pairs-setup-section';

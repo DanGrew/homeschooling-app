@@ -211,10 +211,8 @@ fetch('../../../content/dictionary/dictionary.json')
     });
   });
 
-var DOMINO_STATIC_MATCH_TYPES_SET = { colours: true, shapes: true, numbers: true };
-
 function startGame(setupState) {
-  [setupState].filter(function(s) { return !DOMINO_STATIC_MATCH_TYPES_SET[s.matchType]; })
+  [setupState].filter(function(s) { return !DOMINO_STATIC_MATCH_TYPES_CORE[s.matchType]; })
     .forEach(function(s) {
       var tagEntries = filterByTag(allEntries, s.matchType);
       var ids = tagEntries.map(function(e) { return e.id; });

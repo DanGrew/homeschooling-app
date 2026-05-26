@@ -331,6 +331,19 @@ function buildDominoNumberSvg(value) {
   return s + '</svg>';
 }
 
+var DOMINO_STATIC_MATCH_TYPES_CORE = { colours: true, shapes: true, numbers: true };
+
+function getDominoMatchTypes(allEntries) {
+  var tagTypes = getAvailableTags(allEntries).map(function(tag) {
+    return { value: tag, label: tag.charAt(0).toUpperCase() + tag.slice(1) };
+  });
+  return [
+    { value: 'colours', label: 'Colours' },
+    { value: 'shapes',  label: 'Shapes' },
+    { value: 'numbers', label: 'Numbers' }
+  ].concat(tagTypes);
+}
+
 if (typeof module !== 'undefined') module.exports = {
   generateTiles,
   dealHands,
@@ -343,7 +356,9 @@ if (typeof module !== 'undefined') module.exports = {
   placeTile,
   drawTile,
   getPreviewPlacement,
+  getDominoMatchTypes,
   DOMINO_VALUES,
+  DOMINO_STATIC_MATCH_TYPES_CORE,
   ROTATION_GEOMETRY,
   NEXT_ROTATION,
   findNextPreviewRotation,
