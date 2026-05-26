@@ -206,6 +206,7 @@ fetch('../../../content/dictionary/dictionary.json')
   })
   .then(function(concepts) {
     allEntries = concepts;
+    getAvailableTags(allEntries).forEach(registerDominoIconRenderer);
     renderDominoSetup(setupScreen, allEntries, function(setupState) {
       startGame(setupState);
     });
