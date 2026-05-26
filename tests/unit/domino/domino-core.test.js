@@ -480,6 +480,29 @@ test('advanceTurn sets phase complete when game ends', () => {
   expect(state.phase).toBe('complete')
 })
 
+test('advanceTurn sets phase complete when pile empty and no player can place', () => {
+  const unmatchable = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = makeState({ drawPile: [], hands: { p0: [unmatchable], p1: [unmatchable] } })
+  advanceTurn(state)
+  expect(state.phase).toBe('complete')
+})
+
+test('advanceTurn skips blocked player and lands on player who can place', () => {
+  const playable = { id: 'p-p', left: 'purple', right: 'purple', orientation: 'horizontal' }
+  const blocked  = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = makeState({ drawPile: [], hands: { p0: [blocked], p1: [playable] } })
+  advanceTurn(state)
+  expect(state.turnIndex).toBe(1)
+  expect(state.phase).toBe('playing')
+})
+
+test('advanceTurn does not skip player when draw pile has tiles', () => {
+  const state = makeState({ drawPile: [{ id: 'x', left: 'red', right: 'blue' }], hands: { p0: [], p1: [] } })
+  advanceTurn(state)
+  expect(state.turnIndex).toBe(1)
+  expect(state.phase).toBe('playing')
+})
+
 // ---- placeTile ----
 
 function makePlayingState() {

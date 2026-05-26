@@ -176,8 +176,14 @@ function createInitialBoard(startingTile) {
 }
 
 function advanceTurn(state) {
-  state.turnIndex = (state.turnIndex + 1) % state.players.length;
-  if (checkCompletion(state)) state.phase = 'complete';
+  var n = state.players.length;
+  for (var i = 0; i < n; i++) {
+    state.turnIndex = (state.turnIndex + 1) % n;
+    if (checkCompletion(state)) { state.phase = 'complete'; return; }
+    var cur = state.players[state.turnIndex];
+    if (state.drawPile.length > 0 || playerHasValidPlacement(state.hands[cur.id], state.board.endpoints, state.board.tiles)) return;
+  }
+  state.phase = 'complete';
 }
 
 function placeTile(state, tileId, endpointIndex, rotation) {
