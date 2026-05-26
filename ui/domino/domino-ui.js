@@ -63,10 +63,31 @@ function buildDominoPlayerPanel(idx, player, avatarEntries, allPlayers, onChange
   cgMakeSpeak(avatarLabel, avatarLabel.textContent);
   panel.appendChild(avatarLabel);
 
+  var avatarTags = getAvailableTags(avatarEntries);
+  var currentTab = [player.avatarTab].concat(avatarTags).filter(Boolean)[0];
+  var tabRow = document.createElement('div');
+  tabRow.className = 'pairs-setup-section';
+  avatarTags.forEach(function(tag) {
+    var tabBtn = document.createElement('button');
+    tabBtn.textContent = tag.charAt(0).toUpperCase() + tag.slice(1);
+    tabBtn.className = 'pairs-size-btn' + CG_SEL[String(currentTab === tag)];
+    tabBtn.setAttribute('data-testid', 'avatar-tab-' + idx + '-' + tag);
+    tabBtn.addEventListener('click', function() {
+      var newPlayers = allPlayers.map(function(p, j) {
+        var updates = [{ avatarTab: tag }].filter(function() { return j === idx; });
+        return Object.assign.apply(Object, [{}].concat([p], updates));
+      });
+      onChange({ players: newPlayers });
+    });
+    cgMakeSpeak(tabBtn, tabBtn.textContent);
+    tabRow.appendChild(tabBtn);
+  });
+  panel.appendChild(tabRow);
+
   var grid = document.createElement('div');
   grid.className = 'pairs-avatar-grid';
 
-  avatarEntries.forEach(function(entry) {
+  filterByTag(avatarEntries, currentTab).forEach(function(entry) {
     var isTaken    = takenIcons.indexOf(entry.id) !== -1;
     var isSelected = player.icon === entry.id;
     var btn = document.createElement('button');
@@ -127,10 +148,11 @@ function buildDominoStartButton(cfg, onStart) {
 
 function renderDominoSetup(container, allEntries, onStart) {
   var matchTypes = getDominoMatchTypes(allEntries);
+  var avatarTags = getAvailableTags(allEntries);
   var cfg = {
     playerCount: 2,
     matchType: 'colours',
-    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p); })
+    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p, { avatarTab: avatarTags[0] }); })
   };
 
   function redraw() {

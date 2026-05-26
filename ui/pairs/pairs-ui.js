@@ -12,8 +12,8 @@ function renderPairsSetup(container, allEntries, onStart) {
     playerCount: 2,
     gridSize: 16,
     mode: 'shared',
-    tags: availableTags.slice(),
-    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p); })
+    tags: [],
+    players: CG_DEFAULT_PLAYERS.map(function(p) { return Object.assign({}, p, { avatarTab: availableTags[0] }); })
   };
 
   function redraw() {
