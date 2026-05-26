@@ -27,7 +27,7 @@
     { "random": "items" },
     {
       "prompt": "Last ones — feeling a bit embarrassed, feeling really good, waving hello, and feeling pleased.",
-      "expect": ["EMBARRASSED_SPOKEN", "GOOD_SPOKEN", "WAVE_SPOKEN", "PLEASED_SPOKEN"],
+      "expect": ["EMBARRASSED_SPOKEN", "GOOD_SPOKEN", "WAVE_SPOKEN", "PLEASE_SPOKEN"],
       "feedback": "You know all twelve feelings!"
     }
   ],
