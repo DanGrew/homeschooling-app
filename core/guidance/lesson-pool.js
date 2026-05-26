@@ -22,7 +22,7 @@ export function initPools(data) {
       fisherYates(pool.queue);
     }
     var item = pool.queue.shift();
-    return { prompt: item.clue, expect: item.expect, feedback: item.acknowledgement };
+    return { prompt: item.prompt, expect: item.expect, feedback: item.feedback };
   });
 }
 

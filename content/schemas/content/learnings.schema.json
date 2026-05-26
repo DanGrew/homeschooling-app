@@ -37,12 +37,12 @@
             "minItems": 1,
             "items": {
               "type": "object",
-              "required": ["clue", "expect", "acknowledgement"],
+              "required": ["prompt", "expect", "feedback"],
               "additionalProperties": false,
               "properties": {
-                "clue":            { "type": "string" },
-                "expect":          { "type": "string" },
-                "acknowledgement": { "type": "string" }
+                "prompt":   { "type": "string" },
+                "expect":   { "type": "string" },
+                "feedback": { "type": "string" }
               }
             }
           }

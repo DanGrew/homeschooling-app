@@ -40,7 +40,7 @@ describe('initPools', () => {
       steps: [{ random: 'pool1' }],
       randomPools: [{
         id: 'pool1',
-        items: [{ clue: 'Find the cow!', expect: 'COW_SPOKEN', acknowledgement: 'The cow!' }]
+        items: [{ prompt: 'Find the cow!', expect: 'COW_SPOKEN', feedback: 'The cow!' }]
       }]
     };
     initPools(data);
@@ -57,7 +57,7 @@ describe('initPools', () => {
       ],
       randomPools: [{
         id: 'pool1',
-        items: [{ clue: 'clue', expect: 'X', acknowledgement: 'ack' }]
+        items: [{ prompt: 'clue', expect: 'X', feedback: 'ack' }]
       }]
     };
     initPools(data);
@@ -68,9 +68,9 @@ describe('initPools', () => {
 
   it('uses each pool item exactly once before repeating', () => {
     const items = [
-      { clue: 'c1', expect: 'E1', acknowledgement: 'a1' },
-      { clue: 'c2', expect: 'E2', acknowledgement: 'a2' },
-      { clue: 'c3', expect: 'E3', acknowledgement: 'a3' }
+      { prompt: 'c1', expect: 'E1', feedback: 'a1' },
+      { prompt: 'c2', expect: 'E2', feedback: 'a2' },
+      { prompt: 'c3', expect: 'E3', feedback: 'a3' }
     ];
     const data = {
       steps: [{ random: 'pool1' }, { random: 'pool1' }, { random: 'pool1' }],
@@ -84,8 +84,8 @@ describe('initPools', () => {
 
   it('refills queue when exhausted', () => {
     const items = [
-      { clue: 'c1', expect: 'E1', acknowledgement: 'a1' },
-      { clue: 'c2', expect: 'E2', acknowledgement: 'a2' }
+      { prompt: 'c1', expect: 'E1', feedback: 'a1' },
+      { prompt: 'c2', expect: 'E2', feedback: 'a2' }
     ];
     const data = {
       steps: [{ random: 'pool1' }, { random: 'pool1' }, { random: 'pool1' }],
@@ -108,11 +108,11 @@ describe('initPools', () => {
       ],
       randomPools: [
         { id: 'poolA', items: [
-          { clue: 'a1', expect: 'A1', acknowledgement: 'ack_a1' },
-          { clue: 'a2', expect: 'A2', acknowledgement: 'ack_a2' }
+          { prompt: 'a1', expect: 'A1', feedback: 'ack_a1' },
+          { prompt: 'a2', expect: 'A2', feedback: 'ack_a2' }
         ]},
         { id: 'poolB', items: [
-          { clue: 'b1', expect: 'B1', acknowledgement: 'ack_b1' }
+          { prompt: 'b1', expect: 'B1', feedback: 'ack_b1' }
         ]}
       ]
     };

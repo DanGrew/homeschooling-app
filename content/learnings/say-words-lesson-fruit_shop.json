@@ -40,9 +40,9 @@
     {
       "id": "items",
       "items": [
-        { "clue": "This one is yellow and monkeys love it. What do you think it is? Find it!", "expect": "BANANA_SPOKEN", "acknowledgement": "Banana! Long, yellow, and sweet." },
-        { "clue": "Find the really big one — green on the outside, pink and juicy inside. Great for hot days!", "expect": "WATERMELON_SPOKEN", "acknowledgement": "Watermelon! The biggest fruit in the shop." },
-        { "clue": "Find the fruit that rhymes with 'bear'!", "expect": "PEAR_SPOKEN", "acknowledgement": "Pear! Pear rhymes with bear — same ending sound." }
+        { "prompt": "This one is yellow and monkeys love it. What do you think it is? Find it!", "expect": "BANANA_SPOKEN", "feedback": "Banana! Long, yellow, and sweet." },
+        { "prompt": "Find the really big one — green on the outside, pink and juicy inside. Great for hot days!", "expect": "WATERMELON_SPOKEN", "feedback": "Watermelon! The biggest fruit in the shop." },
+        { "prompt": "Find the fruit that rhymes with 'bear'!", "expect": "PEAR_SPOKEN", "feedback": "Pear! Pear rhymes with bear — same ending sound." }
       ]
     }
   ]
