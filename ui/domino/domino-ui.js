@@ -1,10 +1,16 @@
 
-var DOMINO_MATCH_TYPES = [
+var DOMINO_STATIC_MATCH_TYPES = [
   { value: 'colours', label: 'Colours' },
   { value: 'shapes',  label: 'Shapes' },
-  { value: 'icons',   label: 'Animals' },
   { value: 'numbers', label: 'Numbers' }
 ];
+
+function getDominoMatchTypes(allEntries) {
+  var tagTypes = getAvailableTags(allEntries).map(function(tag) {
+    return { value: tag, label: tag.charAt(0).toUpperCase() + tag.slice(1) };
+  });
+  return DOMINO_STATIC_MATCH_TYPES.concat(tagTypes);
+}
 
 function buildDominoCountSection(playerCount, onChange) {
   var section = document.createElement('div');
@@ -25,7 +31,7 @@ function buildDominoCountSection(playerCount, onChange) {
   return section;
 }
 
-function buildDominoPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
+function buildDominoPlayerPanel(idx, player, avatarEntries, allPlayers, onChange) {
   var takenIcons = allPlayers.filter(function(p, i) { return i !== idx; })
     .map(function(p) { return p.icon; })
     .filter(Boolean);
@@ -73,7 +79,7 @@ function buildDominoPlayerPanel(idx, player, animalEntries, allPlayers, onChange
   var grid = document.createElement('div');
   grid.className = 'pairs-avatar-grid';
 
-  animalEntries.forEach(function(entry) {
+  avatarEntries.forEach(function(entry) {
     var isTaken    = takenIcons.indexOf(entry.id) !== -1;
     var isSelected = player.icon === entry.id;
     var btn = document.createElement('button');
@@ -101,14 +107,14 @@ function buildDominoPlayerPanel(idx, player, animalEntries, allPlayers, onChange
   return panel;
 }
 
-function buildDominoMatchTypeSection(matchType, onChange) {
+function buildDominoMatchTypeSection(matchType, matchTypes, onChange) {
   var section = document.createElement('div');
   section.className = 'pairs-setup-section';
   var label = document.createElement('p');
   label.textContent = 'Match type:';
   cgMakeSpeak(label, label.textContent);
   section.appendChild(label);
-  DOMINO_MATCH_TYPES.forEach(function(m) {
+  matchTypes.forEach(function(m) {
     var btn = document.createElement('button');
     btn.textContent = m.label;
     btn.className = 'pairs-size-btn' + CG_SEL[String(matchType === m.value)];
@@ -132,7 +138,8 @@ function buildDominoStartButton(cfg, onStart) {
   return btn;
 }
 
-function renderDominoSetup(container, animalEntries, onStart) {
+function renderDominoSetup(container, allEntries, onStart) {
+  var matchTypes = getDominoMatchTypes(allEntries);
   var cfg = {
     playerCount: 2,
     matchType: 'colours',
@@ -151,13 +158,13 @@ function renderDominoSetup(container, animalEntries, onStart) {
     }));
 
     cfg.players.slice(0, cfg.playerCount).forEach(function(player, i) {
-      root.appendChild(buildDominoPlayerPanel(i, player, animalEntries, cfg.players, function(patch) {
+      root.appendChild(buildDominoPlayerPanel(i, player, allEntries, cfg.players, function(patch) {
         Object.assign(cfg, patch);
         redraw();
       }));
     });
 
-    root.appendChild(buildDominoMatchTypeSection(cfg.matchType, function(patch) {
+    root.appendChild(buildDominoMatchTypeSection(cfg.matchType, matchTypes, function(patch) {
       Object.assign(cfg, patch);
       redraw();
     }));

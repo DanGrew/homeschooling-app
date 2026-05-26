@@ -55,7 +55,7 @@ function buildCgCountSection(playerCount, onChange) {
   return section;
 }
 
-function buildCgPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
+function buildCgPlayerPanel(idx, player, avatarEntries, allPlayers, onChange) {
   var takenIcons = allPlayers.filter(function(p, i) { return i !== idx; })
     .map(function(p) { return p.icon; })
     .filter(Boolean);
@@ -103,7 +103,7 @@ function buildCgPlayerPanel(idx, player, animalEntries, allPlayers, onChange) {
   var grid = document.createElement('div');
   grid.className = 'pairs-avatar-grid';
 
-  animalEntries.forEach(function(entry) {
+  avatarEntries.forEach(function(entry) {
     var isTaken    = takenIcons.indexOf(entry.id) !== -1;
     var isSelected = player.icon === entry.id;
     var btn = document.createElement('button');
@@ -211,14 +211,14 @@ function buildCgStartButton(cfg, onStart) {
   return btn;
 }
 
-function buildCgSetupRoot(cfg, sizeDefs, availableTags, animalEntries, onChange, onStart) {
+function buildCgSetupRoot(cfg, sizeDefs, availableTags, avatarEntries, onChange, onStart) {
   var root = document.createElement('div');
   root.className = 'pairs-setup-scroll';
 
   root.appendChild(buildCgCountSection(cfg.playerCount, onChange));
 
   cfg.players.slice(0, cfg.playerCount).forEach(function(player, i) {
-    root.appendChild(buildCgPlayerPanel(i, player, animalEntries, cfg.players, onChange));
+    root.appendChild(buildCgPlayerPanel(i, player, avatarEntries, cfg.players, onChange));
   });
 
   root.appendChild(buildCgTagSection(availableTags, cfg.tags, onChange));

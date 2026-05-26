@@ -46,7 +46,6 @@ var summaryScreen = document.getElementById('pairs-summary');
 var gameState;
 var gameMode = 'shared';
 var allEntries;
-var animalEntries;
 var conceptNames = {};
 
 var PAIRS_NOOP = function() {};
@@ -94,9 +93,8 @@ fetch('../../../content/dictionary/dictionary.json')
   })
   .then(function(concepts) {
     concepts.forEach(function(c) { conceptNames[c.id] = [c.name, c.id].filter(Boolean)[0]; });
-    allEntries    = concepts;
-    animalEntries = filterByTag(concepts, 'animals');
-    renderPairsSetup(setupScreen, allEntries, animalEntries, function(cfg) {
+    allEntries = concepts;
+    renderPairsSetup(setupScreen, allEntries, function(cfg) {
       startGame(cfg);
     });
   });
@@ -167,7 +165,7 @@ function applyEvent(ev, cardIndex) {
         showScreen('summary');
         renderPairsSummary(summaryScreen, gameState, function() {
           showScreen('setup');
-          renderPairsSetup(setupScreen, allEntries, animalEntries, function(cfg) {
+          renderPairsSetup(setupScreen, allEntries, function(cfg) {
             startGame(cfg);
           });
         });

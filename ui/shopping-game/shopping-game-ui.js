@@ -10,7 +10,7 @@ var SHOPPING_FOUND_CLASS = { 'true': ' found', 'false': '' };
 
 // ---- Setup ----
 
-function renderShoppingSetup(container, allEntries, animalEntries, onStart) {
+function renderShoppingSetup(container, allEntries, onStart) {
   var availableTags = getAvailableTags(allEntries);
   var cfg = {
     playerCount: 2,
@@ -23,7 +23,7 @@ function renderShoppingSetup(container, allEntries, animalEntries, onStart) {
   function redraw() {
     cgPreserveScroll(container, function() {
       container.innerHTML = '';
-      container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, animalEntries, function(patch) {
+      container.appendChild(buildCgSetupRoot(cfg, SHOPPING_SIZES, availableTags, allEntries, function(patch) {
         Object.assign(cfg, patch);
         redraw();
       }, function() { onStart(cfg); }));

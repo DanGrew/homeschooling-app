@@ -6,7 +6,7 @@ var PAIRS_SIZES = [
 
 // ---- Setup ----
 
-function renderPairsSetup(container, allEntries, animalEntries, onStart) {
+function renderPairsSetup(container, allEntries, onStart) {
   var availableTags = getAvailableTags(allEntries);
   var cfg = {
     playerCount: 2,
@@ -19,7 +19,7 @@ function renderPairsSetup(container, allEntries, animalEntries, onStart) {
   function redraw() {
     cgPreserveScroll(container, function() {
       container.innerHTML = '';
-      container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, animalEntries, function(patch) {
+      container.appendChild(buildCgSetupRoot(cfg, PAIRS_SIZES, availableTags, allEntries, function(patch) {
         Object.assign(cfg, patch);
         redraw();
       }, function() { onStart(cfg); }));

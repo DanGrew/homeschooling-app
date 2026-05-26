@@ -12,6 +12,8 @@ var ROTATION_LAYOUT = {
   315: { cls: 'domino-tile-vertical',   fi: 1 }
 };
 
+var DOMINO_STATIC_TYPES = { colours: true, shapes: true, numbers: true };
+
 var DOMINO_HALF_RENDER = {
   shapes:  function(el, value) { el.innerHTML = buildDominoShapeSvg(value); },
   numbers: function(el, value) { el.innerHTML = buildDominoNumberSvg(value); },
@@ -28,7 +30,8 @@ function buildDominoHalfEl(value, matchType) {
   var el = document.createElement('div');
   el.className = 'domino-half';
   el.setAttribute('data-value', value);
-  [DOMINO_HALF_RENDER[matchType]].filter(Boolean).forEach(function(render) { render(el, value); });
+  var render = DOMINO_HALF_RENDER[matchType] || (!DOMINO_STATIC_TYPES[matchType] && DOMINO_HALF_RENDER.icons);
+  [render].filter(Boolean).forEach(function(r) { r(el, value); });
   return el;
 }
 

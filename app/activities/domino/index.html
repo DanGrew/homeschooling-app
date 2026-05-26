@@ -47,7 +47,7 @@ var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
 
 var gameState;
 var turnState;
-var animalEntries = [];
+var allEntries = [];
 
 function dominoEmit(type, detail) {
   window.dispatchEvent(new CustomEvent('domino:' + type, { detail: Object(detail) }));
@@ -205,17 +205,19 @@ fetch('../../../content/dictionary/dictionary.json')
     }));
   })
   .then(function(concepts) {
-    animalEntries = filterByTag(concepts, 'animals');
-    renderDominoSetup(setupScreen, animalEntries, function(setupState) {
+    allEntries = concepts;
+    renderDominoSetup(setupScreen, allEntries, function(setupState) {
       startGame(setupState);
     });
   });
 
+var DOMINO_STATIC_MATCH_TYPES_SET = { colours: true, shapes: true, numbers: true };
+
 function startGame(setupState) {
-  [setupState].filter(function(s) { return s.matchType === 'icons'; })
-    .filter(function() { return animalEntries.length >= 7; })
+  [setupState].filter(function(s) { return !DOMINO_STATIC_MATCH_TYPES_SET[s.matchType]; })
     .forEach(function(s) {
-      var ids = animalEntries.map(function(e) { return e.id; });
+      var tagEntries = filterByTag(allEntries, s.matchType);
+      var ids = tagEntries.map(function(e) { return e.id; });
       s.values = ids.slice().sort(function() { return Math.random() - 0.5; }).slice(0, 7);
     });
   gameState = createDominoGame(setupState);

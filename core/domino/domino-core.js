@@ -1,7 +1,6 @@
 var DOMINO_VALUES = {
   colours: ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'],
   shapes:  ['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'cross'],
-  icons:   ['cat', 'dog', 'bird', 'fish', 'rabbit', 'lion', 'elephant'],
   numbers: ['0', '1', '2', '3', '4', '5', '6']
 };
 

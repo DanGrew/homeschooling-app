@@ -38,8 +38,8 @@ test('match type buttons visible', async ({ page }) => {
   await page.waitForLoadState('networkidle')
   await expect(page.getByTestId('match-type-colours')).toBeVisible()
   await expect(page.getByTestId('match-type-shapes')).toBeVisible()
-  await expect(page.getByTestId('match-type-icons')).toBeVisible()
   await expect(page.getByTestId('match-type-numbers')).toBeVisible()
+  await expect(page.getByTestId('match-type-animals')).toBeVisible()
 })
 
 test('two player panels shown by default', async ({ page }) => {
