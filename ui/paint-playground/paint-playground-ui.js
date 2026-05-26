@@ -34,6 +34,8 @@ var PAINT_PALETTE_TOGGLE = {
 function paintApplyViewport() {
   var left = -paintState.viewport.x + 'px';
   var top = -paintState.viewport.y + 'px';
+  document.getElementById('paint-canvas-fill').style.left = left;
+  document.getElementById('paint-canvas-fill').style.top = top;
   document.getElementById('paint-bg').style.left = left;
   document.getElementById('paint-bg').style.top = top;
   document.getElementById('paint-draw').style.left = left;
@@ -215,6 +217,10 @@ function initPaintPlayground() {
   bgCanvas.height = paintState.world.height;
   drawCanvas.width = paintState.world.width;
   drawCanvas.height = paintState.world.height;
+
+  var fill = document.getElementById('paint-canvas-fill');
+  fill.style.width = paintState.world.width + 'px';
+  fill.style.height = paintState.world.height + 'px';
 
   paintBgCtx = bgCanvas.getContext('2d');
   paintDrawCtx = drawCanvas.getContext('2d');
