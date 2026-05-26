@@ -24,40 +24,85 @@
       "type": "array",
       "items": { "type": "string" }
     },
+    "randomPools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "items"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["clue", "expect", "acknowledgement"],
+              "additionalProperties": false,
+              "properties": {
+                "clue":            { "type": "string" },
+                "expect":          { "type": "string" },
+                "acknowledgement": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
     "steps": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["expect"],
-        "additionalProperties": false,
-        "properties": {
-          "prompt":          { "type": "string" },
-          "expect": {
-            "oneOf": [
-              { "type": "string" },
-              { "type": "array", "minItems": 1, "items": { "type": "string" } }
-            ]
+        "oneOf": [
+          {
+            "required": ["random"],
+            "additionalProperties": false,
+            "properties": {
+              "random": { "type": "string" }
+            }
           },
-          "feedback":        { "type": "string" },
-          "failureFeedback": { "type": "string" },
-          "maxFailures":     { "type": "integer", "minimum": 1 },
-          "badge":           { "type": "string" },
-          "preset_shown":    { "type": "string" },
-          "correct":         { "type": "string" },
-          "distractors": {
-            "type": "array",
-            "items": { "type": "string" }
+          {
+            "required": ["auto", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "auto": { "type": "boolean", "enum": [true] },
+              "text": { "type": "string" },
+              "pageControls": { "type": "array", "items": { "type": "string" } }
+            }
           },
-          "answers": {
-            "type": "array",
-            "items": { "type": "string" }
-          },
-          "pageControls": {
-            "type": "array",
-            "items": { "type": "string" }
+          {
+            "required": ["expect"],
+            "additionalProperties": false,
+            "properties": {
+              "prompt":          { "type": "string" },
+              "expect": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "array", "minItems": 1, "items": { "type": "string" } }
+                ]
+              },
+              "feedback":        { "type": "string" },
+              "failureFeedback": { "type": "string" },
+              "maxFailures":     { "type": "integer", "minimum": 1 },
+              "badge":           { "type": "string" },
+              "preset_shown":    { "type": "string" },
+              "correct":         { "type": "string" },
+              "distractors": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "answers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "pageControls": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
           }
-        }
+        ]
       }
     }
   }

@@ -81,21 +81,30 @@ test('clicking lesson item shows guidance overlay', async ({ page }) => {
   await expect(page.locator('#guidance-overlay')).toBeVisible()
 })
 
-test('first step shows farm intro and find-cow instruction, no Next button', async ({ page }) => {
+test('first step shows a clue prompt, no Next button', async ({ page }) => {
   await page.goto(URL)
   await startLesson(page)
-  await expect(page.locator('#guidance-overlay')).toContainText("I'm big, I say moo")
-  await expect(page.locator('#guidance-overlay')).toContainText('Find me!')
+  await expect(page.locator('#guidance-overlay')).not.toBeEmpty()
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 
-test('tapping cow tile shows feedback', async ({ page }) => {
+test('tapping the expected animal tile shows feedback', async ({ page }) => {
   await page.goto(URL)
   await page.locator('#nav-filter-slot button[data-tag="animals"]').click()
   await page.locator('#tile-grid .tile').first().waitFor()
   await startLesson(page)
-  await page.locator('.tile').filter({ hasText: 'Cow' }).click()
-  await expect(page.locator('#guidance-overlay')).toContainText('The cow!')
+  const overlayText = await page.locator('#guidance-overlay').textContent()
+  const animals = ['Cow', 'Horse', 'Duck', 'Mouse']
+  const knownClues = {
+    'Cow': 'moo',
+    'Horse': 'tall and strong',
+    'Duck': 'quack or woof',
+    'Mouse': "rhymes with 'house'"
+  }
+  const match = animals.find(a => overlayText.includes(knownClues[a]))
+  expect(match).toBeDefined()
+  await page.locator('.tile').filter({ hasText: match }).click()
+  await expect(page.locator('#guidance-overlay')).not.toContainText(knownClues[match])
   await expect(page.locator('#guidance-overlay [data-action="next"]')).not.toBeVisible()
 })
 

@@ -17,21 +17,9 @@
     "literacy.rhyme-awareness"
   ],
   "steps": [
-    {
-      "prompt": "First — I'm big, I say moo, and farmers use my milk. Who am I? Find me!",
-      "expect": "COW_SPOKEN",
-      "feedback": "The cow! Cows give us milk."
-    },
-    {
-      "prompt": "Next — I'm tall and strong. Farmers ride on my back and I help carry heavy things.",
-      "expect": "HORSE_SPOKEN",
-      "feedback": "The horse! Horses are very powerful."
-    },
-    {
-      "prompt": "What sound do you think the next one makes — quack or woof? Find the duck and tap to hear!",
-      "expect": "DUCK_SPOKEN",
-      "feedback": "Quack! Ducks love splashing in puddles."
-    },
+    { "random": "items" },
+    { "random": "items" },
+    { "random": "items" },
     {
       "prompt": "Now find these three — the one that barks and guards the farm, the one that hops and lives in a hutch, and the one that honks loudly!",
       "expect": ["DOG_SPOKEN", "RABBIT_SPOKEN", "GOOSE_SPOKEN"],
@@ -42,10 +30,17 @@
       "expect": ["BULL_SPOKEN", "BIRD_SPOKEN", "CAT_SPOKEN", "FISH_SPOKEN"],
       "feedback": "Bull, bird, cat, and fish!"
     },
+    { "random": "items" }
+  ],
+  "randomPools": [
     {
-      "prompt": "Last one — find the animal that rhymes with 'house'!",
-      "expect": "MOUSE_SPOKEN",
-      "feedback": "Mouse! Mouse rhymes with house — same ending sound."
+      "id": "items",
+      "items": [
+        { "clue": "I'm big, I say moo, and farmers use my milk. Who am I? Find me!", "expect": "COW_SPOKEN", "acknowledgement": "The cow! Cows give us milk." },
+        { "clue": "I'm tall and strong. Farmers ride on my back and I help carry heavy things.", "expect": "HORSE_SPOKEN", "acknowledgement": "The horse! Horses are very powerful." },
+        { "clue": "What sound do you think the next one makes — quack or woof? Find the duck and tap to hear!", "expect": "DUCK_SPOKEN", "acknowledgement": "Quack! Ducks love splashing in puddles." },
+        { "clue": "Find the animal that rhymes with 'house'!", "expect": "MOUSE_SPOKEN", "acknowledgement": "Mouse! Mouse rhymes with house — same ending sound." }
+      ]
     }
   ]
 }

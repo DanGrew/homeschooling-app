@@ -1,6 +1,7 @@
 import { queue, interrupt, stop } from '../speech/speech-ui.js';
 import { GuidanceOverlay } from './guidance-overlay.js';
 import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
+import { initPools } from '../../core/guidance/lesson-pool.js';
 
 function _resolveText(text) {
   var arr = [].concat(text);
@@ -63,6 +64,7 @@ GuidanceService.prototype.start = function(lesson) {
     .then(function(r) { return r.json(); })
     .then(function(data) {
       [1].filter(function() { return req === self._startReq; }).forEach(function() {
+        initPools(data);
         self._lesson = data;
         self._stepIdx = 0;
         window.dispatchEvent(new CustomEvent('guidance:start', { detail: { lesson: data } }));
@@ -142,12 +144,26 @@ GuidanceService.prototype._showFailure = function(text) {
 };
 
 GuidanceService.prototype._showStep = function() {
+  var self = this;
   this._collected = [];
   this._failureCount = 0;
   var step = this._lesson.steps[this._stepIdx];
   (step.pageControls || []).forEach(function(ctrl) {
     window.dispatchEvent(new CustomEvent('page:control', { detail: { type: ctrl } }));
   });
+  if (step.auto) {
+    var text = _resolveText(step.text);
+    this._overlay.show(
+      this._guideSrc(),
+      { text: text, auto: true },
+      this._stepIdx + 1, this._lesson.steps.length,
+      function() { self._advance(); },
+      function() { interrupt(text); },
+      function() { self.stop(); }
+    );
+    interrupt(text);
+    return;
+  }
   SHOW_STEP[String(!step.prompt)](this, step);
 };
 

@@ -18,40 +18,29 @@
     "literacy.phonics"
   ],
   "steps": [
-    {
-      "prompt": "First — I'm the biggest land animal in the world. I have a long trunk and huge ears. Find me!",
-      "expect": "ELEPHANT_SPOKEN",
-      "feedback": "Elephant! Elephants live in Africa and Asia."
-    },
-    {
-      "prompt": "I'm the tallest animal on Earth. I have a very long neck and eat leaves from the tops of trees.",
-      "expect": "GIRAFFE_SPOKEN",
-      "feedback": "Giraffe! They can reach leaves no other animal can."
-    },
-    {
-      "prompt": "This one is called the king of the jungle. Do you think it eats plants — or other animals? Find it!",
-      "expect": "LION_SPOKEN",
-      "feedback": "Lion! Lions hunt other animals for food. They live in Africa."
-    },
+    { "random": "items" },
+    { "random": "items" },
+    { "random": "items" },
     {
       "prompt": "Now find these two — the one that swings through trees, and the one with a hump on its back!",
       "expect": ["MONKEY_SPOKEN", "CAMEL_SPOKEN"],
       "feedback": "Monkey and camel!"
     },
+    { "random": "items" },
+    { "random": "items" },
+    { "random": "items" }
+  ],
+  "randomPools": [
     {
-      "prompt": "Find the black and white stripy one — its name starts with the /z/ sound. Zzz...",
-      "expect": "ZEBRA_SPOKEN",
-      "feedback": "Zebra! /z/ — the last letter of the alphabet."
-    },
-    {
-      "prompt": "Find the big cat with orange and black stripes — not a lion, but just as fierce!",
-      "expect": "TIGER_SPOKEN",
-      "feedback": "Tiger! Tigers are the largest cats in the world."
-    },
-    {
-      "prompt": "Last one — find the slow one that carries its home on its back!",
-      "expect": "TURTLE_SPOKEN",
-      "feedback": "Turtle — every safari animal found!"
+      "id": "items",
+      "items": [
+        { "clue": "I'm the biggest land animal in the world. I have a long trunk and huge ears. Find me!", "expect": "ELEPHANT_SPOKEN", "acknowledgement": "Elephant! Elephants live in Africa and Asia." },
+        { "clue": "I'm the tallest animal on Earth. I have a very long neck and eat leaves from the tops of trees.", "expect": "GIRAFFE_SPOKEN", "acknowledgement": "Giraffe! They can reach leaves no other animal can." },
+        { "clue": "This one is called the king of the jungle. Do you think it eats plants — or other animals? Find it!", "expect": "LION_SPOKEN", "acknowledgement": "Lion! Lions hunt other animals for food. They live in Africa." },
+        { "clue": "Find the black and white stripy one — its name starts with the /z/ sound. Zzz...", "expect": "ZEBRA_SPOKEN", "acknowledgement": "Zebra! /z/ — the last letter of the alphabet." },
+        { "clue": "Find the big cat with orange and black stripes — not a lion, but just as fierce!", "expect": "TIGER_SPOKEN", "acknowledgement": "Tiger! Tigers are the largest cats in the world." },
+        { "clue": "Find the slow one that carries its home on its back!", "expect": "TURTLE_SPOKEN", "acknowledgement": "Turtle — every safari animal found!" }
+      ]
     }
   ]
 }
