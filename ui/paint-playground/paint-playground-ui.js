@@ -249,6 +249,7 @@ function initPaintPlayground() {
   var isDrawing = false;
   var lastX = 0, lastY = 0;
   var tapStartX = 0, tapStartY = 0;
+  var activePointerId = null;
 
   var PAN_START = {
     hand: function(e) {
@@ -287,39 +288,53 @@ function initPaintPlayground() {
   };
 
   drawCanvas.addEventListener('pointerdown', function(e) {
-    gestureRect = wrap.getBoundingClientRect();
-    [PAN_START[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
-    [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function() {
-      drawCanvas.setPointerCapture(e.pointerId);
-      paintPushUndo();
-      isDrawing = true;
-      var pt = paintClientToCanvas(e.clientX, e.clientY, gestureRect.left, gestureRect.top, paintState.viewport.x, paintState.viewport.y);
-      lastX = pt.x; lastY = pt.y;
+    [activePointerId === null].filter(Boolean).forEach(function() {
+      activePointerId = e.pointerId;
+      gestureRect = wrap.getBoundingClientRect();
+      [PAN_START[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
+      [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function() {
+        drawCanvas.setPointerCapture(e.pointerId);
+        paintPushUndo();
+        isDrawing = true;
+        var pt = paintClientToCanvas(e.clientX, e.clientY, gestureRect.left, gestureRect.top, paintState.viewport.x, paintState.viewport.y);
+        lastX = pt.x; lastY = pt.y;
+      });
+      [TOOL_DOWN[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
     });
-    [TOOL_DOWN[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(e); });
   });
 
   drawCanvas.addEventListener('pointermove', function(e) {
-    [panActive].filter(Boolean).forEach(function() {
-      var dx = e.clientX - panStartX;
-      var dy = e.clientY - panStartY;
-      paintState = applyPaintPan(paintState, panOriginX - dx, panOriginY - dy);
-      paintApplyViewport();
-    });
-    [isDrawing].filter(Boolean).forEach(function() {
-      var pt = paintClientToCanvas(e.clientX, e.clientY, gestureRect.left, gestureRect.top, paintState.viewport.x, paintState.viewport.y);
-      [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function(fn) {
-        fn(paintDrawCtx, lastX, lastY, pt.x, pt.y, paintActiveColour);
+    [e.pointerId === activePointerId].filter(Boolean).forEach(function() {
+      [panActive].filter(Boolean).forEach(function() {
+        var dx = e.clientX - panStartX;
+        var dy = e.clientY - panStartY;
+        paintState = applyPaintPan(paintState, panOriginX - dx, panOriginY - dy);
+        paintApplyViewport();
       });
-      lastX = pt.x; lastY = pt.y;
+      [isDrawing].filter(Boolean).forEach(function() {
+        var pt = paintClientToCanvas(e.clientX, e.clientY, gestureRect.left, gestureRect.top, paintState.viewport.x, paintState.viewport.y);
+        [BRUSH_STROKE[paintActiveTool]].filter(Boolean).forEach(function(fn) {
+          fn(paintDrawCtx, lastX, lastY, pt.x, pt.y, paintActiveColour);
+        });
+        lastX = pt.x; lastY = pt.y;
+      });
     });
   });
 
-  drawCanvas.addEventListener('pointerup', function() {
-    [BRUSH_TAP[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(); });
-    panActive = false;
-    isDrawing = false;
+  drawCanvas.addEventListener('pointerup', function(e) {
+    [e.pointerId === activePointerId].filter(Boolean).forEach(function() {
+      [BRUSH_TAP[paintActiveTool]].filter(Boolean).forEach(function(fn) { fn(); });
+      panActive = false;
+      isDrawing = false;
+      activePointerId = null;
+    });
   });
 
-  drawCanvas.addEventListener('pointercancel', function() { panActive = false; isDrawing = false; });
+  drawCanvas.addEventListener('pointercancel', function(e) {
+    [e.pointerId === activePointerId].filter(Boolean).forEach(function() {
+      panActive = false;
+      isDrawing = false;
+      activePointerId = null;
+    });
+  });
 }

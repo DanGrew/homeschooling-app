@@ -376,3 +376,47 @@ test('clicking large size activates it and deactivates medium', async ({ page })
   expect(lgActive).not.toBeNull()
   expect(mdActive).toBeNull()
 })
+
+test('second pointer mid-stroke does not cause draw path to jump', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-pencil-btn"]')
+  const vpBox = await page.locator('#paint-viewport').boundingBox()
+  const cx = vpBox.x + vpBox.width / 2
+  const cy = vpBox.y + vpBox.height / 2
+
+  const jumped = await page.evaluate(function(args) {
+    var canvas = document.getElementById('paint-draw')
+    var rect = canvas.getBoundingClientRect()
+
+    function fire(type, id, x, y) {
+      canvas.dispatchEvent(new PointerEvent(type, {
+        bubbles: true, cancelable: true, pointerId: id,
+        clientX: x, clientY: y, isPrimary: id === 1
+      }))
+    }
+
+    // primary pointer starts stroke in centre
+    fire('pointerdown', 1, args.cx, args.cy)
+    fire('pointermove', 1, args.cx + 10, args.cy)
+
+    // snapshot pixel columns drawn so far — should be near cx, not near cx+200
+    var snapBefore = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data.slice()
+
+    // second pointer fires far away
+    fire('pointerdown', 2, args.cx + 200, args.cy)
+    fire('pointermove', 2, args.cx + 250, args.cy)
+
+    // primary continues a little further
+    fire('pointermove', 1, args.cx + 20, args.cy)
+    fire('pointerup', 1, args.cx + 20, args.cy)
+
+    // check whether any pixels appeared in the far region (cx+200 area)
+    var ctx = canvas.getContext('2d')
+    var farX = Math.round(args.cx + 200 - rect.left)
+    var farData = ctx.getImageData(farX - 5, Math.round(args.cy - rect.top) - 5, 10, 10).data
+    for (var i = 3; i < farData.length; i += 4) { if (farData[i] > 0) return true }
+    return false
+  }, { cx, cy })
+
+  expect(jumped).toBe(false)
+})
