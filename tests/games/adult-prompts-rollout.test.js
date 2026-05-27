@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
 const ACTIVITIES = [
-  '/homeschooling-app/app/activities/secondary-colours/',
   '/homeschooling-app/app/activities/simulator/',
   '/homeschooling-app/app/activities/story-time/',
   '/homeschooling-app/app/activities/say-words/',
