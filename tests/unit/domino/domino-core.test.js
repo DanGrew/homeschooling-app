@@ -516,7 +516,7 @@ function makePlayingState() {
     phase: 'playing',
     drawPile: [tileC],
     hands: { p0: [tileB, tileD], p1: [tileD] },
-    stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: {
       tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
       endpoints: [
@@ -588,7 +588,7 @@ test('placeTile with rotation 180 on west endpoint places at correct col', () =>
     phase: 'playing',
     drawPile: [],
     hands: { p0: [tileC], p1: [] },
-    stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: {
       tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
       endpoints: [
@@ -612,7 +612,7 @@ test('placeTile with rotation 180 updates west endpoint', () => {
     phase: 'playing',
     drawPile: [],
     hands: { p0: [tileC], p1: [] },
-    stats: { p0: { tilesPlaced: 0 }, p1: { tilesPlaced: 0 } },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: {
       tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
       endpoints: [
@@ -637,6 +637,7 @@ test('drawTile adds tile to current player hand', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }
   drawTile(state)
@@ -652,6 +653,7 @@ test('drawTile removes tile from draw pile', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }
   drawTile(state)
@@ -666,6 +668,7 @@ test('drawTile advances turn', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
   }
   drawTile(state)
@@ -680,6 +683,7 @@ test('drawTile returns success and tile', () => {
     phase: 'playing',
     drawPile: [tile],
     hands: { p0: [], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
     board: { endpoints: [], tiles: [] }
   }
   const result = drawTile(state)
@@ -756,8 +760,8 @@ test('getPreviewPlacement uses explicit rotation when provided', () => {
 test('createDominoGame initialises stats for each player', () => {
   const setup = { matchType: 'colours', players: [{ name: 'A', icon: 'cat', role: 'child' }, { name: 'B', icon: 'dog', role: 'child' }] }
   const state = createDominoGame(setup)
-  expect(state.stats['p0']).toEqual({ tilesPlaced: 0 })
-  expect(state.stats['p1']).toEqual({ tilesPlaced: 0 })
+  expect(state.stats['p0']).toEqual({ tilesPlaced: 0, tilesDrawn: 0 })
+  expect(state.stats['p1']).toEqual({ tilesPlaced: 0, tilesDrawn: 0 })
 })
 
 test('placeTile increments tilesPlaced for active player', () => {
