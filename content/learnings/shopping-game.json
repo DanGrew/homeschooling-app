@@ -1,0 +1,17 @@
+{
+  "id": "shopping-game",
+  "title": "Shopping Game",
+  "source": "Shopping Game",
+  "type": "game",
+  "criteria": [
+    "ead.pretend-play",
+    "uw.community",
+    "cl.topic-vocabulary",
+    "psed.relationships",
+    "maths.counting-5",
+    "pd.fine-motor",
+    "uw.cause-effect",
+    "cl.listening",
+    "psed.self-regulation"
+  ]
+}

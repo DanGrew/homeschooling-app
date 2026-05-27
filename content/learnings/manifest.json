@@ -502,6 +502,12 @@
     "number": 5
   },
   {
+    "id": "shopping-game",
+    "source": "Shopping Game",
+    "title": "Shopping Game",
+    "type": "game"
+  },
+  {
     "id": "things_that_go",
     "source": "Trace Words",
     "title": "Things That Go",

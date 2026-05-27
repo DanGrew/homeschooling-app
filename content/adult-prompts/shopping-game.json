@@ -1,0 +1,11 @@
+{
+  "activity": "shopping-game",
+  "prompts": [
+    { "type": "say", "text": "Pretend play framing before starting: 'You're going to the shops! You have a list — find everything on it. Ready?' Sets the scenario." },
+    { "type": "ask", "text": "Prediction: 'Where do you think the [item] might be hiding? Have a guess before you flip.' Ask before they tap." },
+    { "type": "ask", "text": "Community link: 'Where do we buy that in real life? Who works there? What do they do?' — after an item is found." },
+    { "type": "say", "text": "Counting: 'How many things are left on your list? Let's count.' Point to remaining items together." },
+    { "type": "ask", "text": "Vocabulary: 'What's that called? Have you seen one before? What do we use it for?' — on every new card reveal." },
+    { "type": "say", "text": "Independence: 'You choose which card to flip next — it's your shopping trip.' Step back before they decide." }
+  ]
+}
