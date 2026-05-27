@@ -59,6 +59,16 @@
       <div id="paint-colour-slot"></div>
       <div id="paint-util-slot" style="display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0.65;">
         <button class="paint-tool-btn" id="paint-bg-btn" data-testid="paint-bg-btn">&#128444;&#65039;</button>
+        <div style="display:flex;gap:2px;">
+          <div style="position:relative;width:36px;height:36px;" data-speakable-container>
+            <button class="paint-tool-btn" id="paint-bg-scale-dn-btn" data-testid="paint-bg-scale-dn-btn" style="position:absolute;top:0;left:0;width:36px;height:36px;font-size:18px;">&#8722;</button>
+            <svg id="paint-bg-scale-dn-arc" style="position:absolute;top:-5px;left:-5px;width:46px;height:46px;pointer-events:none;transform:rotate(-90deg);" viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-dasharray="126" stroke-dashoffset="126"/></svg>
+          </div>
+          <div style="position:relative;width:36px;height:36px;" data-speakable-container>
+            <button class="paint-tool-btn" id="paint-bg-scale-up-btn" data-testid="paint-bg-scale-up-btn" style="position:absolute;top:0;left:0;width:36px;height:36px;font-size:18px;">&#43;</button>
+            <svg id="paint-bg-scale-up-arc" style="position:absolute;top:-5px;left:-5px;width:46px;height:46px;pointer-events:none;transform:rotate(-90deg);" viewBox="0 0 46 46"><circle cx="23" cy="23" r="20" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3" stroke-dasharray="126" stroke-dashoffset="126"/></svg>
+          </div>
+        </div>
         <button class="paint-tool-btn" id="paint-undo-btn" data-testid="paint-undo-btn">&#8617;</button>
         <div style="position:relative;width:48px;height:48px;" data-speakable-container>
           <button class="paint-tool-btn" id="paint-clear-btn" data-testid="paint-clear-btn" style="position:absolute;top:0;left:0;">&#128465;</button>
@@ -89,6 +99,18 @@ makeSpeakable(document.querySelector('[data-testid="paint-size-lg-btn"]'), 'Larg
 makeSpeakable(document.getElementById('paint-undo-btn'), 'Undo');
 makeSpeakable(document.getElementById('paint-clear-btn'), 'Clear canvas');
 makeSpeakable(document.getElementById('paint-bg-btn'), 'Backgrounds');
+makeSpeakable(document.getElementById('paint-bg-scale-dn-btn'), 'Shrink background');
+makeSpeakable(document.getElementById('paint-bg-scale-up-btn'), 'Grow background');
+var _scaleUpArc = document.querySelector('#paint-bg-scale-up-arc circle');
+var _scaleDnArc = document.querySelector('#paint-bg-scale-dn-arc circle');
+makeLongPress(document.getElementById('paint-bg-scale-up-btn'), function() { paintSetBgScale(1); }, 600,
+  function() { _scaleUpArc.style.transition = 'stroke-dashoffset 600ms linear'; _scaleUpArc.setAttribute('stroke-dashoffset', '0'); },
+  function() { _scaleUpArc.style.transition = 'none'; _scaleUpArc.setAttribute('stroke-dashoffset', '126'); }
+);
+makeLongPress(document.getElementById('paint-bg-scale-dn-btn'), function() { paintSetBgScale(-1); }, 600,
+  function() { _scaleDnArc.style.transition = 'stroke-dashoffset 600ms linear'; _scaleDnArc.setAttribute('stroke-dashoffset', '0'); },
+  function() { _scaleDnArc.style.transition = 'none'; _scaleDnArc.setAttribute('stroke-dashoffset', '126'); }
+);
 makeSpeakable(document.getElementById('paint-bg-clear-btn'), 'Clear background');
 makeSpeakable(document.getElementById('paint-bg-close-btn'), 'Close backgrounds');
 makeSpeakable(document.getElementById('paint-hand-btn'), 'Hand tool');
