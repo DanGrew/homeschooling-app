@@ -429,6 +429,12 @@
     "number": 2
   },
   {
+    "id": "pairs",
+    "source": "Pairs",
+    "title": "Pairs",
+    "type": "game"
+  },
+  {
     "id": "potty-training",
     "source": "Simulator",
     "title": "Potty Training",

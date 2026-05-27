@@ -1,0 +1,17 @@
+{
+  "id": "pairs",
+  "title": "Pairs",
+  "source": "Pairs",
+  "type": "game",
+  "criteria": [
+    "maths.spatial",
+    "psed.relationships",
+    "maths.equivalence",
+    "cl.topic-vocabulary",
+    "cl.prediction",
+    "psed.self-regulation",
+    "cl.listening",
+    "pd.fine-motor",
+    "uw.cause-effect"
+  ]
+}
