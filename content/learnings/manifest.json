@@ -429,16 +429,16 @@
     "number": 2
   },
   {
-    "id": "potty-training",
-    "source": "Simulator",
-    "title": "Potty Training",
-    "type": "lesson"
-  },
-  {
     "id": "pairs",
     "source": "Pairs",
     "title": "Pairs",
     "type": "game"
+  },
+  {
+    "id": "potty-training",
+    "source": "Simulator",
+    "title": "Potty Training",
+    "type": "lesson"
   },
   {
     "id": "puzzle",

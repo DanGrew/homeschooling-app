@@ -2,6 +2,7 @@
   "id": "pairs",
   "title": "Pairs",
   "source": "Pairs",
+  "type": "game",
   "criteria": [
     "maths.spatial",
     "psed.relationships",
