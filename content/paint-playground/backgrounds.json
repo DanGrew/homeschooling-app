@@ -1,34 +1,34 @@
 [
   {
-    "path": "../../../assets/puzzle/bluey-family/full.jpg",
+    "path": "../../../assets/shared/images/bluey-family.jpg",
     "label": "Bluey Family"
   },
   {
-    "path": "../../../assets/puzzle/bluey-grannies/full.jpg",
+    "path": "../../../assets/shared/images/bluey-grannies.jpg",
     "label": "Bluey Grannies"
   },
   {
-    "path": "../../../assets/puzzle/jurassic-park/full.jpg",
+    "path": "../../../assets/shared/images/jurassic-park.jpg",
     "label": "Jurassic Park"
   },
   {
-    "path": "../../../assets/puzzle/mmprs/full.jpg",
+    "path": "../../../assets/shared/images/mighty-morphin-power-rangers.jpg",
     "label": "Mighty Morphin Power Rangers"
   },
   {
-    "path": "../../../assets/puzzle/paw-patrol/full.jpg",
+    "path": "../../../assets/shared/images/paw-patrol.jpg",
     "label": "Paw Patrol"
   },
   {
-    "path": "../../../assets/puzzle/spiderman/full.jpg",
+    "path": "../../../assets/shared/images/spiderman-vs-lizard.jpg",
+    "label": "Spiderman Vs Lizard"
+  },
+  {
+    "path": "../../../assets/shared/images/spiderman.jpg",
     "label": "Spiderman"
   },
   {
-    "path": "../../../assets/puzzle/spiderman-lizard/full.jpg",
-    "label": "Spiderman vs Lizard"
-  },
-  {
-    "path": "../../../assets/puzzle/the-mask/full.jpg",
+    "path": "../../../assets/shared/images/the-mask.jpg",
     "label": "The Mask"
   }
 ]

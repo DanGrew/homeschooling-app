@@ -1,5 +1,3 @@
 {
-  "source": "assets/puzzle",
-  "filename": "full.jpg",
-  "labels": "content/puzzle/manifest.json"
+  "source": "assets/shared/images"
 }

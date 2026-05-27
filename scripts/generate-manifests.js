@@ -125,8 +125,8 @@ if (fs.existsSync(paintBgDir)) {
       .filter(function(f) { return /\.(png|jpe?g)$/i.test(f); })
       .sort()
       .map(function(f) {
-        var label = f.replace(/\.[^.]+$/, '');
-        return { path: '../../../' + paintBgSourceRel + '/' + f, label: label[0].toUpperCase() + label.slice(1) };
+        var label = f.replace(/\.[^.]+$/, '').split('-').map(function(w) { return w[0].toUpperCase() + w.slice(1); }).join(' ');
+        return { path: '../../../' + paintBgSourceRel + '/' + f, label: label };
       });
   }
 }
@@ -135,3 +135,23 @@ if (!fs.existsSync(path.dirname(paintBgManifestPath))) {
 }
 fs.writeFileSync(paintBgManifestPath, JSON.stringify(paintBgEntries, null, 2) + '\n');
 console.log('content/paint-playground/backgrounds.json: ' + paintBgEntries.length + ' entries');
+
+// shared images — manifest is hand-maintained; warn about orphaned files
+var sharedImagesManifestPath = path.join(__dirname, '..', 'content/shared/images/manifest.json');
+var sharedImagesDir = path.join(__dirname, '..', 'assets/shared/images');
+var sharedImagesManifest = fs.existsSync(sharedImagesManifestPath)
+  ? JSON.parse(fs.readFileSync(sharedImagesManifestPath, 'utf8'))
+  : [];
+var registeredSharedIds = new Set(sharedImagesManifest.map(function(e) { return e.id; }));
+var sharedOrphans = fs.existsSync(sharedImagesDir)
+  ? fs.readdirSync(sharedImagesDir).filter(function(f) {
+      var id = f.replace(/\.[^.]+$/, '');
+      return /\.(png|jpe?g)$/i.test(f) && !registeredSharedIds.has(id);
+    })
+  : [];
+if (sharedOrphans.length) {
+  console.warn('⚠️  Shared images not in manifest — add to content/shared/images/manifest.json:');
+  sharedOrphans.forEach(function(f) { console.warn('   ' + f); });
+} else {
+  console.log('content/shared/images/manifest.json: ' + sharedImagesManifest.length + ' entries');
+}

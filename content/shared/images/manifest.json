@@ -1,0 +1,10 @@
+[
+  { "id": "bluey-family",                  "path": "assets/shared/images/bluey-family.jpg",                  "label": "Bluey Family" },
+  { "id": "bluey-grannies",               "path": "assets/shared/images/bluey-grannies.jpg",               "label": "Bluey Grannies" },
+  { "id": "jurassic-park",                "path": "assets/shared/images/jurassic-park.jpg",                "label": "Jurassic Park" },
+  { "id": "mighty-morphin-power-rangers", "path": "assets/shared/images/mighty-morphin-power-rangers.jpg", "label": "Mighty Morphin Power Rangers" },
+  { "id": "paw-patrol",                   "path": "assets/shared/images/paw-patrol.jpg",                   "label": "Paw Patrol" },
+  { "id": "spiderman",                    "path": "assets/shared/images/spiderman.jpg",                    "label": "Spiderman" },
+  { "id": "spiderman-vs-lizard",          "path": "assets/shared/images/spiderman-vs-lizard.jpg",          "label": "Spiderman vs Lizard" },
+  { "id": "the-mask",                     "path": "assets/shared/images/the-mask.jpg",                     "label": "The Mask" }
+]
