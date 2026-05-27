@@ -117,6 +117,30 @@ function subdirs(dir) {
   }
 })();
 
+// --- shared images ---
+(function checkSharedImages() {
+  const manifestPath = path.join(ROOT, 'content/shared/images/manifest.json');
+  const filesDir = path.join(ROOT, 'assets/shared/images');
+  const manifest = readJSON(manifestPath);
+  if (!manifest) { violations.push('shared/images/manifest.json — invalid JSON or missing'); return; }
+  const manifestIds = new Set();
+  manifest.forEach(entry => {
+    scanned++;
+    manifestIds.add(entry.id);
+    const filePath = path.join(ROOT, entry.path);
+    if (!exists(filePath)) violations.push(`shared/images/${entry.id} — file missing at ${entry.path}`);
+  });
+  if (exists(filesDir)) {
+    fs.readdirSync(filesDir).filter(f => /\.(png|jpe?g)$/i.test(f)).forEach(f => {
+      const id = f.replace(/\.[^.]+$/, '');
+      if (!manifestIds.has(id)) {
+        scanned++;
+        violations.push(`shared/images/${f} — file present but not in manifest`);
+      }
+    });
+  }
+})();
+
 let output = `## check-manifest-files\n`;
 if (violations.length === 0) {
   output += `✅ No issues (scanned ${scanned} entries)\n`;
