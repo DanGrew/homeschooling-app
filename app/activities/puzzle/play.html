@@ -67,7 +67,7 @@
   const gridParam = sessionStorage.getItem('puzzle-grid') || params.get('grid') || '4x3';
   const [colsStr, rowsStr] = gridParam.split('x');
   const PUZZLE = {
-    src: `../../../assets/puzzle/${puzzleId}/full.jpg`,
+    src: '',
     grid: { rows: parseInt(rowsStr, 10), cols: parseInt(colsStr, 10) }
   };
 
@@ -253,8 +253,13 @@
   const fullImage = new Image();
   fullImage.onload = onImageLoad;
   fullImage.onerror = () => { sizeGrid(); start(); };
-  fullImage.src = PUZZLE.src;
-  refImg.src = PUZZLE.src;
+
+  fetch('../../../content/puzzle/manifest.json').then(function(r) { return r.json(); }).then(function(manifest) {
+    var entry = manifest.find(function(e) { return e.id === puzzleId; });
+    PUZZLE.src = entry ? entry.image : '../../../assets/shared/images/paw-patrol.jpg';
+    fullImage.src = PUZZLE.src;
+    refImg.src = PUZZLE.src;
+  });
 </script>
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';

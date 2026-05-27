@@ -78,7 +78,7 @@ function initChooser(puzzles) {
   puzzles.forEach(p => {
     const card = document.createElement('div');
     card.className = 'puzzle-card';
-    card.innerHTML = `<img src="../../../assets/puzzle/${p.id}/full.jpg" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
+    card.innerHTML = `<img src="${p.image}" alt="${p.name}"><div class="puzzle-card-name">${p.name}</div>`;
     card.addEventListener('click', () => selectPuzzle(p, card, picker, btnsEl));
     DO_SPEAK[String(typeof window.__makeSpeakable==='function')](card, p.name);
     cardsEl.appendChild(card);

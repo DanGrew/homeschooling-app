@@ -1,10 +1,10 @@
 [
-  { "id": "bluey-family",    "name": "Bluey Family",       "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "bluey-grannies",  "name": "Bluey Grannies",     "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "jurassic-park",   "name": "Jurassic Park",      "grids": ["3x4", "3x5", "5x8"] },
-  { "id": "mmprs",           "name": "Mighty Morphin Power Rangers", "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "paw-patrol",      "name": "Paw Patrol",         "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "spiderman",       "name": "Spiderman",          "grids": ["4x3", "5x3", "8x5"] },
-  { "id": "spiderman-lizard","name": "Spiderman vs Lizard","grids": ["3x4", "4x5", "5x8"] },
-  { "id": "the-mask",        "name": "The Mask",           "grids": ["4x3", "5x3", "8x5"] }
+  { "id": "bluey-family",    "name": "Bluey Family",                  "grids": ["4x3", "5x3", "8x5"], "image": "../../../assets/shared/images/bluey-family.jpg" },
+  { "id": "bluey-grannies",  "name": "Bluey Grannies",               "grids": ["4x3", "5x3", "8x5"], "image": "../../../assets/shared/images/bluey-grannies.jpg" },
+  { "id": "jurassic-park",   "name": "Jurassic Park",                "grids": ["3x4", "3x5", "5x8"], "image": "../../../assets/shared/images/jurassic-park.jpg" },
+  { "id": "mmprs",           "name": "Mighty Morphin Power Rangers", "grids": ["4x3", "5x3", "8x5"], "image": "../../../assets/shared/images/mighty-morphin-power-rangers.jpg" },
+  { "id": "paw-patrol",      "name": "Paw Patrol",                   "grids": ["4x3", "5x3", "8x5"], "image": "../../../assets/shared/images/paw-patrol.jpg" },
+  { "id": "spiderman",       "name": "Spiderman",                    "grids": ["4x3", "5x3", "8x5"], "image": "../../../assets/shared/images/spiderman.jpg" },
+  { "id": "spiderman-lizard","name": "Spiderman vs Lizard",          "grids": ["3x4", "4x5", "5x8"], "image": "../../../assets/shared/images/spiderman-vs-lizard.jpg" },
+  { "id": "the-mask",        "name": "The Mask",                     "grids": ["4x3", "5x3", "8x5"], "image": "../../../assets/shared/images/the-mask.jpg" }
 ]
