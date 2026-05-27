@@ -48,6 +48,16 @@ test('handover shown after draw with next player name', async ({ page }) => {
   expect(handoverText).not.toContain(firstName.trim())
 })
 
+test('space on ready button does not trigger draw', async ({ page }) => {
+  await setupGame(page)
+  const pileBefore = await page.evaluate(() => window.gameState.drawPile.length)
+  await page.getByTestId('domino-handover-ready').focus()
+  await page.keyboard.press('Space')
+  await expect(page.getByTestId('domino-handover')).toHaveCount(0)
+  const pileAfter = await page.evaluate(() => window.gameState.drawPile.length)
+  expect(pileAfter).toBe(pileBefore)
+})
+
 test('handover shown after valid placement', async ({ page }) => {
   await startGame(page)
 

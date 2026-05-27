@@ -162,7 +162,7 @@ function renderDominoHandover(container, player, onReady) {
   btn.textContent = 'Ready';
   btn.className = 'pairs-handover-btn';
   btn.setAttribute('data-testid', 'domino-handover-ready');
-  btn.addEventListener('click', function() { overlay.remove(); onReady(); });
+  btn.addEventListener('click', function() { overlay.remove(); setTimeout(onReady, 0); });
   cgMakeSpeak(btn, 'Ready');
   overlay.appendChild(btn);
 
