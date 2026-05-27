@@ -44,6 +44,7 @@ var boardViewport = document.getElementById('domino-board-viewport');
 var trayEl        = document.getElementById('domino-tray');
 
 var DOMINO_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
+var DOMINO_TILE_SPEAK = { icons: function(tile) { [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(tile.values.join(' and ')); }); } };
 
 var gameState;
 var turnState;
@@ -90,6 +91,10 @@ function selectTile(tileId) {
   dominoTraySetSubmitEnabled(trayEl, false);
   clearDominoPreview(boardViewport);
   setDominoEndpointsActive(boardViewport, true);
+  var player = gameState.players[gameState.turnIndex];
+  [gameState.hands[player.id].filter(function(t) { return t.id === tileId; })[0]]
+    .filter(Boolean)
+    .forEach(function(tile) { [DOMINO_TILE_SPEAK[gameState.matchType]].filter(Boolean).forEach(function(fn) { fn(tile); }); });
 }
 
 function onTileTap(tileId) {
@@ -130,7 +135,12 @@ function flashTileRed(tileId) {
 }
 
 function showSummary() {
-  dominoEmit('game_complete', {});
+  dominoEmit('game_complete', {
+    matchType: gameState.matchType,
+    per_player: gameState.players.map(function(p) {
+      return { player_id: p.id, tiles_placed: gameState.stats[p.id].tilesPlaced, tiles_drawn: gameState.stats[p.id].tilesDrawn };
+    })
+  });
   showScreen('summary');
   renderDominoSummary(summaryScreen, gameState, function() {
     showScreen('setup');
@@ -228,7 +238,7 @@ function startGame(setupState) {
   renderDominoTray(trayEl, gameState, makeTrayOpts());
   renderDominoHandover(gameScreen, gameState.players[0], function() {
     dominoEmit('turn_start', { player_id: gameState.players[0].id });
-  });
+  }, gameState.players[1].name);
 }
 
 window.addEventListener('resize', function() {

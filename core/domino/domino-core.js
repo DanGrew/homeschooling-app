@@ -273,6 +273,7 @@ function drawTile(state) {
   var drawn = state.drawPile[0];
   state.drawPile = state.drawPile.slice(1);
   state.hands[player.id] = state.hands[player.id].concat([drawn]);
+  state.stats[player.id].tilesDrawn += 1;
   advanceTurn(state);
   return { success: true, tile: drawn };
 }
@@ -284,7 +285,7 @@ function createDominoGame(setupState) {
     return { id: 'p' + i, name: p.name, icon: p.icon, role: p.role };
   });
   var stats = {};
-  players.forEach(function(p) { stats[p.id] = { tilesPlaced: 0 }; });
+  players.forEach(function(p) { stats[p.id] = { tilesPlaced: 0, tilesDrawn: 0 }; });
   return {
     players: players,
     matchType: setupState.matchType,

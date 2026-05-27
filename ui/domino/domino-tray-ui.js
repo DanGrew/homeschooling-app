@@ -134,7 +134,7 @@ function renderDominoSummary(container, gameState, onPlayAgain) {
   container.appendChild(inner);
 }
 
-function renderDominoHandover(container, player, onReady) {
+function renderDominoHandover(container, player, onReady, nextPlayerName) {
   [container.querySelector('.pairs-handover')].filter(Boolean).forEach(function(e) { e.remove(); });
 
   var overlay = document.createElement('div');
@@ -150,9 +150,12 @@ function renderDominoHandover(container, player, onReady) {
   img.style.objectFit = 'cover';
   overlay.appendChild(img);
 
+  var msgText = 'Now it\u2019s ' + player.name + '\u2019s turn';
+  [nextPlayerName].filter(Boolean).forEach(function(n) { msgText = 'First it\u2019s ' + player.name + '\u2019s turn, then ' + n + '\u2019s turn'; });
+
   var msg = document.createElement('p');
   msg.className = 'pairs-handover-name';
-  msg.textContent = player.name + '\u2019s turn';
+  msg.textContent = msgText;
   msg.setAttribute('data-testid', 'domino-handover-name');
   overlay.appendChild(msg);
   cgMakeSpeak(msg, msg.textContent);
