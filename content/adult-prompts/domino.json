@@ -1,0 +1,11 @@
+{
+  "activity": "domino",
+  "prompts": [
+    { "type": "ask", "text": "Prediction: 'Have a look at what's on the end of the chain — which tile do you think will fit there?' Ask before they pick." },
+    { "type": "ask", "text": "Prediction: 'What do you think [name] will play next? Have a guess before they choose.'" },
+    { "type": "say", "text": "Colour families (colours mode): 'Some colours feel warm — like red, orange and yellow. Some feel cool — like blue, green and purple. Can you find a warm one? A cool one?'" },
+    { "type": "ask", "text": "Colour families (colours mode): 'Is that a warm colour or a cool colour? What makes you think that?'" },
+    { "type": "say", "text": "Independence framing: Before each turn say 'It's your turn — you choose which tile to play.' Step back and let them decide without prompting." },
+    { "type": "ask", "text": "Independence: 'Which one do you want to try? You decide.' If they hesitate, wait — resist the urge to point." }
+  ]
+}

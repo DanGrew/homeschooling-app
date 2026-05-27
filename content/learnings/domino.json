@@ -1,0 +1,22 @@
+{
+  "id": "domino",
+  "title": "Domino Match",
+  "source": "Domino",
+  "type": "game",
+  "criteria": [
+    "psed.relationships",
+    "maths.shape-2d",
+    "ead.colour-recognition",
+    "maths.equivalence",
+    "maths.numeral-recognition",
+    "cl.topic-vocabulary",
+    "maths.counting-5",
+    "pd.fine-motor",
+    "maths.subitising",
+    "psed.self-regulation",
+    "maths.spatial",
+    "uw.cause-effect",
+    "cl.listening",
+    "maths.pattern"
+  ]
+}
