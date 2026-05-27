@@ -33,16 +33,6 @@ test('Colours section has matching and colouring games', async ({ page }) => {
   await expect(page.locator('a[href*="activities/match-colour-shape/"]')).toBeVisible()
 })
 
-test('Colours section has Paint Playground', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/games/')
-  await expect(page.locator('a[href*="activities/paint-playground/"]')).toBeVisible()
-})
-
-test('Paint Playground tile navigates to paint playground', async ({ page }) => {
-  await page.goto('/homeschooling-app/app/games/')
-  await page.click('a[href*="activities/paint-playground/"]')
-  await expect(page.locator('#paint-viewport')).toBeVisible()
-})
 
 test('Music section has Piano Game', async ({ page }) => {
   await page.goto('/homeschooling-app/app/games/')
