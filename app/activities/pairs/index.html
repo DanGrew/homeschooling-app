@@ -58,7 +58,7 @@ var PAIRS_EVENT_HANDLERS = {
   fired: PAIRS_NOOP,
   pending: function() {
     eventFired = true;
-    window.__recordLearningEvent({ version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'pairs', variant_id: currentTags.join('-'), activity_id: 'pairs' });
+    window.__recordLearningEvent({ version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'pairs', variant_id: currentTags.join('-'), activity_id: 'pairs' }, null, 'Pairs');
   }
 };
 
