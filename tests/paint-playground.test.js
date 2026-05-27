@@ -421,10 +421,10 @@ test('second pointer mid-stroke does not cause draw path to jump', async ({ page
   expect(jumped).toBe(false)
 })
 
-test('viewport has checkerboard background', async ({ page }) => {
+test('viewport has canvas edge outline', async ({ page }) => {
   await page.goto(URL)
-  const bg = await page.locator('#paint-viewport').evaluate(el => el.style.backgroundImage || getComputedStyle(el).backgroundImage)
-  expect(bg).toContain('linear-gradient')
+  const outline = await page.locator('#paint-viewport').evaluate(el => getComputedStyle(el).outline)
+  expect(outline).toContain('3px')
 })
 
 test('background canvas has grayscale CSS filter applied', async ({ page }) => {
