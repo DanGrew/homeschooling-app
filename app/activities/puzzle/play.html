@@ -255,8 +255,9 @@
   fullImage.onerror = () => { sizeGrid(); start(); };
 
   fetch('../../../content/puzzle/manifest.json').then(function(r) { return r.json(); }).then(function(manifest) {
-    var entry = manifest.find(function(e) { return e.id === puzzleId; });
-    PUZZLE.src = entry ? entry.image : '../../../assets/shared/images/paw-patrol.jpg';
+    var matched = manifest.filter(function(e) { return e.id === puzzleId; });
+    matched.push({ image: '../../../assets/shared/images/paw-patrol.jpg' });
+    PUZZLE.src = matched[0].image;
     fullImage.src = PUZZLE.src;
     refImg.src = PUZZLE.src;
   });
