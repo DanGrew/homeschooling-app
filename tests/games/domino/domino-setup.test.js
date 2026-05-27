@@ -72,6 +72,24 @@ test('taken avatar disabled for other player', async ({ page }) => {
   await expect(page.getByTestId('avatar-1-cat')).toBeDisabled()
 })
 
+test('selecting avatar sets name field', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('avatar-0-cat').click()
+  const name = await page.getByTestId('player-name-0').inputValue()
+  expect(name.length).toBeGreaterThan(0)
+})
+
+test('selecting new avatar overrides existing name', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForLoadState('networkidle')
+  await page.getByTestId('avatar-0-cat').click()
+  await page.getByTestId('player-name-0').fill('My Custom Name')
+  await page.getByTestId('avatar-0-dog').click()
+  const name = await page.getByTestId('player-name-0').inputValue()
+  expect(name).not.toBe('My Custom Name')
+})
+
 test('start transitions to game screen', async ({ page }) => {
   await page.goto(URL)
   await page.waitForLoadState('networkidle')

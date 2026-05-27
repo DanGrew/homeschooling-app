@@ -139,7 +139,7 @@ function buildCgPlayerPanel(idx, player, avatarEntries, allPlayers, onChange) {
     cgMakeSpeak(btn, img.alt);
     btn.addEventListener('click', function() {
       var newPlayers = allPlayers.map(function(p, j) {
-        var nameDefault = [p.name, entry.name, entry.id].filter(Boolean)[0];
+        var nameDefault = [entry.name, entry.id].filter(Boolean)[0];
         var updates = [{ icon: entry.id, name: nameDefault }].filter(function() { return j === idx; });
         return Object.assign.apply(Object, [{}].concat([p], updates));
       });
