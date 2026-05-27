@@ -435,6 +435,12 @@
     "type": "lesson"
   },
   {
+    "id": "pairs",
+    "source": "Pairs",
+    "title": "Pairs",
+    "type": "game"
+  },
+  {
     "id": "puzzle",
     "source": "Puzzle",
     "title": "Puzzle",

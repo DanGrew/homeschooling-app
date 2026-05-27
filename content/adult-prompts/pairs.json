@@ -1,0 +1,10 @@
+{
+  "activity": "pairs",
+  "prompts": [
+    { "type": "ask", "text": "Memory prediction: 'Do you remember where the other [animal/item] is? Have a think before you tap.' Pause — let them recall." },
+    { "type": "say", "text": "After a mismatch: 'That's ok — now you know where that one is. Remember it for later.' Reframes the miss as useful information." },
+    { "type": "ask", "text": "Counting: 'How many pairs have you found so far? Can you count them?' Point to the tray as they count." },
+    { "type": "say", "text": "Independence framing: 'You choose which card to flip — there's no wrong choice.' Step back before they tap." },
+    { "type": "ask", "text": "Vocabulary: 'What's that one called? Have you seen one before? What do you know about it?' — on every new reveal." }
+  ]
+}

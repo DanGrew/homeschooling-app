@@ -47,6 +47,8 @@ var gameState;
 var gameMode = 'shared';
 var allEntries;
 var conceptNames = {};
+var currentTags = [];
+var eventFired = false;
 
 var PAIRS_NOOP = function() {};
 var PAIRS_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
@@ -100,6 +102,8 @@ fetch('../../../content/dictionary/dictionary.json')
   });
 
 function startGame(cfg) {
+  currentTags = cfg.tags || [];
+  eventFired = false;
   var contentEntries = filterByTags(allEntries, cfg.tags);
   var contentSet = buildContentSet(contentEntries, GRID_PAIRS[cfg.gridSize]);
   var players = cfg.players.slice(0, cfg.playerCount).map(function(p, i) {
@@ -161,6 +165,17 @@ function applyEvent(ev, cardIndex) {
       pairsFlashInvalid(gameScreen, cardIndex);
     },
     game_complete: function() {
+      if (!eventFired) {
+        eventFired = true;
+        window.__recordLearningEvent && window.__recordLearningEvent({
+          version: 1,
+          type: 'learning_completed',
+          timestamp: Date.now(),
+          learning_id: 'pairs',
+          variant_id: currentTags.join('-'),
+          activity_id: 'pairs'
+        });
+      }
       setTimeout(function() {
         showScreen('summary');
         renderPairsSummary(summaryScreen, gameState, function() {
@@ -189,11 +204,13 @@ function speakCard(cardIndex) {
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import { speakInterrupt } from '../../../components/speech/speech-ui.js';
+import { recordLearningEvent } from '../../../core/telemetry/learning-events.js';
 document.querySelectorAll('[data-speak]').forEach(function(el) {
   makeSpeakable(el, el.getAttribute('data-speak'));
 });
 window.__makeSpeakable = makeSpeakable;
 window.__speakInterrupt = speakInterrupt;
+window.__recordLearningEvent = recordLearningEvent;
 </script>
 </body>
 </html>
