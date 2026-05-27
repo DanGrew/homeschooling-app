@@ -8,6 +8,9 @@ var paintPaletteEnabled = true;
 var paintUndoStack = [];
 var PAINT_UNDO_MAX = 5;
 var paintBrushSize = 1;
+var paintBgImage = null;
+var paintBgScaleIdx = 2;
+var PAINT_BG_SCALES = [0.5, 0.75, 1.0, 1.25, 1.5];
 
 var PAINT_ACTIVE_ATTR = {
   true: function(btn) { btn.setAttribute('data-active', ''); },
@@ -138,25 +141,56 @@ function paintClearCanvas() {
   paintUndoStack = [];
 }
 
+function paintDrawBackground(img) {
+  var vp = paintState.viewport;
+  var vw = vp.width;
+  var vh = vp.height;
+  var base = Math.max(vw / img.width, vh / img.height);
+  var total = base * PAINT_BG_SCALES[paintBgScaleIdx];
+  var sw = img.width * total;
+  var sh = img.height * total;
+  var dx = vp.x + (vw - sw) / 2;
+  var dy = vp.y + (vh - sh) / 2;
+  paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
+  paintBgCtx.drawImage(img, dx, dy, sw, sh);
+}
+
 function paintLoadBackground(src) {
+  paintBgScaleIdx = 2;
+  paintRenderBgScaleBtns();
   var img = new Image();
   img.addEventListener('load', function() {
-    var vp = paintState.viewport;
-    var vw = vp.width;
-    var vh = vp.height;
-    var scale = Math.max(vw / img.width, vh / img.height);
-    var sw = img.width * scale;
-    var sh = img.height * scale;
-    var dx = vp.x + (vw - sw) / 2;
-    var dy = vp.y + (vh - sh) / 2;
-    paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
-    paintBgCtx.drawImage(img, dx, dy, sw, sh);
+    paintBgImage = img;
+    paintDrawBackground(img);
   });
   img.src = src;
 }
 
+var PAINT_SCALE_AT_LIMIT = { true: '0.3', false: '1' };
+
+function paintSetBgScale(delta) {
+  var next = paintBgScaleIdx + delta;
+  [PAINT_BG_SCALES[next]].filter(Boolean).forEach(function() {
+    [paintBgImage].filter(Boolean).forEach(function(img) {
+      paintBgScaleIdx = next;
+      paintDrawBackground(img);
+      paintRenderBgScaleBtns();
+    });
+  });
+}
+
+function paintRenderBgScaleBtns() {
+  var up = document.getElementById('paint-bg-scale-up-btn');
+  var dn = document.getElementById('paint-bg-scale-dn-btn');
+  [up].filter(Boolean).forEach(function(b) { b.style.opacity = PAINT_SCALE_AT_LIMIT[String(paintBgScaleIdx >= PAINT_BG_SCALES.length - 1)]; });
+  [dn].filter(Boolean).forEach(function(b) { b.style.opacity = PAINT_SCALE_AT_LIMIT[String(paintBgScaleIdx <= 0)]; });
+}
+
 function paintClearBackground() {
   paintBgCtx.clearRect(0, 0, paintBgCtx.canvas.width, paintBgCtx.canvas.height);
+  paintBgImage = null;
+  paintBgScaleIdx = 2;
+  paintRenderBgScaleBtns();
   paintCloseBgPanel();
 }
 

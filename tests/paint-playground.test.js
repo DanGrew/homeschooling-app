@@ -427,6 +427,74 @@ test('viewport has canvas edge outline', async ({ page }) => {
   expect(outline).toContain('3px')
 })
 
+test('bg scale buttons visible', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="paint-bg-scale-up-btn"]')).toBeVisible()
+  await expect(page.locator('[data-testid="paint-bg-scale-dn-btn"]')).toBeVisible()
+})
+
+test('bg scale down button dimmed at minimum after long presses', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-bg-btn"]')
+  await page.waitForSelector('#paint-bg-grid img')
+  await page.locator('#paint-bg-grid img').first().click()
+  await page.waitForFunction(function() {
+    var c = document.getElementById('paint-bg'); var d = c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+    for (var i=3;i<d.length;i+=4){if(d[i]>0)return true;} return false;
+  })
+  var fire = async function(id) {
+    await page.locator(id).evaluate(function(el) { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true, pointerId:99 })) })
+    await page.waitForTimeout(700)
+    await page.locator(id).evaluate(function(el) { el.dispatchEvent(new PointerEvent('pointerup', { bubbles:true, pointerId:99 })) })
+  }
+  await fire('[data-testid="paint-bg-scale-dn-btn"]')
+  await fire('[data-testid="paint-bg-scale-dn-btn"]')
+  await fire('[data-testid="paint-bg-scale-dn-btn"]')
+  await fire('[data-testid="paint-bg-scale-dn-btn"]')
+  const opacity = await page.locator('[data-testid="paint-bg-scale-dn-btn"]').evaluate(el => el.style.opacity)
+  expect(opacity).toBe('0.3')
+})
+
+test('bg scale up button dimmed at maximum after long presses', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-bg-btn"]')
+  await page.waitForSelector('#paint-bg-grid img')
+  await page.locator('#paint-bg-grid img').first().click()
+  await page.waitForFunction(function() {
+    var c = document.getElementById('paint-bg'); var d = c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+    for (var i=3;i<d.length;i+=4){if(d[i]>0)return true;} return false;
+  })
+  var fire = async function(id) {
+    await page.locator(id).evaluate(function(el) { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true, pointerId:99 })) })
+    await page.waitForTimeout(700)
+    await page.locator(id).evaluate(function(el) { el.dispatchEvent(new PointerEvent('pointerup', { bubbles:true, pointerId:99 })) })
+  }
+  await fire('[data-testid="paint-bg-scale-up-btn"]')
+  await fire('[data-testid="paint-bg-scale-up-btn"]')
+  await fire('[data-testid="paint-bg-scale-up-btn"]')
+  await fire('[data-testid="paint-bg-scale-up-btn"]')
+  const opacity = await page.locator('[data-testid="paint-bg-scale-up-btn"]').evaluate(el => el.style.opacity)
+  expect(opacity).toBe('0.3')
+})
+
+test('selecting new background resets scale to 100%', async ({ page }) => {
+  await page.goto(URL)
+  await page.click('[data-testid="paint-bg-btn"]')
+  await page.waitForSelector('#paint-bg-grid img')
+  await page.locator('#paint-bg-grid img').first().click()
+  await page.waitForFunction(function() {
+    var c = document.getElementById('paint-bg'); var d = c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+    for (var i=3;i<d.length;i+=4){if(d[i]>0)return true;} return false;
+  })
+  await page.locator('[data-testid="paint-bg-scale-up-btn"]').evaluate(function(el) { el.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true, pointerId:99 })) })
+  await page.waitForTimeout(700)
+  await page.locator('[data-testid="paint-bg-scale-up-btn"]').evaluate(function(el) { el.dispatchEvent(new PointerEvent('pointerup', { bubbles:true, pointerId:99 })) })
+  await page.click('[data-testid="paint-bg-btn"]')
+  await page.locator('#paint-bg-grid img').first().click()
+  const opacity = await page.locator('[data-testid="paint-bg-scale-up-btn"]').evaluate(el => el.style.opacity)
+  expect(opacity).not.toBe('0.3')
+})
+
 test('background canvas has grayscale CSS filter applied', async ({ page }) => {
   await page.goto(URL)
   const filter = await page.locator('[data-testid="paint-bg"]').evaluate(el => el.style.filter)
