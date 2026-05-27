@@ -111,8 +111,7 @@ test('draw advances to next player', async ({ page }) => {
   const firstName = await page.getByTestId('domino-tray-name').textContent()
   await page.getByTestId('domino-draw-btn').click()
   await page.getByTestId('domino-handover-ready').click()
-  const secondName = await page.getByTestId('domino-tray-name').textContent()
-  expect(secondName).not.toBe(firstName)
+  await expect(page.getByTestId('domino-tray-name')).not.toHaveText(firstName.trim())
 })
 
 test('valid placement adds tile to board and removes from tray', async ({ page }) => {

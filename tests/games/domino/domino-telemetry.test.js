@@ -54,6 +54,7 @@ test('game_start includes player ids', async ({ page }) => {
 
 test('turn_start fires after ready dismissed', async ({ page }) => {
   await startGame(page)
+  await page.waitForFunction(() => window._dominoEvents.some(function(e) { return e.type === 'turn_start' }))
   const events = await getEvents(page, 'turn_start')
   expect(events).toHaveLength(1)
   expect(events[0].detail.player_id).toBe('p0')
