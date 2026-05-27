@@ -36,26 +36,21 @@ Object.keys(groups).forEach(function(key) {
 
 console.log('Manifests written to content/dictionary/manifests/');
 
-// puzzle — manifest is hand-maintained (name/grids need human input)
-// warn about any puzzle dirs with full.jpg not registered in the manifest
+// puzzle — manifest is hand-maintained (name/grids/image need human input)
 const puzzleManifestPath = path.join(__dirname, '..', 'content/puzzle/manifest.json');
-const puzzleFilesDir = path.join(__dirname, '..', 'assets/puzzle');
 const puzzleManifest = fs.existsSync(puzzleManifestPath)
   ? JSON.parse(fs.readFileSync(puzzleManifestPath, 'utf8'))
   : [];
-const registeredIds = new Set(puzzleManifest.map(e => e.id));
-const orphans = fs.existsSync(puzzleFilesDir)
-  ? fs.readdirSync(puzzleFilesDir).filter(d =>
-      fs.statSync(path.join(puzzleFilesDir, d)).isDirectory() &&
-      fs.existsSync(path.join(puzzleFilesDir, d, 'full.jpg')) &&
-      !registeredIds.has(d)
-    )
-  : [];
-if (orphans.length) {
-  console.warn('⚠️  Puzzle dirs with full.jpg not in manifest — add to content/puzzle/manifest.json:');
-  orphans.forEach(id => console.warn('   ' + id));
+const puzzleMissingImage = puzzleManifest.filter(function(e) {
+  if (!e.image) return true;
+  var imgPath = path.join(__dirname, '..', e.image.replace(/^(\.\.\/)+/, ''));
+  return !fs.existsSync(imgPath);
+});
+if (puzzleMissingImage.length) {
+  console.warn('⚠️  Puzzle entries with missing image — check content/puzzle/manifest.json:');
+  puzzleMissingImage.forEach(function(e) { console.warn('   ' + e.id + ': ' + (e.image || '(no image field)')); });
 } else {
-  console.log('content/puzzle/manifest.json: all puzzle dirs registered');
+  console.log('content/puzzle/manifest.json: all images present');
 }
 
 var lessonsDir = path.join(__dirname, '..', 'content/lessons');
