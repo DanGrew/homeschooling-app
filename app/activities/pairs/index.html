@@ -53,6 +53,14 @@ var eventFired = false;
 var PAIRS_NOOP = function() {};
 var PAIRS_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
 var PAIRS_BLOCKED_PHASES = { resolving: true, complete: true };
+var PAIRS_EVENT_KEY = { 'true': 'fired', 'false': 'pending' };
+var PAIRS_EVENT_HANDLERS = {
+  fired: PAIRS_NOOP,
+  pending: function() {
+    eventFired = true;
+    window.__recordLearningEvent({ version: 1, type: 'learning_completed', timestamp: Date.now(), learning_id: 'pairs', variant_id: currentTags.join('-'), activity_id: 'pairs' });
+  }
+};
 
 function showScreen(name) {
   var screens = { setup: setupScreen, game: gameScreen, summary: summaryScreen };
@@ -102,7 +110,7 @@ fetch('../../../content/dictionary/dictionary.json')
   });
 
 function startGame(cfg) {
-  currentTags = cfg.tags || [];
+  currentTags = cfg.tags;
   eventFired = false;
   var contentEntries = filterByTags(allEntries, cfg.tags);
   var contentSet = buildContentSet(contentEntries, GRID_PAIRS[cfg.gridSize]);
@@ -165,17 +173,7 @@ function applyEvent(ev, cardIndex) {
       pairsFlashInvalid(gameScreen, cardIndex);
     },
     game_complete: function() {
-      if (!eventFired) {
-        eventFired = true;
-        window.__recordLearningEvent && window.__recordLearningEvent({
-          version: 1,
-          type: 'learning_completed',
-          timestamp: Date.now(),
-          learning_id: 'pairs',
-          variant_id: currentTags.join('-'),
-          activity_id: 'pairs'
-        });
-      }
+      PAIRS_EVENT_HANDLERS[PAIRS_EVENT_KEY[String(eventFired)]]();
       setTimeout(function() {
         showScreen('summary');
         renderPairsSummary(summaryScreen, gameState, function() {
