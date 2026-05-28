@@ -43,7 +43,6 @@
 .find-row.crossed .btn-cross{display:none;}
 .find-row.crossed .btn-undo{display:inline-block;}
 @media(orientation:portrait){
-  .nav-bar{flex-wrap:wrap;}
   #filter-bar{flex-direction:row;flex-wrap:wrap;}
   #game-body{flex-direction:column;}
   #list-panel{width:auto;height:160px;border-left:none;border-top:2px solid #eee;}
