@@ -317,6 +317,7 @@ var MODES=[
     onRender:function(pic){renderPicture(pic);}
   });
 
+  var pictures=[];
   Dictionary.init('../../../content/dictionary/');
   loadColouringPictures(pictures,function(){
     buildFilterBar(pictures,function(f){paginator.reset(f);});
