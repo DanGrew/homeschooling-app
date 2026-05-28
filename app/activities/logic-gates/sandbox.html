@@ -197,9 +197,10 @@ var _SILENT_RESET_SVG = {
   'true':  function(svg) { _SILENT_RESET_HAS_FN[String(typeof svg._silentReset === 'function')](svg); },
   'false': function() {}
 };
+function _doReset(svg) { _SILENT_RESET_SVG[String(svg !== null)](svg); }
 function _resetSwitches() {
   var svg = _findCurrentSvg();
-  _SILENT_RESET_SVG[String(svg !== null)](svg);
+  setTimeout(function() { _doReset(svg); }, 1500);
 }
 
 var PAGE_CTRL = {
