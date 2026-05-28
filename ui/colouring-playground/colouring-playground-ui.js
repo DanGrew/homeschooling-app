@@ -192,6 +192,11 @@ export function initColouringPlayground() {
     false:function(el,s){el.style.cursor='pointer';el.addEventListener('click',function(){CLICK_HANDLER[mode](el,s);});}
   };
 
+  var SHAPE_DEFAULT_FILL={
+    'true':function(s){return [s.colour,'none'].filter(Boolean)[0];},
+    'false':function(){return 'url(#dots)';}
+  };
+
   resetBtn.addEventListener('click',function(){
     filledEls.forEach(function(el){el.setAttribute('fill','url(#dots)');});
     filledEls=new Set();eventFired=false;resetBtn.style.display='none';
@@ -208,7 +213,7 @@ export function initColouringPlayground() {
     svg.innerHTML='';svg.setAttribute('viewBox',pic.vb);
     injectDotPattern(svg);
     pic.shapes.forEach(function(s){
-      var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
+      var attrs=Object.assign({},{fill:SHAPE_DEFAULT_FILL[String(!!s.noColour)](s),stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       var el=ns(s.tag,attrs);
       ATTACH_CLICK[String(!!s.noColour)](el,s);
       svg.appendChild(el);
