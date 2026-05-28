@@ -8,25 +8,26 @@
   "pageControls": ["SHOW_SINGLE_AND_GATE", "LOCK_SWITCH_B"],
   "steps": [
     {
-      "prompt": "See that switch? Tap switch A!",
+      "prompt": "See the top switch? Give it a tap!",
       "expect": "SWITCH_A_ON",
-      "feedback": "The lamp lights up! You turned switch A on."
+      "feedback": "Top switch is on — but look, the lamp is still dark! This gate is picky. It needs both switches."
     },
     {
-      "prompt": "Now tap switch A again — turn it off.",
+      "prompt": "Now turn the top switch off again.",
       "expect": "SWITCH_A_OFF",
-      "feedback": "The lamp went out. Switch off, lamp off!"
+      "feedback": "Off! Now let's try the bottom switch."
     },
     {
-      "prompt": "There's another switch — switch B. What do you think happens when you turn it on?",
+      "prompt": "Try the bottom switch!",
       "expect": "SWITCH_B_ON",
-      "feedback": "Hmm — B is on but the lamp is still out! This gate needs both switches.",
-      "pageControls": ["UNLOCK_SWITCH_B"]
+      "feedback": "Bottom switch is on... but the lamp is still out! It needs both!",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
     },
     {
-      "prompt": "Turn switch A on too!",
+      "prompt": "Tap the top switch too!",
       "expect": "SWITCH_A_ON",
-      "feedback": "Both on — the lamp lights up! This gate needs both switches. It's called an AND gate!"
+      "feedback": "Both switches on — the lamp lights up! This gate needs both. It's called an AND gate!",
+      "pageControls": ["UNLOCK_SWITCH_A", "LOCK_SWITCH_B"]
     }
   ]
 }

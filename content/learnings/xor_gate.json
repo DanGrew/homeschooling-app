@@ -5,22 +5,22 @@
   "guide": "cat",
   "source": "Logic Gates",
   "criteria": ["cl.technical-vocab", "cl.prediction", "maths.pattern", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_SWITCH_B"],
   "steps": [
     {
-      "prompt": "This is an XOR gate — a tricky one! What do you think happens when you turn A on?",
+      "prompt": "This is an XOR gate — a tricky one! What do you think happens when you turn the top switch on?",
       "expect": "SWITCH_A_ON",
-      "feedback": "Fan spins! XOR works with just one. Now turn B on too — what do you think happens?"
+      "feedback": "Fan spins! XOR works with just one. Now turn the bottom switch on too — what do you think happens?"
     },
     {
-      "prompt": "Now turn switch B on.",
+      "prompt": "Now turn the bottom switch on.",
       "expect": "SWITCH_B_ON",
-      "feedback": "Fan stops! Both on and it stops — XOR only works when the switches are different. Turn B off.",
-      "pageControls": ["LOCK_SWITCH_A"]
+      "feedback": "Fan stops! Both on and it stops — XOR only works when the switches are different. Turn the bottom switch off.",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
     },
     {
       "expect": "SWITCH_B_OFF",
-      "feedback": "Fan spins again! XOR needs the switches to be different — one on, one off. Same means stop!",
-      "pageControls": ["UNLOCK_SWITCH_A"]
+      "feedback": "Fan spins again! XOR needs the switches to be different — one on, one off. Same means stop!"
     }
   ]
 }

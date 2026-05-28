@@ -5,19 +5,21 @@
   "guide": "cat",
   "source": "Logic Gates",
   "criteria": ["cl.technical-vocab", "cl.prediction", "maths.pattern", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_SWITCH_B"],
   "steps": [
     {
-      "prompt": "This is an OR gate. I wonder — will switch A be enough to make the fan spin?",
+      "prompt": "This is an OR gate. I wonder — will the top switch be enough to make the fan spin?",
       "expect": "SWITCH_A_ON",
-      "feedback": "The fan spins! OR only needs one switch. Turn A off — does B work too?"
+      "feedback": "The fan spins! OR only needs one switch. Turn the top switch off — does the bottom work too?"
     },
     {
       "expect": "SWITCH_A_OFF",
-      "feedback": "Fan stops. Now try switch B."
+      "feedback": "Fan stops. Now try the bottom switch."
     },
     {
       "expect": "SWITCH_B_ON",
-      "feedback": "B works too! OR turns on when either switch is on — A or B, it doesn't mind. That's the pattern!"
+      "feedback": "The bottom switch works too! OR turns on when either switch is on — top or bottom, it doesn't mind. That's OR!",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
     }
   ]
 }

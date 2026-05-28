@@ -8,9 +8,9 @@
   "pageControls": ["SHOW_SINGLE_NOT_GATE", "SET_SWITCH_A_OFF"],
   "steps": [
     {
-      "prompt": "The lamp is already on! This is a NOT gate — it does the opposite. What do you think happens if you turn switch A on?",
+      "prompt": "The lamp is already on! This is a NOT gate — it does the opposite. What do you think happens if you turn the switch on?",
       "expect": "SWITCH_A_ON",
-      "feedback": "The lamp went out! NOT flips it — switch on means lamp off. Turn A off again."
+      "feedback": "The lamp went out! NOT flips it — switch on means lamp off. Turn the switch off again."
     },
     {
       "expect": "SWITCH_A_OFF",

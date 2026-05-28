@@ -43,7 +43,7 @@ function updateWire(wire, active, colour) { WIRE_FNS[+active](wire, colour); }
 
 function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
   const W = 64, H = 32, R = 16;
-  const g = el('g', { 'data-switch': id, 'data-switch-label': label, style: 'cursor:pointer' });
+  const g = el('g', { 'data-switch': id, 'data-switch-label': id, style: 'cursor:pointer' });
   const track = el('rect', {
     x: cx - W/2, y: cy - H/2, width: W, height: H, rx: R,
     fill: '#ddd', stroke: '#bbb', 'stroke-width': '2'
@@ -59,7 +59,7 @@ function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
   lbl.textContent = label;
   g.appendChild(track); g.appendChild(knob); g.appendChild(lbl);
   svg.appendChild(g);
-  DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](g, 'Switch ' + label);
+  DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](g, label + ' switch');
 
   function activateState() {
     track.setAttribute('fill', colour);
@@ -190,7 +190,7 @@ function buildStation(config, onToggle) {
   }
 
   const inputLabelMap = {};
-  config.inputs.forEach(function(inp) { inputLabelMap[inp.id] = inp.label; });
+  config.inputs.forEach(function(inp) { inputLabelMap[inp.id] = inp.id; });
   const STATE_SUFFIX = { 'true': 'ON', 'false': 'OFF' };
   const OUTPUT_EVENT = { 'true': 'OUTPUT_ON', 'false': 'OUTPUT_OFF' };
   const LAMP_ON_DISPATCH = {
