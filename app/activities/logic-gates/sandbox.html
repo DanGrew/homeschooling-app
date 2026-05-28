@@ -98,35 +98,76 @@ buildSimpleFilterBar([
 
 function _findCurrentSvg() { return document.querySelector('#puzzle-area svg'); }
 
+var _FIND_SWITCH_IN_SVG = {
+  'true':  function(svg, label) { return svg.querySelector('[data-switch-label="' + label + '"]'); },
+  'false': function() { return null; }
+};
+function _findSwitch(label) {
+  var svg = _findCurrentSvg();
+  return _FIND_SWITCH_IN_SVG[String(svg !== null)](svg, label);
+}
+
+var _RESET_ITEM = {
+  'true':  function(item) { paginator.reset([item]); },
+  'false': function() {}
+};
 function _navigateTo(id) {
   var item = allItems.filter(function(i) { return i.id === id; })[0];
-  if (item) paginator.reset([item]);
+  _RESET_ITEM[String(item !== undefined)](item);
 }
 
+var _LOCK_EL = {
+  'true':  function(g) { g.style.pointerEvents = 'none'; g.style.opacity = '0.4'; },
+  'false': function() {}
+};
 function _lockSwitch(label) {
-  var g = (_findCurrentSvg() || {}).querySelector && _findCurrentSvg().querySelector('[data-switch-label="' + label + '"]');
-  if (g) { g.style.pointerEvents = 'none'; g.style.opacity = '0.4'; }
+  var g = _findSwitch(label);
+  _LOCK_EL[String(g !== null)](g);
 }
 
+var _UNLOCK_EL = {
+  'true':  function(g) { g.style.pointerEvents = ''; g.style.opacity = ''; },
+  'false': function() {}
+};
 function _unlockSwitch(label) {
-  var g = (_findCurrentSvg() || {}).querySelector && _findCurrentSvg().querySelector('[data-switch-label="' + label + '"]');
-  if (g) { g.style.pointerEvents = ''; g.style.opacity = ''; }
+  var g = _findSwitch(label);
+  _UNLOCK_EL[String(g !== null)](g);
 }
 
+var _UNLOCK_ALL_SVG = {
+  'true':  function(svg) { svg.querySelectorAll('[data-switch-label]').forEach(function(g) { g.style.pointerEvents = ''; g.style.opacity = ''; }); },
+  'false': function() {}
+};
 function _unlockAll() {
-  var svg = _findCurrentSvg();
-  if (!svg) return;
-  svg.querySelectorAll('[data-switch-label]').forEach(function(g) { g.style.pointerEvents = ''; g.style.opacity = ''; });
+  _UNLOCK_ALL_SVG[String(_findCurrentSvg() !== null)](_findCurrentSvg());
 }
 
+var _GET_STATES = {
+  'true':  function(svg) { return svg._getInputStates(); },
+  'false': function() { return {}; }
+};
+var _TOGGLE_IF_ON = {
+  'true':  function(svg, id) { svg._handleToggle(id); },
+  'false': function() {}
+};
+var _APPLY_SWITCH_OFF_G = {
+  'true': function(svg, g) {
+    var id = g.getAttribute('data-switch');
+    var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
+    _TOGGLE_IF_ON[String(!!states[id])](svg, id);
+  },
+  'false': function() {}
+};
+var _APPLY_SWITCH_OFF_SVG = {
+  'true': function(svg, label) {
+    var g = svg.querySelector('[data-switch-label="' + label + '"]');
+    _APPLY_SWITCH_OFF_G[String(g !== null)](svg, g);
+  },
+  'false': function() {}
+};
 function _setSwitchOff(label) {
   var svg = _findCurrentSvg();
-  if (!svg) return;
-  var g = svg.querySelector('[data-switch-label="' + label + '"]');
-  if (!g) return;
-  var id = g.getAttribute('data-switch');
-  var states = svg._getInputStates ? svg._getInputStates() : {};
-  if (states[id]) svg._handleToggle(id);
+  _APPLY_SWITCH_OFF_SVG[String(svg !== null)](svg, label);
 }
 
 var PAGE_CTRL = {
@@ -144,8 +185,12 @@ var PAGE_CTRL = {
   'PAGE_CONTROL_RESET':         function() { _unlockAll(); }
 };
 
+var _CTRL_DISPATCH = {
+  'true':  function(type) { PAGE_CTRL[type](); },
+  'false': function() {}
+};
 window.addEventListener('page:control', function(e) {
-  if (e.detail.type in PAGE_CTRL) PAGE_CTRL[e.detail.type]();
+  _CTRL_DISPATCH[String(e.detail.type in PAGE_CTRL)](e.detail.type);
 });
 
 var _guidance = new GuidanceService();
