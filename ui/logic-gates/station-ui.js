@@ -106,6 +106,21 @@ function buildGatePill(svg, cx, cy, label, colour) {
   return g;
 }
 
+function animatePulse(svg, wire, delay, colour) {
+  const d = wire.getAttribute('d');
+  const circle = el('circle', { r: '7', fill: colour, opacity: '0',
+    style: 'pointer-events:none;filter:drop-shadow(0 0 4px ' + colour + ')' });
+  const anim = document.createElementNS(SVG_NS, 'animateMotion');
+  anim.setAttribute('dur', '0.22s');
+  anim.setAttribute('begin', 'indefinite');
+  anim.setAttribute('fill', 'freeze');
+  anim.setAttribute('path', d);
+  circle.appendChild(anim);
+  svg.appendChild(circle);
+  setTimeout(function() { circle.setAttribute('opacity', '0.85'); anim.beginElement(); }, delay * 1000);
+  setTimeout(function() { circle.remove(); }, (delay + 0.25) * 1000);
+}
+
 function buildStation(config, onToggle) {
   config = Object.assign({ onUpdate: NOOP }, config);
   const { buildOutput, updateOutput, GATE_COLOURS } = window.OutputUI;
@@ -159,6 +174,9 @@ function buildStation(config, onToggle) {
   }
   config.outputs.forEach(buildOutputWire);
 
+  const pulseLayer = el('g', {});
+  svg.appendChild(pulseLayer);
+
   // Components on top of wires
   function buildInputComponent(input) {
     const p = positions[input.id];
@@ -180,7 +198,33 @@ function buildStation(config, onToggle) {
   svg.appendChild(outputG);
   DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](outputG, out0.type);
 
-  function evaluate() {
+  function nodeDepths() {
+    const depths = {};
+    config.inputs.forEach(function(i) { depths[i.id] = 0; });
+    config.nodes.forEach(function(n) {
+      depths[n.id] = n.inputs.reduce(function(m, id) { return Math.max(m, depths[id]); }, 0) + 1;
+    });
+    return depths;
+  }
+
+  function pulseInput(input) { animatePulse(pulseLayer, wires['in_' + input.id], 0, nodeColourMap[inputNodeMap[input.id].id]); }
+  function pulsePair(depths, HOP, pair) { animatePulse(pulseLayer, wires['gate_' + pair.srcId + '_to_' + pair.nodeId], depths[pair.srcId] * HOP, nodeColourMap[pair.srcId]); }
+
+  function runPulses(nodeValues) {
+    const HOP = 0.22;
+    const depths = nodeDepths();
+    config.inputs.filter(function(inp) { return inputStates[inp.id]; }).forEach(pulseInput);
+    nodeWirePairs.filter(function(p) { return nodeValues[p.srcId]; }).forEach(function(p) { pulsePair(depths, HOP, p); });
+    PULSE_OUTPUT[String(!!nodeValues[out0.source])](depths, HOP);
+  }
+
+  const PULSE_OUTPUT = {
+    'true':  function(depths, HOP) { animatePulse(pulseLayer, wires['out_' + out0.id], depths[out0.source] * HOP, nodeColourMap[out0.source]); },
+    'false': function() {}
+  };
+  const DO_PULSE = { 'true': runPulses, 'false': NOOP };
+
+  function evaluate(animate) {
     const nodeValues = Object.assign({}, inputStates);
     config.nodes.forEach(n => {
       nodeValues[n.id] = window.LogicEngine.evalGate(n.type, n.inputs.map(id => !!nodeValues[id]));
@@ -195,6 +239,7 @@ function buildStation(config, onToggle) {
     });
     updateWire(wires['out_' + out0.id], active, nodeColourMap[out0.source]);
     updateOutput(outputG, out0.type, active);
+    DO_PULSE[String(!!animate)](nodeValues);
     return active;
   }
 
@@ -210,7 +255,7 @@ function buildStation(config, onToggle) {
   function handleToggle(id) {
     inputStates[id] = !inputStates[id];
     switchMetas[id].meta.applyState(inputStates[id]);
-    const output = evaluate();
+    const output = evaluate(true);
     window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'SWITCH_' + inputLabelMap[id] + '_' + STATE_SUFFIX[String(inputStates[id])] } }));
     window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: OUTPUT_EVENT[String(output)] } }));
     LAMP_ON_DISPATCH[String(output)]();
