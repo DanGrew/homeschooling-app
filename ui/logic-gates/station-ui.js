@@ -43,7 +43,7 @@ function updateWire(wire, active, colour) { WIRE_FNS[+active](wire, colour); }
 
 function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
   const W = 64, H = 32, R = 16;
-  const g = el('g', { 'data-switch': id, style: 'cursor:pointer' });
+  const g = el('g', { 'data-switch': id, 'data-switch-label': label, style: 'cursor:pointer' });
   const track = el('rect', {
     x: cx - W/2, y: cy - H/2, width: W, height: H, rx: R,
     fill: '#ddd', stroke: '#bbb', 'stroke-width': '2'

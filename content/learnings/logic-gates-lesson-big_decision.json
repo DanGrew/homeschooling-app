@@ -1,0 +1,20 @@
+{
+  "id": "logic-gates-lesson-big_decision",
+  "title": "Big Decision",
+  "number": 8,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["cl.prediction", "uw.cause-effect", "psed.independence", "cl.topic-vocabulary", "pd.fine-motor", "psed.self-regulation"],
+  "pageControls": ["SHOW_CONVERGING_OR_OR_AND"],
+  "steps": [
+    {
+      "prompt": ["Three gates — this is the big one! I wonder... can you find a way to light the lamp? Have a go!", "Three gates! There's more than one way — see if you can find a way to light the lamp."],
+      "expect": "LAMP_ON",
+      "feedback": ["You found a way! And here's the secret — there are other ways too. Can you find a different combination?", "The lamp is on! But I wonder — is there another way? Try different switches!"]
+    },
+    {
+      "expect": "LAMP_ON",
+      "feedback": ["Another way! Different switches, same lamp. That's what's special — lots of paths lead to the same answer.", "Found another one! Two different combinations, same result. That's a big decision gate!"]
+    }
+  ]
+}

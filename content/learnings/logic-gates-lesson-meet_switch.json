@@ -1,0 +1,32 @@
+{
+  "id": "logic-gates-lesson-meet_switch",
+  "title": "Meet the Switch",
+  "number": 1,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor", "uw.technology"],
+  "pageControls": ["SHOW_SINGLE_AND_GATE", "LOCK_SWITCH_B"],
+  "steps": [
+    {
+      "prompt": ["See that switch? Tap switch A!", "That's switch A — give it a tap!"],
+      "expect": "SWITCH_A_ON",
+      "feedback": ["The lamp lights up! You turned switch A on.", "Switch A is on — and the lamp glows!"]
+    },
+    {
+      "prompt": ["Now tap switch A again — turn it off.", "Can you turn switch A off?"],
+      "expect": "SWITCH_A_OFF",
+      "feedback": ["The lamp went out. Switch off, lamp off!", "Off! The switch controls the lamp."]
+    },
+    {
+      "prompt": ["There's another switch — switch B. What do you think happens when you turn it on?", "Switch B is there too — have a try! What will happen?"],
+      "expect": "SWITCH_B_ON",
+      "feedback": ["Hmm — B is on but the lamp is still out! This gate needs both switches.", "B is on... but the lamp still needs A too! This one is picky."],
+      "pageControls": ["UNLOCK_SWITCH_B"]
+    },
+    {
+      "prompt": ["Turn switch A on too!", "Now try switch A — what happens with both on?"],
+      "expect": "SWITCH_A_ON",
+      "feedback": ["Both on — the lamp lights up! This gate needs both switches. It's called an AND gate!", "Yes! Both switches on and the lamp is happy. This is an AND gate — it needs both!"]
+    }
+  ]
+}

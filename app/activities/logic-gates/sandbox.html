@@ -25,14 +25,18 @@ window.ACTIVITY_ID = 'logic-gates';
 window.DICT_BASE = '../../../content/dictionary/entries/';
 window.LEARNINGS_BASE = '../../../content/learnings/';
 window.LESSONS = [
-  { id: 'and_gate',                 number: 1, title: 'AND Gate',     puzzle_id: 'and_station' },
-  { id: 'or_gate',                  number: 2, title: 'OR Gate',      puzzle_id: 'or_station' },
-  { id: 'xor_gate',                 number: 3, title: 'XOR Gate',     puzzle_id: 'xor_station' },
-  { id: 'not_gate',                 number: 4, title: 'NOT Gate',     puzzle_id: 'not_station' },
-  { id: 'lesson_2-AND_2-AND-AND',   number: 5, title: 'AND Cascade',  puzzle_id: '2-AND_2-AND-AND' }
+  { id: 'logic-gates-lesson-meet_switch', number: 1, title: 'Meet the Switch' },
+  { id: 'and_gate',               number: 2, title: 'AND Gate',      puzzle_id: 'and_station' },
+  { id: 'or_gate',                number: 3, title: 'OR Gate',       puzzle_id: 'or_station' },
+  { id: 'not_gate',               number: 4, title: 'NOT Gate' },
+  { id: 'xor_gate',               number: 5, title: 'XOR Gate',      puzzle_id: 'xor_station' },
+  { id: 'lesson_2-AND_2-AND-AND', number: 6, title: 'AND Cascade',   puzzle_id: '2-AND_2-AND-AND' },
+  { id: 'logic-gates-lesson-chain',        number: 7, title: 'Chain of Gates' },
+  { id: 'logic-gates-lesson-big_decision', number: 8, title: 'Big Decision' }
 ];
 window.EXERCISES = [
-  { id: 'exercise_2-AND_2-AND-AND', number: 1, title: 'AND Cascade',  puzzle_id: '2-AND_2-AND-AND' }
+  { id: 'logic-gates-exercise-chain',    number: 1, title: 'Follow the Chain' },
+  { id: 'logic-gates-exercise-two_ways', number: 2, title: 'Two Ways' }
 ];
 </script>
 
@@ -91,6 +95,58 @@ buildSimpleFilterBar([
   filterFn = FILTERS[cat];
   applyFilter();
 }, 'all');
+
+function _findCurrentSvg() { return document.querySelector('#puzzle-area svg'); }
+
+function _navigateTo(id) {
+  var item = allItems.filter(function(i) { return i.id === id; })[0];
+  if (item) paginator.reset([item]);
+}
+
+function _lockSwitch(label) {
+  var g = (_findCurrentSvg() || {}).querySelector && _findCurrentSvg().querySelector('[data-switch-label="' + label + '"]');
+  if (g) { g.style.pointerEvents = 'none'; g.style.opacity = '0.4'; }
+}
+
+function _unlockSwitch(label) {
+  var g = (_findCurrentSvg() || {}).querySelector && _findCurrentSvg().querySelector('[data-switch-label="' + label + '"]');
+  if (g) { g.style.pointerEvents = ''; g.style.opacity = ''; }
+}
+
+function _unlockAll() {
+  var svg = _findCurrentSvg();
+  if (!svg) return;
+  svg.querySelectorAll('[data-switch-label]').forEach(function(g) { g.style.pointerEvents = ''; g.style.opacity = ''; });
+}
+
+function _setSwitchOff(label) {
+  var svg = _findCurrentSvg();
+  if (!svg) return;
+  var g = svg.querySelector('[data-switch-label="' + label + '"]');
+  if (!g) return;
+  var id = g.getAttribute('data-switch');
+  var states = svg._getInputStates ? svg._getInputStates() : {};
+  if (states[id]) svg._handleToggle(id);
+}
+
+var PAGE_CTRL = {
+  'SHOW_SINGLE_AND_GATE':       function() { _navigateTo('and_station'); },
+  'SHOW_SINGLE_NOT_GATE':       function() { _navigateTo('not_station'); },
+  'SHOW_LINEAR_OR_AND':         function() { _navigateTo('2-OR-1-AND'); },
+  'SHOW_LINEAR_AND_OR':         function() { _navigateTo('2-AND-1-OR'); },
+  'SHOW_CONVERGING_OR_OR_AND':  function() { _navigateTo('2-OR_2-OR-AND'); },
+  'SHOW_CONVERGING_AND_AND_OR': function() { _navigateTo('2-AND_2-AND-OR'); },
+  'LOCK_SWITCH_A':              function() { _lockSwitch('A'); },
+  'LOCK_SWITCH_B':              function() { _lockSwitch('B'); },
+  'UNLOCK_SWITCH_A':            function() { _unlockSwitch('A'); },
+  'UNLOCK_SWITCH_B':            function() { _unlockSwitch('B'); },
+  'SET_SWITCH_A_OFF':           function() { _setSwitchOff('A'); },
+  'PAGE_CONTROL_RESET':         function() { _unlockAll(); }
+};
+
+window.addEventListener('page:control', function(e) {
+  if (e.detail.type in PAGE_CTRL) PAGE_CTRL[e.detail.type]();
+});
 
 var _guidance = new GuidanceService();
 window.guidanceService = {

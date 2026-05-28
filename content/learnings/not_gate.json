@@ -4,9 +4,17 @@
   "number": 4,
   "guide": "cat",
   "source": "Logic Gates",
-  "criteria": ["uw.cause-effect"],
+  "criteria": ["cl.technical-vocab", "uw.cause-effect", "cl.prediction", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["SHOW_SINGLE_NOT_GATE", "SET_SWITCH_A_OFF"],
   "steps": [
-    { "prompt": "The lamp is already on! Turn switch A on.", "expect": "SWITCH_A_ON", "feedback": "Lamp goes out! NOT flips the signal. Turn A off again." },
-    { "expect": "SWITCH_A_OFF", "feedback": "Lamp back on! NOT always does the opposite." }
+    {
+      "prompt": ["The lamp is already on! This is a NOT gate — it does the opposite. What do you think happens if you turn switch A on?", "See — the lamp is already glowing! NOT always does the opposite. Turn switch A on — what will happen?"],
+      "expect": "SWITCH_A_ON",
+      "feedback": ["The lamp went out! NOT flips it — switch on means lamp off. Turn A off again.", "Off! NOT always does the opposite. Turn A off — watch what happens."]
+    },
+    {
+      "expect": "SWITCH_A_OFF",
+      "feedback": ["Lamp back on! NOT always does the opposite — switch off means lamp on, switch on means lamp off.", "On again! Off becomes on, on becomes off — that's NOT!"]
+    }
   ]
 }
