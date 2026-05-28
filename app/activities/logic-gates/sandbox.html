@@ -170,6 +170,20 @@ function _setSwitchOff(label) {
   _APPLY_SWITCH_OFF_SVG[String(svg !== null)](svg, label);
 }
 
+var _RESET_SWITCHES_SVG = {
+  'true': function(svg) {
+    var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
+    Object.keys(states).forEach(function(id) {
+      _TOGGLE_IF_ON[String(!!states[id])](svg, id);
+    });
+  },
+  'false': function() {}
+};
+function _resetSwitches() {
+  var svg = _findCurrentSvg();
+  _RESET_SWITCHES_SVG[String(svg !== null)](svg);
+}
+
 var PAGE_CTRL = {
   'SHOW_SINGLE_AND_GATE':       function() { _navigateTo('and_station'); },
   'SHOW_SINGLE_NOT_GATE':       function() { _navigateTo('not_station'); },
@@ -179,9 +193,14 @@ var PAGE_CTRL = {
   'SHOW_CONVERGING_AND_AND_OR': function() { _navigateTo('2-AND_2-AND-OR'); },
   'LOCK_SWITCH_A':              function() { _lockSwitch('A'); },
   'LOCK_SWITCH_B':              function() { _lockSwitch('B'); },
+  'LOCK_SWITCH_C':              function() { _lockSwitch('C'); },
+  'LOCK_SWITCH_D':              function() { _lockSwitch('D'); },
   'UNLOCK_SWITCH_A':            function() { _unlockSwitch('A'); },
   'UNLOCK_SWITCH_B':            function() { _unlockSwitch('B'); },
+  'UNLOCK_SWITCH_C':            function() { _unlockSwitch('C'); },
+  'UNLOCK_SWITCH_D':            function() { _unlockSwitch('D'); },
   'SET_SWITCH_A_OFF':           function() { _setSwitchOff('A'); },
+  'RESET_SWITCHES':             function() { _resetSwitches(); },
   'PAGE_CONTROL_RESET':         function() { _unlockAll(); }
 };
 

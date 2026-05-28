@@ -14,7 +14,8 @@
     },
     {
       "expect": "LAMP_ON",
-      "feedback": "Another way! Different switches, same lamp. That's what's special — lots of paths lead to the same answer."
+      "feedback": "Another way! Different switches, same lamp. That's what's special — lots of paths lead to the same answer.",
+      "pageControls": ["RESET_SWITCHES"]
     }
   ]
 }

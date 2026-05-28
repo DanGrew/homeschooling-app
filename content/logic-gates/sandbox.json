@@ -4,8 +4,8 @@
     "label": "AND",
     "grid": { "cols": 3, "rows": 3 },
     "inputs": [
-      { "id": "A", "state": false, "label": "Top",    "cell": [0, 0] },
-      { "id": "B", "state": false, "label": "Bottom", "cell": [0, 2] }
+      { "id": "A", "state": false, "label": "A", "displayLabel": "Top",    "cell": [0, 0] },
+      { "id": "B", "state": false, "label": "B", "displayLabel": "Bottom", "cell": [0, 2] }
     ],
     "nodes": [
       { "id": "G1", "type": "AND", "inputs": ["A", "B"], "cell": [1, 1] }
@@ -17,8 +17,8 @@
     "label": "OR",
     "grid": { "cols": 3, "rows": 3 },
     "inputs": [
-      { "id": "A", "state": false, "label": "Top",    "cell": [0, 0] },
-      { "id": "B", "state": false, "label": "Bottom", "cell": [0, 2] }
+      { "id": "A", "state": false, "label": "A", "displayLabel": "Top",    "cell": [0, 0] },
+      { "id": "B", "state": false, "label": "B", "displayLabel": "Bottom", "cell": [0, 2] }
     ],
     "nodes": [
       { "id": "G1", "type": "OR",  "inputs": ["A", "B"], "cell": [1, 1] }
@@ -30,8 +30,8 @@
     "label": "XOR",
     "grid": { "cols": 3, "rows": 3 },
     "inputs": [
-      { "id": "A", "state": false, "label": "Top",    "cell": [0, 0] },
-      { "id": "B", "state": false, "label": "Bottom", "cell": [0, 2] }
+      { "id": "A", "state": false, "label": "A", "displayLabel": "Top",    "cell": [0, 0] },
+      { "id": "B", "state": false, "label": "B", "displayLabel": "Bottom", "cell": [0, 2] }
     ],
     "nodes": [
       { "id": "G1", "type": "XOR", "inputs": ["A", "B"], "cell": [1, 1] }
@@ -43,7 +43,7 @@
     "label": "NOT",
     "grid": { "cols": 3, "rows": 1 },
     "inputs": [
-      { "id": "A", "state": false, "label": "A", "cell": [0, 0] }
+      { "id": "A", "state": false, "label": "A", "displayLabel": "", "cell": [0, 0] }
     ],
     "nodes": [
       { "id": "G1", "type": "NOT", "inputs": ["A"], "cell": [1, 0] }

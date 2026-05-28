@@ -18,8 +18,13 @@
     },
     {
       "expect": "SWITCH_B_ON",
-      "feedback": "The bottom switch works too! OR turns on when either switch is on — top or bottom, it doesn't mind. That's OR!",
+      "feedback": "The bottom switch works too! Now try turning the top switch on at the same time!",
       "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
+    },
+    {
+      "expect": "SWITCH_A_ON",
+      "feedback": "Fan still spins! OR works with one or both switches on. That's the difference — both is fine with OR!",
+      "pageControls": ["UNLOCK_SWITCH_A"]
     }
   ]
 }

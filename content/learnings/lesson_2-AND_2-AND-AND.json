@@ -5,15 +5,17 @@
   "guide": "cat",
   "source": "Logic Gates",
   "criteria": ["uw.cause-effect", "cl.sequencing-language", "cl.prediction", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_SWITCH_C", "LOCK_SWITCH_D"],
   "steps": [
     {
-      "prompt": "Two AND gates in a row! First, turn switches A and B on — what do you think happens?",
+      "prompt": "Two AND gates in a row! First, turn the top two switches on — what do you think happens?",
       "expect": ["SWITCH_A_ON", "SWITCH_B_ON"],
-      "feedback": "First AND gate is on! But the lamp needs more — turn C and D on too."
+      "feedback": "First AND gate is on! But the lamp needs more — turn the bottom two switches on too.",
+      "pageControls": ["UNLOCK_SWITCH_C", "UNLOCK_SWITCH_D", "LOCK_SWITCH_A", "LOCK_SWITCH_B"]
     },
     {
       "expect": ["SWITCH_C_ON", "SWITCH_D_ON"],
-      "feedback": "The lamp is lit! First A and B, then C and D — two AND gates, each needing both switches."
+      "feedback": "The lamp is lit! Two AND gates, each needing both switches — both pairs had to be on."
     }
   ]
 }
