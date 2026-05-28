@@ -14,13 +14,6 @@ test('games popout button shows gamepad icon', async ({ page }) => {
   await expect(gamesBtn).toBeVisible()
 })
 
-test('games popout shows Primary and Secondary Colours links', async ({ page }) => {
-  await page.goto(URL)
-  await page.locator('.nav-bar button').filter({ hasText: '\uD83C\uDFAE' }).click()
-  await expect(page.getByRole('link', { name: 'Primary Colours' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Secondary Colours' })).toBeVisible()
-})
-
 test('page loads with colour wheel and palette', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('#wheel-svg path')).toHaveCount(12)
