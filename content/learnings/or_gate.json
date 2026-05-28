@@ -7,17 +7,17 @@
   "criteria": ["cl.technical-vocab", "cl.prediction", "maths.pattern", "cl.topic-vocabulary", "pd.fine-motor"],
   "steps": [
     {
-      "prompt": ["This is an OR gate. I wonder — will switch A be enough to make the fan spin?", "Here's an OR gate. What do you think happens when you turn A on?"],
+      "prompt": "This is an OR gate. I wonder — will switch A be enough to make the fan spin?",
       "expect": "SWITCH_A_ON",
-      "feedback": ["The fan spins! OR only needs one switch. Turn A off — does B work too?", "It works with just A! Turn A off and try B instead."]
+      "feedback": "The fan spins! OR only needs one switch. Turn A off — does B work too?"
     },
     {
       "expect": "SWITCH_A_OFF",
-      "feedback": ["Fan stops. Now try switch B.", "Off. Now try B!"]
+      "feedback": "Fan stops. Now try switch B."
     },
     {
       "expect": "SWITCH_B_ON",
-      "feedback": ["B works too! OR turns on when either switch is on — A or B, it doesn't mind. That's the pattern!", "Fan spins again! A works, B works — OR is happy with either. That's OR!"]
+      "feedback": "B works too! OR turns on when either switch is on — A or B, it doesn't mind. That's the pattern!"
     }
   ]
 }

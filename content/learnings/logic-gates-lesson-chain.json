@@ -8,19 +8,19 @@
   "pageControls": ["SHOW_LINEAR_OR_AND"],
   "steps": [
     {
-      "prompt": ["Two gates in a row — first an OR gate, then an AND gate. What do you think happens if you turn A on?", "Two different gates this time! First gate is OR. Will switch A be enough to light the lamp?"],
+      "prompt": "Two gates in a row — first an OR gate, then an AND gate. What do you think happens if you turn A on?",
       "expect": "SWITCH_A_ON",
-      "feedback": ["First gate is on — but the lamp is still out! The signal has to travel through both gates. Turn C on too.", "OR gate is happy — but the AND gate still needs C! Turn C on next."]
+      "feedback": "First gate is on — but the lamp is still out! The signal has to travel through both gates. Turn C on too."
     },
     {
-      "prompt": ["Now turn switch C on.", "Try switch C!"],
+      "prompt": "Now turn switch C on.",
       "expect": "SWITCH_C_ON",
-      "feedback": ["The lamp lights up! First the OR gate, then the AND gate — two steps to get there. Now turn C off — what happens?", "Yes! First OR, then AND, then lamp. Follow the signal! Now turn C off."],
+      "feedback": "The lamp lights up! First the OR gate, then the AND gate — two steps to get there. Now turn C off — what happens?",
       "pageControls": ["LOCK_SWITCH_A"]
     },
     {
       "expect": "SWITCH_C_OFF",
-      "feedback": ["Lamp goes out — the AND gate needs C. The chain broke! First gate, then second gate, then lamp — all must work.", "Out! The chain needs both gates. Turn one off and the whole thing stops."],
+      "feedback": "Lamp goes out — the AND gate needs C. The chain broke! First gate, then second gate, then lamp — all must work.",
       "pageControls": ["UNLOCK_SWITCH_A"]
     }
   ]

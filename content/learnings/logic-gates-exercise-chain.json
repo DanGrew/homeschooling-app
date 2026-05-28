@@ -8,9 +8,9 @@
   "pageControls": ["SHOW_LINEAR_AND_OR"],
   "steps": [
     {
-      "prompt": ["Can you make the lamp turn on?", "Two gates — can you get the signal all the way through?"],
+      "prompt": "Can you make the lamp turn on?",
       "expect": "LAMP_ON",
-      "feedback": ["You got through the chain!", "Signal made it through both gates — lamp on!"]
+      "feedback": "You got through the chain!"
     }
   ]
 }

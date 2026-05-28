@@ -8,13 +8,13 @@
   "pageControls": ["SHOW_SINGLE_NOT_GATE", "SET_SWITCH_A_OFF"],
   "steps": [
     {
-      "prompt": ["The lamp is already on! This is a NOT gate — it does the opposite. What do you think happens if you turn switch A on?", "See — the lamp is already glowing! NOT always does the opposite. Turn switch A on — what will happen?"],
+      "prompt": "The lamp is already on! This is a NOT gate — it does the opposite. What do you think happens if you turn switch A on?",
       "expect": "SWITCH_A_ON",
-      "feedback": ["The lamp went out! NOT flips it — switch on means lamp off. Turn A off again.", "Off! NOT always does the opposite. Turn A off — watch what happens."]
+      "feedback": "The lamp went out! NOT flips it — switch on means lamp off. Turn A off again."
     },
     {
       "expect": "SWITCH_A_OFF",
-      "feedback": ["Lamp back on! NOT always does the opposite — switch off means lamp on, switch on means lamp off.", "On again! Off becomes on, on becomes off — that's NOT!"]
+      "feedback": "Lamp back on! NOT always does the opposite — switch off means lamp on, switch on means lamp off."
     }
   ]
 }

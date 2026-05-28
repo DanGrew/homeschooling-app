@@ -8,25 +8,25 @@
   "pageControls": ["SHOW_SINGLE_AND_GATE", "LOCK_SWITCH_B"],
   "steps": [
     {
-      "prompt": ["See that switch? Tap switch A!", "That's switch A — give it a tap!"],
+      "prompt": "See that switch? Tap switch A!",
       "expect": "SWITCH_A_ON",
-      "feedback": ["The lamp lights up! You turned switch A on.", "Switch A is on — and the lamp glows!"]
+      "feedback": "The lamp lights up! You turned switch A on."
     },
     {
-      "prompt": ["Now tap switch A again — turn it off.", "Can you turn switch A off?"],
+      "prompt": "Now tap switch A again — turn it off.",
       "expect": "SWITCH_A_OFF",
-      "feedback": ["The lamp went out. Switch off, lamp off!", "Off! The switch controls the lamp."]
+      "feedback": "The lamp went out. Switch off, lamp off!"
     },
     {
-      "prompt": ["There's another switch — switch B. What do you think happens when you turn it on?", "Switch B is there too — have a try! What will happen?"],
+      "prompt": "There's another switch — switch B. What do you think happens when you turn it on?",
       "expect": "SWITCH_B_ON",
-      "feedback": ["Hmm — B is on but the lamp is still out! This gate needs both switches.", "B is on... but the lamp still needs A too! This one is picky."],
+      "feedback": "Hmm — B is on but the lamp is still out! This gate needs both switches.",
       "pageControls": ["UNLOCK_SWITCH_B"]
     },
     {
-      "prompt": ["Turn switch A on too!", "Now try switch A — what happens with both on?"],
+      "prompt": "Turn switch A on too!",
       "expect": "SWITCH_A_ON",
-      "feedback": ["Both on — the lamp lights up! This gate needs both switches. It's called an AND gate!", "Yes! Both switches on and the lamp is happy. This is an AND gate — it needs both!"]
+      "feedback": "Both on — the lamp lights up! This gate needs both switches. It's called an AND gate!"
     }
   ]
 }

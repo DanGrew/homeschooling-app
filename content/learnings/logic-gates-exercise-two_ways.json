@@ -8,14 +8,14 @@
   "pageControls": ["SHOW_CONVERGING_AND_AND_OR"],
   "steps": [
     {
-      "prompt": ["Can you find a way to light the lamp?", "Three gates — see if you can make the lamp glow!"],
+      "prompt": "Can you find a way to light the lamp?",
       "expect": "LAMP_ON",
-      "feedback": ["Found one way! Can you find a completely different way?", "Lamp on! Now try different switches — I wonder if there's another way."]
+      "feedback": "Found one way! Can you find a completely different way?"
     },
     {
-      "prompt": ["Now find a different way — different switches, same lamp!", "Try again with different switches."],
+      "prompt": "Now find a different way — different switches, same lamp!",
       "expect": "LAMP_ON",
-      "feedback": ["Two ways — same lamp! Different switches, same answer.", "Another way! Two paths, same result."]
+      "feedback": "Two ways — same lamp! Different switches, same answer."
     }
   ]
 }

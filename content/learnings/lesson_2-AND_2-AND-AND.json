@@ -7,13 +7,13 @@
   "criteria": ["uw.cause-effect", "cl.sequencing-language", "cl.prediction", "cl.topic-vocabulary", "pd.fine-motor"],
   "steps": [
     {
-      "prompt": ["Two AND gates in a row! First, turn switches A and B on — what do you think happens?", "Two gates this time! What do you think — will turning A and B on be enough?"],
+      "prompt": "Two AND gates in a row! First, turn switches A and B on — what do you think happens?",
       "expect": ["SWITCH_A_ON", "SWITCH_B_ON"],
-      "feedback": ["First AND gate is on! But the lamp needs more — turn C and D on too.", "First gate lights up! But we need to get through the second gate too — turn C and D on."]
+      "feedback": "First AND gate is on! But the lamp needs more — turn C and D on too."
     },
     {
       "expect": ["SWITCH_C_ON", "SWITCH_D_ON"],
-      "feedback": ["The lamp is lit! First A and B, then C and D — two AND gates, each needing both switches.", "Yes! First the first gate, then the second gate, then the lamp. That's a chain!"]
+      "feedback": "The lamp is lit! First A and B, then C and D — two AND gates, each needing both switches."
     }
   ]
 }
