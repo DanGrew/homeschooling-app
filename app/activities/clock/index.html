@@ -111,6 +111,14 @@ var totalMinuteDeg = 0;
 var currentSpoken = 'Twelve o\'clock';
 var currentSpoken24 = 'Twelve hundred';
 var defaultPresets = [];
+var _HOUR12_WORDS  = ['twelve','one','two','three','four','five','six','seven','eight','nine','ten','eleven'];
+var _HOUR24_WORDS  = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty','twenty one','twenty two','twenty three'];
+var _MIN_WORDS     = ['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty','twenty one','twenty two','twenty three','twenty four','twenty five','twenty six','twenty seven','twenty eight','twenty nine','thirty','thirty one','thirty two','thirty three','thirty four','thirty five','thirty six','thirty seven','thirty eight','thirty nine','forty','forty one','forty two','forty three','forty four','forty five','forty six','forty seven','forty eight','forty nine','fifty','fifty one','fifty two','fifty three','fifty four','fifty five','fifty six','fifty seven','fifty eight','fifty nine'];
+var _MIN_OCLOCK    = {0: 'o\'clock'};
+var _MIN_HUNDRED   = {0: 'hundred'};
+var _AMPM_WORDS    = ['AM','AM','AM','AM','AM','AM','AM','AM','AM','AM','AM','AM','PM','PM','PM','PM','PM','PM','PM','PM','PM','PM','PM','PM'];
+function _clockSpoken12() { return _HOUR12_WORDS[currentHour%12]+' '+[_MIN_OCLOCK[currentMinute],_MIN_WORDS[currentMinute]].filter(Boolean)[0]+' '+_AMPM_WORDS[currentHour]; }
+function _clockSpoken24() { return _HOUR24_WORDS[currentHour]+' '+[_MIN_HUNDRED[currentMinute],_MIN_WORDS[currentMinute]].filter(Boolean)[0]; }
 var currentPresets = [];
 var presetFilter = null;
 var PAGE_CTRL = {};
@@ -176,9 +184,9 @@ document.querySelector('[data-hand="hour"]').addEventListener('click', function(
 
 makeSpeakable(document.getElementById('sky-sun'),  'Sun');
 makeSpeakable(document.getElementById('sky-moon'), 'Moon');
-makeInteractive(document.getElementById('digital-12h'),     function() { speakInterrupt(currentSpoken); });
-makeInteractive(document.getElementById('digital-24h'),     function() { speakInterrupt(currentSpoken24); });
-makeInteractive(document.getElementById('clock-container'), function() { speakInterrupt(currentSpoken); });
+makeInteractive(document.getElementById('digital-12h'),     function() { speakInterrupt(_clockSpoken12()); });
+makeInteractive(document.getElementById('digital-24h'),     function() { speakInterrupt(_clockSpoken24()); });
+makeInteractive(document.getElementById('clock-container'), function() { speakInterrupt(_clockSpoken12()); });
 document.getElementById('digital-12h').addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 document.getElementById('digital-24h').addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 
