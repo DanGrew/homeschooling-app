@@ -8,6 +8,10 @@ const DO_SPEAK_PILL = {
   'true':  function(g, label) { window.__makeSpeakable(g, GATE_SPOKEN[label]); g.removeAttribute('filter'); },
   'false': function() {}
 };
+const DO_SPEAK_EL = {
+  'true':  function(g, text) { window.__makeSpeakable(g, text); g.removeAttribute('filter'); },
+  'false': function() {}
+};
 
 function el(tag, attrs = {}) {
   const e = document.createElementNS(SVG_NS, tag);
@@ -55,6 +59,7 @@ function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
   lbl.textContent = label;
   g.appendChild(track); g.appendChild(knob); g.appendChild(lbl);
   svg.appendChild(g);
+  DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](g, 'Switch ' + label);
 
   function activateState() {
     track.setAttribute('fill', colour);
@@ -164,6 +169,7 @@ function buildStation(config, onToggle) {
   const op = positions[out0.id];
   const outputG = buildOutput(out0.type, op.x, op.y, 24);
   svg.appendChild(outputG);
+  DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](outputG, out0.type);
 
   function evaluate() {
     const nodeValues = Object.assign({}, inputStates);
@@ -187,6 +193,10 @@ function buildStation(config, onToggle) {
   config.inputs.forEach(function(inp) { inputLabelMap[inp.id] = inp.label; });
   const STATE_SUFFIX = { 'true': 'ON', 'false': 'OFF' };
   const OUTPUT_EVENT = { 'true': 'OUTPUT_ON', 'false': 'OUTPUT_OFF' };
+  const LAMP_ON_DISPATCH = {
+    'true':  function() { window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'LAMP_ON' } })); },
+    'false': function() {}
+  };
 
   function handleToggle(id) {
     inputStates[id] = !inputStates[id];
@@ -194,6 +204,7 @@ function buildStation(config, onToggle) {
     const output = evaluate();
     window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'SWITCH_' + inputLabelMap[id] + '_' + STATE_SUFFIX[String(inputStates[id])] } }));
     window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: OUTPUT_EVENT[String(output)] } }));
+    LAMP_ON_DISPATCH[String(output)]();
     config.onUpdate(inputStates, output);
   }
 
