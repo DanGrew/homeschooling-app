@@ -1,13 +1,30 @@
 {
   "id": "or_gate",
   "title": "OR Gate",
-  "number": 2,
+  "number": 3,
   "guide": "cat",
   "source": "Logic Gates",
-  "criteria": ["uw.cause-effect"],
+  "criteria": ["cl.technical-vocab", "cl.prediction", "maths.pattern", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_SWITCH_B"],
   "steps": [
-    { "prompt": "Can you turn switch A on?", "expect": "SWITCH_A_ON", "feedback": "Fan spins! OR only needs one switch. Turn A off." },
-    { "expect": "SWITCH_A_OFF", "feedback": "Fan stops. Now turn B on instead." },
-    { "expect": "SWITCH_B_ON", "feedback": "B alone works too! OR turns on when either switch is on." }
+    {
+      "prompt": "This is an or gate. I wonder — will the top switch be enough to make the fan spin?",
+      "expect": "SWITCH_A_ON",
+      "feedback": "The fan spins! or only needs one switch. Turn the top switch off — does the bottom work too?"
+    },
+    {
+      "expect": "SWITCH_A_OFF",
+      "feedback": "Now try the bottom switch."
+    },
+    {
+      "expect": "SWITCH_B_ON",
+      "feedback": "The bottom switch works too! Now try turning the top switch on at the same time!",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
+    },
+    {
+      "expect": "SWITCH_A_ON",
+      "feedback": "Fan still spins! or works with one or both switches on. That's the difference — both is fine with or!",
+      "pageControls": ["UNLOCK_SWITCH_A"]
+    }
   ]
 }

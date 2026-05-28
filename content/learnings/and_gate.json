@@ -1,13 +1,27 @@
 {
   "id": "and_gate",
   "title": "AND Gate",
-  "number": 1,
+  "number": 2,
   "guide": "cat",
   "source": "Logic Gates",
-  "criteria": ["uw.cause-effect"],
+  "criteria": ["cl.technical-vocab", "cl.prediction", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_SWITCH_B"],
   "steps": [
-    { "prompt": "Can you turn switch A on?", "expect": "SWITCH_A_ON", "feedback": "A is on! Now turn B on too." },
-    { "expect": "SWITCH_B_ON", "feedback": "Both on — the lamp lights up! AND needs them both. Turn A off." },
-    { "expect": "SWITCH_A_OFF", "feedback": "The lamp goes out. AND only works when both switches are on." }
+    {
+      "prompt": "This is an and gate. I wonder — what happens if you turn the top switch on?",
+      "expect": "SWITCH_A_ON",
+      "feedback": "Still dark! and needs both switches. Turn the bottom switch on too."
+    },
+    {
+      "prompt": "Now turn the bottom switch on.",
+      "expect": "SWITCH_B_ON",
+      "feedback": "Both on — the lamp lights up! and only works when both switches are on. Turn the top switch off — what do you think happens?",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
+    },
+    {
+      "expect": "SWITCH_A_OFF",
+      "feedback": "The lamp goes out! and stops the moment one switch turns off. Both must be on.",
+      "pageControls": ["UNLOCK_SWITCH_A", "LOCK_SWITCH_B"]
+    }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "id": "logic-gates-lesson-big_decision",
+  "title": "Big Decision",
+  "number": 8,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["cl.prediction", "uw.cause-effect", "psed.independence", "cl.topic-vocabulary", "pd.fine-motor", "psed.self-regulation"],
+  "pageControls": ["SHOW_CONVERGING_OR_OR_AND"],
+  "steps": [
+    {
+      "prompt": "Three gates — this is the big one! I wonder... can you find a way to spin the fan? Have a go!",
+      "expect": "LAMP_ON",
+      "feedback": "You found a way! And here's the secret — there are other ways too. Can you find a different combination?"
+    },
+    {
+      "expect": "LAMP_ON",
+      "feedback": "Another way! Different switches, same fan. That's what's special — lots of paths lead to the same answer.",
+      "pageControls": ["LOCK_ACTIVE_SWITCHES", "RESET_SWITCHES"]
+    }
+  ]
+}

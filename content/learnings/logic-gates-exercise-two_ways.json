@@ -1,0 +1,22 @@
+{
+  "id": "logic-gates-exercise-two_ways",
+  "title": "Two Ways",
+  "type": "exercise",
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["maths.equivalence", "cl.prediction", "psed.independence"],
+  "pageControls": ["SHOW_CONVERGING_AND_AND_OR"],
+  "steps": [
+    {
+      "prompt": "Can you find a way to spin the fan?",
+      "expect": "LAMP_ON",
+      "feedback": "Found one way! Can you find a completely different way?"
+    },
+    {
+      "prompt": "Now find a different way — different switches, same fan!",
+      "expect": "LAMP_ON",
+      "feedback": "Two ways — same fan! Different switches, same answer.",
+      "pageControls": ["LOCK_ACTIVE_SWITCHES", "RESET_SWITCHES"]
+    }
+  ]
+}

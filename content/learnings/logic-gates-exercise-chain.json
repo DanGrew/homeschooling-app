@@ -1,0 +1,16 @@
+{
+  "id": "logic-gates-exercise-chain",
+  "title": "Follow the Chain",
+  "type": "exercise",
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["uw.cause-effect", "cl.sequencing-language", "cl.prediction"],
+  "pageControls": ["SHOW_LINEAR_AND_OR"],
+  "steps": [
+    {
+      "prompt": "Can you make the lamp turn on?",
+      "expect": "LAMP_ON",
+      "feedback": "You got through the chain!"
+    }
+  ]
+}

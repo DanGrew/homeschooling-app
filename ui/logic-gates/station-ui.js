@@ -3,7 +3,7 @@ const CELL_W = 90;
 const CELL_H = 65;
 const NOOP = function() {};
 
-const GATE_SPOKEN = { 'AND': 'and', 'OR': 'or', 'NOT': 'not', 'XOR': 'ex or', 'NAND': 'nand', 'XNOR': 'ex nor' };
+const GATE_SPOKEN = { 'AND': 'and gate', 'OR': 'or gate', 'NOT': 'not gate', 'XOR': 'X or gate', 'NAND': 'nand gate', 'XNOR': 'ex nor gate' };
 const DO_SPEAK_PILL = {
   'true':  function(g, label) { window.__makeSpeakable(g, GATE_SPOKEN[label]); g.removeAttribute('filter'); },
   'false': function() {}
@@ -11,6 +11,14 @@ const DO_SPEAK_PILL = {
 const DO_SPEAK_EL = {
   'true':  function(g, text) { window.__makeSpeakable(g, text); g.removeAttribute('filter'); },
   'false': function() {}
+};
+const SPEAK_WITH_LABEL = {
+  'true':  function(d) { return d + ' switch'; },
+  'false': function() { return 'switch'; }
+};
+const DISP_LABEL_FN = {
+  'true':  function(input) { return input.displayLabel; },
+  'false': function(input) { return input.label; }
 };
 
 function el(tag, attrs = {}) {
@@ -41,9 +49,9 @@ function deactivateWire(wire) {
 const WIRE_FNS = [deactivateWire, activateWire];
 function updateWire(wire, active, colour) { WIRE_FNS[+active](wire, colour); }
 
-function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
+function buildSwitch(svg, id, cx, cy, active, colour, eventLabel, displayLabel, onToggle) {
   const W = 64, H = 32, R = 16;
-  const g = el('g', { 'data-switch': id, style: 'cursor:pointer' });
+  const g = el('g', { 'data-switch': id, 'data-switch-label': eventLabel, style: 'cursor:pointer' });
   const track = el('rect', {
     x: cx - W/2, y: cy - H/2, width: W, height: H, rx: R,
     fill: '#ddd', stroke: '#bbb', 'stroke-width': '2'
@@ -56,10 +64,10 @@ function buildSwitch(svg, id, cx, cy, active, colour, label, onToggle) {
     x: cx, y: cy - H/2 - 8,
     'text-anchor': 'middle', 'font-size': '14', 'font-weight': 'bold', fill: '#555'
   });
-  lbl.textContent = label;
+  lbl.textContent = displayLabel;
   g.appendChild(track); g.appendChild(knob); g.appendChild(lbl);
   svg.appendChild(g);
-  DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](g, 'Switch ' + label);
+  DO_SPEAK_EL[String(typeof window.__makeSpeakable === 'function')](g, SPEAK_WITH_LABEL[String(!!displayLabel)](displayLabel));
 
   function activateState() {
     track.setAttribute('fill', colour);
@@ -107,7 +115,7 @@ function buildStation(config, onToggle) {
   const H = grid.rows * CELL_H;
 
   const svg = el('svg', {
-    viewBox: `0 0 ${W} ${H}`, width: '100%',
+    viewBox: `0 -18 ${W} ${H + 18}`, width: '100%',
     style: 'max-width:540px;display:block;margin:0 auto;'
   });
 
@@ -155,7 +163,8 @@ function buildStation(config, onToggle) {
   function buildInputComponent(input) {
     const p = positions[input.id];
     const colour = nodeColourMap[inputNodeMap[input.id].id];
-    const meta = buildSwitch(svg, input.id, p.x, p.y, input.state, colour, input.label, onToggle);
+    const dispLabel = DISP_LABEL_FN[String(input.displayLabel !== undefined)](input);
+    const meta = buildSwitch(svg, input.id, p.x, p.y, input.state, colour, input.label, dispLabel, onToggle);
     switchMetas[input.id] = { meta };
   }
   config.inputs.forEach(buildInputComponent);
@@ -211,6 +220,13 @@ function buildStation(config, onToggle) {
   svg._handleToggle = handleToggle;
   svg._evaluate = evaluate;
   svg._getInputStates = function() { return inputStates; };
+  svg._silentReset = function() {
+    config.inputs.forEach(function(inp) {
+      inputStates[inp.id] = false;
+      switchMetas[inp.id].meta.applyState(false);
+    });
+    evaluate();
+  };
 
   evaluate();
   return svg;

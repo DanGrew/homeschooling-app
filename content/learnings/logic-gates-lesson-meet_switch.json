@@ -1,0 +1,25 @@
+{
+  "id": "logic-gates-lesson-meet_switch",
+  "title": "Meet the Switch",
+  "number": 1,
+  "guide": "cat",
+  "source": "Logic Gates",
+  "criteria": ["uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor", "uw.technology"],
+  "pageControls": ["SHOW_SINGLE_OR_GATE", "LOCK_SWITCH_B"],
+  "steps": [
+    {
+      "prompt": "See the top switch? Give it a tap!",
+      "expect": "SWITCH_A_ON",
+      "feedback": "The fan spins — one switch is enough! Turn it off again."
+    },
+    {
+      "expect": "SWITCH_A_OFF",
+      "feedback": "Now try the bottom one!"
+    },
+    {
+      "expect": "SWITCH_B_ON",
+      "feedback": "That one works too! Either switch makes it spin. This gate just needs one — it's an or gate!",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
+    }
+  ]
+}

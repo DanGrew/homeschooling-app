@@ -59,7 +59,7 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads lesson rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(69)
+  await expect(rows).toHaveCount(72)
 })
 
 test('rows are sorted by activity then lesson title', async ({ page }) => {
@@ -88,7 +88,7 @@ test('clicking Lesson header sorts rows ascending', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.coverage thead th').nth(0).click()
   const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('01. AND Gate')
+  await expect(firstLesson).toHaveText('01. Count the Clock')
 })
 
 test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
@@ -136,7 +136,7 @@ test('exercise table header has Exercise and Activity columns', async ({ page })
 
 test('exercise table loads correct row count', async ({ page }) => {
   await page.goto(URL)
-  await expect(page.locator('.exercises-coverage tbody tr')).toHaveCount(17)
+  await expect(page.locator('.exercises-coverage tbody tr')).toHaveCount(18)
 })
 
 test('exercise table default sort shows Clock first', async ({ page }) => {
