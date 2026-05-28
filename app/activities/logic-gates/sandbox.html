@@ -103,7 +103,7 @@ var _FIND_SWITCH_IN_SVG = {
   'false': function() { return null; }
 };
 function _findSwitch(label) {
-  var svg = _findCurrentSvg();
+  var svg = document.querySelector('#puzzle-area svg');
   return _FIND_SWITCH_IN_SVG[String(svg !== null)](svg, label);
 }
 
