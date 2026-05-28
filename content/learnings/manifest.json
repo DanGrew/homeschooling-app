@@ -4,7 +4,7 @@
     "source": "Logic Gates",
     "title": "AND Gate",
     "type": "lesson",
-    "number": 1
+    "number": 2
   },
   {
     "id": "clock-exercise-am_or_pm",
@@ -347,13 +347,6 @@
     "number": 3
   },
   {
-    "id": "exercise_2-AND_2-AND-AND",
-    "source": "Logic Gates",
-    "title": "AND Cascade",
-    "type": "exercise",
-    "number": 1
-  },
-  {
     "id": "first_five",
     "source": "Letters & Numbers",
     "title": "First Five Letters",
@@ -390,7 +383,40 @@
     "source": "Logic Gates",
     "title": "AND Cascade",
     "type": "lesson",
-    "number": 5
+    "number": 6
+  },
+  {
+    "id": "logic-gates-exercise-chain",
+    "source": "Logic Gates",
+    "title": "Follow the Chain",
+    "type": "exercise"
+  },
+  {
+    "id": "logic-gates-exercise-two_ways",
+    "source": "Logic Gates",
+    "title": "Two Ways",
+    "type": "exercise"
+  },
+  {
+    "id": "logic-gates-lesson-big_decision",
+    "source": "Logic Gates",
+    "title": "Big Decision",
+    "type": "lesson",
+    "number": 8
+  },
+  {
+    "id": "logic-gates-lesson-chain",
+    "source": "Logic Gates",
+    "title": "Chain of Gates",
+    "type": "lesson",
+    "number": 7
+  },
+  {
+    "id": "logic-gates-lesson-meet_switch",
+    "source": "Logic Gates",
+    "title": "Meet the Switch",
+    "type": "lesson",
+    "number": 1
   },
   {
     "id": "make_five",
@@ -432,7 +458,7 @@
     "source": "Logic Gates",
     "title": "OR Gate",
     "type": "lesson",
-    "number": 2
+    "number": 3
   },
   {
     "id": "pairs",
@@ -561,6 +587,6 @@
     "source": "Logic Gates",
     "title": "XOR Gate",
     "type": "lesson",
-    "number": 3
+    "number": 5
   }
 ]
