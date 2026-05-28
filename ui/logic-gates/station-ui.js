@@ -220,6 +220,13 @@ function buildStation(config, onToggle) {
   svg._handleToggle = handleToggle;
   svg._evaluate = evaluate;
   svg._getInputStates = function() { return inputStates; };
+  svg._silentReset = function() {
+    config.inputs.forEach(function(inp) {
+      inputStates[inp.id] = false;
+      switchMetas[inp.id].meta.applyState(false);
+    });
+    evaluate();
+  };
 
   evaluate();
   return svg;

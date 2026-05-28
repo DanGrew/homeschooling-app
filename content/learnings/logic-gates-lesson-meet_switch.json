@@ -14,12 +14,12 @@
     },
     {
       "expect": "SWITCH_A_OFF",
-      "feedback": "Now try the bottom one!",
-      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
+      "feedback": "Now try the bottom one!"
     },
     {
       "expect": "SWITCH_B_ON",
-      "feedback": "That one works too! Either switch makes it spin. This gate just needs one — it's an or gate!"
+      "feedback": "That one works too! Either switch makes it spin. This gate just needs one — it's an or gate!",
+      "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
     }
   ]
 }

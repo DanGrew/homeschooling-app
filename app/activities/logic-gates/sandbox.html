@@ -189,18 +189,17 @@ function _lockActiveSwitches() {
   _LOCK_ACTIVE_SWITCHES_SVG[String(svg !== null)](svg);
 }
 
-var _RESET_SWITCHES_SVG = {
-  'true': function(svg) {
-    var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
-    Object.keys(states).forEach(function(id) {
-      _TOGGLE_IF_ON[String(!!states[id])](svg, id);
-    });
-  },
+var _SILENT_RESET_HAS_FN = {
+  'true':  function(svg) { svg._silentReset(); },
+  'false': function() {}
+};
+var _SILENT_RESET_SVG = {
+  'true':  function(svg) { _SILENT_RESET_HAS_FN[String(typeof svg._silentReset === 'function')](svg); },
   'false': function() {}
 };
 function _resetSwitches() {
   var svg = _findCurrentSvg();
-  _RESET_SWITCHES_SVG[String(svg !== null)](svg);
+  _SILENT_RESET_SVG[String(svg !== null)](svg);
 }
 
 var PAGE_CTRL = {
