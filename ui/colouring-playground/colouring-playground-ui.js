@@ -208,7 +208,7 @@ export function initColouringPlayground() {
     svg.innerHTML='';svg.setAttribute('viewBox',pic.vb);
     injectDotPattern(svg);
     pic.shapes.forEach(function(s){
-      var attrs=Object.assign({},{fill:'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
+      var attrs=Object.assign({},{fill:s.noColour?(s.colour||'none'):'url(#dots)',stroke:'#333','stroke-width':'4','stroke-linejoin':'round','stroke-linecap':'round'},s.attrs);
       var el=ns(s.tag,attrs);
       ATTACH_CLICK[String(!!s.noColour)](el,s);
       svg.appendChild(el);
