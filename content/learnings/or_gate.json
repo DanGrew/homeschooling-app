@@ -8,13 +8,13 @@
   "pageControls": ["LOCK_SWITCH_B"],
   "steps": [
     {
-      "prompt": "This is an OR gate. I wonder — will the top switch be enough to make the fan spin?",
+      "prompt": "This is an or gate. I wonder — will the top switch be enough to make the fan spin?",
       "expect": "SWITCH_A_ON",
-      "feedback": "The fan spins! OR only needs one switch. Turn the top switch off — does the bottom work too?"
+      "feedback": "The fan spins! or only needs one switch. Turn the top switch off — does the bottom work too?"
     },
     {
       "expect": "SWITCH_A_OFF",
-      "feedback": "Fan stops. Now try the bottom switch."
+      "feedback": "Now try the bottom switch."
     },
     {
       "expect": "SWITCH_B_ON",
@@ -23,7 +23,7 @@
     },
     {
       "expect": "SWITCH_A_ON",
-      "feedback": "Fan still spins! OR works with one or both switches on. That's the difference — both is fine with OR!",
+      "feedback": "Fan still spins! or works with one or both switches on. That's the difference — both is fine with or!",
       "pageControls": ["UNLOCK_SWITCH_A"]
     }
   ]

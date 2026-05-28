@@ -8,14 +8,14 @@
   "pageControls": ["SHOW_CONVERGING_OR_OR_AND"],
   "steps": [
     {
-      "prompt": "Three gates — this is the big one! I wonder... can you find a way to light the lamp? Have a go!",
+      "prompt": "Three gates — this is the big one! I wonder... can you find a way to spin the fan? Have a go!",
       "expect": "LAMP_ON",
       "feedback": "You found a way! And here's the secret — there are other ways too. Can you find a different combination?"
     },
     {
       "expect": "LAMP_ON",
-      "feedback": "Another way! Different switches, same lamp. That's what's special — lots of paths lead to the same answer.",
-      "pageControls": ["RESET_SWITCHES"]
+      "feedback": "Another way! Different switches, same fan. That's what's special — lots of paths lead to the same answer.",
+      "pageControls": ["LOCK_ACTIVE_SWITCHES", "RESET_SWITCHES"]
     }
   ]
 }

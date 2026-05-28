@@ -5,29 +5,21 @@
   "guide": "cat",
   "source": "Logic Gates",
   "criteria": ["uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor", "uw.technology"],
-  "pageControls": ["SHOW_SINGLE_AND_GATE", "LOCK_SWITCH_B"],
+  "pageControls": ["SHOW_SINGLE_OR_GATE", "LOCK_SWITCH_B"],
   "steps": [
     {
       "prompt": "See the top switch? Give it a tap!",
       "expect": "SWITCH_A_ON",
-      "feedback": "Top switch is on — but look, the lamp is still dark! This gate is picky. It needs both switches."
+      "feedback": "The fan spins — one switch is enough! Turn it off again."
     },
     {
-      "prompt": "Now turn the top switch off again.",
       "expect": "SWITCH_A_OFF",
-      "feedback": "Off! Now let's try the bottom switch."
-    },
-    {
-      "prompt": "Try the bottom switch!",
-      "expect": "SWITCH_B_ON",
-      "feedback": "Bottom switch is on... but the lamp is still out! It needs both!",
+      "feedback": "Now try the bottom one!",
       "pageControls": ["UNLOCK_SWITCH_B", "LOCK_SWITCH_A"]
     },
     {
-      "prompt": "Tap the top switch too!",
-      "expect": "SWITCH_A_ON",
-      "feedback": "Both switches on — the lamp lights up! This gate needs both. It's called an AND gate!",
-      "pageControls": ["UNLOCK_SWITCH_A", "LOCK_SWITCH_B"]
+      "expect": "SWITCH_B_ON",
+      "feedback": "That one works too! Either switch makes it spin. This gate just needs one — it's an or gate!"
     }
   ]
 }

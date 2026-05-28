@@ -170,6 +170,25 @@ function _setSwitchOff(label) {
   _APPLY_SWITCH_OFF_SVG[String(svg !== null)](svg, label);
 }
 
+var _LOCK_ACTIVE_G = {
+  'true':  function(svg, id) {
+    var g = svg.querySelector('[data-switch="' + id + '"]');
+    _LOCK_EL[String(g !== null)](g);
+  },
+  'false': function() {}
+};
+var _LOCK_ACTIVE_SWITCHES_SVG = {
+  'true': function(svg) {
+    var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
+    Object.keys(states).forEach(function(id) { _LOCK_ACTIVE_G[String(!!states[id])](svg, id); });
+  },
+  'false': function() {}
+};
+function _lockActiveSwitches() {
+  var svg = _findCurrentSvg();
+  _LOCK_ACTIVE_SWITCHES_SVG[String(svg !== null)](svg);
+}
+
 var _RESET_SWITCHES_SVG = {
   'true': function(svg) {
     var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
@@ -186,6 +205,7 @@ function _resetSwitches() {
 
 var PAGE_CTRL = {
   'SHOW_SINGLE_AND_GATE':       function() { _navigateTo('and_station'); },
+  'SHOW_SINGLE_OR_GATE':        function() { _navigateTo('or_station'); },
   'SHOW_SINGLE_NOT_GATE':       function() { _navigateTo('not_station'); },
   'SHOW_LINEAR_OR_AND':         function() { _navigateTo('2-OR-1-AND'); },
   'SHOW_LINEAR_AND_OR':         function() { _navigateTo('2-AND-1-OR'); },
@@ -200,6 +220,7 @@ var PAGE_CTRL = {
   'UNLOCK_SWITCH_C':            function() { _unlockSwitch('C'); },
   'UNLOCK_SWITCH_D':            function() { _unlockSwitch('D'); },
   'SET_SWITCH_A_OFF':           function() { _setSwitchOff('A'); },
+  'LOCK_ACTIVE_SWITCHES':       function() { _lockActiveSwitches(); },
   'RESET_SWITCHES':             function() { _resetSwitches(); },
   'PAGE_CONTROL_RESET':         function() { _unlockAll(); }
 };
