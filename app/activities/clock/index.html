@@ -99,7 +99,7 @@ import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
 import {makeSpeakable, makeInteractive} from '../../../components/speech/speakable.js';
-import {speak} from '../../../components/speech/speech-ui.js';
+import {speakInterrupt} from '../../../components/speech/speech-ui.js';
 import {GuidanceService} from '../../../components/guidance/guidance-service.js';
 import {renderMultiChoiceOptions} from '../../../ui/clock/choice-ui.js';
 import {buildSimpleFilterBar} from '../../../components/filter-bar/filter-bar-ui.js';
@@ -139,7 +139,7 @@ function emit(type) {
 clockInit(document.getElementById('clock-container'));
 
 var SPEAK_NUM = {
-  '0': function(num) { speak(num); },
+  '0': function(num) { speakInterrupt(num); },
   '1': function()    {}
 };
 
@@ -176,9 +176,9 @@ document.querySelector('[data-hand="hour"]').addEventListener('click', function(
 
 makeSpeakable(document.getElementById('sky-sun'),  'Sun');
 makeSpeakable(document.getElementById('sky-moon'), 'Moon');
-makeInteractive(document.getElementById('digital-12h'),     function() { speak(currentSpoken); });
-makeInteractive(document.getElementById('digital-24h'),     function() { speak(currentSpoken24); });
-makeInteractive(document.getElementById('clock-container'), function() { speak(currentSpoken); });
+makeInteractive(document.getElementById('digital-12h'),     function() { speakInterrupt(currentSpoken); });
+makeInteractive(document.getElementById('digital-24h'),     function() { speakInterrupt(currentSpoken24); });
+makeInteractive(document.getElementById('clock-container'), function() { speakInterrupt(currentSpoken); });
 document.getElementById('digital-12h').addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 document.getElementById('digital-24h').addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 
@@ -306,7 +306,7 @@ fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
 var mcContainer = document.getElementById('multi-choice-container');
 var presetButtonsEl = document.getElementById('preset-buttons');
 var profileTitleEl = document.getElementById('profile-title');
-makeInteractive(profileTitleEl, function() { speak(profileTitleEl.textContent); });
+makeInteractive(profileTitleEl, function() { speakInterrupt(profileTitleEl.textContent); });
 profileTitleEl.addEventListener('click', function() { _BADGE_EMIT[String(!!_badgeTapEmit)](); });
 var _profileCache = {};
 
@@ -356,7 +356,7 @@ function _onMCCorrect(options) {
 }
 
 function _onMCWrong(tile) {
-  speak('Try again!');
+  speakInterrupt('Try again!');
   var orig = tile.style.border;
   tile.style.border = '3px solid rgba(255,80,80,0.9)';
   setTimeout(function() { tile.style.border = orig; }, 600);
