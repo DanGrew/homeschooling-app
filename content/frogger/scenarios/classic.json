@@ -7,19 +7,19 @@
     { "id": "mid",   "position": { "x": 5, "y": 4 } }
   ],
   "rows": [
-    { "id": "dest",   "y": 0, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } },
-    { "id": "river1", "y": 1, "baseTile": "hazard",  "wrap": true,  "movement": { "direction": "right", "speed": 1.2 },
-      "spawns": [{ "entity": { "type": "platform", "width": 1 }, "every": 2 }] },
-    { "id": "river2", "y": 2, "baseTile": "hazard",  "wrap": true,  "movement": { "direction": "left",  "speed": 0.9 },
-      "spawns": [{ "entity": { "type": "platform", "width": 1 }, "every": 3 }] },
-    { "id": "river3", "y": 3, "baseTile": "hazard",  "wrap": true,  "movement": { "direction": "right", "speed": 1.8 },
-      "spawns": [{ "entity": { "type": "platform", "width": 1 }, "every": 3 }] },
-    { "id": "median", "y": 4, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } },
-    { "id": "road1",  "y": 5, "baseTile": "ground",  "wrap": true,  "movement": { "direction": "left",  "speed": 1.5 },
-      "spawns": [{ "entity": { "type": "obstacle", "width": 1 }, "every": 5 }] },
-    { "id": "road2",  "y": 6, "baseTile": "ground",  "wrap": true,  "movement": { "direction": "right", "speed": 2.0 },
-      "spawns": [{ "entity": { "type": "obstacle", "width": 1 }, "every": 6 }] },
-    { "id": "start",  "y": 7, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "speed": 0 } }
+    { "id": "dest",   "y": 0, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "river1", "y": 1, "baseTile": "hazard",  "wrap": true,  "movement": { "direction": "right", "moveEvery": 8 },
+      "spawns": [{ "entity": { "type": "platform", "width": 1 }, "spawnEvery": 17 }] },
+    { "id": "river2", "y": 2, "baseTile": "hazard",  "wrap": true,  "movement": { "direction": "left",  "moveEvery": 11 },
+      "spawns": [{ "entity": { "type": "platform", "width": 1 }, "spawnEvery": 33 }] },
+    { "id": "river3", "y": 3, "baseTile": "hazard",  "wrap": true,  "movement": { "direction": "right", "moveEvery": 6 },
+      "spawns": [{ "entity": { "type": "platform", "width": 1 }, "spawnEvery": 17 }] },
+    { "id": "median", "y": 4, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "road1",  "y": 5, "baseTile": "ground",  "wrap": true,  "movement": { "direction": "left",  "moveEvery": 7 },
+      "spawns": [{ "entity": { "type": "obstacle", "width": 1 }, "spawnEvery": 33 }] },
+    { "id": "road2",  "y": 6, "baseTile": "ground",  "wrap": true,  "movement": { "direction": "right", "moveEvery": 5 },
+      "spawns": [{ "entity": { "type": "obstacle", "width": 1 }, "spawnEvery": 30 }] },
+    { "id": "start",  "y": 7, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } }
   ],
   "entities": {}
 }

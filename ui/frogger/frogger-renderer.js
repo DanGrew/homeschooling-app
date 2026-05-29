@@ -213,15 +213,15 @@ function renderBBoxes(rState, simState, scenario) {
   simState.entities.filter(function(e) { return !e.collected; })
     .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
-    layer.appendChild(bboxDiv(p.worldX * cs, p.worldY * cs, cs, cs, 'rgba(255,255,0,0.9)'));
+    layer.appendChild(bboxDiv(p.x * cs, p.y * cs, cs, cs, 'rgba(255,255,0,0.9)'));
     [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
       .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
   });
 }
 
 function applyPlayerPos(rState, player) {
-  rState.playerEl.style.left = (player.worldX * rState.cs) + 'px';
-  rState.playerEl.style.top  = (player.worldY * rState.cs) + 'px';
+  rState.playerEl.style.left = (player.x * rState.cs) + 'px';
+  rState.playerEl.style.top  = (player.y * rState.cs) + 'px';
 }
 
 function renderFrogger(rState, simState, scenario) {
