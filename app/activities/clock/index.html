@@ -273,35 +273,33 @@ window.addEventListener('page:control', function(e) { PAGE_CTRL[e.detail.type]()
 });
 
 var DEFAULT_PROFILE = 'times_of_day';
-var PROFILE_IDS = ['times_of_day', 'child-day', 'baker', 'farmer', 'doctor'];
-var PROFILE_OPTIONS = [
-  {value: 'times_of_day', label: 'Times of Day', icon: '🕐'},
-  {value: 'child-day',    label: "Child's Day",   icon: '🧒'},
-  {value: 'baker',        label: 'Baker',          icon: '🍞'},
-  {value: 'farmer',       label: 'Farmer',         icon: '🌾'},
-  {value: 'doctor',       label: 'Doctor',         icon: '🏥'}
-];
+var _manifestOptions = [];
+var _profileLoaders = {};
 
 function buildProfileFilter() {
-  buildSimpleFilterBar(PROFILE_OPTIONS, function(profileId) {
-    PAGE_CTRL['LOAD_PROFILE_' + profileId.toUpperCase().replace(/-/g, '_')]();
-    [PROFILE_OPTIONS.find(function(o) { return o.value === profileId; })].filter(Boolean).forEach(function(o) {
+  buildSimpleFilterBar(_manifestOptions, function(profileId) {
+    _profileLoaders[profileId]();
+    [_manifestOptions.find(function(o) { return o.value === profileId; })].filter(Boolean).forEach(function(o) {
       profileTitleEl.textContent = o.label;
     });
   }, DEFAULT_PROFILE);
-  profileTitleEl.textContent = PROFILE_OPTIONS[0].label;
+  profileTitleEl.textContent = _manifestOptions[0].label;
 }
 
-PROFILE_IDS.forEach(function(id) {
-  var key = 'LOAD_PROFILE_' + id.toUpperCase().replace(/-/g, '_');
-  PAGE_CTRL[key] = function() {
-    fetch('../../../content/clock/profiles/' + id + '.json')
-      .then(function(r) { return r.json(); })
-      .then(function(profile) { renderPresetButtons(profile.presets); });
-  };
-});
-
-fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json')
+fetch('../../../content/clock/profiles/manifest.json')
+  .then(function(r) { return r.json(); })
+  .then(function(manifest) {
+    _manifestOptions = manifest.map(function(m) { return {value: m.id, label: m.label, icon: m.icon}; });
+    manifest.forEach(function(m) {
+      _profileLoaders[m.id] = function() {
+        fetch('../../../content/clock/profiles/' + m.id + '.json')
+          .then(function(r) { return r.json(); })
+          .then(function(profile) { renderPresetButtons(profile.presets); });
+      };
+      PAGE_CTRL['LOAD_PROFILE_' + m.id.toUpperCase().replace(/-/g, '_')] = _profileLoaders[m.id];
+    });
+    return fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json');
+  })
   .then(function(r) { return r.json(); })
   .then(function(profile) {
     defaultPresets = profile.presets;
