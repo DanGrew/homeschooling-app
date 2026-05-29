@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url)
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROFILE_DIR = join(__dirname, '../../content/clock/profiles')
 const profiles = readdirSync(PROFILE_DIR)
-  .filter(f => f.endsWith('.json'))
+  .filter(f => f.endsWith('.json') && f !== 'manifest.json')
   .map(f => require(join(PROFILE_DIR, f)))
 
 const TIME_RE = /^\d{2}:\d{2}$/
