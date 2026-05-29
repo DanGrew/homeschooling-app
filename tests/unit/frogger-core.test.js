@@ -11,6 +11,7 @@ const {
   collectEntity,
   addPlayer,
   createPlayer,
+  snapshotPositions,
   MIN_OBSTACLE_GAP
 } = require2('../../core/frogger/frogger-core.js')
 
@@ -521,4 +522,57 @@ test('counter set to 1 when obstacle spawn blocked (retry next tick)', () => {
   const state = createSimulation(scenario)
   stepSimulation(state, scenario, 0)
   expect(state.spawnCounters['r1']).toBe(1)
+})
+
+// ---- snapshotPositions ----
+
+test('snapshotPositions captures player x and y', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'right', 1)] })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(3, 5))
+  const snap = snapshotPositions(state)
+  expect(snap.player.x).toBe(3)
+  expect(snap.player.y).toBe(5)
+})
+
+test('snapshotPositions player snapshot is independent copy', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'right', 1)] })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(3, 5))
+  const snap = snapshotPositions(state)
+  state.player.x = 9
+  expect(snap.player.x).toBe(3)
+})
+
+test('snapshotPositions captures entity x by id', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'right', 1)],
+    entities: { r1: [{ id: 'log1', type: 'platform', x: 7, width: 2 }] }
+  })
+  const state = createSimulation(scenario)
+  const snap = snapshotPositions(state)
+  expect(snap.entities['log1'].x).toBe(7)
+})
+
+test('snapshotPositions entity snapshot is independent copy', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'right', 1)],
+    entities: { r1: [{ id: 'log1', type: 'platform', x: 7, width: 2 }] }
+  })
+  const state = createSimulation(scenario)
+  const snap = snapshotPositions(state)
+  state.entities[0].x = 0
+  expect(snap.entities['log1'].x).toBe(7)
+})
+
+test('snapshotPositions with no player returns null player', () => {
+  const state = createSimulation(makeScenario())
+  const snap = snapshotPositions(state)
+  expect(snap.player).toBeNull()
+})
+
+test('snapshotPositions with no entities returns empty entities object', () => {
+  const state = createSimulation(makeScenario())
+  const snap = snapshotPositions(state)
+  expect(snap.entities).toEqual({})
 })
