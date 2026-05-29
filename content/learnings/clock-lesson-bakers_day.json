@@ -4,7 +4,7 @@
   "number": 7,
   "guide": "dog",
   "source": "Clock",
-  "pageControls": ["LOAD_PROFILE_BAKER"],
+  "profile": "baker",
   "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
   "steps": [
     {
