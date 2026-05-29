@@ -41,7 +41,7 @@ function applyPlayerFallback(playerEl) {
 function buildPlayerEl(theme, cs) {
   var playerEl = document.createElement('div');
   playerEl.setAttribute('data-testid', 'frogger-player');
-  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;transition:left 0.08s linear,top 0.08s linear;';
+  playerEl.style.cssText = 'position:absolute;width:' + cs + 'px;height:' + cs + 'px;z-index:10;';
   var playerAsset = theme.assets[theme.map.player];
   var BUILD = { 'true': function() { playerEl.appendChild(assetImg(playerAsset)); }, 'false': function() { applyPlayerFallback(playerEl); } };
   BUILD[String(!!playerAsset)]();
@@ -154,17 +154,19 @@ function ensureEntityEl(rState, e, theme, cs) {
   });
 }
 
-function positionEntityEl(rState, e, scenario, cs) {
+function positionEntityEl(rState, e, scenario, cs, prevPositions, alpha) {
   var rowY = [getRowById(scenario, e.rowId)].filter(Boolean).reduce(function(_, r) { return r.y; }, 0);
-  rState.entityEls[e.id].style.left = (e.x * cs) + 'px';
+  var prevX = [prevPositions.entities[e.id]].filter(Boolean).reduce(function(_, s) { return s.x; }, e.x);
+  var renderX = prevX + (e.x - prevX) * alpha;
+  rState.entityEls[e.id].style.left = (renderX * cs) + 'px';
   rState.entityEls[e.id].style.top = (rowY * cs) + 'px';
   rState.entityEls[e.id].style.width = (e.width * cs) + 'px';
 }
 
-function updateEntity(rState, e, scenario, cs, theme, seen) {
+function updateEntity(rState, e, scenario, cs, theme, seen, prevPositions, alpha) {
   seen[e.id] = true;
   ensureEntityEl(rState, e, theme, cs);
-  positionEntityEl(rState, e, scenario, cs);
+  positionEntityEl(rState, e, scenario, cs, prevPositions, alpha);
 }
 
 function removeOrphanEl(rState, id) {
@@ -206,25 +208,29 @@ function appendActivePlatformBBox(layer, cs, scenario, e) {
 }
 
 
-function renderBBoxes(rState, simState, scenario) {
+function renderBBoxes(rState, simState, scenario, prevPositions, alpha) {
   var layer = rState.bboxLayer;
   var cs = rState.cs;
   layer.innerHTML = '';
   simState.entities.filter(function(e) { return !e.collected; })
     .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
-    layer.appendChild(bboxDiv(p.x * cs, p.y * cs, cs, cs, 'rgba(255,255,0,0.9)'));
+    var prevX = [prevPositions.player].filter(Boolean).reduce(function(_, pp) { return pp.x; }, p.x);
+    var renderX = prevX + (p.x - prevX) * alpha;
+    layer.appendChild(bboxDiv(renderX * cs, p.y * cs, cs, cs, 'rgba(255,255,0,0.9)'));
     [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
       .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
   });
 }
 
-function applyPlayerPos(rState, player) {
-  rState.playerEl.style.left = (player.x * rState.cs) + 'px';
+function applyPlayerPos(rState, player, prevPositions, alpha) {
+  var prevX = [prevPositions.player].filter(Boolean).reduce(function(_, p) { return p.x; }, player.x);
+  var renderX = prevX + (player.x - prevX) * alpha;
+  rState.playerEl.style.left = (renderX * rState.cs) + 'px';
   rState.playerEl.style.top  = (player.y * rState.cs) + 'px';
 }
 
-function renderFrogger(rState, simState, scenario) {
+function renderFrogger(rState, simState, scenario, prevPositions, alpha) {
   var cs = rState.cs;
   var theme = rState.theme;
   var seen = {};
@@ -233,15 +239,15 @@ function renderFrogger(rState, simState, scenario) {
     .forEach(function(e) { removeEntityEl(rState, e); });
 
   simState.entities.filter(function(e) { return !e.collected; })
-    .forEach(function(e) { updateEntity(rState, e, scenario, cs, theme, seen); });
+    .forEach(function(e) { updateEntity(rState, e, scenario, cs, theme, seen, prevPositions, alpha); });
 
   Object.keys(rState.entityEls).filter(function(id) { return !seen[id]; })
     .forEach(function(id) { removeOrphanEl(rState, id); });
 
   [simState.player].filter(Boolean)
-    .forEach(function(player) { applyPlayerPos(rState, player); });
+    .forEach(function(player) { applyPlayerPos(rState, player, prevPositions, alpha); });
 
-  renderBBoxes(rState, simState, scenario);
+  renderBBoxes(rState, simState, scenario, prevPositions, alpha);
   updatePreviewDots(rState, simState, scenario);
 }
 
