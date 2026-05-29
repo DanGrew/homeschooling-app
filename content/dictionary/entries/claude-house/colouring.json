@@ -1,0 +1,14 @@
+{
+  "concept": "claude-house",
+  "type": "colouring",
+  "viewBox": "0 0 500 460",
+  "shapes": [
+    {"id": "shape_1", "tag": "rect", "attrs": {"x": "0", "y": "390", "width": "500", "height": "70"}, "colour": "#27AE60"},
+    {"id": "shape_2", "tag": "rect", "attrs": {"x": "70", "y": "220", "width": "360", "height": "175"}, "colour": "#F0D99A"},
+    {"id": "shape_3", "tag": "rect", "attrs": {"x": "105", "y": "60", "width": "65", "height": "190"}, "colour": "#95A5A6"},
+    {"id": "shape_4", "tag": "polygon", "attrs": {"points": "35,235 250,90 465,235"}, "colour": "#E74C3C"},
+    {"id": "shape_5", "tag": "rect", "attrs": {"x": "185", "y": "305", "width": "75", "height": "90", "rx": "5"}, "colour": "#8B4513"},
+    {"id": "shape_6", "tag": "rect", "attrs": {"x": "95", "y": "255", "width": "80", "height": "62", "rx": "6", "stroke-width": "3"}, "colour": "#AED6F1"},
+    {"id": "shape_7", "tag": "rect", "attrs": {"x": "325", "y": "255", "width": "80", "height": "62", "rx": "6", "stroke-width": "3"}, "colour": "#AED6F1"}
+  ]
+}

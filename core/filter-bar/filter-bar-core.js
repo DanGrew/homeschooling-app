@@ -11,7 +11,7 @@ export function filterItems(items,activeTag){
   });
 }
 
-var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E', fruit: '\uD83C\uDF4E', emotions: '\uD83D\uDE0A', vehicles: '\uD83D\uDE97', medical: '\uD83C\uDFE5', vegetables: '\uD83E\uDD66', dairy: '\uD83E\uDDC0', bakery: '\uD83E\uDD50', groceries: '\uD83D\uDED2', 'paw-patrol': '\uD83D\uDC3E\uD83D\uDE93' };
+var TAG_EMOJI = { all: '', animals: '\uD83D\uDC3E', fruit: '\uD83C\uDF4E', emotions: '\uD83D\uDE0A', vehicles: '\uD83D\uDE97', medical: '\uD83C\uDFE5', vegetables: '\uD83E\uDD66', dairy: '\uD83E\uDDC0', bakery: '\uD83E\uDD50', groceries: '\uD83D\uDED2', 'paw-patrol': '\uD83D\uDC3E\uD83D\uDE93', claude: '\uD83E\uDD16' };
 
 export function tagIcon(t) {
   if (t === 'all') return '\u2726';
