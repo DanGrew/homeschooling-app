@@ -4,7 +4,7 @@
   "number": 3,
   "guide": "cat",
   "filter": "emotions",
-  "words": ["sad", "shy", "smile", "angry", "worried"],
+  "words": ["sad", "shy", "happy", "angry", "worried"],
   "source": "Trace Words",
   "criteria": [
     "literacy.word-recognition",
@@ -20,11 +20,11 @@
     },
     {
       "expect": "WORD_shy_TRACED",
-      "feedback": "Shy! Just three letters — a quiet little word. Now find smile!"
+      "feedback": "Shy! Just three letters — a quiet little word. Now find happy!"
     },
     {
-      "expect": "WORD_smile_TRACED",
-      "feedback": "Smile! Five letters and a happy feeling. Now find angry!"
+      "expect": "WORD_happy_TRACED",
+      "feedback": "Happy! Five letters and a wonderful feeling. Now find angry!"
     },
     {
       "expect": "WORD_angry_TRACED",
