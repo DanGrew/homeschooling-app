@@ -39,6 +39,17 @@ function renderControls(addBtn, undoBtn, state) {
   [state.deletedObject].filter(Boolean).forEach(function() { undoBtn.style.display = ''; });
 }
 
+var OBJ_SPEAK_PROP = {
+  colour: function(o) { return o.colour; },
+  shape: function(o) { return o.shape; },
+  size: function(o) { return o.size; },
+  rotation: function() { return 'rotated'; }
+};
+
+function _speak(text) {
+  [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
+}
+
 function initObjectPlayground() {
   var wrap = document.getElementById('obj-viewport');
   var svgEl = document.getElementById('obj-world');
@@ -113,6 +124,8 @@ function initObjectPlayground() {
     getTapFlag(gesture).forEach(function() {
       state = handleTap(state, gesture.tapWorldX, gesture.tapWorldY);
       redraw();
+      var sel = state.objects.filter(function(o) { return o.selected; });
+      sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) { _speak(o.colour + ' ' + o.shape); });
     });
   });
 
@@ -133,18 +146,26 @@ function initObjectPlayground() {
     panGesture = { active: false };
     toolboxEl.removeAttribute('data-dragging');
     [propRow].filter(Boolean).forEach(function(el) {
-      state = applyToolboxClick(state, gesture, el.getAttribute('data-prop'));
+      var prop = el.getAttribute('data-prop');
+      state = applyToolboxClick(state, gesture, prop);
       redraw();
+      [state.objects.filter(function(o) { return o.selected; })[0]].filter(Boolean).forEach(function(sel) {
+        [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
+      });
     });
     [pickRow].filter(Boolean).forEach(function(el) {
       state = applyStackPick(state, el.getAttribute('data-pick'));
       redraw();
+      [state.objects.filter(function(o) { return o.selected; })[0]].filter(Boolean).forEach(function(sel) {
+        _speak(sel.colour + ' ' + sel.shape);
+      });
     });
     [deleteRow].filter(Boolean).forEach(function() {
       var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
       [selIds[0]].filter(Boolean).forEach(function(id) {
         state = removeObject(state, id);
         redraw();
+        _speak('delete');
       });
     });
   });
