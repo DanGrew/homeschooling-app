@@ -1,0 +1,7 @@
+[
+  { "id": "times_of_day", "label": "Times of Day", "icon": "🕐" },
+  { "id": "child-day",    "label": "My Day",        "icon": "🧒" },
+  { "id": "baker",        "label": "Baker",          "icon": "🍞" },
+  { "id": "farmer",       "label": "Farmer",         "icon": "🌾" },
+  { "id": "doctor",       "label": "Doctor",         "icon": "🩺" }
+]

@@ -4,7 +4,7 @@
   "number": 8,
   "guide": "dog",
   "source": "Clock",
-  "pageControls": ["LOAD_PROFILE_FARMER"],
+  "profile": "farmer",
   "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
   "steps": [
     {

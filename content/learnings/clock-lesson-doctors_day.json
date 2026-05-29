@@ -4,7 +4,7 @@
   "number": 9,
   "guide": "cat",
   "source": "Clock",
-  "pageControls": ["LOAD_PROFILE_DOCTOR"],
+  "profile": "doctor",
   "criteria": ["uw.community", "cl.sequencing-language", "cl.topic-vocabulary"],
   "steps": [
     {
