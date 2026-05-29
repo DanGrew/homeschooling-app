@@ -14,12 +14,21 @@ async function selectBaseColour(page, swatchIndex, shade = '#sh-base') {
 // ── Z-order ────────────────────────────────────────────────────────────────
 
 test('shapes render in array order — noColour z-order preserved', async ({ page }) => {
-  await page.route('**/assets/colouring/pictures/sun.js', route => {
-    route.fulfill({ body: `pictures.push({name:'Sun',tags:['prototype'],vb:'0 0 400 400',shapes:[
-      {tag:'circle',attrs:{cx:'200',cy:'200',r:'90'},colour:'#F1C40F'},
-      {tag:'circle',attrs:{cx:'200',cy:'200',r:'100'},noColour:true},
-      {tag:'polygon',attrs:{points:'200,18 184,112 216,112'},colour:'#F39C12'},
-    ]});` })
+  await page.route('**/manifests/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify(['entries/z-test/colouring.json']) })
+  })
+  await page.route('**/entries/z-test/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+      concept: 'z-test', type: 'colouring', viewBox: '0 0 400 400',
+      shapes: [
+        { id: 'shape_1', tag: 'circle', attrs: { cx: '200', cy: '200', r: '90' }, colour: '#F1C40F' },
+        { id: 'shape_2', tag: 'circle', attrs: { cx: '200', cy: '200', r: '100' }, noColour: true },
+        { id: 'shape_3', tag: 'polygon', attrs: { points: '200,18 184,112 216,112' }, colour: '#F39C12' }
+      ]
+    }) })
+  })
+  await page.route('**/entries/z-test/concept.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({ id: 'z-test', name: 'Z Test', phonetic: 'z-test', tags: [] }) })
   })
   await page.goto(URL)
   await waitForPicture(page)
@@ -84,7 +93,7 @@ test('magic: colouring all shapes stays on same picture — no auto-advance', as
   const titleBefore = await page.locator('#pic-title').textContent()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).click()
+  for (let i = 0; i < count; i++) await shapes.nth(i).evaluate(el => el.click())
   await expect(page.locator('#pic-title')).toHaveText(titleBefore)
 })
 
@@ -167,7 +176,7 @@ test('guided: reset button appears when all shapes coloured', async ({ page }) =
   await swatch.click()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).click()
+  for (let i = 0; i < count; i++) await shapes.nth(i).evaluate(el => el.click())
   await expect(page.locator('#reset-btn')).toBeVisible()
 })
 
@@ -179,7 +188,7 @@ test('guided: reset button clears all fills and hides itself', async ({ page }) 
   await swatch.click()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).click()
+  for (let i = 0; i < count; i++) await shapes.nth(i).evaluate(el => el.click())
   await page.locator('#reset-btn').click()
   await expect(page.locator('#reset-btn')).toBeHidden()
   const fill = await shapes.first().getAttribute('fill')
