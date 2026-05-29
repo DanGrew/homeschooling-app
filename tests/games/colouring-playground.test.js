@@ -88,12 +88,27 @@ test('magic: clicking a shape colours it', async ({ page }) => {
 })
 
 test('magic: colouring all shapes stays on same picture — no auto-advance', async ({ page }) => {
+  await page.route('**/manifests/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify(['entries/click-test/colouring.json']) })
+  })
+  await page.route('**/entries/click-test/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+      concept: 'click-test', type: 'colouring', viewBox: '0 0 400 400',
+      shapes: [
+        { id: 'shape_1', tag: 'circle', attrs: { cx: '100', cy: '200', r: '60' }, colour: '#FF6B6B' },
+        { id: 'shape_2', tag: 'circle', attrs: { cx: '300', cy: '200', r: '60' }, colour: '#FF6B6B' }
+      ]
+    }) })
+  })
+  await page.route('**/entries/click-test/concept.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({ id: 'click-test', name: 'Click Test', phonetic: 'click-test', tags: [] }) })
+  })
   await page.goto(URL)
   await waitForPicture(page)
   const titleBefore = await page.locator('#pic-title').textContent()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).evaluate(el => el.click())
+  for (let i = 0; i < count; i++) await shapes.nth(i).click()
   await expect(page.locator('#pic-title')).toHaveText(titleBefore)
 })
 
@@ -168,6 +183,21 @@ test('guided: selected colour persists across picture navigation', async ({ page
 })
 
 test('guided: reset button appears when all shapes coloured', async ({ page }) => {
+  await page.route('**/manifests/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify(['entries/click-test/colouring.json']) })
+  })
+  await page.route('**/entries/click-test/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+      concept: 'click-test', type: 'colouring', viewBox: '0 0 400 400',
+      shapes: [
+        { id: 'shape_1', tag: 'circle', attrs: { cx: '100', cy: '200', r: '60' }, colour: '#FF6B6B' },
+        { id: 'shape_2', tag: 'circle', attrs: { cx: '300', cy: '200', r: '60' }, colour: '#FF6B6B' }
+      ]
+    }) })
+  })
+  await page.route('**/entries/click-test/concept.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({ id: 'click-test', name: 'Click Test', phonetic: 'click-test', tags: [] }) })
+  })
   await page.goto(URL)
   await waitForPicture(page)
   await page.locator('button[data-mode-btn="guided"]').click()
@@ -176,11 +206,26 @@ test('guided: reset button appears when all shapes coloured', async ({ page }) =
   await swatch.click()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).evaluate(el => el.click())
+  for (let i = 0; i < count; i++) await shapes.nth(i).click()
   await expect(page.locator('#reset-btn')).toBeVisible()
 })
 
 test('guided: reset button clears all fills and hides itself', async ({ page }) => {
+  await page.route('**/manifests/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify(['entries/click-test/colouring.json']) })
+  })
+  await page.route('**/entries/click-test/colouring.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({
+      concept: 'click-test', type: 'colouring', viewBox: '0 0 400 400',
+      shapes: [
+        { id: 'shape_1', tag: 'circle', attrs: { cx: '100', cy: '200', r: '60' }, colour: '#FF6B6B' },
+        { id: 'shape_2', tag: 'circle', attrs: { cx: '300', cy: '200', r: '60' }, colour: '#FF6B6B' }
+      ]
+    }) })
+  })
+  await page.route('**/entries/click-test/concept.json', route => {
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify({ id: 'click-test', name: 'Click Test', phonetic: 'click-test', tags: [] }) })
+  })
   await page.goto(URL)
   await waitForPicture(page)
   await page.locator('button[data-mode-btn="guided"]').click()
@@ -188,7 +233,7 @@ test('guided: reset button clears all fills and hides itself', async ({ page }) 
   await swatch.click()
   const shapes = page.locator('#svg [style*="cursor"]')
   const count = await shapes.count()
-  for (let i = 0; i < count; i++) await shapes.nth(i).evaluate(el => el.click())
+  for (let i = 0; i < count; i++) await shapes.nth(i).click()
   await page.locator('#reset-btn').click()
   await expect(page.locator('#reset-btn')).toBeHidden()
   const fill = await shapes.first().getAttribute('fill')
