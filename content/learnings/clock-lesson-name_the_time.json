@@ -5,7 +5,7 @@
   "guide": "dog",
   "source": "Clock",
   "filter": "named-time",
-  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
+  "profile": "child-day",
   "criteria": ["cl.topic-vocabulary", "cl.sequencing-language"],
   "steps": [
     {
