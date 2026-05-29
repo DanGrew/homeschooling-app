@@ -9,10 +9,12 @@ const {
   getEntityTileX,
   getRowEntities,
   collectEntity,
+  addPlayer,
+  createPlayer,
   MIN_OBSTACLE_GAP
 } = require2('../../core/frogger/frogger-core.js')
 
-// ---- scenario helpers ----
+// ---- helpers ----
 
 function makeScenario(overrides) {
   return Object.assign({
@@ -24,12 +26,12 @@ function makeScenario(overrides) {
   }, overrides)
 }
 
-function makeRow(id, dir, speed, opts) {
+function makeRow(id, dir, moveEvery, opts) {
   return Object.assign({
     id: id,
     baseTile: 'hazard',
     wrap: true,
-    movement: { direction: dir, speed: speed }
+    movement: { direction: dir, moveEvery: moveEvery }
   }, opts)
 }
 
@@ -75,40 +77,68 @@ test('rows with no entities start with empty entity list', () => {
   expect(state.entities).toHaveLength(0)
 })
 
+test('spawnCounter initialised to spawnEvery for spawning rows', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, spawnEvery: 17 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'right', 8), { spawns: [spawnDef] })]
+  })
+  const state = createSimulation(scenario)
+  expect(state.spawnCounters['r1']).toBe(17)
+})
+
+test('no spawnCounter for rows with no spawns', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'right', 1)] })
+  const state = createSimulation(scenario)
+  expect(state.spawnCounters['r1']).toBeUndefined()
+})
+
 // ---- stepSimulation: movement ----
 
-test('entity moves right at correct speed', () => {
+test('entity moves right on move tick', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 2)],
+    rows: [makeRow('r1', 'right', 3)],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 0, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.5)
-  expect(state.entities[0].x).toBeCloseTo(1.0)
+  stepSimulation(state, scenario, 1)
+  expect(state.entities[0].x).toBe(0)
+  stepSimulation(state, scenario, 3)
+  expect(state.entities[0].x).toBe(1)
 })
 
-test('entity moves left at correct speed', () => {
+test('entity moves left on move tick', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'left', 1)],
+    rows: [makeRow('r1', 'left', 2)],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 5, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 1)
-  expect(state.entities[0].x).toBeCloseTo(4.0)
+  stepSimulation(state, scenario, 2)
+  expect(state.entities[0].x).toBe(4)
 })
 
-test('entity in different row not affected by row step', () => {
+test('entity does not move on non-move tick', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 2), makeRow('r2', 'left', 2)],
+    rows: [makeRow('r1', 'right', 5)],
+    entities: { r1: [{ id: 'e1', type: 'platform', x: 3, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 1)
+  stepSimulation(state, scenario, 3)
+  expect(state.entities[0].x).toBe(3)
+})
+
+test('entities in different rows move at independent rates', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'right', 1), makeRow('r2', 'left', 2)],
     entities: {
       r1: [{ id: 'e1', type: 'platform', x: 0, width: 1 }],
-      r2: [{ id: 'e2', type: 'obstacle', x: 5, width: 1 }]
+      r2: [{ id: 'e2', type: 'platform', x: 5, width: 1 }]
     }
   })
   const state = createSimulation(scenario)
   stepSimulation(state, scenario, 1)
-  expect(state.entities.find(e => e.id === 'e1').x).toBeCloseTo(2)
-  expect(state.entities.find(e => e.id === 'e2').x).toBeCloseTo(3)
+  expect(state.entities.find(e => e.id === 'e1').x).toBe(1)
+  expect(state.entities.find(e => e.id === 'e2').x).toBe(5)
 })
 
 test('row with direction none does not move entities', () => {
@@ -117,140 +147,200 @@ test('row with direction none does not move entities', () => {
     entities: { r1: [{ id: 'e1', type: 'ground', x: 3, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 1)
+  stepSimulation(state, scenario, 0)
   expect(state.entities[0].x).toBe(3)
 })
 
 // ---- stepSimulation: wrapping ----
 
-test('right-moving entity wraps when x >= cols', () => {
+test('right-moving entity wraps at cols (non-spawn row)', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 10)],
+    rows: [makeRow('r1', 'right', 1)],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 9, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.5)
-  expect(state.entities[0].x).toBeCloseTo(4)
+  stepSimulation(state, scenario, 1)
+  expect(state.entities[0].x).toBe(0)
 })
 
-test('left-moving entity wraps when x + width <= 0', () => {
+test('left-moving entity wraps when x+width <= 0 (non-spawn row)', () => {
   const scenario = makeScenario({
     rows: [makeRow('r1', 'left', 1)],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 0, width: 1 }] }
   })
   const state = createSimulation(scenario)
   stepSimulation(state, scenario, 1)
-  expect(state.entities[0].x).toBeCloseTo(9)
+  expect(state.entities[0].x).toBe(9)
 })
 
-test('wrap false: entity does not wrap', () => {
+test('wrap false row: no wrapping (entity slides off grid)', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 5, { wrap: false })],
-    entities: { r1: [{ id: 'e1', type: 'platform', x: 8, width: 1 }] }
+    rows: [makeRow('r1', 'right', 1, { wrap: false })],
+    entities: { r1: [{ id: 'e1', type: 'platform', x: 9, width: 1 }] }
   })
   const state = createSimulation(scenario)
   stepSimulation(state, scenario, 1)
-  expect(state.entities[0].x).toBeCloseTo(13)
+  expect(state.entities[0].x).toBe(10)
 })
 
 // ---- stepSimulation: spawning ----
 
-test('entity spawns after enough tiles traveled', () => {
-  const spawnDef = { entity: { type: 'platform', width: 2 }, every: 4 }
+test('no spawn on tick 0 — first spawn after spawnEvery ticks', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, spawnEvery: 4 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })]
   })
   const state = createSimulation(scenario)
+  for (var t = 0; t < 3; t++) stepSimulation(state, scenario, t)
   expect(state.entities).toHaveLength(0)
-  stepSimulation(state, scenario, 4)
-  expect(state.entities).toHaveLength(1)
-  expect(state.entities[0].type).toBe('platform')
-  expect(state.entities[0].rowId).toBe('r1')
+  stepSimulation(state, scenario, 3)
+  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
 })
 
-test('right-moving spawn starts at negative x', () => {
-  const spawnDef = { entity: { type: 'platform', width: 2 }, every: 1 }
+test('right-moving spawn starts at x = -width', () => {
+  const spawnDef = { entity: { type: 'platform', width: 2 }, spawnEvery: 1 }
   const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'right', 10), { spawns: [spawnDef] })]
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })]
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.5)
+  stepSimulation(state, scenario, 0)
   const spawned = state.entities.find(e => e.rowId === 'r1')
-  expect(spawned.x).toBeLessThan(0)
+  expect(spawned.x).toBe(-2)
 })
 
-test('left-moving spawn starts at cols', () => {
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 1 }
+test('left-moving spawn starts at x = cols', () => {
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, spawnEvery: 1 }
   const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'left', 10), { spawns: [spawnDef] })]
+    rows: [Object.assign(makeRow('r1', 'left', 1), { spawns: [spawnDef] })]
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.5)
+  stepSimulation(state, scenario, 0)
   const spawned = state.entities.find(e => e.rowId === 'r1')
   expect(spawned.x).toBe(10)
 })
 
-test('spawns multiple entities for multiple intervals elapsed', () => {
-  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 2 }
+test('spawn counter resets to spawnEvery after spawn', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, spawnEvery: 3 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })]
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 6)
-  expect(state.entities.length).toBe(3)
-})
-
-test('spawn accumulator is cumulative across steps', () => {
-  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 3 }
-  const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })]
-  })
-  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 0)
   stepSimulation(state, scenario, 1)
-  expect(state.entities).toHaveLength(0)
-  stepSimulation(state, scenario, 1)
-  expect(state.entities).toHaveLength(0)
-  stepSimulation(state, scenario, 1)
-  expect(state.entities).toHaveLength(1)
+  stepSimulation(state, scenario, 2)
+  expect(state.spawnCounters['r1']).toBe(3)
 })
 
-test('spawning row: right-moving entity removed when x >= cols (not wrapped)', () => {
-  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 100 }
+test('spawning row: right entity removed when x >= cols', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, spawnEvery: 100 }
   const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'right', 10), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'e1', type: 'platform', x: 9.5, width: 1 }] }
-  })
-  const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.1) // e1 moves to 10.5, past cols=10 → removed
-  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(0)
-})
-
-test('spawning row: left-moving entity removed when x+width <= 0 (not wrapped)', () => {
-  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 100 }
-  const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'left', 10), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'e1', type: 'platform', x: -0.5, width: 1 }] }
-  })
-  const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.1) // e1 moves to -1.5, x+width=-0.5 <= 0 → removed
-  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(0)
-})
-
-test('non-spawning row wraps normally', () => {
-  const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 10)],
+    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 9, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.5)
-  expect(state.entities[0].x).toBeCloseTo(4) // wrapped back
+  stepSimulation(state, scenario, 1)
+  expect(state.entities.filter(e => e.rowId === 'r1' && !e.collected)).toHaveLength(0)
+})
+
+test('spawning row: left entity removed when x+width <= 0', () => {
+  const spawnDef = { entity: { type: 'platform', width: 1 }, spawnEvery: 100 }
+  const scenario = makeScenario({
+    rows: [Object.assign(makeRow('r1', 'left', 1), { spawns: [spawnDef] })],
+    entities: { r1: [{ id: 'e1', type: 'platform', x: 0, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  stepSimulation(state, scenario, 1)
+  expect(state.entities.filter(e => e.rowId === 'r1' && !e.collected)).toHaveLength(0)
+})
+
+// ---- stepSimulation: carrying ----
+
+test('player on platform is carried right when platform moves', () => {
+  const scenario = makeScenario({
+    rows: [{ id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'right', moveEvery: 1 } }],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 4, width: 3 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(4, 3))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(5)
+  expect(state.entities[0].x).toBe(5)
+})
+
+test('player on platform is carried left when platform moves', () => {
+  const scenario = makeScenario({
+    rows: [{ id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'left', moveEvery: 1 } }],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 4, width: 3 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(4, 3))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(3)
+})
+
+test('player not on platform is not carried', () => {
+  const scenario = makeScenario({
+    rows: [{ id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'right', moveEvery: 1 } }],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 7, width: 2 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(2, 3))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(2)
+})
+
+test('player on different row not carried when platform moves', () => {
+  const scenario = makeScenario({
+    rows: [
+      { id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'right', moveEvery: 1 } },
+      { id: 'ground', y: 4, baseTile: 'ground', wrap: false, movement: { direction: 'none', moveEvery: 0 } }
+    ],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 4, width: 3 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(4, 4))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(4)
+})
+
+test('carrying clamped at right grid edge', () => {
+  const scenario = makeScenario({
+    rows: [{ id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'right', moveEvery: 1 } }],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 9, width: 1 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(9, 3))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(9)
+})
+
+test('carrying clamped at left grid edge', () => {
+  const scenario = makeScenario({
+    rows: [{ id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'left', moveEvery: 1 } }],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 0, width: 3 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(0, 3))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(0)
+})
+
+test('player not carried on non-move tick', () => {
+  const scenario = makeScenario({
+    rows: [{ id: 'river', y: 3, baseTile: 'hazard', wrap: true, movement: { direction: 'right', moveEvery: 5 } }],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 4, width: 3 }] }
+  })
+  const state = createSimulation(scenario)
+  addPlayer(state, createPlayer(4, 3))
+  stepSimulation(state, scenario, 1)
+  expect(state.player.x).toBe(4)
 })
 
 // ---- pause / resume ----
 
 test('paused simulation does not move entities', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 2)],
+    rows: [makeRow('r1', 'right', 1)],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 0, width: 1 }] }
   })
   const state = createSimulation(scenario)
@@ -261,14 +351,14 @@ test('paused simulation does not move entities', () => {
 
 test('resumed simulation moves entities again', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 2)],
+    rows: [makeRow('r1', 'right', 1)],
     entities: { r1: [{ id: 'e1', type: 'platform', x: 0, width: 1 }] }
   })
   const state = createSimulation(scenario)
   pauseSimulation(state)
   resumeSimulation(state)
   stepSimulation(state, scenario, 1)
-  expect(state.entities[0].x).toBeCloseTo(2)
+  expect(state.entities[0].x).toBe(1)
 })
 
 test('pause sets phase to paused', () => {
@@ -332,7 +422,7 @@ test('collectEntity marks entity as collected', () => {
 
 test('collected entity does not move on step', () => {
   const scenario = makeScenario({
-    rows: [makeRow('r1', 'right', 2)],
+    rows: [makeRow('r1', 'right', 1)],
     entities: { r1: [{ id: 'gem1', type: 'collectible', x: 0, width: 1 }] }
   })
   const state = createSimulation(scenario)
@@ -375,84 +465,60 @@ test('MIN_OBSTACLE_GAP is 2', () => {
 })
 
 test('obstacle spawn blocked when existing obstacle within gap (rightward)', () => {
-  // speed=1, dt=0.01 → entity at x=0 moves 0.01 tiles; post-move dist=1.01 < MIN_OBSTACLE_GAP+w=3
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  // car1 at x=1. After move (tick 0): x=2. dist=2-(-1)=3 <= MIN_OBSTACLE_GAP+w=3 → blocked
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, spawnEvery: 1 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 0, width: 1 }] }
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 1, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
-  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+  stepSimulation(state, scenario, 0)
+  expect(state.entities.filter(e => e.rowId === 'r1' && !e.collected)).toHaveLength(1)
 })
 
 test('obstacle spawn proceeds when existing obstacle beyond gap (rightward)', () => {
-  // speed=1, dt=0.01 → entity at x=5 stays at x=5.01; post-move dist=6.01 >= 3
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  // car1 at x=5. After move: x=6. dist=6-(-1)=7 > 3 → spawn proceeds
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, spawnEvery: 1 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
     entities: { r1: [{ id: 'car1', type: 'obstacle', x: 5, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
+  stepSimulation(state, scenario, 0)
   expect(state.entities.filter(e => e.rowId === 'r1').length).toBeGreaterThan(1)
 })
 
 test('obstacle spawn blocked when existing obstacle within gap (leftward)', () => {
-  // speed=1, dt=0.01 → entity at x=8.5 moves to x=8.49; right edge=9.49; dist=10-9.49=0.51 < 3
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+  // car1 at x=8 width=1. After move: x=7. spawnX=10. dist=10-(7+1)=2 <= 3 → blocked
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, spawnEvery: 1 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'left', 1), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 8.5, width: 1 }] }
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 8, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
-  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+  stepSimulation(state, scenario, 0)
+  expect(state.entities.filter(e => e.rowId === 'r1' && !e.collected)).toHaveLength(1)
 })
 
 test('gap check does not affect platform spawning', () => {
-  // platform at x=0 — gap check skipped for platforms; spawn proceeds
-  const spawnDef = { entity: { type: 'platform', width: 1 }, every: 0.01 }
+  // platform at x=0 (near spawn) — gap check skipped for platforms → spawn proceeds
+  const spawnDef = { entity: { type: 'platform', width: 1 }, spawnEvery: 1 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
     entities: { r1: [{ id: 'log1', type: 'platform', x: 0, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
+  stepSimulation(state, scenario, 0)
   expect(state.entities.filter(e => e.rowId === 'r1').length).toBeGreaterThan(1)
 })
 
-test('counter resets to 0 when obstacle spawn blocked', () => {
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
+test('counter set to 1 when obstacle spawn blocked (retry next tick)', () => {
+  const spawnDef = { entity: { type: 'obstacle', width: 1 }, spawnEvery: 1 }
   const scenario = makeScenario({
     rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 0, width: 1 }] }
+    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 1, width: 1 }] }
   })
   const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
-  expect(state.spawnCounters['r1']).toBe(0)
-})
-
-test('obstacle spawn blocked when existing obstacle near wrap point (rightward)', () => {
-  // cols=10, entity at x=7.5 w=1: right edge=8.5, distWrap=10-8.5=1.5 <= MIN_OBSTACLE_GAP+w=3
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
-  const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'right', 1), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 7.5, width: 1 }] }
-  })
-  const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
-  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
-})
-
-test('obstacle spawn blocked when existing obstacle near wrap point (leftward)', () => {
-  // cols=10, entity at x=0.5 w=1: left edge=0.5, distWrap=0.5+1=1.5 <= MIN_OBSTACLE_GAP+w=3
-  const spawnDef = { entity: { type: 'obstacle', width: 1 }, every: 0.01 }
-  const scenario = makeScenario({
-    rows: [Object.assign(makeRow('r1', 'left', 1), { spawns: [spawnDef] })],
-    entities: { r1: [{ id: 'car1', type: 'obstacle', x: 0.5, width: 1 }] }
-  })
-  const state = createSimulation(scenario)
-  stepSimulation(state, scenario, 0.01)
-  expect(state.entities.filter(e => e.rowId === 'r1')).toHaveLength(1)
+  stepSimulation(state, scenario, 0)
+  expect(state.spawnCounters['r1']).toBe(1)
 })

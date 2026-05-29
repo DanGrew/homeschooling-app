@@ -1,5 +1,4 @@
 var MIN_OBSTACLE_GAP = 2;
-var STEP = 0.5;
 
 function createPRNG(seed) {
   var s = (seed >>> 0) || 1;
@@ -18,10 +17,11 @@ function createSimulation(scenario, seed) {
   var prng = createPRNG(seed || 42);
 
   (scenario.rows || []).forEach(function(rowDef) {
-    rows[rowDef.id] = { def: rowDef, travelAccum: 0 };
-    spawnCounters[rowDef.id] = 0;
+    rows[rowDef.id] = { def: rowDef };
+    if (rowDef.spawns && rowDef.spawns.length > 0) {
+      spawnCounters[rowDef.id] = rowDef.spawns[0].spawnEvery;
+    }
   });
-  // prng available for future use
   void prng;
 
   var entityMap = scenario.entities || {};
@@ -49,80 +49,80 @@ function createSimulation(scenario, seed) {
   };
 }
 
-function stepSimulation(state, scenario, dt) {
+function stepSimulation(state, scenario, tickCount) {
   if (state.phase !== 'running') return;
-
   var cols = state.grid.cols;
+  var player = state.player;
 
   (scenario.rows || []).forEach(function(rowDef) {
     var movement = rowDef.movement;
-    if (!movement || movement.direction === 'none') return;
+    if (!movement || movement.direction === 'none' || !movement.moveEvery) return;
 
-    var speed = movement.speed;
+    var moveEvery = movement.moveEvery;
     var dir = movement.direction;
-    var dx = (dir === 'right' ? 1 : -1) * speed * dt;
-    var wrap = rowDef.wrap !== false;
-    var absDx = Math.abs(dx);
-
+    var delta = dir === 'right' ? 1 : -1;
     var hasSpawns = rowDef.spawns && rowDef.spawns.length > 0;
 
-    state.entities.forEach(function(e) {
-      if (e.rowId !== rowDef.id || e.collected) return;
-      e.x += dx;
-      if (wrap && !hasSpawns) {
-        if (dir === 'right' && e.x >= cols) e.x -= cols;
-        if (dir === 'left' && e.x + e.width <= 0) e.x += cols;
+    if (tickCount % moveEvery === 0) {
+      var playerCarried = player && player.y === rowDef.y &&
+        activePlatformsInRow(state, rowDef.id, player.x).length > 0;
+
+      state.entities.forEach(function(e) {
+        if (e.rowId !== rowDef.id || e.collected) return;
+        e.x += delta;
+      });
+
+      if (hasSpawns) {
+        state.entities = state.entities.filter(function(e) {
+          if (e.rowId !== rowDef.id || e.collected) return true;
+          return dir === 'right' ? e.x < cols : e.x + e.width > 0;
+        });
+      } else if (rowDef.wrap !== false) {
+        state.entities.forEach(function(e) {
+          if (e.rowId !== rowDef.id || e.collected) return;
+          if (dir === 'right' && e.x >= cols) e.x -= cols;
+          if (dir === 'left' && e.x + e.width <= 0) e.x += cols;
+        });
       }
-    });
+
+      if (playerCarried) {
+        player.x += delta;
+        player.x = Math.max(0, Math.min(cols - 1, player.x));
+      }
+    }
 
     if (hasSpawns) {
-      state.entities = state.entities.filter(function(e) {
-        if (e.rowId !== rowDef.id || e.collected) return true;
-        return dir === 'right' ? e.x < cols : e.x + e.width > 0;
-      });
-      var prevAccum = state.spawnCounters[rowDef.id];
-      var newAccum = prevAccum + absDx;
-      var finalAccum = newAccum;
+      state.spawnCounters[rowDef.id]--;
+      if (state.spawnCounters[rowDef.id] <= 0) {
+        var spawnDef = rowDef.spawns[0];
+        state.spawnCounters[rowDef.id] = spawnDef.spawnEvery;
+        var eDef = spawnDef.entity;
+        var w = eDef.width !== undefined ? eDef.width : 1;
+        var spawnX = dir === 'right' ? -w : cols;
 
-      rowDef.spawns.forEach(function(spawnDef) {
-        var every = spawnDef.every;
-        var prevCount = Math.floor(prevAccum / every);
-        var newCount = Math.floor(newAccum / every);
-        var toSpawn = newCount - prevCount;
-
-        for (var i = 0; i < toSpawn; i++) {
-          var eDef = spawnDef.entity;
-          var w = eDef.width !== undefined ? eDef.width : 1;
-          var spawnX = dir === 'right' ? -w : cols;
-
-          if (eDef.type === 'obstacle') {
-            var tooClose = false;
-            state.entities.forEach(function(ex) {
-              if (ex.rowId !== rowDef.id || ex.type !== 'obstacle' || ex.collected) return;
-              var dist = dir === 'right' ? ex.x - (-w) : cols - (ex.x + ex.width);
-              if (dist <= MIN_OBSTACLE_GAP + w) tooClose = true;
-              var distWrap = dir === 'right' ? cols - (ex.x + ex.width) : ex.x + ex.width;
-              if (wrap && distWrap <= MIN_OBSTACLE_GAP + w) tooClose = true;
-            });
-            if (tooClose) {
-              finalAccum = 0;
-              return;
-            }
-          }
-
-          state._spawnIdCounter++;
-          state.entities.push({
-            id: rowDef.id + '_s' + state._spawnIdCounter,
-            type: eDef.type,
-            rowId: rowDef.id,
-            x: spawnX,
-            width: w,
-            collected: false
+        if (eDef.type === 'obstacle') {
+          var tooClose = false;
+          state.entities.forEach(function(ex) {
+            if (ex.rowId !== rowDef.id || ex.type !== 'obstacle' || ex.collected) return;
+            var dist = dir === 'right' ? ex.x - spawnX : spawnX - (ex.x + ex.width);
+            if (dist <= MIN_OBSTACLE_GAP + w) tooClose = true;
           });
+          if (tooClose) {
+            state.spawnCounters[rowDef.id] = 1;
+            return;
+          }
         }
-      });
 
-      state.spawnCounters[rowDef.id] = finalAccum;
+        state._spawnIdCounter++;
+        state.entities.push({
+          id: rowDef.id + '_s' + state._spawnIdCounter,
+          type: eDef.type,
+          rowId: rowDef.id,
+          x: spawnX,
+          width: w,
+          collected: false
+        });
+      }
     }
   });
 }
@@ -152,12 +152,7 @@ function collectEntity(state, entityId) {
 // ---- Player + Collision ----
 
 function createPlayer(x, y) {
-  return {
-    x: x,
-    y: y,
-    worldX: x,
-    worldY: y
-  };
+  return { x: x, y: y };
 }
 
 function addPlayer(state, player) {
@@ -184,14 +179,20 @@ function entityOverlapsPlayerTile(entity, playerX) {
   return playerX + 1 > entity.x && playerX < entity.x + entity.width;
 }
 
+function activePlatformsInRow(state, rowId, playerX) {
+  return state.entities.filter(function(e) {
+    return !e.collected && e.type === 'platform' && e.rowId === rowId &&
+           playerX >= e.x && playerX < e.x + e.width;
+  });
+}
+
 function isOnPlatform(state, scenario, player) {
   var row = getRowAtY(scenario, player.y);
   if (!row) return false;
-  var cx = player.worldX + 0.5;
   for (var i = 0; i < state.entities.length; i++) {
     var e = state.entities[i];
     if (e.rowId !== row.id || e.type !== 'platform' || e.collected) continue;
-    if (e.x < cx && cx < e.x + e.width) return true;
+    if (player.x >= e.x && player.x < e.x + e.width) return true;
   }
   return false;
 }
@@ -200,36 +201,20 @@ function applyInput(state, scenario, direction) {
   if (state.phase !== 'running') return;
   var player = state.player;
   if (!player) return;
-  var dx = direction === 'left' ? -STEP : direction === 'right' ? STEP : 0;
-  var dy = direction === 'up' ? -STEP : direction === 'down' ? STEP : 0;
-  var nx = player.worldX + dx;
-  var ny = player.worldY + dy;
+  var dx = direction === 'left' ? -1 : direction === 'right' ? 1 : 0;
+  var dy = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
+  var nx = player.x + dx;
+  var ny = player.y + dy;
   if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return;
-  var destRow = getRowAtY(scenario, Math.floor(ny));
+  var destRow = getRowAtY(scenario, ny);
   if (destRow && destRow.baseTile === 'wall') return;
-  player.worldX = nx;
-  player.worldY = ny;
-  player.x = Math.floor(nx);
-  player.y = Math.floor(ny);
+  player.x = nx;
+  player.y = ny;
 }
 
-function applyCarrying(state, scenario, dt) {
-  if (state.phase !== 'running') return;
-  var player = state.player;
-  if (!player) return;
-
-  var row = getRowAtY(scenario, player.y);
-  if (!row || !row.movement || row.movement.direction === 'none') return;
-  if (!isOnPlatform(state, scenario, player)) return;
-
-  var dx = (row.movement.direction === 'right' ? 1 : -1) * row.movement.speed * dt;
-  player.worldX += dx;
-
-  var cols = state.grid.cols;
-  if (player.worldX < 0) player.worldX = 0;
-  if (player.worldX > cols - 1) player.worldX = cols - 1;
-  player.x = Math.floor(player.worldX);
-}
+// no-op stub: carrying is now handled inside stepSimulation
+// kept as browser global so index.html does not crash before GAME-LOOP lands
+function applyCarrying() {}
 
 function detectCollisions(state, scenario) {
   if (state.phase !== 'running') return null;
@@ -241,8 +226,8 @@ function detectCollisions(state, scenario) {
     var e = entities[i];
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
-    if (!eRow || player.worldY >= eRow.y + 1 || player.worldY + 1 <= eRow.y) continue;
-    if (entityOverlapsPlayerTile(e, player.worldX)) {
+    if (!eRow || player.y !== eRow.y) continue;
+    if (entityOverlapsPlayerTile(e, player.x)) {
       return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
     }
   }
@@ -264,30 +249,27 @@ function resetPlayer(state, scenario, resetPointId) {
       var pos = resetPoints[i].position;
       player.x = pos.x;
       player.y = pos.y;
-      player.worldX = pos.x;
-      player.worldY = pos.y;
       return;
     }
   }
 }
 
 function isSafeMove(state, scenario, player, dx, dy) {
-  var nx = player.worldX + dx;
-  var ny = player.worldY + dy;
+  var nx = player.x + dx;
+  var ny = player.y + dy;
   if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return false;
-  var destRow = getRowAtY(scenario, Math.floor(ny));
+  var destRow = getRowAtY(scenario, ny);
   if (!destRow) return false;
   if (destRow.baseTile === 'wall') return false;
   if (destRow.baseTile === 'hazard') {
-    var cx = nx + 0.5;
-    if (activePlatformsInRow(state, destRow.id, cx).length === 0) return false;
+    if (activePlatformsInRow(state, destRow.id, nx).length === 0) return false;
   }
   var entities = state.entities;
   for (var i = 0; i < entities.length; i++) {
     var e = entities[i];
     if (e.type !== 'obstacle' || e.collected) continue;
     var eRow = getRowById(scenario, e.rowId);
-    if (!eRow || ny >= eRow.y + 1 || ny + 1 <= eRow.y) continue;
+    if (!eRow || ny !== eRow.y) continue;
     if (entityOverlapsPlayerTile(e, nx)) return false;
   }
   return true;
@@ -295,31 +277,22 @@ function isSafeMove(state, scenario, player, dx, dy) {
 
 function getMovePreview(state, scenario, player) {
   return {
-    left:  isSafeMove(state, scenario, player, -STEP, 0),
-    right: isSafeMove(state, scenario, player,  STEP, 0),
-    up:    isSafeMove(state, scenario, player, 0, -STEP),
-    down:  isSafeMove(state, scenario, player, 0,  STEP)
+    left:  isSafeMove(state, scenario, player, -1, 0),
+    right: isSafeMove(state, scenario, player,  1, 0),
+    up:    isSafeMove(state, scenario, player, 0, -1),
+    down:  isSafeMove(state, scenario, player, 0,  1)
   };
 }
 
-function activePlatformsInRow(state, rowId, cx) {
-  return state.entities
-    .filter(function(e) { return !e.collected; })
-    .filter(function(e) { return e.type === 'platform'; })
-    .filter(function(e) { return e.rowId === rowId; })
-    .filter(function(e) { return e.x < cx; })
-    .filter(function(e) { return e.x + e.width > cx; });
-}
-
 function findCarryingPlatform(state, scenario, player) {
-  var cx = player.worldX + 0.5;
-  return [getRowAtY(scenario, player.y)].filter(Boolean)
-    .reduce(function(_, row) { return activePlatformsInRow(state, row.id, cx)[0]; }, null);
+  var row = getRowAtY(scenario, player.y);
+  if (!row) return null;
+  var platforms = activePlatformsInRow(state, row.id, player.x);
+  return platforms[0] || null;
 }
 
 if (typeof module !== 'undefined') module.exports = {
   MIN_OBSTACLE_GAP,
-  STEP,
   createPRNG,
   createSimulation,
   stepSimulation,
@@ -335,7 +308,6 @@ if (typeof module !== 'undefined') module.exports = {
   entityOverlapsPlayerTile,
   isOnPlatform,
   applyInput,
-  applyCarrying,
   detectCollisions,
   resetPlayer,
   activePlatformsInRow,
