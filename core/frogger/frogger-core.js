@@ -291,6 +291,20 @@ function findCarryingPlatform(state, scenario, player) {
   return platforms[0] || null;
 }
 
+var DIR_DELTA = { right: 1, left: -1, none: 0 };
+
+function buildRowVelocities(scenario) {
+  var map = {};
+  scenario.rows.forEach(function(row) {
+    map[row.id] = DIR_DELTA[row.movement.direction] / Math.max(1, row.movement.moveEvery * 100);
+  });
+  return map;
+}
+
+function clampVisualToSim(visualX, simX) {
+  return [visualX].filter(function(v) { return Math.abs(v - simX) <= 1.5; }).reduce(function(_, v) { return v; }, simX);
+}
+
 function snapshotPositions(simState) {
   var player = simState.player;
   var entities = simState.entities || [];
@@ -327,5 +341,7 @@ if (typeof module !== 'undefined') module.exports = {
   findCarryingPlatform,
   isSafeMove,
   getMovePreview,
-  snapshotPositions
+  snapshotPositions,
+  buildRowVelocities,
+  clampVisualToSim
 };

@@ -2,6 +2,7 @@ function createGameLoop(simState, scenario, rState, onTick) {
   var TICK_MS = 100;
   var tickCount = 0;
   var lastTickTime = performance.now();
+  var lastFrameTime = performance.now();
   var prevPositions = snapshotPositions(simState);
   var tickHandle, rafHandle;
 
@@ -13,9 +14,11 @@ function createGameLoop(simState, scenario, rState, onTick) {
     [onTick].filter(Boolean).forEach(function(fn) { fn(simState); });
   }
 
-  function frame() {
+  function frame(timestamp) {
+    var dt = Math.min(timestamp - lastFrameTime, 50);
+    lastFrameTime = timestamp;
     var alpha = Math.min(1, (performance.now() - lastTickTime) / TICK_MS);
-    renderFrogger(rState, simState, scenario, prevPositions, alpha);
+    renderFrogger(rState, simState, scenario, prevPositions, alpha, dt);
     rafHandle = requestAnimationFrame(frame);
   }
 

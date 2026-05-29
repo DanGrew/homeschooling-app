@@ -138,12 +138,13 @@ function initFroggerRenderer(container, scenario, theme) {
   grid.appendChild(resetOverlay);
   container.appendChild(grid);
 
-  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, bboxLayer, previewDots, entityEls: {}, cs, theme };
+  return { grid, entityLayer, playerEl, highlightEl, resetOverlay, resetBtn, bboxLayer, previewDots, entityEls: {}, visualX: {}, rowVelocities: buildRowVelocities(scenario), cs, theme };
 }
 
 function removeEntityEl(rState, e) {
   [rState.entityEls[e.id]].filter(Boolean).forEach(function(el) { el.remove(); });
   delete rState.entityEls[e.id];
+  delete rState.visualX[e.id];
 }
 
 function ensureEntityEl(rState, e, theme, cs) {
@@ -151,27 +152,33 @@ function ensureEntityEl(rState, e, theme, cs) {
     var el = entityEl(e, theme, cs);
     rState.entityLayer.appendChild(el);
     rState.entityEls[e.id] = el;
+    rState.visualX[e.id] = e.x;
   });
 }
 
-function positionEntityEl(rState, e, scenario, cs, prevPositions, alpha) {
+function advanceEntityVisualX(rState, e, dt) {
+  var next = rState.visualX[e.id] + rState.rowVelocities[e.rowId] * dt;
+  rState.visualX[e.id] = clampVisualToSim(next, e.x);
+}
+
+function positionEntityEl(rState, e, scenario, cs) {
   var rowY = [getRowById(scenario, e.rowId)].filter(Boolean).reduce(function(_, r) { return r.y; }, 0);
-  var prevX = [prevPositions.entities[e.id]].filter(Boolean).reduce(function(_, s) { return s.x; }, e.x);
-  var renderX = prevX + (e.x - prevX) * alpha;
-  rState.entityEls[e.id].style.left = (renderX * cs) + 'px';
+  rState.entityEls[e.id].style.left = (rState.visualX[e.id] * cs) + 'px';
   rState.entityEls[e.id].style.top = (rowY * cs) + 'px';
   rState.entityEls[e.id].style.width = (e.width * cs) + 'px';
 }
 
-function updateEntity(rState, e, scenario, cs, theme, seen, prevPositions, alpha) {
+function updateEntity(rState, e, scenario, cs, theme, seen, dt) {
   seen[e.id] = true;
   ensureEntityEl(rState, e, theme, cs);
-  positionEntityEl(rState, e, scenario, cs, prevPositions, alpha);
+  advanceEntityVisualX(rState, e, dt);
+  positionEntityEl(rState, e, scenario, cs);
 }
 
 function removeOrphanEl(rState, id) {
   rState.entityEls[id].remove();
   delete rState.entityEls[id];
+  delete rState.visualX[id];
 }
 
 var BBOX_CFG = {
@@ -192,7 +199,6 @@ function bboxDivThick(x, y, w, h, color) {
   return el;
 }
 
-
 function appendEntityBBox(layer, cs, scenario, e) {
   var cfg = BBOX_CFG[e.type];
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
@@ -200,13 +206,11 @@ function appendEntityBBox(layer, cs, scenario, e) {
   });
 }
 
-
 function appendActivePlatformBBox(layer, cs, scenario, e) {
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
     layer.appendChild(bboxDivThick(e.x * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)'));
   });
 }
-
 
 function renderBBoxes(rState, simState, scenario, prevPositions, alpha) {
   var layer = rState.bboxLayer;
@@ -230,7 +234,7 @@ function applyPlayerPos(rState, player, prevPositions, alpha) {
   rState.playerEl.style.top  = (player.y * rState.cs) + 'px';
 }
 
-function renderFrogger(rState, simState, scenario, prevPositions, alpha) {
+function renderFrogger(rState, simState, scenario, prevPositions, alpha, dt) {
   var cs = rState.cs;
   var theme = rState.theme;
   var seen = {};
@@ -239,7 +243,7 @@ function renderFrogger(rState, simState, scenario, prevPositions, alpha) {
     .forEach(function(e) { removeEntityEl(rState, e); });
 
   simState.entities.filter(function(e) { return !e.collected; })
-    .forEach(function(e) { updateEntity(rState, e, scenario, cs, theme, seen, prevPositions, alpha); });
+    .forEach(function(e) { updateEntity(rState, e, scenario, cs, theme, seen, dt); });
 
   Object.keys(rState.entityEls).filter(function(id) { return !seen[id]; })
     .forEach(function(id) { removeOrphanEl(rState, id); });
