@@ -88,3 +88,67 @@ test('close button stops lesson and hides overlay', async ({ page }) => {
   await page.locator('#guidance-overlay button[title="Stop lesson"]').click({ delay: 700 })
   await expect(page.locator('#guidance-overlay')).not.toBeVisible()
 })
+
+test('lesson 2 first step prompts to make five', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').nth(1).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await expect(page.locator('#guidance-overlay')).toContainText('make five')
+})
+
+test('lesson 3 first step prompts for equal groups', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').nth(2).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await expect(page.locator('#guidance-overlay')).toContainText('equal')
+})
+
+test('lesson 4 first step prompts to count to ten', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').nth(3).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await expect(page.locator('#guidance-overlay')).toContainText('10')
+})
+
+test('lesson 5 first step prompts to press plus', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').nth(4).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await expect(page.locator('#guidance-overlay')).toContainText('+')
+})
+
+test('lesson 5 advances through A_PLUS, B_PLUS, A_MINUS', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService && window.LESSON_VARS)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item').nth(4).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+
+  await fireGuidanceEvent(page, 'A_PLUS')
+  await expect(page.locator('#guidance-overlay')).toContainText('grew bigger')
+
+  await fireGuidanceEvent(page, 'B_PLUS')
+  await expect(page.locator('#guidance-overlay')).toContainText('grew too')
+
+  await fireGuidanceEvent(page, 'A_MINUS')
+  await expect(page.locator('#guidance-overlay')).toContainText('fewer')
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
+})
+
+test('Next on terminal step hides overlay', async ({ page }) => {
+  await page.goto(URL)
+  await startLesson(page)
+  await fireGuidanceEvent(page, 'TOTAL_3')
+  await fireGuidanceEvent(page, 'COUNT_ALL')
+  await expect(page.locator('#guidance-overlay [data-action="next"]')).toBeVisible()
+  await page.locator('#guidance-overlay [data-action="next"]').click()
+  await expect(page.locator('#guidance-overlay')).not.toBeVisible()
+})
