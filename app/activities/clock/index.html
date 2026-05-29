@@ -274,10 +274,11 @@ window.addEventListener('page:control', function(e) { PAGE_CTRL[e.detail.type]()
 
 var DEFAULT_PROFILE = 'times_of_day';
 var _manifestOptions = [];
+var _profileLoaders = {};
 
 function buildProfileFilter() {
   buildSimpleFilterBar(_manifestOptions, function(profileId) {
-    PAGE_CTRL['LOAD_PROFILE_' + profileId.toUpperCase().replace(/-/g, '_')]();
+    _profileLoaders[profileId]();
     [_manifestOptions.find(function(o) { return o.value === profileId; })].filter(Boolean).forEach(function(o) {
       profileTitleEl.textContent = o.label;
     });
@@ -290,12 +291,12 @@ fetch('../../../content/clock/profiles/manifest.json')
   .then(function(manifest) {
     _manifestOptions = manifest.map(function(m) { return {value: m.id, label: m.label, icon: m.icon}; });
     manifest.forEach(function(m) {
-      var key = 'LOAD_PROFILE_' + m.id.toUpperCase().replace(/-/g, '_');
-      PAGE_CTRL[key] = function() {
+      _profileLoaders[m.id] = function() {
         fetch('../../../content/clock/profiles/' + m.id + '.json')
           .then(function(r) { return r.json(); })
           .then(function(profile) { renderPresetButtons(profile.presets); });
       };
+      PAGE_CTRL['LOAD_PROFILE_' + m.id.toUpperCase().replace(/-/g, '_')] = _profileLoaders[m.id];
     });
     return fetch('../../../content/clock/profiles/' + DEFAULT_PROFILE + '.json');
   })
