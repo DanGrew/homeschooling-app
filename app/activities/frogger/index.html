@@ -13,6 +13,7 @@
 <script src="../../../core/frogger/frogger-core.js"></script>
 <script src="../../../core/frogger/frogger-loader.js"></script>
 <script src="../../../ui/frogger/frogger-renderer.js"></script>
+<script src="../../../ui/frogger/frogger-game-loop.js"></script>
 <script type="module">
 import { makeSpeakable, makeSpeakableButton } from '../../../components/speech/speakable.js';
 window.__makeSpeakable = makeSpeakable;
@@ -95,18 +96,20 @@ var DEV_THEME = {
   map: { player: '', platform: '', obstacle: '', collectible: '' }
 };
 
-var state, rState, animId;
-var lastTime = 0;
-var pendingReset = false;
+var state, rState, loop;
 var activeScenario = null;
-var NOOP = function() {};
 var KEY_MAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
+
+function onCollision(collision) {
+  loop.stop();
+  showCollisionHighlight(rState, collision);
+  setTimeout(function() { showResetPrompt(rState); }, 400);
+}
 
 function onResetClick() {
   hideResetPrompt(rState);
   resetPlayer(state, activeScenario, 'start');
-  resumeSimulation(state);
-  pendingReset = false;
+  loop.start();
 }
 
 window.startGame = function(scenario, theme) {
@@ -118,36 +121,12 @@ window.startGame = function(scenario, theme) {
   container.innerHTML = '';
   rState = initFroggerRenderer(container, scenario, resolvedTheme);
   rState.resetBtn.addEventListener('click', onResetClick);
-  lastTime = 0;
-  cancelAnimationFrame(animId);
-  animId = requestAnimationFrame(loop);
+  [loop].filter(Boolean).forEach(function(l) { l.stop(); });
+  loop = createGameLoop(state, scenario, rState, function(s) {
+    [detectCollisions(s, activeScenario)].filter(Boolean).forEach(onCollision);
+  });
+  loop.start();
 };
-
-function showResetOverlay() { showResetPrompt(rState); }
-
-function onCollision(collision) {
-  pauseSimulation(state);
-  pendingReset = true;
-  showCollisionHighlight(rState, collision);
-  setTimeout(showResetOverlay, 400);
-}
-
-function stepActive(dt) {
-  stepSimulation(state, activeScenario, dt);
-  applyCarrying(state, activeScenario, dt);
-  [detectCollisions(state, activeScenario)].filter(Boolean).forEach(onCollision);
-}
-
-var LOOP_STEP = { 'true': NOOP, 'false': stepActive };
-
-function loop(timestamp) {
-  lastTime = [lastTime, timestamp].filter(Boolean)[0];
-  var dt = Math.min((timestamp - lastTime) / 1000, 0.05);
-  LOOP_STEP[String(pendingReset)](dt);
-  lastTime = timestamp;
-  renderFrogger(rState, state, activeScenario);
-  animId = requestAnimationFrame(loop);
-}
 
 function onKeyDown(e) {
   e.preventDefault();

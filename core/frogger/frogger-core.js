@@ -291,6 +291,19 @@ function findCarryingPlatform(state, scenario, player) {
   return platforms[0] || null;
 }
 
+function snapshotPositions(simState) {
+  var player = simState.player;
+  var entities = simState.entities || [];
+  var snap = {
+    player: player ? { x: player.x, y: player.y } : null,
+    entities: {}
+  };
+  for (var i = 0; i < entities.length; i++) {
+    snap.entities[entities[i].id] = { x: entities[i].x };
+  }
+  return snap;
+}
+
 if (typeof module !== 'undefined') module.exports = {
   MIN_OBSTACLE_GAP,
   createPRNG,
@@ -313,5 +326,6 @@ if (typeof module !== 'undefined') module.exports = {
   activePlatformsInRow,
   findCarryingPlatform,
   isSafeMove,
-  getMovePreview
+  getMovePreview,
+  snapshotPositions
 };
