@@ -30,3 +30,5 @@ export function speak(text) { queue(text); }
 export function speakInterrupt(text) { interrupt(text); }
 var _SET_GLOBAL = { 'true': function(fn) { window.__speak = fn; }, 'false': function() {} };
 _SET_GLOBAL[String(typeof window !== 'undefined')](speak);
+var _SET_INTERRUPT = { 'true': function(fn) { window.__speakInterrupt = fn; }, 'false': function() {} };
+_SET_INTERRUPT[String(typeof window !== 'undefined')](speakInterrupt);
