@@ -121,6 +121,7 @@ function _clockSpoken12() { return _HOUR12_WORDS[currentHour%12]+' '+[_MIN_OCLOC
 function _clockSpoken24() { return _HOUR24_WORDS[currentHour]+' '+[_MIN_HUNDRED[currentMinute],_MIN_WORDS[currentMinute]].filter(Boolean)[0]; }
 var currentPresets = [];
 var presetFilter = null;
+var pageDefaultFilter = document.documentElement.getAttribute('data-default-profile') || null;
 var PAGE_CTRL = {};
 var _badgeTapEmit = null;
 var _badgeTargetEl = null;
@@ -405,13 +406,22 @@ window.addEventListener('guidance:start', function(e) {
     presetFilter = new Set([].concat(filter));
     renderPresetButtons(currentPresets);
   });
+  [e.detail.lesson.profile].filter(Boolean).forEach(function(profileId) {
+    fetch('../../../content/clock/profiles/' + profileId + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        _storeProfile(profileId, data, function() {});
+        renderPresetButtons(data.presets);
+      });
+  });
 });
 
 window.addEventListener('guidance:stop', function() {
   [document.getElementById('nav-filter-slot')].filter(Boolean).forEach(function(el) { el.style.visibility = ''; });
   profileTitleEl.style.display = '';
   buildProfileFilter();
-  presetFilter = null;
+  presetFilter = pageDefaultFilter;
+  renderPresetButtons(defaultPresets);
   presetButtonsEl.style.display = '';
   mcContainer.style.display = 'none';
   mcContainer.innerHTML = '';
