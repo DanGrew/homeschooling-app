@@ -4,7 +4,7 @@ const { parseScenario } = require2('../../core/frogger/frogger-loader.js');
 
 function makeRow(overrides) {
   return Object.assign(
-    { id: 'r', y: 0, baseTile: 'ground', wrap: false, movement: { direction: 'none', speed: 0 } },
+    { id: 'r', y: 0, baseTile: 'ground', wrap: false, movement: { direction: 'none', moveEvery: 0 } },
     overrides
   );
 }
@@ -84,13 +84,53 @@ describe('parseScenario', () => {
   });
 
   test('throws if movement missing direction', () => {
-    var row = makeRow({ movement: { speed: 0 } });
+    var row = makeRow({ movement: { moveEvery: 0 } });
     expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('row[0].movement missing required field: direction');
   });
 
-  test('throws if movement missing speed', () => {
+  test('throws if movement missing moveEvery', () => {
     var row = makeRow({ movement: { direction: 'none' } });
-    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('row[0].movement missing required field: speed');
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('row[0].movement missing required field: moveEvery');
+  });
+
+  test('throws if movement contains deprecated speed field', () => {
+    var row = makeRow({ movement: { direction: 'none', speed: 1.2, moveEvery: 8 } });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('deprecated field: speed');
+  });
+
+  test('throws if moveEvery is not a non-negative integer', () => {
+    var row = makeRow({ movement: { direction: 'right', moveEvery: -1 } });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('moveEvery must be a non-negative integer');
+  });
+
+  test('throws if moveEvery is a float', () => {
+    var row = makeRow({ movement: { direction: 'right', moveEvery: 1.5 } });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('moveEvery must be a non-negative integer');
+  });
+
+  test('accepts moveEvery of 0 (no movement)', () => {
+    var row = makeRow({ movement: { direction: 'none', moveEvery: 0 } });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).not.toThrow();
+  });
+
+  test('throws if spawn contains deprecated every field', () => {
+    var row = makeRow({ spawns: [{ entity: { type: 'platform', width: 1 }, every: 2 }] });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('deprecated field: every');
+  });
+
+  test('throws if spawn missing spawnEvery', () => {
+    var row = makeRow({ spawns: [{ entity: { type: 'platform', width: 1 } }] });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('missing required field: spawnEvery');
+  });
+
+  test('throws if spawnEvery is not a positive integer', () => {
+    var row = makeRow({ spawns: [{ entity: { type: 'platform', width: 1 }, spawnEvery: 0 }] });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('spawnEvery must be a positive integer');
+  });
+
+  test('accepts valid spawns with spawnEvery', () => {
+    var row = makeRow({ spawns: [{ entity: { type: 'platform', width: 1 }, spawnEvery: 17 }] });
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).not.toThrow();
   });
 
   test('validates all rows — catches error in second row', () => {
