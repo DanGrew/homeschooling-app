@@ -165,8 +165,7 @@ test('clicking move-right button moves selected object', async ({ page }) => {
   const obj = page.locator('[data-testid="object-' + topId + '"]');
   const before = await obj.getAttribute('transform');
   await page.locator('[data-action="move-right"]').click();
-  const after = await obj.getAttribute('transform');
-  expect(after).not.toBe(before);
+  await expect(obj).not.toHaveAttribute('transform', before);
 });
 
 test('refreshing produces a different layout', async ({ page }) => {
