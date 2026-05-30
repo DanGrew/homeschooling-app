@@ -1,8 +1,6 @@
 var OBJ_ANIM_DURATION = 175;
 var objAnims = {};
 
-function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
-
 function getVisualPos(obj) {
   var anim = objAnims[obj.id];
   if (!anim) return { x: obj.x, y: obj.y };
@@ -13,10 +11,6 @@ function getVisualPos(obj) {
 }
 
 function hasActiveAnims() { return Object.keys(objAnims).length > 0; }
-
-function objTransform(pos, rotation, scale) {
-  return 'translate(' + pos.x.toFixed(1) + ',' + pos.y.toFixed(1) + ') rotate(' + rotation + ') scale(' + scale + ')';
-}
 
 function renderObjects(svgEl, state) {
   var layer = svgEl.querySelector('[data-layer]');
