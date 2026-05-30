@@ -5,6 +5,7 @@
   "guide": "cat",
   "source": "Clock",
   "criteria": ["cl.technical-vocab", "uw.cause-effect"],
+  "pageControls": ["LOAD_PRESET_MORNING"],
   "steps": [
     {
       "prompt": "The clock shows seven in the morning. Look at the display — it says AM. AM means morning. Tap AM!",

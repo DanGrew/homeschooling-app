@@ -4,7 +4,6 @@
   "number": 6,
   "guide": "cat",
   "source": "Clock",
-  "filter": "my-day",
   "pageControls": ["ENABLE_ANY_PRESET"],
   "criteria": ["psed.identity", "cl.topic-vocabulary", "cl.sequencing-language"],
   "steps": [
