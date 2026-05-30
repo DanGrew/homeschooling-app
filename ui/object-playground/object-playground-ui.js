@@ -49,6 +49,8 @@ function renderControls(addBtn, undoBtn, state) {
   [state.deletedObject].filter(Boolean).forEach(function() { undoBtn.style.display = ''; });
 }
 
+var OBJ_DIR_EDGE = { left: 'left edge', right: 'right edge', up: 'top edge', down: 'bottom edge' };
+
 var OBJ_SPEAK_PROP = {
   colour: function(o) { return o.colour; },
   shape: function(o) { return o.shape; },
@@ -215,6 +217,10 @@ function initObjectPlayground() {
         var unchanged = [fromPos].filter(function(p) { return p.x === o.x; }).filter(function(p) { return p.y === o.y; });
         [o].filter(function() { return fromPos; }).filter(function() { return !unchanged.length; }).forEach(function(o) {
           objAnims[o.id] = { fromX: fromPos.x, fromY: fromPos.y, toX: o.x, toY: o.y, startTime: Date.now() };
+          _speak('move ' + dir);
+        });
+        [1].filter(function() { return fromPos; }).filter(function() { return unchanged.length; }).forEach(function() {
+          _speak(OBJ_DIR_EDGE[dir]);
         });
       });
       redraw();
