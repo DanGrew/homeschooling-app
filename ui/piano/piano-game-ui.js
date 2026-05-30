@@ -87,11 +87,11 @@ var HIT_RESULT = {
 };
 
 function processHit(closest, elapsed, keyEl) {
-  HIT_RESULT[String(Math.abs(elapsed - closest.hitTime) <= PIANO_CONFIG.HIT_WINDOW_MS)](closest, keyEl);
+  HIT_RESULT[String(isNoteHit(elapsed, closest.hitTime, PIANO_CONFIG.HIT_WINDOW_MS))](closest, keyEl);
 }
 
 function handleActive(activeInLane, elapsed, keyEl) {
-  var closest = activeInLane.sort((a, b) => Math.abs(elapsed - a.hitTime) - Math.abs(elapsed - b.hitTime))[0];
+  var closest = activeInLane.sort((a, b) => noteTimingDistance(elapsed, a.hitTime) - noteTimingDistance(elapsed, b.hitTime))[0];
   processHit(closest, elapsed, keyEl);
 }
 

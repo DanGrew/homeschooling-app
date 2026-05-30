@@ -41,10 +41,9 @@ function addBottomBand(body, lastEnd, ppm) {
 }
 
 function renderInactiveBands(body, schedule, ppm) {
-  const firstStart = Math.min(...schedule.map(i => toMins(i.start)));
-  const lastEnd = Math.max(...schedule.map(i => toMins(i.end)));
-  addTopBand(body, firstStart, ppm);
-  addBottomBand(body, lastEnd, ppm);
+  var bounds = scheduleTimeBounds(schedule);
+  addTopBand(body, bounds.firstStart, ppm);
+  addBottomBand(body, bounds.lastEnd, ppm);
 }
 
 function renderScheduleBlock(body, act, item, ppm) {
