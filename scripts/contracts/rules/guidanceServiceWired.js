@@ -2,25 +2,27 @@
 
 const fs = require('fs');
 const path = require('path');
-const ROOT = path.resolve(__dirname, '..', '..', '..');
 
-function extractActivityId(html) {
-  const m = html.match(/ACTIVITY_ID\s*=\s*['"]([^'"]+)['"]/);
+function extractLearningsBase(html) {
+  const m = html.match(/LEARNINGS_BASE\s*=\s*['"]([^'"]+)['"]/);
   return m ? m[1] : null;
 }
 
-function check(doc, html, optOuts = {}) {
+function check(doc, html, abs, optOuts = {}) {
   if (optOuts['guidance-service']) return [];
   if (!html.includes('guidance-service.js')) return [];
   const errors = [];
-  const id = extractActivityId(html);
-  if (!id) {
-    errors.push('imports guidance-service.js but ACTIVITY_ID not set');
-    return errors;
+  const base = extractLearningsBase(html);
+  if (!base) {
+    errors.push('imports guidance-service.js but window.LEARNINGS_BASE not set');
+  } else {
+    const resolved = path.resolve(path.dirname(abs), base);
+    if (!fs.existsSync(resolved)) {
+      errors.push('LEARNINGS_BASE resolves to non-existent path: ' + resolved);
+    }
   }
-  const lessonPath = path.join(ROOT, 'content', 'lessons', id + '.json');
-  if (!fs.existsSync(lessonPath)) {
-    errors.push('imports guidance-service.js but content/lessons/' + id + '.json not found');
+  if (!html.includes('new GuidanceService()')) {
+    errors.push('imports guidance-service.js but new GuidanceService() not called');
   }
   return errors;
 }
