@@ -12,6 +12,8 @@ const {
   addPlayer,
   createPlayer,
   snapshotPositions,
+  buildRowVelocities,
+  clampVisualToSim,
   MIN_OBSTACLE_GAP
 } = require2('../../core/frogger/frogger-core.js')
 
@@ -575,4 +577,53 @@ test('snapshotPositions with no entities returns empty entities object', () => {
   const state = createSimulation(makeScenario())
   const snap = snapshotPositions(state)
   expect(snap.entities).toEqual({})
+})
+
+// ---- buildRowVelocities ----
+
+test('buildRowVelocities right row returns positive velocity', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'right', 5)] })
+  const vels = buildRowVelocities(scenario)
+  expect(vels['r1']).toBeCloseTo(1 / (5 * 100))
+})
+
+test('buildRowVelocities left row returns negative velocity', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'left', 4)] })
+  const vels = buildRowVelocities(scenario)
+  expect(vels['r1']).toBeCloseTo(-1 / (4 * 100))
+})
+
+test('buildRowVelocities none row returns zero velocity', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'none', 1)] })
+  const vels = buildRowVelocities(scenario)
+  expect(vels['r1']).toBe(0)
+})
+
+test('buildRowVelocities multiple rows', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'right', 2), makeRow('r2', 'left', 10)] })
+  const vels = buildRowVelocities(scenario)
+  expect(vels['r1']).toBeCloseTo(1 / 200)
+  expect(vels['r2']).toBeCloseTo(-1 / 1000)
+})
+
+// ---- clampVisualToSim ----
+
+test('clampVisualToSim returns visualX when within 1.5 of simX', () => {
+  expect(clampVisualToSim(3.4, 3)).toBe(3.4)
+})
+
+test('clampVisualToSim returns simX when visualX more than 1.5 ahead', () => {
+  expect(clampVisualToSim(5.0, 3)).toBe(3)
+})
+
+test('clampVisualToSim returns simX when visualX more than 1.5 behind', () => {
+  expect(clampVisualToSim(1.0, 3)).toBe(3)
+})
+
+test('clampVisualToSim returns visualX at exactly 1.5 distance', () => {
+  expect(clampVisualToSim(4.5, 3)).toBe(4.5)
+})
+
+test('clampVisualToSim returns simX when wrapping causes large jump', () => {
+  expect(clampVisualToSim(9.8, 0)).toBe(0)
 })
