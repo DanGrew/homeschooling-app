@@ -42,14 +42,14 @@ function loadOptOuts(abs, rel) {
   }
 }
 
-function validate(html, optOuts) {
+function validate(abs, html, optOuts) {
   const { window } = new JSDOM(html);
   const doc = window.document;
   const errors = [];
   errors.push(...checkMenuBar(doc, optOuts).map(e => `[menuBar] ${e}`));
   errors.push(...checkSpeakableUI(doc, html, optOuts).map(e => `[speakableUI] ${e}`));
   errors.push(...checkActivityId(doc, html, optOuts).map(e => `[activityId] ${e}`));
-  errors.push(...checkGuidanceServiceWired(doc, html, optOuts).map(e => `[guidanceService] ${e}`));
+  errors.push(...checkGuidanceServiceWired(doc, html, abs, optOuts).map(e => `[guidanceService] ${e}`));
   return errors;
 }
 
@@ -65,7 +65,7 @@ for (const abs of allHtmlFiles) {
   if (filterFiles.length > 0 && !filterFiles.includes(rel)) continue;
   const html = fs.readFileSync(abs, 'utf8');
   const optOuts = loadOptOuts(abs, rel);
-  results.push({ file: rel, errors: validate(html, optOuts) });
+  results.push({ file: rel, errors: validate(abs, html, optOuts) });
 }
 
 const totalErrors = report(results);
