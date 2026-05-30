@@ -78,4 +78,11 @@ function findCurrentNext(schedule, nowMins) {
   return result;
 }
 
-if(typeof module!=='undefined')module.exports={toMins,getTodayKey,buildOrderedDays,pixelsPerMin,formatTimeLabel,slotLineClass,blockLayout,focusedScrollX,nowScrollTop,nowInRange,fmtActivity,findCurrentNext,dayLabel};
+function scheduleTimeBounds(schedule) {
+  return {
+    firstStart: Math.min.apply(null, schedule.map(function(i) { return toMins(i.start); })),
+    lastEnd:    Math.max.apply(null, schedule.map(function(i) { return toMins(i.end); }))
+  };
+}
+
+if(typeof module!=='undefined')module.exports={toMins,getTodayKey,buildOrderedDays,pixelsPerMin,formatTimeLabel,slotLineClass,blockLayout,focusedScrollX,nowScrollTop,nowInRange,fmtActivity,findCurrentNext,dayLabel,scheduleTimeBounds};

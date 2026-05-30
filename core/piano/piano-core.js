@@ -55,5 +55,13 @@ function noteInfo(token, noteMap, simplifications, noNoteInfo) {
   )[0];
 }
 
-if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo };
+function isNoteHit(elapsed, hitTime, windowMs) {
+  return Math.abs(elapsed - hitTime) <= windowMs;
+}
+
+function noteTimingDistance(elapsed, hitTime) {
+  return Math.abs(elapsed - hitTime);
+}
+
+if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo, isNoteHit, noteTimingDistance };
 
