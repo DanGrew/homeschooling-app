@@ -305,6 +305,16 @@ function clampVisualToSim(visualX, simX) {
   return [visualX].filter(function(v) { return Math.abs(v - simX) <= 1.5; }).reduce(function(_, v) { return v; }, simX);
 }
 
+function stepPlatformVisualX(visualX, simX, velocity, dt) {
+  return clampVisualToSim(visualX + velocity * dt, simX);
+}
+
+function stepObstacleVisualX(visualX, simX, velocity, dt) {
+  var next = clampVisualToSim(visualX + velocity * dt, simX);
+  var absD = Math.abs(next - simX);
+  return (next + simX - Math.sign(velocity) * absD) / 2;
+}
+
 function snapshotPositions(simState) {
   var player = simState.player;
   var entities = simState.entities || [];
@@ -343,5 +353,7 @@ if (typeof module !== 'undefined') module.exports = {
   getMovePreview,
   snapshotPositions,
   buildRowVelocities,
-  clampVisualToSim
+  clampVisualToSim,
+  stepPlatformVisualX,
+  stepObstacleVisualX
 };

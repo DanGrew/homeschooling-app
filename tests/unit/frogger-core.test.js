@@ -14,6 +14,8 @@ const {
   snapshotPositions,
   buildRowVelocities,
   clampVisualToSim,
+  stepPlatformVisualX,
+  stepObstacleVisualX,
   MIN_OBSTACLE_GAP
 } = require2('../../core/frogger/frogger-core.js')
 
@@ -626,4 +628,72 @@ test('clampVisualToSim returns visualX at exactly 1.5 distance', () => {
 
 test('clampVisualToSim returns simX when wrapping causes large jump', () => {
   expect(clampVisualToSim(9.8, 0)).toBe(0)
+})
+
+// ---- stepPlatformVisualX ----
+
+test('stepPlatformVisualX advances toward simX at velocity', () => {
+  const vel = 1 / 500  // moveEvery=5, 100ms tick
+  const result = stepPlatformVisualX(0, 1, vel, 100)
+  expect(result).toBeCloseTo(0.2)
+})
+
+test('stepPlatformVisualX converges to simX after full cycle', () => {
+  const vel = 1 / 500
+  let vx = 0
+  for (let t = 0; t < 500; t += 16) vx = stepPlatformVisualX(vx, 1, vel, 16)
+  expect(vx).toBeCloseTo(1, 1)
+})
+
+test('stepPlatformVisualX left-moving: visual can lead simX', () => {
+  const vel = -1 / 500
+  const result = stepPlatformVisualX(5, 4, vel, 100)
+  expect(result).toBeCloseTo(4.8)
+  expect(result).toBeLessThan(5)
+  expect(result).toBeGreaterThan(4)
+})
+
+test('stepPlatformVisualX snaps to simX on large gap (wrap-around)', () => {
+  const vel = -1 / 500
+  expect(stepPlatformVisualX(9.8, 0, vel, 16)).toBe(0)
+})
+
+// ---- stepObstacleVisualX ----
+
+test('stepObstacleVisualX right-moving: visual never exceeds simX', () => {
+  const vel = 1 / 500
+  const result = stepObstacleVisualX(0, 1, vel, 400)
+  expect(result).toBeLessThanOrEqual(1)
+})
+
+test('stepObstacleVisualX left-moving: visual never goes below simX', () => {
+  const vel = -1 / 500
+  const result = stepObstacleVisualX(5, 4, vel, 400)
+  expect(result).toBeGreaterThanOrEqual(4)
+})
+
+test('stepObstacleVisualX right-moving: lags then reaches simX at full cycle', () => {
+  const vel = 1 / 500
+  let vx = 0
+  for (let t = 0; t < 500; t += 16) vx = stepObstacleVisualX(vx, 1, vel, 16)
+  expect(vx).toBeCloseTo(1, 1)
+})
+
+test('stepObstacleVisualX right-moving: visual approaches simX smoothly mid-cycle', () => {
+  const vel = 1 / 500
+  const at250 = stepObstacleVisualX(0, 1, vel, 250)
+  expect(at250).toBeGreaterThan(0)
+  expect(at250).toBeLessThanOrEqual(1)
+})
+
+test('stepObstacleVisualX left-moving: visual approaches simX smoothly mid-cycle', () => {
+  const vel = -1 / 500
+  const at250 = stepObstacleVisualX(5, 4, vel, 250)
+  expect(at250).toBeLessThan(5)
+  expect(at250).toBeGreaterThanOrEqual(4)
+})
+
+test('stepObstacleVisualX snaps to simX on large gap (wrap-around)', () => {
+  const vel = -1 / 500
+  expect(stepObstacleVisualX(9.8, 0, vel, 16)).toBe(0)
 })

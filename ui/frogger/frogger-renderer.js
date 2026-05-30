@@ -156,17 +156,11 @@ function ensureEntityEl(rState, e, theme, cs) {
   });
 }
 
-var NO_LEAD_ENTITY = { obstacle: true };
+var STEP_VISUAL = { obstacle: stepObstacleVisualX, platform: stepPlatformVisualX, collectible: stepPlatformVisualX };
 
 function advanceEntityVisualX(rState, e, dt) {
   var vel = rState.rowVelocities[e.rowId];
-  var next = clampVisualToSim(rState.visualX[e.id] + vel * dt, e.x);
-  var absD = Math.abs(next - e.x);
-  var ADVANCE = {
-    'true':  function() { return (next + e.x - Math.sign(vel) * absD) / 2; },
-    'false': function() { return next; }
-  };
-  rState.visualX[e.id] = ADVANCE[String(!!NO_LEAD_ENTITY[e.type])]();
+  rState.visualX[e.id] = STEP_VISUAL[e.type](rState.visualX[e.id], e.x, vel, dt);
 }
 
 function positionEntityEl(rState, e, scenario, cs) {
@@ -238,7 +232,7 @@ function advancePlayerVisualX(rState, player, simState, scenario, prevPositions,
   var carrier = findCarryingPlatform(simState, scenario, player);
   var prevX = [prevPositions.player].filter(Boolean).reduce(function(_, p) { return p.x; }, player.x);
   var ADVANCE = {
-    'true':  function() { var vel = rState.rowVelocities[carrier.rowId]; var next = clampVisualToSim(initX + vel * dt, player.x); var absD = Math.abs(next - player.x); return (next + player.x - Math.sign(vel) * absD) / 2; },
+    'true':  function() { return stepPlatformVisualX(initX, player.x, rState.rowVelocities[carrier.rowId], dt); },
     'false': function() { return prevX + (player.x - prevX) * alpha; }
   };
   rState.playerVisualX = ADVANCE[String(!!carrier)]();
