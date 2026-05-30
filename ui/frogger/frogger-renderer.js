@@ -157,8 +157,10 @@ function ensureEntityEl(rState, e, theme, cs) {
 }
 
 function advanceEntityVisualX(rState, e, dt) {
-  var next = rState.visualX[e.id] + rState.rowVelocities[e.rowId] * dt;
-  rState.visualX[e.id] = clampVisualToSim(next, e.x);
+  var vel = rState.rowVelocities[e.rowId];
+  var next = clampVisualToSim(rState.visualX[e.id] + vel * dt, e.x);
+  var absD = Math.abs(next - e.x);
+  rState.visualX[e.id] = (next + e.x - Math.sign(vel) * absD) / 2;
 }
 
 function positionEntityEl(rState, e, scenario, cs) {
@@ -230,7 +232,7 @@ function advancePlayerVisualX(rState, player, simState, scenario, prevPositions,
   var carrier = findCarryingPlatform(simState, scenario, player);
   var prevX = [prevPositions.player].filter(Boolean).reduce(function(_, p) { return p.x; }, player.x);
   var ADVANCE = {
-    'true':  function() { return clampVisualToSim(initX + rState.rowVelocities[carrier.rowId] * dt, player.x); },
+    'true':  function() { var vel = rState.rowVelocities[carrier.rowId]; var next = clampVisualToSim(initX + vel * dt, player.x); var absD = Math.abs(next - player.x); return (next + player.x - Math.sign(vel) * absD) / 2; },
     'false': function() { return prevX + (player.x - prevX) * alpha; }
   };
   rState.playerVisualX = ADVANCE[String(!!carrier)]();
