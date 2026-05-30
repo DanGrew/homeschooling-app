@@ -94,7 +94,7 @@
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, shuffle} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, shuffle, presetSkyColour} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
@@ -222,22 +222,6 @@ function pressPreset(preset) {
   _EMIT_ANY_PRESET[String(_anyPresetEnabled)]();
 }
 
-var _SKY_COLOURS = [
-  {from:0,  to:4,  bg:'#1a1a2e', fg:'#ffffff'},
-  {from:5,  to:7,  bg:'#ff7043', fg:'#ffffff'},
-  {from:8,  to:11, bg:'#b3e5fc', fg:'#333333'},
-  {from:12, to:14, bg:'#fff9c4', fg:'#333333'},
-  {from:15, to:17, bg:'#ffe0b2', fg:'#333333'},
-  {from:18, to:20, bg:'#7e57c2', fg:'#ffffff'},
-  {from:21, to:23, bg:'#1a237e', fg:'#ffffff'}
-];
-
-function _skyColour(time) {
-  var hour = parseInt(time.split(':')[0], 10);
-  return _SKY_COLOURS.filter(function(s) { return hour >= s.from && hour <= s.to; })[0]
-    || {bg: 'rgba(255,255,255,0.88)', fg: '#333333'};
-}
-
 var _APPLY_FILTER = {
   'true':  function(presets) { return presets.filter(function(p) { return p.tags.some(function(t) { return presetFilter.has(t); }); }); },
   'false': function(presets) { return presets; }
@@ -251,7 +235,7 @@ function renderPresetButtons(presets) {
   show.forEach(function(preset) {
     var btn = document.createElement('button');
     btn.className = 'preset-btn';
-    var sky = _skyColour(preset.time);
+    var sky = presetSkyColour(preset.time);
     btn.style.background = sky.bg;
     btn.style.color = sky.fg;
     [preset.emoji].filter(Boolean).forEach(function(e) {
