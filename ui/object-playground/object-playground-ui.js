@@ -62,6 +62,31 @@ function _speak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
 
+var OBJ_DIR_ARROW = { left: '\u2B05', right: '\u27A1', up: '\u2B06', down: '\u2B07' };
+var OBJ_DIR_OFFSET = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
+
+function showDirArrow(svgEl, obj, dir) {
+  var layer = svgEl.querySelector('[data-layer]');
+  var scale = OBJ_SIZE_MAP[obj.size];
+  var off = OBJ_DIR_OFFSET[dir];
+  var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('class', 'obj-dir-arrow');
+  t.setAttribute('data-dir-arrow', '');
+  t.setAttribute('x', obj.x + off[0] * (OBJ_BASE_R * scale + 24));
+  t.setAttribute('y', obj.y + off[1] * (OBJ_BASE_R * scale + 24));
+  t.textContent = OBJ_DIR_ARROW[dir];
+  layer.appendChild(t);
+  t.addEventListener('animationend', function() { [t.parentNode].filter(Boolean).forEach(function(p) { p.removeChild(t); }); });
+}
+
+function showEdgeFlash(svgEl, objId) {
+  var el = svgEl.querySelector('[data-obj="' + objId + '"]');
+  [el].filter(Boolean).forEach(function(el) {
+    el.classList.add('obj-edge-flash');
+    el.addEventListener('animationend', function() { el.classList.remove('obj-edge-flash'); }, { once: true });
+  });
+}
+
 function initObjectPlayground() {
   var wrap = document.getElementById('obj-viewport');
   var svgEl = document.getElementById('obj-world');
@@ -207,6 +232,7 @@ function initObjectPlayground() {
       });
     });
     var actionRow = e.target.closest('[data-action^="move-"]');
+    var flashIds = [];
     [actionRow].filter(Boolean).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
@@ -219,13 +245,16 @@ function initObjectPlayground() {
         [o].filter(function() { return animFrom; }).filter(function() { return !unchanged.length; }).forEach(function(o) {
           objAnims[o.id] = { fromX: animFrom.x, fromY: animFrom.y, toX: o.x, toY: o.y, startTime: Date.now() };
           _speak('move ' + dir);
+          showDirArrow(svgEl, o, dir);
         });
-        [1].filter(function() { return logicalFrom; }).filter(function() { return unchanged.length; }).forEach(function() {
+        [o].filter(function() { return logicalFrom; }).filter(function() { return unchanged.length; }).forEach(function(o) {
           _speak(OBJ_DIR_EDGE[dir]);
+          flashIds.push(o.id);
         });
       });
       redraw();
       scheduleAnimLoop();
+      flashIds.forEach(function(id) { showEdgeFlash(svgEl, id); });
     });
   });
 }

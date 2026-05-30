@@ -191,6 +191,25 @@ test('pressing direction button at edge speaks edge label', async ({ page }) => 
   expect(log).toContain('right edge');
 });
 
+test('direction arrow appears after pressing move-right', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  await page.locator('[data-action="move-right"]').click();
+  await expect(page.locator('[data-dir-arrow]')).toBeVisible();
+});
+
+test('edge flash class applied when movement blocked', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  for (let i = 0; i < 60; i++) await page.locator('[data-action="move-right"]').click();
+  await page.locator('[data-action="move-right"]').click();
+  await expect(page.locator('[data-testid="object-' + topId + '"]')).toHaveClass(/obj-edge-flash/);
+});
+
 test('refreshing produces a different layout', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform1 = await page.locator('[data-testid="object-obj-0"]').getAttribute('transform');
