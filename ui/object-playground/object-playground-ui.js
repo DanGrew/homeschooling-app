@@ -168,5 +168,11 @@ function initObjectPlayground() {
         _speak('delete');
       });
     });
+    var actionRow = e.target.closest('[data-action^="move-"]');
+    [actionRow].filter(Boolean).forEach(function(el) {
+      var dir = el.getAttribute('data-action').replace('move-', '');
+      state = moveSelectedObject(state, dir);
+      redraw();
+    });
   });
 }
