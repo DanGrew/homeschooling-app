@@ -35,6 +35,13 @@
     "number": 2
   },
   {
+    "id": "clock-exercise-what_comes_after",
+    "source": "Clock",
+    "title": "What Comes After?",
+    "type": "exercise",
+    "number": 1
+  },
+  {
     "id": "clock-exercise-what_comes_next_fives",
     "source": "Clock",
     "title": "What Comes Next?",
@@ -133,6 +140,13 @@
     "number": 2
   },
   {
+    "id": "clock-lesson-morning_to_night",
+    "source": "Clock",
+    "title": "Morning to Night",
+    "type": "lesson",
+    "number": 5
+  },
+  {
     "id": "clock-lesson-my_day",
     "source": "Clock",
     "title": "My Day",
@@ -166,6 +180,13 @@
     "title": "Sun and Moon",
     "type": "lesson",
     "number": 5
+  },
+  {
+    "id": "clock-lesson-times_of_day",
+    "source": "Clock",
+    "title": "Times of Day",
+    "type": "lesson",
+    "number": 4
   },
   {
     "id": "colour-wheel-exercise-cool",
@@ -440,13 +461,6 @@
     "number": 5
   },
   {
-    "id": "morning_to_night",
-    "source": "Clock",
-    "title": "Morning to Night",
-    "type": "lesson",
-    "number": 5
-  },
-  {
     "id": "not_gate",
     "source": "Logic Gates",
     "title": "NOT Gate",
@@ -541,24 +555,10 @@
     "number": 5
   },
   {
-    "id": "times_of_day",
-    "source": "Clock",
-    "title": "Times of Day",
-    "type": "lesson",
-    "number": 4
-  },
-  {
     "id": "vowels",
     "source": "Letters & Numbers",
     "title": "Vowels",
     "type": "lesson",
-    "number": 1
-  },
-  {
-    "id": "what_comes_after",
-    "source": "Clock",
-    "title": "What Comes After?",
-    "type": "exercise",
     "number": 1
   },
   {

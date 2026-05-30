@@ -1,5 +1,5 @@
 {
-  "id": "times_of_day",
+  "id": "clock-lesson-times_of_day",
   "title": "Times of Day",
   "number": 4,
   "guide": "dog",
@@ -11,18 +11,18 @@
   "steps": [
     {
       "prompt": "Different times of day have different names. Press Breakfast — what time do you eat breakfast?",
-      "expect": "PRESET_BREAKFAST_SELECTED",
-      "feedback": "The short hand is near the 10. Now press Lunch!"
+      "expect": "PRESET_BREAKFAST_SELECTED"
     },
     {
-      "expect": "PRESET_LUNCH_SELECTED",
-      "feedback": "The short hand has moved to the 1. Now press Dinner!"
+      "prompt": "The short hand is near the 10. Now press Lunch!",
+      "expect": "PRESET_LUNCH_SELECTED"
     },
     {
-      "expect": "PRESET_DINNER_SELECTED",
-      "feedback": "It's getting dark outside! Now press Bedtime!"
+      "prompt": "The short hand has moved to the 1. Now press Dinner!",
+      "expect": "PRESET_DINNER_SELECTED"
     },
     {
+      "prompt": "It's getting dark outside! Now press Bedtime!",
       "expect": "PRESET_BEDTIME_SELECTED",
       "feedback": "Time to sleep. You know your whole day!"
     }
