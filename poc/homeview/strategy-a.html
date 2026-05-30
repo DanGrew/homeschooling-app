@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategy A — showDirectoryPicker</title>
+<style>
+* { box-sizing: border-box; }
+body { background: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 40px; }
+h1 { font-size: 52px; margin: 0 0 4px; }
+.subtitle { font-size: 26px; color: #aaa; margin-bottom: 8px; }
+h2 { font-size: 30px; color: #ff0; margin: 36px 0 14px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+.log { font-family: monospace; font-size: 22px; line-height: 1.9; }
+.log div { margin: 2px 0; }
+.pass { color: #4f4; }
+.fail { color: #f55; }
+.pending { color: #ff0; }
+.skip { color: #666; }
+.nav { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+button { background: #222; color: #fff; border: 2px solid #555; border-radius: 10px;
+         font-size: 34px; padding: 22px 40px; cursor: pointer; min-width: 260px; }
+button:focus { outline: 4px solid #ff0; border-color: #ff0; background: #2a2a00; }
+button:hover { background: #2a2a2a; }
+a { color: #ff0; font-size: 24px; text-decoration: none; display: inline-block; margin-bottom: 24px; }
+a:focus { outline: 2px solid #ff0; }
+#file-list { font-family: monospace; font-size: 20px; color: #aaa; margin: 12px 0; }
+video { display: block; width: 100%; max-width: 860px; background: #000; margin-top: 16px; border-radius: 8px; }
+</style>
+</head>
+<body>
+<a href="index.html">← Hub</a>
+<h1>Strategy A</h1>
+<div class="subtitle">showDirectoryPicker() — File System Access API</div>
+
+<h2>Test Cases</h2>
+<div class="log">
+  <div id="tc-01">? TC-01: showDirectoryPicker API exists</div>
+  <div id="tc-02">? TC-02: Directory picker launches from button tap</div>
+  <div id="tc-03" class="skip">— TC-03: USB drive visible in picker — observe manually when picker opens</div>
+  <div id="tc-04">? TC-04: Directory handle granted</div>
+  <div id="tc-05">? TC-05: File iteration returns MP4s</div>
+  <div id="tc-06">? TC-06: File handle read returns File object</div>
+  <div id="tc-07">? TC-07: URL.createObjectURL() returns blob URL</div>
+  <div id="tc-08">? TC-08: Video plays within 5s</div>
+  <div id="tc-09" class="skip">— TC-09: 5 min playback — observe manually after TC-08 passes</div>
+  <div id="tc-10" class="skip">— TC-10: IndexedDB persistence — informational only, not tested here</div>
+  <div id="tc-12a">? TC-12a: Remote OK triggers showDirectoryPicker</div>
+</div>
+
+<h2>Action</h2>
+<div class="nav">
+  <button id="btn-pick">Pick Folder (USB Drive)</button>
+</div>
+
+<div id="file-list"></div>
+<video id="video" controls></video>
+
+<script>
+function log(id, status, msg) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var icons = { pass: '✓', fail: '✗', skip: '—', pending: '…' };
+  el.textContent = (icons[status] || '?') + ' ' + msg;
+  el.className = status;
+}
+
+if ('showDirectoryPicker' in window) {
+  log('tc-01', 'pass', 'TC-01: showDirectoryPicker API exists');
+} else {
+  log('tc-01', 'fail', 'TC-01: showDirectoryPicker NOT available in this browser');
+}
+
+var video = document.getElementById('video');
+var currentBlobUrl = null;
+
+function revokeBlob() {
+  if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
+}
+
+document.getElementById('btn-pick').addEventListener('click', async function () {
+  log('tc-02', 'pending', 'TC-02: Opening picker…');
+  log('tc-12a', 'pending', 'TC-12a: Remote OK pressed — waiting for picker…');
+
+  try {
+    var dirHandle = await window.showDirectoryPicker();
+    log('tc-02', 'pass', 'TC-02: Picker launched successfully');
+    log('tc-04', 'pass', 'TC-04: Directory handle granted — ' + dirHandle.name);
+    log('tc-12a', 'pass', 'TC-12a: Remote OK triggered picker ✓');
+
+    log('tc-05', 'pending', 'TC-05: Iterating files…');
+    var mp4s = [];
+    var fileList = document.getElementById('file-list');
+    fileList.textContent = 'Scanning for MP4s…';
+    for await (var entry of dirHandle.values()) {
+      if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.mp4')) {
+        mp4s.push(entry);
+      }
+    }
+
+    fileList.textContent = 'MP4s found: ' + mp4s.map(function (e) { return e.name; }).join(', ');
+
+    if (mp4s.length > 0) {
+      log('tc-05', 'pass', 'TC-05: ' + mp4s.length + ' MP4(s) found');
+
+      log('tc-06', 'pending', 'TC-06: Reading first file…');
+      var fileHandle = mp4s[0];
+      var file = await fileHandle.getFile();
+      log('tc-06', 'pass', 'TC-06: File object — ' + file.name + ' (' + (file.size / 1048576).toFixed(1) + ' MB)');
+
+      revokeBlob();
+      var url = URL.createObjectURL(file);
+      currentBlobUrl = url;
+      log('tc-07', 'pass', 'TC-07: Blob URL created — ' + url.substring(0, 40) + '…');
+
+      video.src = url;
+      var playStart = Date.now();
+      log('tc-08', 'pending', 'TC-08: Starting playback…');
+
+      video.addEventListener('playing', function onPlay() {
+        video.removeEventListener('playing', onPlay);
+        var elapsed = ((Date.now() - playStart) / 1000).toFixed(1);
+        var pass = parseFloat(elapsed) <= 5;
+        log('tc-08', pass ? 'pass' : 'fail', 'TC-08: Playing in ' + elapsed + 's' + (pass ? '' : ' (>5s)'));
+      });
+
+      video.addEventListener('error', function onErr() {
+        video.removeEventListener('error', onErr);
+        var msg = video.error ? ('code ' + video.error.code) : 'unknown';
+        log('tc-08', 'fail', 'TC-08: Video error — ' + msg);
+      });
+
+      video.play().catch(function (e) {
+        log('tc-08', 'fail', 'TC-08: play() rejected — ' + e.message);
+      });
+    } else {
+      log('tc-05', 'fail', 'TC-05: No MP4 files found in selected folder');
+    }
+  } catch (e) {
+    if (e.name === 'AbortError') {
+      log('tc-02', 'fail', 'TC-02: Picker dismissed — user cancelled');
+      log('tc-12a', 'fail', 'TC-12a: Picker dismissed before selection');
+    } else {
+      log('tc-02', 'fail', 'TC-02: ' + e.name + ': ' + e.message);
+      log('tc-12a', 'fail', 'TC-12a: ' + e.name + ': ' + e.message);
+    }
+  }
+});
+</script>
+</body>
+</html>

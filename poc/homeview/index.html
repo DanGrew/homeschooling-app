@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HomeView PoC — Hub</title>
+<style>
+* { box-sizing: border-box; }
+body { background: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 40px; }
+h1 { font-size: 52px; margin: 0 0 8px; }
+h2 { font-size: 32px; color: #ff0; margin: 40px 0 16px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+.info { font-size: 18px; color: #888; word-break: break-all; margin-bottom: 8px; }
+.log { font-family: monospace; font-size: 22px; line-height: 1.9; }
+.log div { margin: 2px 0; }
+.pass { color: #4f4; }
+.fail { color: #f55; }
+.pending { color: #ff0; }
+.skip { color: #666; }
+.nav { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+button { background: #222; color: #fff; border: 2px solid #555; border-radius: 10px;
+         font-size: 34px; padding: 22px 40px; cursor: pointer; min-width: 280px; text-align: center; }
+button:focus { outline: 4px solid #ff0; border-color: #ff0; background: #2a2a00; }
+button:hover { background: #2a2a2a; }
+input[type=text] { background: #1a1a1a; color: #fff; border: 2px solid #555; border-radius: 8px;
+                   font-size: 26px; padding: 14px 18px; width: 100%; max-width: 700px; margin-bottom: 16px; }
+input[type=text]:focus { outline: 4px solid #ff0; border-color: #ff0; }
+video { display: block; width: 100%; max-width: 860px; background: #000; margin-top: 16px; border-radius: 8px; }
+small { font-size: 18px; color: #aaa; display: block; margin-top: 6px; }
+</style>
+</head>
+<body>
+<h1>HomeView PoC</h1>
+<div class="info" id="ua-display"></div>
+
+<h2>Phase 1 — Auto Checks</h2>
+<div class="log">
+  <div id="tc-p101">? TC-P1-01: Page load</div>
+  <div id="tc-wakelock">? Wake Lock</div>
+  <div id="tc-p103">? TC-P1-03: D-pad — press any arrow key on remote</div>
+</div>
+
+<h2>Phase 1 — Video Playback</h2>
+<input type="text" id="video-url" value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4">
+<small>Default: Big Buck Bunny (test video). Replace with any hosted MP4 URL.</small>
+<div class="nav" style="margin-top:16px">
+  <button id="btn-play">▶ Play Video</button>
+  <button id="btn-stop">■ Stop</button>
+</div>
+<div class="log" style="margin-top:8px">
+  <div id="tc-p104">? TC-P1-04: Video plays within 5s — press Play then observe</div>
+  <div id="tc-p105" class="skip">— TC-P1-05: 5 min playback — observe manually after P1-04 passes</div>
+  <div id="tc-p106" class="skip">— TC-P1-06: iPhone Safari — test this page on iPhone separately</div>
+</div>
+<video id="video" controls></video>
+
+<h2>Strategy Pages</h2>
+<div class="nav">
+  <button onclick="location.href='strategy-a.html'">Strategy A<br><small>showDirectoryPicker</small></button>
+  <button onclick="location.href='strategy-b.html'">Strategy B<br><small>input[type=file]</small></button>
+  <button onclick="location.href='strategy-c.html'">Strategy C<br><small>Auto Path Scan</small></button>
+</div>
+
+<script>
+function log(id, status, msg) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var icons = { pass: '✓', fail: '✗', skip: '—', pending: '…' };
+  el.textContent = (icons[status] || '?') + ' ' + msg;
+  el.className = status;
+}
+
+var ua = navigator.userAgent;
+document.getElementById('ua-display').textContent = ua;
+
+var browser = ua.includes('Firefox') ? 'Firefox'
+  : (ua.includes('SilkAccelerated') || ua.includes('Silk')) ? 'Silk Browser'
+  : ua.includes('Chrome') ? 'Chrome'
+  : ua.includes('Safari') ? 'Safari'
+  : 'Unknown browser';
+log('tc-p101', 'pass', 'TC-P1-01: Page loaded — ' + browser);
+
+if ('wakeLock' in navigator) {
+  navigator.wakeLock.request('screen').then(function () {
+    log('tc-wakelock', 'pass', 'Wake Lock: acquired — screen will not sleep');
+  }).catch(function (e) {
+    log('tc-wakelock', 'fail', 'Wake Lock: request failed — ' + e.message);
+  });
+} else {
+  log('tc-wakelock', 'fail', 'Wake Lock: API not available in this browser');
+}
+
+window.addEventListener('keydown', function onDpad(e) {
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+    log('tc-p103', 'pass', 'TC-P1-03: D-pad detected — ' + e.key);
+    window.removeEventListener('keydown', onDpad);
+  }
+});
+
+var video = document.getElementById('video');
+var playStart = null;
+var blobUrl = null;
+
+document.getElementById('btn-play').addEventListener('click', function () {
+  var url = document.getElementById('video-url').value.trim();
+  if (!url) return;
+  video.src = url;
+  playStart = Date.now();
+  log('tc-p104', 'pending', 'TC-P1-04: Loading video…');
+  video.play().catch(function (e) {
+    log('tc-p104', 'fail', 'TC-P1-04: play() rejected — ' + e.message);
+  });
+});
+
+document.getElementById('btn-stop').addEventListener('click', function () {
+  video.pause();
+  video.src = '';
+  if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
+});
+
+video.addEventListener('playing', function () {
+  if (playStart === null) return;
+  var elapsed = ((Date.now() - playStart) / 1000).toFixed(1);
+  var pass = parseFloat(elapsed) <= 5;
+  log('tc-p104', pass ? 'pass' : 'fail', 'TC-P1-04: Playing in ' + elapsed + 's' + (pass ? '' : ' (>5s threshold)'));
+  playStart = null;
+});
+
+video.addEventListener('error', function () {
+  var msg = video.error ? ('code ' + video.error.code + ' — ' + video.error.message) : 'unknown error';
+  log('tc-p104', 'fail', 'TC-P1-04: Video error — ' + msg);
+  playStart = null;
+});
+</script>
+</body>
+</html>

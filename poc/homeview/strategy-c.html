@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Strategy C — Auto Path Scan</title>
+<style>
+* { box-sizing: border-box; }
+body { background: #111; color: #fff; font-family: sans-serif; margin: 0; padding: 40px; }
+h1 { font-size: 52px; margin: 0 0 4px; }
+.subtitle { font-size: 26px; color: #aaa; margin-bottom: 8px; }
+h2 { font-size: 30px; color: #ff0; margin: 36px 0 14px; border-bottom: 1px solid #333; padding-bottom: 6px; }
+.note { font-size: 22px; color: #fa0; background: #221800; border-left: 4px solid #fa0; padding: 14px 18px; margin-bottom: 20px; }
+.log { font-family: monospace; font-size: 20px; line-height: 1.9; }
+.log div { margin: 2px 0; }
+.pass { color: #4f4; }
+.fail { color: #f55; }
+.pending { color: #ff0; }
+.skip { color: #666; }
+.nav { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+button { background: #222; color: #fff; border: 2px solid #555; border-radius: 10px;
+         font-size: 34px; padding: 22px 40px; cursor: pointer; min-width: 260px; }
+button:focus { outline: 4px solid #ff0; border-color: #ff0; background: #2a2a00; }
+button:hover { background: #2a2a2a; }
+a { color: #ff0; font-size: 24px; text-decoration: none; display: inline-block; margin-bottom: 24px; }
+a:focus { outline: 2px solid #ff0; }
+#path-log { font-family: monospace; font-size: 18px; color: #aaa; margin-top: 16px; }
+#path-log div { margin: 4px 0; padding: 4px 8px; background: #1a1a1a; border-radius: 4px; }
+</style>
+</head>
+<body>
+<a href="index.html">← Hub</a>
+<h1>Strategy C</h1>
+<div class="subtitle">Auto Path Scan — fetch() against known USB mount paths</div>
+
+<div class="note">Expected result: all paths fail. This strategy cannot work from a GitHub Pages (HTTPS) origin — file:// URLs are blocked by browser security policy. Data recorded for reference.</div>
+
+<h2>TC-12c — Auto Path Scan</h2>
+<div class="log">
+  <div id="tc-12c">? TC-12c: Running scan…</div>
+</div>
+
+<h2>Action</h2>
+<div class="nav">
+  <button id="btn-scan">Run Scan</button>
+</div>
+
+<div id="path-log"></div>
+
+<script>
+function log(id, status, msg) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  var icons = { pass: '✓', fail: '✗', skip: '—', pending: '…' };
+  el.textContent = (icons[status] || '?') + ' ' + msg;
+  el.className = status;
+}
+
+function addPathResult(path, result, detail) {
+  var el = document.createElement('div');
+  el.style.color = result === 'ok' ? '#4f4' : result === 'blocked' ? '#fa0' : '#f55';
+  el.textContent = (result === 'ok' ? '✓' : result === 'blocked' ? '⚠' : '✗') + ' ' + path + ' — ' + detail;
+  document.getElementById('path-log').appendChild(el);
+}
+
+var PATHS = [
+  'file:///storage/usb0/',
+  'file:///storage/usb1/',
+  'file:///mnt/usb_storage/',
+  'file:///mnt/media_rw/usb0/',
+  'file:///storage/emulated/0/',
+  'file:///sdcard/',
+  'file:///storage/self/primary/',
+  'file:///mnt/'
+];
+
+async function runScan() {
+  document.getElementById('path-log').innerHTML = '';
+  log('tc-12c', 'pending', 'TC-12c: Scanning ' + PATHS.length + ' paths…');
+
+  var responded = 0;
+
+  for (var i = 0; i < PATHS.length; i++) {
+    var path = PATHS[i];
+    try {
+      var res = await fetch(path, { mode: 'no-cors', signal: AbortSignal.timeout(3000) });
+      responded++;
+      addPathResult(path, 'ok', 'responded (status ' + res.status + ')');
+    } catch (e) {
+      var detail = e.name === 'TimeoutError' ? 'timeout (3s)'
+        : e.name === 'TypeError' ? 'blocked — ' + e.message
+        : e.name + ': ' + e.message;
+      var kind = e.name === 'TimeoutError' ? 'timeout' : 'blocked';
+      addPathResult(path, kind, detail);
+    }
+  }
+
+  if (responded > 0) {
+    log('tc-12c', 'pass', 'TC-12c: ' + responded + '/' + PATHS.length + ' paths responded (unexpected — investigate)');
+  } else {
+    log('tc-12c', 'fail', 'TC-12c: 0/' + PATHS.length + ' paths responded — expected from HTTPS origin');
+  }
+}
+
+document.getElementById('btn-scan').addEventListener('click', runScan);
+</script>
+</body>
+</html>
