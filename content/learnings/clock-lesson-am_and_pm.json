@@ -4,9 +4,8 @@
   "number": 12,
   "guide": "cat",
   "source": "Clock",
-  "filter": "sky-change",
-  "profile": "child-day",
   "criteria": ["cl.technical-vocab", "uw.cause-effect"],
+  "pageControls": ["LOAD_PRESET_MORNING"],
   "steps": [
     {
       "prompt": "The clock shows seven in the morning. Look at the display — it says AM. AM means morning. Tap AM!",
@@ -27,9 +26,9 @@
       "expect": "PRESET_BEDTIME_SELECTED"
     },
     {
-      "prompt": "Still PM! Bedtime is in the evening — that is still PM. PM lasts a long time. Now press Wake up. What will happen?",
-      "expect": "PRESET_WAKE_UP_SELECTED",
-      "feedback": "AM is back! Because wake-up time is in the morning, it flipped back to AM. Morning is always AM."
+      "prompt": "Still PM! Bedtime is in the evening — that is still PM. PM lasts a long time. Now press Morning. What will happen?",
+      "expect": "PRESET_MORNING_SELECTED",
+      "feedback": "AM is back! Because morning time is before midday, it flipped back to AM. Morning is always AM."
     }
   ]
 }
