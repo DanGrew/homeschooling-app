@@ -1,3 +1,7 @@
+var objAnims = {};
+
+function hasActiveAnims() { return Object.keys(objAnims).length > 0; }
+
 function renderObjects(svgEl, state) {
   var layer = svgEl.querySelector('[data-layer]');
   var existing = layer.querySelectorAll('[data-obj]');
@@ -12,9 +16,7 @@ function renderObjects(svgEl, state) {
     g.setAttribute('data-obj', obj.id);
     g.setAttribute('data-testid', 'object-' + obj.id);
     g.setAttribute('data-shape', obj.shape);
-    g.setAttribute('transform',
-      'translate(' + obj.x.toFixed(1) + ',' + obj.y.toFixed(1) + ') rotate(' + obj.rotation + ') scale(' + s + ')'
-    );
+    g.setAttribute('transform', objTransform(getVisualPos(obj, objAnims), obj.rotation, s));
     g.innerHTML = renderObjectShape(obj.shape, obj.colour);
     [obj].filter(function(o) { return o.selected; }).forEach(function() { g.classList.add('obj-selected'); });
     layer.appendChild(g);
@@ -29,6 +31,14 @@ function renderToolbox(toolboxEl, state) {
   [state.stackObjects[0]].filter(Boolean).forEach(function() {
     toolboxEl.style.display = 'flex';
   });
+  var dirLabels = { 'move-left': 'Move left', 'move-right': 'Move right', 'move-up': 'Move up', 'move-down': 'Move down' };
+  [window.__makeSpeakable].filter(Boolean).forEach(function(fn) {
+    Object.keys(dirLabels).forEach(function(action) {
+      toolboxEl.querySelectorAll('[data-action="' + action + '"]').forEach(function(el) {
+        fn(el, dirLabels[action]);
+      });
+    });
+  });
 }
 
 function renderControls(addBtn, undoBtn, state) {
@@ -38,6 +48,8 @@ function renderControls(addBtn, undoBtn, state) {
   undoBtn.style.display = 'none';
   [state.deletedObject].filter(Boolean).forEach(function() { undoBtn.style.display = ''; });
 }
+
+var OBJ_DIR_EDGE = { left: 'left edge', right: 'right edge', up: 'top edge', down: 'bottom edge' };
 
 var OBJ_SPEAK_PROP = {
   colour: function(o) { return o.colour; },
@@ -67,6 +79,31 @@ function initObjectPlayground() {
   layer.setAttribute('data-layer', '');
   svgEl.appendChild(layer);
 
+  var animRafHandle = null;
+
+  function tickAnims() {
+    Object.keys(objAnims).forEach(function(id) {
+      state.objects.filter(function(o) { return o.id === id; }).forEach(function(obj) {
+        var pos = getVisualPos(obj, objAnims);
+        var el = svgEl.querySelector('[data-obj="' + id + '"]');
+        [el].filter(Boolean).forEach(function(el) {
+          el.setAttribute('transform', objTransform(pos, obj.rotation, OBJ_SIZE_MAP[obj.size]));
+        });
+      });
+    });
+  }
+
+  function scheduleAnimLoop() {
+    [animRafHandle].filter(Boolean).forEach(function(h) { cancelAnimationFrame(h); });
+    [1].filter(hasActiveAnims).forEach(function() {
+      animRafHandle = requestAnimationFrame(function() {
+        animRafHandle = null;
+        tickAnims();
+        scheduleAnimLoop();
+      });
+    });
+  }
+
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
@@ -95,6 +132,7 @@ function initObjectPlayground() {
     svgEl.setPointerCapture(e.pointerId);
     var tapTarget = e.target.closest('[data-obj]');
     var tapIds = [tapTarget].filter(Boolean).map(function(el) { return el.getAttribute('data-obj'); });
+    tapIds.forEach(function(id) { delete objAnims[id]; });
     var svgRect = svgEl.getBoundingClientRect();
     var tapWorldX = e.clientX - svgRect.left + state.viewport.x;
     var tapWorldY = e.clientY - svgRect.top + state.viewport.y;
@@ -167,6 +205,27 @@ function initObjectPlayground() {
         redraw();
         _speak('delete');
       });
+    });
+    var actionRow = e.target.closest('[data-action^="move-"]');
+    [actionRow].filter(Boolean).forEach(function(el) {
+      var dir = el.getAttribute('data-action').replace('move-', '');
+      var sel = state.objects.filter(function(o) { return o.selected; })[0];
+      var animFrom = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];
+      var logicalFrom = [sel].filter(Boolean).map(function(s) { return { x: s.x, y: s.y }; })[0];
+      state = moveSelectedObject(state, dir);
+      var afterSel = state.objects.filter(function(o) { return o.selected; })[0];
+      [afterSel].filter(Boolean).forEach(function(o) {
+        var unchanged = [logicalFrom].filter(function(p) { return p.x === o.x; }).filter(function(p) { return p.y === o.y; });
+        [o].filter(function() { return animFrom; }).filter(function() { return !unchanged.length; }).forEach(function(o) {
+          objAnims[o.id] = { fromX: animFrom.x, fromY: animFrom.y, toX: o.x, toY: o.y, startTime: Date.now() };
+          _speak('move ' + dir);
+        });
+        [1].filter(function() { return logicalFrom; }).filter(function() { return unchanged.length; }).forEach(function() {
+          _speak(OBJ_DIR_EDGE[dir]);
+        });
+      });
+      redraw();
+      scheduleAnimLoop();
     });
   });
 }

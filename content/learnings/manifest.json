@@ -1,10 +1,31 @@
 [
   {
+    "id": "alphabet_sweep",
+    "source": "Letters & Numbers",
+    "title": "Your Turn — a to z",
+    "type": "lesson",
+    "number": 7
+  },
+  {
     "id": "and_gate",
     "source": "Logic Gates",
     "title": "AND Gate",
     "type": "lesson",
     "number": 2
+  },
+  {
+    "id": "animal_words",
+    "source": "Trace Words",
+    "title": "Animal Names",
+    "type": "lesson",
+    "number": 1
+  },
+  {
+    "id": "circular_words",
+    "source": "Trace Words",
+    "title": "Round Letter Words",
+    "type": "lesson",
+    "number": 7
   },
   {
     "id": "clock-exercise-am_or_pm",
@@ -341,6 +362,13 @@
     "number": 4
   },
   {
+    "id": "cvc_phonics",
+    "source": "Trace Words",
+    "title": "Short Words",
+    "type": "lesson",
+    "number": 6
+  },
+  {
     "id": "digits_one_to_five",
     "source": "Letters & Numbers",
     "title": "Count and Write 1 to 5",
@@ -359,6 +387,13 @@
     "source": "Domino",
     "title": "Domino Match",
     "type": "game"
+  },
+  {
+    "id": "emotion_words",
+    "source": "Trace Words",
+    "title": "How Are You Feeling?",
+    "type": "lesson",
+    "number": 3
   },
   {
     "id": "equal_groups",
@@ -454,6 +489,13 @@
     "number": 1
   },
   {
+    "id": "medical_words",
+    "source": "Trace Words",
+    "title": "At the Doctor",
+    "type": "lesson",
+    "number": 8
+  },
+  {
     "id": "more_and_fewer",
     "source": "Numbers",
     "title": "More and Fewer",
@@ -464,6 +506,20 @@
     "id": "not_gate",
     "source": "Logic Gates",
     "title": "NOT Gate",
+    "type": "lesson",
+    "number": 4
+  },
+  {
+    "id": "numerals_five_to_nine",
+    "source": "Letters & Numbers",
+    "title": "Write 5 to 9",
+    "type": "lesson",
+    "number": 5
+  },
+  {
+    "id": "numerals_zero_to_four",
+    "source": "Letters & Numbers",
+    "title": "Write 0 to 4",
     "type": "lesson",
     "number": 4
   },
@@ -485,6 +541,13 @@
     "source": "Simulator",
     "title": "Potty Training",
     "type": "lesson"
+  },
+  {
+    "id": "pre_writing_shapes",
+    "source": "Letters & Numbers",
+    "title": "Shapes in Letters",
+    "type": "lesson",
+    "number": 1
   },
   {
     "id": "puzzle",
@@ -553,6 +616,13 @@
     "title": "Things That Go",
     "type": "lesson",
     "number": 5
+  },
+  {
+    "id": "uppercase_letters",
+    "source": "Letters & Numbers",
+    "title": "Capital Letters",
+    "type": "lesson",
+    "number": 6
   },
   {
     "id": "vowels",

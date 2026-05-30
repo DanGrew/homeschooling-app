@@ -2,12 +2,12 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
-  OBJ_BASE_R, OBJ_MAX_COUNT, OBJ_SPAWN_RADIUS, objPick, initObjectState,
+  OBJ_BASE_R, OBJ_MAX_COUNT, OBJ_SPAWN_RADIUS, OBJ_MOVE_STEP, objPick, initObjectState,
   PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
   getPanMoves, getTapFlag, applyPan,
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
-  canAddObject, addObject, removeObject, restoreDeleted
+  canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject
 } = require('../../core/object-playground/object-playground-core.js');
 
 describe('constants', () => {
@@ -602,6 +602,13 @@ describe('buildToolboxHTML', () => {
   it('includes delete row with data-action="delete"', () => {
     expect(html).toContain('data-action="delete"');
   });
+
+  it('includes all four direction action buttons', () => {
+    expect(html).toContain('data-action="move-left"');
+    expect(html).toContain('data-action="move-right"');
+    expect(html).toContain('data-action="move-up"');
+    expect(html).toContain('data-action="move-down"');
+  });
 });
 
 describe('canAddObject', () => {
@@ -728,5 +735,94 @@ describe('restoreDeleted', () => {
     const state = removeObject(initObjectState(800, 600), 'obj-5');
     restoreDeleted(state);
     expect(state.deletedObject).not.toBeNull();
+  });
+});
+
+describe('moveSelectedObject', () => {
+  const makeState = () => {
+    const base = initObjectState(800, 600);
+    const withSel = selectObject(base, 'obj-0');
+    return Object.assign({}, withSel, {
+      objects: withSel.objects.map(o =>
+        o.id === 'obj-0' ? Object.assign({}, o, { x: 800, y: 600, size: 'medium' }) : o
+      )
+    });
+  };
+
+  it('moves selected object left by OBJ_MOVE_STEP', () => {
+    const state = makeState();
+    const next = moveSelectedObject(state, 'left');
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(800 - OBJ_MOVE_STEP);
+  });
+
+  it('moves selected object right by OBJ_MOVE_STEP', () => {
+    const state = makeState();
+    const next = moveSelectedObject(state, 'right');
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(800 + OBJ_MOVE_STEP);
+  });
+
+  it('moves selected object up by OBJ_MOVE_STEP', () => {
+    const state = makeState();
+    const next = moveSelectedObject(state, 'up');
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(600 - OBJ_MOVE_STEP);
+  });
+
+  it('moves selected object down by OBJ_MOVE_STEP', () => {
+    const state = makeState();
+    const next = moveSelectedObject(state, 'down');
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(600 + OBJ_MOVE_STEP);
+  });
+
+  it('clamps to world left boundary', () => {
+    const base = initObjectState(800, 600);
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['medium']);
+    const state = Object.assign({}, selectObject(base, 'obj-0'), {
+      objects: selectObject(base, 'obj-0').objects.map(o =>
+        o.id === 'obj-0' ? Object.assign({}, o, { x: margin, y: 600, size: 'medium' }) : o
+      )
+    });
+    const next = moveSelectedObject(state, 'left');
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(margin);
+  });
+
+  it('clamps to world right boundary', () => {
+    const base = initObjectState(800, 600);
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['medium']);
+    const maxX = base.world.width - margin;
+    const state = Object.assign({}, selectObject(base, 'obj-0'), {
+      objects: selectObject(base, 'obj-0').objects.map(o =>
+        o.id === 'obj-0' ? Object.assign({}, o, { x: maxX, y: 600, size: 'medium' }) : o
+      )
+    });
+    const next = moveSelectedObject(state, 'right');
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(maxX);
+  });
+
+  it('does not move unselected objects', () => {
+    const state = makeState();
+    const before = state.objects.find(o => o.id === 'obj-5').x;
+    const next = moveSelectedObject(state, 'right');
+    expect(next.objects.find(o => o.id === 'obj-5').x).toBe(before);
+  });
+
+  it('is a no-op when no object selected', () => {
+    const state = deselectAll(makeState());
+    const next = moveSelectedObject(state, 'right');
+    next.objects.forEach((o, i) => {
+      expect(o.x).toBe(state.objects[i].x);
+    });
+  });
+
+  it('returns state unchanged for unknown direction', () => {
+    const state = makeState();
+    const next = moveSelectedObject(state, 'diagonal');
+    expect(next).toBe(state);
+  });
+
+  it('does not mutate original state', () => {
+    const state = makeState();
+    const origX = state.objects.find(o => o.id === 'obj-0').x;
+    moveSelectedObject(state, 'right');
+    expect(state.objects.find(o => o.id === 'obj-0').x).toBe(origX);
   });
 });

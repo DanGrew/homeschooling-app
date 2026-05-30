@@ -1,0 +1,36 @@
+{
+  "id": "uppercase_letters",
+  "title": "Capital Letters",
+  "number": 6,
+  "guide": "cat",
+  "source": "Letters & Numbers",
+  "criteria": [
+    "literacy.letter-formation",
+    "literacy.print-concepts",
+    "pd.fine-motor",
+    "cl.topic-vocabulary"
+  ],
+  "steps": [
+    {
+      "prompt": "Capital letters go at the start of names and sentences! Find A — the big version of a!",
+      "expect": "CHAR_A_TRACED",
+      "feedback": "A! Capital A starts Apple and Ant. Now find B!"
+    },
+    {
+      "expect": "CHAR_B_TRACED",
+      "feedback": "B! Capital B starts Bird and Banana. Now find C!"
+    },
+    {
+      "expect": "CHAR_C_TRACED",
+      "feedback": "C! Capital C starts Cat and Cow. Now find D!"
+    },
+    {
+      "expect": "CHAR_D_TRACED",
+      "feedback": "D! Capital D starts Dog and Duck. Last one — find E!"
+    },
+    {
+      "expect": "CHAR_E_TRACED",
+      "feedback": "E! Capital E starts Egg and Elephant. Capital letters — bigger, bolder, for important words!"
+    }
+  ]
+}

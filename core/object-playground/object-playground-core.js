@@ -71,6 +71,7 @@ function renderObjectShape(shape, colour) {
   return '<path d="M0,22 C-28,8 -30,-10 -16,-18 C-8,-22 -2,-16 0,-9 C2,-16 8,-22 16,-18 C30,-10 28,8 0,22 Z" fill="' + fill + '" stroke="' + stroke + '" stroke-width="3"/><circle cx="14" cy="-14" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>';
 }
 
+var OBJ_MOVE_STEP = 50;
 var PAN_THRESHOLD = 5;
 
 function buildGesture(state, tapTargetId, clientX, clientY, viewportX, viewportY, tapWorldX, tapWorldY) {
@@ -270,6 +271,21 @@ function restoreDeleted(state) {
   }, state);
 }
 
+function moveSelectedObject(state, dir) {
+  var deltas = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
+  var d = deltas[dir];
+  if (!d) return state;
+  return Object.assign({}, state, {
+    objects: state.objects.map(function(o) {
+      if (!o.selected) return o;
+      var margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP[o.size]);
+      var nx = Math.max(margin, Math.min(o.x + d[0] * OBJ_MOVE_STEP, state.world.width - margin));
+      var ny = Math.max(margin, Math.min(o.y + d[1] * OBJ_MOVE_STEP, state.world.height - margin));
+      return Object.assign({}, o, { x: nx, y: ny });
+    })
+  });
+}
+
 function buildStackHTML(stackIds, allObjects) {
   return stackIds.map(function(id) {
     var obj = allObjects.filter(function(o) { return o.id === id; })[0];
@@ -288,16 +304,43 @@ function buildToolboxHTML(obj) {
   var propHtml = rows.map(function(r) {
     return '<div class="obj-tool-row" data-prop="' + r.prop + '"><span class="obj-tool-label">' + r.label + '</span><span class="obj-tool-val">' + r.val + '</span></div>';
   }).join('');
-  return propHtml + '<div class="obj-tool-row obj-tool-delete" data-action="delete"><span class="obj-tool-label">Delete</span><span class="obj-tool-val">\u2715</span></div>';
+  var dirHtml = [
+    { action: 'move-left',  label: '\u2B05', val: 'Left'  },
+    { action: 'move-right', label: '\u27A1', val: 'Right' },
+    { action: 'move-up',    label: '\u2B06', val: 'Up'    },
+    { action: 'move-down',  label: '\u2B07', val: 'Down'  }
+  ].map(function(d) {
+    return '<div class="obj-tool-row" data-action="' + d.action + '"><span class="obj-tool-label">' + d.label + '</span><span class="obj-tool-val">' + d.val + '</span></div>';
+  }).join('');
+  return propHtml + dirHtml + '<div class="obj-tool-row obj-tool-delete" data-action="delete"><span class="obj-tool-label">Delete</span><span class="obj-tool-val">\u2715</span></div>';
+}
+
+var OBJ_ANIM_DURATION = 175;
+
+function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
+
+function objTransform(pos, rotation, scale) {
+  return 'translate(' + pos.x.toFixed(1) + ',' + pos.y.toFixed(1) + ') rotate(' + rotation + ') scale(' + scale + ')';
+}
+
+function getVisualPos(obj, animMap) {
+  var anim = animMap[obj.id];
+  if (!anim) return { x: obj.x, y: obj.y };
+  var t = Math.min(1, (Date.now() - anim.startTime) / OBJ_ANIM_DURATION);
+  if (t >= 1) { delete animMap[obj.id]; return { x: obj.x, y: obj.y }; }
+  var e = easeOutQuad(t);
+  return { x: anim.fromX + (anim.toX - anim.fromX) * e, y: anim.fromY + (anim.toY - anim.fromY) * e };
 }
 
 if (typeof module !== 'undefined') module.exports = {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
   OBJ_COLOUR_FILL, OBJ_COLOUR_STROKE, OBJ_BASE_R, OBJ_MAX_COUNT, OBJ_SPAWN_RADIUS,
+  OBJ_MOVE_STEP,
   objPick, initObjectState, renderObjectShape,
   PAN_THRESHOLD, buildGesture, getDragMoves, updateDragPosition, getDragCancelMoves, applyToolboxClick,
   getPanMoves, getTapFlag, applyPan,
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
-  canAddObject, addObject, removeObject, restoreDeleted
+  canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
+  easeOutQuad, objTransform, getVisualPos, OBJ_ANIM_DURATION
 };

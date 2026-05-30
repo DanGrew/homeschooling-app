@@ -146,6 +146,51 @@ test('toolbox shows as dragging during object drag', async ({ page }) => {
   expect(dragging).not.toBeNull();
 });
 
+test('direction buttons appear in toolbox when object is selected', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  await expect(page.locator('[data-action="move-left"]')).toBeVisible();
+  await expect(page.locator('[data-action="move-right"]')).toBeVisible();
+  await expect(page.locator('[data-action="move-up"]')).toBeVisible();
+  await expect(page.locator('[data-action="move-down"]')).toBeVisible();
+});
+
+test('clicking move-right button moves selected object', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  const obj = page.locator('[data-testid="object-' + topId + '"]');
+  const before = await obj.getAttribute('transform');
+  await page.locator('[data-action="move-right"]').click();
+  await expect(obj).not.toHaveAttribute('transform', before);
+});
+
+test('pressing move-right speaks "move right"', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  await page.evaluate(() => { window.__speechLog = []; window.__speakInterrupt = function(t) { window.__speechLog.push(t); }; });
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  await page.locator('[data-action="move-right"]').click();
+  const log = await page.evaluate(() => window.__speechLog);
+  expect(log).toContain('move right');
+});
+
+test('pressing direction button at edge speaks edge label', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  for (let i = 0; i < 60; i++) await page.locator('[data-action="move-right"]').click();
+  await page.evaluate(() => { window.__speechLog = []; window.__speakInterrupt = function(t) { window.__speechLog.push(t); }; });
+  await page.locator('[data-action="move-right"]').click();
+  const log = await page.evaluate(() => window.__speechLog);
+  expect(log).toContain('right edge');
+});
+
 test('refreshing produces a different layout', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform1 = await page.locator('[data-testid="object-obj-0"]').getAttribute('transform');

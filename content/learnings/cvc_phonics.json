@@ -1,0 +1,38 @@
+{
+  "id": "cvc_phonics",
+  "title": "Short Words",
+  "number": 6,
+  "guide": "cat",
+  "source": "Trace Words",
+  "criteria": [
+    "literacy.phonics",
+    "literacy.letter-formation",
+    "literacy.print-concepts",
+    "pd.fine-motor",
+    "cl.topic-vocabulary"
+  ],
+  "words": ["cat", "hen", "pig", "bus", "sad"],
+  "steps": [
+    {
+      "prompt": "Short words are made of just three sounds! Find cat and trace each letter — c, a, t!",
+      "expect": "WORD_cat_TRACED",
+      "feedback": "Cat! c-a-t — three sounds, three letters. Now find hen!"
+    },
+    {
+      "expect": "WORD_hen_TRACED",
+      "feedback": "Hen! h-e-n — three sounds, three letters. Now find pig!"
+    },
+    {
+      "expect": "WORD_pig_TRACED",
+      "feedback": "Pig! p-i-g — three sounds. Now find bus!"
+    },
+    {
+      "expect": "WORD_bus_TRACED",
+      "feedback": "Bus! b-u-s — three sounds. Last one — find sad!"
+    },
+    {
+      "expect": "WORD_sad_TRACED",
+      "feedback": "Sad! s-a-d — three sounds, three letters. Every one of those short words follows the same pattern — one sound per letter!"
+    }
+  ]
+}
