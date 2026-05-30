@@ -1,14 +1,4 @@
-var OBJ_ANIM_DURATION = 175;
 var objAnims = {};
-
-function getVisualPos(obj) {
-  var anim = objAnims[obj.id];
-  if (!anim) return { x: obj.x, y: obj.y };
-  var t = Math.min(1, (Date.now() - anim.startTime) / OBJ_ANIM_DURATION);
-  if (t >= 1) { delete objAnims[obj.id]; return { x: obj.x, y: obj.y }; }
-  var e = easeOutQuad(t);
-  return { x: anim.fromX + (anim.toX - anim.fromX) * e, y: anim.fromY + (anim.toY - anim.fromY) * e };
-}
 
 function hasActiveAnims() { return Object.keys(objAnims).length > 0; }
 
@@ -26,7 +16,7 @@ function renderObjects(svgEl, state) {
     g.setAttribute('data-obj', obj.id);
     g.setAttribute('data-testid', 'object-' + obj.id);
     g.setAttribute('data-shape', obj.shape);
-    g.setAttribute('transform', objTransform(getVisualPos(obj), obj.rotation, s));
+    g.setAttribute('transform', objTransform(getVisualPos(obj, objAnims), obj.rotation, s));
     g.innerHTML = renderObjectShape(obj.shape, obj.colour);
     [obj].filter(function(o) { return o.selected; }).forEach(function() { g.classList.add('obj-selected'); });
     layer.appendChild(g);
@@ -93,7 +83,7 @@ function initObjectPlayground() {
     Object.keys(objAnims).forEach(function(id) {
       var obj = state.objects.filter(function(o) { return o.id === id; })[0];
       if (!obj) { delete objAnims[id]; return; }
-      var pos = getVisualPos(obj);
+      var pos = getVisualPos(obj, objAnims);
       var el = svgEl.querySelector('[data-obj="' + id + '"]');
       [el].filter(Boolean).forEach(function(el) {
         el.setAttribute('transform', objTransform(pos, obj.rotation, OBJ_SIZE_MAP[obj.size]));
@@ -218,7 +208,7 @@ function initObjectPlayground() {
     [actionRow].filter(Boolean).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
-      var fromPos = sel ? getVisualPos(sel) : null;
+      var fromPos = sel ? getVisualPos(sel, objAnims) : null;
       state = moveSelectedObject(state, dir);
       var afterSel = state.objects.filter(function(o) { return o.selected; })[0];
       [afterSel].filter(Boolean).filter(function(o) {

@@ -315,10 +315,21 @@ function buildToolboxHTML(obj) {
   return propHtml + dirHtml + '<div class="obj-tool-row obj-tool-delete" data-action="delete"><span class="obj-tool-label">Delete</span><span class="obj-tool-val">\u2715</span></div>';
 }
 
+var OBJ_ANIM_DURATION = 175;
+
 function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
 
 function objTransform(pos, rotation, scale) {
   return 'translate(' + pos.x.toFixed(1) + ',' + pos.y.toFixed(1) + ') rotate(' + rotation + ') scale(' + scale + ')';
+}
+
+function getVisualPos(obj, animMap) {
+  var anim = animMap[obj.id];
+  if (!anim) return { x: obj.x, y: obj.y };
+  var t = Math.min(1, (Date.now() - anim.startTime) / OBJ_ANIM_DURATION);
+  if (t >= 1) { delete animMap[obj.id]; return { x: obj.x, y: obj.y }; }
+  var e = easeOutQuad(t);
+  return { x: anim.fromX + (anim.toX - anim.fromX) * e, y: anim.fromY + (anim.toY - anim.fromY) * e };
 }
 
 if (typeof module !== 'undefined') module.exports = {
@@ -331,5 +342,5 @@ if (typeof module !== 'undefined') module.exports = {
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
   canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
-  easeOutQuad, objTransform
+  easeOutQuad, objTransform, getVisualPos, OBJ_ANIM_DURATION
 };
