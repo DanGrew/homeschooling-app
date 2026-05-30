@@ -1,3 +1,23 @@
+var OBJ_ANIM_DURATION = 175;
+var objAnims = {};
+
+function easeOutQuad(t) { return 1 - (1 - t) * (1 - t); }
+
+function getVisualPos(obj) {
+  var anim = objAnims[obj.id];
+  if (!anim) return { x: obj.x, y: obj.y };
+  var t = Math.min(1, (Date.now() - anim.startTime) / OBJ_ANIM_DURATION);
+  if (t >= 1) { delete objAnims[obj.id]; return { x: obj.x, y: obj.y }; }
+  var e = easeOutQuad(t);
+  return { x: anim.fromX + (anim.toX - anim.fromX) * e, y: anim.fromY + (anim.toY - anim.fromY) * e };
+}
+
+function hasActiveAnims() { return Object.keys(objAnims).length > 0; }
+
+function objTransform(pos, rotation, scale) {
+  return 'translate(' + pos.x.toFixed(1) + ',' + pos.y.toFixed(1) + ') rotate(' + rotation + ') scale(' + scale + ')';
+}
+
 function renderObjects(svgEl, state) {
   var layer = svgEl.querySelector('[data-layer]');
   var existing = layer.querySelectorAll('[data-obj]');
@@ -12,9 +32,7 @@ function renderObjects(svgEl, state) {
     g.setAttribute('data-obj', obj.id);
     g.setAttribute('data-testid', 'object-' + obj.id);
     g.setAttribute('data-shape', obj.shape);
-    g.setAttribute('transform',
-      'translate(' + obj.x.toFixed(1) + ',' + obj.y.toFixed(1) + ') rotate(' + obj.rotation + ') scale(' + s + ')'
-    );
+    g.setAttribute('transform', objTransform(getVisualPos(obj), obj.rotation, s));
     g.innerHTML = renderObjectShape(obj.shape, obj.colour);
     [obj].filter(function(o) { return o.selected; }).forEach(function() { g.classList.add('obj-selected'); });
     layer.appendChild(g);
@@ -75,6 +93,31 @@ function initObjectPlayground() {
   layer.setAttribute('data-layer', '');
   svgEl.appendChild(layer);
 
+  var animRafHandle = null;
+
+  function tickAnims() {
+    Object.keys(objAnims).forEach(function(id) {
+      var obj = state.objects.filter(function(o) { return o.id === id; })[0];
+      if (!obj) { delete objAnims[id]; return; }
+      var pos = getVisualPos(obj);
+      var el = svgEl.querySelector('[data-obj="' + id + '"]');
+      [el].filter(Boolean).forEach(function(el) {
+        el.setAttribute('transform', objTransform(pos, obj.rotation, OBJ_SIZE_MAP[obj.size]));
+      });
+    });
+  }
+
+  function scheduleAnimLoop() {
+    [animRafHandle].filter(Boolean).forEach(function(h) { cancelAnimationFrame(h); });
+    [1].filter(hasActiveAnims).forEach(function() {
+      animRafHandle = requestAnimationFrame(function() {
+        animRafHandle = null;
+        tickAnims();
+        scheduleAnimLoop();
+      });
+    });
+  }
+
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
@@ -103,6 +146,7 @@ function initObjectPlayground() {
     svgEl.setPointerCapture(e.pointerId);
     var tapTarget = e.target.closest('[data-obj]');
     var tapIds = [tapTarget].filter(Boolean).map(function(el) { return el.getAttribute('data-obj'); });
+    tapIds.forEach(function(id) { delete objAnims[id]; });
     var svgRect = svgEl.getBoundingClientRect();
     var tapWorldX = e.clientX - svgRect.left + state.viewport.x;
     var tapWorldY = e.clientY - svgRect.top + state.viewport.y;
@@ -179,8 +223,17 @@ function initObjectPlayground() {
     var actionRow = e.target.closest('[data-action^="move-"]');
     [actionRow].filter(Boolean).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
+      var sel = state.objects.filter(function(o) { return o.selected; })[0];
+      var fromPos = sel ? getVisualPos(sel) : null;
       state = moveSelectedObject(state, dir);
+      var afterSel = state.objects.filter(function(o) { return o.selected; })[0];
+      [afterSel].filter(Boolean).filter(function(o) {
+        return fromPos && (fromPos.x !== o.x || fromPos.y !== o.y);
+      }).forEach(function(o) {
+        objAnims[o.id] = { fromX: fromPos.x, fromY: fromPos.y, toX: o.x, toY: o.y, startTime: Date.now() };
+      });
       redraw();
+      scheduleAnimLoop();
     });
   });
 }
