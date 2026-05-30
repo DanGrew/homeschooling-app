@@ -11,7 +11,7 @@
       "expect": "PRESET_MORNING_SELECTED"
     },
     {
-      "prompt": "Because it is morning, the sun rises. The sky turns light. Morning brings the sun! Now it is midday. The sun has been climbing all morning. Where do you think it is now? Press Lunch!",
+      "prompt": "Because it is morning, the sun rises. The sky turns light. Morning brings the sun! The sun has been climbing all morning. Where do you think it will be at lunchtime? Press Lunch!",
       "expect": "PRESET_LUNCH_SELECTED"
     },
     {
