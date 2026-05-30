@@ -5,7 +5,7 @@
   "guide": "dog",
   "source": "Clock",
   "mode": "multi-choice",
-  "profile": "child-day",
+  "profile": "times_of_day",
   "pageControls": [
     "HIDE_DIGITAL_DISPLAY"
   ],
@@ -20,7 +20,7 @@
         "RENDER_MULTI_CHOICE"
       ],
       "expect": "MULTI_CHOICE_CORRECT",
-      "preset_shown": "wake_up",
+      "preset_shown": "morning",
       "answers": [
         "AM",
         "PM"
