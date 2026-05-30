@@ -62,21 +62,43 @@ function _speak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
 
-var OBJ_DIR_ARROW = { left: '\u2B05', right: '\u27A1', up: '\u2B06', down: '\u2B07' };
+var OBJ_DIR_ARROW = { left: '\u2190', right: '\u2192', up: '\u2191', down: '\u2193' };
 var OBJ_DIR_OFFSET = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
+
+function _makeArrow(layer, x, y, char, fontSize) {
+  var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  t.setAttribute('class', 'obj-dir-arrow');
+  t.setAttribute('data-dir-arrow', '');
+  t.setAttribute('x', x);
+  t.setAttribute('y', y);
+  t.setAttribute('font-size', fontSize);
+  t.textContent = char;
+  layer.appendChild(t);
+  t.addEventListener('animationend', function() { [t.parentNode].filter(Boolean).forEach(function(p) { p.removeChild(t); }); });
+}
 
 function showDirArrow(svgEl, obj, dir) {
   var layer = svgEl.querySelector('[data-layer]');
   var scale = OBJ_SIZE_MAP[obj.size];
   var off = OBJ_DIR_OFFSET[dir];
-  var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  t.setAttribute('class', 'obj-dir-arrow');
-  t.setAttribute('data-dir-arrow', '');
-  t.setAttribute('x', obj.x + off[0] * (OBJ_BASE_R * scale + 24));
-  t.setAttribute('y', obj.y + off[1] * (OBJ_BASE_R * scale + 24));
-  t.textContent = OBJ_DIR_ARROW[dir];
-  layer.appendChild(t);
-  t.addEventListener('animationend', function() { [t.parentNode].filter(Boolean).forEach(function(p) { p.removeChild(t); }); });
+  _makeArrow(layer, obj.x + off[0] * (OBJ_BASE_R * scale + 24), obj.y + off[1] * (OBJ_BASE_R * scale + 24), OBJ_DIR_ARROW[dir], 56);
+}
+
+function showRotationIndicator(svgEl, obj) {
+  var layer = svgEl.querySelector('[data-layer]');
+  var scale = OBJ_SIZE_MAP[obj.size];
+  _makeArrow(layer, obj.x, obj.y - OBJ_BASE_R * scale - 20, '\u21BB', 48);
+}
+
+function showSizeIndicator(svgEl, obj) {
+  var layer = svgEl.querySelector('[data-layer]');
+  var scale = OBJ_SIZE_MAP[obj.size];
+  var off = OBJ_BASE_R * scale + 16;
+  ['\u2191', '\u2193', '\u2190', '\u2192'].forEach(function(ch, i) {
+    var dx = [0, 0, -1, 1][i] * off;
+    var dy = [-1, 1, 0, 0][i] * off;
+    _makeArrow(layer, obj.x + dx, obj.y + dy, ch, 36);
+  });
 }
 
 function showEdgeFlash(svgEl, objId) {
@@ -214,6 +236,8 @@ function initObjectPlayground() {
       redraw();
       [state.objects.filter(function(o) { return o.selected; })[0]].filter(Boolean).forEach(function(sel) {
         [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
+        [sel].filter(function() { return prop === 'rotation'; }).forEach(function(o) { showRotationIndicator(svgEl, o); });
+        [sel].filter(function() { return prop === 'size'; }).forEach(function(o) { showSizeIndicator(svgEl, o); });
       });
     });
     [pickRow].filter(Boolean).forEach(function(el) {
