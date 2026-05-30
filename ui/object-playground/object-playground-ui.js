@@ -81,12 +81,12 @@ function initObjectPlayground() {
 
   function tickAnims() {
     Object.keys(objAnims).forEach(function(id) {
-      var obj = state.objects.filter(function(o) { return o.id === id; })[0];
-      if (!obj) { delete objAnims[id]; return; }
-      var pos = getVisualPos(obj, objAnims);
-      var el = svgEl.querySelector('[data-obj="' + id + '"]');
-      [el].filter(Boolean).forEach(function(el) {
-        el.setAttribute('transform', objTransform(pos, obj.rotation, OBJ_SIZE_MAP[obj.size]));
+      state.objects.filter(function(o) { return o.id === id; }).forEach(function(obj) {
+        var pos = getVisualPos(obj, objAnims);
+        var el = svgEl.querySelector('[data-obj="' + id + '"]');
+        [el].filter(Boolean).forEach(function(el) {
+          el.setAttribute('transform', objTransform(pos, obj.rotation, OBJ_SIZE_MAP[obj.size]));
+        });
       });
     });
   }
@@ -208,13 +208,14 @@ function initObjectPlayground() {
     [actionRow].filter(Boolean).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
-      var fromPos = sel ? getVisualPos(sel, objAnims) : null;
+      var fromPos = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];
       state = moveSelectedObject(state, dir);
       var afterSel = state.objects.filter(function(o) { return o.selected; })[0];
-      [afterSel].filter(Boolean).filter(function(o) {
-        return fromPos && (fromPos.x !== o.x || fromPos.y !== o.y);
-      }).forEach(function(o) {
-        objAnims[o.id] = { fromX: fromPos.x, fromY: fromPos.y, toX: o.x, toY: o.y, startTime: Date.now() };
+      [afterSel].filter(Boolean).forEach(function(o) {
+        var unchanged = [fromPos].filter(function(p) { return p.x === o.x; }).filter(function(p) { return p.y === o.y; });
+        [o].filter(function() { return fromPos; }).filter(function() { return !unchanged.length; }).forEach(function(o) {
+          objAnims[o.id] = { fromX: fromPos.x, fromY: fromPos.y, toX: o.x, toY: o.y, startTime: Date.now() };
+        });
       });
       redraw();
       scheduleAnimLoop();
