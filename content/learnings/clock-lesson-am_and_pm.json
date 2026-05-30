@@ -5,7 +5,7 @@
   "guide": "cat",
   "source": "Clock",
   "filter": "sky-change",
-  "pageControls": ["LOAD_PROFILE_CHILD_DAY"],
+  "profile": "child-day",
   "criteria": ["cl.technical-vocab", "uw.cause-effect"],
   "steps": [
     {

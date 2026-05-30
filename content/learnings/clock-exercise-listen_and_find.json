@@ -6,9 +6,6 @@
   "source": "Clock",
   "profile": "child-day",
   "filter": "named-time",
-  "pageControls": [
-    "LOAD_PROFILE_CHILD_DAY"
-  ],
   "criteria": [
     "cl.listening"
   ],
