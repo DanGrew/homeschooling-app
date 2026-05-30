@@ -199,16 +199,16 @@ function bboxDivThick(x, y, w, h, color) {
   return el;
 }
 
-function appendEntityBBox(layer, cs, scenario, e) {
+function appendEntityBBox(rState, layer, cs, scenario, e) {
   var cfg = BBOX_CFG[e.type];
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(bboxDiv(e.x * cs, row.y * cs, e.width * cs, cs, cfg.color));
+    layer.appendChild(bboxDiv(rState.visualX[e.id] * cs, row.y * cs, e.width * cs, cs, cfg.color));
   });
 }
 
-function appendActivePlatformBBox(layer, cs, scenario, e) {
+function appendActivePlatformBBox(rState, layer, cs, scenario, e) {
   [getRowById(scenario, e.rowId)].filter(Boolean).forEach(function(row) {
-    layer.appendChild(bboxDivThick(e.x * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)'));
+    layer.appendChild(bboxDivThick(rState.visualX[e.id] * cs, row.y * cs, e.width * cs, cs, 'rgba(120,255,120,1.0)'));
   });
 }
 
@@ -217,13 +217,13 @@ function renderBBoxes(rState, simState, scenario, prevPositions, alpha) {
   var cs = rState.cs;
   layer.innerHTML = '';
   simState.entities.filter(function(e) { return !e.collected; })
-    .forEach(function(e) { appendEntityBBox(layer, cs, scenario, e); });
+    .forEach(function(e) { appendEntityBBox(rState, layer, cs, scenario, e); });
   [simState.player].filter(Boolean).forEach(function(p) {
     var prevX = [prevPositions.player].filter(Boolean).reduce(function(_, pp) { return pp.x; }, p.x);
     var renderX = prevX + (p.x - prevX) * alpha;
     layer.appendChild(bboxDiv(renderX * cs, p.y * cs, cs, cs, 'rgba(255,255,0,0.9)'));
     [findCarryingPlatform(simState, scenario, p)].filter(Boolean)
-      .forEach(function(e) { appendActivePlatformBBox(layer, cs, scenario, e); });
+      .forEach(function(e) { appendActivePlatformBBox(rState, layer, cs, scenario, e); });
   });
 }
 
