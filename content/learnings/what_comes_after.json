@@ -6,7 +6,7 @@
   "source": "Clock",
   "type": "exercise",
   "mode": "multi-choice",
-  "profile": "child-day",
+  "profile": "times_of_day",
   "criteria": [
     "cl.sequencing-language",
     "cl.prediction"
@@ -17,7 +17,7 @@
       "preset_shown": "breakfast",
       "correct": "lunch",
       "distractors": [
-        "wake_up",
+        "morning",
         "dinner",
         "bedtime"
       ],
@@ -31,7 +31,7 @@
       "preset_shown": "lunch",
       "correct": "afternoon",
       "distractors": [
-        "wake_up",
+        "morning",
         "breakfast",
         "bedtime"
       ],
@@ -45,7 +45,7 @@
       "preset_shown": "afternoon",
       "correct": "dinner",
       "distractors": [
-        "wake_up",
+        "morning",
         "lunch",
         "bedtime"
       ],
