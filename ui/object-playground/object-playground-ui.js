@@ -210,16 +210,17 @@ function initObjectPlayground() {
     [actionRow].filter(Boolean).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
-      var fromPos = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];
+      var animFrom = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];
+      var logicalFrom = [sel].filter(Boolean).map(function(s) { return { x: s.x, y: s.y }; })[0];
       state = moveSelectedObject(state, dir);
       var afterSel = state.objects.filter(function(o) { return o.selected; })[0];
       [afterSel].filter(Boolean).forEach(function(o) {
-        var unchanged = [fromPos].filter(function(p) { return p.x === o.x; }).filter(function(p) { return p.y === o.y; });
-        [o].filter(function() { return fromPos; }).filter(function() { return !unchanged.length; }).forEach(function(o) {
-          objAnims[o.id] = { fromX: fromPos.x, fromY: fromPos.y, toX: o.x, toY: o.y, startTime: Date.now() };
+        var unchanged = [logicalFrom].filter(function(p) { return p.x === o.x; }).filter(function(p) { return p.y === o.y; });
+        [o].filter(function() { return animFrom; }).filter(function() { return !unchanged.length; }).forEach(function(o) {
+          objAnims[o.id] = { fromX: animFrom.x, fromY: animFrom.y, toX: o.x, toY: o.y, startTime: Date.now() };
           _speak('move ' + dir);
         });
-        [1].filter(function() { return fromPos; }).filter(function() { return unchanged.length; }).forEach(function() {
+        [1].filter(function() { return logicalFrom; }).filter(function() { return unchanged.length; }).forEach(function() {
           _speak(OBJ_DIR_EDGE[dir]);
         });
       });
