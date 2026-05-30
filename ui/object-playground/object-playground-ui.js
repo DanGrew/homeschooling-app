@@ -29,6 +29,14 @@ function renderToolbox(toolboxEl, state) {
   [state.stackObjects[0]].filter(Boolean).forEach(function() {
     toolboxEl.style.display = 'flex';
   });
+  var dirLabels = { 'move-left': 'Move left', 'move-right': 'Move right', 'move-up': 'Move up', 'move-down': 'Move down' };
+  [window.__makeSpeakable].filter(Boolean).forEach(function(fn) {
+    Object.keys(dirLabels).forEach(function(action) {
+      toolboxEl.querySelectorAll('[data-action="' + action + '"]').forEach(function(el) {
+        fn(el, dirLabels[action]);
+      });
+    });
+  });
 }
 
 function renderControls(addBtn, undoBtn, state) {
@@ -167,6 +175,12 @@ function initObjectPlayground() {
         redraw();
         _speak('delete');
       });
+    });
+    var actionRow = e.target.closest('[data-action^="move-"]');
+    [actionRow].filter(Boolean).forEach(function(el) {
+      var dir = el.getAttribute('data-action').replace('move-', '');
+      state = moveSelectedObject(state, dir);
+      redraw();
     });
   });
 }

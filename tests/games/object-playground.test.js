@@ -146,6 +146,29 @@ test('toolbox shows as dragging during object drag', async ({ page }) => {
   expect(dragging).not.toBeNull();
 });
 
+test('direction buttons appear in toolbox when object is selected', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  await expect(page.locator('[data-action="move-left"]')).toBeVisible();
+  await expect(page.locator('[data-action="move-right"]')).toBeVisible();
+  await expect(page.locator('[data-action="move-up"]')).toBeVisible();
+  await expect(page.locator('[data-action="move-down"]')).toBeVisible();
+});
+
+test('clicking move-right button moves selected object', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  const obj = page.locator('[data-testid="object-' + topId + '"]');
+  const before = await obj.getAttribute('transform');
+  await page.locator('[data-action="move-right"]').click();
+  const after = await obj.getAttribute('transform');
+  expect(after).not.toBe(before);
+});
+
 test('refreshing produces a different layout', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform1 = await page.locator('[data-testid="object-obj-0"]').getAttribute('transform');

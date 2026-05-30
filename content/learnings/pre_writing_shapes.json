@@ -1,0 +1,28 @@
+{
+  "id": "pre_writing_shapes",
+  "title": "Shapes in Letters",
+  "number": 1,
+  "guide": "cat",
+  "source": "Letters & Numbers",
+  "criteria": [
+    "pd.fine-motor",
+    "ead.mark-making",
+    "maths.shape-2d",
+    "psed.self-regulation"
+  ],
+  "steps": [
+    {
+      "prompt": "Every letter is made of shapes — lines, curves, and circles! Find l — it's just one straight line going down!",
+      "expect": "CHAR_l_TRACED",
+      "feedback": "A straight line! That shape is inside b, d, h, k, and lots more. Now find c — it's a curve!"
+    },
+    {
+      "expect": "CHAR_c_TRACED",
+      "feedback": "A curve — like a smile on its side! That shape is inside a, d, e, g, and q too. Now find o — it's a full circle!"
+    },
+    {
+      "expect": "CHAR_o_TRACED",
+      "feedback": "A circle — all the way round! Lines, curves, and circles — those three shapes make every letter. You're ready to write!"
+    }
+  ]
+}
