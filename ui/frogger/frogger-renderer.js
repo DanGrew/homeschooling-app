@@ -156,11 +156,17 @@ function ensureEntityEl(rState, e, theme, cs) {
   });
 }
 
+var NO_LEAD_ENTITY = { obstacle: true };
+
 function advanceEntityVisualX(rState, e, dt) {
   var vel = rState.rowVelocities[e.rowId];
   var next = clampVisualToSim(rState.visualX[e.id] + vel * dt, e.x);
   var absD = Math.abs(next - e.x);
-  rState.visualX[e.id] = (next + e.x - Math.sign(vel) * absD) / 2;
+  var ADVANCE = {
+    'true':  function() { return (next + e.x - Math.sign(vel) * absD) / 2; },
+    'false': function() { return next; }
+  };
+  rState.visualX[e.id] = ADVANCE[String(!!NO_LEAD_ENTITY[e.type])]();
 }
 
 function positionEntityEl(rState, e, scenario, cs) {
