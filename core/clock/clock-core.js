@@ -60,6 +60,22 @@ export function nextMinuteDeg(fromMin, toMin) {
   return delta < 0 ? delta + 360 : delta;
 }
 
+var _PRESET_SKY = [
+  {from:0,  to:4,  bg:'#1a1a2e', fg:'#ffffff'},
+  {from:5,  to:7,  bg:'#ff7043', fg:'#ffffff'},
+  {from:8,  to:11, bg:'#b3e5fc', fg:'#333333'},
+  {from:12, to:14, bg:'#fff9c4', fg:'#333333'},
+  {from:15, to:17, bg:'#ffe0b2', fg:'#333333'},
+  {from:18, to:20, bg:'#7e57c2', fg:'#ffffff'},
+  {from:21, to:23, bg:'#1a237e', fg:'#ffffff'}
+];
+
+export function presetSkyColour(time) {
+  var hour = parseInt(time.split(':')[0], 10);
+  return _PRESET_SKY.filter(function(s) { return hour >= s.from && hour <= s.to; })[0]
+    || {bg: 'rgba(255,255,255,0.88)', fg: '#333333'};
+}
+
 export function generateChoices(presets, correctIdx, n) {
   var indices = [correctIdx];
   var pool = presets.map(function(_, i) { return i; }).filter(function(i) { return i !== correctIdx; });

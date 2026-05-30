@@ -55,7 +55,7 @@
 #preset-panel{flex:1;display:flex;flex-direction:column;}
 #profile-title{width:100%;text-align:center;font-weight:bold;color:#fff;font-size:clamp(1em,3.5vw,1.3em);padding:6px 8px;cursor:pointer;user-select:none;-webkit-touch-callout:none;}
 #preset-buttons{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:center;justify-content:center;padding:12px 12px 12px 4px;}
-.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;}
+.preset-btn{width:calc(50% - 4px);padding:10px 6px;font-size:clamp(0.78em,2.4vw,0.98em);font-family:inherit;font-weight:bold;border:none;border-radius:14px;background:rgba(255,255,255,0.88);color:#333;cursor:pointer;touch-action:manipulation;-webkit-touch-callout:none;user-select:none;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
 .preset-btn:active{transform:scale(0.95);}
 @keyframes badgePulse{0%,100%{box-shadow:0 0 0 2px #f0c060}50%{box-shadow:0 0 0 6px #f0c060,0 0 12px rgba(240,192,96,0.6)}}
 .badge-target-active{animation:badgePulse 1.2s ease-in-out infinite;}
@@ -94,7 +94,7 @@
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, shuffle} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, shuffle, presetSkyColour} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
@@ -235,7 +235,19 @@ function renderPresetButtons(presets) {
   show.forEach(function(preset) {
     var btn = document.createElement('button');
     btn.className = 'preset-btn';
-    btn.textContent = [preset.emoji, preset.label].filter(Boolean).join(' ');
+    var sky = presetSkyColour(preset.time);
+    btn.style.background = sky.bg;
+    btn.style.color = sky.fg;
+    [preset.emoji].filter(Boolean).forEach(function(e) {
+      var span = document.createElement('span');
+      span.style.fontSize = '2em';
+      span.style.lineHeight = '1';
+      span.textContent = e;
+      btn.appendChild(span);
+    });
+    var label = document.createElement('span');
+    label.textContent = preset.label;
+    btn.appendChild(label);
     makeSpeakable(btn, preset.label);
     btn.addEventListener('click', function() { pressPreset(preset); });
     btns.appendChild(btn);
