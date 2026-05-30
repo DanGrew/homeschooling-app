@@ -165,7 +165,7 @@
     "source": "Clock",
     "title": "Morning to Night",
     "type": "lesson",
-    "number": 5
+    "number": 15
   },
   {
     "id": "clock-lesson-my_day",
@@ -207,7 +207,7 @@
     "source": "Clock",
     "title": "Times of Day",
     "type": "lesson",
-    "number": 4
+    "number": 3
   },
   {
     "id": "colour-wheel-exercise-cool",
