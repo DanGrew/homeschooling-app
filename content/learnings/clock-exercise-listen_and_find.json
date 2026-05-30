@@ -4,18 +4,16 @@
   "number": 7,
   "guide": "dog",
   "source": "Clock",
-  "profile": "child-day",
-  "filter": "named-time",
   "criteria": [
     "cl.listening"
   ],
   "steps": [
     {
-      "prompt": "Listen carefully — then press what I say. Ready? Press... wake up.",
-      "expect": "PRESET_WAKE_UP_SELECTED"
+      "prompt": "Listen carefully — then press what I say. Ready? Press... morning.",
+      "expect": "PRESET_MORNING_SELECTED"
     },
     {
-      "prompt": "You listened and found it! Wake up — first thing in the morning. Listen again. Press... bedtime.",
+      "prompt": "You listened and found it! Morning — first thing in the day. Listen again. Press... bedtime.",
       "expect": "PRESET_BEDTIME_SELECTED"
     },
     {

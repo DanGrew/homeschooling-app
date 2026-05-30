@@ -4,13 +4,11 @@
   "number": 5,
   "guide": "cat",
   "source": "Clock",
-  "filter": "sky-change",
-  "profile": "child-day",
   "criteria": ["uw.cause-effect", "cl.prediction", "cl.topic-vocabulary"],
   "steps": [
     {
-      "prompt": "When it is morning, the sun comes up. What do you think the sky looks like? Press Wake up and see!",
-      "expect": "PRESET_WAKE_UP_SELECTED"
+      "prompt": "When it is morning, the sun comes up. What do you think the sky looks like? Press Morning and see!",
+      "expect": "PRESET_MORNING_SELECTED"
     },
     {
       "prompt": "Because it is morning, the sun rises. The sky turns light. Morning brings the sun! Now it is midday. The sun has been climbing all morning. Where do you think it is now? Press Lunch!",

@@ -4,8 +4,6 @@
   "number": 4,
   "guide": "dog",
   "source": "Clock",
-  "filter": "named-time",
-  "profile": "child-day",
   "criteria": ["cl.topic-vocabulary", "cl.sequencing-language"],
   "steps": [
     {
@@ -14,8 +12,8 @@
       "expect": "BADGE_TAPPED"
     },
     {
-      "prompt": "Morning! The sun is low and the sky is bright. It is morning time. Press Wake up!",
-      "expect": "PRESET_WAKE_UP_SELECTED"
+      "prompt": "Morning! The sun is low and the sky is bright. It is morning time. Press Morning!",
+      "expect": "PRESET_MORNING_SELECTED"
     },
     {
       "prompt": "When the sun is right at the top of the sky, it is called midday.",
