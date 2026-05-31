@@ -1,5 +1,6 @@
 {
   "id": "word-builder-exercise-hard_mode",
+  "type": "exercise",
   "title": "Hard Mode",
   "number": 5,
   "guide": "dog",
