@@ -36,10 +36,10 @@
     {
       "id": "items",
       "items": [
-        { "prompt": "I'm big, I say moo, and farmers use my milk. Who am I? Find me!", "expect": "COW_SPOKEN", "feedback": "The cow! Cows give us milk." },
-        { "prompt": "I'm tall and strong. Farmers ride on my back and I help carry heavy things.", "expect": "HORSE_SPOKEN", "feedback": "The horse! Horses are very powerful." },
-        { "prompt": "What sound do you think the next one makes — quack or woof? Find the duck and tap to hear!", "expect": "DUCK_SPOKEN", "feedback": "Quack! Ducks love splashing in puddles." },
-        { "prompt": "Find the animal that rhymes with 'house'!", "expect": "MOUSE_SPOKEN", "feedback": "Mouse! Mouse rhymes with house — same ending sound." }
+        { "prompt": "Next! I'm big, I say moo, and farmers use my milk. Who am I? Find me!", "expect": "COW_SPOKEN", "feedback": "The cow! Cows give us milk." },
+        { "prompt": "Your turn — I'm tall and strong. Farmers ride on my back and I help carry heavy things.", "expect": "HORSE_SPOKEN", "feedback": "The horse! Horses are very powerful." },
+        { "prompt": "Now then — what sound do you think the next one makes — quack or woof? Find the duck and tap to hear!", "expect": "DUCK_SPOKEN", "feedback": "Quack! Ducks love splashing in puddles." },
+        { "prompt": "OK, next one — find the animal that rhymes with 'house'!", "expect": "MOUSE_SPOKEN", "feedback": "Mouse! Mouse rhymes with house — same ending sound." }
       ]
     }
   ]

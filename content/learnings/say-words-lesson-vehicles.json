@@ -31,10 +31,10 @@
     {
       "id": "items",
       "items": [
-        { "prompt": "I'm very long and I stop at bus stops. I carry lots of people to school and work at the same time.", "expect": "BUS_SPOKEN", "feedback": "Bus! Buses are great because one bus can carry 50 people at once." },
-        { "prompt": "I run on tracks, not roads. My name rhymes with 'rain'. Find me!", "expect": "TRAIN_SPOKEN", "feedback": "Train! Train rhymes with rain — same ending sound. Trains travel much further than buses." },
-        { "prompt": "This one goes incredibly fast — zoom! The driver wears a helmet and races to win. What do you think it is? Find it!", "expect": "RACE_CAR_SPOKEN", "feedback": "Race car! The fastest vehicle here." },
-        { "prompt": "This one digs big holes in the ground — for building roads, houses, and tunnels. Builders need it every day.", "expect": "DIGGER_SPOKEN", "feedback": "Digger! Diggers can move more earth in one scoop than 10 people with spades." }
+        { "prompt": "Now then — I'm very long and I stop at bus stops. I carry lots of people to school and work at the same time.", "expect": "BUS_SPOKEN", "feedback": "Bus! Buses are great because one bus can carry 50 people at once." },
+        { "prompt": "Next! I run on tracks, not roads. My name rhymes with 'rain'. Find me!", "expect": "TRAIN_SPOKEN", "feedback": "Train! Train rhymes with rain — same ending sound. Trains travel much further than buses." },
+        { "prompt": "Your turn — this one goes incredibly fast — zoom! The driver wears a helmet and races to win. What do you think it is? Find it!", "expect": "RACE_CAR_SPOKEN", "feedback": "Race car! The fastest vehicle here." },
+        { "prompt": "Great — now look for the one that digs big holes in the ground — for building roads, houses, and tunnels. Builders need it every day.", "expect": "DIGGER_SPOKEN", "feedback": "Digger! Diggers can move more earth in one scoop than 10 people with spades." }
       ]
     }
   ]
