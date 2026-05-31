@@ -145,8 +145,9 @@ function makeTile(letter, soundId) {
   btn.style.cssText = TILE_STYLE;
   TILE_SOUND[String(soundId != null)](btn, soundId, letter);
   btn.addEventListener('pointerdown', function() { btn.style.transform = 'scale(0.9)'; btn.style.background = '#e3f2fd'; });
-  btn.addEventListener('pointerup', function() { btn.style.transform = ''; btn.style.background = '#fff'; tryPlace(letter); });
+  btn.addEventListener('pointerup', function() { btn.style.transform = ''; btn.style.background = '#fff'; });
   btn.addEventListener('pointerleave', function() { btn.style.transform = ''; btn.style.background = '#fff'; });
+  btn.addEventListener('click', function() { tryPlace(letter); });
   return btn;
 }
 
