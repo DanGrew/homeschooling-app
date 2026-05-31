@@ -207,15 +207,14 @@ var WATCH_CLICK = {
 
 var MODE_PARAM = { 'true': 'trace', 'false': 'lesson' };
 
+var PHONEME_BY_GROUP = {
+  'lower': function(e) { var sounds = deriveLetterSounds(e.char); [sounds[0]].filter(Boolean).forEach(playSound); },
+  'upper': function(e) { speak(e.speak); },
+  'digit': function(e) { speak(e.speak); }
+};
+
 function playCharPhoneme() {
-  [currentEntry].filter(Boolean).forEach(function(e) {
-    if (e.group === 'lower') {
-      var sounds = deriveLetterSounds(e.char);
-      [sounds[0]].filter(Boolean).forEach(playSound);
-    } else {
-      speak(e.speak);
-    }
-  });
+  [currentEntry].filter(Boolean).forEach(function(e) { PHONEME_BY_GROUP[e.group](e); });
 }
 
 function getSpeakLabel() { return [currentEntry].filter(Boolean).map(function(e) { return e.speak; }).concat(['Speak'])[0]; }
