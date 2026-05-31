@@ -34,12 +34,12 @@
     {
       "id": "items",
       "items": [
-        { "prompt": "I'm the biggest land animal in the world. I have a long trunk and huge ears. Find me!", "expect": "ELEPHANT_SPOKEN", "feedback": "Elephant! Elephants live in Africa and Asia." },
-        { "prompt": "I'm the tallest animal on Earth. I have a very long neck and eat leaves from the tops of trees.", "expect": "GIRAFFE_SPOKEN", "feedback": "Giraffe! They can reach leaves no other animal can." },
-        { "prompt": "This one is called the king of the jungle. Do you think it eats plants — or other animals? Find it!", "expect": "LION_SPOKEN", "feedback": "Lion! Lions hunt other animals for food. They live in Africa." },
-        { "prompt": "Find the black and white stripy one — its name starts with the /z/ sound. Zzz...", "expect": "ZEBRA_SPOKEN", "feedback": "Zebra! /z/ — the last letter of the alphabet." },
-        { "prompt": "Find the big cat with orange and black stripes — not a lion, but just as fierce!", "expect": "TIGER_SPOKEN", "feedback": "Tiger! Tigers are the largest cats in the world." },
-        { "prompt": "Find the slow one that carries its home on its back!", "expect": "TURTLE_SPOKEN", "feedback": "Turtle — every safari animal found!" }
+        { "prompt": "Now then — I'm the biggest land animal in the world. I have a long trunk and huge ears. Find me!", "expect": "ELEPHANT_SPOKEN", "feedback": "Elephant! Elephants live in Africa and Asia." },
+        { "prompt": "Next! I'm the tallest animal on Earth. I have a very long neck and eat leaves from the tops of trees.", "expect": "GIRAFFE_SPOKEN", "feedback": "Giraffe! They can reach leaves no other animal can." },
+        { "prompt": "Your turn — this one is called the king of the jungle. Do you think it eats plants — or other animals? Find it!", "expect": "LION_SPOKEN", "feedback": "Lion! Lions hunt other animals for food. They live in Africa." },
+        { "prompt": "Now find the black and white stripy one — its name starts with the /z/ sound. Zzz...", "expect": "ZEBRA_SPOKEN", "feedback": "Zebra! /z/ — the last letter of the alphabet." },
+        { "prompt": "Great — now look for the big cat with orange and black stripes — not a lion, but just as fierce!", "expect": "TIGER_SPOKEN", "feedback": "Tiger! Tigers are the largest cats in the world." },
+        { "prompt": "OK, next one — find the slow one that carries its home on its back!", "expect": "TURTLE_SPOKEN", "feedback": "Turtle — every safari animal found!" }
       ]
     }
   ]

@@ -35,11 +35,11 @@
     {
       "id": "items",
       "items": [
-        { "prompt": "This face has a big smile. Everything feels good. Find it!", "expect": "SMILE_SPOKEN", "feedback": "Happy! What makes you feel happy?" },
-        { "prompt": "This face has tears. Something didn't go the way they wanted.", "expect": "SAD_SPOKEN", "feedback": "Sad. Feeling sad is normal — everyone feels sad sometimes." },
-        { "prompt": "This is a big hot feeling. Your face goes red and you might want to shout. What do you think it is? Find it!", "expect": "ANGRY_SPOKEN", "feedback": "Angry! When you feel angry, try this — breathe in slowly... and breathe out. That helps." },
-        { "prompt": "This face isn't sure if something bad is going to happen. They keep thinking about it.", "expect": "WORRIED_SPOKEN", "feedback": "Worried. Talking about worries helps make them smaller." },
-        { "prompt": "Find the face that shows someone is feeling unwell.", "expect": "POORLY_SPOKEN", "feedback": "Poorly. When you feel poorly, rest and cuddles help." }
+        { "prompt": "Now then — this face has a big smile. Everything feels good. Find it!", "expect": "SMILE_SPOKEN", "feedback": "Happy! What makes you feel happy?" },
+        { "prompt": "Next! This face has tears. Something didn't go the way they wanted.", "expect": "SAD_SPOKEN", "feedback": "Sad. Feeling sad is normal — everyone feels sad sometimes." },
+        { "prompt": "Your turn — this is a big hot feeling. Your face goes red and you might want to shout. What do you think it is? Find it!", "expect": "ANGRY_SPOKEN", "feedback": "Angry! When you feel angry, try this — breathe in slowly... and breathe out. That helps." },
+        { "prompt": "Let's try another one — this face isn't sure if something bad is going to happen. They keep thinking about it.", "expect": "WORRIED_SPOKEN", "feedback": "Worried. Talking about worries helps make them smaller." },
+        { "prompt": "OK, next one — find the face that shows someone is feeling unwell.", "expect": "POORLY_SPOKEN", "feedback": "Poorly. When you feel poorly, rest and cuddles help." }
       ]
     }
   ]
