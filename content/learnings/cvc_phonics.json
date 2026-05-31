@@ -12,6 +12,21 @@
     "cl.topic-vocabulary"
   ],
   "words": ["cat", "hen", "pig", "bus", "sad"],
+  "shapeDecomp": {
+    "c": ["curve"],
+    "a": ["curve", "straight line"],
+    "t": ["straight line", "curve"],
+    "h": ["straight line", "curve"],
+    "e": ["straight line", "curve"],
+    "n": ["straight line", "curve"],
+    "p": ["straight line", "curve"],
+    "i": ["straight line"],
+    "g": ["curve", "straight line"],
+    "b": ["straight line", "curve"],
+    "u": ["curve"],
+    "s": ["curve"],
+    "d": ["curve", "straight line"]
+  },
   "steps": [
     {
       "prompt": "Short words are made of just three sounds! Find cat and trace each letter — c, a, t!",

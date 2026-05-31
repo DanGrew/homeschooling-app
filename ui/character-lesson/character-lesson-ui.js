@@ -183,6 +183,41 @@ function loadChar(entry) {
     });
 }
 
+var SHAPE_COLORS = {'straight line':'#3498DB','curve':'#E67E22','circle':'#2ECC71','diagonal':'#9B59B6'};
+
+function getActiveShapeDecomp(char) {
+  var lesson = window.guidanceService && window.guidanceService._lesson;
+  return (lesson && lesson.shapeDecomp && lesson.shapeDecomp[char]) || null;
+}
+
+function showShapeDecomp(shapes, onDismiss) {
+  var overlay = document.createElement('div');
+  overlay.id = 'shape-decomp-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.55);z-index:1000;cursor:pointer;';
+  var card = document.createElement('div');
+  card.style.cssText = 'background:white;border-radius:20px;padding:28px 36px;display:flex;flex-direction:column;align-items:center;gap:16px;max-width:90vw;';
+  var lbl = document.createElement('div');
+  lbl.style.cssText = 'font-size:1em;color:#888;font-family:inherit;font-weight:bold;';
+  lbl.textContent = 'Made of:';
+  card.appendChild(lbl);
+  var pills = document.createElement('div');
+  pills.style.cssText = 'display:flex;gap:12px;flex-wrap:wrap;justify-content:center;';
+  shapes.forEach(function(s) {
+    var pill = document.createElement('span');
+    pill.style.cssText = 'background:' + (SHAPE_COLORS[s] || '#888') + ';color:white;border-radius:20px;padding:10px 24px;font-size:1.2em;font-weight:bold;font-family:inherit;';
+    pill.textContent = s;
+    pills.appendChild(pill);
+  });
+  card.appendChild(pills);
+  var hint = document.createElement('div');
+  hint.style.cssText = 'font-size:0.85em;color:#bbb;font-family:inherit;';
+  hint.textContent = 'tap to continue';
+  card.appendChild(hint);
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  overlay.addEventListener('pointerdown', function() { overlay.remove(); onDismiss(); }, {once: true});
+}
+
 var BTN_TRACE_CLICK = {
   'true':  () => {},
   'false': () => {
@@ -196,7 +231,9 @@ var BTN_TRACE_CLICK = {
       dot.setAttribute('fill', [dot.dataset.origFill, '#ccc'].filter(Boolean)[0]);
       dot.style.filter = '';
     });
-    engine.startAnimation(2500);
+    var shapes = currentEntry && getActiveShapeDecomp(currentEntry.char);
+    var startAnim = function() { engine.startAnimation(2500); };
+    if (shapes) showShapeDecomp(shapes, startAnim); else startAnim();
   }
 };
 
