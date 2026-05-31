@@ -9,8 +9,10 @@ const {
   getRowById,
   entityOverlapsPlayerTile,
   isOnPlatform,
+  tileHasBlocker,
   applyInput,
   detectCollisions,
+  collectEntity,
   resetPlayer,
   isSafeMove,
   getMovePreview
@@ -432,4 +434,85 @@ test('getMovePreview: returns object with all four boolean keys', () => {
   expect(typeof preview.right).toBe('boolean')
   expect(typeof preview.up).toBe('boolean')
   expect(typeof preview.down).toBe('boolean')
+})
+
+// ---- tileHasBlocker ----
+
+test('tileHasBlocker: returns true when blocker occupies target tile', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g5', 5)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'wall1', type: 'blocker', rowId: 'g5', x: 3, width: 1, collected: false })
+  expect(tileHasBlocker(state.entities, scenario, 3, 5)).toBe(true)
+})
+
+test('tileHasBlocker: returns false when no blocker at target tile', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g5', 5)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'wall1', type: 'blocker', rowId: 'g5', x: 3, width: 1, collected: false })
+  expect(tileHasBlocker(state.entities, scenario, 4, 5)).toBe(false)
+})
+
+test('tileHasBlocker: returns false when blocker is on different row (y mismatch)', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g5', 5), makeGroundRow('g6', 6)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'wall1', type: 'blocker', rowId: 'g5', x: 3, width: 1, collected: false })
+  expect(tileHasBlocker(state.entities, scenario, 3, 6)).toBe(false)
+})
+
+test('tileHasBlocker: collected blocker does not block', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g5', 5)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'wall1', type: 'blocker', rowId: 'g5', x: 3, width: 1, collected: true })
+  expect(tileHasBlocker(state.entities, scenario, 3, 5)).toBe(false)
+})
+
+// ---- applyInput: blocker ----
+
+test('applyInput blocked by blocker entity', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  state.entities.push({ id: 'b1', type: 'blocker', rowId: 'g6', x: 5, width: 1, collected: false })
+  applyInput(state, scenario, 'up')
+  expect(state.player.y).toBe(7)
+})
+
+test('applyInput not blocked when blocker is at different x', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7), makeGroundRow('g6', 6)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  state.entities.push({ id: 'b1', type: 'blocker', rowId: 'g6', x: 3, width: 1, collected: false })
+  applyInput(state, scenario, 'up')
+  expect(state.player.y).toBe(6)
+})
+
+// ---- detectCollisions: collectible pickup ----
+
+test('detectCollisions: collectible at player tile returns collectiblePickedUp', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g5', 5)],
+    entities: { g5: [{ id: 'gem1', type: 'collectible', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  const event = detectCollisions(state, scenario)
+  expect(event).not.toBeNull()
+  expect(event.type).toBe('collectiblePickedUp')
+  expect(event.entityId).toBe('gem1')
+})
+
+test('detectCollisions: already collected collectible does not trigger', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g5', 5)],
+    entities: { g5: [{ id: 'gem1', type: 'collectible', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  collectEntity(state, 'gem1')
+  expect(detectCollisions(state, scenario)).toBeNull()
+})
+
+test('detectCollisions: collectible in different row does not trigger', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g5', 5), makeGroundRow('g6', 6)],
+    entities: { g6: [{ id: 'gem1', type: 'collectible', x: 4, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  expect(detectCollisions(state, scenario)).toBeNull()
 })

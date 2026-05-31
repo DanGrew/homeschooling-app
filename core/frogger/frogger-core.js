@@ -197,6 +197,14 @@ function isOnPlatform(state, scenario, player) {
   return false;
 }
 
+function tileHasBlocker(entities, scenario, targetX, targetY) {
+  return entities.some(function(e) {
+    if (e.type !== 'blocker' || e.collected) return false;
+    var row = getRowById(scenario, e.rowId);
+    return row && row.y === targetY && Math.floor(e.x) === targetX;
+  });
+}
+
 function applyInput(state, scenario, direction) {
   if (state.phase !== 'running') return;
   var player = state.player;
@@ -208,6 +216,7 @@ function applyInput(state, scenario, direction) {
   if (nx < 0 || nx >= state.grid.cols || ny < 0 || ny >= state.grid.rows) return;
   var destRow = getRowAtY(scenario, ny);
   if (destRow && destRow.baseTile === 'wall') return;
+  if (tileHasBlocker(state.entities, scenario, nx, ny)) return;
   player.x = nx;
   player.y = ny;
 }
@@ -229,6 +238,16 @@ function detectCollisions(state, scenario) {
     if (!eRow || player.y !== eRow.y) continue;
     if (entityOverlapsPlayerTile(e, player.x)) {
       return { type: 'obstacle', playerX: player.x, playerY: player.y, entityId: e.id };
+    }
+  }
+
+  for (var j = 0; j < entities.length; j++) {
+    var c = entities[j];
+    if (c.type !== 'collectible' || c.collected) continue;
+    var cRow = getRowById(scenario, c.rowId);
+    if (!cRow || player.y !== cRow.y) continue;
+    if (entityOverlapsPlayerTile(c, player.x)) {
+      return { type: 'collectiblePickedUp', entityId: c.id };
     }
   }
 
@@ -344,6 +363,7 @@ if (typeof module !== 'undefined') module.exports = {
   getRowById,
   entityOverlapsPlayerTile,
   isOnPlatform,
+  tileHasBlocker,
   applyInput,
   detectCollisions,
   resetPlayer,

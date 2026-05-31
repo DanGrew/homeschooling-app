@@ -1,4 +1,4 @@
-var ENTITY_FALLBACK_FILL = { obstacle: '#cc3300', platform: '#886633', collectible: '#ffcc00' };
+var ENTITY_FALLBACK_FILL = { obstacle: '#cc3300', platform: '#886633', collectible: '#ffcc00', blocker: '#888888' };
 
 function calcCellSize(container, cols, rows) {
   var cs = Math.floor(Math.min(container.offsetWidth / cols, container.offsetHeight / rows));
@@ -156,7 +156,7 @@ function ensureEntityEl(rState, e, theme, cs) {
   });
 }
 
-var STEP_VISUAL = { obstacle: stepObstacleVisualX, platform: stepPlatformVisualX, collectible: stepPlatformVisualX };
+var STEP_VISUAL = { obstacle: stepObstacleVisualX, platform: stepPlatformVisualX, collectible: stepPlatformVisualX, blocker: stepPlatformVisualX };
 
 function advanceEntityVisualX(rState, e, dt) {
   var vel = rState.rowVelocities[e.rowId];
@@ -186,7 +186,8 @@ function removeOrphanEl(rState, id) {
 var BBOX_CFG = {
   obstacle:    { color: 'rgba(255,60,60,0.85)'  },
   platform:    { color: 'rgba(60,220,60,0.85)'  },
-  collectible: { color: 'rgba(255,200,0,0.85)'  }
+  collectible: { color: 'rgba(255,200,0,0.85)'  },
+  blocker:     { color: 'rgba(150,150,150,0.85)' }
 };
 
 function bboxDiv(x, y, w, h, color) {
