@@ -59,13 +59,13 @@ test('lesson nav button is visible', async ({ page }) => {
   await expect(page.locator('.nav-lesson-btn')).toContainText('\uD83D\uDCDA')
 })
 
-test('lesson popout shows all 6 lessons', async ({ page }) => {
+test('lesson popout shows all 7 lessons', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.nav-lesson-btn').click()
   await expect(page.locator('.nav-lesson-popout')).toBeVisible()
-  await expect(page.locator('.nav-lesson-item')).toHaveCount(6)
+  await expect(page.locator('.nav-lesson-item')).toHaveCount(7)
   await expect(page.locator('.nav-lesson-item').first()).toContainText('Lesson 1: Farm Animals')
-  await expect(page.locator('.nav-lesson-item').last()).toContainText('Lesson 6: Exotic Fruits')
+  await expect(page.locator('.nav-lesson-item').last()).toContainText("Lesson 7: At the Doctor's")
 })
 
 async function startLesson(page) {
