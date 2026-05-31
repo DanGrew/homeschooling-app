@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { initAudio, loadGraphemes, loadRegistry, playSound, playSequence, getAssetPath, getAssetPathForChar, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
+import { initAudio, loadGraphemes, loadRegistry, playSound, playSoundAsync, playSequence, getAssetPath, getAssetPathForChar, deriveLetterSounds, _reset } from '../../components/phonics/phonics-service.js';
 
 const REGISTRY = {
   'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }], defaultSound: 'a-short' },
@@ -16,7 +16,7 @@ var MANIFEST_URL = 'content/phonics/manifest.json';
 var AUDIO_BASE = 'assets/audio/phonics/';
 
 function makeCtx() {
-  var src = { buffer: null, connect: vi.fn(), start: vi.fn() };
+  var src = { buffer: null, connect: vi.fn(), start: vi.fn(function() { if (typeof src.onended === 'function') setTimeout(src.onended, 0); }) };
   var ctx = {
     state: 'running',
     resume: vi.fn(() => Promise.resolve()),
@@ -137,6 +137,36 @@ describe('playSequence', function() {
     vi.advanceTimersByTime(1);
     expect(played.length).toBe(2);
     vi.useRealTimers();
+  });
+});
+
+describe('playSoundAsync', function() {
+  it('returns a Promise that resolves after buffer playback ends', async function() {
+    var { ctx } = setupLoaded();
+    initAudio();
+    await loadGraphemes(REGISTRY_URL, MANIFEST_URL, AUDIO_BASE);
+    var resolved = false;
+    var p = playSoundAsync('a-short').then(function() { resolved = true; });
+    await ctx.resume();
+    await new Promise(function(r) { setTimeout(r, 10); });
+    await p;
+    expect(resolved).toBe(true);
+  });
+
+  it('resolves immediately with TTS fallback for unknown sound', async function() {
+    await playSoundAsync('unknown-xyz');
+    expect(speechSynthesis.speak).toHaveBeenCalled();
+  });
+
+  it('resolves immediately with TTS fallback when no audio context', async function() {
+    global.fetch = vi.fn().mockImplementation(function(url) {
+      if (url === REGISTRY_URL) return Promise.resolve({ json: () => Promise.resolve(REGISTRY) });
+      if (url === MANIFEST_URL) return Promise.resolve({ json: () => Promise.resolve(MANIFEST) });
+      return Promise.resolve({ arrayBuffer: () => Promise.resolve(new ArrayBuffer(8)) });
+    });
+    await loadGraphemes(REGISTRY_URL, MANIFEST_URL, AUDIO_BASE);
+    await playSoundAsync('a-short');
+    expect(speechSynthesis.speak).toHaveBeenCalled();
   });
 });
 

@@ -3,7 +3,8 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
-import { getAssetPathForChar } from '../../components/phonics/phonics-service.js';
+import { getAssetPathForChar, playSoundAsync, initAudio, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
+import { speak } from '../../components/speech/speech-ui.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
 var CHAR_URL = { 'true': function(p) { return p; }, 'false': function(_, c) { return CHAR_BASE + charFile(c); } };
@@ -24,6 +25,7 @@ var charBases = [];
 var charBalls = [];
 var charDots = [];
 var charEngines = [];
+var _phonemeChain = Promise.resolve();
 
 function stopAllEngines() {
   charEngines.forEach(e => [e].filter(Boolean).forEach(e => { e.done = true; e.stopAnimation(); }));
@@ -150,6 +152,7 @@ function fetchCharData(c) {
 
 function loadWord(word) {
   stopAllEngines();
+  _phonemeChain = Promise.resolve();
   document.getElementById('word-container').innerHTML = '';
   const chars = word.split('');
   Promise.all(chars.map(fetchCharData))
@@ -351,6 +354,8 @@ function doTraceChar(charIdx) {
     progressStyle: 'filter:drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 5px #FFA500)',
     onComplete: () => {
       ball.style.display = 'none';
+      var sounds = deriveLetterSounds(currentWord.charAt(charIdx));
+      [sounds[0]].filter(Boolean).forEach(function(id) { _phonemeChain = _phonemeChain.then(function() { return playSoundAsync(id); }); });
       TRACE_DOT_HANDLERS[String(!!dot)](dot, charIdx);
     }
   });
@@ -362,7 +367,7 @@ function emitWordTraced() {
   window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: 'WORD_' + currentWord + '_TRACED'}}));
 }
 
-function onWordComplete() { isTracing = false; emitWordTraced(); showBanner(); }
+function onWordComplete() { isTracing = false; emitWordTraced(); _phonemeChain.then(function() { speak(currentWord); }); showBanner(); }
 
 var START_TRACE_GUARD = { 'true': doStartTrace, 'false': () => {} };
 
@@ -401,6 +406,7 @@ function handleGenerate() {
 function getSayItLabel() { return [currentWord].filter(Boolean).concat(['Say It'])[0]; }
 
 export function init() {
+  initAudio();
   paginator = createPaginator({
     container: document.getElementById('paginator-bar'),
     items: [],

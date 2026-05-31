@@ -3,7 +3,7 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
-import { getAssetPathForChar } from '../../components/phonics/phonics-service.js';
+import { getAssetPathForChar, playSound, initAudio, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
 
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
@@ -94,7 +94,7 @@ var TRACE_COMPLETE = {
   'false': showBanner
 };
 
-function onTraceComplete() { TRACE_COMPLETE[String(!!dotEl)](); }
+function onTraceComplete() { playCharPhoneme(); TRACE_COMPLETE[String(!!dotEl)](); }
 
 function dotTappedAction() {
   dotEl.classList.remove('dot-pulse');
@@ -207,9 +207,20 @@ var WATCH_CLICK = {
 
 var MODE_PARAM = { 'true': 'trace', 'false': 'lesson' };
 
+var PHONEME_BY_GROUP = {
+  'lower': function(e) { var sounds = deriveLetterSounds(e.char); [sounds[0]].filter(Boolean).forEach(playSound); },
+  'upper': function(e) { speak(e.speak); },
+  'digit': function(e) { speak(e.speak); }
+};
+
+function playCharPhoneme() {
+  [currentEntry].filter(Boolean).forEach(function(e) { PHONEME_BY_GROUP[e.group](e); });
+}
+
 function getSpeakLabel() { return [currentEntry].filter(Boolean).map(function(e) { return e.speak; }).concat(['Speak'])[0]; }
 
 export function init() {
+  initAudio();
   const paramChar   = [new URLSearchParams(location.search).get('char'),   'a'  ].filter(Boolean)[0];
   const paramFilter = [new URLSearchParams(location.search).get('filter'), 'all'].filter(Boolean)[0];
   mode = MODE_PARAM[String(new URLSearchParams(location.search).get('mode') === 'trace')];
@@ -254,7 +265,7 @@ export function init() {
   });
 
   document.getElementById('btn-trace').addEventListener('click', () => BTN_TRACE_CLICK[String(!engine)]());
-  document.getElementById('btn-speak').addEventListener('click', () => { [currentEntry].filter(Boolean).forEach(e => speak(e.speak)); });
+  document.getElementById('btn-speak').addEventListener('click', playCharPhoneme);
   makeSpeakable(document.getElementById('btn-speak'), getSpeakLabel);
   document.getElementById('btn-tryit').addEventListener('click', () => switchMode('trace'));
   document.getElementById('btn-watch').addEventListener('click', () => WATCH_CLICK[mode]());

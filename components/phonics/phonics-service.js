@@ -101,6 +101,31 @@ export function playSound(soundId) {
   _ctx.resume().then(function() { _playBuffer(filename); }).catch(function() {});
 }
 
+function _playBufferAsync(filename) {
+  return new Promise(function(resolve) {
+    function play(buf) {
+      var src = _ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(_ctx.destination);
+      src.onended = resolve;
+      src.start();
+    }
+    if (_decoded[filename]) { play(_decoded[filename]); return; }
+    _decodeBuffer(_ctx, _rawBuffers[filename].slice(0))
+      .then(function(buf) { _decoded[filename] = buf; play(buf); })
+      .catch(resolve);
+  });
+}
+
+export function playSoundAsync(soundId) {
+  var entry = _soundIndex[soundId];
+  if (!entry) { _tts(soundId); return Promise.resolve(); }
+  var filename = _manifest[entry.clipId];
+  if (!filename || !_rawBuffers[filename]) { _tts(entry.characters); return Promise.resolve(); }
+  if (!_ctx) { _tts(entry.characters); return Promise.resolve(); }
+  return _ctx.resume().then(function() { return _playBufferAsync(filename); }).catch(function() { return Promise.resolve(); });
+}
+
 export function playSequence(soundIds, gapMs) {
   var gap = gapMs !== undefined ? gapMs : 200;
   soundIds.forEach(function(id, i) {
