@@ -162,11 +162,12 @@ function initActiveTray(scenario, total) {
   tray.style.display = 'flex';
 }
 
+var TRAY_BUILD = { 'true': initActiveTray, 'false': clearCollectTray };
+
 function buildCollectTray(scenario) {
   var total = countCollectibles(scenario);
-  var active = [scenario.collectGoal].filter(Boolean).filter(function() { return total > 0; });
-  active.forEach(function() { initActiveTray(scenario, total); });
-  [active.length].filter(function(n) { return !n; }).forEach(clearCollectTray);
+  var key = String(!![scenario.collectGoal].filter(Boolean).filter(function() { return total > 0; }).length);
+  TRAY_BUILD[key](scenario, total);
 }
 
 function applySlotAsset(slot, assetPath) {
@@ -227,12 +228,15 @@ window.startGame = function(scenario, theme) {
   rState = initFroggerRenderer(container, scenario, resolvedTheme);
   rState.resetBtn.addEventListener('click', onResetClick);
   buildCollectTray(scenario);
-  var EV_HANDLER = { collectiblePickedUp: function(ev) { collectEntity(state, ev.entityId); fillCollectSlot(resolvedTheme); } };
+  var EV_HANDLER = {
+    collectiblePickedUp: function(ev) { collectEntity(state, ev.entityId); fillCollectSlot(resolvedTheme); },
+    obstacle: onCollision,
+    hazard: onCollision
+  };
   [loop].filter(Boolean).forEach(function(l) { l.stop(); });
   loop = createGameLoop(state, scenario, rState, function(s) {
     [detectCollisions(s, activeScenario)].filter(Boolean).forEach(function(ev) {
       [EV_HANDLER[ev.type]].filter(Boolean).forEach(function(fn) { fn(ev); });
-      [EV_HANDLER[ev.type]].filter(function(fn) { return !fn; }).forEach(function() { onCollision(ev); });
     });
   });
   loop.start();
