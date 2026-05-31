@@ -116,16 +116,6 @@ function onResetClick() {
   loop.start();
 }
 
-function rowEntities(scenario, rowId) {
-  return [].concat(scenario.entities[rowId]).filter(Boolean);
-}
-
-function countCollectibles(scenario) {
-  return Object.keys(Object.assign({}, scenario.entities)).reduce(function(sum, rowId) {
-    return sum + rowEntities(scenario, rowId).filter(function(e) { return e.type === 'collectible'; }).length;
-  }, 0);
-}
-
 function makeCollectSlot() {
   var slot = document.createElement('div');
   slot.setAttribute('data-testid', 'frogger-collect-slot');
@@ -180,10 +170,6 @@ function applySlotAsset(slot, assetPath) {
 function applySlotFallback(slot) {
   slot.style.background = '#ffcc00';
   slot.style.border = '3px solid #cc8800';
-}
-
-function getCollectAssetPath(theme) {
-  return [theme.assets].filter(Boolean).map(function(a) { return a[theme.map.collectible]; }).filter(Boolean)[0];
 }
 
 var SLOT_FILL = { 'true': applySlotAsset, 'false': applySlotFallback };

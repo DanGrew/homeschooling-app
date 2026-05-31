@@ -347,6 +347,20 @@ function snapshotPositions(simState) {
   return snap;
 }
 
+function rowEntities(scenario, rowId) {
+  return [].concat(scenario.entities[rowId]).filter(Boolean);
+}
+
+function countCollectibles(scenario) {
+  return Object.keys(Object.assign({}, scenario.entities)).reduce(function(sum, rowId) {
+    return sum + rowEntities(scenario, rowId).filter(function(e) { return e.type === 'collectible'; }).length;
+  }, 0);
+}
+
+function getCollectAssetPath(theme) {
+  return [theme.assets].filter(Boolean).map(function(a) { return a[theme.map.collectible]; }).filter(Boolean)[0];
+}
+
 if (typeof module !== 'undefined') module.exports = {
   MIN_OBSTACLE_GAP,
   createPRNG,
@@ -375,5 +389,8 @@ if (typeof module !== 'undefined') module.exports = {
   buildRowVelocities,
   clampVisualToSim,
   stepPlatformVisualX,
-  stepObstacleVisualX
+  stepObstacleVisualX,
+  rowEntities,
+  countCollectibles,
+  getCollectAssetPath
 };
