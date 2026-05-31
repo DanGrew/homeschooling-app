@@ -30,15 +30,28 @@ import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
-import { init, startRound, setMode, togglePicture } from '../../../ui/word-builder/word-builder-ui.js';
+import { init, startRound, setMode, togglePicture, setPicture } from '../../../ui/word-builder/word-builder-ui.js';
 import { speak } from '../../../components/speech/speech-ui.js';
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import { initAudio, loadGraphemes } from '../../../components/phonics/phonics-service.js';
+import { GuidanceService } from '../../../components/guidance/guidance-service.js';
 
 Dictionary.init('../../../content/dictionary/');
 initAudio();
 loadGraphemes();
 var all = [];
+var currentFilter = [];
+
+var PAGE_CTRL = {};
+PAGE_CTRL['MODE_DISTRACTORS']   = function() { setModeUI('distractors'); };
+PAGE_CTRL['MODE_ALPHABET']      = function() { setModeUI('alphabet'); };
+PAGE_CTRL['SHOW_PICTURE']       = function() { setPicture(true); };
+PAGE_CTRL['HIDE_PICTURE']       = function() { setPicture(false); };
+PAGE_CTRL['PAGE_CONTROL_RESET'] = function() { setModeUI('distractors'); setPicture(true); paginator.reset(currentFilter); };
+
+window.addEventListener('page:control', function(e) {
+  [PAGE_CTRL[e.detail.type]].filter(Boolean).forEach(function(fn) { fn(); });
+});
 
 var paginator = createPaginator({
   container: document.getElementById('paginator-bar'),
@@ -49,9 +62,13 @@ var paginator = createPaginator({
 });
 
 init(function(text) { speak(text); }, function() { paginator.next(); });
+window.guidanceService = new GuidanceService();
 
 loadImages(all, function() {
-  buildFilterBar(all, function(f) { paginator.reset(f); });
+  all.forEach(function(item) {
+    PAGE_CTRL['SET_WORD_' + item.name.toLowerCase().replace(/\s+/g, '_')] = function() { startRound(item); };
+  });
+  buildFilterBar(all, function(f) { currentFilter = f; paginator.reset(f); });
 });
 
 var modeD = document.getElementById('wb-mode-distractors');
@@ -83,7 +100,7 @@ modeD.addEventListener('click', function() { setModeUI('distractors'); });
 modeA.addEventListener('click', function() { setModeUI('alphabet'); });
 picBtn.addEventListener('click', function() { togglePicture(); });
 </script>
-<script>window.ACTIVITY_ID = 'word-builder';</script>
+<script>window.ACTIVITY_ID = 'word-builder'; window.LEARNINGS_BASE = '../../../content/learnings/';</script>
 <script type="module">import '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';</script>
 </body>
