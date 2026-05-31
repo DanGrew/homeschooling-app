@@ -1,0 +1,16 @@
+{
+  "id": "garden",
+  "assets": {
+    "player":      "../../../content/dictionary/entries/dog/dog.svg",
+    "blocker":     "../../../content/frogger/garden/blocker.svg",
+    "collectible": "../../../content/frogger/garden/collectible.svg"
+  },
+  "tiles": {
+    "ground": { "fill": "#c8a96e" }
+  },
+  "map": {
+    "player":      "player",
+    "blocker":     "blocker",
+    "collectible": "collectible"
+  }
+}
