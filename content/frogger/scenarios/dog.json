@@ -4,8 +4,8 @@
   "collectGoal": true,
   "grid": { "rows": 12, "cols": 14 },
   "resetPoints": [
-    { "id": "start", "position": { "x": 11, "y": 11 } },
-    { "id": "mid",   "position": { "x": 11, "y": 7 } }
+    { "id": "start", "position": { "x": 1, "y": 11 } },
+    { "id": "mid",   "position": { "x": 2, "y": 5 } }
   ],
   "rows": [
     { "id": "row0",  "y": 0,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
@@ -41,20 +41,26 @@
     "row1": [
       { "id": "w1-0",  "type": "blocker",     "x": 0  },
       { "id": "w1-1",  "type": "blocker",     "x": 1  },
-      { "id": "c1-7",  "type": "collectible", "x": 7  },
+      { "id": "w1-2",  "type": "blocker",     "x": 2  },
+      { "id": "w1-3",  "type": "blocker",     "x": 3  },
+      { "id": "w1-4",  "type": "blocker",     "x": 4  },
+      { "id": "w1-5",  "type": "blocker",     "x": 5  },
+      { "id": "c1-6",  "type": "collectible", "x": 6  },
+      { "id": "w1-10", "type": "blocker",     "x": 10 },
+      { "id": "w1-11", "type": "blocker",     "x": 11 },
       { "id": "w1-12", "type": "blocker",     "x": 12 },
       { "id": "w1-13", "type": "blocker",     "x": 13 }
     ],
     "row2": [
       { "id": "w2-0",  "type": "blocker", "x": 0  },
       { "id": "w2-1",  "type": "blocker", "x": 1  },
+      { "id": "w2-2",  "type": "blocker", "x": 2  },
       { "id": "w2-3",  "type": "blocker", "x": 3  },
       { "id": "w2-4",  "type": "blocker", "x": 4  },
       { "id": "w2-5",  "type": "blocker", "x": 5  },
       { "id": "w2-6",  "type": "blocker", "x": 6  },
       { "id": "w2-7",  "type": "blocker", "x": 7  },
       { "id": "w2-8",  "type": "blocker", "x": 8  },
-      { "id": "w2-9",  "type": "blocker", "x": 9  },
       { "id": "w2-10", "type": "blocker", "x": 10 },
       { "id": "w2-11", "type": "blocker", "x": 11 },
       { "id": "w2-12", "type": "blocker", "x": 12 },
@@ -63,13 +69,14 @@
     "row3": [
       { "id": "w3-0",  "type": "blocker", "x": 0  },
       { "id": "w3-1",  "type": "blocker", "x": 1  },
+      { "id": "w3-10", "type": "blocker", "x": 10 },
+      { "id": "w3-11", "type": "blocker", "x": 11 },
       { "id": "w3-12", "type": "blocker", "x": 12 },
       { "id": "w3-13", "type": "blocker", "x": 13 }
     ],
     "row4": [
       { "id": "w4-0",  "type": "blocker", "x": 0  },
       { "id": "w4-1",  "type": "blocker", "x": 1  },
-      { "id": "w4-2",  "type": "blocker", "x": 2  },
       { "id": "w4-3",  "type": "blocker", "x": 3  },
       { "id": "w4-4",  "type": "blocker", "x": 4  },
       { "id": "w4-5",  "type": "blocker", "x": 5  },
@@ -78,22 +85,15 @@
       { "id": "w4-8",  "type": "blocker", "x": 8  },
       { "id": "w4-9",  "type": "blocker", "x": 9  },
       { "id": "w4-10", "type": "blocker", "x": 10 },
+      { "id": "w4-11", "type": "blocker", "x": 11 },
       { "id": "w4-12", "type": "blocker", "x": 12 },
       { "id": "w4-13", "type": "blocker", "x": 13 }
     ],
     "row5": [
       { "id": "w5-0",  "type": "blocker",     "x": 0  },
       { "id": "w5-1",  "type": "blocker",     "x": 1  },
-      { "id": "w5-2",  "type": "blocker",     "x": 2  },
-      { "id": "w5-3",  "type": "blocker",     "x": 3  },
-      { "id": "w5-4",  "type": "blocker",     "x": 4  },
-      { "id": "w5-5",  "type": "blocker",     "x": 5  },
-      { "id": "w5-6",  "type": "blocker",     "x": 6  },
-      { "id": "w5-7",  "type": "blocker",     "x": 7  },
-      { "id": "w5-8",  "type": "blocker",     "x": 8  },
-      { "id": "w5-9",  "type": "blocker",     "x": 9  },
-      { "id": "w5-10", "type": "blocker",     "x": 10 },
-      { "id": "c5-12", "type": "collectible", "x": 12 },
+      { "id": "c5-6",  "type": "collectible", "x": 6  },
+      { "id": "w5-12", "type": "blocker",     "x": 12 },
       { "id": "w5-13", "type": "blocker",     "x": 13 }
     ],
     "row6": [
@@ -114,13 +114,20 @@
     "row7": [
       { "id": "w7-0",  "type": "blocker",     "x": 0  },
       { "id": "w7-1",  "type": "blocker",     "x": 1  },
-      { "id": "c7-6",  "type": "collectible", "x": 6  },
+      { "id": "w7-2",  "type": "blocker",     "x": 2  },
+      { "id": "w7-3",  "type": "blocker",     "x": 3  },
+      { "id": "w7-4",  "type": "blocker",     "x": 4  },
+      { "id": "w7-5",  "type": "blocker",     "x": 5  },
+      { "id": "w7-6",  "type": "blocker",     "x": 6  },
+      { "id": "w7-7",  "type": "blocker",     "x": 7  },
+      { "id": "c7-8",  "type": "collectible", "x": 8  },
       { "id": "w7-12", "type": "blocker",     "x": 12 },
       { "id": "w7-13", "type": "blocker",     "x": 13 }
     ],
     "row8": [
       { "id": "w8-0",  "type": "blocker", "x": 0  },
       { "id": "w8-1",  "type": "blocker", "x": 1  },
+      { "id": "w8-2",  "type": "blocker", "x": 2  },
       { "id": "w8-3",  "type": "blocker", "x": 3  },
       { "id": "w8-4",  "type": "blocker", "x": 4  },
       { "id": "w8-5",  "type": "blocker", "x": 5  },
@@ -129,31 +136,25 @@
       { "id": "w8-8",  "type": "blocker", "x": 8  },
       { "id": "w8-9",  "type": "blocker", "x": 9  },
       { "id": "w8-10", "type": "blocker", "x": 10 },
-      { "id": "w8-11", "type": "blocker", "x": 11 },
       { "id": "w8-12", "type": "blocker", "x": 12 },
       { "id": "w8-13", "type": "blocker", "x": 13 }
     ],
     "row9": [
       { "id": "w9-0",  "type": "blocker",     "x": 0  },
-      { "id": "c9-1",  "type": "collectible", "x": 1  },
+      { "id": "w9-1",  "type": "blocker",     "x": 1  },
+      { "id": "w9-2",  "type": "blocker",     "x": 2  },
       { "id": "w9-3",  "type": "blocker",     "x": 3  },
       { "id": "w9-4",  "type": "blocker",     "x": 4  },
-      { "id": "w9-5",  "type": "blocker",     "x": 5  },
-      { "id": "w9-6",  "type": "blocker",     "x": 6  },
-      { "id": "w9-7",  "type": "blocker",     "x": 7  },
-      { "id": "w9-8",  "type": "blocker",     "x": 8  },
-      { "id": "w9-9",  "type": "blocker",     "x": 9  },
-      { "id": "w9-10", "type": "blocker",     "x": 10 },
-      { "id": "w9-11", "type": "blocker",     "x": 11 },
+      { "id": "c9-7",  "type": "collectible", "x": 7  },
       { "id": "w9-12", "type": "blocker",     "x": 12 },
       { "id": "w9-13", "type": "blocker",     "x": 13 }
     ],
     "row10": [
       { "id": "w10-0",  "type": "blocker", "x": 0  },
       { "id": "w10-1",  "type": "blocker", "x": 1  },
+      { "id": "w10-2",  "type": "blocker", "x": 2  },
       { "id": "w10-3",  "type": "blocker", "x": 3  },
       { "id": "w10-4",  "type": "blocker", "x": 4  },
-      { "id": "w10-5",  "type": "blocker", "x": 5  },
       { "id": "w10-6",  "type": "blocker", "x": 6  },
       { "id": "w10-7",  "type": "blocker", "x": 7  },
       { "id": "w10-8",  "type": "blocker", "x": 8  },
@@ -165,8 +166,13 @@
     ],
     "row11": [
       { "id": "w11-0",  "type": "blocker",     "x": 0  },
-      { "id": "w11-1",  "type": "blocker",     "x": 1  },
-      { "id": "c11-6",  "type": "collectible", "x": 6  },
+      { "id": "c11-3",  "type": "collectible", "x": 3  },
+      { "id": "w11-6",  "type": "blocker",     "x": 6  },
+      { "id": "w11-7",  "type": "blocker",     "x": 7  },
+      { "id": "w11-8",  "type": "blocker",     "x": 8  },
+      { "id": "w11-9",  "type": "blocker",     "x": 9  },
+      { "id": "w11-10", "type": "blocker",     "x": 10 },
+      { "id": "w11-11", "type": "blocker",     "x": 11 },
       { "id": "w11-12", "type": "blocker",     "x": 12 },
       { "id": "w11-13", "type": "blocker",     "x": 13 }
     ]
