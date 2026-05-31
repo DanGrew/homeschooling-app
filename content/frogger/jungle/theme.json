@@ -1,0 +1,16 @@
+{
+  "id": "jungle",
+  "assets": {
+    "player":      "../../../content/frogger/jungle/player.svg",
+    "blocker":     "../../../content/frogger/jungle/blocker.svg",
+    "collectible": "../../../content/frogger/jungle/collectible.svg"
+  },
+  "tiles": {
+    "ground": { "fill": "#7ab648" }
+  },
+  "map": {
+    "player":      "player",
+    "blocker":     "blocker",
+    "collectible": "collectible"
+  }
+}

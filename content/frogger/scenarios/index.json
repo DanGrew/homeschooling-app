@@ -1,4 +1,5 @@
 [
   { "id": "classic", "title": "Cross the River", "file": "classic.json", "theme": "../classic/theme.json" },
-  { "id": "maze",    "title": "Maze",             "file": "maze.json",    "theme": "../classic/theme.json" }
+  { "id": "maze",    "title": "Maze",             "file": "maze.json",    "theme": "../classic/theme.json" },
+  { "id": "monkey",  "title": "Monkey Maze",      "file": "monkey.json",  "theme": "../jungle/theme.json"  }
 ]
