@@ -16,7 +16,10 @@ const {
   clampVisualToSim,
   stepPlatformVisualX,
   stepObstacleVisualX,
-  MIN_OBSTACLE_GAP
+  MIN_OBSTACLE_GAP,
+  rowEntities,
+  countCollectibles,
+  getCollectAssetPath
 } = require2('../../core/frogger/frogger-core.js')
 
 // ---- helpers ----
@@ -696,4 +699,112 @@ test('stepObstacleVisualX left-moving: visual approaches simX smoothly mid-cycle
 test('stepObstacleVisualX snaps to simX on large gap (wrap-around)', () => {
   const vel = -1 / 500
   expect(stepObstacleVisualX(9.8, 0, vel, 16)).toBe(0)
+})
+
+// ---- rowEntities ----
+
+test('rowEntities returns entities for given rowId', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'none', 0)],
+    entities: { r1: [{ id: 'e1', type: 'collectible', x: 2, width: 1 }] }
+  })
+  const result = rowEntities(scenario, 'r1')
+  expect(result).toHaveLength(1)
+  expect(result[0].id).toBe('e1')
+})
+
+test('rowEntities returns empty array when row has no entities', () => {
+  const scenario = makeScenario({ rows: [makeRow('r1', 'none', 0)], entities: {} })
+  expect(rowEntities(scenario, 'r1')).toHaveLength(0)
+})
+
+test('rowEntities returns empty array when entities map missing row key', () => {
+  const scenario = makeScenario({ entities: {} })
+  expect(rowEntities(scenario, 'nonexistent')).toHaveLength(0)
+})
+
+test('rowEntities returns multiple entities in order', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'none', 0)],
+    entities: {
+      r1: [
+        { id: 'a', type: 'collectible', x: 0, width: 1 },
+        { id: 'b', type: 'blocker', x: 3, width: 1 }
+      ]
+    }
+  })
+  const result = rowEntities(scenario, 'r1')
+  expect(result).toHaveLength(2)
+  expect(result[0].id).toBe('a')
+  expect(result[1].id).toBe('b')
+})
+
+// ---- countCollectibles ----
+
+test('countCollectibles returns 0 when no entities', () => {
+  expect(countCollectibles(makeScenario({ entities: {} }))).toBe(0)
+})
+
+test('countCollectibles counts collectibles across single row', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'none', 0)],
+    entities: { r1: [
+      { id: 'g1', type: 'collectible', x: 1, width: 1 },
+      { id: 'g2', type: 'collectible', x: 3, width: 1 }
+    ]}
+  })
+  expect(countCollectibles(scenario)).toBe(2)
+})
+
+test('countCollectibles counts collectibles across multiple rows', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'none', 0), makeRow('r2', 'none', 0)],
+    entities: {
+      r1: [{ id: 'g1', type: 'collectible', x: 1, width: 1 }],
+      r2: [{ id: 'g2', type: 'collectible', x: 5, width: 1 }]
+    }
+  })
+  expect(countCollectibles(scenario)).toBe(2)
+})
+
+test('countCollectibles ignores non-collectible entities', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'none', 0)],
+    entities: { r1: [
+      { id: 'c1', type: 'collectible', x: 0, width: 1 },
+      { id: 'b1', type: 'blocker', x: 2, width: 1 },
+      { id: 'o1', type: 'obstacle', x: 4, width: 1 }
+    ]}
+  })
+  expect(countCollectibles(scenario)).toBe(1)
+})
+
+test('countCollectibles returns 0 when all entities are non-collectible', () => {
+  const scenario = makeScenario({
+    rows: [makeRow('r1', 'none', 0)],
+    entities: { r1: [{ id: 'b1', type: 'blocker', x: 0, width: 1 }] }
+  })
+  expect(countCollectibles(scenario)).toBe(0)
+})
+
+// ---- getCollectAssetPath ----
+
+test('getCollectAssetPath returns asset path when theme has collectible mapped', () => {
+  const theme = { assets: { gem: 'assets/gem.png' }, map: { collectible: 'gem' } }
+  expect(getCollectAssetPath(theme)).toBe('assets/gem.png')
+})
+
+test('getCollectAssetPath returns undefined when collectible map key missing', () => {
+  const theme = { assets: {}, map: { collectible: 'gem' } }
+  expect(getCollectAssetPath(theme)).toBeUndefined()
+})
+
+test('getCollectAssetPath returns undefined when assets missing', () => {
+  const theme = { map: { collectible: 'gem' } }
+  expect(getCollectAssetPath(theme)).toBeUndefined()
+})
+
+test('getCollectAssetPath returns undefined when collectible maps to empty string', () => {
+  const theme = { assets: { '': undefined }, map: { collectible: '' } }
+  expect(getCollectAssetPath(theme)).toBeUndefined()
 })
