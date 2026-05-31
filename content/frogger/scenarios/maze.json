@@ -1,0 +1,146 @@
+{
+  "id": "maze",
+  "title": "Maze",
+  "collectGoal": true,
+  "grid": { "rows": 12, "cols": 14 },
+  "resetPoints": [
+    { "id": "start", "position": { "x": 1, "y": 11 } },
+    { "id": "mid",   "position": { "x": 1, "y": 6 } }
+  ],
+  "rows": [
+    { "id": "row0",  "y": 0,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row1",  "y": 1,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row2",  "y": 2,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row3",  "y": 3,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row4",  "y": 4,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row5",  "y": 5,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row6",  "y": 6,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row7",  "y": 7,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row8",  "y": 8,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row9",  "y": 9,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row10", "y": 10, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row11", "y": 11, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } }
+  ],
+  "entities": {
+    "row0": [
+      { "id": "w0-0",  "type": "blocker", "x": 0 },
+      { "id": "w0-1",  "type": "blocker", "x": 1 },
+      { "id": "w0-2",  "type": "blocker", "x": 2 },
+      { "id": "w0-3",  "type": "blocker", "x": 3 },
+      { "id": "w0-4",  "type": "blocker", "x": 4 },
+      { "id": "w0-5",  "type": "blocker", "x": 5 },
+      { "id": "w0-6",  "type": "blocker", "x": 6 },
+      { "id": "w0-7",  "type": "blocker", "x": 7 },
+      { "id": "w0-8",  "type": "blocker", "x": 8 },
+      { "id": "w0-9",  "type": "blocker", "x": 9 },
+      { "id": "w0-10", "type": "blocker", "x": 10 },
+      { "id": "w0-11", "type": "blocker", "x": 11 },
+      { "id": "w0-12", "type": "blocker", "x": 12 },
+      { "id": "w0-13", "type": "blocker", "x": 13 }
+    ],
+    "row1": [
+      { "id": "w1-0",  "type": "blocker",     "x": 0 },
+      { "id": "w1-13", "type": "blocker",     "x": 13 },
+      { "id": "c1-3",  "type": "collectible", "x": 3 }
+    ],
+    "row2": [
+      { "id": "w2-0",  "type": "blocker", "x": 0 },
+      { "id": "w2-2",  "type": "blocker", "x": 2 },
+      { "id": "w2-3",  "type": "blocker", "x": 3 },
+      { "id": "w2-4",  "type": "blocker", "x": 4 },
+      { "id": "w2-5",  "type": "blocker", "x": 5 },
+      { "id": "w2-6",  "type": "blocker", "x": 6 },
+      { "id": "w2-7",  "type": "blocker", "x": 7 },
+      { "id": "w2-8",  "type": "blocker", "x": 8 },
+      { "id": "w2-9",  "type": "blocker", "x": 9 },
+      { "id": "w2-10", "type": "blocker", "x": 10 },
+      { "id": "w2-11", "type": "blocker", "x": 11 },
+      { "id": "w2-12", "type": "blocker", "x": 12 },
+      { "id": "w2-13", "type": "blocker", "x": 13 }
+    ],
+    "row3": [
+      { "id": "w3-0",  "type": "blocker", "x": 0 },
+      { "id": "w3-13", "type": "blocker", "x": 13 }
+    ],
+    "row4": [
+      { "id": "w4-0",  "type": "blocker", "x": 0 },
+      { "id": "w4-1",  "type": "blocker", "x": 1 },
+      { "id": "w4-2",  "type": "blocker", "x": 2 },
+      { "id": "w4-3",  "type": "blocker", "x": 3 },
+      { "id": "w4-4",  "type": "blocker", "x": 4 },
+      { "id": "w4-5",  "type": "blocker", "x": 5 },
+      { "id": "w4-6",  "type": "blocker", "x": 6 },
+      { "id": "w4-7",  "type": "blocker", "x": 7 },
+      { "id": "w4-8",  "type": "blocker", "x": 8 },
+      { "id": "w4-9",  "type": "blocker", "x": 9 },
+      { "id": "w4-10", "type": "blocker", "x": 10 },
+      { "id": "w4-11", "type": "blocker", "x": 11 },
+      { "id": "w4-13", "type": "blocker", "x": 13 }
+    ],
+    "row5": [
+      { "id": "w5-0",  "type": "blocker",     "x": 0 },
+      { "id": "w5-13", "type": "blocker",     "x": 13 },
+      { "id": "c5-6",  "type": "collectible", "x": 6 }
+    ],
+    "row6": [
+      { "id": "w6-0",  "type": "blocker", "x": 0 },
+      { "id": "w6-2",  "type": "blocker", "x": 2 },
+      { "id": "w6-3",  "type": "blocker", "x": 3 },
+      { "id": "w6-4",  "type": "blocker", "x": 4 },
+      { "id": "w6-5",  "type": "blocker", "x": 5 },
+      { "id": "w6-6",  "type": "blocker", "x": 6 },
+      { "id": "w6-7",  "type": "blocker", "x": 7 },
+      { "id": "w6-8",  "type": "blocker", "x": 8 },
+      { "id": "w6-9",  "type": "blocker", "x": 9 },
+      { "id": "w6-10", "type": "blocker", "x": 10 },
+      { "id": "w6-11", "type": "blocker", "x": 11 },
+      { "id": "w6-12", "type": "blocker", "x": 12 },
+      { "id": "w6-13", "type": "blocker", "x": 13 }
+    ],
+    "row7": [
+      { "id": "w7-0",  "type": "blocker",     "x": 0 },
+      { "id": "w7-13", "type": "blocker",     "x": 13 },
+      { "id": "c7-9",  "type": "collectible", "x": 9 }
+    ],
+    "row8": [
+      { "id": "w8-0",  "type": "blocker", "x": 0 },
+      { "id": "w8-1",  "type": "blocker", "x": 1 },
+      { "id": "w8-2",  "type": "blocker", "x": 2 },
+      { "id": "w8-3",  "type": "blocker", "x": 3 },
+      { "id": "w8-4",  "type": "blocker", "x": 4 },
+      { "id": "w8-5",  "type": "blocker", "x": 5 },
+      { "id": "w8-6",  "type": "blocker", "x": 6 },
+      { "id": "w8-7",  "type": "blocker", "x": 7 },
+      { "id": "w8-8",  "type": "blocker", "x": 8 },
+      { "id": "w8-9",  "type": "blocker", "x": 9 },
+      { "id": "w8-10", "type": "blocker", "x": 10 },
+      { "id": "w8-11", "type": "blocker", "x": 11 },
+      { "id": "w8-13", "type": "blocker", "x": 13 }
+    ],
+    "row9": [
+      { "id": "w9-0",  "type": "blocker",     "x": 0 },
+      { "id": "w9-13", "type": "blocker",     "x": 13 },
+      { "id": "c9-4",  "type": "collectible", "x": 4 }
+    ],
+    "row10": [
+      { "id": "w10-0",  "type": "blocker", "x": 0 },
+      { "id": "w10-2",  "type": "blocker", "x": 2 },
+      { "id": "w10-3",  "type": "blocker", "x": 3 },
+      { "id": "w10-4",  "type": "blocker", "x": 4 },
+      { "id": "w10-5",  "type": "blocker", "x": 5 },
+      { "id": "w10-6",  "type": "blocker", "x": 6 },
+      { "id": "w10-7",  "type": "blocker", "x": 7 },
+      { "id": "w10-8",  "type": "blocker", "x": 8 },
+      { "id": "w10-9",  "type": "blocker", "x": 9 },
+      { "id": "w10-10", "type": "blocker", "x": 10 },
+      { "id": "w10-11", "type": "blocker", "x": 11 },
+      { "id": "w10-12", "type": "blocker", "x": 12 },
+      { "id": "w10-13", "type": "blocker", "x": 13 }
+    ],
+    "row11": [
+      { "id": "w11-0",  "type": "blocker",     "x": 0 },
+      { "id": "w11-13", "type": "blocker",     "x": 13 },
+      { "id": "c11-8",  "type": "collectible", "x": 8 }
+    ]
+  }
+}

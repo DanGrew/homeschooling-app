@@ -97,7 +97,8 @@ var DEV_THEME = {
   map: { player: '', platform: '', obstacle: '', collectible: '' }
 };
 
-var state, rState, loop;
+var AudioCtxClass = window.AudioContext || window.webkitAudioContext;
+var state, rState, loop, audioCtx;
 var activeScenario = null;
 var KEY_MAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right' };
 var collectSlots = [];
@@ -114,6 +115,19 @@ function onResetClick() {
   hideResetPrompt(rState);
   resetPlayer(state, activeScenario, 'start');
   loop.start();
+}
+
+function playDing() {
+  var ctx = audioCtx;
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.frequency.value = 880;
+  gain.gain.setValueAtTime(0.3, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.4);
 }
 
 function makeCollectSlot() {
@@ -207,6 +221,8 @@ function onCollectReset() {
 window.startGame = function(scenario, theme) {
   activeScenario = scenario;
   var resolvedTheme = [theme, DEV_THEME].filter(Boolean)[0];
+  [audioCtx].filter(Boolean).forEach(function(c) { c.close(); });
+  audioCtx = new AudioCtxClass();
   state = createSimulation(scenario);
   addPlayer(state, createPlayer(scenario.resetPoints[0].position.x, scenario.resetPoints[0].position.y));
   var container = document.getElementById('frogger-container');
@@ -215,7 +231,7 @@ window.startGame = function(scenario, theme) {
   rState.resetBtn.addEventListener('click', onResetClick);
   buildCollectTray(scenario);
   var EV_HANDLER = {
-    collectiblePickedUp: function(ev) { collectEntity(state, ev.entityId); fillCollectSlot(resolvedTheme); },
+    collectiblePickedUp: function(ev) { collectEntity(state, ev.entityId); fillCollectSlot(resolvedTheme); playDing(); },
     obstacle: onCollision,
     hazard: onCollision
   };
@@ -230,7 +246,7 @@ window.startGame = function(scenario, theme) {
 
 function onKeyDown(e) {
   e.preventDefault();
-  applyInput(state, activeScenario, KEY_MAP[e.key]);
+  [loop].filter(Boolean).forEach(function(l) { l.queueInput(KEY_MAP[e.key]); });
 }
 
 function bindControls() {
@@ -240,7 +256,7 @@ function bindControls() {
     var btn = document.querySelector('[data-testid="' + id + '"]');
     btn.addEventListener('pointerdown', function(e) {
       e.preventDefault();
-      [activeScenario].filter(Boolean).forEach(function() { applyInput(state, activeScenario, dir); });
+      [loop].filter(Boolean).forEach(function(l) { l.queueInput(dir); });
     });
   });
   document.addEventListener('keydown', function(e) {
