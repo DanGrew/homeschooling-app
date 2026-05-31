@@ -20,6 +20,14 @@
     "profile": { "type": "string" },
     "filter": { "type": "string" },
     "words": { "type": "array", "items": { "type": "string" } },
+    "shapeDecomp": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      }
+    },
     "pageControls": {
       "type": "array",
       "items": { "type": "string" }
