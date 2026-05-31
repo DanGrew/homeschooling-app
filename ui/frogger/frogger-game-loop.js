@@ -5,9 +5,12 @@ function createGameLoop(simState, scenario, rState, onTick) {
   var lastFrameTime = performance.now();
   var prevPositions = snapshotPositions(simState);
   var tickHandle, rafHandle;
+  var pendingInput = null;
 
   function tick() {
     prevPositions = snapshotPositions(simState);
+    [pendingInput].filter(Boolean).forEach(function(dir) { applyInput(simState, scenario, dir); });
+    pendingInput = null;
     stepSimulation(simState, scenario, tickCount);
     tickCount++;
     lastTickTime = performance.now();
@@ -32,5 +35,7 @@ function createGameLoop(simState, scenario, rState, onTick) {
     cancelAnimationFrame(rafHandle);
   }
 
-  return { start: start, stop: stop };
+  function queueInput(dir) { pendingInput = dir; }
+
+  return { start: start, stop: stop, queueInput: queueInput };
 }
