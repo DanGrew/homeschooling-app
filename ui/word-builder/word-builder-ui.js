@@ -59,8 +59,8 @@ function isActiveSlot(s) { return SLOT_ACTIVE[s.type](s); }
 function currentTargetIndex() { return state.slots.findIndex(isActiveSlot); }
 
 var PLACE_ACTION = {
-  'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); },
-  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toUpperCase(); slot.error = true; }
+  'true': function(slot, letter) { slot.locked = true; slot.placed = letter.toUpperCase(); slot.display = letter.toLowerCase(); },
+  'false': function(slot, letter) { slot.placed = letter.toUpperCase(); slot.display = letter.toLowerCase(); slot.error = true; }
 };
 
 var COMPLETE_ACTION = {
@@ -141,7 +141,7 @@ var TILE_SOUND = {
 
 function makeTile(letter, soundId) {
   var btn = document.createElement('button');
-  btn.textContent = letter;
+  btn.textContent = letter.toLowerCase();
   btn.style.cssText = TILE_STYLE;
   TILE_SOUND[String(soundId != null)](btn, soundId, letter);
   btn.addEventListener('pointerdown', function() { btn.style.transform = 'scale(0.9)'; btn.style.background = '#e3f2fd'; });
