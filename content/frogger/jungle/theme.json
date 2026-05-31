@@ -1,9 +1,9 @@
 {
   "id": "jungle",
   "assets": {
-    "player":      "../../../content/frogger/jungle/player.svg",
+    "player":      "../../../content/dictionary/entries/monkey/monkey.svg",
     "blocker":     "../../../content/frogger/jungle/blocker.svg",
-    "collectible": "../../../content/frogger/jungle/collectible.svg"
+    "collectible": "../../../content/dictionary/entries/banana/banana.svg"
   },
   "tiles": {
     "ground": { "fill": "#7ab648" }
