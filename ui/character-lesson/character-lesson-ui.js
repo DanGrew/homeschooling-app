@@ -3,7 +3,7 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
-import { getAssetPathForChar, playSound, initAudio, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
+import { getAssetPathForChar, playSound, initAudio, deriveLetterSounds, getShapesForChar } from '../../components/phonics/phonics-service.js';
 
 const CHARS = [
   ...'abcdefghijklmnopqrstuvwxyz'.split('').map(c => ({char: c, file: 'lower-' + c + '.svg', group: 'lower', speak: c})),
@@ -180,21 +180,17 @@ function loadChar(entry) {
       SET_TRACE_BTN_ENABLED[String(mode === 'trace')]();
       initEngine();
       [autoPlay].filter(Boolean).forEach(() => { autoPlay=false; BTN_TRACE_CLICK[String(!engine)](); });
+      [_shapeDecompEnabled].filter(Boolean)
+        .filter(function() { return mode === 'trace'; })
+        .map(function() { return getShapesForChar(entry.char); })
+        .filter(Boolean)
+        .forEach(function(shapes) { showShapeDecomp(shapes, function() {}); });
     });
 }
 
 var SHAPE_COLORS = {'straight line':'#3498DB','curve':'#E67E22','circle':'#2ECC71','diagonal':'#9B59B6'};
 
-function getActiveShapeDecomp(char) {
-  return [window.guidanceService]
-    .filter(Boolean)
-    .map(function(s) { return s._lesson; })
-    .filter(Boolean)
-    .map(function(l) { return l.shapeDecomp; })
-    .filter(Boolean)
-    .map(function(sd) { return sd[char]; })
-    .filter(Boolean)[0];
-}
+var _shapeDecompEnabled = false;
 
 function makeShapePill(s) {
   var pill = document.createElement('span');
@@ -232,6 +228,12 @@ var DECOMP_ACTION = {
   'false': function(_, fn) { fn(); }
 };
 
+var PAGE_CTRL = {
+  'SHOW_SHAPE_DECOMP': function() { _shapeDecompEnabled = true; },
+  'PAGE_CONTROL_RESET': function() { _shapeDecompEnabled = false; }
+};
+var PAGE_CTRL_DISPATCH = {'true': function(t) { PAGE_CTRL[t](); }, 'false': function() {}};
+
 var BTN_TRACE_CLICK = {
   'true':  () => {},
   'false': () => {
@@ -245,9 +247,7 @@ var BTN_TRACE_CLICK = {
       dot.setAttribute('fill', [dot.dataset.origFill, '#ccc'].filter(Boolean)[0]);
       dot.style.filter = '';
     });
-    var startAnim = function() { engine.startAnimation(2500); };
-    var shapes = [currentEntry].filter(Boolean).map(function(e) { return getActiveShapeDecomp(e.char); }).filter(Boolean)[0];
-    DECOMP_ACTION[String(!!shapes)](shapes, startAnim);
+    engine.startAnimation(2500);
   }
 };
 
@@ -298,6 +298,8 @@ export function init() {
   );
 
   paginator.goTo(Math.max(0, filteredChars.findIndex(e => e.char === paramChar)));
+
+  window.addEventListener('page:control', function(e) { PAGE_CTRL_DISPATCH[String(e.detail.type in PAGE_CTRL)](e.detail.type); });
 
   window.addEventListener('guidance:start', function() {
     [window.guidanceService].filter(Boolean)

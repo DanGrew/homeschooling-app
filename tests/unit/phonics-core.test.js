@@ -1,13 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar } = require('../../core/phonics/phonics-core.js');
+const { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar, getShapesForChar } = require('../../core/phonics/phonics-core.js');
 
 const GRAPHEMES = {
-  'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }, { id: 'a-long', label: 'long a', example: 'cake', clip: 'bt-a-long' }], defaultSound: 'a-short' },
-  'lower-c': { type: 'letter', characters: 'c', asset: 'assets/language-characters/lower-c.svg', sounds: [{ id: 'k', label: 'kuh', example: 'cat', clip: 'alpha-k' }, { id: 's-ss', label: 'ss', example: 'city', clip: 'alpha-s' }], defaultSound: 'k' },
+  'lower-a': { type: 'letter', characters: 'a', asset: 'assets/language-characters/lower-a.svg', sounds: [{ id: 'a-short', label: 'short a', example: 'apple', clip: 'alpha-a' }, { id: 'a-long', label: 'long a', example: 'cake', clip: 'bt-a-long' }], defaultSound: 'a-short', shapes: ['curve', 'straight line'] },
+  'lower-c': { type: 'letter', characters: 'c', asset: 'assets/language-characters/lower-c.svg', sounds: [{ id: 'k', label: 'kuh', example: 'cat', clip: 'alpha-k' }, { id: 's-ss', label: 'ss', example: 'city', clip: 'alpha-s' }], defaultSound: 'k', shapes: ['curve'] },
+  'lower-o': { type: 'letter', characters: 'o', asset: 'assets/language-characters/lower-o.svg', sounds: [], defaultSound: null, shapes: ['circle'] },
   'lower-s': { type: 'letter', characters: 's', asset: 'assets/language-characters/lower-s.svg', sounds: [{ id: 's-ss', label: 'ss', example: 'sun', clip: 'alpha-s' }], defaultSound: 's-ss' },
   'upper-a': { type: 'letter', characters: 'A', asset: 'assets/language-characters/upper-a.svg', sounds: [], defaultSound: null },
+  'digit-1': { type: 'digit', characters: '1', asset: null, sounds: [], defaultSound: null, shapes: ['straight line'] },
   'digraph-sh': { type: 'digraph', characters: 'sh', asset: null, sounds: [{ id: 'sh', label: 'sh', example: 'shop', clip: 'bt-sh' }], defaultSound: 'sh' },
 };
 
@@ -81,5 +83,29 @@ describe('graphemeIdForChar', function() {
   it('returns null for non-alphanumeric', function() {
     expect(graphemeIdForChar('!')).toBeNull();
     expect(graphemeIdForChar(' ')).toBeNull();
+  });
+});
+
+describe('getShapesForChar', function() {
+  it('returns shapes array for known char with shapes', function() {
+    expect(getShapesForChar(GRAPHEMES, 'a')).toEqual(['curve', 'straight line']);
+    expect(getShapesForChar(GRAPHEMES, 'c')).toEqual(['curve']);
+    expect(getShapesForChar(GRAPHEMES, 'o')).toEqual(['circle']);
+  });
+
+  it('returns shapes for digit', function() {
+    expect(getShapesForChar(GRAPHEMES, '1')).toEqual(['straight line']);
+  });
+
+  it('returns undefined when grapheme has no shapes field', function() {
+    expect(getShapesForChar(GRAPHEMES, 's')).toBeUndefined();
+  });
+
+  it('returns undefined for char not in registry', function() {
+    expect(getShapesForChar(GRAPHEMES, 'z')).toBeUndefined();
+  });
+
+  it('returns undefined for non-alphanumeric', function() {
+    expect(getShapesForChar(GRAPHEMES, '!')).toBeUndefined();
   });
 });

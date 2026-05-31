@@ -3,7 +3,7 @@ import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
-import { getAssetPathForChar, playSoundAsync, initAudio, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
+import { getAssetPathForChar, playSoundAsync, initAudio, deriveLetterSounds, getShapesForChar } from '../../components/phonics/phonics-service.js';
 import { speak } from '../../components/speech/speech-ui.js';
 
 const CHAR_BASE = '../../../assets/language-characters/';
@@ -317,16 +317,13 @@ function startWatch() {
 
 var SHAPE_COLORS = {'straight line':'#3498DB','curve':'#E67E22','circle':'#2ECC71','diagonal':'#9B59B6'};
 
-function getActiveShapeDecomp(char) {
-  return [window.guidanceService]
-    .filter(Boolean)
-    .map(function(s) { return s._lesson; })
-    .filter(Boolean)
-    .map(function(l) { return l.shapeDecomp; })
-    .filter(Boolean)
-    .map(function(sd) { return sd[char]; })
-    .filter(Boolean)[0];
-}
+var _shapeDecompEnabled = false;
+
+var PAGE_CTRL = {
+  'SHOW_SHAPE_DECOMP': function() { _shapeDecompEnabled = true; },
+  'PAGE_CONTROL_RESET': function() { _shapeDecompEnabled = false; }
+};
+var PAGE_CTRL_DISPATCH = {'true': function(t) { PAGE_CTRL[t](); }, 'false': function() {}};
 
 function makeShapePill(s) {
   var pill = document.createElement('span');
@@ -413,7 +410,9 @@ function startTraceEngine(charIdx) {
 }
 
 function doTraceChar(charIdx) {
-  var shapes = getActiveShapeDecomp(currentWord.charAt(charIdx));
+  var shapes = [_shapeDecompEnabled].filter(Boolean)
+    .map(function() { return getShapesForChar(currentWord.charAt(charIdx)); })
+    .filter(Boolean)[0];
   DECOMP_ACTION[String(!!shapes)](shapes, function() { startTraceEngine(charIdx); });
 }
 
@@ -475,6 +474,8 @@ export function init() {
   makeSpeakable(document.getElementById('btn-sayit'), getSayItLabel);
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
+  window.addEventListener('page:control', function(e) { PAGE_CTRL_DISPATCH[String(e.detail.type in PAGE_CTRL)](e.detail.type); });
+
   window.addEventListener('guidance:start', function() {
     [window.guidanceService].filter(Boolean)
       .map(function(s) { return s._lesson; })

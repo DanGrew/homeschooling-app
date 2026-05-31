@@ -4,296 +4,964 @@
     "characters": "a",
     "asset": "assets/language-characters/lower-a.svg",
     "sounds": [
-      { "id": "a-short", "label": "short a", "example": "apple", "clip": "alpha-a" },
-      { "id": "a-long",  "label": "long a",  "example": "cake",  "clip": "bt-a-long" },
-      { "id": "a-open",  "label": "ah",       "example": "father","clip": "bt-a-dotted" }
+      {
+        "id": "a-short",
+        "label": "short a",
+        "example": "apple",
+        "clip": "alpha-a"
+      },
+      {
+        "id": "a-long",
+        "label": "long a",
+        "example": "cake",
+        "clip": "bt-a-long"
+      },
+      {
+        "id": "a-open",
+        "label": "ah",
+        "example": "father",
+        "clip": "bt-a-dotted"
+      }
     ],
-    "defaultSound": "a-short"
+    "defaultSound": "a-short",
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
   },
   "lower-b": {
     "type": "letter",
     "characters": "b",
     "asset": "assets/language-characters/lower-b.svg",
     "sounds": [
-      { "id": "b", "label": "buh", "example": "ball", "clip": "alpha-b" }
+      {
+        "id": "b",
+        "label": "buh",
+        "example": "ball",
+        "clip": "alpha-b"
+      }
     ],
-    "defaultSound": "b"
+    "defaultSound": "b",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-c": {
     "type": "letter",
     "characters": "c",
     "asset": "assets/language-characters/lower-c.svg",
     "sounds": [
-      { "id": "c-hard", "label": "kuh", "example": "cat",  "clip": "alpha-c" },
-      { "id": "c-soft", "label": "ss",  "example": "city", "clip": "alpha-s" }
+      {
+        "id": "c-hard",
+        "label": "kuh",
+        "example": "cat",
+        "clip": "alpha-c"
+      },
+      {
+        "id": "c-soft",
+        "label": "ss",
+        "example": "city",
+        "clip": "alpha-s"
+      }
     ],
-    "defaultSound": "c-hard"
+    "defaultSound": "c-hard",
+    "shapes": [
+      "curve"
+    ]
   },
   "lower-d": {
     "type": "letter",
     "characters": "d",
     "asset": "assets/language-characters/lower-d.svg",
     "sounds": [
-      { "id": "d", "label": "duh", "example": "dog", "clip": "alpha-d" }
+      {
+        "id": "d",
+        "label": "duh",
+        "example": "dog",
+        "clip": "alpha-d"
+      }
     ],
-    "defaultSound": "d"
+    "defaultSound": "d",
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
   },
   "lower-e": {
     "type": "letter",
     "characters": "e",
     "asset": "assets/language-characters/lower-e.svg",
     "sounds": [
-      { "id": "e-short", "label": "eh", "example": "egg",  "clip": "alpha-e" },
-      { "id": "e-long",  "label": "ee", "example": "feet", "clip": "bt-e-long" },
-      { "id": "e-ay",    "label": "ay", "example": "they", "clip": "bt-a-long" }
+      {
+        "id": "e-short",
+        "label": "eh",
+        "example": "egg",
+        "clip": "alpha-e"
+      },
+      {
+        "id": "e-long",
+        "label": "ee",
+        "example": "feet",
+        "clip": "bt-e-long"
+      },
+      {
+        "id": "e-ay",
+        "label": "ay",
+        "example": "they",
+        "clip": "bt-a-long"
+      }
     ],
-    "defaultSound": "e-short"
+    "defaultSound": "e-short",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-f": {
     "type": "letter",
     "characters": "f",
     "asset": "assets/language-characters/lower-f.svg",
     "sounds": [
-      { "id": "f", "label": "ff", "example": "fish", "clip": "alpha-f" }
+      {
+        "id": "f",
+        "label": "ff",
+        "example": "fish",
+        "clip": "alpha-f"
+      }
     ],
-    "defaultSound": "f"
+    "defaultSound": "f",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-g": {
     "type": "letter",
     "characters": "g",
     "asset": "assets/language-characters/lower-g.svg",
     "sounds": [
-      { "id": "g-hard", "label": "guh", "example": "got",   "clip": "alpha-g" },
-      { "id": "g-soft", "label": "juh", "example": "giant", "clip": "alpha-j" }
+      {
+        "id": "g-hard",
+        "label": "guh",
+        "example": "got",
+        "clip": "alpha-g"
+      },
+      {
+        "id": "g-soft",
+        "label": "juh",
+        "example": "giant",
+        "clip": "alpha-j"
+      }
     ],
-    "defaultSound": "g-hard"
+    "defaultSound": "g-hard",
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
   },
   "lower-h": {
     "type": "letter",
     "characters": "h",
     "asset": "assets/language-characters/lower-h.svg",
     "sounds": [
-      { "id": "h", "label": "huh", "example": "hat", "clip": "alpha-h" }
+      {
+        "id": "h",
+        "label": "huh",
+        "example": "hat",
+        "clip": "alpha-h"
+      }
     ],
-    "defaultSound": "h"
+    "defaultSound": "h",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-i": {
     "type": "letter",
     "characters": "i",
     "asset": "assets/language-characters/lower-i.svg",
     "sounds": [
-      { "id": "i-short", "label": "i",   "example": "igloo", "clip": "alpha-i" },
-      { "id": "i-long",  "label": "eye", "example": "ice",   "clip": "bt-i-long" },
-      { "id": "i-ee",    "label": "ee",  "example": "ski",   "clip": "bt-e-long" },
-      { "id": "i-yy",    "label": "yy",  "example": "onion", "clip": "alpha-y" }
+      {
+        "id": "i-short",
+        "label": "i",
+        "example": "igloo",
+        "clip": "alpha-i"
+      },
+      {
+        "id": "i-long",
+        "label": "eye",
+        "example": "ice",
+        "clip": "bt-i-long"
+      },
+      {
+        "id": "i-ee",
+        "label": "ee",
+        "example": "ski",
+        "clip": "bt-e-long"
+      },
+      {
+        "id": "i-yy",
+        "label": "yy",
+        "example": "onion",
+        "clip": "alpha-y"
+      }
     ],
-    "defaultSound": "i-short"
+    "defaultSound": "i-short",
+    "shapes": [
+      "straight line"
+    ]
   },
   "lower-j": {
     "type": "letter",
     "characters": "j",
     "asset": "assets/language-characters/lower-j.svg",
     "sounds": [
-      { "id": "j", "label": "juh", "example": "jam", "clip": "alpha-j" }
+      {
+        "id": "j",
+        "label": "juh",
+        "example": "jam",
+        "clip": "alpha-j"
+      }
     ],
-    "defaultSound": "j"
+    "defaultSound": "j",
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
   },
   "lower-k": {
     "type": "letter",
     "characters": "k",
     "asset": "assets/language-characters/lower-k.svg",
     "sounds": [
-      { "id": "k", "label": "kuh", "example": "kite", "clip": "alpha-k" }
+      {
+        "id": "k",
+        "label": "kuh",
+        "example": "kite",
+        "clip": "alpha-k"
+      }
     ],
-    "defaultSound": "k"
+    "defaultSound": "k",
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
   },
   "lower-l": {
     "type": "letter",
     "characters": "l",
     "asset": "assets/language-characters/lower-l.svg",
     "sounds": [
-      { "id": "l", "label": "luh", "example": "leg", "clip": "alpha-l" }
+      {
+        "id": "l",
+        "label": "luh",
+        "example": "leg",
+        "clip": "alpha-l"
+      }
     ],
-    "defaultSound": "l"
+    "defaultSound": "l",
+    "shapes": [
+      "straight line"
+    ]
   },
   "lower-m": {
     "type": "letter",
     "characters": "m",
     "asset": "assets/language-characters/lower-m.svg",
     "sounds": [
-      { "id": "m", "label": "mm", "example": "map", "clip": "alpha-m" }
+      {
+        "id": "m",
+        "label": "mm",
+        "example": "map",
+        "clip": "alpha-m"
+      }
     ],
-    "defaultSound": "m"
+    "defaultSound": "m",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-n": {
     "type": "letter",
     "characters": "n",
     "asset": "assets/language-characters/lower-n.svg",
     "sounds": [
-      { "id": "n", "label": "nn", "example": "net", "clip": "alpha-n" }
+      {
+        "id": "n",
+        "label": "nn",
+        "example": "net",
+        "clip": "alpha-n"
+      }
     ],
-    "defaultSound": "n"
+    "defaultSound": "n",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-o": {
     "type": "letter",
     "characters": "o",
     "asset": "assets/language-characters/lower-o.svg",
     "sounds": [
-      { "id": "o-short", "label": "aww", "example": "hot", "clip": "alpha-o-short" },
-      { "id": "o-long",  "label": "ohh", "example": "go",  "clip": "bt-o-long" },
-      { "id": "o-oo",    "label": "oo",  "example": "to",  "clip": "bt-o-dotted" }
+      {
+        "id": "o-short",
+        "label": "aww",
+        "example": "hot",
+        "clip": "alpha-o-short"
+      },
+      {
+        "id": "o-long",
+        "label": "ohh",
+        "example": "go",
+        "clip": "bt-o-long"
+      },
+      {
+        "id": "o-oo",
+        "label": "oo",
+        "example": "to",
+        "clip": "bt-o-dotted"
+      }
     ],
-    "defaultSound": "o-short"
+    "defaultSound": "o-short",
+    "shapes": [
+      "circle"
+    ]
   },
   "lower-p": {
     "type": "letter",
     "characters": "p",
     "asset": "assets/language-characters/lower-p.svg",
     "sounds": [
-      { "id": "p", "label": "puh", "example": "pig", "clip": "alpha-p" }
+      {
+        "id": "p",
+        "label": "puh",
+        "example": "pig",
+        "clip": "alpha-p"
+      }
     ],
-    "defaultSound": "p"
+    "defaultSound": "p",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-q": {
     "type": "letter",
     "characters": "q",
     "asset": "assets/language-characters/lower-q.svg",
     "sounds": [
-      { "id": "q-kw", "label": "caw", "example": "queen", "clip": "alpha-q" },
-      { "id": "q-k",  "label": "k",   "example": "plaque","clip": "alpha-k" }
+      {
+        "id": "q-kw",
+        "label": "caw",
+        "example": "queen",
+        "clip": "alpha-q"
+      },
+      {
+        "id": "q-k",
+        "label": "k",
+        "example": "plaque",
+        "clip": "alpha-k"
+      }
     ],
-    "defaultSound": "q-kw"
+    "defaultSound": "q-kw",
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
   },
   "lower-r": {
     "type": "letter",
     "characters": "r",
     "asset": "assets/language-characters/lower-r.svg",
     "sounds": [
-      { "id": "r", "label": "rr", "example": "rat", "clip": "alpha-r" }
+      {
+        "id": "r",
+        "label": "rr",
+        "example": "rat",
+        "clip": "alpha-r"
+      }
     ],
-    "defaultSound": "r"
+    "defaultSound": "r",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-s": {
     "type": "letter",
     "characters": "s",
     "asset": "assets/language-characters/lower-s.svg",
     "sounds": [
-      { "id": "s-ss", "label": "ss", "example": "sun", "clip": "alpha-s" },
-      { "id": "s-zz", "label": "zz", "example": "is",  "clip": "alpha-z" }
+      {
+        "id": "s-ss",
+        "label": "ss",
+        "example": "sun",
+        "clip": "alpha-s"
+      },
+      {
+        "id": "s-zz",
+        "label": "zz",
+        "example": "is",
+        "clip": "alpha-z"
+      }
     ],
-    "defaultSound": "s-ss"
+    "defaultSound": "s-ss",
+    "shapes": [
+      "curve"
+    ]
   },
   "lower-t": {
     "type": "letter",
     "characters": "t",
     "asset": "assets/language-characters/lower-t.svg",
     "sounds": [
-      { "id": "t", "label": "tuh", "example": "tap", "clip": "alpha-t" }
+      {
+        "id": "t",
+        "label": "tuh",
+        "example": "tap",
+        "clip": "alpha-t"
+      }
     ],
-    "defaultSound": "t"
+    "defaultSound": "t",
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
   },
   "lower-u": {
     "type": "letter",
     "characters": "u",
     "asset": "assets/language-characters/lower-u.svg",
     "sounds": [
-      { "id": "u-short",  "label": "uhh", "example": "umbrella", "clip": "alpha-u-short" },
-      { "id": "u-long",   "label": "you", "example": "cube",     "clip": "bt-u-long" },
-      { "id": "u-schwa",  "label": "uh",  "example": "the",      "clip": "bt-u-dotted" }
+      {
+        "id": "u-short",
+        "label": "uhh",
+        "example": "umbrella",
+        "clip": "alpha-u-short"
+      },
+      {
+        "id": "u-long",
+        "label": "you",
+        "example": "cube",
+        "clip": "bt-u-long"
+      },
+      {
+        "id": "u-schwa",
+        "label": "uh",
+        "example": "the",
+        "clip": "bt-u-dotted"
+      }
     ],
-    "defaultSound": "u-short"
+    "defaultSound": "u-short",
+    "shapes": [
+      "curve"
+    ]
   },
   "lower-v": {
     "type": "letter",
     "characters": "v",
     "asset": "assets/language-characters/lower-v.svg",
     "sounds": [
-      { "id": "v", "label": "vv", "example": "van", "clip": "alpha-v" }
+      {
+        "id": "v",
+        "label": "vv",
+        "example": "van",
+        "clip": "alpha-v"
+      }
     ],
-    "defaultSound": "v"
+    "defaultSound": "v",
+    "shapes": [
+      "diagonal"
+    ]
   },
   "lower-w": {
     "type": "letter",
     "characters": "w",
     "asset": "assets/language-characters/lower-w.svg",
     "sounds": [
-      { "id": "w", "label": "ww", "example": "web", "clip": "alpha-w" }
+      {
+        "id": "w",
+        "label": "ww",
+        "example": "web",
+        "clip": "alpha-w"
+      }
     ],
-    "defaultSound": "w"
+    "defaultSound": "w",
+    "shapes": [
+      "diagonal"
+    ]
   },
   "lower-x": {
     "type": "letter",
     "characters": "x",
     "asset": "assets/language-characters/lower-x.svg",
     "sounds": [
-      { "id": "x-ks", "label": "kss", "example": "fox",      "clip": "alpha-x" },
-      { "id": "x-zz", "label": "zz",  "example": "xylophone","clip": "alpha-z" }
+      {
+        "id": "x-ks",
+        "label": "kss",
+        "example": "fox",
+        "clip": "alpha-x"
+      },
+      {
+        "id": "x-zz",
+        "label": "zz",
+        "example": "xylophone",
+        "clip": "alpha-z"
+      }
     ],
-    "defaultSound": "x-ks"
+    "defaultSound": "x-ks",
+    "shapes": [
+      "diagonal"
+    ]
   },
   "lower-y": {
     "type": "letter",
     "characters": "y",
     "asset": "assets/language-characters/lower-y.svg",
     "sounds": [
-      { "id": "y-yy",  "label": "yy",  "example": "yes",   "clip": "alpha-y" },
-      { "id": "y-ee",  "label": "ee",  "example": "happy", "clip": "bt-e-long" },
-      { "id": "y-eye", "label": "eye", "example": "fly",   "clip": "bt-i-long" },
-      { "id": "y-i",   "label": "i",   "example": "gym",   "clip": "alpha-i" }
+      {
+        "id": "y-yy",
+        "label": "yy",
+        "example": "yes",
+        "clip": "alpha-y"
+      },
+      {
+        "id": "y-ee",
+        "label": "ee",
+        "example": "happy",
+        "clip": "bt-e-long"
+      },
+      {
+        "id": "y-eye",
+        "label": "eye",
+        "example": "fly",
+        "clip": "bt-i-long"
+      },
+      {
+        "id": "y-i",
+        "label": "i",
+        "example": "gym",
+        "clip": "alpha-i"
+      }
     ],
-    "defaultSound": "y-yy"
+    "defaultSound": "y-yy",
+    "shapes": [
+      "diagonal",
+      "curve"
+    ]
   },
   "lower-z": {
     "type": "letter",
     "characters": "z",
     "asset": "assets/language-characters/lower-z.svg",
     "sounds": [
-      { "id": "z", "label": "zz", "example": "zip", "clip": "alpha-z" }
+      {
+        "id": "z",
+        "label": "zz",
+        "example": "zip",
+        "clip": "alpha-z"
+      }
     ],
-    "defaultSound": "z"
+    "defaultSound": "z",
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
   },
-  "upper-a": { "type": "letter", "characters": "A", "asset": "assets/language-characters/upper-a.svg", "sounds": [], "defaultSound": null },
-  "upper-b": { "type": "letter", "characters": "B", "asset": "assets/language-characters/upper-b.svg", "sounds": [], "defaultSound": null },
-  "upper-c": { "type": "letter", "characters": "C", "asset": "assets/language-characters/upper-c.svg", "sounds": [], "defaultSound": null },
-  "upper-d": { "type": "letter", "characters": "D", "asset": "assets/language-characters/upper-d.svg", "sounds": [], "defaultSound": null },
-  "upper-e": { "type": "letter", "characters": "E", "asset": "assets/language-characters/upper-e.svg", "sounds": [], "defaultSound": null },
-  "upper-f": { "type": "letter", "characters": "F", "asset": "assets/language-characters/upper-f.svg", "sounds": [], "defaultSound": null },
-  "upper-g": { "type": "letter", "characters": "G", "asset": "assets/language-characters/upper-g.svg", "sounds": [], "defaultSound": null },
-  "upper-h": { "type": "letter", "characters": "H", "asset": "assets/language-characters/upper-h.svg", "sounds": [], "defaultSound": null },
-  "upper-i": { "type": "letter", "characters": "I", "asset": "assets/language-characters/upper-i.svg", "sounds": [], "defaultSound": null },
-  "upper-j": { "type": "letter", "characters": "J", "asset": "assets/language-characters/upper-j.svg", "sounds": [], "defaultSound": null },
-  "upper-k": { "type": "letter", "characters": "K", "asset": "assets/language-characters/upper-k.svg", "sounds": [], "defaultSound": null },
-  "upper-l": { "type": "letter", "characters": "L", "asset": "assets/language-characters/upper-l.svg", "sounds": [], "defaultSound": null },
-  "upper-m": { "type": "letter", "characters": "M", "asset": "assets/language-characters/upper-m.svg", "sounds": [], "defaultSound": null },
-  "upper-n": { "type": "letter", "characters": "N", "asset": "assets/language-characters/upper-n.svg", "sounds": [], "defaultSound": null },
-  "upper-o": { "type": "letter", "characters": "O", "asset": "assets/language-characters/upper-o.svg", "sounds": [], "defaultSound": null },
-  "upper-p": { "type": "letter", "characters": "P", "asset": "assets/language-characters/upper-p.svg", "sounds": [], "defaultSound": null },
-  "upper-q": { "type": "letter", "characters": "Q", "asset": "assets/language-characters/upper-q.svg", "sounds": [], "defaultSound": null },
-  "upper-r": { "type": "letter", "characters": "R", "asset": "assets/language-characters/upper-r.svg", "sounds": [], "defaultSound": null },
-  "upper-s": { "type": "letter", "characters": "S", "asset": "assets/language-characters/upper-s.svg", "sounds": [], "defaultSound": null },
-  "upper-t": { "type": "letter", "characters": "T", "asset": "assets/language-characters/upper-t.svg", "sounds": [], "defaultSound": null },
-  "upper-u": { "type": "letter", "characters": "U", "asset": "assets/language-characters/upper-u.svg", "sounds": [], "defaultSound": null },
-  "upper-v": { "type": "letter", "characters": "V", "asset": "assets/language-characters/upper-v.svg", "sounds": [], "defaultSound": null },
-  "upper-w": { "type": "letter", "characters": "W", "asset": "assets/language-characters/upper-w.svg", "sounds": [], "defaultSound": null },
-  "upper-x": { "type": "letter", "characters": "X", "asset": "assets/language-characters/upper-x.svg", "sounds": [], "defaultSound": null },
-  "upper-y": { "type": "letter", "characters": "Y", "asset": "assets/language-characters/upper-y.svg", "sounds": [], "defaultSound": null },
-  "upper-z": { "type": "letter", "characters": "Z", "asset": "assets/language-characters/upper-z.svg", "sounds": [], "defaultSound": null },
-  "digit-0": { "type": "digit", "characters": "0", "asset": "assets/language-characters/0.svg", "sounds": [], "defaultSound": null },
-  "digit-1": { "type": "digit", "characters": "1", "asset": "assets/language-characters/1.svg", "sounds": [], "defaultSound": null },
-  "digit-2": { "type": "digit", "characters": "2", "asset": "assets/language-characters/2.svg", "sounds": [], "defaultSound": null },
-  "digit-3": { "type": "digit", "characters": "3", "asset": "assets/language-characters/3.svg", "sounds": [], "defaultSound": null },
-  "digit-4": { "type": "digit", "characters": "4", "asset": "assets/language-characters/4.svg", "sounds": [], "defaultSound": null },
-  "digit-5": { "type": "digit", "characters": "5", "asset": "assets/language-characters/5.svg", "sounds": [], "defaultSound": null },
-  "digit-6": { "type": "digit", "characters": "6", "asset": "assets/language-characters/6.svg", "sounds": [], "defaultSound": null },
-  "digit-7": { "type": "digit", "characters": "7", "asset": "assets/language-characters/7.svg", "sounds": [], "defaultSound": null },
-  "digit-8": { "type": "digit", "characters": "8", "asset": "assets/language-characters/8.svg", "sounds": [], "defaultSound": null },
-  "digit-9": { "type": "digit", "characters": "9", "asset": "assets/language-characters/9.svg", "sounds": [], "defaultSound": null },
+  "upper-a": {
+    "type": "letter",
+    "characters": "A",
+    "asset": "assets/language-characters/upper-a.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "diagonal",
+      "straight line"
+    ]
+  },
+  "upper-b": {
+    "type": "letter",
+    "characters": "B",
+    "asset": "assets/language-characters/upper-b.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
+  },
+  "upper-c": {
+    "type": "letter",
+    "characters": "C",
+    "asset": "assets/language-characters/upper-c.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "upper-d": {
+    "type": "letter",
+    "characters": "D",
+    "asset": "assets/language-characters/upper-d.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
+  },
+  "upper-e": {
+    "type": "letter",
+    "characters": "E",
+    "asset": "assets/language-characters/upper-e.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "upper-f": {
+    "type": "letter",
+    "characters": "F",
+    "asset": "assets/language-characters/upper-f.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "upper-g": {
+    "type": "letter",
+    "characters": "G",
+    "asset": "assets/language-characters/upper-g.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
+  },
+  "upper-h": {
+    "type": "letter",
+    "characters": "H",
+    "asset": "assets/language-characters/upper-h.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "upper-i": {
+    "type": "letter",
+    "characters": "I",
+    "asset": "assets/language-characters/upper-i.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "upper-j": {
+    "type": "letter",
+    "characters": "J",
+    "asset": "assets/language-characters/upper-j.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
+  },
+  "upper-k": {
+    "type": "letter",
+    "characters": "K",
+    "asset": "assets/language-characters/upper-k.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
+  },
+  "upper-l": {
+    "type": "letter",
+    "characters": "L",
+    "asset": "assets/language-characters/upper-l.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "upper-m": {
+    "type": "letter",
+    "characters": "M",
+    "asset": "assets/language-characters/upper-m.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
+  },
+  "upper-n": {
+    "type": "letter",
+    "characters": "N",
+    "asset": "assets/language-characters/upper-n.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
+  },
+  "upper-o": {
+    "type": "letter",
+    "characters": "O",
+    "asset": "assets/language-characters/upper-o.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "circle"
+    ]
+  },
+  "upper-p": {
+    "type": "letter",
+    "characters": "P",
+    "asset": "assets/language-characters/upper-p.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
+  },
+  "upper-q": {
+    "type": "letter",
+    "characters": "Q",
+    "asset": "assets/language-characters/upper-q.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "circle",
+      "diagonal"
+    ]
+  },
+  "upper-r": {
+    "type": "letter",
+    "characters": "R",
+    "asset": "assets/language-characters/upper-r.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "curve",
+      "diagonal"
+    ]
+  },
+  "upper-s": {
+    "type": "letter",
+    "characters": "S",
+    "asset": "assets/language-characters/upper-s.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "upper-t": {
+    "type": "letter",
+    "characters": "T",
+    "asset": "assets/language-characters/upper-t.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "upper-u": {
+    "type": "letter",
+    "characters": "U",
+    "asset": "assets/language-characters/upper-u.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "upper-v": {
+    "type": "letter",
+    "characters": "V",
+    "asset": "assets/language-characters/upper-v.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "diagonal"
+    ]
+  },
+  "upper-w": {
+    "type": "letter",
+    "characters": "W",
+    "asset": "assets/language-characters/upper-w.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "diagonal"
+    ]
+  },
+  "upper-x": {
+    "type": "letter",
+    "characters": "X",
+    "asset": "assets/language-characters/upper-x.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "diagonal"
+    ]
+  },
+  "upper-y": {
+    "type": "letter",
+    "characters": "Y",
+    "asset": "assets/language-characters/upper-y.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "diagonal",
+      "straight line"
+    ]
+  },
+  "upper-z": {
+    "type": "letter",
+    "characters": "Z",
+    "asset": "assets/language-characters/upper-z.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
+  },
+  "digit-0": {
+    "type": "digit",
+    "characters": "0",
+    "asset": "assets/language-characters/0.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "digit-1": {
+    "type": "digit",
+    "characters": "1",
+    "asset": "assets/language-characters/1.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line"
+    ]
+  },
+  "digit-2": {
+    "type": "digit",
+    "characters": "2",
+    "asset": "assets/language-characters/2.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
+  },
+  "digit-3": {
+    "type": "digit",
+    "characters": "3",
+    "asset": "assets/language-characters/3.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "digit-4": {
+    "type": "digit",
+    "characters": "4",
+    "asset": "assets/language-characters/4.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
+  },
+  "digit-5": {
+    "type": "digit",
+    "characters": "5",
+    "asset": "assets/language-characters/5.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "curve"
+    ]
+  },
+  "digit-6": {
+    "type": "digit",
+    "characters": "6",
+    "asset": "assets/language-characters/6.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "digit-7": {
+    "type": "digit",
+    "characters": "7",
+    "asset": "assets/language-characters/7.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "straight line",
+      "diagonal"
+    ]
+  },
+  "digit-8": {
+    "type": "digit",
+    "characters": "8",
+    "asset": "assets/language-characters/8.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve"
+    ]
+  },
+  "digit-9": {
+    "type": "digit",
+    "characters": "9",
+    "asset": "assets/language-characters/9.svg",
+    "sounds": [],
+    "defaultSound": null,
+    "shapes": [
+      "curve",
+      "straight line"
+    ]
+  },
   "digraph-sh": {
     "type": "digraph",
     "characters": "sh",
     "asset": null,
     "sounds": [
-      { "id": "sh", "label": "sh", "example": "shop", "clip": "bt-sh" }
+      {
+        "id": "sh",
+        "label": "sh",
+        "example": "shop",
+        "clip": "bt-sh"
+      }
     ],
     "defaultSound": "sh"
   },
@@ -302,8 +970,18 @@
     "characters": "th",
     "asset": null,
     "sounds": [
-      { "id": "th-soft", "label": "soft th", "example": "the",   "clip": "bt-th-soft" },
-      { "id": "th-hard", "label": "hard th", "example": "think", "clip": "bt-th-hard" }
+      {
+        "id": "th-soft",
+        "label": "soft th",
+        "example": "the",
+        "clip": "bt-th-soft"
+      },
+      {
+        "id": "th-hard",
+        "label": "hard th",
+        "example": "think",
+        "clip": "bt-th-hard"
+      }
     ],
     "defaultSound": "th-soft"
   },
@@ -312,7 +990,12 @@
     "characters": "ch",
     "asset": null,
     "sounds": [
-      { "id": "ch", "label": "ch", "example": "chip", "clip": "bt-ch" }
+      {
+        "id": "ch",
+        "label": "ch",
+        "example": "chip",
+        "clip": "bt-ch"
+      }
     ],
     "defaultSound": "ch"
   },
@@ -321,7 +1004,12 @@
     "characters": "oi",
     "asset": null,
     "sounds": [
-      { "id": "oi", "label": "oi", "example": "coin", "clip": "bt-oy" }
+      {
+        "id": "oi",
+        "label": "oi",
+        "example": "coin",
+        "clip": "bt-oy"
+      }
     ],
     "defaultSound": "oi"
   },
@@ -330,7 +1018,12 @@
     "characters": "oy",
     "asset": null,
     "sounds": [
-      { "id": "oy", "label": "oy", "example": "boy", "clip": "bt-oy" }
+      {
+        "id": "oy",
+        "label": "oy",
+        "example": "boy",
+        "clip": "bt-oy"
+      }
     ],
     "defaultSound": "oy"
   },
@@ -339,8 +1032,18 @@
     "characters": "ow",
     "asset": null,
     "sounds": [
-      { "id": "ow-cow", "label": "ow", "example": "cow",  "clip": "bt-ow" },
-      { "id": "ow-oh",  "label": "oh", "example": "show", "clip": "bt-o-long" }
+      {
+        "id": "ow-cow",
+        "label": "ow",
+        "example": "cow",
+        "clip": "bt-ow"
+      },
+      {
+        "id": "ow-oh",
+        "label": "oh",
+        "example": "show",
+        "clip": "bt-o-long"
+      }
     ],
     "defaultSound": "ow-cow"
   },
@@ -349,10 +1052,30 @@
     "characters": "ou",
     "asset": null,
     "sounds": [
-      { "id": "ou-cow", "label": "ow",  "example": "out",     "clip": "bt-ow" },
-      { "id": "ou-oh",  "label": "oh",  "example": "soul",    "clip": "bt-o-long" },
-      { "id": "ou-oo",  "label": "oo",  "example": "through", "clip": "bt-o-dotted" },
-      { "id": "ou-uh",  "label": "uhh", "example": "could",   "clip": "alpha-u-short" }
+      {
+        "id": "ou-cow",
+        "label": "ow",
+        "example": "out",
+        "clip": "bt-ow"
+      },
+      {
+        "id": "ou-oh",
+        "label": "oh",
+        "example": "soul",
+        "clip": "bt-o-long"
+      },
+      {
+        "id": "ou-oo",
+        "label": "oo",
+        "example": "through",
+        "clip": "bt-o-dotted"
+      },
+      {
+        "id": "ou-uh",
+        "label": "uhh",
+        "example": "could",
+        "clip": "alpha-u-short"
+      }
     ],
     "defaultSound": "ou-cow"
   }

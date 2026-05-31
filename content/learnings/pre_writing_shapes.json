@@ -10,11 +10,7 @@
     "maths.shape-2d",
     "psed.self-regulation"
   ],
-  "shapeDecomp": {
-    "l": ["straight line"],
-    "c": ["curve"],
-    "o": ["circle"]
-  },
+  "pageControls": ["SHOW_SHAPE_DECOMP"],
   "steps": [
     {
       "prompt": "Every letter is made of shapes — lines, curves, and circles! Find l — it's just one straight line going down!",

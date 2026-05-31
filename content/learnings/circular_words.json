@@ -13,22 +13,7 @@
     "cl.topic-vocabulary"
   ],
   "words": ["dog", "frog", "goat", "octopus", "crocodile"],
-  "shapeDecomp": {
-    "d": ["curve", "straight line"],
-    "o": ["circle"],
-    "g": ["curve", "straight line"],
-    "f": ["straight line", "curve"],
-    "r": ["straight line", "curve"],
-    "a": ["curve", "straight line"],
-    "t": ["straight line", "curve"],
-    "c": ["curve"],
-    "p": ["straight line", "curve"],
-    "u": ["curve"],
-    "s": ["curve"],
-    "i": ["straight line"],
-    "l": ["straight line"],
-    "e": ["straight line", "curve"]
-  },
+  "pageControls": ["SHOW_SHAPE_DECOMP"],
   "steps": [
     {
       "prompt": "Some letters are made with a round curve — like c, o, d, and g. Find dog — it has two round letters!",

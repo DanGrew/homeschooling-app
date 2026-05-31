@@ -1,4 +1,4 @@
-import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive, graphemeIdForChar as coreGraphemeIdForChar } from '../../core/phonics/phonics-core.js';
+import { buildSoundIndex, getAssetPath as coreGetAssetPath, deriveLetterSounds as coreDerive, graphemeIdForChar as coreGraphemeIdForChar, getShapesForChar as coreGetShapesForChar } from '../../core/phonics/phonics-core.js';
 
 var _DEFAULT_REGISTRY   = new URL('../../content/phonics/graphemes.json', import.meta.url).href;
 var _DEFAULT_MANIFEST   = new URL('../../content/phonics/manifest.json',   import.meta.url).href;
@@ -145,6 +145,10 @@ export var getAssetPathForChar = function(char) {
 
 export var deriveLetterSounds = function(word) {
   return coreDerive(_graphemes, word);
+};
+
+export var getShapesForChar = function(char) {
+  return coreGetShapesForChar(_graphemes, char);
 };
 
 export function _reset() {

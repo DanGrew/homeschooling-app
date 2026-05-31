@@ -30,5 +30,14 @@ function graphemeIdForChar(char) {
   return null;
 }
 
-export { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar };
-if (typeof module !== 'undefined') module.exports = { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar };
+function getShapesForChar(graphemes, char) {
+  var id = graphemeIdForChar(char);
+  return [id].filter(Boolean)
+    .map(function(i) { return graphemes[i]; })
+    .filter(Boolean)
+    .map(function(g) { return g.shapes; })
+    .filter(Boolean)[0];
+}
+
+export { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar, getShapesForChar };
+if (typeof module !== 'undefined') module.exports = { buildSoundIndex, getAssetPath, deriveLetterSounds, graphemeIdForChar, getShapesForChar };
