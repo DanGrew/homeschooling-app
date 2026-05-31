@@ -503,6 +503,66 @@
     "number": 5
   },
   {
+    "id": "ni_bigger_smaller",
+    "source": "Numbers",
+    "title": "Bigger and Smaller",
+    "type": "lesson",
+    "number": 3
+  },
+  {
+    "id": "ni_count_to_ten",
+    "source": "Numbers",
+    "title": "Count to Ten",
+    "type": "lesson",
+    "number": 6
+  },
+  {
+    "id": "ni_counting_to_5",
+    "source": "Numbers",
+    "title": "Counting to 5",
+    "type": "lesson",
+    "number": 1
+  },
+  {
+    "id": "ni_ex_equal",
+    "source": "Numbers",
+    "title": "Equal Groups",
+    "type": "exercise"
+  },
+  {
+    "id": "ni_ex_make_7",
+    "source": "Numbers",
+    "title": "Make 7",
+    "type": "exercise"
+  },
+  {
+    "id": "ni_ex_make_9",
+    "source": "Numbers",
+    "title": "Make 9",
+    "type": "exercise"
+  },
+  {
+    "id": "ni_make_five_together",
+    "source": "Numbers",
+    "title": "Make Five Together",
+    "type": "lesson",
+    "number": 2
+  },
+  {
+    "id": "ni_predict_and_add",
+    "source": "Numbers",
+    "title": "Predict and Add",
+    "type": "lesson",
+    "number": 5
+  },
+  {
+    "id": "ni_quick_look",
+    "source": "Numbers",
+    "title": "Quick Look",
+    "type": "lesson",
+    "number": 4
+  },
+  {
     "id": "not_gate",
     "source": "Logic Gates",
     "title": "NOT Gate",
@@ -637,6 +697,41 @@
     "title": "Vowels",
     "type": "lesson",
     "number": 1
+  },
+  {
+    "id": "wb_animal_spelling",
+    "source": "Word Builder",
+    "title": "Animal Spelling",
+    "type": "lesson",
+    "number": 1
+  },
+  {
+    "id": "wb_doctor_words",
+    "source": "Word Builder",
+    "title": "At the Doctor",
+    "type": "lesson",
+    "number": 3
+  },
+  {
+    "id": "wb_feeling_words",
+    "source": "Word Builder",
+    "title": "Feeling Words",
+    "type": "lesson",
+    "number": 2
+  },
+  {
+    "id": "wb_hard_mode",
+    "source": "Word Builder",
+    "title": "Hard Mode",
+    "type": "lesson",
+    "number": 5
+  },
+  {
+    "id": "wb_left_to_right",
+    "source": "Word Builder",
+    "title": "Left to Right",
+    "type": "lesson",
+    "number": 4
   },
   {
     "id": "wild_animals",
