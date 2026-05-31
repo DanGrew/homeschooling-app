@@ -1,0 +1,25 @@
+{
+  "id": "ni_make_five_together",
+  "title": "Make Five Together",
+  "number": 2,
+  "guide": "cat",
+  "source": "Numbers",
+  "criteria": [
+    "maths.composition",
+    "maths.counting-5",
+    "maths.equivalence",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ],
+  "steps": [
+    {
+      "prompt": "Use both + buttons — make the {fruit_a_p} and {fruit_b_p} add up to 5 together!",
+      "expect": "TOTAL_5",
+      "feedback": "Five! You split them between two groups. Tap the Total to count all five!"
+    },
+    {
+      "expect": "COUNT_ALL",
+      "feedback": "Five — two groups making one total. The same five, just split differently!"
+    }
+  ]
+}

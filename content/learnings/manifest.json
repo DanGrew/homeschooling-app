@@ -1324,7 +1324,35 @@
     ]
   },
   {
-    "id": "wb_animal_spelling",
+    "id": "wild_animals",
+    "source": "Trace Words",
+    "title": "Wild Animals",
+    "type": "lesson",
+    "number": 2,
+    "criteria": [
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "uw.animals-nature",
+      "uw.world-awareness"
+    ]
+  },
+  {
+    "id": "word-builder-exercise-hard_mode",
+    "source": "Word Builder",
+    "title": "Hard Mode",
+    "type": "exercise",
+    "number": 5,
+    "criteria": [
+      "psed.independence",
+      "psed.self-regulation",
+      "cl.topic-vocabulary",
+      "literacy.phonics",
+      "literacy.word-recognition",
+      "pd.fine-motor"
+    ]
+  },
+  {
+    "id": "word-builder-lesson-animal_spelling",
     "source": "Word Builder",
     "title": "Animal Spelling",
     "type": "lesson",
@@ -1339,7 +1367,7 @@
     ]
   },
   {
-    "id": "wb_doctor_words",
+    "id": "word-builder-lesson-doctor_words",
     "source": "Word Builder",
     "title": "At the Doctor",
     "type": "lesson",
@@ -1355,7 +1383,7 @@
     ]
   },
   {
-    "id": "wb_feeling_words",
+    "id": "word-builder-lesson-feeling_words",
     "source": "Word Builder",
     "title": "Feeling Words",
     "type": "lesson",
@@ -1370,22 +1398,7 @@
     ]
   },
   {
-    "id": "wb_hard_mode",
-    "source": "Word Builder",
-    "title": "Hard Mode",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "psed.independence",
-      "psed.self-regulation",
-      "cl.topic-vocabulary",
-      "literacy.phonics",
-      "literacy.word-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "wb_left_to_right",
+    "id": "word-builder-lesson-left_to_right",
     "source": "Word Builder",
     "title": "Left to Right",
     "type": "lesson",
@@ -1396,19 +1409,6 @@
       "literacy.word-recognition",
       "pd.fine-motor",
       "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "wild_animals",
-    "source": "Trace Words",
-    "title": "Wild Animals",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "literacy.word-recognition",
-      "pd.fine-motor",
-      "uw.animals-nature",
-      "uw.world-awareness"
     ]
   },
   {

@@ -1,0 +1,34 @@
+{
+  "id": "ni_quick_look",
+  "title": "Quick Look",
+  "number": 4,
+  "guide": "cat",
+  "source": "Numbers",
+  "criteria": [
+    "maths.subitising",
+    "maths.ten-frame",
+    "maths.counting-5",
+    "maths.numeral-recognition",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ],
+  "steps": [
+    {
+      "prompt": "Press + on the {fruit_a_p} to make 3. Then look at the grid — can you just see it without counting?",
+      "expect": "TOTAL_3",
+      "feedback": "Three! In the grid, three makes a shape — you can learn to just know it. Tap the Total to check!"
+    },
+    {
+      "expect": "COUNT_ALL",
+      "feedback": "Three! Now add two more — make it 5!"
+    },
+    {
+      "expect": "TOTAL_5",
+      "feedback": "Five! A full row in the grid. Look — can you see five without counting each one? Tap Total to check!"
+    },
+    {
+      "expect": "COUNT_ALL",
+      "feedback": "Five! When you know the number just by looking, that's called subitising. Your brain is getting fast!"
+    }
+  ]
+}

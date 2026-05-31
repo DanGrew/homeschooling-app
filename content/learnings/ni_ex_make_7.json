@@ -1,0 +1,19 @@
+{
+  "id": "ni_ex_make_7",
+  "title": "Make 7",
+  "type": "exercise",
+  "guide": "dog",
+  "source": "Numbers",
+  "criteria": [
+    "maths.composition",
+    "maths.counting-5",
+    "psed.self-regulation"
+  ],
+  "steps": [
+    {
+      "prompt": "Can you make the Total show 7? You decide how to split it between the two groups!",
+      "expect": "TOTAL_7",
+      "feedback": "Seven! How did you split it?"
+    }
+  ]
+}

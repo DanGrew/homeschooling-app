@@ -1,0 +1,19 @@
+{
+  "id": "ni_ex_equal",
+  "title": "Equal Groups",
+  "type": "exercise",
+  "guide": "cat",
+  "source": "Numbers",
+  "criteria": [
+    "maths.equivalence",
+    "maths.composition",
+    "psed.self-regulation"
+  ],
+  "steps": [
+    {
+      "prompt": "Make both groups equal — same number of {fruit_a_p} and {fruit_b_p}. You choose the number!",
+      "expect": "GROUPS_EQUAL",
+      "feedback": "Equal! Both groups the same."
+    }
+  ]
+}
