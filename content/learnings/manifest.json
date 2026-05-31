@@ -591,6 +591,13 @@
     "number": 4
   },
   {
+    "id": "say-words-lesson-medical",
+    "source": "Say Words",
+    "title": "At the Doctor's",
+    "type": "lesson",
+    "number": 7
+  },
+  {
     "id": "say-words-lesson-safari_animals",
     "source": "Say Words",
     "title": "Safari Animals",
