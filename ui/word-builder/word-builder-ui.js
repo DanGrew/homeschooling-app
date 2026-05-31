@@ -1,8 +1,9 @@
 import { parseWord, buildTileSet, validateLetter, isWordComplete, slotKey } from '../../core/word-builder/word-builder-core.js';
 import { makeSpeakable, makeInteractive } from '../../components/speech/speakable.js';
-import { playSound, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
+import { playSoundAsync, deriveLetterSounds } from '../../components/phonics/phonics-service.js';
 
 var NO_ITEM = { name: '', url: '' };
+var _phonemeChain = Promise.resolve();
 
 var state = {
   mode: 'distractors',
@@ -22,6 +23,7 @@ export function init(speakFn, onNextWord) {
 var START_DISPATCH = {
   'true': function(item) {
     state.currentItem = item;
+    _phonemeChain = Promise.resolve();
     var word = item.name;
     state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false, display: '' }); });
     state.tiles = buildTileSet(word, state.mode);
@@ -64,7 +66,7 @@ var PLACE_ACTION = {
 var COMPLETE_ACTION = {
   'true': function() {
     var word = state.currentItem.name;
-    setTimeout(function() { state.speakFn(word, 'word'); }, 300);
+    _phonemeChain.then(function() { state.speakFn(word, 'word'); });
     renderActions();
   },
   'false': function() {}
@@ -133,7 +135,7 @@ function renderSlots() {
 var TILE_STYLE = 'width:clamp(36px,9vmin,64px);height:clamp(36px,9vmin,64px);border-radius:10px;background:#fff;border:2px solid #bbb;font-size:clamp(1.2em,4vmin,2.2em);font-weight:bold;color:#333;cursor:pointer;touch-action:manipulation;transition:transform 0.1s,background 0.1s;';
 
 var TILE_SOUND = {
-  'true':  function(btn, soundId) { makeInteractive(btn, function() { playSound(soundId); }); },
+  'true':  function(btn, soundId) { makeInteractive(btn, function() { _phonemeChain = playSoundAsync(soundId); }); },
   'false': function(btn, _, letter) { makeSpeakable(btn, letter); }
 };
 
