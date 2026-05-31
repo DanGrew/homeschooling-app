@@ -318,8 +318,22 @@ function startWatch() {
 var SHAPE_COLORS = {'straight line':'#3498DB','curve':'#E67E22','circle':'#2ECC71','diagonal':'#9B59B6'};
 
 function getActiveShapeDecomp(char) {
-  var lesson = window.guidanceService && window.guidanceService._lesson;
-  return (lesson && lesson.shapeDecomp && lesson.shapeDecomp[char]) || null;
+  return [window.guidanceService]
+    .filter(Boolean)
+    .map(function(s) { return s._lesson; })
+    .filter(Boolean)
+    .map(function(l) { return l.shapeDecomp; })
+    .filter(Boolean)
+    .map(function(sd) { return sd[char]; })
+    .filter(Boolean)[0];
+}
+
+function makeShapePill(s) {
+  var pill = document.createElement('span');
+  pill.style.cssText = 'color:white;border-radius:20px;padding:10px 24px;font-size:1.2em;font-weight:bold;font-family:inherit;';
+  pill.style.background = [SHAPE_COLORS[s], '#888'].filter(Boolean)[0];
+  pill.textContent = s;
+  return pill;
 }
 
 function showShapeDecomp(shapes, onDismiss) {
@@ -334,12 +348,7 @@ function showShapeDecomp(shapes, onDismiss) {
   card.appendChild(lbl);
   var pills = document.createElement('div');
   pills.style.cssText = 'display:flex;gap:12px;flex-wrap:wrap;justify-content:center;';
-  shapes.forEach(function(s) {
-    var pill = document.createElement('span');
-    pill.style.cssText = 'background:' + (SHAPE_COLORS[s] || '#888') + ';color:white;border-radius:20px;padding:10px 24px;font-size:1.2em;font-weight:bold;font-family:inherit;';
-    pill.textContent = s;
-    pills.appendChild(pill);
-  });
+  shapes.forEach(function(s) { pills.appendChild(makeShapePill(s)); });
   card.appendChild(pills);
   var hint = document.createElement('div');
   hint.style.cssText = 'font-size:0.85em;color:#bbb;font-family:inherit;';
@@ -349,6 +358,11 @@ function showShapeDecomp(shapes, onDismiss) {
   document.body.appendChild(overlay);
   overlay.addEventListener('pointerdown', function() { overlay.remove(); onDismiss(); }, {once: true});
 }
+
+var DECOMP_ACTION = {
+  'true':  function(shapes, fn) { showShapeDecomp(shapes, fn); },
+  'false': function(_, fn) { fn(); }
+};
 
 var TRACE_DOT_HANDLERS = {
   'true': (dot, charIdx) => {
@@ -400,8 +414,7 @@ function startTraceEngine(charIdx) {
 
 function doTraceChar(charIdx) {
   var shapes = getActiveShapeDecomp(currentWord.charAt(charIdx));
-  if (shapes) showShapeDecomp(shapes, function() { startTraceEngine(charIdx); });
-  else startTraceEngine(charIdx);
+  DECOMP_ACTION[String(!!shapes)](shapes, function() { startTraceEngine(charIdx); });
 }
 
 function emitWordTraced() {
