@@ -68,9 +68,9 @@
 <script type="module">
 import { init } from '../../../ui/word-lesson/word-lesson-ui.js';
 import { GuidanceService } from '../../../components/guidance/guidance-service.js';
-import { loadRegistry } from '../../../components/phonics/phonics-service.js';
+import { loadRegistry, loadGraphemes } from '../../../components/phonics/phonics-service.js';
 window.guidanceService = new GuidanceService();
-loadRegistry().then(function() { init(); });
+loadRegistry().then(function() { init(); loadGraphemes().catch(function() {}); });
 </script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">
