@@ -204,6 +204,8 @@ async function init() {
   var criterionMap = buildCriterionMap(criteriaData);
   buildColKeyFns();
   renderGlossary();
+  renderCoverageHeader();
+  renderExerciseHeader();
   var learningFiles = await Promise.all(learningsManifest.map(attachLearning));
   var physicalFiles = await Promise.all(physicalManifest.map(attachPhysical));
   var allLearnings  = flattenLearnings(learningFiles, criterionMap, areas);
@@ -212,9 +214,7 @@ async function init() {
   exRows = allLearnings.filter(function(r) { return r.type === 'exercise'; });
   applySort();
   applyExSort();
-  renderCoverageHeader();
   renderBody();
-  renderExerciseHeader();
   renderExerciseBody();
 }
 
