@@ -47,6 +47,11 @@ export function togglePicture() {
   renderPicture();
 }
 
+export function setPicture(visible) {
+  state.showPicture = visible;
+  renderPicture();
+}
+
 export function reset() {
   var word = state.currentItem.name;
   state.slots = parseWord(word).map(function(t) { return Object.assign({}, t, { placed: null, locked: false, display: '' }); });
@@ -67,6 +72,7 @@ var COMPLETE_ACTION = {
   'true': function() {
     var word = state.currentItem.name;
     _phonemeChain.then(function() { state.speakFn(word, 'word'); });
+    window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'WORD_' + word.toLowerCase().replace(/\s+/g, '_') + '_BUILT' } }));
     renderActions();
   },
   'false': function() {}
