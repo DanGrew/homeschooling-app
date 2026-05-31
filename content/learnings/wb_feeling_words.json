@@ -1,0 +1,44 @@
+{
+  "id": "wb_feeling_words",
+  "title": "Feeling Words",
+  "number": 2,
+  "guide": "cat",
+  "source": "Word Builder",
+  "criteria": [
+    "cl.feeling-vocabulary",
+    "psed.emotion-vocab",
+    "cl.topic-vocabulary",
+    "literacy.phonics",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ],
+  "pageControls": ["MODE_DISTRACTORS", "SHOW_PICTURE"],
+  "steps": [
+    {
+      "prompt": "Feelings have names — and you can spell them! Build sad!",
+      "pageControls": ["SET_WORD_sad"],
+      "expect": "WORD_sad_BUILT",
+      "feedback": "s-a-d — everyone feels sad sometimes. Now build happy!"
+    },
+    {
+      "pageControls": ["SET_WORD_happy"],
+      "expect": "WORD_happy_BUILT",
+      "feedback": "Five letters for a wonderful feeling. Now build angry!"
+    },
+    {
+      "pageControls": ["SET_WORD_angry"],
+      "expect": "WORD_angry_BUILT",
+      "feedback": "Five letters for a big feeling. Now build shy!"
+    },
+    {
+      "pageControls": ["SET_WORD_shy"],
+      "expect": "WORD_shy_BUILT",
+      "feedback": "s-h-y — three letters. Last one — build worried!"
+    },
+    {
+      "pageControls": ["SET_WORD_worried"],
+      "expect": "WORD_worried_BUILT",
+      "feedback": "w-o-r-r-i-e-d. sad, happy, angry, shy, worried — every feeling has a word!"
+    }
+  ]
+}

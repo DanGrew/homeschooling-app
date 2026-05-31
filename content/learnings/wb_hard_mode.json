@@ -1,0 +1,39 @@
+{
+  "id": "wb_hard_mode",
+  "title": "Hard Mode",
+  "number": 5,
+  "guide": "dog",
+  "source": "Word Builder",
+  "criteria": [
+    "psed.independence",
+    "psed.self-regulation",
+    "cl.topic-vocabulary",
+    "literacy.phonics",
+    "literacy.word-recognition",
+    "pd.fine-motor"
+  ],
+  "pageControls": ["MODE_DISTRACTORS", "HIDE_PICTURE"],
+  "steps": [
+    {
+      "prompt": "No picture this time — you have to remember the word yourself! Build apple!",
+      "pageControls": ["SET_WORD_apple"],
+      "expect": "WORD_apple_BUILT",
+      "feedback": "You remembered without seeing it. Now build lemon!"
+    },
+    {
+      "pageControls": ["SET_WORD_lemon"],
+      "expect": "WORD_lemon_BUILT",
+      "feedback": "Five letters from memory. Now build tiger!"
+    },
+    {
+      "pageControls": ["SET_WORD_tiger"],
+      "expect": "WORD_tiger_BUILT",
+      "feedback": "Five letters — you knew it. Last one — build truck!"
+    },
+    {
+      "pageControls": ["SET_WORD_truck"],
+      "expect": "WORD_truck_BUILT",
+      "feedback": "Five letters, no picture — all from your own head. That's hard mode done!"
+    }
+  ]
+}
