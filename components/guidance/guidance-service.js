@@ -103,7 +103,6 @@ GuidanceService.prototype.complete = function() {
 GuidanceService.prototype._handle = function(type) {
   var self = this;
   if (!this._lesson) return;
-  stop();
   var step = this._lesson.steps[this._stepIdx];
   if (!step) return;
   if (Array.isArray(step.expect)) {
