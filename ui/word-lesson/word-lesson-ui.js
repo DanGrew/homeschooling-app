@@ -365,7 +365,7 @@ function emitWordTraced() {
   window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: 'WORD_' + currentWord + '_TRACED'}}));
 }
 
-function onWordComplete() { isTracing = false; emitWordTraced(); speak(currentWord); showBanner(); }
+function onWordComplete() { isTracing = false; emitWordTraced(); setTimeout(function() { speak(currentWord); }, 500); showBanner(); }
 
 var START_TRACE_GUARD = { 'true': doStartTrace, 'false': () => {} };
 

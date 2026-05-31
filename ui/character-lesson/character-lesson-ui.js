@@ -1,3 +1,4 @@
+import { speak } from '../../components/speech/speech-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 import { showBanner as _showBanner, hideBanner as _hideBanner } from '../../components/success-banner.js';
 import { buildSimpleFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
@@ -208,8 +209,12 @@ var MODE_PARAM = { 'true': 'trace', 'false': 'lesson' };
 
 function playCharPhoneme() {
   [currentEntry].filter(Boolean).forEach(function(e) {
-    var sounds = deriveLetterSounds(e.char);
-    [sounds[0]].filter(Boolean).forEach(playSound);
+    if (e.group === 'lower') {
+      var sounds = deriveLetterSounds(e.char);
+      [sounds[0]].filter(Boolean).forEach(playSound);
+    } else {
+      speak(e.speak);
+    }
   });
 }
 
