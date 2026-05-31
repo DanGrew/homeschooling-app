@@ -1,0 +1,40 @@
+{
+  "id": "word-builder-lesson-doctor_words",
+  "title": "At the Doctor",
+  "number": 3,
+  "guide": "cat",
+  "source": "Word Builder",
+  "criteria": [
+    "cl.technical-vocab",
+    "uw.community",
+    "cl.topic-vocabulary",
+    "literacy.phonics",
+    "literacy.word-recognition",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ],
+  "pageControls": ["MODE_DISTRACTORS", "SHOW_PICTURE"],
+  "steps": [
+    {
+      "prompt": "Doctors and nurses use special words! Build nurse!",
+      "pageControls": ["SET_WORD_nurse"],
+      "expect": "WORD_nurse_BUILT",
+      "feedback": "n-u-r-s-e — a nurse helps people feel better. Now build sick!"
+    },
+    {
+      "pageControls": ["SET_WORD_sick"],
+      "expect": "WORD_sick_BUILT",
+      "feedback": "s-i-c-k — how you feel when something hurts. Now build plaster!"
+    },
+    {
+      "pageControls": ["SET_WORD_plaster"],
+      "expect": "WORD_plaster_BUILT",
+      "feedback": "p-l-a-s-t-e-r — goes on a cut to help it heal. Last one — build needle!"
+    },
+    {
+      "pageControls": ["SET_WORD_needle"],
+      "expect": "WORD_needle_BUILT",
+      "feedback": "n-e-e-d-l-e. nurse, sick, plaster, needle — you know the doctor words!"
+    }
+  ]
+}
