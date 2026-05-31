@@ -78,6 +78,7 @@ var learningsManifest = fs.readdirSync(learningsDir)
       var type = data.type || (f.includes('exercise') ? 'exercise' : 'lesson');
       var entry = { id: data.id, source: data.source, title: data.title, type: type };
       if (data.number != null) entry.number = data.number;
+      if (Array.isArray(data.criteria)) entry.criteria = data.criteria;
       return entry;
     } catch(e) { return null; }
   })

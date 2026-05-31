@@ -170,12 +170,6 @@ function renderCoverageHeader() {
   head.appendChild(hr);
 }
 
-function attachLearning(entry) {
-  return fetch('../../content/learnings/' + entry.id + '.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) { return Object.assign({ type: entry.type }, data); });
-}
-
 function attachPhysical(entry) {
   return fetch('../../content/physical/activities/' + entry.file)
     .then(function(r) { return r.json(); })
@@ -206,9 +200,8 @@ async function init() {
   renderGlossary();
   renderCoverageHeader();
   renderExerciseHeader();
-  var learningFiles = await Promise.all(learningsManifest.map(attachLearning));
   var physicalFiles = await Promise.all(physicalManifest.map(attachPhysical));
-  var allLearnings  = flattenLearnings(learningFiles, criterionMap, areas);
+  var allLearnings  = flattenLearnings(learningsManifest, criterionMap, areas);
   rows   = allLearnings.filter(function(r) { return r.type !== 'exercise'; })
              .concat(flattenPhysical(physicalFiles, criterionMap, areas));
   exRows = allLearnings.filter(function(r) { return r.type === 'exercise'; });

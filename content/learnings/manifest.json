@@ -4,761 +4,1449 @@
     "source": "Letters & Numbers",
     "title": "Your Turn — a to z",
     "type": "lesson",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "literacy.letter-formation",
+      "literacy.phonics",
+      "pd.fine-motor",
+      "psed.independence"
+    ]
   },
   {
     "id": "and_gate",
     "source": "Logic Gates",
     "title": "AND Gate",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "cl.technical-vocab",
+      "cl.prediction",
+      "uw.cause-effect",
+      "cl.topic-vocabulary",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "animal_words",
     "source": "Trace Words",
     "title": "Animal Names",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "uw.animals-nature",
+      "cl.topic-vocabulary",
+      "literacy.word-recognition",
+      "literacy.letter-formation",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "circular_words",
     "source": "Trace Words",
     "title": "Round Letter Words",
     "type": "lesson",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "pd.fine-motor-circular",
+      "pd.fine-motor",
+      "literacy.letter-formation",
+      "literacy.phonics",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "clock-exercise-am_or_pm",
     "source": "Clock",
     "title": "AM or PM?",
     "type": "exercise",
-    "number": 9
+    "number": 9,
+    "criteria": [
+      "cl.technical-vocab",
+      "uw.cause-effect"
+    ]
   },
   {
     "id": "clock-exercise-count_the_clock",
     "source": "Clock",
     "title": "Count the Clock",
     "type": "exercise",
-    "number": 8
+    "number": 8,
+    "criteria": [
+      "maths.counting-10",
+      "maths.number-order"
+    ]
   },
   {
     "id": "clock-exercise-listen_and_find",
     "source": "Clock",
     "title": "Listen and Find",
     "type": "exercise",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "cl.listening"
+    ]
   },
   {
     "id": "clock-exercise-morning_or_night",
     "source": "Clock",
     "title": "Morning or Night?",
     "type": "exercise",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "uw.cause-effect",
+      "cl.prediction"
+    ]
   },
   {
     "id": "clock-exercise-what_comes_after",
     "source": "Clock",
     "title": "What Comes After?",
     "type": "exercise",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "cl.sequencing-language",
+      "cl.prediction"
+    ]
   },
   {
     "id": "clock-exercise-what_comes_next_fives",
     "source": "Clock",
     "title": "What Comes Next?",
     "type": "exercise",
-    "number": 11
+    "number": 11,
+    "criteria": [
+      "maths.pattern"
+    ]
   },
   {
     "id": "clock-exercise-whats_the_time",
     "source": "Clock",
     "title": "What's the Time?",
     "type": "exercise",
-    "number": 10
+    "number": 10,
+    "criteria": [
+      "cl.technical-vocab",
+      "maths.numeral-recognition"
+    ]
   },
   {
     "id": "clock-exercise-which_number",
     "source": "Clock",
     "title": "Which Number?",
     "type": "exercise",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "maths.numeral-recognition",
+      "maths.number-order"
+    ]
   },
   {
     "id": "clock-exercise-whose_day_baker",
     "source": "Clock",
     "title": "The Baker — Can You Remember?",
     "type": "exercise",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "uw.community",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "clock-exercise-whose_day_doctor",
     "source": "Clock",
     "title": "The Doctor — Can You Remember?",
     "type": "exercise",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "uw.community",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "clock-exercise-whose_day_farmer",
     "source": "Clock",
     "title": "The Farmer — Can You Remember?",
     "type": "exercise",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "uw.community",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "clock-lesson-am_and_pm",
     "source": "Clock",
     "title": "AM and PM",
     "type": "lesson",
-    "number": 12
+    "number": 12,
+    "criteria": [
+      "cl.technical-vocab",
+      "uw.cause-effect"
+    ]
   },
   {
     "id": "clock-lesson-bakers_day",
     "source": "Clock",
     "title": "The Baker's Day",
     "type": "lesson",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "uw.community",
+      "cl.sequencing-language",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "clock-lesson-clock_counts_in_fives",
     "source": "Clock",
     "title": "The Clock Counts in Fives",
     "type": "lesson",
-    "number": 14
+    "number": 14,
+    "criteria": [
+      "maths.pattern",
+      "maths.counting-10"
+    ]
   },
   {
     "id": "clock-lesson-count_the_clock",
     "source": "Clock",
     "title": "Count the Clock",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "maths.counting-10",
+      "maths.number-order"
+    ]
   },
   {
     "id": "clock-lesson-doctors_day",
     "source": "Clock",
     "title": "The Doctor's Day",
     "type": "lesson",
-    "number": 9
+    "number": 9,
+    "criteria": [
+      "uw.community",
+      "cl.sequencing-language",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "clock-lesson-farmers_day",
     "source": "Clock",
     "title": "The Farmer's Day",
     "type": "lesson",
-    "number": 8
+    "number": 8,
+    "criteria": [
+      "uw.community",
+      "cl.sequencing-language",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "clock-lesson-how_does_the_clock_work",
     "source": "Clock",
     "title": "How Does the Clock Work?",
     "type": "lesson",
-    "number": 11
+    "number": 11,
+    "criteria": [
+      "uw.technology",
+      "uw.cause-effect"
+    ]
   },
   {
     "id": "clock-lesson-long_and_short",
     "source": "Clock",
     "title": "Long Hand, Short Hand",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "maths.size-measure",
+      "cl.descriptive-vocab"
+    ]
   },
   {
     "id": "clock-lesson-morning_to_night",
     "source": "Clock",
     "title": "Morning to Night",
     "type": "lesson",
-    "number": 15
+    "number": 15,
+    "criteria": [
+      "uw.seasonal-change",
+      "cl.sequencing-language",
+      "maths.number-order"
+    ]
   },
   {
     "id": "clock-lesson-my_day",
     "source": "Clock",
     "title": "My Day",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "psed.identity",
+      "cl.topic-vocabulary",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "clock-lesson-name_the_time",
     "source": "Clock",
     "title": "Name the Time",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "cl.topic-vocabulary",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "clock-lesson-numbers_on_the_clock",
     "source": "Clock",
     "title": "Numbers on the Clock",
     "type": "lesson",
-    "number": 10
+    "number": 10,
+    "criteria": [
+      "maths.numeral-recognition",
+      "maths.number-order"
+    ]
   },
   {
     "id": "clock-lesson-oclock_and_half_past",
     "source": "Clock",
     "title": "O'clock and Half Past",
     "type": "lesson",
-    "number": 13
+    "number": 13,
+    "criteria": [
+      "cl.technical-vocab",
+      "maths.number-order"
+    ]
   },
   {
     "id": "clock-lesson-sun_and_moon",
     "source": "Clock",
     "title": "Sun and Moon",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "uw.cause-effect",
+      "cl.prediction",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "clock-lesson-times_of_day",
     "source": "Clock",
     "title": "Times of Day",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "uw.seasonal-change",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-exercise-cool",
     "source": "Colour Wheel",
     "title": "Find Cool Colours",
     "type": "exercise",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "ead.colour-families",
+      "ead.colour-recognition",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-exercise-primary",
     "source": "Colour Wheel",
     "title": "Find Primary Colours",
     "type": "exercise",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "ead.colour-recognition",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-exercise-secondary",
     "source": "Colour Wheel",
     "title": "Find Secondary Colours",
     "type": "exercise",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "ead.colour-recognition",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-exercise-tertiary",
     "source": "Colour Wheel",
     "title": "Find Tertiary Colours",
     "type": "exercise",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "ead.colour-recognition",
+      "cl.topic-vocabulary",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-exercise-warm",
     "source": "Colour Wheel",
     "title": "Find Warm Colours",
     "type": "exercise",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "ead.colour-families",
+      "ead.colour-recognition",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-lesson-find_cool",
     "source": "Colour Wheel",
     "title": "Cool Colours",
     "type": "lesson",
-    "number": 8
+    "number": 8,
+    "criteria": [
+      "ead.colour-families",
+      "ead.colour-recognition",
+      "cl.technical-vocab",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-lesson-find_primary",
     "source": "Colour Wheel",
     "title": "Find Primary Colours",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "ead.colour-recognition",
+      "cl.technical-vocab",
+      "cl.listening",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-find_secondary",
     "source": "Colour Wheel",
     "title": "Find Secondary Colours",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "ead.colour-recognition",
+      "cl.technical-vocab",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-lesson-find_tertiary",
     "source": "Colour Wheel",
     "title": "Find Tertiary Colours",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "ead.colour-recognition",
+      "cl.technical-vocab",
+      "cl.topic-vocabulary",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-lesson-find_warm",
     "source": "Colour Wheel",
     "title": "Warm Colours",
     "type": "lesson",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "ead.colour-families",
+      "ead.colour-recognition",
+      "cl.technical-vocab",
+      "cl.listening"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_amber",
     "source": "Colour Wheel",
     "title": "Make Amber",
     "type": "lesson",
-    "number": 10
+    "number": 10,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_chartreuse",
     "source": "Colour Wheel",
     "title": "Make Chartreuse",
     "type": "lesson",
-    "number": 11
+    "number": 11,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_green",
     "source": "Colour Wheel",
     "title": "Make Green",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_indigo",
     "source": "Colour Wheel",
     "title": "Make Indigo",
     "type": "lesson",
-    "number": 12
+    "number": 12,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_magenta",
     "source": "Colour Wheel",
     "title": "Make Magenta",
     "type": "lesson",
-    "number": 13
+    "number": 13,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_orange",
     "source": "Colour Wheel",
     "title": "Make Orange",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_purple",
     "source": "Colour Wheel",
     "title": "Make Purple",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_teal",
     "source": "Colour Wheel",
     "title": "Make Teal",
     "type": "lesson",
-    "number": 8
+    "number": 8,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colour-wheel-lesson-make_vermillion",
     "source": "Colour Wheel",
     "title": "Make Vermillion",
     "type": "lesson",
-    "number": 9
+    "number": 9,
+    "criteria": [
+      "ead.colour-mixing",
+      "cl.listening",
+      "cl.prediction",
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "colouring-free",
     "source": "Colouring Playground",
     "title": "Free Colouring",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "ead.colour-mixing",
+      "ead.colour-recognition"
+    ]
   },
   {
     "id": "colouring-guided",
     "source": "Colouring Playground",
     "title": "Guided Colouring",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "ead.colour-recognition",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "count_to_ten",
     "source": "Numbers",
     "title": "Count to Ten",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "maths.counting-10",
+      "maths.numeral-recognition",
+      "maths.number-order"
+    ]
   },
   {
     "id": "cvc_phonics",
     "source": "Trace Words",
     "title": "Short Words",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "literacy.phonics",
+      "literacy.letter-formation",
+      "literacy.print-concepts",
+      "pd.fine-motor",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "digits_one_to_five",
     "source": "Letters & Numbers",
     "title": "Count and Write 1 to 5",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "maths.counting-5",
+      "maths.numeral-recognition",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "digits_six_to_ten",
     "source": "Letters & Numbers",
     "title": "Count and Write 6 to 10",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "maths.counting-10",
+      "maths.numeral-recognition",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "domino",
     "source": "Domino",
     "title": "Domino Match",
-    "type": "game"
+    "type": "game",
+    "criteria": [
+      "psed.relationships",
+      "maths.shape-2d",
+      "ead.colour-recognition",
+      "maths.equivalence",
+      "maths.numeral-recognition",
+      "cl.topic-vocabulary",
+      "maths.counting-5",
+      "pd.fine-motor",
+      "maths.subitising",
+      "psed.self-regulation",
+      "maths.spatial",
+      "uw.cause-effect",
+      "cl.listening",
+      "maths.pattern"
+    ]
   },
   {
     "id": "emotion_words",
     "source": "Trace Words",
     "title": "How Are You Feeling?",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "cl.feeling-vocabulary",
+      "psed.emotion-vocab",
+      "cl.topic-vocabulary",
+      "literacy.word-recognition",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "equal_groups",
     "source": "Numbers",
     "title": "Equal Groups",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "maths.equivalence",
+      "maths.numeral-recognition"
+    ]
   },
   {
     "id": "first_five",
     "source": "Letters & Numbers",
     "title": "First Five Letters",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "literacy.phonics",
+      "maths.number-order",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "grow-tomatoes-level-1",
     "source": "Simulator",
     "title": "Grow Tomatoes (Level 1)",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "uw.cause-effect",
+      "cl.topic-vocabulary",
+      "maths.counting-5"
+    ]
   },
   {
     "id": "grow-tomatoes-level-2",
     "source": "Simulator",
     "title": "Grow Tomatoes (Level 2)",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "uw.cause-effect",
+      "cl.topic-vocabulary",
+      "maths.counting-5",
+      "pd.tool-use"
+    ]
   },
   {
     "id": "grow-tomatoes-level-3",
     "source": "Simulator",
     "title": "Grow Tomatoes (Level 3)",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "uw.cause-effect",
+      "cl.topic-vocabulary",
+      "maths.counting-5",
+      "pd.tool-use",
+      "cl.sequencing-language",
+      "uw.animals-nature",
+      "uw.seasonal-change"
+    ]
   },
   {
     "id": "how_are_you_feeling",
     "source": "Trace Words",
     "title": "How Are You Feeling?",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "psed.emotion-vocab",
+      "cl.feeling-vocabulary"
+    ]
   },
   {
     "id": "lesson_2-AND_2-AND-AND",
     "source": "Logic Gates",
     "title": "AND Cascade",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "uw.cause-effect",
+      "cl.sequencing-language",
+      "cl.prediction",
+      "cl.topic-vocabulary",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "logic-gates-exercise-chain",
     "source": "Logic Gates",
     "title": "Follow the Chain",
-    "type": "exercise"
+    "type": "exercise",
+    "criteria": [
+      "uw.cause-effect",
+      "cl.sequencing-language",
+      "cl.prediction"
+    ]
   },
   {
     "id": "logic-gates-exercise-two_ways",
     "source": "Logic Gates",
     "title": "Two Ways",
-    "type": "exercise"
+    "type": "exercise",
+    "criteria": [
+      "maths.equivalence",
+      "cl.prediction",
+      "psed.independence"
+    ]
   },
   {
     "id": "logic-gates-lesson-big_decision",
     "source": "Logic Gates",
     "title": "Big Decision",
     "type": "lesson",
-    "number": 8
+    "number": 8,
+    "criteria": [
+      "cl.prediction",
+      "uw.cause-effect",
+      "psed.independence",
+      "cl.topic-vocabulary",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "logic-gates-lesson-chain",
     "source": "Logic Gates",
     "title": "Chain of Gates",
     "type": "lesson",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "cl.prediction",
+      "uw.cause-effect",
+      "cl.sequencing-language",
+      "cl.topic-vocabulary",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "logic-gates-lesson-meet_switch",
     "source": "Logic Gates",
     "title": "Meet the Switch",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "uw.cause-effect",
+      "cl.topic-vocabulary",
+      "pd.fine-motor",
+      "uw.technology"
+    ]
   },
   {
     "id": "make_five",
     "source": "Numbers",
     "title": "Make Five",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "maths.composition",
+      "maths.counting-5",
+      "maths.numeral-recognition"
+    ]
   },
   {
     "id": "make_three",
     "source": "Numbers",
     "title": "Make Three",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "maths.counting-5",
+      "maths.subitising",
+      "maths.numeral-recognition"
+    ]
   },
   {
     "id": "medical_words",
     "source": "Trace Words",
     "title": "At the Doctor",
     "type": "lesson",
-    "number": 8
+    "number": 8,
+    "criteria": [
+      "cl.technical-vocab",
+      "uw.community",
+      "cl.topic-vocabulary",
+      "literacy.word-recognition",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "more_and_fewer",
     "source": "Numbers",
     "title": "More and Fewer",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "cl.descriptive-vocab",
+      "maths.equivalence",
+      "maths.numeral-recognition"
+    ]
   },
   {
     "id": "ni_bigger_smaller",
     "source": "Numbers",
     "title": "Bigger and Smaller",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "maths.equivalence",
+      "cl.descriptive-vocab",
+      "maths.size-measure",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_count_to_ten",
     "source": "Numbers",
     "title": "Count to Ten",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "maths.counting-10",
+      "maths.composition",
+      "maths.ten-frame",
+      "cl.topic-vocabulary",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_counting_to_5",
     "source": "Numbers",
     "title": "Counting to 5",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "maths.counting-5",
+      "maths.numeral-recognition",
+      "maths.ten-frame",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_ex_equal",
     "source": "Numbers",
     "title": "Equal Groups",
-    "type": "exercise"
+    "type": "exercise",
+    "criteria": [
+      "maths.equivalence",
+      "maths.composition",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_ex_make_7",
     "source": "Numbers",
     "title": "Make 7",
-    "type": "exercise"
+    "type": "exercise",
+    "criteria": [
+      "maths.composition",
+      "maths.counting-5",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_ex_make_9",
     "source": "Numbers",
     "title": "Make 9",
-    "type": "exercise"
+    "type": "exercise",
+    "criteria": [
+      "maths.composition",
+      "maths.counting-10",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_make_five_together",
     "source": "Numbers",
     "title": "Make Five Together",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "maths.composition",
+      "maths.counting-5",
+      "maths.equivalence",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_predict_and_add",
     "source": "Numbers",
     "title": "Predict and Add",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "cl.prediction",
+      "maths.number-order",
+      "uw.cause-effect",
+      "maths.counting-5",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "ni_quick_look",
     "source": "Numbers",
     "title": "Quick Look",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "maths.subitising",
+      "maths.ten-frame",
+      "maths.counting-5",
+      "maths.numeral-recognition",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "not_gate",
     "source": "Logic Gates",
     "title": "NOT Gate",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "cl.technical-vocab",
+      "uw.cause-effect",
+      "cl.prediction",
+      "cl.topic-vocabulary",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "numerals_five_to_nine",
     "source": "Letters & Numbers",
     "title": "Write 5 to 9",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "pd.numeral-formation",
+      "maths.numeral-recognition",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "numerals_zero_to_four",
     "source": "Letters & Numbers",
     "title": "Write 0 to 4",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "pd.numeral-formation",
+      "maths.numeral-recognition",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "or_gate",
     "source": "Logic Gates",
     "title": "OR Gate",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "cl.technical-vocab",
+      "cl.prediction",
+      "maths.pattern",
+      "cl.topic-vocabulary",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "pairs",
     "source": "Pairs",
     "title": "Pairs",
-    "type": "game"
+    "type": "game",
+    "criteria": [
+      "maths.spatial",
+      "psed.relationships",
+      "maths.equivalence",
+      "cl.topic-vocabulary",
+      "cl.prediction",
+      "psed.self-regulation",
+      "cl.listening",
+      "pd.fine-motor",
+      "uw.cause-effect"
+    ]
   },
   {
     "id": "potty-training",
     "source": "Simulator",
     "title": "Potty Training",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "psed.independence",
+      "psed.self-regulation",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "pre_writing_shapes",
     "source": "Letters & Numbers",
     "title": "Shapes in Letters",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "pd.fine-motor",
+      "ead.mark-making",
+      "maths.shape-2d",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "puzzle",
     "source": "Puzzle",
     "title": "Puzzle",
-    "type": "lesson"
+    "type": "lesson",
+    "criteria": [
+      "maths.spatial",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "round_letters",
     "source": "Letters & Numbers",
     "title": "Round Letters",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "pd.fine-motor-circular",
+      "literacy.phonics"
+    ]
   },
   {
     "id": "say-words-lesson-core_emotions",
     "source": "Say Words",
     "title": "How Are You Feeling?",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "cl.feeling-vocabulary",
+      "psed.emotion-vocab",
+      "cl.listening",
+      "psed.self-regulation",
+      "cl.prediction",
+      "psed.independence",
+      "cl.sequencing-language"
+    ]
   },
   {
     "id": "say-words-lesson-exotic_fruit",
     "source": "Say Words",
     "title": "Exotic Fruits",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "cl.topic-vocabulary",
+      "cl.listening",
+      "uw.world-awareness",
+      "cl.descriptive-vocab",
+      "cl.prediction",
+      "cl.sequencing-language",
+      "literacy.word-recognition",
+      "literacy.phonics"
+    ]
   },
   {
     "id": "say-words-lesson-farm_animals",
     "source": "Say Words",
     "title": "Farm Animals",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "uw.animals-nature",
+      "cl.topic-vocabulary",
+      "cl.listening",
+      "maths.counting-10",
+      "cl.descriptive-vocab",
+      "cl.sequencing-language",
+      "cl.prediction",
+      "literacy.word-recognition",
+      "literacy.rhyme-awareness"
+    ]
   },
   {
     "id": "say-words-lesson-fruit_shop",
     "source": "Say Words",
     "title": "Fruit Shop",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "cl.topic-vocabulary",
+      "cl.listening",
+      "ead.colour-recognition",
+      "cl.descriptive-vocab",
+      "maths.counting-5",
+      "cl.sequencing-language",
+      "cl.prediction",
+      "literacy.word-recognition",
+      "literacy.rhyme-awareness"
+    ]
   },
   {
     "id": "say-words-lesson-medical",
     "source": "Say Words",
     "title": "At the Doctor's",
     "type": "lesson",
-    "number": 7
+    "number": 7,
+    "criteria": [
+      "cl.topic-vocabulary",
+      "cl.technical-vocab",
+      "cl.listening",
+      "cl.descriptive-vocab",
+      "cl.prediction",
+      "literacy.word-recognition",
+      "uw.community"
+    ]
   },
   {
     "id": "say-words-lesson-safari_animals",
     "source": "Say Words",
     "title": "Safari Animals",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "uw.animals-nature",
+      "cl.topic-vocabulary",
+      "cl.listening",
+      "maths.counting-10",
+      "uw.world-awareness",
+      "cl.descriptive-vocab",
+      "cl.prediction",
+      "cl.sequencing-language",
+      "literacy.word-recognition",
+      "literacy.phonics"
+    ]
   },
   {
     "id": "say-words-lesson-vehicles",
     "source": "Say Words",
     "title": "Things That Go",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "cl.topic-vocabulary",
+      "uw.community",
+      "cl.listening",
+      "maths.counting-5",
+      "cl.descriptive-vocab",
+      "cl.sequencing-language",
+      "cl.prediction",
+      "literacy.word-recognition",
+      "literacy.rhyme-awareness"
+    ]
   },
   {
     "id": "shopping-game",
     "source": "Shopping Game",
     "title": "Shopping Game",
-    "type": "game"
+    "type": "game",
+    "criteria": [
+      "ead.pretend-play",
+      "uw.community",
+      "cl.topic-vocabulary",
+      "psed.relationships",
+      "maths.counting-5",
+      "pd.fine-motor",
+      "uw.cause-effect",
+      "cl.listening",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "things_that_go",
     "source": "Trace Words",
     "title": "Things That Go",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "cl.topic-vocabulary",
+      "uw.community"
+    ]
   },
   {
     "id": "uppercase_letters",
     "source": "Letters & Numbers",
     "title": "Capital Letters",
     "type": "lesson",
-    "number": 6
+    "number": 6,
+    "criteria": [
+      "literacy.letter-formation",
+      "literacy.print-concepts",
+      "pd.fine-motor",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "vowels",
     "source": "Letters & Numbers",
     "title": "Vowels",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "literacy.phonics",
+      "pd.fine-motor",
+      "literacy.word-recognition"
+    ]
   },
   {
     "id": "wb_animal_spelling",
     "source": "Word Builder",
     "title": "Animal Spelling",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "uw.animals-nature",
+      "cl.topic-vocabulary",
+      "literacy.phonics",
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "wb_doctor_words",
     "source": "Word Builder",
     "title": "At the Doctor",
     "type": "lesson",
-    "number": 3
+    "number": 3,
+    "criteria": [
+      "cl.technical-vocab",
+      "uw.community",
+      "cl.topic-vocabulary",
+      "literacy.phonics",
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "wb_feeling_words",
     "source": "Word Builder",
     "title": "Feeling Words",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "cl.feeling-vocabulary",
+      "psed.emotion-vocab",
+      "cl.topic-vocabulary",
+      "literacy.phonics",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "wb_hard_mode",
     "source": "Word Builder",
     "title": "Hard Mode",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "psed.independence",
+      "psed.self-regulation",
+      "cl.topic-vocabulary",
+      "literacy.phonics",
+      "literacy.word-recognition",
+      "pd.fine-motor"
+    ]
   },
   {
     "id": "wb_left_to_right",
     "source": "Word Builder",
     "title": "Left to Right",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "literacy.print-concepts",
+      "literacy.phonics",
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "psed.self-regulation"
+    ]
   },
   {
     "id": "wild_animals",
     "source": "Trace Words",
     "title": "Wild Animals",
     "type": "lesson",
-    "number": 2
+    "number": 2,
+    "criteria": [
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "uw.animals-nature",
+      "uw.world-awareness"
+    ]
   },
   {
     "id": "word_farm_animals",
     "source": "Trace Words",
     "title": "Farm Animals",
     "type": "lesson",
-    "number": 1
+    "number": 1,
+    "criteria": [
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "uw.animals-nature"
+    ]
   },
   {
     "id": "word_fruit_shop",
     "source": "Trace Words",
     "title": "Fruit Shop",
     "type": "lesson",
-    "number": 4
+    "number": 4,
+    "criteria": [
+      "literacy.word-recognition",
+      "pd.fine-motor",
+      "cl.topic-vocabulary"
+    ]
   },
   {
     "id": "xor_gate",
     "source": "Logic Gates",
     "title": "XOR Gate",
     "type": "lesson",
-    "number": 5
+    "number": 5,
+    "criteria": [
+      "cl.technical-vocab",
+      "cl.prediction",
+      "maths.pattern",
+      "cl.topic-vocabulary",
+      "pd.fine-motor"
+    ]
   }
 ]
