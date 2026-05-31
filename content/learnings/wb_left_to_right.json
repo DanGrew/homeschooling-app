@@ -17,27 +17,27 @@
       "prompt": "Words always go from left to right — first letter on the left, last letter on the right! Build bus — start on the left!",
       "pageControls": ["SET_WORD_bus"],
       "expect": "WORD_bus_BUILT",
-      "feedback": "b-u-s — b then u then s — left to right. Now build cat!"
-    },
-    {
-      "pageControls": ["SET_WORD_cat"],
-      "expect": "WORD_cat_BUILT",
-      "feedback": "c first on the left, t last on the right. Now build dog!"
-    },
-    {
-      "pageControls": ["SET_WORD_dog"],
-      "expect": "WORD_dog_BUILT",
-      "feedback": "Always left to right — just like reading. Now build cow!"
+      "feedback": "b-u-s — b then u then s — left to right. Now build cow!"
     },
     {
       "pageControls": ["SET_WORD_cow"],
       "expect": "WORD_cow_BUILT",
-      "feedback": "c-o-w from left to right. Last one — build duck!"
+      "feedback": "c first on the left, w last on the right. Now build bull!"
     },
     {
-      "pageControls": ["SET_WORD_duck"],
-      "expect": "WORD_duck_BUILT",
-      "feedback": "d-u-c-k — left to right, every time. That's how every word is written!"
+      "pageControls": ["SET_WORD_bull"],
+      "expect": "WORD_bull_BUILT",
+      "feedback": "b-u-l-l — always left to right. Now build lion!"
+    },
+    {
+      "pageControls": ["SET_WORD_lion"],
+      "expect": "WORD_lion_BUILT",
+      "feedback": "l-i-o-n from left to right. Last one — build horse!"
+    },
+    {
+      "pageControls": ["SET_WORD_horse"],
+      "expect": "WORD_horse_BUILT",
+      "feedback": "h-o-r-s-e — left to right, every time. That's how every word is written!"
     }
   ]
 }
