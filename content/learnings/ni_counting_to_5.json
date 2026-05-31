@@ -1,0 +1,14 @@
+{
+  "id": "ni_counting_to_5",
+  "title": "Counting to 5",
+  "number": 1,
+  "source": "Numbers",
+  "type": "lesson",
+  "criteria": [
+    "maths.counting-5",
+    "maths.numeral-recognition",
+    "maths.ten-frame",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

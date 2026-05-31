@@ -1,0 +1,11 @@
+{
+  "id": "ni_ex_equal",
+  "title": "Equal Groups",
+  "source": "Numbers",
+  "type": "exercise",
+  "criteria": [
+    "maths.equivalence",
+    "maths.composition",
+    "psed.self-regulation"
+  ]
+}

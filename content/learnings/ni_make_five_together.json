@@ -1,0 +1,14 @@
+{
+  "id": "ni_make_five_together",
+  "title": "Make Five Together",
+  "number": 2,
+  "source": "Numbers",
+  "type": "lesson",
+  "criteria": [
+    "maths.composition",
+    "maths.counting-5",
+    "maths.equivalence",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

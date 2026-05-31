@@ -1,0 +1,15 @@
+{
+  "id": "ni_quick_look",
+  "title": "Quick Look",
+  "number": 4,
+  "source": "Numbers",
+  "type": "lesson",
+  "criteria": [
+    "maths.subitising",
+    "maths.ten-frame",
+    "maths.counting-5",
+    "maths.numeral-recognition",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

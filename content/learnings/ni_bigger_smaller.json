@@ -1,0 +1,14 @@
+{
+  "id": "ni_bigger_smaller",
+  "title": "Bigger and Smaller",
+  "number": 3,
+  "source": "Numbers",
+  "type": "lesson",
+  "criteria": [
+    "maths.equivalence",
+    "cl.descriptive-vocab",
+    "maths.size-measure",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

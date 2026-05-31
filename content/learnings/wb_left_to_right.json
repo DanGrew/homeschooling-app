@@ -1,0 +1,14 @@
+{
+  "id": "wb_left_to_right",
+  "title": "Left to Right",
+  "number": 4,
+  "source": "Word Builder",
+  "type": "lesson",
+  "criteria": [
+    "literacy.print-concepts",
+    "literacy.phonics",
+    "literacy.word-recognition",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

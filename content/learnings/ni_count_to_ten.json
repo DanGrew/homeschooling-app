@@ -1,0 +1,15 @@
+{
+  "id": "ni_count_to_ten",
+  "title": "Count to Ten",
+  "number": 6,
+  "source": "Numbers",
+  "type": "lesson",
+  "criteria": [
+    "maths.counting-10",
+    "maths.composition",
+    "maths.ten-frame",
+    "cl.topic-vocabulary",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

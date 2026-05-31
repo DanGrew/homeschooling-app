@@ -1,0 +1,16 @@
+{
+  "id": "wb_doctor_words",
+  "title": "At the Doctor",
+  "number": 3,
+  "source": "Word Builder",
+  "type": "lesson",
+  "criteria": [
+    "cl.technical-vocab",
+    "uw.community",
+    "cl.topic-vocabulary",
+    "literacy.phonics",
+    "literacy.word-recognition",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

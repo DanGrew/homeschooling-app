@@ -1,0 +1,15 @@
+{
+  "id": "wb_feeling_words",
+  "title": "Feeling Words",
+  "number": 2,
+  "source": "Word Builder",
+  "type": "lesson",
+  "criteria": [
+    "cl.feeling-vocabulary",
+    "psed.emotion-vocab",
+    "cl.topic-vocabulary",
+    "literacy.phonics",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

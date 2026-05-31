@@ -1,0 +1,15 @@
+{
+  "id": "ni_predict_and_add",
+  "title": "Predict and Add",
+  "number": 5,
+  "source": "Numbers",
+  "type": "lesson",
+  "criteria": [
+    "cl.prediction",
+    "maths.number-order",
+    "uw.cause-effect",
+    "maths.counting-5",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}

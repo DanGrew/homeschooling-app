@@ -1,0 +1,15 @@
+{
+  "id": "wb_animal_spelling",
+  "title": "Animal Spelling",
+  "number": 1,
+  "source": "Word Builder",
+  "type": "lesson",
+  "criteria": [
+    "uw.animals-nature",
+    "cl.topic-vocabulary",
+    "literacy.phonics",
+    "literacy.word-recognition",
+    "pd.fine-motor",
+    "psed.self-regulation"
+  ]
+}
