@@ -8,18 +8,18 @@
     { "id": "mid",   "position": { "x": 2, "y": 7 } }
   ],
   "rows": [
-    { "id": "row0",  "y": 0,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row1",  "y": 1,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row2",  "y": 2,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row3",  "y": 3,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row4",  "y": 4,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row5",  "y": 5,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row6",  "y": 6,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row7",  "y": 7,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row8",  "y": 8,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row9",  "y": 9,  "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row10", "y": 10, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
-    { "id": "row11", "y": 11, "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } }
+    { "id": "row0",  "y": 0,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row1",  "y": 1,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row2",  "y": 2,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row3",  "y": 3,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row4",  "y": 4,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row5",  "y": 5,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row6",  "y": 6,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row7",  "y": 7,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row8",  "y": 8,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row9",  "y": 9,  "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row10", "y": 10, "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } },
+    { "id": "row11", "y": 11, "label": "path", "baseTile": "ground", "wrap": false, "movement": { "direction": "none", "moveEvery": 0 } }
   ],
   "entities": {
     "row0": [

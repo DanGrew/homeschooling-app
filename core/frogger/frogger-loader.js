@@ -1,6 +1,6 @@
 var SCENARIO_REQUIRED = ['id', 'title', 'grid', 'resetPoints', 'rows', 'entities'];
 var GRID_REQUIRED = ['rows', 'cols'];
-var ROW_REQUIRED = ['id', 'y', 'baseTile', 'wrap', 'movement'];
+var ROW_REQUIRED = ['id', 'y', 'baseTile', 'wrap', 'movement', 'label'];
 var MOVEMENT_REQUIRED = ['direction', 'moveEvery'];
 
 function validateFields(obj, fields, context) {

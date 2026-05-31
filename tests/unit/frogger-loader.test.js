@@ -4,7 +4,7 @@ const { parseScenario } = require2('../../core/frogger/frogger-loader.js');
 
 function makeRow(overrides) {
   return Object.assign(
-    { id: 'r', y: 0, baseTile: 'ground', wrap: false, movement: { direction: 'none', moveEvery: 0 } },
+    { id: 'r', y: 0, baseTile: 'ground', wrap: false, movement: { direction: 'none', moveEvery: 0 }, label: 'path' },
     overrides
   );
 }
@@ -81,6 +81,11 @@ describe('parseScenario', () => {
   test('throws if row missing movement', () => {
     var row = makeRow(); delete row.movement;
     expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('row[0] missing required field: movement');
+  });
+
+  test('throws if row missing label', () => {
+    var row = makeRow(); delete row.label;
+    expect(() => parseScenario(makeScenario({ rows: [row] }))).toThrow('row[0] missing required field: label');
   });
 
   test('throws if movement missing direction', () => {
