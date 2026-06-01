@@ -11,13 +11,13 @@
     {
       "id": "shapes",
       "items": [
-        { "prompt": "Can you find the circle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_CIRCLE", "feedback": ["Yes! That's the circle!", "You found it!"] },
-        { "prompt": "Can you find the square? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_SQUARE", "feedback": ["Yes! That's the square!", "You found it!"] },
-        { "prompt": "Can you find the triangle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_TRIANGLE", "feedback": ["Yes! That's the triangle!", "You found it!"] },
-        { "prompt": "Can you find the rectangle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_RECTANGLE", "feedback": ["Yes! That's the rectangle!", "You found it!"] },
-        { "prompt": "Can you find the pentagon? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_PENTAGON", "feedback": ["Yes! That's the pentagon!", "You found it!"] },
-        { "prompt": "Can you find the star? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_STAR", "feedback": ["Yes! That's the star!", "You found it!"] },
-        { "prompt": "Can you find the heart? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_HEART", "feedback": ["Yes! That's the heart!", "You found it!"] }
+        { "prompt": "Can you find the circle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_CIRCLE", "feedback": "Yes! That's the circle!" },
+        { "prompt": "Can you find the square? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_SQUARE", "feedback": "Yes! That's the square!" },
+        { "prompt": "Can you find the triangle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_TRIANGLE", "feedback": "Yes! That's the triangle!" },
+        { "prompt": "Can you find the rectangle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_RECTANGLE", "feedback": "Yes! That's the rectangle!" },
+        { "prompt": "Can you find the pentagon? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_PENTAGON", "feedback": "Yes! That's the pentagon!" },
+        { "prompt": "Can you find the star? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_STAR", "feedback": "Yes! That's the star!" },
+        { "prompt": "Can you find the heart? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_HEART", "feedback": "Yes! That's the heart!" }
       ]
     }
   ],

@@ -9,33 +9,33 @@
   "pageControls": ["CLEAR_CANVAS", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
-      "prompt": ["Listen carefully! Add ONE object — just one!", "Just one — can you add a single object?"],
+      "prompt": "Listen carefully! Add ONE object — just one!",
       "expect": "OBJECT_COUNT_1",
-      "feedback": ["One! Just one object. Count it — one!", "One! That's one."]
+      "feedback": "One! Just one object. Count it — one!"
     },
     {
-      "prompt": ["Add one more — how many will that make? Add another!", "One more object — what number will we get to?"],
+      "prompt": "Add one more — how many will that make? Add another!",
       "expect": "OBJECT_COUNT_2",
-      "feedback": ["TWO! One… two. Count with me — one, two!", "Two! One and one more makes two."]
+      "feedback": "TWO! One… two. Count with me — one, two!"
     },
     {
-      "prompt": ["Add another one!", "One more — can you add it?"],
+      "prompt": "Add another one!",
       "expect": "OBJECT_COUNT_3",
-      "feedback": ["THREE! One, two, three — count them all!", "Three! You're brilliant at counting."]
+      "feedback": "THREE! One, two, three — count them all!"
     },
     {
-      "prompt": ["Two more to make FIVE! Add two more objects.", "Can you get to five? Add two more!"],
+      "prompt": "Two more to make FIVE! Add two more objects.",
       "expect": "OBJECT_COUNT_5",
-      "feedback": ["FIVE! One, two, three, four, five — you counted to five!", "Five! Brilliant counting!"],
+      "feedback": "FIVE! One, two, three, four, five — you counted to five!",
       "maxFailures": 3,
-      "failureFeedback": ["Keep adding — count as you go!", "Nearly there — add one more!"]
+      "failureFeedback": "Keep adding — count as you go!"
     },
     {
-      "prompt": ["Now take some away — can you remove objects until you have THREE left?", "Remove some — stop when you have three!"],
+      "prompt": "Now take some away — can you remove objects until you have THREE left?",
       "expect": "OBJECT_COUNT_3",
-      "feedback": ["Three again! You took some away and knew when to stop — that's brilliant.", "Three! You compared and got the right amount!"],
+      "feedback": "Three again! You took some away and knew when to stop — that's brilliant.",
       "maxFailures": 3,
-      "failureFeedback": ["Count what's left — do you have three yet?", "Keep removing — or add some back!"]
+      "failureFeedback": "Count what's left — do you have three yet?"
     }
   ]
 }

@@ -9,24 +9,24 @@
   "pageControls": ["LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
-      "prompt": ["Can you make your object RED? Use the colour button!", "Find red — like strawberries and fire engines!"],
+      "prompt": "Can you make your object RED? Use the colour button!",
       "expect": "COLOUR_CHANGED_RED",
-      "feedback": ["Red! Like apples and fire engines — well spotted!", "That's red! A warm, bright colour."]
+      "feedback": "Red! Like apples and fire engines — well spotted!"
     },
     {
-      "prompt": ["Now try BLUE — like the sky!", "Can you find blue?"],
+      "prompt": "Now try BLUE — like the sky!",
       "expect": "COLOUR_CHANGED_BLUE",
-      "feedback": ["Blue! Like the sky and the sea.", "Beautiful blue!"]
+      "feedback": "Blue! Like the sky and the sea."
     },
     {
-      "prompt": ["Now YELLOW — yellow like the sun!", "Can you find yellow?"],
+      "prompt": "Now YELLOW — yellow like the sun!",
       "expect": "COLOUR_CHANGED_YELLOW",
-      "feedback": ["Yellow sunshine! Bright and cheerful.", "Yellow — like bananas and the sun!"]
+      "feedback": "Yellow sunshine! Bright and cheerful."
     },
     {
-      "prompt": ["What's your favourite colour? Change it to whatever you like!", "You choose — any colour you want!"],
+      "prompt": "What's your favourite colour? Change it to whatever you like!",
       "expect": "COLOUR_CHANGED",
-      "feedback": ["That's your favourite! Great choice.", "Your choice — well done!"]
+      "feedback": "That's your favourite! Great choice."
     }
   ]
 }

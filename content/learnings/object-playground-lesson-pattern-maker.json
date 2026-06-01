@@ -9,24 +9,24 @@
   "pageControls": ["CLEAR_CANVAS"],
   "steps": [
     {
-      "prompt": ["Let's make a pattern! First, add an object and make it RED.", "Start your pattern — add something and make it red!"],
+      "prompt": "Let's make a pattern! First, add an object and make it RED.",
       "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_RED"],
-      "feedback": ["Red — that's the start of your pattern! Remember: red...", "A red object! First piece of the pattern."]
+      "feedback": "Red — that's the start of your pattern! Remember: red..."
     },
     {
-      "prompt": ["Now add another and make it BLUE. Red… then blue!", "Add a blue one next — red, then blue!"],
+      "prompt": "Now add another and make it BLUE. Red… then blue!",
       "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_BLUE"],
-      "feedback": ["Blue! Red, blue... what do you think comes next?", "Red, blue — can you guess the pattern?"]
+      "feedback": "Blue! Red, blue... what do you think comes next?"
     },
     {
-      "prompt": ["Red again! Add one more and make it red.", "Back to red — add another red one!"],
+      "prompt": "Red again! Add one more and make it red.",
       "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_RED"],
-      "feedback": ["Red again! Red, blue, red… do you see it?", "Red! The pattern is: red, blue, red, blue!"]
+      "feedback": "Red again! Red, blue, red… do you see it?"
     },
     {
-      "prompt": ["One more blue to finish! Add a blue one to complete the pattern.", "Last one — blue to finish your pattern!"],
+      "prompt": "One more blue to finish! Add a blue one to complete the pattern.",
       "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_BLUE"],
-      "feedback": ["Red, blue, red, blue — a repeating pattern! You made it all by yourself!", "A perfect pattern — red, blue, red, blue! Well done!"]
+      "feedback": "Red, blue, red, blue — a repeating pattern! You made it all by yourself!"
     }
   ]
 }

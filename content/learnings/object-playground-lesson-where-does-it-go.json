@@ -9,30 +9,30 @@
   "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_ROTATION"],
   "steps": [
     {
-      "prompt": ["Press the UP arrow to move your object UP!", "Can you send it upwards? Tap UP!"],
+      "prompt": "Press the UP arrow to move your object UP!",
       "expect": "MOVED_UP",
-      "feedback": ["Up it goes! Higher and higher.", "It moved UP — great!"]
+      "feedback": "Up it goes! Higher and higher."
     },
     {
-      "prompt": ["Now press DOWN — send it down!", "Down — can you press the down arrow?"],
+      "prompt": "Now press DOWN — send it down!",
       "expect": "MOVED_DOWN",
-      "feedback": ["Down! It went down.", "Going down — well done!"]
+      "feedback": "Down! It went down."
     },
     {
-      "prompt": ["LEFT now — move it to the left!", "Press the left arrow!"],
+      "prompt": "LEFT now — move it to the left!",
       "expect": "MOVED_LEFT",
-      "feedback": ["To the left! Good.", "Left — you found it!"]
+      "feedback": "To the left! Good."
     },
     {
-      "prompt": ["And RIGHT — move it to the right!", "One more — press right!"],
+      "prompt": "And RIGHT — move it to the right!",
       "expect": "MOVED_RIGHT",
-      "feedback": ["Right! Up, down, left, right — you know all four directions!", "All four directions — brilliant!"]
+      "feedback": "Right! Up, down, left, right — you know all four directions!"
     },
     {
-      "prompt": ["Now drag it with your finger — move it wherever you like!", "Can you drag it to a new spot?"],
+      "prompt": "Now drag it with your finger — move it wherever you like!",
       "expect": "OBJECT_DRAGGED",
       "pageControls": ["UNLOCK_ALL"],
-      "feedback": ["You moved it! You can put things exactly where you want them.", "Perfect placing!"]
+      "feedback": "You moved it! You can put things exactly where you want them."
     }
   ]
 }

@@ -9,23 +9,23 @@
   "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
-      "prompt": ["Let's make something HUGE! Use the size button to make your object as big as it can go.", "Can you make it enormous? Make it as big as possible!"],
+      "prompt": "Let's make something HUGE! Use the size button to make your object as big as it can go.",
       "expect": "SIZE_AT_MAX",
-      "feedback": ["WOW — that's enormous! The biggest it can be!", "Huge! Look how big that is!"],
+      "feedback": "WOW — that's enormous! The biggest it can be!",
       "maxFailures": 3,
-      "failureFeedback": ["Keep going — make it even bigger!", "Try cycling size all the way up!"]
+      "failureFeedback": "Keep going — make it even bigger!"
     },
     {
-      "prompt": ["Now make it TINY — as small as it can go!", "Can you shrink it? Make it as small as possible."],
+      "prompt": "Now make it TINY — as small as it can go!",
       "expect": "SIZE_AT_MIN",
-      "feedback": ["So tiny! Can you barely see it?", "Teeny tiny! It shrank!"],
+      "feedback": "So tiny! Can you barely see it?",
       "maxFailures": 3,
-      "failureFeedback": ["Keep going — make it even smaller!", "All the way down!"]
+      "failureFeedback": "Keep going — make it even smaller!"
     },
     {
-      "prompt": ["Now make it somewhere in the middle — not too big, not too small.", "Can you find a medium size?"],
+      "prompt": "Now make it somewhere in the middle — not too big, not too small.",
       "expect": "SIZE_CHANGED",
-      "feedback": ["Just right! Not too big, not too small.", "Medium! You know big, medium, and small!"]
+      "feedback": "Just right! Not too big, not too small."
     }
   ]
 }

@@ -9,20 +9,20 @@
   "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS"],
   "steps": [
     {
-      "prompt": ["Can you make your object SPIN? Use the rotation button to turn it!", "Try rotating it — round and round!"],
+      "prompt": "Can you make your object SPIN? Use the rotation button to turn it!",
       "expect": "OBJECT_ROTATED",
-      "feedback": ["It's turning! Round and round like a wheel.", "Spinning — well done!"]
+      "feedback": "It's turning! Round and round like a wheel."
     },
     {
-      "prompt": ["Keep turning — can you turn it all the way round?", "A full circle — can you rotate it all the way?"],
+      "prompt": "Keep turning — can you turn it all the way round?",
       "expect": "OBJECT_ROTATED",
-      "feedback": ["Going round and round!", "Right round — like a spinning top!"]
+      "feedback": "Going round and round!"
     },
     {
-      "prompt": ["Now try the other way — can you turn it back?", "Rotate it the other direction!"],
+      "prompt": "Now try the other way — can you turn it back?",
       "expect": "OBJECT_ROTATED",
       "pageControls": ["UNLOCK_ALL"],
-      "feedback": ["The other way! You can spin it both ways.", "Back round — great control!"]
+      "feedback": "The other way! You can spin it both ways."
     }
   ]
 }

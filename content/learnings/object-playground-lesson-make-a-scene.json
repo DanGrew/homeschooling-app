@@ -9,25 +9,25 @@
   "pageControls": ["CLEAR_CANVAS", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
-      "prompt": ["We're going to make a picture! First, add an object — tap the plus button.", "Start building — add your first object!"],
+      "prompt": "We're going to make a picture! First, add an object — tap the plus button.",
       "expect": "OBJECT_ADDED",
-      "feedback": ["One thing in your scene! What will it be?", "Your first piece — what are you making?"]
+      "feedback": "One thing in your scene! What will it be?"
     },
     {
-      "prompt": ["Add another — what else belongs in your picture?", "What will you put in next?"],
+      "prompt": "Add another — what else belongs in your picture?",
       "expect": "OBJECT_ADDED",
-      "feedback": ["Two things now! Your picture is growing.", "Good — keep going!"]
+      "feedback": "Two things now! Your picture is growing."
     },
     {
-      "prompt": ["One more to finish — add a third object.", "Add one more thing to your scene!"],
+      "prompt": "One more to finish — add a third object.",
       "expect": "OBJECT_ADDED",
       "pageControls": ["UNLOCK_ALL"],
-      "feedback": ["Three things! Now drag them where you want.", "A scene with three things — now arrange them!"]
+      "feedback": "Three things! Now drag them where you want."
     },
     {
-      "prompt": ["Drag them around to arrange your scene — put everything just where you want it.", "Move things into the perfect spot!"],
+      "prompt": "Drag them around to arrange your scene — put everything just where you want it.",
       "expect": "OBJECT_DRAGGED",
-      "feedback": ["Beautiful! You made that all by yourself.", "Your own picture — well done!"]
+      "feedback": "Beautiful! You made that all by yourself."
     }
   ]
 }
