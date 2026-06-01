@@ -7,30 +7,23 @@
   "guide": "cat",
   "criteria": ["maths.shape-2d", "cl.listening", "pd.fine-motor"],
   "pageControls": ["SETUP_SHAPE_SELECTION"],
-  "randomPools": {
-    "shape_sequence": ["CIRCLE", "SQUARE", "TRIANGLE", "RECTANGLE", "PENTAGON", "STAR", "HEART"]
-  },
-  "steps": [
+  "randomPools": [
     {
-      "prompt": { "pool": "shape_sequence", "template": "Can you find the {shape}? Tap it!" },
-      "expect": { "type": "TAPPED_OBJECT_SHAPE", "matchesPool": "shape_sequence" },
-      "pageControls": ["NEXT_SHAPE_ROUND"],
-      "feedback": ["Yes! That's a {shape}!", "You found it!"],
-      "maxFailures": 3,
-      "failureFeedback": "Have another look — find the {shape}!"
-    },
-    {
-      "prompt": { "pool": "shape_sequence", "template": "Now find the {shape}!" },
-      "expect": { "type": "TAPPED_OBJECT_SHAPE", "matchesPool": "shape_sequence" },
-      "pageControls": ["NEXT_SHAPE_ROUND"],
-      "feedback": ["That's a {shape} — well spotted!", "Brilliant!"],
-      "maxFailures": 3,
-      "failureFeedback": "Look carefully — which one is the {shape}?"
-    },
-    {
-      "prompt": { "pool": "shape_sequence", "template": "Last one — can you find the {shape}?" },
-      "expect": { "type": "TAPPED_OBJECT_SHAPE", "matchesPool": "shape_sequence" },
-      "feedback": ["Yes! You know your shapes!", "Perfect — you found all three!"]
+      "id": "shapes",
+      "items": [
+        { "prompt": "Can you find the circle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_CIRCLE", "feedback": ["Yes! That's the circle!", "You found it!"] },
+        { "prompt": "Can you find the square? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_SQUARE", "feedback": ["Yes! That's the square!", "You found it!"] },
+        { "prompt": "Can you find the triangle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_TRIANGLE", "feedback": ["Yes! That's the triangle!", "You found it!"] },
+        { "prompt": "Can you find the rectangle? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_RECTANGLE", "feedback": ["Yes! That's the rectangle!", "You found it!"] },
+        { "prompt": "Can you find the pentagon? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_PENTAGON", "feedback": ["Yes! That's the pentagon!", "You found it!"] },
+        { "prompt": "Can you find the star? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_STAR", "feedback": ["Yes! That's the star!", "You found it!"] },
+        { "prompt": "Can you find the heart? Tap it!", "expect": "TAPPED_OBJECT_SHAPE_HEART", "feedback": ["Yes! That's the heart!", "You found it!"] }
+      ]
     }
+  ],
+  "steps": [
+    { "random": "shapes" },
+    { "random": "shapes" },
+    { "random": "shapes" }
   ]
 }

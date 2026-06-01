@@ -342,20 +342,66 @@ function initObjectPlayground() {
     });
   });
 
+  function _placeSelectionObjects(objects) {
+    state = Object.assign({}, state, { objects: objects, stackObjects: [], deletedObject: null });
+    objLocks = { addRemove: true, direction: true, rotation: true, size: true, shape: true, colour: true };
+  }
+
+  function _shuffleObjectPositions() {
+    var objs = state.objects.slice();
+    var positions = objs.map(function(o) { return { x: o.x, y: o.y }; });
+    for (var i = positions.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp;
+    }
+    state = Object.assign({}, state, {
+      objects: objs.map(function(o, i) { return Object.assign({}, o, { x: positions[i].x, y: positions[i].y }); }),
+      stackObjects: []
+    });
+  }
+
+  function _buildColourSelectionObjects() {
+    var vx = state.viewport.x, vy = state.viewport.y;
+    var vw = state.viewport.width, vh = state.viewport.height;
+    var xs = [vx + vw * 0.2, vx + vw * 0.5, vx + vw * 0.8];
+    var ys = [vy + vh * 0.35, vy + vh * 0.7];
+    return OBJ_COLOURS.map(function(colour, i) {
+      return { id: 'sel-' + i, shape: 'circle', colour: colour, size: 'medium',
+               rotation: 0, x: xs[i % 3], y: ys[Math.floor(i / 3)], selected: false, zIndex: i };
+    });
+  }
+
+  function _buildShapeSelectionObjects() {
+    var vx = state.viewport.x, vy = state.viewport.y;
+    var vw = state.viewport.width, vh = state.viewport.height;
+    var xsTop = [vx + vw*0.15, vx + vw*0.38, vx + vw*0.62, vx + vw*0.85];
+    var xsBot = [vx + vw*0.25, vx + vw*0.5,  vx + vw*0.75];
+    var xs = xsTop.concat(xsBot);
+    var ys = [0.35, 0.35, 0.35, 0.35, 0.7, 0.7, 0.7].map(function(f) { return vy + vh * f; });
+    return OBJ_SHAPES.map(function(shape, i) {
+      return { id: 'sel-' + i, shape: shape, colour: 'blue', size: 'medium',
+               rotation: 0, x: xs[i], y: ys[i], selected: false, zIndex: i };
+    });
+  }
+
   window.addEventListener('page:control', function(e) {
     var type = e.detail.type;
     var LOCK_CTRL = {
-      'LOCK_COLOUR_CONTROLS':  function() { objLocks.colour = true; },
-      'LOCK_SIZE_CONTROLS':    function() { objLocks.size = true; },
-      'LOCK_SHAPE_CONTROLS':   function() { objLocks.shape = true; },
-      'LOCK_ADD_REMOVE':       function() { objLocks.addRemove = true; },
-      'LOCK_DIRECTION_BUTTONS':function() { objLocks.direction = true; },
-      'LOCK_ROTATION':         function() { objLocks.rotation = true; },
-      'UNLOCK_ALL':            function() { objLocks = {}; },
-      'PAGE_CONTROL_RESET':    function() { objLocks = {}; },
-      'CLEAR_CANVAS':          function() {
+      'LOCK_COLOUR_CONTROLS':   function() { objLocks.colour = true; },
+      'LOCK_SIZE_CONTROLS':     function() { objLocks.size = true; },
+      'LOCK_SHAPE_CONTROLS':    function() { objLocks.shape = true; },
+      'LOCK_ADD_REMOVE':        function() { objLocks.addRemove = true; },
+      'LOCK_DIRECTION_BUTTONS': function() { objLocks.direction = true; },
+      'LOCK_ROTATION':          function() { objLocks.rotation = true; },
+      'UNLOCK_ALL':             function() { objLocks = {}; },
+      'PAGE_CONTROL_RESET':     function() { objLocks = {}; },
+      'CLEAR_CANVAS':           function() {
         state = Object.assign({}, state, { objects: [], stackObjects: [], deletedObject: null });
-      }
+      },
+      'SETUP_COLOUR_SELECTION': function() { _placeSelectionObjects(_buildColourSelectionObjects()); },
+      'SETUP_SHAPE_SELECTION':  function() { _placeSelectionObjects(_buildShapeSelectionObjects()); },
+      'NEXT_COLOUR_ROUND':      function() { _shuffleObjectPositions(); },
+      'NEXT_SHAPE_ROUND':       function() { _shuffleObjectPositions(); }
     };
     [LOCK_CTRL[type]].filter(Boolean).forEach(function(fn) { fn(); });
     redraw();

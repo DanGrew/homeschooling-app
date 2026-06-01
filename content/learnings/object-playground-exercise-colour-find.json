@@ -7,30 +7,22 @@
   "guide": "cat",
   "criteria": ["ead.colour-recognition", "cl.listening", "pd.fine-motor"],
   "pageControls": ["SETUP_COLOUR_SELECTION"],
-  "randomPools": {
-    "colour_sequence": ["RED", "YELLOW", "BLUE", "ORANGE", "GREEN", "PURPLE"]
-  },
-  "steps": [
+  "randomPools": [
     {
-      "prompt": { "pool": "colour_sequence", "template": "Can you find the {colour} one? Tap it!" },
-      "expect": { "type": "TAPPED_OBJECT_COLOUR", "matchesPool": "colour_sequence" },
-      "pageControls": ["NEXT_COLOUR_ROUND"],
-      "feedback": ["Yes! That's {colour}!", "You found it!"],
-      "maxFailures": 3,
-      "failureFeedback": "Have another look — find the {colour} one!"
-    },
-    {
-      "prompt": { "pool": "colour_sequence", "template": "Now find {colour}!" },
-      "expect": { "type": "TAPPED_OBJECT_COLOUR", "matchesPool": "colour_sequence" },
-      "pageControls": ["NEXT_COLOUR_ROUND"],
-      "feedback": ["That's {colour} — well spotted!", "Brilliant!"],
-      "maxFailures": 3,
-      "failureFeedback": "Look carefully — which one is {colour}?"
-    },
-    {
-      "prompt": { "pool": "colour_sequence", "template": "Last one — can you find {colour}?" },
-      "expect": { "type": "TAPPED_OBJECT_COLOUR", "matchesPool": "colour_sequence" },
-      "feedback": ["Yes! You know your colours!", "Perfect — you found all three!"]
+      "id": "colours",
+      "items": [
+        { "prompt": "Can you find the red one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_RED", "feedback": ["Yes! That's red!", "You found it!"] },
+        { "prompt": "Can you find the yellow one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_YELLOW", "feedback": ["Yes! That's yellow!", "You found it!"] },
+        { "prompt": "Can you find the blue one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_BLUE", "feedback": ["Yes! That's blue!", "You found it!"] },
+        { "prompt": "Can you find the orange one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_ORANGE", "feedback": ["Yes! That's orange!", "You found it!"] },
+        { "prompt": "Can you find the green one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_GREEN", "feedback": ["Yes! That's green!", "You found it!"] },
+        { "prompt": "Can you find the purple one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_PURPLE", "feedback": ["Yes! That's purple!", "You found it!"] }
+      ]
     }
+  ],
+  "steps": [
+    { "random": "colours" },
+    { "random": "colours" },
+    { "random": "colours" }
   ]
 }
