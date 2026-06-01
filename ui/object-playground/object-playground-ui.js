@@ -343,16 +343,11 @@ function initObjectPlayground() {
     objLocks = { addRemove: true, direction: true, rotation: true, size: true, shape: true, colour: true };
   }
 
-  function _swapPositions(positions, i) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp;
-  }
-
   function _shuffleObjectPositions() {
     var objs = state.objects.slice();
     var positions = objs.map(function(o) { return { x: o.x, y: o.y }; });
     positions.slice(1).map(function(_, k) { return positions.length - 1 - k; })
-      .forEach(function(i) { _swapPositions(positions, i); });
+      .forEach(function(i) { var j = Math.floor(Math.random() * (i + 1)); var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp; });
     state = Object.assign({}, state, {
       objects: objs.map(function(o, i) { return Object.assign({}, o, { x: positions[i].x, y: positions[i].y }); }),
       stackObjects: []
