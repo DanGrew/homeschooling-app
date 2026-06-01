@@ -114,19 +114,16 @@ function showEdgeFlash(svgEl, objId) {
 }
 
 function _applyLocks(toolboxEl, addBtn, undoBtn, locks) {
-  if (locks.colour) toolboxEl.querySelectorAll('[data-prop="colour"]').forEach(function(el) { el.style.display = 'none'; });
-  if (locks.size) toolboxEl.querySelectorAll('[data-prop="size"]').forEach(function(el) { el.style.display = 'none'; });
-  if (locks.shape) toolboxEl.querySelectorAll('[data-prop="shape"]').forEach(function(el) { el.style.display = 'none'; });
-  if (locks.rotation) toolboxEl.querySelectorAll('[data-prop="rotation"]').forEach(function(el) { el.style.display = 'none'; });
-  if (locks.direction) {
+  [locks.colour].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="colour"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.size].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="size"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.shape].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="shape"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.rotation].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="rotation"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.direction].filter(Boolean).forEach(function() {
     ['move-left', 'move-right', 'move-up', 'move-down'].forEach(function(action) {
       toolboxEl.querySelectorAll('[data-action="' + action + '"]').forEach(function(el) { el.style.display = 'none'; });
     });
-  }
-  if (locks.addRemove) {
-    addBtn.disabled = true;
-    undoBtn.style.display = 'none';
-  }
+  });
+  [locks.addRemove].filter(Boolean).forEach(function() { addBtn.disabled = true; undoBtn.style.display = 'none'; });
 }
 
 function _fireCountEvents(count) {
@@ -281,17 +278,17 @@ function initObjectPlayground() {
         showRotationIndicator(svgEl, o);
         _fireGuidance('OBJECT_ROTATED');
       });
-      [sel].filter(function(o) { return o && prop === 'size'; }).forEach(function(o) {
+      [sel].filter(Boolean).filter(function() { return prop === 'size'; }).forEach(function(o) {
         showSizeIndicator(svgEl, o);
         _fireGuidance('SIZE_CHANGED');
         [o].filter(function(o) { return o.size === OBJ_SIZES[OBJ_SIZES.length - 1]; }).forEach(function() { _fireGuidance('SIZE_AT_MAX'); });
         [o].filter(function(o) { return o.size === OBJ_SIZES[0]; }).forEach(function() { _fireGuidance('SIZE_AT_MIN'); });
       });
-      [sel].filter(function(o) { return o && prop === 'colour'; }).forEach(function(o) {
+      [sel].filter(Boolean).filter(function() { return prop === 'colour'; }).forEach(function(o) {
         _fireGuidance('COLOUR_CHANGED');
         _fireGuidance('COLOUR_CHANGED_' + o.colour.toUpperCase());
       });
-      [sel].filter(function(o) { return o && prop === 'shape'; }).forEach(function(o) {
+      [sel].filter(Boolean).filter(function() { return prop === 'shape'; }).forEach(function(o) {
         _fireGuidance('SHAPE_CHANGED');
         _fireGuidance('SHAPE_CHANGED_' + o.shape.toUpperCase());
       });
@@ -303,8 +300,7 @@ function initObjectPlayground() {
         _speak(sel.colour + ' ' + sel.shape);
       });
     });
-    [deleteRow].filter(Boolean).forEach(function() {
-      if (objLocks.addRemove) return;
+    [deleteRow].filter(Boolean).filter(function() { return !objLocks.addRemove; }).forEach(function() {
       var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
       [selIds[0]].filter(Boolean).forEach(function(id) {
         state = removeObject(state, id);
@@ -347,13 +343,16 @@ function initObjectPlayground() {
     objLocks = { addRemove: true, direction: true, rotation: true, size: true, shape: true, colour: true };
   }
 
+  function _swapPositions(positions, i) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp;
+  }
+
   function _shuffleObjectPositions() {
     var objs = state.objects.slice();
     var positions = objs.map(function(o) { return { x: o.x, y: o.y }; });
-    for (var i = positions.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp;
-    }
+    positions.slice(1).map(function(_, k) { return positions.length - 1 - k; })
+      .forEach(function(i) { _swapPositions(positions, i); });
     state = Object.assign({}, state, {
       objects: objs.map(function(o, i) { return Object.assign({}, o, { x: positions[i].x, y: positions[i].y }); }),
       stackObjects: []
