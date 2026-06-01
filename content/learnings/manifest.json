@@ -1095,19 +1095,6 @@
     ]
   },
   {
-    "id": "object-playground-exercise-colour-shape-find",
-    "source": "Object Playground",
-    "title": "Find the Colour and Shape",
-    "type": "exercise",
-    "number": 5,
-    "criteria": [
-      "maths.shape-2d",
-      "ead.colour-recognition",
-      "cl.listening",
-      "pd.fine-motor"
-    ]
-  },
-  {
     "id": "object-playground-exercise-colour-sort",
     "source": "Object Playground",
     "title": "Four Different Colours",
