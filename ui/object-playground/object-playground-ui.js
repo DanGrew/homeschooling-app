@@ -180,27 +180,29 @@ function initObjectPlayground() {
     renderToolbox(toolboxEl, state);
     _applyLocks(toolboxEl, addBtn, undoBtn, objLocks);
     renderControls(addBtn, undoBtn, state);
-    if (objLocks.addRemove) { addBtn.disabled = true; undoBtn.style.display = 'none'; }
+    [objLocks.addRemove].filter(Boolean).forEach(function() { addBtn.disabled = true; undoBtn.style.display = 'none'; });
   }
 
   redraw();
 
   addBtn.addEventListener('click', function() {
-    if (objLocks.addRemove) return;
-    var spawnX = state.viewport.x + state.viewport.width / 2;
-    var spawnY = state.viewport.y + state.viewport.height / 2;
-    [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
-      state = addObject(state, spawnX, spawnY);
-      redraw();
-      _fireGuidance('OBJECT_ADDED');
-      _fireCountEvents(state.objects.length);
+    [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
+      var spawnX = state.viewport.x + state.viewport.width / 2;
+      var spawnY = state.viewport.y + state.viewport.height / 2;
+      [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
+        state = addObject(state, spawnX, spawnY);
+        redraw();
+        _fireGuidance('OBJECT_ADDED');
+        _fireCountEvents(state.objects.length);
+      });
     });
   });
 
   undoBtn.addEventListener('click', function() {
-    if (objLocks.addRemove) return;
-    state = restoreDeleted(state);
-    redraw();
+    [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
+      state = restoreDeleted(state);
+      redraw();
+    });
   });
 
   var panGesture = { active: false };
@@ -236,7 +238,7 @@ function initObjectPlayground() {
     toolboxEl.removeAttribute('data-dragging');
     var gesture = panGesture;
     panGesture = { active: false };
-    [gesture].filter(function(g) { return g.moved && g.isSelected; }).forEach(function() {
+    [gesture].filter(function(g) { return g.moved; }).filter(function(g) { return g.isSelected; }).forEach(function() {
       _fireGuidance('OBJECT_DRAGGED');
     });
     getTapFlag(gesture).forEach(function() {
@@ -274,7 +276,7 @@ function initObjectPlayground() {
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
       [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
-      [sel].filter(function(o) { return o && prop === 'rotation'; }).forEach(function(o) {
+      [sel].filter(Boolean).filter(function() { return prop === 'rotation'; }).forEach(function(o) {
         showRotationIndicator(svgEl, o);
         _fireGuidance('OBJECT_ROTATED');
       });
