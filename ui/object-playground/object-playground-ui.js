@@ -62,6 +62,10 @@ function _speak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
 
+function _fireGuidance(type) {
+  window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: type } }));
+}
+
 var OBJ_DIR_ARROW = { left: '\u2190', right: '\u2192', up: '\u2191', down: '\u2193' };
 var OBJ_DIR_OFFSET = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
 
@@ -109,6 +113,28 @@ function showEdgeFlash(svgEl, objId) {
   });
 }
 
+function _applyLocks(toolboxEl, addBtn, undoBtn, locks) {
+  if (locks.colour) toolboxEl.querySelectorAll('[data-prop="colour"]').forEach(function(el) { el.style.display = 'none'; });
+  if (locks.size) toolboxEl.querySelectorAll('[data-prop="size"]').forEach(function(el) { el.style.display = 'none'; });
+  if (locks.shape) toolboxEl.querySelectorAll('[data-prop="shape"]').forEach(function(el) { el.style.display = 'none'; });
+  if (locks.rotation) toolboxEl.querySelectorAll('[data-prop="rotation"]').forEach(function(el) { el.style.display = 'none'; });
+  if (locks.direction) {
+    ['move-left', 'move-right', 'move-up', 'move-down'].forEach(function(action) {
+      toolboxEl.querySelectorAll('[data-action="' + action + '"]').forEach(function(el) { el.style.display = 'none'; });
+    });
+  }
+  if (locks.addRemove) {
+    addBtn.disabled = true;
+    undoBtn.style.display = 'none';
+  }
+}
+
+function _fireCountEvents(count) {
+  [1, 2, 3, 4, 5].filter(function(n) { return n === count; }).forEach(function(n) {
+    _fireGuidance('OBJECT_COUNT_' + n);
+  });
+}
+
 function initObjectPlayground() {
   var wrap = document.getElementById('obj-viewport');
   var svgEl = document.getElementById('obj-world');
@@ -118,6 +144,7 @@ function initObjectPlayground() {
   var w = wrap.clientWidth;
   var h = wrap.clientHeight;
   var state = initObjectState(w, h);
+  var objLocks = {};
 
   svgEl.setAttribute('width', state.world.width);
   svgEl.setAttribute('height', state.world.height);
@@ -154,21 +181,27 @@ function initObjectPlayground() {
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
+    _applyLocks(toolboxEl, addBtn, undoBtn, objLocks);
     renderControls(addBtn, undoBtn, state);
+    if (objLocks.addRemove) { addBtn.disabled = true; undoBtn.style.display = 'none'; }
   }
 
   redraw();
 
   addBtn.addEventListener('click', function() {
+    if (objLocks.addRemove) return;
     var spawnX = state.viewport.x + state.viewport.width / 2;
     var spawnY = state.viewport.y + state.viewport.height / 2;
     [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
       state = addObject(state, spawnX, spawnY);
       redraw();
+      _fireGuidance('OBJECT_ADDED');
+      _fireCountEvents(state.objects.length);
     });
   });
 
   undoBtn.addEventListener('click', function() {
+    if (objLocks.addRemove) return;
     state = restoreDeleted(state);
     redraw();
   });
@@ -206,11 +239,19 @@ function initObjectPlayground() {
     toolboxEl.removeAttribute('data-dragging');
     var gesture = panGesture;
     panGesture = { active: false };
+    [gesture].filter(function(g) { return g.moved && g.isSelected; }).forEach(function() {
+      _fireGuidance('OBJECT_DRAGGED');
+    });
     getTapFlag(gesture).forEach(function() {
       state = handleTap(state, gesture.tapWorldX, gesture.tapWorldY);
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; });
-      sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) { _speak(o.colour + ' ' + o.shape); });
+      sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) {
+        _speak(o.colour + ' ' + o.shape);
+        _fireGuidance('OBJECT_SELECTED');
+        _fireGuidance('TAPPED_OBJECT_COLOUR_' + o.colour.toUpperCase());
+        _fireGuidance('TAPPED_OBJECT_SHAPE_' + o.shape.toUpperCase());
+      });
     });
   });
 
@@ -234,10 +275,25 @@ function initObjectPlayground() {
       var prop = el.getAttribute('data-prop');
       state = applyToolboxClick(state, gesture, prop);
       redraw();
-      [state.objects.filter(function(o) { return o.selected; })[0]].filter(Boolean).forEach(function(sel) {
-        [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
-        [sel].filter(function() { return prop === 'rotation'; }).forEach(function(o) { showRotationIndicator(svgEl, o); });
-        [sel].filter(function() { return prop === 'size'; }).forEach(function(o) { showSizeIndicator(svgEl, o); });
+      var sel = state.objects.filter(function(o) { return o.selected; })[0];
+      [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
+      [sel].filter(function(o) { return o && prop === 'rotation'; }).forEach(function(o) {
+        showRotationIndicator(svgEl, o);
+        _fireGuidance('OBJECT_ROTATED');
+      });
+      [sel].filter(function(o) { return o && prop === 'size'; }).forEach(function(o) {
+        showSizeIndicator(svgEl, o);
+        _fireGuidance('SIZE_CHANGED');
+        [o].filter(function(o) { return o.size === OBJ_SIZES[OBJ_SIZES.length - 1]; }).forEach(function() { _fireGuidance('SIZE_AT_MAX'); });
+        [o].filter(function(o) { return o.size === OBJ_SIZES[0]; }).forEach(function() { _fireGuidance('SIZE_AT_MIN'); });
+      });
+      [sel].filter(function(o) { return o && prop === 'colour'; }).forEach(function(o) {
+        _fireGuidance('COLOUR_CHANGED');
+        _fireGuidance('COLOUR_CHANGED_' + o.colour.toUpperCase());
+      });
+      [sel].filter(function(o) { return o && prop === 'shape'; }).forEach(function(o) {
+        _fireGuidance('SHAPE_CHANGED');
+        _fireGuidance('SHAPE_CHANGED_' + o.shape.toUpperCase());
       });
     });
     [pickRow].filter(Boolean).forEach(function(el) {
@@ -248,16 +304,19 @@ function initObjectPlayground() {
       });
     });
     [deleteRow].filter(Boolean).forEach(function() {
+      if (objLocks.addRemove) return;
       var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
       [selIds[0]].filter(Boolean).forEach(function(id) {
         state = removeObject(state, id);
         redraw();
         _speak('delete');
+        _fireGuidance('OBJECT_REMOVED');
+        _fireCountEvents(state.objects.length);
       });
     });
     var actionRow = e.target.closest('[data-action^="move-"]');
     var flashIds = [];
-    [actionRow].filter(Boolean).forEach(function(el) {
+    [actionRow].filter(Boolean).filter(function() { return !objLocks.direction; }).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
       var animFrom = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];
@@ -270,6 +329,7 @@ function initObjectPlayground() {
           objAnims[o.id] = { fromX: animFrom.x, fromY: animFrom.y, toX: o.x, toY: o.y, startTime: Date.now() };
           _speak('move ' + dir);
           showDirArrow(svgEl, o, dir);
+          _fireGuidance('MOVED_' + dir.toUpperCase());
         });
         [o].filter(function() { return logicalFrom; }).filter(function() { return unchanged.length; }).forEach(function(o) {
           _speak(OBJ_DIR_EDGE[dir]);
@@ -280,5 +340,24 @@ function initObjectPlayground() {
       scheduleAnimLoop();
       flashIds.forEach(function(id) { showEdgeFlash(svgEl, id); });
     });
+  });
+
+  window.addEventListener('page:control', function(e) {
+    var type = e.detail.type;
+    var LOCK_CTRL = {
+      'LOCK_COLOUR_CONTROLS':  function() { objLocks.colour = true; },
+      'LOCK_SIZE_CONTROLS':    function() { objLocks.size = true; },
+      'LOCK_SHAPE_CONTROLS':   function() { objLocks.shape = true; },
+      'LOCK_ADD_REMOVE':       function() { objLocks.addRemove = true; },
+      'LOCK_DIRECTION_BUTTONS':function() { objLocks.direction = true; },
+      'LOCK_ROTATION':         function() { objLocks.rotation = true; },
+      'UNLOCK_ALL':            function() { objLocks = {}; },
+      'PAGE_CONTROL_RESET':    function() { objLocks = {}; },
+      'CLEAR_CANVAS':          function() {
+        state = Object.assign({}, state, { objects: [], stackObjects: [], deletedObject: null });
+      }
+    };
+    [LOCK_CTRL[type]].filter(Boolean).forEach(function(fn) { fn(); });
+    redraw();
   });
 }

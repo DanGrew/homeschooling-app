@@ -1,0 +1,32 @@
+{
+  "id": "object-playground-lesson-pattern-maker",
+  "title": "Pattern Maker",
+  "number": 10,
+  "source": "Object Playground",
+  "type": "lesson",
+  "guide": "cat",
+  "criteria": ["maths.pattern", "cl.sequencing-language", "cl.topic-vocabulary", "pd.fine-motor", "psed.independence"],
+  "pageControls": ["CLEAR_CANVAS"],
+  "steps": [
+    {
+      "prompt": ["Let's make a pattern! First, add an object and make it RED.", "Start your pattern — add something and make it red!"],
+      "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_RED"],
+      "feedback": ["Red — that's the start of your pattern! Remember: red...", "A red object! First piece of the pattern."]
+    },
+    {
+      "prompt": ["Now add another and make it BLUE. Red… then blue!", "Add a blue one next — red, then blue!"],
+      "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_BLUE"],
+      "feedback": ["Blue! Red, blue... what do you think comes next?", "Red, blue — can you guess the pattern?"]
+    },
+    {
+      "prompt": ["Red again! Add one more and make it red.", "Back to red — add another red one!"],
+      "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_RED"],
+      "feedback": ["Red again! Red, blue, red… do you see it?", "Red! The pattern is: red, blue, red, blue!"]
+    },
+    {
+      "prompt": ["One more blue to finish! Add a blue one to complete the pattern.", "Last one — blue to finish your pattern!"],
+      "expect": ["OBJECT_ADDED", "COLOUR_CHANGED_BLUE"],
+      "feedback": ["Red, blue, red, blue — a repeating pattern! You made it all by yourself!", "A perfect pattern — red, blue, red, blue! Well done!"]
+    }
+  ]
+}

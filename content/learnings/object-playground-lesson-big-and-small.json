@@ -1,0 +1,31 @@
+{
+  "id": "object-playground-lesson-big-and-small",
+  "title": "Big and Small",
+  "number": 3,
+  "source": "Object Playground",
+  "type": "lesson",
+  "guide": "cat",
+  "criteria": ["maths.size-measure", "cl.descriptive-vocab", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "steps": [
+    {
+      "prompt": ["Let's make something HUGE! Use the size button to make your object as big as it can go.", "Can you make it enormous? Make it as big as possible!"],
+      "expect": "SIZE_AT_MAX",
+      "feedback": ["WOW — that's enormous! The biggest it can be!", "Huge! Look how big that is!"],
+      "maxFailures": 3,
+      "failureFeedback": ["Keep going — make it even bigger!", "Try cycling size all the way up!"]
+    },
+    {
+      "prompt": ["Now make it TINY — as small as it can go!", "Can you shrink it? Make it as small as possible."],
+      "expect": "SIZE_AT_MIN",
+      "feedback": ["So tiny! Can you barely see it?", "Teeny tiny! It shrank!"],
+      "maxFailures": 3,
+      "failureFeedback": ["Keep going — make it even smaller!", "All the way down!"]
+    },
+    {
+      "prompt": ["Now make it somewhere in the middle — not too big, not too small.", "Can you find a medium size?"],
+      "expect": "SIZE_CHANGED",
+      "feedback": ["Just right! Not too big, not too small.", "Medium! You know big, medium, and small!"]
+    }
+  ]
+}

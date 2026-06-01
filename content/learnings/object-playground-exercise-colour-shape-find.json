@@ -1,0 +1,34 @@
+{
+  "id": "object-playground-exercise-colour-shape-find",
+  "title": "Find the Colour and Shape",
+  "number": 5,
+  "source": "Object Playground",
+  "type": "exercise",
+  "guide": "cat",
+  "criteria": ["maths.shape-2d", "ead.colour-recognition", "cl.listening", "pd.fine-motor"],
+  "randomPools": {
+    "combo_objects": { "from": "ALL_COLOUR_SHAPE_COMBOS", "draw": 4 },
+    "combo_rounds": { "from": "combo_objects", "draw": 3 }
+  },
+  "steps": [
+    {
+      "prompt": { "pool": "combo_rounds", "template": "Can you find the {colour} {shape}? Tap it!" },
+      "expect": { "type": "TAPPED_OBJECT", "matchesPool": "combo_rounds" },
+      "feedback": ["Yes! The {colour} {shape}!", "You found it!"],
+      "maxFailures": 3,
+      "failureFeedback": "Have another look — find the {colour} {shape}!"
+    },
+    {
+      "prompt": { "pool": "combo_rounds", "template": "Now find the {colour} {shape}!" },
+      "expect": { "type": "TAPPED_OBJECT", "matchesPool": "combo_rounds" },
+      "feedback": ["That's the {colour} {shape}!", "Brilliant!"],
+      "maxFailures": 3,
+      "failureFeedback": "Look carefully — which one is the {colour} {shape}?"
+    },
+    {
+      "prompt": { "pool": "combo_rounds", "template": "Last one — find the {colour} {shape}!" },
+      "expect": { "type": "TAPPED_OBJECT", "matchesPool": "combo_rounds" },
+      "feedback": ["Yes! You know your colours and shapes!", "Perfect — all three!"]
+    }
+  ]
+}

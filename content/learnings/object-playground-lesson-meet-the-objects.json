@@ -1,0 +1,28 @@
+{
+  "id": "object-playground-lesson-meet-the-objects",
+  "title": "Meet the Objects",
+  "number": 1,
+  "source": "Object Playground",
+  "type": "lesson",
+  "guide": "cat",
+  "criteria": ["cl.topic-vocabulary", "uw.technology", "pd.fine-motor"],
+  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "steps": [
+    {
+      "prompt": ["Let's explore! Tap on an object to pick it up.", "Can you tap on something? Give it a try!"],
+      "expect": "OBJECT_SELECTED",
+      "feedback": ["You picked one! Did you hear its name?", "There it is! The playground tells you what it is."]
+    },
+    {
+      "prompt": ["Now tap a different object — what else is there?", "Can you find something different to tap?"],
+      "expect": "OBJECT_SELECTED",
+      "feedback": ["Another one! You're finding all kinds of things.", "Great exploring!"]
+    },
+    {
+      "prompt": ["One more — which will you choose?", "Tap one more object!"],
+      "expect": "OBJECT_SELECTED",
+      "pageControls": ["UNLOCK_ALL"],
+      "feedback": ["You know lots of objects! Well done.", "Brilliant exploring!"]
+    }
+  ]
+}

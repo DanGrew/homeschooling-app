@@ -1,0 +1,38 @@
+{
+  "id": "object-playground-lesson-where-does-it-go",
+  "title": "Where Does It Go?",
+  "number": 5,
+  "source": "Object Playground",
+  "type": "lesson",
+  "guide": "cat",
+  "criteria": ["maths.spatial", "cl.technical-vocab", "pd.fine-motor", "cl.topic-vocabulary"],
+  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_ROTATION"],
+  "steps": [
+    {
+      "prompt": ["Press the UP arrow to move your object UP!", "Can you send it upwards? Tap UP!"],
+      "expect": "MOVED_UP",
+      "feedback": ["Up it goes! Higher and higher.", "It moved UP — great!"]
+    },
+    {
+      "prompt": ["Now press DOWN — send it down!", "Down — can you press the down arrow?"],
+      "expect": "MOVED_DOWN",
+      "feedback": ["Down! It went down.", "Going down — well done!"]
+    },
+    {
+      "prompt": ["LEFT now — move it to the left!", "Press the left arrow!"],
+      "expect": "MOVED_LEFT",
+      "feedback": ["To the left! Good.", "Left — you found it!"]
+    },
+    {
+      "prompt": ["And RIGHT — move it to the right!", "One more — press right!"],
+      "expect": "MOVED_RIGHT",
+      "feedback": ["Right! Up, down, left, right — you know all four directions!", "All four directions — brilliant!"]
+    },
+    {
+      "prompt": ["Now drag it with your finger — move it wherever you like!", "Can you drag it to a new spot?"],
+      "expect": "OBJECT_DRAGGED",
+      "pageControls": ["UNLOCK_ALL"],
+      "feedback": ["You moved it! You can put things exactly where you want them.", "Perfect placing!"]
+    }
+  ]
+}

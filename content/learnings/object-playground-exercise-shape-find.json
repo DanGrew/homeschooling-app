@@ -1,0 +1,36 @@
+{
+  "id": "object-playground-exercise-shape-find",
+  "title": "Find the Shape",
+  "number": 4,
+  "source": "Object Playground",
+  "type": "exercise",
+  "guide": "cat",
+  "criteria": ["maths.shape-2d", "cl.listening", "pd.fine-motor"],
+  "pageControls": ["SETUP_SHAPE_SELECTION"],
+  "randomPools": {
+    "shape_sequence": ["CIRCLE", "SQUARE", "TRIANGLE", "RECTANGLE", "PENTAGON", "STAR", "HEART"]
+  },
+  "steps": [
+    {
+      "prompt": { "pool": "shape_sequence", "template": "Can you find the {shape}? Tap it!" },
+      "expect": { "type": "TAPPED_OBJECT_SHAPE", "matchesPool": "shape_sequence" },
+      "pageControls": ["NEXT_SHAPE_ROUND"],
+      "feedback": ["Yes! That's a {shape}!", "You found it!"],
+      "maxFailures": 3,
+      "failureFeedback": "Have another look — find the {shape}!"
+    },
+    {
+      "prompt": { "pool": "shape_sequence", "template": "Now find the {shape}!" },
+      "expect": { "type": "TAPPED_OBJECT_SHAPE", "matchesPool": "shape_sequence" },
+      "pageControls": ["NEXT_SHAPE_ROUND"],
+      "feedback": ["That's a {shape} — well spotted!", "Brilliant!"],
+      "maxFailures": 3,
+      "failureFeedback": "Look carefully — which one is the {shape}?"
+    },
+    {
+      "prompt": { "pool": "shape_sequence", "template": "Last one — can you find the {shape}?" },
+      "expect": { "type": "TAPPED_OBJECT_SHAPE", "matchesPool": "shape_sequence" },
+      "feedback": ["Yes! You know your shapes!", "Perfect — you found all three!"]
+    }
+  ]
+}

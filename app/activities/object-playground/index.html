@@ -41,16 +41,41 @@
     <button id="obj-undo-btn" data-testid="obj-undo-btn" style="display:none">&#8617;</button>
   </div>
 </div>
+<script>
+window.ACTIVITY_ID='object-playground';
+window.LEARNINGS_BASE='../../../content/learnings/';
+window.DICT_BASE='../../../content/dictionary/entries/';
+window.LESSONS=[
+  {id:'object-playground-lesson-meet-the-objects',number:1,title:'Meet the Objects'},
+  {id:'object-playground-lesson-colour-explorer',number:2,title:'Colour Explorer'},
+  {id:'object-playground-lesson-big-and-small',number:3,title:'Big and Small'},
+  {id:'object-playground-lesson-shape-changer',number:4,title:'Shape Changer'},
+  {id:'object-playground-lesson-where-does-it-go',number:5,title:'Where Does It Go?'},
+  {id:'object-playground-lesson-spin-it-round',number:6,title:'Spin It Round'},
+  {id:'object-playground-lesson-make-a-scene',number:7,title:'Make a Scene'},
+  {id:'object-playground-lesson-warm-and-cool',number:8,title:'Warm and Cool Colours'},
+  {id:'object-playground-lesson-count-and-compare',number:9,title:'Count and Compare'},
+  {id:'object-playground-lesson-pattern-maker',number:10,title:'Pattern Maker'}
+];
+window.EXERCISES=[
+  {id:'object-playground-exercise-colour-sort',number:1,title:'Four Different Colours'},
+  {id:'object-playground-exercise-build-and-count',number:2,title:'Five, then Three'},
+  {id:'object-playground-exercise-colour-find',number:3,title:'Find the Colour'},
+  {id:'object-playground-exercise-shape-find',number:4,title:'Find the Shape'},
+  {id:'object-playground-exercise-colour-shape-find',number:5,title:'Find the Colour and Shape'}
+];
+</script>
 <script src="../../../core/object-playground/object-playground-core.js"></script>
 <script src="../../../ui/object-playground/object-playground-ui.js"></script>
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
+import { GuidanceService } from '../../../components/guidance/guidance-service.js';
+window.guidanceService = new GuidanceService();
 makeSpeakable(document.getElementById('obj-add-btn'), 'Add object');
 makeSpeakable(document.getElementById('obj-undo-btn'), 'Undo delete');
 </script>
 <script>window.addEventListener('load', initObjectPlayground);</script>
-<script>window.ACTIVITY_ID='object-playground';</script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
 </html>
