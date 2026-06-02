@@ -1,0 +1,21 @@
+{
+  "id": "object-playground-exercise-build-and-count",
+  "title": "Five, then Three",
+  "number": 2,
+  "source": "Object Playground",
+  "type": "exercise",
+  "guide": "cat",
+  "criteria": ["maths.counting-5", "maths.equivalence", "psed.self-regulation"],
+  "pageControls": ["CLEAR_CANVAS"],
+  "steps": [
+    {
+      "prompt": "Add five objects — count as you go!",
+      "expect": "OBJECT_COUNT_5"
+    },
+    {
+      "prompt": "Now take two away. How many will be left?",
+      "expect": "OBJECT_COUNT_3",
+      "feedback": "Three! Five take away two leaves three. You worked it out!"
+    }
+  ]
+}

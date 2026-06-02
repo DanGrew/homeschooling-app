@@ -1,0 +1,26 @@
+{
+  "id": "object-playground-exercise-colour-sort",
+  "title": "Four Different Colours",
+  "number": 1,
+  "source": "Object Playground",
+  "type": "exercise",
+  "guide": "cat",
+  "criteria": ["ead.colour-recognition", "psed.independence", "pd.fine-motor"],
+  "pageControls": ["CLEAR_CANVAS"],
+  "steps": [
+    {
+      "prompt": "Can you add four objects and give each one a different colour?",
+      "expect": "OBJECT_COUNT_4"
+    },
+    {
+      "expect": "COLOUR_CHANGED"
+    },
+    {
+      "expect": "COLOUR_CHANGED"
+    },
+    {
+      "expect": "COLOUR_CHANGED",
+      "feedback": "Four objects, four colours — brilliant!"
+    }
+  ]
+}

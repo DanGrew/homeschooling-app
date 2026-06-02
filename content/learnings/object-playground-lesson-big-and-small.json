@@ -1,0 +1,31 @@
+{
+  "id": "object-playground-lesson-big-and-small",
+  "title": "Big and Small",
+  "number": 3,
+  "source": "Object Playground",
+  "type": "lesson",
+  "guide": "cat",
+  "criteria": ["maths.size-measure", "cl.descriptive-vocab", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "steps": [
+    {
+      "prompt": "Let's make something HUGE! Use the size button to make your object as big as it can go.",
+      "expect": "SIZE_AT_MAX",
+      "feedback": "WOW — that's enormous! The biggest it can be!",
+      "maxFailures": 3,
+      "failureFeedback": "Keep going — make it even bigger!"
+    },
+    {
+      "prompt": "Now make it TINY — as small as it can go!",
+      "expect": "SIZE_AT_MIN",
+      "feedback": "So tiny! Can you barely see it?",
+      "maxFailures": 3,
+      "failureFeedback": "Keep going — make it even smaller!"
+    },
+    {
+      "prompt": "Now make it somewhere in the middle — not too big, not too small.",
+      "expect": "SIZE_CHANGED",
+      "feedback": "Just right! Not too big, not too small."
+    }
+  ]
+}

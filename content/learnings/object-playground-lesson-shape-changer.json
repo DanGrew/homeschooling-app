@@ -1,0 +1,32 @@
+{
+  "id": "object-playground-lesson-shape-changer",
+  "title": "Shape Changer",
+  "number": 4,
+  "source": "Object Playground",
+  "type": "lesson",
+  "guide": "cat",
+  "criteria": ["maths.shape-2d", "cl.technical-vocab", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
+  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "steps": [
+    {
+      "prompt": "Let's explore shapes! Can you make your object a CIRCLE? Circles are perfectly round.",
+      "expect": "SHAPE_CHANGED_CIRCLE",
+      "feedback": "A circle — perfectly round, no corners anywhere!"
+    },
+    {
+      "prompt": "Now try a SQUARE — four equal sides, four corners.",
+      "expect": "SHAPE_CHANGED_SQUARE",
+      "feedback": "A square! Four sides, all the same length. Count the corners — one, two, three, four!"
+    },
+    {
+      "prompt": "Now a TRIANGLE — three sides and three corners.",
+      "expect": "SHAPE_CHANGED_TRIANGLE",
+      "feedback": "A triangle! Three sides and three corners. One, two, three!"
+    },
+    {
+      "prompt": "Now pick YOUR favourite shape — circle, square, or triangle!",
+      "expect": "SHAPE_CHANGED",
+      "feedback": "Good choosing! You know your shapes."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "object-playground-exercise-colour-find",
+  "title": "Find the Colour",
+  "number": 3,
+  "source": "Object Playground",
+  "type": "exercise",
+  "guide": "cat",
+  "criteria": ["ead.colour-recognition", "cl.listening", "pd.fine-motor"],
+  "pageControls": ["SETUP_COLOUR_SELECTION"],
+  "randomPools": [
+    {
+      "id": "colours",
+      "items": [
+        { "prompt": "Can you find the red one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_RED", "feedback": "Yes! That's red!" },
+        { "prompt": "Can you find the yellow one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_YELLOW", "feedback": "Yes! That's yellow!" },
+        { "prompt": "Can you find the blue one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_BLUE", "feedback": "Yes! That's blue!" },
+        { "prompt": "Can you find the orange one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_ORANGE", "feedback": "Yes! That's orange!" },
+        { "prompt": "Can you find the green one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_GREEN", "feedback": "Yes! That's green!" },
+        { "prompt": "Can you find the purple one? Tap it!", "expect": "TAPPED_OBJECT_COLOUR_PURPLE", "feedback": "Yes! That's purple!" }
+      ]
+    }
+  ],
+  "steps": [
+    { "random": "colours" },
+    { "random": "colours" },
+    { "random": "colours" }
+  ]
+}

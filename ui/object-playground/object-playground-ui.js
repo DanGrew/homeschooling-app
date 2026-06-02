@@ -62,6 +62,10 @@ function _speak(text) {
   [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
 
+function _fireGuidance(type) {
+  window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: type } }));
+}
+
 var OBJ_DIR_ARROW = { left: '\u2190', right: '\u2192', up: '\u2191', down: '\u2193' };
 var OBJ_DIR_OFFSET = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
 
@@ -109,6 +113,25 @@ function showEdgeFlash(svgEl, objId) {
   });
 }
 
+function _applyLocks(toolboxEl, addBtn, undoBtn, locks) {
+  [locks.colour].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="colour"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.size].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="size"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.shape].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="shape"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.rotation].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="rotation"]').forEach(function(el) { el.style.display = 'none'; }); });
+  [locks.direction].filter(Boolean).forEach(function() {
+    ['move-left', 'move-right', 'move-up', 'move-down'].forEach(function(action) {
+      toolboxEl.querySelectorAll('[data-action="' + action + '"]').forEach(function(el) { el.style.display = 'none'; });
+    });
+  });
+  [locks.addRemove].filter(Boolean).forEach(function() { addBtn.disabled = true; undoBtn.style.display = 'none'; });
+}
+
+function _fireCountEvents(count) {
+  [1, 2, 3, 4, 5].filter(function(n) { return n === count; }).forEach(function(n) {
+    _fireGuidance('OBJECT_COUNT_' + n);
+  });
+}
+
 function initObjectPlayground() {
   var wrap = document.getElementById('obj-viewport');
   var svgEl = document.getElementById('obj-world');
@@ -118,6 +141,7 @@ function initObjectPlayground() {
   var w = wrap.clientWidth;
   var h = wrap.clientHeight;
   var state = initObjectState(w, h);
+  var objLocks = {};
 
   svgEl.setAttribute('width', state.world.width);
   svgEl.setAttribute('height', state.world.height);
@@ -154,23 +178,31 @@ function initObjectPlayground() {
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
+    _applyLocks(toolboxEl, addBtn, undoBtn, objLocks);
     renderControls(addBtn, undoBtn, state);
+    [objLocks.addRemove].filter(Boolean).forEach(function() { addBtn.disabled = true; undoBtn.style.display = 'none'; });
   }
 
   redraw();
 
   addBtn.addEventListener('click', function() {
-    var spawnX = state.viewport.x + state.viewport.width / 2;
-    var spawnY = state.viewport.y + state.viewport.height / 2;
-    [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
-      state = addObject(state, spawnX, spawnY);
-      redraw();
+    [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
+      var spawnX = state.viewport.x + state.viewport.width / 2;
+      var spawnY = state.viewport.y + state.viewport.height / 2;
+      [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
+        state = addObject(state, spawnX, spawnY);
+        redraw();
+        _fireGuidance('OBJECT_ADDED');
+        _fireCountEvents(state.objects.length);
+      });
     });
   });
 
   undoBtn.addEventListener('click', function() {
-    state = restoreDeleted(state);
-    redraw();
+    [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
+      state = restoreDeleted(state);
+      redraw();
+    });
   });
 
   var panGesture = { active: false };
@@ -206,11 +238,19 @@ function initObjectPlayground() {
     toolboxEl.removeAttribute('data-dragging');
     var gesture = panGesture;
     panGesture = { active: false };
+    [gesture].filter(function(g) { return g.moved; }).filter(function(g) { return g.isSelected; }).forEach(function() {
+      _fireGuidance('OBJECT_DRAGGED');
+    });
     getTapFlag(gesture).forEach(function() {
       state = handleTap(state, gesture.tapWorldX, gesture.tapWorldY);
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; });
-      sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) { _speak(o.colour + ' ' + o.shape); });
+      sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) {
+        _speak(o.colour + ' ' + o.shape);
+        _fireGuidance('OBJECT_SELECTED');
+        _fireGuidance('TAPPED_OBJECT_COLOUR_' + o.colour.toUpperCase());
+        _fireGuidance('TAPPED_OBJECT_SHAPE_' + o.shape.toUpperCase());
+      });
     });
   });
 
@@ -234,10 +274,25 @@ function initObjectPlayground() {
       var prop = el.getAttribute('data-prop');
       state = applyToolboxClick(state, gesture, prop);
       redraw();
-      [state.objects.filter(function(o) { return o.selected; })[0]].filter(Boolean).forEach(function(sel) {
-        [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
-        [sel].filter(function() { return prop === 'rotation'; }).forEach(function(o) { showRotationIndicator(svgEl, o); });
-        [sel].filter(function() { return prop === 'size'; }).forEach(function(o) { showSizeIndicator(svgEl, o); });
+      var sel = state.objects.filter(function(o) { return o.selected; })[0];
+      [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
+      [sel].filter(Boolean).filter(function() { return prop === 'rotation'; }).forEach(function(o) {
+        showRotationIndicator(svgEl, o);
+        _fireGuidance('OBJECT_ROTATED');
+      });
+      [sel].filter(Boolean).filter(function() { return prop === 'size'; }).forEach(function(o) {
+        showSizeIndicator(svgEl, o);
+        _fireGuidance('SIZE_CHANGED');
+        [o].filter(function(o) { return o.size === OBJ_SIZES[OBJ_SIZES.length - 1]; }).forEach(function() { _fireGuidance('SIZE_AT_MAX'); });
+        [o].filter(function(o) { return o.size === OBJ_SIZES[0]; }).forEach(function() { _fireGuidance('SIZE_AT_MIN'); });
+      });
+      [sel].filter(Boolean).filter(function() { return prop === 'colour'; }).forEach(function(o) {
+        _fireGuidance('COLOUR_CHANGED');
+        _fireGuidance('COLOUR_CHANGED_' + o.colour.toUpperCase());
+      });
+      [sel].filter(Boolean).filter(function() { return prop === 'shape'; }).forEach(function(o) {
+        _fireGuidance('SHAPE_CHANGED');
+        _fireGuidance('SHAPE_CHANGED_' + o.shape.toUpperCase());
       });
     });
     [pickRow].filter(Boolean).forEach(function(el) {
@@ -247,17 +302,19 @@ function initObjectPlayground() {
         _speak(sel.colour + ' ' + sel.shape);
       });
     });
-    [deleteRow].filter(Boolean).forEach(function() {
+    [deleteRow].filter(Boolean).filter(function() { return !objLocks.addRemove; }).forEach(function() {
       var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
       [selIds[0]].filter(Boolean).forEach(function(id) {
         state = removeObject(state, id);
         redraw();
         _speak('delete');
+        _fireGuidance('OBJECT_REMOVED');
+        _fireCountEvents(state.objects.length);
       });
     });
     var actionRow = e.target.closest('[data-action^="move-"]');
     var flashIds = [];
-    [actionRow].filter(Boolean).forEach(function(el) {
+    [actionRow].filter(Boolean).filter(function() { return !objLocks.direction; }).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
       var animFrom = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];
@@ -270,6 +327,7 @@ function initObjectPlayground() {
           objAnims[o.id] = { fromX: animFrom.x, fromY: animFrom.y, toX: o.x, toY: o.y, startTime: Date.now() };
           _speak('move ' + dir);
           showDirArrow(svgEl, o, dir);
+          _fireGuidance('MOVED_' + dir.toUpperCase());
         });
         [o].filter(function() { return logicalFrom; }).filter(function() { return unchanged.length; }).forEach(function(o) {
           _speak(OBJ_DIR_EDGE[dir]);
@@ -280,5 +338,68 @@ function initObjectPlayground() {
       scheduleAnimLoop();
       flashIds.forEach(function(id) { showEdgeFlash(svgEl, id); });
     });
+  });
+
+  function _placeSelectionObjects(objects) {
+    state = Object.assign({}, state, { objects: objects, stackObjects: [], deletedObject: null });
+    objLocks = { addRemove: true, direction: true, rotation: true, size: true, shape: true, colour: true };
+  }
+
+  function _shuffleObjectPositions() {
+    var objs = state.objects.slice();
+    var positions = objs.map(function(o) { return { x: o.x, y: o.y }; });
+    positions.slice(1).map(function(_, k) { return positions.length - 1 - k; })
+      .forEach(function(i) { var j = Math.floor(Math.random() * (i + 1)); var tmp = positions[i]; positions[i] = positions[j]; positions[j] = tmp; });
+    state = Object.assign({}, state, {
+      objects: objs.map(function(o, i) { return Object.assign({}, o, { x: positions[i].x, y: positions[i].y }); }),
+      stackObjects: []
+    });
+  }
+
+  function _buildColourSelectionObjects() {
+    var vx = state.viewport.x, vy = state.viewport.y;
+    var vw = state.viewport.width, vh = state.viewport.height;
+    var xs = [vx + vw * 0.2, vx + vw * 0.5, vx + vw * 0.8];
+    var ys = [vy + vh * 0.35, vy + vh * 0.7];
+    return OBJ_COLOURS.map(function(colour, i) {
+      return { id: 'sel-' + i, shape: 'circle', colour: colour, size: 'medium',
+               rotation: 0, x: xs[i % 3], y: ys[Math.floor(i / 3)], selected: false, zIndex: i };
+    });
+  }
+
+  function _buildShapeSelectionObjects() {
+    var vx = state.viewport.x, vy = state.viewport.y;
+    var vw = state.viewport.width, vh = state.viewport.height;
+    var xsTop = [vx + vw*0.15, vx + vw*0.38, vx + vw*0.62, vx + vw*0.85];
+    var xsBot = [vx + vw*0.25, vx + vw*0.5,  vx + vw*0.75];
+    var xs = xsTop.concat(xsBot);
+    var ys = [0.35, 0.35, 0.35, 0.35, 0.7, 0.7, 0.7].map(function(f) { return vy + vh * f; });
+    return OBJ_SHAPES.map(function(shape, i) {
+      return { id: 'sel-' + i, shape: shape, colour: 'blue', size: 'medium',
+               rotation: 0, x: xs[i], y: ys[i], selected: false, zIndex: i };
+    });
+  }
+
+  window.addEventListener('page:control', function(e) {
+    var type = e.detail.type;
+    var LOCK_CTRL = {
+      'LOCK_COLOUR_CONTROLS':   function() { objLocks.colour = true; },
+      'LOCK_SIZE_CONTROLS':     function() { objLocks.size = true; },
+      'LOCK_SHAPE_CONTROLS':    function() { objLocks.shape = true; },
+      'LOCK_ADD_REMOVE':        function() { objLocks.addRemove = true; },
+      'LOCK_DIRECTION_BUTTONS': function() { objLocks.direction = true; },
+      'LOCK_ROTATION':          function() { objLocks.rotation = true; },
+      'UNLOCK_ALL':             function() { objLocks = {}; },
+      'PAGE_CONTROL_RESET':     function() { objLocks = {}; },
+      'CLEAR_CANVAS':           function() {
+        state = Object.assign({}, state, { objects: [], stackObjects: [], deletedObject: null });
+      },
+      'SETUP_COLOUR_SELECTION': function() { _placeSelectionObjects(_buildColourSelectionObjects()); },
+      'SETUP_SHAPE_SELECTION':  function() { _placeSelectionObjects(_buildShapeSelectionObjects()); },
+      'NEXT_COLOUR_ROUND':      function() { _shuffleObjectPositions(); },
+      'NEXT_SHAPE_ROUND':       function() { _shuffleObjectPositions(); }
+    };
+    [LOCK_CTRL[type]].filter(Boolean).forEach(function(fn) { fn(); });
+    redraw();
   });
 }
