@@ -6,7 +6,7 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["ead.colour-recognition", "cl.descriptive-vocab", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
-  "pageControls": ["LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_CIRCLE", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
       "prompt": "Can you make your object RED? Use the colour button!",

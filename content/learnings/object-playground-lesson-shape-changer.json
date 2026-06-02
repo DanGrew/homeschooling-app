@@ -6,7 +6,7 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["maths.shape-2d", "cl.technical-vocab", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
-  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_SQUARE", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
       "prompt": "Let's explore shapes! Can you make your object a CIRCLE? Circles are perfectly round.",

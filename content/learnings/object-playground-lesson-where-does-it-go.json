@@ -6,7 +6,7 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["maths.spatial", "cl.technical-vocab", "pd.fine-motor", "cl.topic-vocabulary"],
-  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_ROTATION"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_CIRCLE", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_ROTATION"],
   "steps": [
     {
       "prompt": "Press the UP arrow to move your object UP!",

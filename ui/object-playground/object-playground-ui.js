@@ -142,6 +142,7 @@ function initObjectPlayground() {
   var h = wrap.clientHeight;
   var state = initObjectState(w, h);
   var objLocks = {};
+  var lastSelectedId = null;
 
   svgEl.setAttribute('width', state.world.width);
   svgEl.setAttribute('height', state.world.height);
@@ -248,6 +249,8 @@ function initObjectPlayground() {
       sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) {
         _speak(o.colour + ' ' + o.shape);
         _fireGuidance('OBJECT_SELECTED');
+        [o].filter(function(o) { return o.id !== lastSelectedId; }).forEach(function() { _fireGuidance('DIFFERENT_OBJECT_SELECTED'); });
+        lastSelectedId = o.id;
         _fireGuidance('TAPPED_OBJECT_COLOUR_' + o.colour.toUpperCase());
         _fireGuidance('TAPPED_OBJECT_SHAPE_' + o.shape.toUpperCase());
       });
@@ -301,6 +304,7 @@ function initObjectPlayground() {
       [state.objects.filter(function(o) { return o.selected; })[0]].filter(Boolean).forEach(function(sel) {
         _speak(sel.colour + ' ' + sel.shape);
       });
+      _fireGuidance('STACK_PICKED');
     });
     [deleteRow].filter(Boolean).filter(function() { return !objLocks.addRemove; }).forEach(function() {
       var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
@@ -397,7 +401,30 @@ function initObjectPlayground() {
       'SETUP_COLOUR_SELECTION': function() { _placeSelectionObjects(_buildColourSelectionObjects()); },
       'SETUP_SHAPE_SELECTION':  function() { _placeSelectionObjects(_buildShapeSelectionObjects()); },
       'NEXT_COLOUR_ROUND':      function() { _shuffleObjectPositions(); },
-      'NEXT_SHAPE_ROUND':       function() { _shuffleObjectPositions(); }
+      'NEXT_SHAPE_ROUND':       function() { _shuffleObjectPositions(); },
+      'SPAWN_CIRCLE': function() {
+        var cx = state.viewport.x + state.viewport.width / 2;
+        var cy = state.viewport.y + state.viewport.height / 2;
+        state = addObject(state, cx, cy);
+        var objs = state.objects;
+        var newest = objs[objs.length - 1];
+        var updated = Object.assign({}, newest, { shape: 'circle', colour: 'purple', size: 'medium', rotation: 0, selected: true });
+        state = Object.assign({}, state, { objects: objs.slice(0, -1).concat([updated]), stackObjects: [newest.id] });
+      },
+      'SPAWN_SQUARE': function() {
+        var cx = state.viewport.x + state.viewport.width / 2;
+        var cy = state.viewport.y + state.viewport.height / 2;
+        state = addObject(state, cx, cy);
+        var objs = state.objects;
+        var newest = objs[objs.length - 1];
+        var updated = Object.assign({}, newest, { shape: 'square', colour: 'red', size: 'medium', rotation: 0, selected: true });
+        state = Object.assign({}, state, { objects: objs.slice(0, -1).concat([updated]), stackObjects: [newest.id] });
+      },
+      'SPAWN_OBJECTS_5': function() {
+        [[0.2, 0.35], [0.5, 0.35], [0.8, 0.35], [0.35, 0.65], [0.65, 0.65]].forEach(function(p) {
+          state = addObject(state, state.viewport.x + state.viewport.width * p[0], state.viewport.y + state.viewport.height * p[1]);
+        });
+      }
     };
     [LOCK_CTRL[type]].filter(Boolean).forEach(function(fn) { fn(); });
     redraw();

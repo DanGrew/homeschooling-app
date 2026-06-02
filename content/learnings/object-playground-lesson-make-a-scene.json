@@ -11,18 +11,23 @@
     {
       "prompt": "We're going to make a picture! First, add an object — tap the plus button.",
       "expect": "OBJECT_ADDED",
-      "feedback": "One thing in your scene! What will it be?"
+      "feedback": "One thing in your scene!"
     },
     {
       "prompt": "Add another — what else belongs in your picture?",
       "expect": "OBJECT_ADDED",
-      "feedback": "Two things now! Your picture is growing."
+      "feedback": "Two things! Your picture is growing."
     },
     {
       "prompt": "One more to finish — add a third object.",
       "expect": "OBJECT_ADDED",
       "pageControls": ["UNLOCK_ALL"],
-      "feedback": "Three things! Now drag them where you want."
+      "feedback": "Three! They might be stacked on top of each other — tap the pile to pick one out."
+    },
+    {
+      "prompt": "Tap the pile and pick an object to move.",
+      "expect": "STACK_PICKED",
+      "feedback": "Got one! Now drag it where you want it."
     },
     {
       "prompt": "Drag them around to arrange your scene — put everything just where you want it.",
