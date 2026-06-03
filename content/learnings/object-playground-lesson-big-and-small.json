@@ -11,7 +11,7 @@
     {
       "prompt": "Let's make something HUGE! Use the size button to make your object as big as it can go.",
       "expect": "SIZE_AT_MAX",
-      "feedback": "WOW — that's enormous! The biggest it can be!",
+      "feedback": "Wow — that's enormous! The biggest it can be!",
       "maxFailures": 3,
       "failureFeedback": "Keep going — make it even bigger!"
     },

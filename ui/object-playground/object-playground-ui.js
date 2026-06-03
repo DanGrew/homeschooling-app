@@ -42,9 +42,7 @@ function renderToolbox(toolboxEl, state) {
 }
 
 function renderControls(addBtn, undoBtn, state) {
-  var spawnX = state.viewport.x + state.viewport.width / 2;
-  var spawnY = state.viewport.y + state.viewport.height / 2;
-  addBtn.disabled = !canAddObject(state, spawnX, spawnY);
+  addBtn.disabled = !canAddObject(state);
   undoBtn.style.display = 'none';
   [state.deletedObject].filter(Boolean).forEach(function() { undoBtn.style.display = ''; });
 }
@@ -143,6 +141,8 @@ function initObjectPlayground() {
   var state = initObjectState(w, h);
   var objLocks = {};
   var lastSelectedId = null;
+  var _spawnPositions = [[0.5,0.5],[0.25,0.35],[0.75,0.35],[0.25,0.65],[0.75,0.65],[0.5,0.2],[0.5,0.8],[0.1,0.5],[0.9,0.5]];
+  var _spawnIndex = 0;
 
   svgEl.setAttribute('width', state.world.width);
   svgEl.setAttribute('height', state.world.height);
@@ -188,9 +188,11 @@ function initObjectPlayground() {
 
   addBtn.addEventListener('click', function() {
     [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
-      var spawnX = state.viewport.x + state.viewport.width / 2;
-      var spawnY = state.viewport.y + state.viewport.height / 2;
-      [1].filter(function() { return canAddObject(state, spawnX, spawnY); }).forEach(function() {
+      var pos = _spawnPositions[_spawnIndex % _spawnPositions.length];
+      _spawnIndex++;
+      var spawnX = state.viewport.x + state.viewport.width * pos[0];
+      var spawnY = state.viewport.y + state.viewport.height * pos[1];
+      [1].filter(function() { return canAddObject(state); }).forEach(function() {
         state = addObject(state, spawnX, spawnY);
         redraw();
         _fireGuidance('OBJECT_ADDED');
@@ -249,7 +251,7 @@ function initObjectPlayground() {
       sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) {
         _speak(o.colour + ' ' + o.shape);
         _fireGuidance('OBJECT_SELECTED');
-        [o].filter(function(o) { return o.id !== lastSelectedId; }).forEach(function() { _fireGuidance('DIFFERENT_OBJECT_SELECTED'); });
+        [lastSelectedId].filter(Boolean).filter(function(id) { return id !== o.id; }).forEach(function() { _fireGuidance('DIFFERENT_OBJECT_SELECTED'); });
         lastSelectedId = o.id;
         _fireGuidance('TAPPED_OBJECT_COLOUR_' + o.colour.toUpperCase());
         _fireGuidance('TAPPED_OBJECT_SHAPE_' + o.shape.toUpperCase());
@@ -394,14 +396,24 @@ function initObjectPlayground() {
       'LOCK_DIRECTION_BUTTONS': function() { objLocks.direction = true; },
       'LOCK_ROTATION':          function() { objLocks.rotation = true; },
       'UNLOCK_ALL':             function() { objLocks = {}; },
-      'PAGE_CONTROL_RESET':     function() { objLocks = {}; },
+      'PAGE_CONTROL_RESET':     function() { objLocks = {}; _spawnIndex = 0; },
       'CLEAR_CANVAS':           function() {
         state = Object.assign({}, state, { objects: [], stackObjects: [], deletedObject: null });
+        _spawnIndex = 0;
       },
       'SETUP_COLOUR_SELECTION': function() { _placeSelectionObjects(_buildColourSelectionObjects()); },
       'SETUP_SHAPE_SELECTION':  function() { _placeSelectionObjects(_buildShapeSelectionObjects()); },
       'NEXT_COLOUR_ROUND':      function() { _shuffleObjectPositions(); },
       'NEXT_SHAPE_ROUND':       function() { _shuffleObjectPositions(); },
+      'SPAWN_TRIANGLE': function() {
+        var cx = state.viewport.x + state.viewport.width / 2;
+        var cy = state.viewport.y + state.viewport.height / 2;
+        state = addObject(state, cx, cy);
+        var objs = state.objects;
+        var newest = objs[objs.length - 1];
+        var updated = Object.assign({}, newest, { shape: 'triangle', colour: 'blue', size: 'medium', rotation: 0, selected: true });
+        state = Object.assign({}, state, { objects: objs.slice(0, -1).concat([updated]), stackObjects: [newest.id] });
+      },
       'SPAWN_CIRCLE': function() {
         var cx = state.viewport.x + state.viewport.width / 2;
         var cy = state.viewport.y + state.viewport.height / 2;

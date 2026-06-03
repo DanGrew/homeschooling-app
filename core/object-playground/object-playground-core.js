@@ -222,14 +222,8 @@ function handlePropertyCycle(state, prop) {
   });
 }
 
-function canAddObject(state, spawnX, spawnY) {
-  if (state.objects.length >= OBJ_MAX_COUNT) return false;
-  var nearby = state.objects.filter(function(o) {
-    var dx = o.x - spawnX;
-    var dy = o.y - spawnY;
-    return dx * dx + dy * dy <= OBJ_SPAWN_RADIUS * OBJ_SPAWN_RADIUS;
-  });
-  return nearby.length < 2;
+function canAddObject(state) {
+  return state.objects.length < OBJ_MAX_COUNT;
 }
 
 function addObject(state, spawnX, spawnY) {

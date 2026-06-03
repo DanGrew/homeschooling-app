@@ -22,12 +22,7 @@
       "prompt": "One more to finish — add a third object.",
       "expect": "OBJECT_ADDED",
       "pageControls": ["UNLOCK_ALL"],
-      "feedback": "Three! They might be stacked on top of each other — tap the pile to pick one out."
-    },
-    {
-      "prompt": "Tap the pile and pick an object to move.",
-      "expect": "STACK_PICKED",
-      "feedback": "Got one! Now drag it where you want it."
+      "feedback": "Three things in your scene! Now drag them where you want."
     },
     {
       "prompt": "Drag them around to arrange your scene — put everything just where you want it.",

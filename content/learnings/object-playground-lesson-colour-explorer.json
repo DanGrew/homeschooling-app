@@ -24,7 +24,7 @@
       "feedback": "Yellow sunshine! Bright and cheerful."
     },
     {
-      "prompt": "What's your favourite colour? Change it to whatever you like!",
+      "prompt": "What colour comes next? Change it to anything you like!",
       "expect": "COLOUR_CHANGED",
       "feedback": "That's your favourite! Great choice."
     }

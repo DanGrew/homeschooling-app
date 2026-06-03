@@ -24,7 +24,7 @@
       "feedback": "A triangle! Three sides and three corners. One, two, three!"
     },
     {
-      "prompt": "Now pick YOUR favourite shape — circle, square, or triangle!",
+      "prompt": "What shape comes next? Change it to anything you like!",
       "expect": "SHAPE_CHANGED",
       "feedback": "Good choosing! You know your shapes."
     }

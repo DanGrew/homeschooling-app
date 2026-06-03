@@ -6,7 +6,7 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["pd.fine-motor-circular", "cl.descriptive-vocab", "cl.topic-vocabulary", "pd.fine-motor"],
-  "pageControls": ["CLEAR_CANVAS", "SPAWN_CIRCLE", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_TRIANGLE", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS"],
   "steps": [
     {
       "prompt": "Can you make your object SPIN? Use the rotation button to turn it!",
