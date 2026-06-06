@@ -39,6 +39,25 @@ test('first tap advances to step 2, not step 3, after a prior selection', async 
   await expect(page.locator('#guidance-overlay')).toContainText('2 / 3')
 })
 
+// Regression: BUG-OBJ-MEET-NO-SPEAK. Selecting an object must speak its colour
+// and shape. The guidance event used to fire in the same tick as the speech, so
+// the step-1 feedback's interrupt() cancelled the colour+shape utterance before
+// it played. The fire is now deferred until the utterance ends.
+test('selecting an object speaks its colour and shape', async ({ page }) => {
+  await page.goto(URL)
+  await page.evaluate(() => {
+    window.__speechLog = []
+    window.__speakInterrupt = function(t, onEnd) { window.__speechLog.push(t); [onEnd].filter(Boolean).forEach(fn => fn()) }
+  })
+  await startMeetTheObjects(page)
+  const ids = await lessonObjectIds(page)
+  const shape = await page.locator(`[data-testid="object-${ids[0]}"]`).getAttribute('data-shape')
+  await tap(page, page.locator(`[data-obj="${ids[0]}"]`))
+  await expect(page.locator('#guidance-overlay')).toContainText('2 / 3')
+  const spoken = await page.evaluate(() => window.__speechLog[0])
+  expect(spoken).toMatch(new RegExp('^\\w+ ' + shape + '$'))
+})
+
 // Spin It Round step 3 ("the other way") must require the anticlockwise
 // control — re-tapping the clockwise Spin button should not satisfy it.
 test('spin it round step 3 only advances on anticlockwise rotation', async ({ page }) => {
