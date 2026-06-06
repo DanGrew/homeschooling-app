@@ -6,7 +6,7 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["maths.shape-2d", "cl.technical-vocab", "uw.cause-effect", "cl.topic-vocabulary", "pd.fine-motor"],
-  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_SQUARE", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
       "prompt": "Let's explore shapes! Can you make your object a CIRCLE? Circles are perfectly round.",
@@ -24,7 +24,7 @@
       "feedback": "A triangle! Three sides and three corners. One, two, three!"
     },
     {
-      "prompt": "Now pick YOUR favourite shape — circle, square, or triangle!",
+      "prompt": "What shape comes next? Change it to anything you like!",
       "expect": "SHAPE_CHANGED",
       "feedback": "Good choosing! You know your shapes."
     }

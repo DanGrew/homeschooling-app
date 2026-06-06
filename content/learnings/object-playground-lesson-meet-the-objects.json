@@ -6,21 +6,21 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["cl.topic-vocabulary", "uw.technology", "pd.fine-motor"],
-  "pageControls": ["LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_OBJECTS_5", "LOCK_COLOUR_CONTROLS", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
       "prompt": "Let's explore! Tap on an object to pick it up.",
       "expect": "OBJECT_SELECTED",
-      "feedback": "You picked one! Did you hear its name?"
+      "feedback": "You picked one! Did you hear it say its colour and shape?"
     },
     {
       "prompt": "Now tap a different object — what else is there?",
-      "expect": "OBJECT_SELECTED",
+      "expect": "DIFFERENT_OBJECT_SELECTED",
       "feedback": "Another one! You're finding all kinds of things."
     },
     {
       "prompt": "One more — which will you choose?",
-      "expect": "OBJECT_SELECTED",
+      "expect": "DIFFERENT_OBJECT_SELECTED",
       "pageControls": ["UNLOCK_ALL"],
       "feedback": "You know lots of objects! Well done."
     }

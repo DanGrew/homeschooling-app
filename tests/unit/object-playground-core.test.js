@@ -612,9 +612,9 @@ describe('buildToolboxHTML', () => {
 });
 
 describe('canAddObject', () => {
-  it('returns true when count below max and spawn clear', () => {
+  it('returns true when count below max', () => {
     const state = initObjectState(800, 600);
-    expect(canAddObject(state, 0, 0)).toBe(true);
+    expect(canAddObject(state)).toBe(true);
   });
 
   it('returns false when count at max', () => {
@@ -624,20 +624,14 @@ describe('canAddObject', () => {
       state = addObject(state, i * 1000, i * 1000);
     }
     expect(state.objects.length).toBe(OBJ_MAX_COUNT);
-    expect(canAddObject(state, 9999, 9999)).toBe(false);
+    expect(canAddObject(state)).toBe(false);
   });
 
-  it('returns false when 2 or more objects within spawn radius', () => {
+  it('returns true regardless of proximity when below max', () => {
     const state = initObjectState(800, 600);
     const s1 = addObject(state, 0, 0);
     const s2 = addObject(s1, 0, 0);
-    expect(canAddObject(s2, 0, 0)).toBe(false);
-  });
-
-  it('returns true when only 1 object within spawn radius', () => {
-    const state = initObjectState(800, 600);
-    const s1 = addObject(state, 0, 0);
-    expect(canAddObject(s1, 0, 0)).toBe(true);
+    expect(canAddObject(s2)).toBe(true);
   });
 });
 

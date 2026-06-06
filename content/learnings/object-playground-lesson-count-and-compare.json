@@ -24,18 +24,19 @@
       "feedback": "THREE! One, two, three — count them all!"
     },
     {
-      "prompt": "Two more to make FIVE! Add two more objects.",
+      "prompt": "Add one more — nearly there!",
+      "expect": "OBJECT_COUNT_4",
+      "feedback": "Four! One more to go."
+    },
+    {
+      "prompt": "One more — make it five!",
       "expect": "OBJECT_COUNT_5",
-      "feedback": "FIVE! One, two, three, four, five — you counted to five!",
-      "maxFailures": 3,
-      "failureFeedback": "Keep adding — count as you go!"
+      "feedback": "FIVE! One, two, three, four, five — you counted to five!"
     },
     {
       "prompt": "Now take some away — can you remove objects until you have THREE left?",
       "expect": "OBJECT_COUNT_3",
-      "feedback": "Three again! You took some away and knew when to stop — that's brilliant.",
-      "maxFailures": 3,
-      "failureFeedback": "Count what's left — do you have three yet?"
+      "feedback": "Three again! You took some away and knew when to stop — that's brilliant."
     }
   ]
 }

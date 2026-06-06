@@ -6,7 +6,7 @@
   "type": "lesson",
   "guide": "cat",
   "criteria": ["ead.colour-families", "cl.prediction", "ead.colour-recognition", "cl.topic-vocabulary", "pd.fine-motor"],
-  "pageControls": ["LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
+  "pageControls": ["CLEAR_CANVAS", "SPAWN_CIRCLE", "LOCK_SIZE_CONTROLS", "LOCK_SHAPE_CONTROLS", "LOCK_ADD_REMOVE", "LOCK_DIRECTION_BUTTONS", "LOCK_ROTATION"],
   "steps": [
     {
       "prompt": "Some colours feel WARM — like fire and sunshine! Can you make something red?",
