@@ -72,7 +72,8 @@ test('clicking an object shows the toolbox', async ({ page }) => {
   await expect(page.locator('[data-prop="shape"]')).toBeVisible();
   await expect(page.locator('[data-prop="colour"]')).toBeVisible();
   await expect(page.locator('[data-prop="size"]')).toBeVisible();
-  await expect(page.locator('[data-prop="rotation"]')).toBeVisible();
+  await expect(page.locator('[data-prop="rotation"][data-rot-dir="cw"]')).toBeVisible();
+  await expect(page.locator('[data-prop="rotation"][data-rot-dir="acw"]')).toBeVisible();
 });
 
 test('clicking a toolbox row cycles the shape', async ({ page }) => {
@@ -215,8 +216,21 @@ test('rotation indicator appears after cycling rotation', async ({ page }) => {
   const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
   await page.locator('[data-obj]').last().click();
   await page.locator('[data-pick="' + topId + '"]').click();
-  await page.locator('[data-prop="rotation"]').click();
+  await page.locator('[data-prop="rotation"][data-rot-dir="cw"]').click();
   await expect(page.locator('[data-dir-arrow]')).toBeVisible();
+});
+
+test('anticlockwise rotation turns the other way', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const topId = await page.locator('[data-obj]').last().getAttribute('data-obj');
+  await page.locator('[data-obj]').last().click();
+  await page.locator('[data-pick="' + topId + '"]').click();
+  const obj = page.locator('[data-testid="object-' + topId + '"]');
+  const rot = async () => parseInt((await obj.getAttribute('transform')).match(/rotate\(([-0-9]+)/)[1], 10);
+  const before = await rot();
+  await page.locator('[data-prop="rotation"][data-rot-dir="acw"]').click();
+  const after = await rot();
+  expect(after).toBe((before - 45 + 360) % 360);
 });
 
 test('size indicator appears after cycling size', async ({ page }) => {

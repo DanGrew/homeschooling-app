@@ -66,6 +66,9 @@ function _fireGuidance(type) {
 
 var OBJ_DIR_ARROW = { left: '\u2190', right: '\u2192', up: '\u2191', down: '\u2193' };
 var OBJ_DIR_OFFSET = { left: [-1, 0], right: [1, 0], up: [0, -1], down: [0, 1] };
+var OBJ_ROT_GLYPH = { cw: '\u21bb', acw: '\u21ba' };
+var OBJ_ROT_STEP = { cw: 1, acw: -1 };
+var OBJ_ROT_EVENT = { cw: 'OBJECT_ROTATED_CW', acw: 'OBJECT_ROTATED_ACW' };
 
 function _makeArrow(layer, x, y, char, fontSize) {
   var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -86,10 +89,10 @@ function showDirArrow(svgEl, obj, dir) {
   _makeArrow(layer, obj.x + off[0] * (OBJ_BASE_R * scale + 24), obj.y + off[1] * (OBJ_BASE_R * scale + 24), OBJ_DIR_ARROW[dir], 56);
 }
 
-function showRotationIndicator(svgEl, obj) {
+function showRotationIndicator(svgEl, obj, dir) {
   var layer = svgEl.querySelector('[data-layer]');
   var scale = OBJ_SIZE_MAP[obj.size];
-  _makeArrow(layer, obj.x, obj.y - OBJ_BASE_R * scale - 20, '\u21BB', 48);
+  _makeArrow(layer, obj.x, obj.y - OBJ_BASE_R * scale - 20, OBJ_ROT_GLYPH[dir], 48);
 }
 
 function showSizeIndicator(svgEl, obj) {
@@ -277,13 +280,15 @@ function initObjectPlayground() {
     toolboxEl.removeAttribute('data-dragging');
     [propRow].filter(Boolean).forEach(function(el) {
       var prop = el.getAttribute('data-prop');
-      state = applyToolboxClick(state, gesture, prop);
+      var rotDir = el.getAttribute('data-rot-dir');
+      state = applyToolboxClick(state, gesture, prop, OBJ_ROT_STEP[rotDir]);
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
       [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
       [sel].filter(Boolean).filter(function() { return prop === 'rotation'; }).forEach(function(o) {
-        showRotationIndicator(svgEl, o);
+        showRotationIndicator(svgEl, o, rotDir);
         _fireGuidance('OBJECT_ROTATED');
+        _fireGuidance(OBJ_ROT_EVENT[rotDir]);
       });
       [sel].filter(Boolean).filter(function() { return prop === 'size'; }).forEach(function(o) {
         showSizeIndicator(svgEl, o);

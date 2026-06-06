@@ -293,6 +293,12 @@ describe('cycleProperty', () => {
     const next = cycleProperty(obj, 'rotation');
     expect(next.rotation).toBe(45);
   });
+
+  it('cycles rotation backwards with dir -1, wrapping past zero', () => {
+    const obj = { shape: 'circle', colour: 'red', size: 'small', rotation: 0, selected: false };
+    const next = cycleProperty(obj, 'rotation', -1);
+    expect(next.rotation).toBe(OBJ_ROTATIONS[OBJ_ROTATIONS.length - 1]);
+  });
 });
 
 describe('handlePropertyCycle', () => {
@@ -597,6 +603,11 @@ describe('buildToolboxHTML', () => {
     expect(html).toContain('red');
     expect(html).toContain('medium');
     expect(html).toContain('90');
+  });
+
+  it('includes clockwise and anticlockwise rotation rows', () => {
+    expect(html).toContain('data-prop="rotation" data-rot-dir="cw"');
+    expect(html).toContain('data-prop="rotation" data-rot-dir="acw"');
   });
 
   it('includes delete row with data-action="delete"', () => {

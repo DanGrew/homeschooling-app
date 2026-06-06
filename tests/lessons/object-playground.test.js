@@ -39,6 +39,34 @@ test('first tap advances to step 2, not step 3, after a prior selection', async 
   await expect(page.locator('#guidance-overlay')).toContainText('2 / 3')
 })
 
+// Spin It Round step 3 ("the other way") must require the anticlockwise
+// control — re-tapping the clockwise Spin button should not satisfy it.
+test('spin it round step 3 only advances on anticlockwise rotation', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item', { hasText: 'Spin It Round' }).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+
+  const cw = page.locator('[data-prop="rotation"][data-rot-dir="cw"]')
+  const acw = page.locator('[data-prop="rotation"][data-rot-dir="acw"]')
+  await expect(cw).toBeVisible()
+
+  await cw.click()
+  await expect(page.locator('#guidance-overlay')).toContainText('2 / 3')
+  await cw.click()
+  await expect(page.locator('#guidance-overlay')).toContainText('3 / 3')
+
+  // wrong direction must not advance step 3
+  await cw.click()
+  await expect(page.locator('#guidance-overlay')).toContainText('3 / 3')
+  await expect(page.locator('#guidance-overlay')).not.toContainText('The other way')
+
+  // correct direction completes the lesson
+  await acw.click()
+  await expect(page.locator('#guidance-overlay')).toContainText('The other way')
+})
+
 test('each of the three steps needs its own distinct tap', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.querySelectorAll('[data-obj]').length > 0)
