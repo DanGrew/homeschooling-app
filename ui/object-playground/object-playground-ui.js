@@ -396,10 +396,11 @@ function initObjectPlayground() {
       'LOCK_DIRECTION_BUTTONS': function() { objLocks.direction = true; },
       'LOCK_ROTATION':          function() { objLocks.rotation = true; },
       'UNLOCK_ALL':             function() { objLocks = {}; },
-      'PAGE_CONTROL_RESET':     function() { objLocks = {}; _spawnIndex = 0; },
+      'PAGE_CONTROL_RESET':     function() { objLocks = {}; _spawnIndex = 0; lastSelectedId = null; },
       'CLEAR_CANVAS':           function() {
         state = Object.assign({}, state, { objects: [], stackObjects: [], deletedObject: null });
         _spawnIndex = 0;
+        lastSelectedId = null;
       },
       'SETUP_COLOUR_SELECTION': function() { _placeSelectionObjects(_buildColourSelectionObjects()); },
       'SETUP_SHAPE_SELECTION':  function() { _placeSelectionObjects(_buildShapeSelectionObjects()); },
