@@ -1,5 +1,11 @@
 # Testing — Ways of Working
 
+> **Full enforced-gate list:** see `docs/CI-GATES.md`. It covers everything CI
+> checks beyond the two test layers below — the architecture rules (incl.
+> `no-pure-fn-outside-core`), file-home rules, the rule that every `core/`
+> function needs a unit test, page contracts, and manifest freshness — plus a
+> one-shot command to run them all locally before committing.
+
 ## Two layers
 
 | Layer | Tool | Command |
