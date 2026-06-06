@@ -85,6 +85,33 @@ test('big and small step 1 shows no stray checkbox dots', async ({ page }) => {
   expect(boxes).toBe(0)
 })
 
+// Regression: BUG-OBJ-PATTERN-LAYOUT. Added objects cycled through a scatter
+// position array, so Pattern Maker's red/blue/red/blue sequence landed spread
+// across the canvas instead of a readable row. Spawn is now a predictable
+// left-to-right grid fill.
+test('pattern maker spawns objects in a left-to-right row', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item', { hasText: 'Pattern Maker' }).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await page.waitForFunction(() => document.querySelectorAll('[data-obj]').length === 0)
+
+  const addBtn = page.locator('#obj-add-btn')
+  for (let i = 0; i < 3; i++) await addBtn.click()
+  await page.waitForFunction(() => document.querySelectorAll('[data-obj]').length === 3)
+
+  const pts = await page.evaluate(() => Array.from(document.querySelectorAll('[data-obj]')).map(el => {
+    const m = el.getAttribute('transform').match(/translate\(([-\d.]+),([-\d.]+)\)/)
+    return { x: parseFloat(m[1]), y: parseFloat(m[2]) }
+  }))
+  // strictly increasing x at a constant y => one left-to-right row
+  expect(pts[1].x).toBeGreaterThan(pts[0].x)
+  expect(pts[2].x).toBeGreaterThan(pts[1].x)
+  expect(pts[0].y).toBe(pts[1].y)
+  expect(pts[1].y).toBe(pts[2].y)
+})
+
 test('each of the three steps needs its own distinct tap', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.querySelectorAll('[data-obj]').length > 0)

@@ -144,8 +144,22 @@ function initObjectPlayground() {
   var state = initObjectState(w, h);
   var objLocks = {};
   var lastSelectedId = null;
-  var _spawnPositions = [[0.5,0.5],[0.25,0.35],[0.75,0.35],[0.25,0.65],[0.75,0.65],[0.5,0.2],[0.5,0.8],[0.1,0.5],[0.9,0.5]];
   var _spawnIndex = 0;
+  var OBJ_SPAWN_CELL = 132;
+
+  // Predictable left-to-right fill: object N lands in slot N, wrapping to a new
+  // row when the next slot would run past the viewport. Keeps a repeating colour
+  // sequence (e.g. Pattern Maker red/blue/red/blue) reading as a row instead of
+  // scattering across the canvas.
+  function _gridSpawn(i) {
+    var vp = state.viewport;
+    var margin = OBJ_BASE_R * 2 + 8;
+    var cols = Math.max(1, Math.floor((vp.width - margin * 2) / OBJ_SPAWN_CELL) + 1);
+    return [
+      vp.x + margin + (i % cols) * OBJ_SPAWN_CELL,
+      vp.y + margin + Math.floor(i / cols) * OBJ_SPAWN_CELL
+    ];
+  }
 
   svgEl.setAttribute('width', state.world.width);
   svgEl.setAttribute('height', state.world.height);
@@ -191,10 +205,10 @@ function initObjectPlayground() {
 
   addBtn.addEventListener('click', function() {
     [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
-      var pos = _spawnPositions[_spawnIndex % _spawnPositions.length];
+      var pos = _gridSpawn(_spawnIndex);
       _spawnIndex++;
-      var spawnX = state.viewport.x + state.viewport.width * pos[0];
-      var spawnY = state.viewport.y + state.viewport.height * pos[1];
+      var spawnX = pos[0];
+      var spawnY = pos[1];
       [1].filter(function() { return canAddObject(state); }).forEach(function() {
         state = addObject(state, spawnX, spawnY);
         redraw();
