@@ -56,16 +56,8 @@ var OBJ_SPEAK_PROP = {
   rotation: function() { return 'rotated'; }
 };
 
-function _speak(text, onEnd) {
-  [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text, onEnd); });
-}
-
-function _afterSpeak(text, cb) {
-  var fired = {};
-  var RUN_ONCE = { 'false': function() { fired.x = true; cb(); }, 'true': function() {} };
-  function run() { RUN_ONCE[String(!!fired.x)](); }
-  _speak(text, run);
-  setTimeout(run, 1200);
+function _speak(text) {
+  [window.__speakInterrupt].filter(Boolean).forEach(function(fn) { fn(text); });
 }
 
 function _fireGuidance(type) {
@@ -259,14 +251,12 @@ function initObjectPlayground() {
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; });
       sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) {
-        var prevSelectedId = lastSelectedId;
+        _speak(o.colour + ' ' + o.shape);
+        _fireGuidance('OBJECT_SELECTED');
+        [lastSelectedId].filter(Boolean).filter(function(id) { return id !== o.id; }).forEach(function() { _fireGuidance('DIFFERENT_OBJECT_SELECTED'); });
         lastSelectedId = o.id;
-        _afterSpeak(o.colour + ' ' + o.shape, function() {
-          _fireGuidance('OBJECT_SELECTED');
-          [prevSelectedId].filter(Boolean).filter(function(id) { return id !== o.id; }).forEach(function() { _fireGuidance('DIFFERENT_OBJECT_SELECTED'); });
-          _fireGuidance('TAPPED_OBJECT_COLOUR_' + o.colour.toUpperCase());
-          _fireGuidance('TAPPED_OBJECT_SHAPE_' + o.shape.toUpperCase());
-        });
+        _fireGuidance('TAPPED_OBJECT_COLOUR_' + o.colour.toUpperCase());
+        _fireGuidance('TAPPED_OBJECT_SHAPE_' + o.shape.toUpperCase());
       });
     });
   });
