@@ -286,6 +286,7 @@ function initObjectPlayground() {
       [sel].filter(Boolean).filter(function() { return prop === 'rotation'; }).forEach(function(o) {
         showRotationIndicator(svgEl, o, rotDir);
         _fireGuidance('OBJECT_ROTATED');
+        _fireGuidance(rotDir === 'acw' ? 'OBJECT_ROTATED_ACW' : 'OBJECT_ROTATED_CW');
       });
       [sel].filter(Boolean).filter(function() { return prop === 'size'; }).forEach(function(o) {
         showSizeIndicator(svgEl, o);
