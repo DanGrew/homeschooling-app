@@ -11,16 +11,12 @@
     {
       "prompt": "Let's make something HUGE! Use the size button to make your object as big as it can go.",
       "expect": "SIZE_AT_MAX",
-      "feedback": "Wow — that's enormous! The biggest it can be!",
-      "maxFailures": 3,
-      "failureFeedback": "Keep going — make it even bigger!"
+      "feedback": "Wow — that's enormous! The biggest it can be!"
     },
     {
       "prompt": "Now make it TINY — as small as it can go!",
       "expect": "SIZE_AT_MIN",
-      "feedback": "So tiny! You can barely see it!",
-      "maxFailures": 3,
-      "failureFeedback": "Keep going — make it even smaller!"
+      "feedback": "So tiny! You can barely see it!"
     },
     {
       "prompt": "Now make it somewhere in the middle — not too big, not too small.",

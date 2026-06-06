@@ -67,6 +67,24 @@ test('spin it round step 3 only advances on anticlockwise rotation', async ({ pa
   await expect(page.locator('#guidance-overlay')).toContainText('The other way')
 })
 
+// Regression: BUG-OBJ-STEP-CHECKBOXES. Big and Small steps carried maxFailures
+// on string-expect steps, where the failure path is unreachable, so the overlay
+// painted 3 grey fail-dot boxes upfront that never did anything — looking like a
+// stray checklist. The step only wants the single largest-size outcome.
+test('big and small step 1 shows no stray checkbox dots', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item', { hasText: 'Big and Small' }).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+  await expect(page.locator('#guidance-overlay')).toContainText('HUGE')
+
+  const boxes = await page.evaluate(() => Array.from(
+    document.querySelectorAll('#guidance-overlay span')
+  ).filter(s => s.style.width === '18px' && s.offsetParent !== null).length)
+  expect(boxes).toBe(0)
+})
+
 test('each of the three steps needs its own distinct tap', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.querySelectorAll('[data-obj]').length > 0)
