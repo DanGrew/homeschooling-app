@@ -47,6 +47,7 @@ See `TESTING.md` for full ways of working. Summary:
 
 **Branching:** Feature branches off `main`. Naming: `<topic>-<descriptor>`.
 **PRs:** Always draft (`--draft`), one per logical unit. Merge target is always `main`.
+**Never merge a PR.** Take work to green CI / ready-for-review, then STOP and hand back. The user reviews and merges. `gh pr merge`, the merge button, and auto-merge are all off-limits.
 
 ## Tooling
 
