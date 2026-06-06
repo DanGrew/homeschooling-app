@@ -7,27 +7,28 @@ var _mode = [_stored].filter(function(m) { return _VALID_MODE[m]; }).concat(['fu
 
 var MODE_ENABLED = { 'true': 'full', 'false': 'off' };
 
-function _doSpeak(text) {
+function _doSpeak(text, onEnd) {
   var u = new SpeechSynthesisUtterance(text);
   u.lang = 'en-GB'; u.rate = 1.0; u.pitch = 1.1;
   [getVoice()].filter(Boolean).forEach(v => { u.voice = v; });
+  [onEnd].filter(Boolean).forEach(fn => { u.onend = fn; u.onerror = fn; });
   speechSynthesis.resume();
   speechSynthesis.speak(u);
 }
 
 var SPEAK_ACTION = {
-  'off':   () => {},
-  'quiet': () => {},
+  'off':   (t, onEnd) => { [onEnd].filter(Boolean).forEach(fn => fn()); },
+  'quiet': (t, onEnd) => { [onEnd].filter(Boolean).forEach(fn => fn()); },
   'full':  _doSpeak
 };
 
 export function setMode(mode) { _mode = mode; }
 export function setEnabled(on) { _mode = MODE_ENABLED[String(!!on)]; }
 export function stop() { speechSynthesis.cancel(); }
-export function queue(text) { [text].filter(Boolean).forEach(t => SPEAK_ACTION[_mode](t)); }
-export function interrupt(text) { stop(); queue(text); }
-export function speak(text) { queue(text); }
-export function speakInterrupt(text) { interrupt(text); }
+export function queue(text, onEnd) { [text].filter(Boolean).forEach(t => SPEAK_ACTION[_mode](t, onEnd)); }
+export function interrupt(text, onEnd) { stop(); queue(text, onEnd); }
+export function speak(text, onEnd) { queue(text, onEnd); }
+export function speakInterrupt(text, onEnd) { interrupt(text, onEnd); }
 var _SET_GLOBAL = { 'true': function(fn) { window.__speak = fn; }, 'false': function() {} };
 _SET_GLOBAL[String(typeof window !== 'undefined')](speak);
 var _SET_INTERRUPT = { 'true': function(fn) { window.__speakInterrupt = fn; }, 'false': function() {} };
