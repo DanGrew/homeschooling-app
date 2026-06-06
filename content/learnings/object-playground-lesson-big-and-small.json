@@ -18,7 +18,7 @@
     {
       "prompt": "Now make it TINY — as small as it can go!",
       "expect": "SIZE_AT_MIN",
-      "feedback": "So tiny! Can you barely see it?",
+      "feedback": "So tiny! You can barely see it!",
       "maxFailures": 3,
       "failureFeedback": "Keep going — make it even smaller!"
     },
