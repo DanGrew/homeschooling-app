@@ -86,10 +86,11 @@ function showDirArrow(svgEl, obj, dir) {
   _makeArrow(layer, obj.x + off[0] * (OBJ_BASE_R * scale + 24), obj.y + off[1] * (OBJ_BASE_R * scale + 24), OBJ_DIR_ARROW[dir], 56);
 }
 
-function showRotationIndicator(svgEl, obj) {
+function showRotationIndicator(svgEl, obj, dir) {
   var layer = svgEl.querySelector('[data-layer]');
   var scale = OBJ_SIZE_MAP[obj.size];
-  _makeArrow(layer, obj.x, obj.y - OBJ_BASE_R * scale - 20, '\u21BB', 48);
+  var glyph = dir === 'acw' ? '\u21BA' : '\u21BB';
+  _makeArrow(layer, obj.x, obj.y - OBJ_BASE_R * scale - 20, glyph, 48);
 }
 
 function showSizeIndicator(svgEl, obj) {
@@ -277,12 +278,13 @@ function initObjectPlayground() {
     toolboxEl.removeAttribute('data-dragging');
     [propRow].filter(Boolean).forEach(function(el) {
       var prop = el.getAttribute('data-prop');
-      state = applyToolboxClick(state, gesture, prop);
+      var rotDir = el.getAttribute('data-rot-dir');
+      state = applyToolboxClick(state, gesture, prop, rotDir === 'acw' ? -1 : 1);
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
       [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
       [sel].filter(Boolean).filter(function() { return prop === 'rotation'; }).forEach(function(o) {
-        showRotationIndicator(svgEl, o);
+        showRotationIndicator(svgEl, o, rotDir);
         _fireGuidance('OBJECT_ROTATED');
       });
       [sel].filter(Boolean).filter(function() { return prop === 'size'; }).forEach(function(o) {

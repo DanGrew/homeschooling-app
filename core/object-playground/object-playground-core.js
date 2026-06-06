@@ -123,11 +123,11 @@ function getDragCancelMoves(gesture) {
   return [{ x: gesture.originObjX, y: gesture.originObjY }];
 }
 
-function applyToolboxClick(state, gesture, prop) {
+function applyToolboxClick(state, gesture, prop, dir) {
   var base = getDragCancelMoves(gesture).reduce(function(s, origin) {
     return updateDragPosition(s, origin.x, origin.y);
   }, state);
-  return handlePropertyCycle(base, prop);
+  return handlePropertyCycle(base, prop, dir);
 }
 
 function getPanMoves(gesture, dx, dy) {
@@ -153,11 +153,12 @@ function applyPan(state, targetX, targetY) {
   });
 }
 
-function cycleProperty(obj, prop) {
+function cycleProperty(obj, prop, dir) {
   var CYCLES = { shape: OBJ_SHAPES, colour: OBJ_COLOURS, size: OBJ_SIZES, rotation: OBJ_ROTATIONS };
   var arr = CYCLES[prop];
+  var step = dir === -1 ? -1 : 1;
   var idx = arr.indexOf(obj[prop]);
-  var next = arr[(idx + 1) % arr.length];
+  var next = arr[(idx + step + arr.length) % arr.length];
   var updated = Object.assign({}, obj);
   updated[prop] = next;
   return updated;
@@ -213,10 +214,10 @@ function handleTap(state, worldX, worldY) {
   return withStack;
 }
 
-function handlePropertyCycle(state, prop) {
+function handlePropertyCycle(state, prop, dir) {
   return Object.assign({}, state, {
     objects: state.objects.map(function(o) {
-      if (o.selected) { return cycleProperty(o, prop); }
+      if (o.selected) { return cycleProperty(o, prop, dir); }
       return o;
     })
   });
@@ -292,12 +293,18 @@ function buildToolboxHTML(obj) {
   var rows = [
     { prop: 'shape', label: 'Shape', val: obj.shape },
     { prop: 'colour', label: 'Colour', val: obj.colour },
-    { prop: 'size', label: 'Size', val: obj.size },
-    { prop: 'rotation', label: 'Rotation', val: obj.rotation + '\u00b0' }
+    { prop: 'size', label: 'Size', val: obj.size }
   ];
   var propHtml = rows.map(function(r) {
     return '<div class="obj-tool-row" data-prop="' + r.prop + '"><span class="obj-tool-label">' + r.label + '</span><span class="obj-tool-val">' + r.val + '</span></div>';
   }).join('');
+  var rotHtml = [
+    { dir: 'cw',  arrow: '\u21bb', label: 'Spin' },
+    { dir: 'acw', arrow: '\u21ba', label: 'Spin back' }
+  ].map(function(r) {
+    return '<div class="obj-tool-row" data-prop="rotation" data-rot-dir="' + r.dir + '"><span class="obj-tool-label">' + r.arrow + ' ' + r.label + '</span><span class="obj-tool-val">' + obj.rotation + '\u00b0</span></div>';
+  }).join('');
+  propHtml += rotHtml;
   var dirHtml = [
     { action: 'move-left',  label: '\u2B05', val: 'Left'  },
     { action: 'move-right', label: '\u27A1', val: 'Right' },
