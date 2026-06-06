@@ -14,6 +14,7 @@ var OBJ_COLOUR_STROKE = {
 var OBJ_BASE_R = 32;
 var OBJ_MAX_COUNT = 20;
 var OBJ_SPAWN_RADIUS = OBJ_BASE_R * 2;
+var OBJ_SPAWN_CELL = 132;
 
 function objPick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -324,6 +325,19 @@ function objTransform(pos, rotation, scale) {
   return 'translate(' + pos.x.toFixed(1) + ',' + pos.y.toFixed(1) + ') rotate(' + rotation + ') scale(' + scale + ')';
 }
 
+// Predictable left-to-right fill: object `index` lands in slot `index`, wrapping
+// to a new row when the next slot would run past the viewport width. Keeps a
+// repeating colour sequence (e.g. Pattern Maker red/blue/red/blue) reading as a
+// row instead of scattering across the canvas.
+function gridSpawn(viewport, index) {
+  var margin = OBJ_BASE_R * 2 + 8;
+  var cols = Math.max(1, Math.floor((viewport.width - margin * 2) / OBJ_SPAWN_CELL) + 1);
+  return {
+    x: viewport.x + margin + (index % cols) * OBJ_SPAWN_CELL,
+    y: viewport.y + margin + Math.floor(index / cols) * OBJ_SPAWN_CELL
+  };
+}
+
 function getVisualPos(obj, animMap) {
   var anim = animMap[obj.id];
   if (!anim) return { x: obj.x, y: obj.y };
@@ -343,5 +357,6 @@ if (typeof module !== 'undefined') module.exports = {
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
   canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
-  easeOutQuad, objTransform, getVisualPos, OBJ_ANIM_DURATION
+  easeOutQuad, objTransform, getVisualPos, OBJ_ANIM_DURATION,
+  OBJ_SPAWN_CELL, gridSpawn
 };
