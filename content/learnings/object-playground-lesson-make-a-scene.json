@@ -22,7 +22,12 @@
       "prompt": "One more to finish — add a third object.",
       "expect": "OBJECT_ADDED",
       "pageControls": ["UNLOCK_ALL"],
-      "feedback": "Three things in your scene! Now drag them where you want."
+      "feedback": "Three things in your scene!"
+    },
+    {
+      "prompt": "Tap one of your objects, then pick it to pick it up.",
+      "expect": "STACK_PICKED",
+      "feedback": "Got one! Now drag it where you want it."
     },
     {
       "prompt": "Drag them around to arrange your scene — put everything just where you want it.",

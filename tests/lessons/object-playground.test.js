@@ -67,6 +67,27 @@ test('spin it round step 3 only advances on anticlockwise rotation', async ({ pa
   await expect(page.locator('#guidance-overlay')).toContainText('The other way')
 })
 
+// BUG-OBJ-LESSON-BUGS bug 3: Make a Scene must teach the stack picker —
+// a STACK_PICKED step sits between adding objects and dragging them.
+test('make a scene advances through the stack-pick step', async ({ page }) => {
+  await page.goto(URL)
+  await page.waitForFunction(() => window.guidanceService)
+  await page.locator('.nav-lesson-btn').click()
+  await page.locator('.nav-lesson-item', { hasText: 'Make a Scene' }).click()
+  await expect(page.locator('#guidance-overlay')).toBeVisible()
+
+  await page.locator('#obj-add-btn').click()
+  await page.locator('#obj-add-btn').click()
+  await page.locator('#obj-add-btn').click()
+  await expect(page.locator('#guidance-overlay')).toContainText('Tap one of your objects')
+
+  const id = await page.locator('[data-obj]').last().getAttribute('data-obj')
+  await page.locator(`[data-obj="${id}"]`).click()
+  await page.locator(`[data-pick="${id}"]`).click()
+
+  await expect(page.locator('#guidance-overlay')).toContainText('Drag them around')
+})
+
 test('each of the three steps needs its own distinct tap', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.querySelectorAll('[data-obj]').length > 0)
