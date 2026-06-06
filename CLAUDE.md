@@ -43,6 +43,10 @@ See `TESTING.md` for full ways of working. Summary:
 
 **Never run the full Playwright suite (`npm test`) without explicit user permission.** Full suite takes ~4 minutes. Run only the specific test file for the feature under development: `npx playwright test tests/<file>.test.js`. CI runs the full suite on every PR.
 
+**First-time setup before running tests:** `npm install`, then `npx playwright install chromium` (the browser binary is not vendored). Playwright auto-starts its own web server (`webServer` in `playwright.config.js`) — you do NOT need to start a server to run tests.
+
+**Local preview:** to view the app in a browser, use the dev server that is already running (IntelliJ autostarts one for this project). Do not spin up a second static server (`npx serve` etc.).
+
 ## Git and GitHub
 
 **Branching:** Feature branches off `main`. Naming: `<topic>-<descriptor>`.
@@ -53,6 +57,14 @@ See `TESTING.md` for full ways of working. Summary:
 
 **gh CLI:** not on PATH in bash — always use full path: `"/c/Program Files/GitHub CLI/gh.exe"`
 **Parallel agents:** `gh pr create` is blocked in the agent sandbox — PR creation must always be done from the main session after agents complete.
+
+## Content Manifests
+
+`node scripts/generate-manifests.js` regenerates generated manifests from the content files, including `content/learnings/manifest.json`, `content/lessons/index.json`, and `content/dictionary/manifests/`. Run it and commit the result after adding/removing/renaming any learning, lesson, or dictionary entry.
+
+**Gotcha:** the `check-manifests` CI gate only diffs `content/dictionary/manifests/` and `content/lessons/index.json` — it does **not** verify `content/learnings/manifest.json`. That manifest can therefore drift silently (stale entries for deleted content). Two downstream effects:
+- The Curriculum Coverage page (`app/curriculum/`) builds its tables from `content/learnings/manifest.json`.
+- `tests/curriculum.test.js` hard-codes the lesson/exercise row counts. When learnings change, regenerate the manifest AND update those counts, or the `e2e-test` CI job fails on a row-count mismatch.
 
 ## Guidance + Page Control Pattern
 
@@ -80,6 +92,10 @@ window.addEventListener('page:control', function(e) {
 ```
 
 **Rule:** never modify `guidance-service.js` to add new behaviour. All page-specific logic goes in the page's `PAGE_CTRL` map. New controls are just new string keys.
+
+**Step matching:** a step's `expect` is either a single event string, or an array of event strings (array = ALL listed events must be collected before the step advances; progress shows as dots). Each `guidance:event` is handled independently and advances at most one step.
+
+**Cascade gotcha:** one user action can dispatch several guidance events in sequence (e.g. a single object tap fires `OBJECT_SELECTED` and then `DIFFERENT_OBJECT_SELECTED`). If consecutive steps expect those events, a single action can advance multiple steps at once — looking like skipped steps. Guard by resetting page-local interaction state (e.g. `lastSelectedId`) on `CLEAR_CANVAS` / `PAGE_CONTROL_RESET` so a lesson starts clean and the first action fires only the intended event.
 
 ## Token Efficiency
 
