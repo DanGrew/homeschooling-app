@@ -7,8 +7,47 @@ const {
   getPanMoves, getTapFlag, applyPan,
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
-  canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject
+  canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
+  gridSpawn, OBJ_SPAWN_CELL
 } = require('../../core/object-playground/object-playground-core.js');
+
+describe('gridSpawn', () => {
+  const vp = { x: 100, y: 200, width: 900, height: 600 };
+
+  it('fills left to right at a constant y on the first row', () => {
+    const a = gridSpawn(vp, 0);
+    const b = gridSpawn(vp, 1);
+    const c = gridSpawn(vp, 2);
+    expect(b.x).toBe(a.x + OBJ_SPAWN_CELL);
+    expect(c.x).toBe(b.x + OBJ_SPAWN_CELL);
+    expect(a.y).toBe(b.y);
+    expect(b.y).toBe(c.y);
+  });
+
+  it('is offset by the viewport origin', () => {
+    const margin = OBJ_BASE_R * 2 + 8;
+    const a = gridSpawn(vp, 0);
+    expect(a.x).toBe(vp.x + margin);
+    expect(a.y).toBe(vp.y + margin);
+  });
+
+  it('wraps to a new row once a row is full', () => {
+    const margin = OBJ_BASE_R * 2 + 8;
+    const cols = Math.floor((vp.width - margin * 2) / OBJ_SPAWN_CELL) + 1;
+    const first = gridSpawn(vp, 0);
+    const wrapped = gridSpawn(vp, cols);
+    expect(wrapped.x).toBe(first.x);
+    expect(wrapped.y).toBe(first.y + OBJ_SPAWN_CELL);
+  });
+
+  it('keeps at least one column on a narrow viewport', () => {
+    const narrow = { x: 0, y: 0, width: 10, height: 600 };
+    const a = gridSpawn(narrow, 0);
+    const b = gridSpawn(narrow, 1);
+    expect(a.x).toBe(b.x);
+    expect(b.y).toBe(a.y + OBJ_SPAWN_CELL);
+  });
+});
 
 describe('constants', () => {
   it('OBJ_SHAPES has 7 entries', () => {

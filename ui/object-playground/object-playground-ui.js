@@ -144,7 +144,6 @@ function initObjectPlayground() {
   var state = initObjectState(w, h);
   var objLocks = {};
   var lastSelectedId = null;
-  var _spawnPositions = [[0.5,0.5],[0.25,0.35],[0.75,0.35],[0.25,0.65],[0.75,0.65],[0.5,0.2],[0.5,0.8],[0.1,0.5],[0.9,0.5]];
   var _spawnIndex = 0;
 
   svgEl.setAttribute('width', state.world.width);
@@ -191,10 +190,10 @@ function initObjectPlayground() {
 
   addBtn.addEventListener('click', function() {
     [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
-      var pos = _spawnPositions[_spawnIndex % _spawnPositions.length];
+      var pos = gridSpawn(state.viewport, _spawnIndex);
       _spawnIndex++;
-      var spawnX = state.viewport.x + state.viewport.width * pos[0];
-      var spawnY = state.viewport.y + state.viewport.height * pos[1];
+      var spawnX = pos.x;
+      var spawnY = pos.y;
       [1].filter(function() { return canAddObject(state); }).forEach(function() {
         state = addObject(state, spawnX, spawnY);
         redraw();
