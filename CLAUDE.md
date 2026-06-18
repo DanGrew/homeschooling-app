@@ -57,6 +57,14 @@ Static site, no build step. `test-server.js` serves **its own directory** via `s
 
 **One port per worktree — never reuse a server across worktrees.** Each worktree serves only its own files, so a server on `:3000` from another tree (or IntelliJ's autostart) will show you the *wrong* worktree's code. Pick a distinct `PORT` per worktree and hand the user that exact URL when they need to test your branch — they can't `git checkout` your worktree from the shared checkout, so a running server pointed at the worktree is how they see your change. Same rule for Playwright: it reads `PORT`/a `.port` file (default 3000) and will `reuseExistingServer` locally — set a per-worktree `PORT` (or `.port`) so a test run can't silently hit another tree's server.
 
+**Servers are on-demand, one per worktree, stopped when done — not always-on.** A worktree is just files; nothing serves it until someone starts a server. When a change needs the user to eyeball it, the hand-off MUST give them the copy-paste **start command** and the **URL**, and tell them to **stop it when done**. Don't start one speculatively, and don't leave stale servers running across worktrees (that's how the wrong-tree-on-`:3000` mixup happens). Template:
+```bash
+# start — run from the worktree dir:
+cd <worktree-path> && PORT=3007 node test-server.js     # → http://localhost:3007/app/...
+# stop when done:  Ctrl-C  (or, if backgrounded:)  lsof -ti:3007 | xargs kill
+```
+Any server *you* (the agent) start during a session, tear down before ending the session unless the user still has it open to test.
+
 ## Git and GitHub
 
 **All dev goes in a worktree off `origin/main` — never branch-switch a shared checkout.** Concurrent Claude sessions and any running local server share the primary checkout; switching its branch (or `git checkout -b` in it) moves the branch pointer and reverts the working tree mid-edit, and a stash/checkout slip can silently land a commit on `main`. A worktree pins HEAD per directory so that can't happen:
