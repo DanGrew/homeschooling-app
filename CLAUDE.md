@@ -49,11 +49,13 @@ See `TESTING.md` for full ways of working. Summary:
 
 **First-time setup before running tests:** `npm install`, then `npx playwright install chromium` (the browser binary is not vendored). Playwright auto-starts its own web server (`webServer` in `playwright.config.js`) — you do NOT need to start a server to run tests.
 
-**Run the app locally (no IntelliJ needed):**
+**Run the app locally (no IntelliJ needed) — serve from the worktree you're working in, so what you see is *that worktree's* code:**
 ```bash
-node test-server.js          # → http://localhost:3000/  (override port: PORT=3001 node test-server.js)
+PORT=3001 node test-server.js     # run this FROM the worktree dir → http://localhost:3001/
 ```
-Static site, no build step. `test-server.js` serves the repo via `serve-handler` and strips the `/homeschooling-app` GitHub-Pages path prefix, so **both** `http://localhost:3000/` and `http://localhost:3000/homeschooling-app/...` resolve (the latter matches the deployed Pages URL). Open `/` → redirects to `app/`. First run needs `npm install` (pulls `serve-handler` via the `serve` dep). If a server is already up on the port (IntelliJ autostart, or a prior run), reuse it — don't start a second; Playwright likewise reuses an existing server (`reuseExistingServer`).
+Static site, no build step. `test-server.js` serves **its own directory** via `serve-handler` and strips the `/homeschooling-app` GitHub-Pages path prefix, so both `http://localhost:3001/` and `http://localhost:3001/homeschooling-app/...` resolve (the latter matches the deployed Pages URL). Open `/` → redirects to `app/`. First run needs `npm install` (pulls `serve-handler` via the `serve` dep).
+
+**One port per worktree — never reuse a server across worktrees.** Each worktree serves only its own files, so a server on `:3000` from another tree (or IntelliJ's autostart) will show you the *wrong* worktree's code. Pick a distinct `PORT` per worktree and hand the user that exact URL when they need to test your branch — they can't `git checkout` your worktree from the shared checkout, so a running server pointed at the worktree is how they see your change. Same rule for Playwright: it reads `PORT`/a `.port` file (default 3000) and will `reuseExistingServer` locally — set a per-worktree `PORT` (or `.port`) so a test run can't silently hit another tree's server.
 
 ## Git and GitHub
 
