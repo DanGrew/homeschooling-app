@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## STOP — Read Before Implementing
 
 Before any implementation:
-1. Pull `main` and create a new branch off it
+1. Make a **worktree off `origin/main`** and work there — never branch-switch the primary checkout (see Git and GitHub below)
 2. Read `TESTING.md` — this repo has tight CI quality checks; skipping this causes refactor cycles
 3. Skim `docs/CI-GATES.md` — the full list of enforced PR gates (architecture rules, layer/file-home rules, the core-function-needs-a-unit-test rule, contracts, manifests) and the one-shot local command to run them all before committing. Writing to these up front avoids post-push refactor cycles.
 4. **Verify the spec's premise against current code before building.** Specs can go stale as the code moves on. If a spec assumes behaviour that no longer holds (e.g. it assumes objects spawn stacked but the add button now spawns at spread positions), do not silently implement around it — confirm with the user whether the task is still relevant; they often already know. A wrong premise means wasted build/test/revert cycles.
@@ -45,15 +45,50 @@ See `TESTING.md` for full ways of working. Summary:
 
 **Never run the full Playwright suite (`npm test`) without explicit user permission.** Full suite takes ~4 minutes. Run only the specific test file for the feature under development: `npx playwright test tests/<file>.test.js`. CI runs the full suite on every PR.
 
+**Every bug fix ships a regression test proven to fail on the old code.** Write the test, watch it fail *before* the fix, then make it pass — don't wait to be asked. A fix without a red-then-green test isn't done.
+
 **First-time setup before running tests:** `npm install`, then `npx playwright install chromium` (the browser binary is not vendored). Playwright auto-starts its own web server (`webServer` in `playwright.config.js`) — you do NOT need to start a server to run tests.
 
-**Local preview:** to view the app in a browser, use the dev server that is already running (IntelliJ autostarts one for this project). Do not spin up a second static server (`npx serve` etc.).
+**Run the app locally (no IntelliJ needed) — serve from the worktree you're working in, so what you see is *that worktree's* code:**
+```bash
+PORT=3001 node test-server.js     # run this FROM the worktree dir → http://localhost:3001/
+```
+Static site, no build step. `test-server.js` serves **its own directory** via `serve-handler` and strips the `/homeschooling-app` GitHub-Pages path prefix, so both `http://localhost:3001/` and `http://localhost:3001/homeschooling-app/...` resolve (the latter matches the deployed Pages URL). Open `/` → redirects to `app/`. First run needs `npm install` (pulls `serve-handler` via the `serve` dep).
+
+**One port per worktree — never reuse a server across worktrees.** Each worktree serves only its own files, so a server on `:3000` from another tree (or IntelliJ's autostart) will show you the *wrong* worktree's code. Pick a distinct `PORT` per worktree and hand the user that exact URL when they need to test your branch — they can't `git checkout` your worktree from the shared checkout, so a running server pointed at the worktree is how they see your change. Same rule for Playwright: it reads `PORT`/a `.port` file (default 3000) and will `reuseExistingServer` locally — set a per-worktree `PORT` (or `.port`) so a test run can't silently hit another tree's server.
+
+**Servers are on-demand, one per worktree, stopped when done — not always-on.** A worktree is just files; nothing serves it until someone starts a server. When a change needs the user to eyeball it, the hand-off MUST give them the copy-paste **start command** and the **URL**, and tell them to **stop it when done**. Don't start one speculatively, and don't leave stale servers running across worktrees (that's how the wrong-tree-on-`:3000` mixup happens). Template:
+```bash
+# start — run from the worktree dir:
+cd <worktree-path> && PORT=3007 node test-server.js     # → http://localhost:3007/app/...
+# stop when done:  Ctrl-C  (or, if backgrounded:)  lsof -ti:3007 | xargs kill
+```
+Any server *you* (the agent) start during a session, tear down before ending the session unless the user still has it open to test.
 
 ## Git and GitHub
 
-**Branching:** Feature branches off `main`. Naming: `<topic>-<descriptor>`.
-**PRs:** Always draft (`--draft`), one per logical unit. Merge target is always `main`.
-**Never merge a PR.** Take work to green CI / ready-for-review, then STOP and hand back. The user reviews and merges. `gh pr merge`, the merge button, and auto-merge are all off-limits.
+**All dev goes in a worktree off `origin/main` — never branch-switch a shared checkout.** Concurrent Claude sessions and any running local server share the primary checkout; switching its branch (or `git checkout -b` in it) moves the branch pointer and reverts the working tree mid-edit, and a stash/checkout slip can silently land a commit on `main`. A worktree pins HEAD per directory so that can't happen:
+```bash
+git worktree add ../homeschooling-app-<topic>-wt origin/main -b <topic>/<descriptor>
+```
+Commit, push, raise a **draft PR**. (Supersedes the old "new branch in the checkout" + second-clone `homeschooling-app-2` model.)
+
+**Never delete a worktree before its PR is merged**, and never delete one you didn't create — unmerged work in it is unrecoverable, and another session/the user may be serving from it. Cleanup is a separate step the user authorises after merge ("merged, you can delete it now").
+
+**PRs:** Always draft (`--draft`), one per logical unit, merge target always `main`.
+**Never merge a PR.** Take work to green CI / ready-for-review, then STOP and hand back. The user reviews and merges. `gh pr merge`, the merge button, and auto-merge are all off-limits. After you open a PR, wait for the user to merge it before starting the next task.
+
+**Always end a reply that opens PR(s) with a scannable numbered block** — one line each: repo + PR number + one-line title + full URL, plus any co-deploy/merge-order note. Never bury a PR link mid-paragraph.
+
+## Working Norms
+
+- **Discussing a task ≠ go-ahead.** Wait for an explicit "build it"; before starting, fetch and confirm the task isn't already merged.
+- **`git status` clean-check before every commit** — edits made after `git add` are unstaged and silently dropped from the commit.
+- **Blocked 2–3× in a row? Question the approach** — surface alternatives before pushing on or installing anything.
+
+## Keep Docs Current
+
+Hit a stale `CLAUDE.md`/doc while working (wrong path, renamed file, changed command/port/gate, superseded rule)? Fix it in the **same PR** — don't leave it for later and don't ask first; low-risk and expected. When a session uncovers a durable repo gotcha (a shared module to keep optional-safe, a non-obvious build/test step, a constraint that just caused a bug), write it into the relevant checked-in doc — **not (only) memory**, which auto-recalls unreliably and isn't visible to other contributors.
 
 ## Tooling
 
