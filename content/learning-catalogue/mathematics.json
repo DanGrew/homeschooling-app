@@ -5,14 +5,89 @@
       "icon": "🔢",
       "title": "Count to 5",
       "learningIcons": ["count", "observe"],
-      "keywords": ["1", "2", "3", "4", "5"],
-      "focus": "Count a small group of objects up to five.",
-      "concepts": ["Counting", "One-to-one", "Numbers"],
-      "lookFor": ["Counts each once", "Says how many", "Stops at the last"],
+      "keywords": ["1", "2", "3", "4", "5", "how many"],
+      "focus": "Count a small group of objects up to five, one number for each.",
+      "concepts": ["Counting", "One-to-one", "How many"],
+      "lookFor": ["Touches each object once", "Says one number per object", "Knows the last number is how many"],
       "curriculum": ["maths.counting-5"],
       "area": "mathematics",
       "playgrounds": [
-        { "id": "object-playground", "note": "Add objects and count them" }
+        { "id": "object-playground", "note": "Add objects and count them out loud" }
+      ]
+    },
+    {
+      "id": "recognise-2d-shapes",
+      "icon": "🔺",
+      "title": "Recognise 2D shapes",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["circle", "square", "triangle", "sides", "corners"],
+      "focus": "Spot and name flat shapes by their sides and corners.",
+      "concepts": ["Shapes", "Sides", "Corners"],
+      "lookFor": ["Names a circle, square or triangle", "Points to the sides and corners", "Finds a matching shape"],
+      "curriculum": ["maths.shape-2d"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Find the shape I call out" }
+      ]
+    },
+    {
+      "id": "compare-sizes",
+      "icon": "📏",
+      "title": "Compare sizes",
+      "learningIcons": ["compare", "observe"],
+      "keywords": ["big", "small", "bigger", "smaller", "tall"],
+      "focus": "Compare two objects and say which is bigger or smaller.",
+      "concepts": ["Size", "Comparing", "Big and small"],
+      "lookFor": ["Says which is bigger", "Puts objects in size order", "Uses words like bigger and smaller"],
+      "curriculum": ["maths.size-measure", "cl.descriptive-vocab"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Make objects big or small and compare them" }
+      ]
+    },
+    {
+      "id": "compare-amounts",
+      "icon": "⚖️",
+      "title": "Compare amounts",
+      "learningIcons": ["compare", "count"],
+      "keywords": ["more", "fewer", "same", "how many"],
+      "focus": "Compare two groups and say which has more or fewer.",
+      "concepts": ["Quantity", "More and fewer", "Comparing"],
+      "lookFor": ["Says which group has more", "Spots when groups are the same", "Uses more and fewer"],
+      "curriculum": ["maths.equivalence"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Build two groups and compare how many" }
+      ]
+    },
+    {
+      "id": "make-a-repeating-pattern",
+      "icon": "🔁",
+      "title": "Make a repeating pattern",
+      "learningIcons": ["observe", "create"],
+      "keywords": ["pattern", "repeat", "next", "again"],
+      "focus": "Make and continue a simple repeating pattern.",
+      "concepts": ["Pattern", "Repeating", "Sequence"],
+      "lookFor": ["Copies a repeating pattern", "Says what comes next", "Spots a break in the pattern"],
+      "curriculum": ["maths.pattern", "cl.sequencing-language"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Lay objects in a repeating pattern" }
+      ]
+    },
+    {
+      "id": "use-position-words",
+      "icon": "📍",
+      "title": "Use position words",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["on", "under", "in front", "behind"],
+      "focus": "Use position words to say where an object is.",
+      "concepts": ["Position", "Space", "Direction"],
+      "lookFor": ["Puts an object on top or under", "Says where it is using words", "Follows a position instruction"],
+      "curriculum": ["maths.spatial", "cl.technical-vocab"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Move objects and say where they go" }
       ]
     }
   ]

@@ -12,6 +12,8 @@
   },
   "areas": [
     { "id": "communication-language", "title": "Communication & Language", "order": 1, "file": "communication-language.json" },
-    { "id": "mathematics", "title": "Mathematics", "order": 2, "file": "mathematics.json" }
+    { "id": "physical-development", "title": "Physical Development", "order": 2, "file": "physical-development.json" },
+    { "id": "mathematics", "title": "Mathematics", "order": 3, "file": "mathematics.json" },
+    { "id": "expressive-arts-design", "title": "Expressive Arts & Design", "order": 4, "file": "expressive-arts-design.json" }
   ]
 }
