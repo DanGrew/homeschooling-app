@@ -110,6 +110,18 @@ const MAPPINGS = [
     schema: 'content/schemas/content/logic-gates.schema.json',
     searchDir: 'content/logic-gates',
     match: (name) => name.endsWith('.json')
+  },
+  {
+    label: 'learning-catalogue/index',
+    schema: 'content/schemas/content/learning-catalogue-index.schema.json',
+    searchDir: 'content/learning-catalogue',
+    match: (name) => name === 'index.json'
+  },
+  {
+    label: 'learning-catalogue/area',
+    schema: 'content/schemas/content/learning-catalogue-area.schema.json',
+    searchDir: 'content/learning-catalogue',
+    match: (name) => name.endsWith('.json') && name !== 'index.json'
   }
 ];
 

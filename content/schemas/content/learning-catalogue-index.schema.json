@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Learning Catalogue — index / control file",
+  "type": "object",
+  "required": ["learningIcons", "playgrounds", "areas"],
+  "additionalProperties": false,
+  "properties": {
+    "learningIcons": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "emoji", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "emoji": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "playgrounds": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["emoji", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "emoji": { "type": "string" },
+          "name": { "type": "string" }
+        }
+      }
+    },
+    "areas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "order", "file"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "order": { "type": "integer", "minimum": 1 },
+          "file": { "type": "string", "pattern": "\\.json$" }
+        }
+      }
+    }
+  }
+}

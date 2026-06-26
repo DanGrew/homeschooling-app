@@ -9,7 +9,7 @@
       "focus": "Name everyday objects and talk about what you see.",
       "concepts": ["Objects", "Vocabulary", "Naming"],
       "lookFor": ["Points to an object", "Names it out loud", "Tries a new word"],
-      "curriculum": ["Communication", "Topic vocabulary"],
+      "curriculum": ["cl.topic-vocabulary"],
       "area": "communication-language",
       "playgrounds": [
         { "id": "object-playground", "note": "Tap objects — each says its name" }
