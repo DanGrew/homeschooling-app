@@ -49,18 +49,18 @@ See `TESTING.md` for full ways of working. Summary:
 
 **First-time setup before running tests:** `npm install`, then `npx playwright install chromium` (the browser binary is not vendored). Playwright auto-starts its own web server (`webServer` in `playwright.config.js`) — you do NOT need to start a server to run tests.
 
-**Run the app locally (no IntelliJ needed) — serve from the worktree you're working in, so what you see is *that worktree's* code:**
+**Run the app locally (no IntelliJ needed) — serve from the worktree you're working in, so what you see is *that worktree's* code. Always give the no-`cd` form: pass `test-server.js` by its absolute path, never `cd` into the worktree first** (a `cd` in a compound command triggers a permission prompt):
 ```bash
-PORT=3001 node test-server.js     # run this FROM the worktree dir → http://localhost:3001/
+PORT=3001 node /abs/path/to/<worktree>/test-server.js     # → http://localhost:3001/
 ```
-Static site, no build step. `test-server.js` serves **its own directory** via `serve-handler` and strips the `/homeschooling-app` GitHub-Pages path prefix, so both `http://localhost:3001/` and `http://localhost:3001/homeschooling-app/...` resolve (the latter matches the deployed Pages URL). Open `/` → redirects to `app/`. First run needs `npm install` (pulls `serve-handler` via the `serve` dep).
+Static site, no build step. `test-server.js` serves **its own directory** (`public: __dirname`) via `serve-handler`, so the directory served is wherever the *script file* lives — pointing `node` at the worktree's `test-server.js` serves that worktree regardless of your shell's cwd, no `cd` needed. It strips the `/homeschooling-app` GitHub-Pages path prefix, so both `http://localhost:3001/` and `http://localhost:3001/homeschooling-app/...` resolve (the latter matches the deployed Pages URL). Open `/` → redirects to `app/`. First run needs `npm install` (pulls `serve-handler` via the `serve` dep).
 
 **One port per worktree — never reuse a server across worktrees.** Each worktree serves only its own files, so a server on `:3000` from another tree (or IntelliJ's autostart) will show you the *wrong* worktree's code. Pick a distinct `PORT` per worktree and hand the user that exact URL when they need to test your branch — they can't `git checkout` your worktree from the shared checkout, so a running server pointed at the worktree is how they see your change. Same rule for Playwright: it reads `PORT`/a `.port` file (default 3000) and will `reuseExistingServer` locally — set a per-worktree `PORT` (or `.port`) so a test run can't silently hit another tree's server.
 
 **Servers are on-demand, one per worktree, stopped when done — not always-on.** A worktree is just files; nothing serves it until someone starts a server. When a change needs the user to eyeball it, the hand-off MUST give them the copy-paste **start command** and the **URL**, and tell them to **stop it when done**. Don't start one speculatively, and don't leave stale servers running across worktrees (that's how the wrong-tree-on-`:3000` mixup happens). Template:
 ```bash
-# start — run from the worktree dir:
-cd <worktree-path> && PORT=3007 node test-server.js     # → http://localhost:3007/app/...
+# start — pass the worktree's test-server.js by absolute path (no cd):
+PORT=3007 node <worktree-path>/test-server.js     # → http://localhost:3007/app/...
 # stop when done:  Ctrl-C  (or, if backgrounded:)  lsof -ti:3007 | xargs kill
 ```
 Any server *you* (the agent) start during a session, tear down before ending the session unless the user still has it open to test.
