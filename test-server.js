@@ -1,6 +1,8 @@
 const http = require('http');
 const handler = require('./node_modules/serve-handler');
 
+process.chdir(__dirname);
+
 const PORT = process.env.PORT || 3000;
 
 http.createServer((req, res) => {
