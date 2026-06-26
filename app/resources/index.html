@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Resources</title>
+<link rel="stylesheet" href="../../styles/theme.css">
+<link rel="stylesheet" href="../../styles/hub.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#fff8f0;display:flex;flex-direction:column;align-items:center;padding:32px 16px 48px;}
+h1{font-size:3em;color:#333;margin-bottom:32px;}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
+.home{color:#8E44AD;}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:150px;height:150px;border-radius:20px;text-decoration:none;color:#333;font-size:1em;font-family:inherit;font-weight:bold;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.12);transition:transform 0.15s,box-shadow 0.15s;background:#fff;padding:0 0 12px;}
+.tile:hover{transform:translateY(-4px);box-shadow:0 8px 18px rgba(0,0,0,0.18);}
+.tile svg{flex:1;width:100%;padding:16px 16px 8px;}
+.tile span{font-size:0.95em;text-align:center;padding:0 8px;}
+</style>
+</head>
+<body>
+<a class="home" href="../index.html">&#127968; Home</a>
+<h1>Resources</h1>
+<div class="tiles">
+
+  <a class="tile" href="learning-catalogue/" style="background:#F5EEFF;">
+    <svg viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="10" width="14" height="42" rx="2" fill="#9B59B6"/>
+      <rect x="26" y="6" width="13" height="46" rx="2" fill="#C39BD3"/>
+      <rect x="41" y="14" width="13" height="38" rx="2" fill="#8E44AD"/>
+      <rect x="54" y="6" width="16" height="46" rx="2" fill="#D2B4DE" transform="rotate(8 62 29)"/>
+      <line x1="13" y1="20" x2="21" y2="20" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="29" y1="16" x2="36" y2="16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      <line x1="44" y1="24" x2="51" y2="24" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span>Learning Catalogue</span>
+  </a>
+
+</div>
+</body>
+</html>
