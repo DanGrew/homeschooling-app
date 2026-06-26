@@ -1,0 +1,49 @@
+{
+  "learnings": [
+    {
+      "id": "recognise-colours",
+      "icon": "🎨",
+      "title": "Recognise colours",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["red", "blue", "yellow", "colour", "name"],
+      "focus": "Recognise and name everyday colours.",
+      "concepts": ["Colour", "Naming", "Matching"],
+      "lookFor": ["Names a colour", "Finds a matching colour", "Sorts objects by colour"],
+      "curriculum": ["ead.colour-recognition", "cl.descriptive-vocab"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Find the colour I call out" }
+      ]
+    },
+    {
+      "id": "sort-warm-cool-colours",
+      "icon": "🔥",
+      "title": "Sort warm & cool colours",
+      "learningIcons": ["compare", "observe"],
+      "keywords": ["warm", "cool", "red", "blue", "sort"],
+      "focus": "Sort colours into warm and cool families.",
+      "concepts": ["Colour families", "Warm", "Cool"],
+      "lookFor": ["Groups red and orange as warm", "Groups blue and green as cool", "Explains why a colour is warm or cool"],
+      "curriculum": ["ead.colour-families", "ead.colour-recognition"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Sort the objects into warm and cool colours" }
+      ]
+    },
+    {
+      "id": "make-a-pretend-scene",
+      "icon": "🏠",
+      "title": "Make a pretend scene",
+      "learningIcons": ["create", "talk"],
+      "keywords": ["pretend", "scene", "story", "small world"],
+      "focus": "Arrange objects to make a pretend small-world scene.",
+      "concepts": ["Pretend play", "Small world", "Imagination"],
+      "lookFor": ["Lets one object stand for another", "Tells a story about the scene", "Adds new ideas to the scene"],
+      "curriculum": ["ead.pretend-play", "ead.making-modelling"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Place objects to build a pretend scene" }
+      ]
+    }
+  ]
+}
