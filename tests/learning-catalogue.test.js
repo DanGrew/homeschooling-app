@@ -62,3 +62,53 @@ test('standard nav-bar with home link is present', async ({ page }) => {
   await expect(page.locator('.nav-bar a').first()).toBeVisible()
   await expect(page.locator('.activity-title')).toContainText('Learning Catalogue')
 })
+
+const playgroundNames = [...new Set(allLearnings.flatMap(l => l.playgrounds.map(v => index.playgrounds[v.id].name)))]
+
+test('renders an All chip plus one chip per area and per playground present', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="lc-chip"]')).toHaveCount(1 + groups.length + playgroundNames.length)
+  await expect(page.locator('[data-testid="lc-chip"]').first()).toHaveText('All')
+  await expect(page.locator('[data-testid="lc-chip"][data-chip="all"]')).toHaveClass(/lc-chip-on/)
+})
+
+test('typing in search narrows the list to matching cards', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#lc-search').fill(sample.title)
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(1)
+  await expect(page.locator('.lc-card', { hasText: sample.title })).toBeVisible()
+})
+
+test('clearing the search restores the full grouped list', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#lc-search').fill(sample.title)
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(1)
+  await page.locator('#lc-search').fill('')
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(allLearnings.length)
+  await expect(page.locator('.lc-area')).toHaveText(groups.map(g => g.title))
+})
+
+test('tapping an area chip shows only that area, preserving its header', async ({ page }) => {
+  await page.goto(URL)
+  const area = groups[0]
+  await page.locator('[data-testid="lc-chip"]', { hasText: area.title }).click()
+  await expect(page.locator('.lc-area')).toHaveText([area.title])
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(area.learnings.length)
+})
+
+test('tapping a playground chip shows only learnings that practise there', async ({ page }) => {
+  await page.goto(URL)
+  const name = playgroundNames[0]
+  const expected = allLearnings.filter(l => l.playgrounds.some(v => index.playgrounds[v.id].name === name)).length
+  await page.locator('[data-testid="lc-chip"]', { hasText: name }).click()
+  await expect(page.locator('[data-testid="lc-chip"]', { hasText: name })).toHaveClass(/lc-chip-on/)
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(expected)
+})
+
+test('opening a card hides the filter bar; back restores it', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await expect(page.locator('#lc-filter')).toBeHidden()
+  await page.locator('[data-testid="lc-back"]').click()
+  await expect(page.locator('#lc-filter')).toBeVisible()
+})

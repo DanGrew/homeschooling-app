@@ -3,7 +3,14 @@ var LC = {
   iconMap: {},
   playgrounds: {},
   listEl: null,
-  detailEl: null
+  detailEl: null,
+  chipsEl: null,
+  searchEl: null,
+  filterEl: null,
+  groups: [],
+  chips: [],
+  chip: { type: 'all', id: 'all', label: 'All' },
+  query: ''
 };
 
 function lcFetchJson(url) {
@@ -49,6 +56,7 @@ function lcShowDetail(learning) {
     '<div class="lc-sec"><div class="lc-lab">📚 Curriculum</div><div class="lc-pills">' + learning.curriculum.map(function(k) { return '<span class="lc-pill lc-cur">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">▶ Where to practise</div>' + learning.playgrounds.map(function(v) { return '<a class="lc-venue" data-testid="lc-venue" href="' + activityHref(v.id) + '"><span class="lc-vi">' + LC.playgrounds[v.id].emoji + '</span><span class="lc-vt"><b>' + LC.playgrounds[v.id].name + '</b><span>' + v.note + '</span></span><span class="lc-go">▶</span></a>'; }).join('') + '</div>';
   LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);
+  LC.filterEl.style.display = 'none';
   LC.listEl.style.display = 'none';
   LC.detailEl.style.display = 'block';
   window.scrollTo(0, 0);
@@ -56,7 +64,46 @@ function lcShowDetail(learning) {
 
 function lcShowList() {
   LC.detailEl.style.display = 'none';
+  LC.filterEl.style.display = 'block';
   LC.listEl.style.display = 'block';
+}
+
+function lcApplyFilter() {
+  lcRenderList(lcFilter(LC.groups, LC.query, LC.chip));
+}
+
+function lcOnSearch(e) {
+  LC.query = e.target.value;
+  lcApplyFilter();
+}
+
+function lcRenderChip(chip) {
+  var el = document.createElement('button');
+  el.className = lcChipClass(chip, LC.chip);
+  el.textContent = chip.label;
+  el.setAttribute('data-testid', 'lc-chip');
+  el.setAttribute('data-chip', chip.id);
+  el.addEventListener('click', function() { lcSelectChip(chip); });
+  LC.chipsEl.appendChild(el);
+}
+
+function lcRenderChips() {
+  LC.chipsEl.innerHTML = '';
+  LC.chips.forEach(lcRenderChip);
+}
+
+function lcSelectChip(chip) {
+  LC.chip = chip;
+  lcRenderChips();
+  lcApplyFilter();
+}
+
+function lcReady(index, groups) {
+  LC.groups = groups;
+  LC.chips = lcBuildChips(index, lcAllLearnings(groups));
+  LC.chip = LC.chips[0];
+  lcRenderChips();
+  lcApplyFilter();
 }
 
 function lcOnIndex(index) {
@@ -65,12 +112,16 @@ function lcOnIndex(index) {
   Promise.all(index.areas.map(function(area) {
     return lcFetchJson(LC.base + area.file).then(function(data) { return { learnings: data.learnings }; });
   })).then(function(payloads) {
-    lcRenderList(assembleGroups(index.areas, payloads));
+    lcReady(index, assembleGroups(index.areas, payloads));
   });
 }
 
 function initLearningCatalogue() {
   LC.listEl = document.getElementById('lc-list');
   LC.detailEl = document.getElementById('lc-detail');
+  LC.chipsEl = document.getElementById('lc-chips');
+  LC.searchEl = document.getElementById('lc-search');
+  LC.filterEl = document.getElementById('lc-filter');
+  LC.searchEl.addEventListener('input', lcOnSearch);
   lcFetchJson(LC.base + 'index.json').then(lcOnIndex);
 }
