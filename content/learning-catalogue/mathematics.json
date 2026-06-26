@@ -9,7 +9,7 @@
       "focus": "Count a small group of objects up to five.",
       "concepts": ["Counting", "One-to-one", "Numbers"],
       "lookFor": ["Counts each once", "Says how many", "Stops at the last"],
-      "curriculum": ["Mathematics", "Counting to 5"],
+      "curriculum": ["maths.counting-5"],
       "area": "mathematics",
       "playgrounds": [
         { "id": "object-playground", "note": "Add objects and count them" }

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Learning Catalogue — area file (learnings for one EYFS area)",
+  "type": "object",
+  "required": ["learnings"],
+  "additionalProperties": false,
+  "properties": {
+    "learnings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "icon", "title", "learningIcons", "keywords", "focus", "concepts", "lookFor", "curriculum", "area", "playgrounds"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "icon": { "type": "string" },
+          "title": { "type": "string" },
+          "learningIcons": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "keywords": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "focus": { "type": "string" },
+          "concepts": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "lookFor": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "curriculum": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" }
+          },
+          "area": { "type": "string" },
+          "playgrounds": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["id", "note"],
+              "additionalProperties": false,
+              "properties": {
+                "id": { "type": "string" },
+                "note": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

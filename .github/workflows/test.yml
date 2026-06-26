@@ -290,6 +290,18 @@ jobs:
           name: report-validate-json
           path: reports/validate-json.txt
 
+  validate-catalogue-refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p reports
+      - run: node scripts/validate-catalogue-refs.js reports/validate-catalogue-refs.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: report-validate-catalogue-refs
+          path: reports/validate-catalogue-refs.txt
+
   check-contracts:
     runs-on: ubuntu-latest
     steps:
@@ -358,6 +370,7 @@ jobs:
       - no-pure-fn-outside-core
       - check-manifest-files
       - validate-json
+      - validate-catalogue-refs
       - check-contracts
       - contracts-speakable
     if: always() && github.event_name == 'pull_request'
@@ -396,6 +409,7 @@ jobs:
             row "no-pure-fn-outside-core" "$(smry reports/no-pure-fn-outside-core.txt)"
             row "manifest files" "$(smry reports/check-manifest-files.txt)"
             row "validate-json" "$(smry reports/validate-json.txt)"
+            row "catalogue refs" "$(smry reports/validate-catalogue-refs.txt)"
             row "ui-cyclomatic" "$(smry reports/ui-cyclomatic.txt)"
             row "Page Contract Checks" "$(smry reports/contracts.txt)"
             SPEAKABLE=$(sed 's/\x1b\[[0-9;]*[A-Za-z]//g' reports/contracts-speakable.txt 2>/dev/null)
