@@ -1,0 +1,17 @@
+{
+  "learningIcons": [
+    { "id": "observe", "emoji": "👀", "label": "Observe" },
+    { "id": "talk", "emoji": "💬", "label": "Talk" },
+    { "id": "count", "emoji": "🔢", "label": "Count" },
+    { "id": "compare", "emoji": "⚖️", "label": "Compare" },
+    { "id": "listen", "emoji": "🎵", "label": "Listen" },
+    { "id": "create", "emoji": "🎨", "label": "Create" }
+  ],
+  "playgrounds": {
+    "object-playground": { "emoji": "🟦", "name": "Object Playground" }
+  },
+  "areas": [
+    { "id": "communication-language", "title": "Communication & Language", "order": 1, "file": "communication-language.json" },
+    { "id": "mathematics", "title": "Mathematics", "order": 2, "file": "mathematics.json" }
+  ]
+}
