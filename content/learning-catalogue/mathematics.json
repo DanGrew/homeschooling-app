@@ -20,7 +20,7 @@
       "icon": "🔺",
       "title": "Recognise 2D shapes",
       "learningIcons": ["observe", "talk"],
-      "keywords": ["circle", "square", "triangle", "sides", "corners", "rectangle", "star", "heart"],
+      "keywords": ["circle", "square", "triangle", "sides", "corners", "rectangle", "pentagon", "star", "heart"],
       "focus": "Spot and name flat shapes by their sides and corners.",
       "concepts": ["Shapes", "Sides", "Corners", "Counting corners"],
       "lookFor": ["Names a circle, square or triangle", "Points to the sides and corners", "Finds a matching shape", "Counts the corners of a shape"],
