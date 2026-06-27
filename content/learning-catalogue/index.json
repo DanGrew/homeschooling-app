@@ -10,6 +10,10 @@
   "playgrounds": {
     "object-playground": { "emoji": "🟦", "name": "Object Playground" }
   },
+  "talkPrompts": {
+    "actions": ["Name / point out", "Compare", "Count / measure", "Predict", "Pick a favourite"],
+    "topics": ["Colour", "Shape", "Size", "Number / amount", "Position", "Pattern"]
+  },
   "areas": [
     { "id": "communication-language", "title": "Communication & Language", "order": 1, "file": "communication-language.json" },
     { "id": "physical-development", "title": "Physical Development", "order": 2, "file": "physical-development.json" },

@@ -3,7 +3,8 @@ const require = createRequire(import.meta.url);
 const {
   buildIconMap, assembleGroups, activityHref,
   lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcChipClass,
-  lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter
+  lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
+  lcTalkColumn, lcTalkColumnsHtml
 } = require('../../core/learning-catalogue/learning-catalogue-core.js');
 
 describe('buildIconMap', () => {
@@ -162,6 +163,33 @@ describe('lcMatchesChip', () => {
 describe('lcFilterLearnings', () => {
   it('keeps learnings matching both chip and query', () => {
     expect(lcFilterLearnings([COUNT, PAINT], 'mix', ALL)).toEqual([PAINT]);
+  });
+});
+
+describe('lcTalkColumn', () => {
+  it('wraps a heading and its items as a column of list entries', () => {
+    expect(lcTalkColumn('Ask them to…', ['Compare', 'Predict'])).toBe(
+      '<div class="lc-talk-col"><div class="lc-talk-ch">Ask them to…</div>' +
+      '<ul class="lc-talk-ul"><li>Compare</li><li>Predict</li></ul></div>'
+    );
+  });
+  it('renders an empty list for no items', () => {
+    expect(lcTalkColumn('…about', [])).toBe(
+      '<div class="lc-talk-col"><div class="lc-talk-ch">…about</div><ul class="lc-talk-ul"></ul></div>'
+    );
+  });
+});
+
+describe('lcTalkColumnsHtml', () => {
+  const TALK = { actions: ['Name / point out', 'Compare'], topics: ['Colour', 'Shape'] };
+  it('emits an actions column then a topics column with sentence-frame headings', () => {
+    const html = lcTalkColumnsHtml(TALK);
+    expect(html).toBe(lcTalkColumn('Ask them to…', TALK.actions) + lcTalkColumn('…about', TALK.topics));
+    expect(html.indexOf('Ask them to…')).toBeLessThan(html.indexOf('…about'));
+  });
+  it('includes every action and topic', () => {
+    const html = lcTalkColumnsHtml(TALK);
+    ['Name / point out', 'Compare', 'Colour', 'Shape'].forEach(t => expect(html).toContain('<li>' + t + '</li>'));
   });
 });
 

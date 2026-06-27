@@ -41,6 +41,16 @@
 .lc-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px;}
 .lc-chip{border:1px solid #e6e3ef;background:#fff;color:#55556a;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:600;cursor:pointer;}
 .lc-chip-on{background:#7b4fc0;border-color:#7b4fc0;color:#fff;}
+.lc-talk-btn{position:fixed;right:14px;bottom:14px;z-index:5;background:#7b4fc0;color:#fff;border:none;border-radius:999px;padding:12px 18px;font-size:14px;font-weight:700;box-shadow:0 3px 12px rgba(0,0,0,.2);cursor:pointer;}
+.lc-talk-pop{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;}
+.lc-talk-backdrop{position:absolute;inset:0;background:rgba(20,16,30,.45);}
+.lc-talk-card{position:relative;background:#fff;border-radius:20px;padding:18px 20px 22px;max-width:420px;width:88%;box-shadow:0 12px 44px rgba(0,0,0,.32);}
+.lc-talk-head{display:flex;align-items:center;font-size:18px;font-weight:800;margin-bottom:14px;}
+.lc-talk-x{margin-left:auto;background:none;border:none;font-size:18px;color:#8a8a9a;cursor:pointer;line-height:1;padding:2px 4px;}
+.lc-talk-cols{display:flex;gap:18px;}
+.lc-talk-col{flex:1;}
+.lc-talk-ch{font-size:12px;color:#9a6bd0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+.lc-talk-ul{margin:0;padding-left:18px;font-size:15px;line-height:1.9;color:#444;}
 </style>
 </head>
 <body>
@@ -53,6 +63,14 @@
     </div>
     <div id="lc-list"></div>
     <div id="lc-detail" style="display:none"></div>
+  </div>
+  <button id="lc-talk-btn" class="lc-talk-btn" data-testid="lc-talk-btn" aria-label="Talk prompts">🗣 Talk prompts</button>
+  <div id="lc-talk-pop" class="lc-talk-pop" data-testid="lc-talk-pop" role="dialog" aria-label="Talk prompts">
+    <div id="lc-talk-backdrop" class="lc-talk-backdrop"></div>
+    <div class="lc-talk-card">
+      <div class="lc-talk-head">🗣 Talk prompts<button id="lc-talk-close" class="lc-talk-x" data-testid="lc-talk-close" aria-label="Close">✕</button></div>
+      <div id="lc-talk-cols" class="lc-talk-cols" data-testid="lc-talk-cols"></div>
+    </div>
   </div>
 </div>
 <script src="../../../core/learning-catalogue/learning-catalogue-core.js"></script>
