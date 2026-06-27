@@ -7,6 +7,8 @@ var LC = {
   chipsEl: null,
   searchEl: null,
   filterEl: null,
+  talkPopEl: null,
+  talkColsEl: null,
   groups: [],
   chips: [],
   chip: { type: 'all', id: 'all', label: 'All' },
@@ -106,9 +108,18 @@ function lcReady(index, groups) {
   lcApplyFilter();
 }
 
+function lcOpenTalk() {
+  LC.talkPopEl.style.display = 'flex';
+}
+
+function lcCloseTalk() {
+  LC.talkPopEl.style.display = 'none';
+}
+
 function lcOnIndex(index) {
   LC.iconMap = buildIconMap(index.learningIcons);
   LC.playgrounds = index.playgrounds;
+  LC.talkColsEl.innerHTML = lcTalkColumnsHtml(index.talkPrompts);
   Promise.all(index.areas.map(function(area) {
     return lcFetchJson(LC.base + area.file).then(function(data) { return { learnings: data.learnings }; });
   })).then(function(payloads) {
@@ -122,6 +133,11 @@ function initLearningCatalogue() {
   LC.chipsEl = document.getElementById('lc-chips');
   LC.searchEl = document.getElementById('lc-search');
   LC.filterEl = document.getElementById('lc-filter');
+  LC.talkPopEl = document.getElementById('lc-talk-pop');
+  LC.talkColsEl = document.getElementById('lc-talk-cols');
   LC.searchEl.addEventListener('input', lcOnSearch);
+  document.getElementById('lc-talk-btn').addEventListener('click', lcOpenTalk);
+  document.getElementById('lc-talk-close').addEventListener('click', lcCloseTalk);
+  document.getElementById('lc-talk-backdrop').addEventListener('click', lcCloseTalk);
   lcFetchJson(LC.base + 'index.json').then(lcOnIndex);
 }

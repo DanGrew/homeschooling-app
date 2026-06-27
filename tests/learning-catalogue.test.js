@@ -112,3 +112,38 @@ test('opening a card hides the filter bar; back restores it', async ({ page }) =
   await page.locator('[data-testid="lc-back"]').click()
   await expect(page.locator('#lc-filter')).toBeVisible()
 })
+
+const talk = index.talkPrompts
+
+test('Talk prompts button opens a popup with both static lists', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="lc-talk-btn"]')).toBeVisible()
+  await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeHidden()
+  await page.locator('[data-testid="lc-talk-btn"]').click()
+  await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeVisible()
+  const items = page.locator('[data-testid="lc-talk-cols"] li')
+  await expect(items).toHaveCount(talk.actions.length + talk.topics.length)
+  for (const action of talk.actions) {
+    await expect(page.locator('[data-testid="lc-talk-cols"] li', { hasText: action })).toBeVisible()
+  }
+  for (const topic of talk.topics) {
+    await expect(page.locator('[data-testid="lc-talk-cols"] li', { hasText: topic })).toBeVisible()
+  }
+})
+
+test('Talk prompts popup closes via the close button', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('[data-testid="lc-talk-btn"]').click()
+  await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeVisible()
+  await page.locator('[data-testid="lc-talk-close"]').click()
+  await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeHidden()
+})
+
+test('Talk prompts button is available on the detail view too', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('[data-testid="lc-talk-btn"]')).toBeVisible()
+  await page.locator('[data-testid="lc-talk-btn"]').click()
+  await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeVisible()
+})

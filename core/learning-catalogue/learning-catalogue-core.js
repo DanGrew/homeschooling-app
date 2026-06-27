@@ -65,8 +65,18 @@ function lcFilter(groups, query, chip) {
   }).filter(function(group) { return group.learnings.length > 0; });
 }
 
+function lcTalkColumn(heading, items) {
+  return '<div class="lc-talk-col"><div class="lc-talk-ch">' + heading + '</div><ul class="lc-talk-ul">' +
+    items.map(function(item) { return '<li>' + item + '</li>'; }).join('') + '</ul></div>';
+}
+
+function lcTalkColumnsHtml(talkPrompts) {
+  return lcTalkColumn('Ask them to…', talkPrompts.actions) + lcTalkColumn('…about', talkPrompts.topics);
+}
+
 if (typeof module !== 'undefined') module.exports = {
   buildIconMap, assembleGroups, activityHref,
   lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcChipClass,
-  lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter
+  lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
+  lcTalkColumn, lcTalkColumnsHtml
 };
