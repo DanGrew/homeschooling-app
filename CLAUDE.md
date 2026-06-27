@@ -49,6 +49,12 @@ See `TESTING.md` for full ways of working. Summary:
 
 **First-time setup before running tests:** `npm install`, then `npx playwright install chromium` (the browser binary is not vendored). Playwright auto-starts its own web server (`webServer` in `playwright.config.js`) — you do NOT need to start a server to run tests.
 
+**Fresh worktree needs `node_modules` before the server or tests run.** A worktree starts with no `node_modules`, and `test-server.js` does `require('./node_modules/serve-handler')` *relative to the script dir* — so the worktree itself must have one, even with the no-`cd` run form. Symlink the primary checkout's instead of a fresh `npm install`:
+```bash
+ln -sfn /abs/path/to/homeschooling-app/node_modules /abs/path/to/<worktree>/node_modules
+```
+`.gitignore` ignores `node_modules` (no trailing slash) so the symlink is **not** committed — never `rm` it to "clean" before a commit; `git add -A` is already safe. Deleting it is what breaks `node test-server.js` with `Cannot find module './node_modules/serve-handler'`.
+
 **Run the app locally (no IntelliJ needed) — serve from the worktree you're working in, so what you see is *that worktree's* code. Always give the no-`cd` form: pass `test-server.js` by its absolute path, never `cd` into the worktree first** (a `cd` in a compound command triggers a permission prompt):
 ```bash
 PORT=3001 node /abs/path/to/<worktree>/test-server.js     # → http://localhost:3001/
