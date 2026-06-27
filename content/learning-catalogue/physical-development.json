@@ -5,11 +5,11 @@
       "icon": "🔄",
       "title": "Turn & rotate",
       "learningIcons": ["observe", "talk"],
-      "keywords": ["turn", "rotate", "spin", "round"],
+      "keywords": ["turn", "rotate", "spin", "round", "back", "round and round"],
       "focus": "Turn and rotate an object to change the way it faces.",
-      "concepts": ["Rotation", "Turning", "Orientation"],
-      "lookFor": ["Turns an object all the way round", "Says it has turned", "Rotates it to match a target"],
-      "curriculum": ["pd.fine-motor-circular", "maths.spatial"],
+      "concepts": ["Rotation", "Turning", "Orientation", "Both ways"],
+      "lookFor": ["Turns an object all the way round", "Says it has turned", "Rotates it to match a target", "Spins it the other way"],
+      "curriculum": ["pd.fine-motor-circular", "maths.spatial", "cl.descriptive-vocab"],
       "area": "physical-development",
       "playgrounds": [
         { "id": "object-playground", "note": "Spin and turn objects round" }

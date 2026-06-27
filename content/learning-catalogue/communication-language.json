@@ -5,14 +5,14 @@
       "icon": "🔤",
       "title": "Name objects",
       "learningIcons": ["observe", "talk"],
-      "keywords": ["object", "name", "point", "what is it"],
+      "keywords": ["object", "name", "point", "what is it", "colour", "shape"],
       "focus": "Name everyday objects and talk about what you see.",
       "concepts": ["Objects", "Vocabulary", "Naming"],
-      "lookFor": ["Points to an object", "Names it out loud", "Tries a new word"],
-      "curriculum": ["cl.topic-vocabulary"],
+      "lookFor": ["Points to an object", "Names it out loud", "Tries a new word", "Hears the object name its colour and shape"],
+      "curriculum": ["cl.topic-vocabulary", "uw.technology"],
       "area": "communication-language",
       "playgrounds": [
-        { "id": "object-playground", "note": "Tap objects — each says its name" }
+        { "id": "object-playground", "note": "Tap objects — each says its name, colour and shape" }
       ]
     }
   ]
