@@ -5,11 +5,11 @@
       "icon": "🎨",
       "title": "Recognise colours",
       "learningIcons": ["observe", "talk"],
-      "keywords": ["red", "blue", "yellow", "colour", "name"],
+      "keywords": ["red", "blue", "yellow", "colour", "name", "orange", "green", "purple"],
       "focus": "Recognise and name everyday colours.",
       "concepts": ["Colour", "Naming", "Matching"],
       "lookFor": ["Names a colour", "Finds a matching colour", "Sorts objects by colour"],
-      "curriculum": ["ead.colour-recognition", "cl.descriptive-vocab"],
+      "curriculum": ["ead.colour-recognition", "cl.descriptive-vocab", "cl.listening"],
       "area": "expressive-arts-design",
       "playgrounds": [
         { "id": "object-playground", "note": "Find the colour I call out" }
@@ -20,11 +20,11 @@
       "icon": "🔥",
       "title": "Sort warm & cool colours",
       "learningIcons": ["compare", "observe"],
-      "keywords": ["warm", "cool", "red", "blue", "sort"],
+      "keywords": ["warm", "cool", "red", "blue", "sort", "orange", "green"],
       "focus": "Sort colours into warm and cool families.",
       "concepts": ["Colour families", "Warm", "Cool"],
       "lookFor": ["Groups red and orange as warm", "Groups blue and green as cool", "Explains why a colour is warm or cool"],
-      "curriculum": ["ead.colour-families", "ead.colour-recognition"],
+      "curriculum": ["ead.colour-families", "ead.colour-recognition", "cl.prediction"],
       "area": "expressive-arts-design",
       "playgrounds": [
         { "id": "object-playground", "note": "Sort the objects into warm and cool colours" }
@@ -39,7 +39,7 @@
       "focus": "Arrange objects to make a pretend small-world scene.",
       "concepts": ["Pretend play", "Small world", "Imagination"],
       "lookFor": ["Lets one object stand for another", "Tells a story about the scene", "Adds new ideas to the scene"],
-      "curriculum": ["ead.pretend-play", "ead.making-modelling"],
+      "curriculum": ["ead.pretend-play", "ead.making-modelling", "psed.independence"],
       "area": "expressive-arts-design",
       "playgrounds": [
         { "id": "object-playground", "note": "Place objects to build a pretend scene" }

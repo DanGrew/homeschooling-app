@@ -20,11 +20,11 @@
       "icon": "🔺",
       "title": "Recognise 2D shapes",
       "learningIcons": ["observe", "talk"],
-      "keywords": ["circle", "square", "triangle", "sides", "corners"],
+      "keywords": ["circle", "square", "triangle", "sides", "corners", "rectangle", "star", "heart"],
       "focus": "Spot and name flat shapes by their sides and corners.",
-      "concepts": ["Shapes", "Sides", "Corners"],
-      "lookFor": ["Names a circle, square or triangle", "Points to the sides and corners", "Finds a matching shape"],
-      "curriculum": ["maths.shape-2d"],
+      "concepts": ["Shapes", "Sides", "Corners", "Counting corners"],
+      "lookFor": ["Names a circle, square or triangle", "Points to the sides and corners", "Finds a matching shape", "Counts the corners of a shape"],
+      "curriculum": ["maths.shape-2d", "cl.technical-vocab"],
       "area": "mathematics",
       "playgrounds": [
         { "id": "object-playground", "note": "Find the shape I call out" }
@@ -35,10 +35,10 @@
       "icon": "📏",
       "title": "Compare sizes",
       "learningIcons": ["compare", "observe"],
-      "keywords": ["big", "small", "bigger", "smaller", "tall"],
+      "keywords": ["big", "small", "bigger", "smaller", "tall", "huge", "tiny"],
       "focus": "Compare two objects and say which is bigger or smaller.",
-      "concepts": ["Size", "Comparing", "Big and small"],
-      "lookFor": ["Says which is bigger", "Puts objects in size order", "Uses words like bigger and smaller"],
+      "concepts": ["Size", "Comparing", "Big and small", "Biggest and smallest"],
+      "lookFor": ["Says which is bigger", "Puts objects in size order", "Uses words like bigger and smaller", "Makes something as big or as small as it can"],
       "curriculum": ["maths.size-measure", "cl.descriptive-vocab"],
       "area": "mathematics",
       "playgrounds": [
@@ -61,6 +61,21 @@
       ]
     },
     {
+      "id": "take-objects-away",
+      "icon": "➖",
+      "title": "Take away",
+      "learningIcons": ["count", "compare"],
+      "keywords": ["take away", "how many left", "fewer", "remove", "less"],
+      "focus": "Take some away and count how many are left.",
+      "concepts": ["Taking away", "How many left", "Counting back"],
+      "lookFor": ["Removes objects one at a time", "Counts how many are left", "Stops when the group reaches the target"],
+      "curriculum": ["maths.composition", "maths.counting-5"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Build a group, then take some away and count what's left" }
+      ]
+    },
+    {
       "id": "make-a-repeating-pattern",
       "icon": "🔁",
       "title": "Make a repeating pattern",
@@ -68,8 +83,8 @@
       "keywords": ["pattern", "repeat", "next", "again"],
       "focus": "Make and continue a simple repeating pattern.",
       "concepts": ["Pattern", "Repeating", "Sequence"],
-      "lookFor": ["Copies a repeating pattern", "Says what comes next", "Spots a break in the pattern"],
-      "curriculum": ["maths.pattern", "cl.sequencing-language"],
+      "lookFor": ["Copies a repeating pattern", "Says what comes next", "Spots a break in the pattern", "Predicts what comes next"],
+      "curriculum": ["maths.pattern", "cl.sequencing-language", "cl.prediction"],
       "area": "mathematics",
       "playgrounds": [
         { "id": "object-playground", "note": "Lay objects in a repeating pattern" }
@@ -88,6 +103,21 @@
       "area": "mathematics",
       "playgrounds": [
         { "id": "object-playground", "note": "Move objects and say where they go" }
+      ]
+    },
+    {
+      "id": "move-in-a-direction",
+      "icon": "🧭",
+      "title": "Move up, down, left, right",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["up", "down", "left", "right", "move"],
+      "focus": "Move an object up, down, left or right and say which way it went.",
+      "concepts": ["Direction", "Up and down", "Left and right"],
+      "lookFor": ["Moves an object the way you ask", "Names the direction it moved", "Knows all four directions"],
+      "curriculum": ["maths.spatial", "cl.technical-vocab"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Use the arrows to move the object up, down, left and right" }
       ]
     }
   ]
