@@ -42,7 +42,8 @@
       "curriculum": ["uw.animals-nature", "cl.topic-vocabulary"],
       "area": "understanding-the-world",
       "playgrounds": [
-        { "id": "word-lesson", "note": "Trace and say the names of farm and wild animals" }
+        { "id": "word-lesson", "note": "Trace and say the names of farm and wild animals" },
+        { "id": "word-builder", "note": "Spell out animal names letter by letter" }
       ]
     },
     {
@@ -57,7 +58,8 @@
       "curriculum": ["uw.community", "cl.topic-vocabulary"],
       "area": "understanding-the-world",
       "playgrounds": [
-        { "id": "word-lesson", "note": "Trace and say words for vehicles, food and helpers" }
+        { "id": "word-lesson", "note": "Trace and say words for vehicles, food and helpers" },
+        { "id": "word-builder", "note": "Build words for vehicles, food and helpers" }
       ]
     }
   ]

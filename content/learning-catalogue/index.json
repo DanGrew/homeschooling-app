@@ -14,7 +14,8 @@
     "logic-gates": { "emoji": "⚡", "name": "Logic Gates" },
     "clock": { "emoji": "🕐", "name": "Clock" },
     "character-lesson": { "emoji": "✏️", "name": "Letter Tracing" },
-    "word-lesson": { "emoji": "📝", "name": "Trace Words" }
+    "word-lesson": { "emoji": "📝", "name": "Trace Words" },
+    "word-builder": { "emoji": "🔡", "name": "Word Builder" }
   },
   "talkPrompts": {
     "actions": ["Name / point out", "Compare", "Count / measure", "Predict", "Pick a favourite"],
