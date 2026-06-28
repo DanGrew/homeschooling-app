@@ -13,7 +13,8 @@
     "colour-wheel": { "emoji": "🌈", "name": "Colour Wheel" },
     "logic-gates": { "emoji": "⚡", "name": "Logic Gates" },
     "clock": { "emoji": "🕐", "name": "Clock" },
-    "character-lesson": { "emoji": "✏️", "name": "Letter Tracing" }
+    "character-lesson": { "emoji": "✏️", "name": "Letter Tracing" },
+    "word-lesson": { "emoji": "📝", "name": "Trace Words" }
   },
   "talkPrompts": {
     "actions": ["Name / point out", "Compare", "Count / measure", "Predict", "Pick a favourite"],
@@ -25,6 +26,7 @@
     { "id": "mathematics", "title": "Mathematics", "order": 3, "file": "mathematics.json" },
     { "id": "expressive-arts-design", "title": "Expressive Arts & Design", "order": 4, "file": "expressive-arts-design.json" },
     { "id": "understanding-the-world", "title": "Understanding the World", "order": 5, "file": "understanding-the-world.json" },
-    { "id": "literacy", "title": "Literacy", "order": 6, "file": "literacy.json" }
+    { "id": "literacy", "title": "Literacy", "order": 6, "file": "literacy.json" },
+    { "id": "personal-social-emotional", "title": "Personal, Social & Emotional", "order": 7, "file": "personal-social-emotional.json" }
   ]
 }

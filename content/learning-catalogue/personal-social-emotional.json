@@ -1,0 +1,19 @@
+{
+  "learnings": [
+    {
+      "id": "emotion-words",
+      "icon": "😊",
+      "title": "Emotion words",
+      "learningIcons": ["talk", "observe"],
+      "keywords": ["happy", "sad", "angry", "scared", "feeling", "feel"],
+      "focus": "Name and read words for feelings.",
+      "concepts": ["Feelings", "Emotions", "Naming feelings"],
+      "lookFor": ["Names a feeling like happy or sad", "Reads a feeling word", "Says how someone might feel", "Talks about their own feelings"],
+      "curriculum": ["psed.emotion-vocab", "cl.feeling-vocabulary"],
+      "area": "personal-social-emotional",
+      "playgrounds": [
+        { "id": "word-lesson", "note": "Trace and say words for how we feel" }
+      ]
+    }
+  ]
+}
