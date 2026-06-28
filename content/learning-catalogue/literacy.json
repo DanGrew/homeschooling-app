@@ -1,0 +1,34 @@
+{
+  "learnings": [
+    {
+      "id": "letter-sounds",
+      "icon": "🔤",
+      "title": "Letter sounds",
+      "learningIcons": ["listen", "talk"],
+      "keywords": ["letter", "sound", "phonics", "a", "b", "c", "name"],
+      "focus": "Hear the sound and name of each letter.",
+      "concepts": ["Letter sounds", "Letter names", "Phonics"],
+      "lookFor": ["Hears a letter's sound", "Says the letter's sound back", "Names the letter", "Spots the letter that makes a sound"],
+      "curriculum": ["literacy.phonics"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "character-lesson", "note": "Hear each letter's sound and name as you trace it" }
+      ]
+    },
+    {
+      "id": "trace-letters",
+      "icon": "✏️",
+      "title": "Trace letters",
+      "learningIcons": ["create", "observe"],
+      "keywords": ["trace", "letter", "write", "shape", "stroke", "line"],
+      "focus": "Trace letter shapes and learn how each letter is formed.",
+      "concepts": ["Letter formation", "Tracing", "Writing"],
+      "lookFor": ["Follows the letter stroke with a finger", "Starts at the right place", "Traces the whole letter shape", "Recognises the letter afterwards"],
+      "curriculum": ["literacy.word-recognition", "pd.fine-motor"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "character-lesson", "note": "Trace each letter shape from start to finish" }
+      ]
+    }
+  ]
+}

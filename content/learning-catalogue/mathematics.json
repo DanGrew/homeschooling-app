@@ -170,6 +170,21 @@
       "playgrounds": [
         { "id": "clock", "note": "Read the numbers and move the hands to tell the time" }
       ]
+    },
+    {
+      "id": "write-numerals",
+      "icon": "✏️",
+      "title": "Write numerals",
+      "learningIcons": ["create", "count"],
+      "keywords": ["write", "trace", "number", "numeral", "0", "9"],
+      "focus": "Trace numerals and learn how each number is written.",
+      "concepts": ["Numeral formation", "Tracing", "Numbers"],
+      "lookFor": ["Follows the number stroke with a finger", "Starts at the right place", "Traces the whole numeral", "Names the number afterwards"],
+      "curriculum": ["maths.numeral-recognition", "pd.fine-motor"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "character-lesson", "note": "Trace each numeral from start to finish" }
+      ]
     }
   ]
 }
