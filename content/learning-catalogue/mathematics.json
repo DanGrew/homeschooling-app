@@ -134,7 +134,7 @@
       "focus": "Put two groups together and count how many there are altogether.",
       "concepts": ["Adding", "Combining", "Total", "Altogether"],
       "lookFor": ["Builds a group in each box", "Watches the two groups join into the total", "Counts the total out loud", "Reads the numeral under each box"],
-      "curriculum": ["maths.composition", "maths.numeral-recognition", "uw.cause-effect", "pd.fine-motor"],
+      "curriculum": ["maths.composition", "maths.numeral-recognition", "maths.subitising", "uw.cause-effect", "pd.fine-motor"],
       "area": "mathematics",
       "playgrounds": [
         { "id": "number-interaction", "note": "Fill both boxes with + and count the total altogether" }
@@ -180,7 +180,7 @@
       "focus": "Trace numerals and learn how each number is written.",
       "concepts": ["Numeral formation", "Tracing", "Numbers"],
       "lookFor": ["Follows the number stroke with a finger", "Starts at the right place", "Traces the whole numeral", "Names the number afterwards"],
-      "curriculum": ["maths.numeral-recognition", "pd.fine-motor"],
+      "curriculum": ["maths.numeral-recognition", "pd.numeral-formation", "pd.fine-motor"],
       "area": "mathematics",
       "playgrounds": [
         { "id": "character-lesson", "note": "Trace each numeral from start to finish" }

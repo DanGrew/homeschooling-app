@@ -39,7 +39,7 @@
       "focus": "Learn and name farm and wild animals.",
       "concepts": ["Animals", "Farm animals", "Wild animals", "Naming"],
       "lookFor": ["Names a farm animal", "Names a wild animal", "Hears and repeats an animal name", "Tells a farm animal from a wild one"],
-      "curriculum": ["uw.animals-nature", "cl.topic-vocabulary"],
+      "curriculum": ["uw.animals-nature", "uw.world-awareness", "cl.topic-vocabulary"],
       "area": "understanding-the-world",
       "playgrounds": [
         { "id": "word-lesson", "note": "Trace and say the names of farm and wild animals" },
@@ -56,7 +56,7 @@
       "focus": "Learn words for vehicles, food and the people who help us.",
       "concepts": ["Vehicles", "Food", "People who help us", "Naming"],
       "lookFor": ["Names a vehicle", "Names a fruit or food", "Names a person who helps us", "Uses a new everyday word"],
-      "curriculum": ["uw.community", "cl.topic-vocabulary"],
+      "curriculum": ["uw.community", "uw.world-awareness", "cl.topic-vocabulary"],
       "area": "understanding-the-world",
       "playgrounds": [
         { "id": "word-lesson", "note": "Trace and say words for vehicles, food and helpers" },
