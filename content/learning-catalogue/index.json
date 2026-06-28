@@ -11,7 +11,8 @@
     "object-playground": { "emoji": "🟦", "name": "Object Playground" },
     "number-interaction": { "emoji": "➕", "name": "Number Interactions" },
     "colour-wheel": { "emoji": "🌈", "name": "Colour Wheel" },
-    "logic-gates": { "emoji": "⚡", "name": "Logic Gates" }
+    "logic-gates": { "emoji": "⚡", "name": "Logic Gates" },
+    "clock": { "emoji": "🕐", "name": "Clock" }
   },
   "talkPrompts": {
     "actions": ["Name / point out", "Compare", "Count / measure", "Predict", "Pick a favourite"],

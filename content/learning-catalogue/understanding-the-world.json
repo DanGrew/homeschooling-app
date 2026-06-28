@@ -14,6 +14,21 @@
       "playgrounds": [
         { "id": "logic-gates", "note": "Flip the switches and see which gates turn the lamp on" }
       ]
+    },
+    {
+      "id": "times-of-day",
+      "icon": "🌙",
+      "title": "Times of day",
+      "learningIcons": ["talk", "observe"],
+      "keywords": ["morning", "noon", "night", "day", "bedtime", "sky", "sun", "moon"],
+      "focus": "Talk about morning, noon and night and watch the sky change through the day.",
+      "concepts": ["Times of day", "Day and night", "Daily routine"],
+      "lookFor": ["Names morning, noon and night", "Watches the sky change from day to dark", "Talks about what they do at each time of day", "Links a time to something they do"],
+      "curriculum": ["uw.seasonal-change", "cl.topic-vocabulary", "psed.identity"],
+      "area": "understanding-the-world",
+      "playgrounds": [
+        { "id": "clock", "note": "Watch the sky change and talk about morning, noon and night" }
+      ]
     }
   ]
 }
