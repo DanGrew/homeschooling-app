@@ -12,7 +12,8 @@
       "curriculum": ["cl.topic-vocabulary", "uw.technology"],
       "area": "communication-language",
       "playgrounds": [
-        { "id": "object-playground", "note": "Tap objects — each says its name, colour and shape" }
+        { "id": "object-playground", "note": "Tap objects — each says its name, colour and shape" },
+        { "id": "number-interaction", "note": "Tap each fruit to hear its name" }
       ]
     }
   ]

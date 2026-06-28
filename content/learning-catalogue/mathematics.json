@@ -12,7 +12,8 @@
       "curriculum": ["maths.counting-5"],
       "area": "mathematics",
       "playgrounds": [
-        { "id": "object-playground", "note": "Add objects and count them out loud" }
+        { "id": "object-playground", "note": "Add objects and count them out loud" },
+        { "id": "number-interaction", "note": "Build a group with + and count the fruit out loud" }
       ]
     },
     {
@@ -42,7 +43,8 @@
       "curriculum": ["maths.size-measure", "cl.descriptive-vocab"],
       "area": "mathematics",
       "playgrounds": [
-        { "id": "object-playground", "note": "Make objects big or small and compare them" }
+        { "id": "object-playground", "note": "Make objects big or small and compare them" },
+        { "id": "number-interaction", "note": "Read the label to say which group is bigger, smaller or the same" }
       ]
     },
     {
@@ -57,7 +59,8 @@
       "curriculum": ["maths.equivalence"],
       "area": "mathematics",
       "playgrounds": [
-        { "id": "object-playground", "note": "Build two groups and compare how many" }
+        { "id": "object-playground", "note": "Build two groups and compare how many" },
+        { "id": "number-interaction", "note": "Fill both boxes and read bigger, smaller or same" }
       ]
     },
     {
@@ -72,7 +75,8 @@
       "curriculum": ["maths.composition", "maths.counting-5"],
       "area": "mathematics",
       "playgrounds": [
-        { "id": "object-playground", "note": "Build a group, then take some away and count what's left" }
+        { "id": "object-playground", "note": "Build a group, then take some away and count what's left" },
+        { "id": "number-interaction", "note": "Use − to take fruit away and count what's left" }
       ]
     },
     {
@@ -118,6 +122,36 @@
       "area": "mathematics",
       "playgrounds": [
         { "id": "object-playground", "note": "Use the arrows to move the object up, down, left and right" }
+      ]
+    },
+    {
+      "id": "make-a-total",
+      "icon": "➕",
+      "title": "Make a total",
+      "learningIcons": ["count", "create"],
+      "keywords": ["add", "plus", "altogether", "total", "make", "how many"],
+      "focus": "Put two groups together and count how many there are altogether.",
+      "concepts": ["Adding", "Combining", "Total", "Altogether"],
+      "lookFor": ["Builds a group in each box", "Watches the two groups join into the total", "Counts the total out loud", "Reads the numeral under each box"],
+      "curriculum": ["maths.composition", "maths.numeral-recognition", "uw.cause-effect", "pd.fine-motor"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "number-interaction", "note": "Fill both boxes with + and count the total altogether" }
+      ]
+    },
+    {
+      "id": "count-to-10",
+      "icon": "🔟",
+      "title": "Count to 10",
+      "learningIcons": ["count", "observe"],
+      "keywords": ["6", "7", "8", "9", "10", "one more", "how many"],
+      "focus": "Count a group all the way to ten, adding one more each time.",
+      "concepts": ["Counting to 10", "One more", "Number order"],
+      "lookFor": ["Counts past five up to ten", "Adds one more and says the next number", "Guesses the total before counting", "Keeps going at their own pace"],
+      "curriculum": ["maths.counting-10", "maths.number-order", "cl.prediction", "psed.self-regulation"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "number-interaction", "note": "Press + to add one more and count up to ten" }
       ]
     }
   ]
