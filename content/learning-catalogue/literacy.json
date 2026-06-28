@@ -14,7 +14,8 @@
       "playgrounds": [
         { "id": "character-lesson", "note": "Hear each letter's sound and name as you trace it" },
         { "id": "word-lesson", "note": "Sound out the letters in each word as you trace it" },
-        { "id": "word-builder", "note": "Blend the letter sounds as you build the word" }
+        { "id": "word-builder", "note": "Blend the letter sounds as you build the word" },
+        { "id": "say-words", "note": "Listen for the sound at the start of each word" }
       ]
     },
     {
@@ -60,6 +61,21 @@
       "area": "literacy",
       "playgrounds": [
         { "id": "word-builder", "note": "Place the letters in order, left to right, to build the word" }
+      ]
+    },
+    {
+      "id": "rhyming-words",
+      "icon": "🎵",
+      "title": "Rhyming words",
+      "learningIcons": ["listen", "talk"],
+      "keywords": ["rhyme", "sound", "cat", "hat", "same", "end"],
+      "focus": "Listen for words that rhyme and sound alike.",
+      "concepts": ["Rhyme", "Sounds the same", "Listening"],
+      "lookFor": ["Spots two words that rhyme", "Says a word that rhymes", "Hears the end sound in a word", "Joins in with a rhyme"],
+      "curriculum": ["literacy.rhyme-awareness"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "say-words", "note": "Listen for words that rhyme and say one back" }
       ]
     }
   ]

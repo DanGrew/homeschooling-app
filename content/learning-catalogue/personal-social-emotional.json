@@ -13,7 +13,8 @@
       "area": "personal-social-emotional",
       "playgrounds": [
         { "id": "word-lesson", "note": "Trace and say words for how we feel" },
-        { "id": "word-builder", "note": "Spell out words for how we feel" }
+        { "id": "word-builder", "note": "Spell out words for how we feel" },
+        { "id": "say-words", "note": "Listen and name how someone feels" }
       ]
     }
   ]
