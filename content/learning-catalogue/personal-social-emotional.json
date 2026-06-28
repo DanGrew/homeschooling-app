@@ -12,7 +12,8 @@
       "curriculum": ["psed.emotion-vocab", "cl.feeling-vocabulary"],
       "area": "personal-social-emotional",
       "playgrounds": [
-        { "id": "word-lesson", "note": "Trace and say words for how we feel" }
+        { "id": "word-lesson", "note": "Trace and say words for how we feel" },
+        { "id": "word-builder", "note": "Spell out words for how we feel" }
       ]
     }
   ]

@@ -13,7 +13,8 @@
       "area": "literacy",
       "playgrounds": [
         { "id": "character-lesson", "note": "Hear each letter's sound and name as you trace it" },
-        { "id": "word-lesson", "note": "Sound out the letters in each word as you trace it" }
+        { "id": "word-lesson", "note": "Sound out the letters in each word as you trace it" },
+        { "id": "word-builder", "note": "Blend the letter sounds as you build the word" }
       ]
     },
     {
@@ -44,6 +45,21 @@
       "area": "literacy",
       "playgrounds": [
         { "id": "word-lesson", "note": "Trace each word from start to finish and say it out loud" }
+      ]
+    },
+    {
+      "id": "build-words",
+      "icon": "🔡",
+      "title": "Build words",
+      "learningIcons": ["create", "listen"],
+      "keywords": ["build", "spell", "letter", "blend", "word", "tile"],
+      "focus": "Build words letter by letter, from left to right.",
+      "concepts": ["Building words", "Blending sounds", "Left to right"],
+      "lookFor": ["Places letters in order", "Blends the sounds together", "Works left to right", "Reads the finished word"],
+      "curriculum": ["literacy.word-recognition", "literacy.print-concepts", "pd.fine-motor"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "word-builder", "note": "Place the letters in order, left to right, to build the word" }
       ]
     }
   ]
