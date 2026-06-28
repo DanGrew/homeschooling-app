@@ -34,7 +34,7 @@
     {
       "id": "trace-words",
       "icon": "📝",
-      "title": "Trace words",
+      "title": "Trace whole words",
       "learningIcons": ["create", "talk"],
       "keywords": ["trace", "word", "write", "read", "name"],
       "focus": "Trace whole words and recognise them.",
