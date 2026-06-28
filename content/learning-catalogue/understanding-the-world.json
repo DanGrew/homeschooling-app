@@ -1,0 +1,19 @@
+{
+  "learnings": [
+    {
+      "id": "logic-gate-types",
+      "icon": "⚡",
+      "title": "Switches and gates",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["switch", "gate", "lamp", "on", "off", "and", "or", "not"],
+      "focus": "Flip switches through different gates and see what turns the lamp on.",
+      "concepts": ["Cause and effect", "Switches", "Gates", "On and off"],
+      "lookFor": ["Flips a switch and watches the lamp", "Says what turned the lamp on", "Guesses what will happen next", "Tries a different gate"],
+      "curriculum": ["uw.cause-effect", "uw.technology", "cl.technical-vocab", "cl.prediction"],
+      "area": "understanding-the-world",
+      "playgrounds": [
+        { "id": "logic-gates", "note": "Flip the switches and see which gates turn the lamp on" }
+      ]
+    }
+  ]
+}
