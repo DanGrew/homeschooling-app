@@ -12,7 +12,8 @@
       "curriculum": ["ead.colour-recognition", "cl.descriptive-vocab", "cl.listening"],
       "area": "expressive-arts-design",
       "playgrounds": [
-        { "id": "object-playground", "note": "Find the colour I call out" }
+        { "id": "object-playground", "note": "Find the colour I call out" },
+        { "id": "colour-wheel", "note": "Tap a colour on the wheel and name it" }
       ]
     },
     {
@@ -27,7 +28,8 @@
       "curriculum": ["ead.colour-families", "ead.colour-recognition", "cl.prediction"],
       "area": "expressive-arts-design",
       "playgrounds": [
-        { "id": "object-playground", "note": "Sort the objects into warm and cool colours" }
+        { "id": "object-playground", "note": "Sort the objects into warm and cool colours" },
+        { "id": "colour-wheel", "note": "Find the warm and cool colours on the wheel" }
       ]
     },
     {
@@ -43,6 +45,21 @@
       "area": "expressive-arts-design",
       "playgrounds": [
         { "id": "object-playground", "note": "Place objects to build a pretend scene" }
+      ]
+    },
+    {
+      "id": "mix-colours",
+      "icon": "🌈",
+      "title": "Mix colours",
+      "learningIcons": ["create", "observe"],
+      "keywords": ["mix", "red", "yellow", "blue", "orange", "green", "purple", "primary", "secondary"],
+      "focus": "Mix two primary colours and watch them make a new colour.",
+      "concepts": ["Colour mixing", "Primary colours", "Secondary colours", "Predicting"],
+      "lookFor": ["Picks two colours to mix", "Guesses what they will make", "Names the new colour", "Knows red and yellow make orange"],
+      "curriculum": ["ead.colour-mixing", "cl.prediction", "uw.cause-effect", "cl.technical-vocab"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "colour-wheel", "note": "Mix two colours and see what new colour they make" }
       ]
     }
   ]
