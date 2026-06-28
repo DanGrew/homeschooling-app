@@ -44,7 +44,8 @@
       "area": "mathematics",
       "playgrounds": [
         { "id": "object-playground", "note": "Make objects big or small and compare them" },
-        { "id": "number-interaction", "note": "Read the label to say which group is bigger, smaller or the same" }
+        { "id": "number-interaction", "note": "Read the label to say which group is bigger, smaller or the same" },
+        { "id": "clock", "note": "Compare the long minute hand and the short hour hand" }
       ]
     },
     {
@@ -151,7 +152,23 @@
       "curriculum": ["maths.counting-10", "maths.number-order", "cl.prediction", "psed.self-regulation"],
       "area": "mathematics",
       "playgrounds": [
-        { "id": "number-interaction", "note": "Press + to add one more and count up to ten" }
+        { "id": "number-interaction", "note": "Press + to add one more and count up to ten" },
+        { "id": "clock", "note": "Count the numbers 1 to 12 around the clock face in order" }
+      ]
+    },
+    {
+      "id": "read-the-clock",
+      "icon": "🕐",
+      "title": "Read the clock",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["clock", "time", "hands", "o'clock", "hour", "minute", "12"],
+      "focus": "Read the numbers and hands on a clock to tell the time.",
+      "concepts": ["Time", "Clock face", "Hands", "O'clock"],
+      "lookFor": ["Finds the numbers 1 to 12 on the clock", "Names the hour and minute hands", "Reads an o'clock time", "Uses time words like o'clock"],
+      "curriculum": ["maths.numeral-recognition", "cl.technical-vocab"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "clock", "note": "Read the numbers and move the hands to tell the time" }
       ]
     }
   ]
