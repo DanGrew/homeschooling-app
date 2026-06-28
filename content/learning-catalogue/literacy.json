@@ -27,7 +27,7 @@
       "focus": "Trace letter shapes and learn how each letter is formed.",
       "concepts": ["Letter formation", "Tracing", "Writing"],
       "lookFor": ["Follows the letter stroke with a finger", "Starts at the right place", "Traces the whole letter shape", "Recognises the letter afterwards"],
-      "curriculum": ["literacy.word-recognition", "pd.fine-motor"],
+      "curriculum": ["literacy.word-recognition", "literacy.letter-formation", "pd.fine-motor", "ead.mark-making"],
       "area": "literacy",
       "playgrounds": [
         { "id": "character-lesson", "note": "Trace each letter shape from start to finish" }
@@ -42,7 +42,7 @@
       "focus": "Trace whole words and recognise them.",
       "concepts": ["Words", "Tracing", "Word recognition"],
       "lookFor": ["Traces a whole word", "Says the word out loud", "Recognises the word again", "Points to the start of the word"],
-      "curriculum": ["literacy.word-recognition", "pd.fine-motor"],
+      "curriculum": ["literacy.word-recognition", "literacy.letter-formation", "pd.fine-motor"],
       "area": "literacy",
       "playgrounds": [
         { "id": "word-lesson", "note": "Trace each word from start to finish and say it out loud" }
