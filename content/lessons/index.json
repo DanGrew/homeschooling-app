@@ -12,10 +12,6 @@
     "activity": "Numbers"
   },
   {
-    "file": "object-playground.json",
-    "activity": "Object Playground"
-  },
-  {
     "file": "say-words.json",
     "activity": "Say Words"
   },
