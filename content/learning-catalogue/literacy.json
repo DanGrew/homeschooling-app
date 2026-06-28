@@ -12,7 +12,8 @@
       "curriculum": ["literacy.phonics"],
       "area": "literacy",
       "playgrounds": [
-        { "id": "character-lesson", "note": "Hear each letter's sound and name as you trace it" }
+        { "id": "character-lesson", "note": "Hear each letter's sound and name as you trace it" },
+        { "id": "word-lesson", "note": "Sound out the letters in each word as you trace it" }
       ]
     },
     {
@@ -28,6 +29,21 @@
       "area": "literacy",
       "playgrounds": [
         { "id": "character-lesson", "note": "Trace each letter shape from start to finish" }
+      ]
+    },
+    {
+      "id": "trace-words",
+      "icon": "📝",
+      "title": "Trace whole words",
+      "learningIcons": ["create", "talk"],
+      "keywords": ["trace", "word", "write", "read", "name"],
+      "focus": "Trace whole words and recognise them.",
+      "concepts": ["Words", "Tracing", "Word recognition"],
+      "lookFor": ["Traces a whole word", "Says the word out loud", "Recognises the word again", "Points to the start of the word"],
+      "curriculum": ["literacy.word-recognition", "pd.fine-motor"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "word-lesson", "note": "Trace each word from start to finish and say it out loud" }
       ]
     }
   ]

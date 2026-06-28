@@ -29,6 +29,36 @@
       "playgrounds": [
         { "id": "clock", "note": "Watch the sky change and talk about morning, noon and night" }
       ]
+    },
+    {
+      "id": "animal-names",
+      "icon": "🐾",
+      "title": "Animal names",
+      "learningIcons": ["talk", "listen"],
+      "keywords": ["animal", "farm", "wild", "cow", "lion", "name"],
+      "focus": "Learn and name farm and wild animals.",
+      "concepts": ["Animals", "Farm animals", "Wild animals", "Naming"],
+      "lookFor": ["Names a farm animal", "Names a wild animal", "Hears and repeats an animal name", "Tells a farm animal from a wild one"],
+      "curriculum": ["uw.animals-nature", "cl.topic-vocabulary"],
+      "area": "understanding-the-world",
+      "playgrounds": [
+        { "id": "word-lesson", "note": "Trace and say the names of farm and wild animals" }
+      ]
+    },
+    {
+      "id": "everyday-words",
+      "icon": "🚌",
+      "title": "Everyday words",
+      "learningIcons": ["talk", "observe"],
+      "keywords": ["vehicle", "fruit", "food", "people", "helpers", "name"],
+      "focus": "Learn words for vehicles, food and the people who help us.",
+      "concepts": ["Vehicles", "Food", "People who help us", "Naming"],
+      "lookFor": ["Names a vehicle", "Names a fruit or food", "Names a person who helps us", "Uses a new everyday word"],
+      "curriculum": ["uw.community", "cl.topic-vocabulary"],
+      "area": "understanding-the-world",
+      "playgrounds": [
+        { "id": "word-lesson", "note": "Trace and say words for vehicles, food and helpers" }
+      ]
     }
   ]
 }
