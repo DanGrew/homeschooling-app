@@ -71,12 +71,8 @@ var PLACE_ACTION = {
 var COMPLETE_ACTION = {
   'true': function() {
     var word = state.currentItem.name;
-    var type = 'WORD_' + word.toLowerCase().replace(/\s+/g, '_') + '_BUILT';
     _phonemeChain.then(function() {
       state.speakFn(word, 'word');
-      setTimeout(function() {
-        window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: type } }));
-      }, 800);
     });
     renderActions();
   },
