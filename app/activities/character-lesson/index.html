@@ -9,13 +9,6 @@
 <link rel="stylesheet" href="../../../styles/speakable.css">
 <script>
   window.DICT_BASE = '../../../content/dictionary/entries/';
-  window.LESSONS = [
-    {id:'vowels',              number:1, title:'Vowels'},
-    {id:'round_letters',       number:2, title:'Round Letters'},
-    {id:'first_five',          number:3, title:'First Five Letters'},
-    {id:'digits_one_to_five',  number:4, title:'Count and Write 1 to 5'},
-    {id:'digits_six_to_ten',   number:5, title:'Count and Write 6 to 10'}
-  ];
 </script>
 <script src="../../../components/menu.js" defer></script>
 <style>
@@ -56,11 +49,8 @@
 <script src="../../../ui/trace/trace-ui.js"></script>
 <script type="module">
 import { init } from '../../../ui/character-lesson/character-lesson-ui.js';
-import { GuidanceService } from '../../../components/guidance/guidance-service.js';
 import { loadRegistry, loadGraphemes } from '../../../components/phonics/phonics-service.js';
-window.LEARNINGS_BASE = '../../../content/learnings/';
 window.addEventListener('load', function() {
-  window.guidanceService = new GuidanceService();
   loadRegistry().then(function() { init(); loadGraphemes().catch(function() {}); });
 });
 </script>
