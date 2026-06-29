@@ -13,20 +13,6 @@
     ]
   },
   {
-    "id": "and_gate",
-    "source": "Logic Gates",
-    "title": "AND Gate",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "cl.technical-vocab",
-      "cl.prediction",
-      "uw.cause-effect",
-      "cl.topic-vocabulary",
-      "pd.fine-motor"
-    ]
-  },
-  {
     "id": "animal_words",
     "source": "Trace Words",
     "title": "Animal Names",
@@ -502,85 +488,6 @@
     ]
   },
   {
-    "id": "lesson_2-AND_2-AND-AND",
-    "source": "Logic Gates",
-    "title": "AND Cascade",
-    "type": "lesson",
-    "number": 6,
-    "criteria": [
-      "uw.cause-effect",
-      "cl.sequencing-language",
-      "cl.prediction",
-      "cl.topic-vocabulary",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "logic-gates-exercise-chain",
-    "source": "Logic Gates",
-    "title": "Follow the Chain",
-    "type": "exercise",
-    "criteria": [
-      "uw.cause-effect",
-      "cl.sequencing-language",
-      "cl.prediction"
-    ]
-  },
-  {
-    "id": "logic-gates-exercise-two_ways",
-    "source": "Logic Gates",
-    "title": "Two Ways",
-    "type": "exercise",
-    "criteria": [
-      "maths.equivalence",
-      "cl.prediction",
-      "psed.independence"
-    ]
-  },
-  {
-    "id": "logic-gates-lesson-big_decision",
-    "source": "Logic Gates",
-    "title": "Big Decision",
-    "type": "lesson",
-    "number": 8,
-    "criteria": [
-      "cl.prediction",
-      "uw.cause-effect",
-      "psed.independence",
-      "cl.topic-vocabulary",
-      "pd.fine-motor",
-      "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "logic-gates-lesson-chain",
-    "source": "Logic Gates",
-    "title": "Chain of Gates",
-    "type": "lesson",
-    "number": 7,
-    "criteria": [
-      "cl.prediction",
-      "uw.cause-effect",
-      "cl.sequencing-language",
-      "cl.topic-vocabulary",
-      "pd.fine-motor",
-      "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "logic-gates-lesson-meet_switch",
-    "source": "Logic Gates",
-    "title": "Meet the Switch",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "uw.cause-effect",
-      "cl.topic-vocabulary",
-      "pd.fine-motor",
-      "uw.technology"
-    ]
-  },
-  {
     "id": "medical_words",
     "source": "Trace Words",
     "title": "At the Doctor",
@@ -591,20 +498,6 @@
       "uw.community",
       "cl.topic-vocabulary",
       "literacy.word-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "not_gate",
-    "source": "Logic Gates",
-    "title": "NOT Gate",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "cl.technical-vocab",
-      "uw.cause-effect",
-      "cl.prediction",
-      "cl.topic-vocabulary",
       "pd.fine-motor"
     ]
   },
@@ -632,20 +525,6 @@
       "maths.numeral-recognition",
       "pd.fine-motor",
       "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "or_gate",
-    "source": "Logic Gates",
-    "title": "OR Gate",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "cl.technical-vocab",
-      "cl.prediction",
-      "maths.pattern",
-      "cl.topic-vocabulary",
-      "pd.fine-motor"
     ]
   },
   {
@@ -997,20 +876,6 @@
       "literacy.word-recognition",
       "pd.fine-motor",
       "cl.topic-vocabulary"
-    ]
-  },
-  {
-    "id": "xor_gate",
-    "source": "Logic Gates",
-    "title": "XOR Gate",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "cl.technical-vocab",
-      "cl.prediction",
-      "maths.pattern",
-      "cl.topic-vocabulary",
-      "pd.fine-motor"
     ]
   }
 ]
