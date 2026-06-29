@@ -50,29 +50,26 @@ function flattenPhysical(files, criterionMap, areas) {
   return files.map(function(f) { return physicalToRow(f.data, criterionMap, areas); });
 }
 
-function exerciseToRow(exercise, criterionMap, areas) {
-  return { title: exercise.title, activity: exercise.source || '', byArea: buildByArea(lessonCriteria(exercise), criterionMap, areas), type: 'exercise' };
+function cardVenues(card, playgroundsMap) {
+  var pgs = Array.isArray(card.playgrounds) ? card.playgrounds : [];
+  return pgs.map(function(p) { return (playgroundsMap[p.id] && playgroundsMap[p.id].name) || p.id; }).join(', ');
 }
 
-function flattenExercises(exercises, criterionMap, areas) {
-  return exercises.map(function(ex) { return exerciseToRow(ex, criterionMap, areas); });
+function cardCriteria(card) {
+  return Array.isArray(card.curriculum) ? card.curriculum : [];
 }
 
-function numberPrefix(n) {
-  return n != null ? String(n).padStart(2, '0') + '. ' : '';
+function cardToRow(card, criterionMap, areas, playgroundsMap) {
+  return { title: card.title, activity: cardVenues(card, playgroundsMap),
+           byArea: buildByArea(cardCriteria(card), criterionMap, areas), type: 'card' };
 }
 
-function learningToRow(learning, criterionMap, areas) {
-  return {
-    title: numberPrefix(learning.number) + learning.title,
-    activity: learning.source || '',
-    byArea: buildByArea(lessonCriteria(learning), criterionMap, areas),
-    type: learning.type === 'exercise' ? 'exercise' : 'lesson'
-  };
-}
-
-function flattenLearnings(learnings, criterionMap, areas) {
-  return learnings.map(function(l) { return learningToRow(l, criterionMap, areas); });
+function flattenCatalogue(areaFiles, criterionMap, areas, playgroundsMap) {
+  var result = [];
+  areaFiles.forEach(function(f) {
+    (f.learnings || []).forEach(function(card) { result.push(cardToRow(card, criterionMap, areas, playgroundsMap)); });
+  });
+  return result;
 }
 
 function defaultCompare(a, b) {
@@ -83,4 +80,4 @@ function colCompare(a, b, sortAsc, colKeyFns, sortCol) {
   return COMPARE_DIR[String(sortAsc)](colKeyFns[sortCol](a), colKeyFns[sortCol](b));
 }
 
-if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, exerciseToRow, flattenExercises, learningToRow, flattenLearnings, defaultCompare, colCompare };
+if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, cardVenues, cardCriteria, cardToRow, flattenCatalogue, defaultCompare, colCompare };
