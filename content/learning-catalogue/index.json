@@ -23,12 +23,12 @@
     "topics": ["Colour", "Shape", "Size", "Number / amount", "Position", "Pattern"]
   },
   "areas": [
-    { "id": "communication-language", "title": "Communication & Language", "order": 1, "file": "communication-language.json" },
-    { "id": "physical-development", "title": "Physical Development", "order": 2, "file": "physical-development.json" },
-    { "id": "mathematics", "title": "Mathematics", "order": 3, "file": "mathematics.json" },
-    { "id": "expressive-arts-design", "title": "Expressive Arts & Design", "order": 4, "file": "expressive-arts-design.json" },
-    { "id": "understanding-the-world", "title": "Understanding the World", "order": 5, "file": "understanding-the-world.json" },
-    { "id": "literacy", "title": "Literacy", "order": 6, "file": "literacy.json" },
-    { "id": "personal-social-emotional", "title": "Personal, Social & Emotional", "order": 7, "file": "personal-social-emotional.json" }
+    { "id": "communication-language", "title": "Communication & Language", "icon": "💬", "order": 1, "file": "communication-language.json" },
+    { "id": "physical-development", "title": "Physical Development", "icon": "🤸", "order": 2, "file": "physical-development.json" },
+    { "id": "mathematics", "title": "Mathematics", "icon": "🔢", "order": 3, "file": "mathematics.json" },
+    { "id": "expressive-arts-design", "title": "Expressive Arts & Design", "icon": "🎨", "order": 4, "file": "expressive-arts-design.json" },
+    { "id": "understanding-the-world", "title": "Understanding the World", "icon": "🌍", "order": 5, "file": "understanding-the-world.json" },
+    { "id": "literacy", "title": "Literacy", "icon": "📖", "order": 6, "file": "literacy.json" },
+    { "id": "personal-social-emotional", "title": "Personal, Social & Emotional", "icon": "🤝", "order": 7, "file": "personal-social-emotional.json" }
   ]
 }

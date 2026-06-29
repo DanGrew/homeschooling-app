@@ -52,8 +52,8 @@ const INDEX = {
     'paint-playground': { emoji: '🎨', name: 'Paint Playground' }
   },
   areas: [
-    { id: 'mathematics', title: 'Mathematics' },
-    { id: 'communication-language', title: 'Communication & Language' }
+    { id: 'mathematics', title: 'Mathematics', icon: '🔢' },
+    { id: 'communication-language', title: 'Communication & Language', icon: '💬' }
   ]
 };
 const COUNT = {
@@ -81,8 +81,8 @@ describe('lcAllLearnings', () => {
 
 describe('lcAreaChip', () => {
   it('builds an area chip from an area row', () => {
-    expect(lcAreaChip({ id: 'mathematics', title: 'Mathematics' }))
-      .toEqual({ type: 'area', id: 'mathematics', label: 'Mathematics' });
+    expect(lcAreaChip({ id: 'mathematics', title: 'Mathematics', icon: '🔢' }))
+      .toEqual({ type: 'area', id: 'mathematics', label: 'Mathematics', icon: '🔢' });
   });
 });
 
@@ -90,7 +90,7 @@ describe('lcAddPlaygroundChip', () => {
   it('pushes a playground chip when unseen', () => {
     const chips = []; const seen = {};
     lcAddPlaygroundChip(chips, seen, INDEX, 'paint-playground');
-    expect(chips).toEqual([{ type: 'playground', id: 'paint-playground', label: 'Paint Playground' }]);
+    expect(chips).toEqual([{ type: 'playground', id: 'paint-playground', label: 'Paint Playground', icon: '🎨' }]);
     expect(seen['paint-playground']).toBe(true);
   });
   it('skips an already-seen playground', () => {
@@ -103,11 +103,11 @@ describe('lcAddPlaygroundChip', () => {
 describe('lcBuildChips', () => {
   it('builds All + one chip per area + one chip per playground present, deduped', () => {
     expect(lcBuildChips(INDEX, [COUNT, PAINT])).toEqual([
-      { type: 'all', id: 'all', label: 'All' },
-      { type: 'area', id: 'mathematics', label: 'Mathematics' },
-      { type: 'area', id: 'communication-language', label: 'Communication & Language' },
-      { type: 'playground', id: 'object-playground', label: 'Object Playground' },
-      { type: 'playground', id: 'paint-playground', label: 'Paint Playground' }
+      { type: 'all', id: 'all', label: 'All', icon: '✨' },
+      { type: 'area', id: 'mathematics', label: 'Mathematics', icon: '🔢' },
+      { type: 'area', id: 'communication-language', label: 'Communication & Language', icon: '💬' },
+      { type: 'playground', id: 'object-playground', label: 'Object Playground', icon: '🟦' },
+      { type: 'playground', id: 'paint-playground', label: 'Paint Playground', icon: '🎨' }
     ]);
   });
   it('omits playgrounds that no learning references', () => {

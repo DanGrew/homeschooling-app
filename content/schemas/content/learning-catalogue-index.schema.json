@@ -46,11 +46,12 @@
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "title", "order", "file"],
+        "required": ["id", "title", "icon", "order", "file"],
         "additionalProperties": false,
         "properties": {
           "id": { "type": "string" },
           "title": { "type": "string" },
+          "icon": { "type": "string" },
           "order": { "type": "integer", "minimum": 1 },
           "file": { "type": "string", "pattern": "\\.json$" }
         }

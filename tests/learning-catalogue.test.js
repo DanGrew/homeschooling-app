@@ -68,7 +68,7 @@ const playgroundNames = [...new Set(allLearnings.flatMap(l => l.playgrounds.map(
 test('renders an All chip plus one chip per area and per playground present', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('[data-testid="lc-chip"]')).toHaveCount(1 + groups.length + playgroundNames.length)
-  await expect(page.locator('[data-testid="lc-chip"]').first()).toHaveText('All')
+  await expect(page.locator('[data-testid="lc-chip"]').first()).toHaveAttribute('aria-label', 'All')
   await expect(page.locator('[data-testid="lc-chip"][data-chip="all"]')).toHaveClass(/lc-chip-on/)
 })
 
@@ -91,7 +91,7 @@ test('clearing the search restores the full grouped list', async ({ page }) => {
 test('tapping an area chip shows only that area, preserving its header', async ({ page }) => {
   await page.goto(URL)
   const area = groups[0]
-  await page.locator('[data-testid="lc-chip"]', { hasText: area.title }).click()
+  await page.locator('[data-testid="lc-chip"][aria-label="' + area.title + '"]').click()
   await expect(page.locator('.lc-area')).toHaveText([area.title])
   await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(area.learnings.length)
 })
@@ -100,9 +100,24 @@ test('tapping a playground chip shows only learnings that practise there', async
   await page.goto(URL)
   const name = playgroundNames[0]
   const expected = allLearnings.filter(l => l.playgrounds.some(v => index.playgrounds[v.id].name === name)).length
-  await page.locator('[data-testid="lc-chip"]', { hasText: name }).click()
-  await expect(page.locator('[data-testid="lc-chip"]', { hasText: name })).toHaveClass(/lc-chip-on/)
+  await page.locator('[data-testid="lc-chip"][aria-label="' + name + '"]').click()
+  await expect(page.locator('[data-testid="lc-chip"][aria-label="' + name + '"]')).toHaveClass(/lc-chip-on/)
   await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(expected)
+})
+
+test('playground chips carry the playground class to distinguish them from areas', async ({ page }) => {
+  await page.goto(URL)
+  const name = playgroundNames[0]
+  await expect(page.locator('[data-testid="lc-chip"][aria-label="' + name + '"]')).toHaveClass(/lc-chip-playground/)
+  await expect(page.locator('[data-testid="lc-chip"][aria-label="' + groups[0].title + '"]')).toHaveClass(/lc-chip-area/)
+})
+
+test('the current-filter label shows the selected filter name on screen', async ({ page }) => {
+  await page.goto(URL)
+  await expect(page.locator('[data-testid="lc-current"]')).toContainText('All')
+  const name = playgroundNames[0]
+  await page.locator('[data-testid="lc-chip"][aria-label="' + name + '"]').click()
+  await expect(page.locator('[data-testid="lc-current"]')).toContainText(name)
 })
 
 test('opening a card hides the filter bar; back restores it', async ({ page }) => {
