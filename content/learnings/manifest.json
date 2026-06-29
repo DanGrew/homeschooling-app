@@ -622,18 +622,6 @@
     ]
   },
   {
-    "id": "count_to_ten",
-    "source": "Numbers",
-    "title": "Count to Ten",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "maths.counting-10",
-      "maths.numeral-recognition",
-      "maths.number-order"
-    ]
-  },
-  {
     "id": "cvc_phonics",
     "source": "Trace Words",
     "title": "Short Words",
@@ -705,17 +693,6 @@
       "cl.topic-vocabulary",
       "literacy.word-recognition",
       "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "equal_groups",
-    "source": "Numbers",
-    "title": "Equal Groups",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "maths.equivalence",
-      "maths.numeral-recognition"
     ]
   },
   {
@@ -861,30 +838,6 @@
     ]
   },
   {
-    "id": "make_five",
-    "source": "Numbers",
-    "title": "Make Five",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "maths.composition",
-      "maths.counting-5",
-      "maths.numeral-recognition"
-    ]
-  },
-  {
-    "id": "make_three",
-    "source": "Numbers",
-    "title": "Make Three",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "maths.counting-5",
-      "maths.subitising",
-      "maths.numeral-recognition"
-    ]
-  },
-  {
     "id": "medical_words",
     "source": "Trace Words",
     "title": "At the Doctor",
@@ -896,18 +849,6 @@
       "cl.topic-vocabulary",
       "literacy.word-recognition",
       "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "more_and_fewer",
-    "source": "Numbers",
-    "title": "More and Fewer",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "cl.descriptive-vocab",
-      "maths.equivalence",
-      "maths.numeral-recognition"
     ]
   },
   {

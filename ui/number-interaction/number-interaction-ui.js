@@ -3,13 +3,6 @@ import { getVoice } from '../../components/speech/voice-service.js';
 import { makeInteractive } from '../../components/speech/speakable.js';
 import { comparisonColor, clamp, makeImg, labelState, computeChange } from '../../core/number-interaction/number-interaction-core.js';
 
-var SIDE_EVT = { a: 'A', b: 'B' };
-var DELTA_EVT = { 'true': '_PLUS', 'false': '_MINUS' };
-var DISPATCH_EQUAL = { 'true': function() { guidanceEvent('GROUPS_EQUAL'); }, 'false': function() {} };
-var DISPATCH_NONZERO = { 'true': function() { DISPATCH_EQUAL[String(aCount === bCount)](); }, 'false': function() {} };
-
-function guidanceEvent(type) { window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: type } })); }
-
 const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
 const SZ_SM = 'width:min(48px,6.2vw);height:min(48px,6.2vw)';
 
@@ -24,8 +17,7 @@ function stopAndSpeak(wasCounting, doSpeak) {
 
 export function init(a, b, max) {
   aKey = a; bKey = b; MAX = max;
-  window.addEventListener('guidance:start', function() { aCount = 0; bCount = 0; render(); });
-var numA = document.getElementById('num-a');
+  var numA = document.getElementById('num-a');
   var numB = document.getElementById('num-b');
   var numTotal = document.getElementById('num-total');
   var instruction = document.getElementById('ni-instruction');
@@ -92,8 +84,6 @@ export function render() {
   bContainer.style.borderColor = comparisonColor(bCount, aCount);
   document.getElementById('lbl-a').textContent = LABEL_TEXT[labelState(aCount, bCount)];
   document.getElementById('lbl-b').textContent = LABEL_TEXT[labelState(bCount, aCount)];
-  guidanceEvent('TOTAL_' + (aCount + bCount));
-  DISPATCH_NONZERO[String(aCount > 0)]();
 }
 
 export function flashAll(containerId) {
@@ -119,7 +109,6 @@ export function change(side, delta, onChanged) {
   bCount = result.newB;
   render();
   [1].filter(() => result.changed).forEach(() => {
-    guidanceEvent(SIDE_EVT[side] + DELTA_EVT[String(delta > 0)]);
     [onChanged].filter(Boolean).forEach(function(cb) { cb(wasCounting); });
   });
 }
@@ -151,7 +140,7 @@ export function countAll() {
         const idx = steps[i++];
         highlight(idx, imgs);
         [countSpeak].filter(() => idx >= 0).forEach(fn => fn(String(idx + 1), next));
-        [1].filter(() => idx < 0).forEach(() => { counting = false; guidanceEvent('COUNT_ALL'); });
+        [1].filter(() => idx < 0).forEach(() => { counting = false; });
       })();
     });
   });
