@@ -21,15 +21,14 @@ tr:nth-child(even) td{background:#fafafa;}
 .col-lesson{font-weight:600;color:#333;white-space:nowrap;}
 .col-activity{color:#888;white-space:nowrap;font-size:0.9em;}
 .row-physical .col-activity{color:#27AE60;}
-.row-exercise .col-activity{color:#1ABC9C;}
 .glossary th:first-child{width:200px;}
 .glossary th:nth-child(2){width:80px;}
-.coverage th:first-child,.exercises-coverage th:first-child{width:160px;}
-.coverage th:nth-child(2),.exercises-coverage th:nth-child(2){width:110px;}
-.coverage th,.exercises-coverage th{cursor:pointer;user-select:none;}
-.coverage th:hover,.exercises-coverage th:hover{background:#e4d5ff;}
-.coverage th.sort-asc::after,.exercises-coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
-.coverage th.sort-desc::after,.exercises-coverage th.sort-desc::after{content:' ▼';font-size:0.75em;color:#7c6fcd;}
+.coverage th:first-child{width:160px;}
+.coverage th:nth-child(2){width:110px;}
+.coverage th{cursor:pointer;user-select:none;}
+.coverage th:hover{background:#e4d5ff;}
+.coverage th.sort-asc::after{content:' ▲';font-size:0.75em;color:#7c6fcd;}
+.coverage th.sort-desc::after{content:' ▼';font-size:0.75em;color:#7c6fcd;}
 </style>
 </head>
 <body>
@@ -52,24 +51,13 @@ tr:nth-child(even) td{background:#fafafa;}
 </table>
 </div>
 
-<h2>Exercises</h2>
-<div class="table-wrap">
-<table class="exercises-coverage">
-  <thead id="exercise-head"></thead>
-  <tbody id="exercise-body"></tbody>
-</table>
-</div>
-
 <script src="../../core/curriculum/curriculum-core.js"></script>
 <script>
 var areas = [];
 var rows = [];
-var exRows = [];
 var colKeyFns = [];
 var sortCol = -1;
 var sortAsc = true;
-var exSortCol = -1;
-var exSortAsc = true;
 
 var SORT_CLASS = { 'true': 'sort-asc', 'false': 'sort-desc' };
 var SORT_FNS = {
@@ -90,7 +78,6 @@ function applyGenericSort(target, sc, sa) {
 }
 
 function applySort() { applyGenericSort(rows, sortCol, sortAsc); }
-function applyExSort() { applyGenericSort(exRows, exSortCol, exSortAsc); }
 
 function buildColKeyFns() {
   colKeyFns = [
@@ -114,7 +101,7 @@ function renderGlossary() {
   areas.forEach(function(area) { gb.appendChild(renderGlossaryRow(area)); });
 }
 
-var ROW_CLASS = { 'lesson': '', 'physical': 'row-physical', 'exercise': 'row-exercise' };
+var ROW_CLASS = { 'card': '', 'physical': 'row-physical' };
 
 function buildCoverageRow(row) {
   var tr = document.createElement('tr');
@@ -153,15 +140,6 @@ function handleHeaderClick(i) {
   updateHeaderThs('.coverage', sortCol, sortAsc);
 }
 
-function handleExHeaderClick(i) {
-  var state = { col: exSortCol, asc: exSortAsc };
-  CLICK_ACTION[String(exSortCol === i)](state, i);
-  exSortCol = state.col; exSortAsc = state.asc;
-  applyExSort();
-  renderExerciseBody();
-  updateHeaderThs('.exercises-coverage', exSortCol, exSortAsc);
-}
-
 function renderCoverageHeader() {
   var head = document.getElementById('coverage-head');
   var hr = document.createElement('tr');
@@ -176,39 +154,25 @@ function attachPhysical(entry) {
     .then(function(data) { return { data: data }; });
 }
 
-function renderExerciseHeader() {
-  var head = document.getElementById('exercise-head');
-  var hr = document.createElement('tr');
-  ['Exercise', 'Activity'].concat(areas.map(function(a) { return a.shortLabel; }))
-    .forEach(function(label, i) { hr.appendChild(buildHeaderTh(label, i, handleExHeaderClick)); });
-  head.appendChild(hr);
-}
-
-function renderExerciseBody() {
-  var tbody = document.getElementById('exercise-body');
-  tbody.innerHTML = '';
-  exRows.forEach(function(row) { tbody.appendChild(buildCoverageRow(row)); });
+function fetchAreaFile(area) {
+  return fetch('../../content/learning-catalogue/' + area.file).then(function(r) { return r.json(); });
 }
 
 async function init() {
-  var criteriaData      = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
-  var learningsManifest = await fetch('../../content/learnings/manifest.json').then(function(r) { return r.json(); });
-  var physicalManifest  = await fetch('../../content/physical/activities/index.json').then(function(r) { return r.json(); });
+  var criteriaData     = await fetch('../../content/curriculum/criteria.json').then(function(r) { return r.json(); });
+  var catalogueIndex   = await fetch('../../content/learning-catalogue/index.json').then(function(r) { return r.json(); });
+  var physicalManifest = await fetch('../../content/physical/activities/index.json').then(function(r) { return r.json(); });
   areas = criteriaData.areas;
   var criterionMap = buildCriterionMap(criteriaData);
   buildColKeyFns();
   renderGlossary();
   renderCoverageHeader();
-  renderExerciseHeader();
+  var areaFiles     = await Promise.all(catalogueIndex.areas.map(fetchAreaFile));
   var physicalFiles = await Promise.all(physicalManifest.map(attachPhysical));
-  var allLearnings  = flattenLearnings(learningsManifest, criterionMap, areas);
-  rows   = allLearnings.filter(function(r) { return r.type !== 'exercise'; })
-             .concat(flattenPhysical(physicalFiles, criterionMap, areas));
-  exRows = allLearnings.filter(function(r) { return r.type === 'exercise'; });
+  rows = flattenCatalogue(areaFiles, criterionMap, areas, catalogueIndex.playgrounds)
+           .concat(flattenPhysical(physicalFiles, criterionMap, areas));
   applySort();
-  applyExSort();
   renderBody();
-  renderExerciseBody();
 }
 
 init();

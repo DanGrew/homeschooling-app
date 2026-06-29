@@ -56,47 +56,47 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
   await expect(ths).toContainText(['EAD', 'Maths', 'C&L', 'UW', 'PSED', 'Literacy', 'PD'])
 })
 
-test('coverage table loads lesson rows', async ({ page }) => {
+test('coverage table loads catalogue + physical rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(87)
+  await expect(rows).toHaveCount(32)
 })
 
-test('rows are sorted by activity then lesson title', async ({ page }) => {
+test('Mix colours card has Colour mixing in EAD column', async ({ page }) => {
   await page.goto(URL)
-  const firstActivity = page.locator('.coverage tbody .col-activity').first()
-  const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstActivity).toHaveText('Clock')
-  await expect(firstLesson).toHaveText('01. Count the Clock')
-})
-
-test('Make Orange row has Colour mixing in EAD column', async ({ page }) => {
-  await page.goto(URL)
-  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Make Orange' })
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Mix colours' }).first()
   const eadCell = row.locator('td').nth(2)
   await expect(eadCell).toContainText('Colour mixing')
 })
 
-test('How Are You Feeling row has Emotion vocabulary in PSED column', async ({ page }) => {
+test('Mix colours card shows its venue in the Activity column', async ({ page }) => {
   await page.goto(URL)
-  const row = page.locator('.coverage tbody tr').filter({ hasText: 'How Are You Feeling?' }).first()
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Mix colours' }).first()
+  await expect(row.locator('.col-activity')).toContainText('Colour Wheel')
+})
+
+test('Emotion words card has Emotion vocabulary in PSED column', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Emotion words' }).first()
   const psedCell = row.locator('td').nth(6)
   await expect(psedCell).toContainText('Emotion vocabulary')
 })
 
-test('clicking Lesson header sorts rows ascending', async ({ page }) => {
+test('clicking Lesson header sorts rows by title ascending', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.coverage thead th').nth(0).click()
-  const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('01. Animal Names')
+  const titles = await page.locator('.coverage tbody .col-lesson').allTextContents()
+  const sorted = [...titles].sort((a, b) => a.localeCompare(b))
+  expect(titles).toEqual(sorted)
 })
 
-test('clicking Lesson header twice sorts rows descending', async ({ page }) => {
+test('clicking Lesson header twice sorts rows by title descending', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.coverage thead th').nth(0).click()
   await page.locator('.coverage thead th').nth(0).click()
-  const firstLesson = page.locator('.coverage tbody .col-lesson').first()
-  await expect(firstLesson).toHaveText('The Long Way Round')
+  const titles = await page.locator('.coverage tbody .col-lesson').allTextContents()
+  const sorted = [...titles].sort((a, b) => b.localeCompare(a))
+  expect(titles).toEqual(sorted)
 })
 
 test('sorted column shows direction indicator', async ({ page }) => {
@@ -127,29 +127,8 @@ test('Rope Rescue row has Climbing apparatus in PD column', async ({ page }) => 
   await expect(pdCell).toContainText('Climbing apparatus')
 })
 
-test('exercise table header has Exercise and Activity columns', async ({ page }) => {
+test('no Exercises section', async ({ page }) => {
   await page.goto(URL)
-  const ths = page.locator('.exercises-coverage thead th')
-  await expect(ths.nth(0)).toHaveText('Exercise')
-  await expect(ths.nth(1)).toHaveText('Activity')
-})
-
-test('exercise table loads correct row count', async ({ page }) => {
-  await page.goto(URL)
-  await expect(page.locator('.exercises-coverage tbody tr')).toHaveCount(19)
-})
-
-test('exercise table default sort shows Clock first', async ({ page }) => {
-  await page.goto(URL)
-  await expect(page.locator('.exercises-coverage tbody .col-activity').first()).toHaveText('Clock')
-  await expect(page.locator('.exercises-coverage tbody .col-lesson').first()).toHaveText('01. What Comes After?')
-})
-
-test('exercise table clicking Exercise header shows sort indicator', async ({ page }) => {
-  await page.goto(URL)
-  const exerciseTh = page.locator('.exercises-coverage thead th').nth(0)
-  await exerciseTh.click()
-  await expect(exerciseTh).toHaveClass(/sort-asc/)
-  await exerciseTh.click()
-  await expect(exerciseTh).toHaveClass(/sort-desc/)
+  await expect(page.getByRole('heading', { name: 'Exercises' })).toHaveCount(0)
+  await expect(page.locator('.exercises-coverage')).toHaveCount(0)
 })

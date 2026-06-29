@@ -1,6 +1,11 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, exerciseToRow, flattenExercises, learningToRow, flattenLearnings, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
+const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, cardVenues, cardCriteria, cardToRow, flattenCatalogue, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
+
+const PLAYGROUNDS = {
+  'colour-wheel': { name: 'Colour Wheel' },
+  'object-playground': { name: 'Object Playground' }
+};
 
 const CRITERIA_DATA = {
   areas: [
@@ -129,82 +134,57 @@ describe('defaultCompare', () => {
   });
 });
 
-describe('exerciseToRow', () => {
-  const map = buildCriterionMap(CRITERIA_DATA);
-  it('sets type to exercise', () => {
-    const row = exerciseToRow({ title: 'Find Primaries', source: 'Colour Wheel', criteria: [] }, map, AREAS);
-    expect(row.type).toBe('exercise');
+describe('cardVenues', () => {
+  it('joins playground names by id', () => {
+    const card = { playgrounds: [{ id: 'colour-wheel' }, { id: 'object-playground' }] };
+    expect(cardVenues(card, PLAYGROUNDS)).toBe('Colour Wheel, Object Playground');
   });
-  it('uses source as activity', () => {
-    const row = exerciseToRow({ title: 'Find Primaries', source: 'Colour Wheel', criteria: [] }, map, AREAS);
+  it('falls back to the id when unknown', () => {
+    const card = { playgrounds: [{ id: 'mystery' }] };
+    expect(cardVenues(card, PLAYGROUNDS)).toBe('mystery');
+  });
+  it('returns empty string when no playgrounds', () => {
+    expect(cardVenues({}, PLAYGROUNDS)).toBe('');
+  });
+});
+
+describe('cardCriteria', () => {
+  it('returns the curriculum array', () => {
+    expect(cardCriteria({ curriculum: ['cl1', 'md1'] })).toEqual(['cl1', 'md1']);
+  });
+  it('returns empty array when curriculum absent', () => {
+    expect(cardCriteria({})).toEqual([]);
+  });
+});
+
+describe('cardToRow', () => {
+  const map = buildCriterionMap(CRITERIA_DATA);
+  it('maps a card to a coverage row', () => {
+    const card = { title: 'Mix colours', curriculum: ['md1'], playgrounds: [{ id: 'colour-wheel' }] };
+    const row = cardToRow(card, map, AREAS, PLAYGROUNDS);
+    expect(row.title).toBe('Mix colours');
     expect(row.activity).toBe('Colour Wheel');
-  });
-  it('maps criteria to byArea', () => {
-    const row = exerciseToRow({ title: 'T', source: 'S', criteria: ['cl1'] }, map, AREAS);
-    expect(row.byArea['cl']).toEqual(['Speaking']);
-  });
-  it('falls back to empty string when source missing', () => {
-    const row = exerciseToRow({ title: 'T', criteria: [] }, map, AREAS);
-    expect(row.activity).toBe('');
+    expect(row.byArea['md']).toEqual(['Counting']);
+    expect(row.type).toBe('card');
   });
 });
 
-describe('flattenExercises', () => {
+describe('flattenCatalogue', () => {
   const map = buildCriterionMap(CRITERIA_DATA);
-  it('maps exercises to rows', () => {
-    const exercises = [{ title: 'E1', source: 'S', criteria: [] }, { title: 'E2', source: 'S', criteria: [] }];
-    const rows = flattenExercises(exercises, map, AREAS);
-    expect(rows).toHaveLength(2);
-    expect(rows[0].type).toBe('exercise');
-  });
-});
-
-describe('learningToRow', () => {
-  const map = buildCriterionMap(CRITERIA_DATA);
-  it('prefixes title with zero-padded number', () => {
-    const row = learningToRow({ title: 'Count the Clock', number: 1, source: 'Clock', criteria: [] }, map, AREAS);
-    expect(row.title).toBe('01. Count the Clock');
-  });
-  it('pads two-digit number correctly', () => {
-    const row = learningToRow({ title: 'Big Lesson', number: 14, source: 'Clock', criteria: [] }, map, AREAS);
-    expect(row.title).toBe('14. Big Lesson');
-  });
-  it('no prefix when number absent', () => {
-    const row = learningToRow({ title: 'No Number', source: 'Clock', criteria: [] }, map, AREAS);
-    expect(row.title).toBe('No Number');
-  });
-  it('sets type to exercise when type field is exercise', () => {
-    const row = learningToRow({ title: 'E', source: 'S', criteria: [], type: 'exercise' }, map, AREAS);
-    expect(row.type).toBe('exercise');
-  });
-  it('defaults type to lesson', () => {
-    const row = learningToRow({ title: 'L', source: 'S', criteria: [] }, map, AREAS);
-    expect(row.type).toBe('lesson');
-  });
-  it('uses source as activity', () => {
-    const row = learningToRow({ title: 'T', source: 'Clock', criteria: [] }, map, AREAS);
-    expect(row.activity).toBe('Clock');
-  });
-  it('falls back to empty string when source absent', () => {
-    const row = learningToRow({ title: 'T', criteria: [] }, map, AREAS);
-    expect(row.activity).toBe('');
-  });
-});
-
-describe('flattenLearnings', () => {
-  const map = buildCriterionMap(CRITERIA_DATA);
-  it('maps each learning to a row', () => {
-    const learnings = [
-      { title: 'L1', number: 1, source: 'Clock', criteria: ['cl1'], type: 'lesson' },
-      { title: 'E1', source: 'Clock', criteria: [], type: 'exercise' }
+  it('flattens cards across area files', () => {
+    const areaFiles = [
+      { learnings: [{ title: 'A', curriculum: ['cl1'], playgrounds: [{ id: 'colour-wheel' }] },
+                    { title: 'B', curriculum: [], playgrounds: [] }] },
+      { learnings: [{ title: 'C', curriculum: ['md1'], playgrounds: [{ id: 'object-playground' }] }] }
     ];
-    const result = flattenLearnings(learnings, map, AREAS);
-    expect(result).toHaveLength(2);
-    expect(result[0].type).toBe('lesson');
-    expect(result[1].type).toBe('exercise');
+    const result = flattenCatalogue(areaFiles, map, AREAS, PLAYGROUNDS);
+    expect(result).toHaveLength(3);
+    expect(result[0].title).toBe('A');
+    expect(result[2].activity).toBe('Object Playground');
+    expect(result.every(r => r.type === 'card')).toBe(true);
   });
-  it('returns empty array for empty input', () => {
-    expect(flattenLearnings([], map, AREAS)).toEqual([]);
+  it('tolerates an area file with no learnings', () => {
+    expect(flattenCatalogue([{}], map, AREAS, PLAYGROUNDS)).toEqual([]);
   });
 });
 
