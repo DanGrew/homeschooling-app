@@ -1,18 +1,5 @@
 [
   {
-    "id": "alphabet_sweep",
-    "source": "Letters & Numbers",
-    "title": "Your Turn — a to z",
-    "type": "lesson",
-    "number": 7,
-    "criteria": [
-      "literacy.letter-formation",
-      "literacy.phonics",
-      "pd.fine-motor",
-      "psed.independence"
-    ]
-  },
-  {
     "id": "colouring-free",
     "source": "Colouring Playground",
     "title": "Free Colouring",
@@ -29,30 +16,6 @@
     "type": "lesson",
     "criteria": [
       "ead.colour-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "digits_one_to_five",
-    "source": "Letters & Numbers",
-    "title": "Count and Write 1 to 5",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "maths.counting-5",
-      "maths.numeral-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "digits_six_to_ten",
-    "source": "Letters & Numbers",
-    "title": "Count and Write 6 to 10",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "maths.counting-10",
-      "maths.numeral-recognition",
       "pd.fine-motor"
     ]
   },
@@ -76,18 +39,6 @@
       "uw.cause-effect",
       "cl.listening",
       "maths.pattern"
-    ]
-  },
-  {
-    "id": "first_five",
-    "source": "Letters & Numbers",
-    "title": "First Five Letters",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "literacy.phonics",
-      "maths.number-order",
-      "pd.fine-motor"
     ]
   },
   {
@@ -129,32 +80,6 @@
     ]
   },
   {
-    "id": "numerals_five_to_nine",
-    "source": "Letters & Numbers",
-    "title": "Write 5 to 9",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "pd.numeral-formation",
-      "maths.numeral-recognition",
-      "pd.fine-motor",
-      "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "numerals_zero_to_four",
-    "source": "Letters & Numbers",
-    "title": "Write 0 to 4",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "pd.numeral-formation",
-      "maths.numeral-recognition",
-      "pd.fine-motor",
-      "psed.self-regulation"
-    ]
-  },
-  {
     "id": "pairs",
     "source": "Pairs",
     "title": "Pairs",
@@ -183,19 +108,6 @@
     ]
   },
   {
-    "id": "pre_writing_shapes",
-    "source": "Letters & Numbers",
-    "title": "Shapes in Letters",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "pd.fine-motor",
-      "ead.mark-making",
-      "maths.shape-2d",
-      "psed.self-regulation"
-    ]
-  },
-  {
     "id": "puzzle",
     "source": "Puzzle",
     "title": "Puzzle",
@@ -203,139 +115,6 @@
     "criteria": [
       "maths.spatial",
       "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "round_letters",
-    "source": "Letters & Numbers",
-    "title": "Round Letters",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "pd.fine-motor-circular",
-      "literacy.phonics"
-    ]
-  },
-  {
-    "id": "say-words-lesson-core_emotions",
-    "source": "Say Words",
-    "title": "How Are You Feeling?",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "cl.feeling-vocabulary",
-      "psed.emotion-vocab",
-      "cl.listening",
-      "psed.self-regulation",
-      "cl.prediction",
-      "psed.independence",
-      "cl.sequencing-language"
-    ]
-  },
-  {
-    "id": "say-words-lesson-exotic_fruit",
-    "source": "Say Words",
-    "title": "Exotic Fruits",
-    "type": "lesson",
-    "number": 6,
-    "criteria": [
-      "cl.topic-vocabulary",
-      "cl.listening",
-      "uw.world-awareness",
-      "cl.descriptive-vocab",
-      "cl.prediction",
-      "cl.sequencing-language",
-      "literacy.word-recognition",
-      "literacy.phonics"
-    ]
-  },
-  {
-    "id": "say-words-lesson-farm_animals",
-    "source": "Say Words",
-    "title": "Farm Animals",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "uw.animals-nature",
-      "cl.topic-vocabulary",
-      "cl.listening",
-      "maths.counting-10",
-      "cl.descriptive-vocab",
-      "cl.sequencing-language",
-      "cl.prediction",
-      "literacy.word-recognition",
-      "literacy.rhyme-awareness"
-    ]
-  },
-  {
-    "id": "say-words-lesson-fruit_shop",
-    "source": "Say Words",
-    "title": "Fruit Shop",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "cl.topic-vocabulary",
-      "cl.listening",
-      "ead.colour-recognition",
-      "cl.descriptive-vocab",
-      "maths.counting-5",
-      "cl.sequencing-language",
-      "cl.prediction",
-      "literacy.word-recognition",
-      "literacy.rhyme-awareness"
-    ]
-  },
-  {
-    "id": "say-words-lesson-medical",
-    "source": "Say Words",
-    "title": "At the Doctor's",
-    "type": "lesson",
-    "number": 7,
-    "criteria": [
-      "cl.topic-vocabulary",
-      "cl.technical-vocab",
-      "cl.listening",
-      "cl.descriptive-vocab",
-      "cl.prediction",
-      "literacy.word-recognition",
-      "uw.community"
-    ]
-  },
-  {
-    "id": "say-words-lesson-safari_animals",
-    "source": "Say Words",
-    "title": "Safari Animals",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "uw.animals-nature",
-      "cl.topic-vocabulary",
-      "cl.listening",
-      "maths.counting-10",
-      "uw.world-awareness",
-      "cl.descriptive-vocab",
-      "cl.prediction",
-      "cl.sequencing-language",
-      "literacy.word-recognition",
-      "literacy.phonics"
-    ]
-  },
-  {
-    "id": "say-words-lesson-vehicles",
-    "source": "Say Words",
-    "title": "Things That Go",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "cl.topic-vocabulary",
-      "uw.community",
-      "cl.listening",
-      "maths.counting-5",
-      "cl.descriptive-vocab",
-      "cl.sequencing-language",
-      "cl.prediction",
-      "literacy.word-recognition",
-      "literacy.rhyme-awareness"
     ]
   },
   {
@@ -353,31 +132,6 @@
       "uw.cause-effect",
       "cl.listening",
       "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "uppercase_letters",
-    "source": "Letters & Numbers",
-    "title": "Capital Letters",
-    "type": "lesson",
-    "number": 6,
-    "criteria": [
-      "literacy.letter-formation",
-      "literacy.print-concepts",
-      "pd.fine-motor",
-      "cl.topic-vocabulary"
-    ]
-  },
-  {
-    "id": "vowels",
-    "source": "Letters & Numbers",
-    "title": "Vowels",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "literacy.phonics",
-      "pd.fine-motor",
-      "literacy.word-recognition"
     ]
   },
   {
