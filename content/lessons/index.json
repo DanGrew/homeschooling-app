@@ -8,10 +8,6 @@
     "activity": "Logic Gates"
   },
   {
-    "file": "number-interaction.json",
-    "activity": "Numbers"
-  },
-  {
     "file": "say-words.json",
     "activity": "Say Words"
   },

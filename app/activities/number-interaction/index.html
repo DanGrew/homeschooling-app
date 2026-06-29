@@ -48,7 +48,7 @@ import '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadImages } from '../../../core/dictionary/dictionary-helpers-core.js';
-import { pickFruitPair, pluralize } from '../../../core/number-interaction/number-interaction-core.js';
+import { pickFruitPair } from '../../../core/number-interaction/number-interaction-core.js';
 import { init, change, countAll } from '../../../ui/number-interaction/number-interaction-ui.js';
 
 Dictionary.init('../../../content/dictionary/');
@@ -58,12 +58,6 @@ loadImages(all, () => {
   const fruits = all.filter(w => w.tags.includes('fruit'));
   const [a, b] = pickFruitPair(fruits);
   init(a, b, 10);
-  window.LESSON_VARS = {
-    fruit_a: a.name.toLowerCase(),
-    fruit_b: b.name.toLowerCase(),
-    fruit_a_p: pluralize(a.name.toLowerCase()),
-    fruit_b_p: pluralize(b.name.toLowerCase())
-  };
   document.body.dataset.ready = 'true';
 });
 
@@ -73,18 +67,6 @@ window.countAll = countAll;
 <script>
   window.DICT_BASE='../../../content/dictionary/entries/';
   window.ACTIVITY_ID='number-interaction';
-  window.LESSONS=[
-    {id:'make_three',number:1,title:'Make Three'},
-    {id:'make_five',number:2,title:'Make Five'},
-    {id:'equal_groups',number:3,title:'Equal Groups'},
-    {id:'count_to_ten',number:4,title:'Count to Ten'},
-    {id:'more_and_fewer',number:5,title:'More and Fewer'}
-  ];
-</script>
-<script type="module">
-  import{GuidanceService}from'../../../components/guidance/guidance-service.js';
-  window.LEARNINGS_BASE='../../../content/learnings/';
-  window.guidanceService=new GuidanceService();
 </script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 </body>
