@@ -50,6 +50,7 @@ function lcShowDetail(learning) {
   LC.detailEl.innerHTML =
     '<a class="lc-back" data-testid="lc-back">← Back</a>' +
     '<div class="lc-hero">' + learning.icon + '</div>' +
+    '<div class="lc-d-title">' + learning.title + '</div>' +
     '<div class="lc-d-icons">' + learning.learningIcons.map(function(id) { return LC.iconMap[id]; }).join(' ') + '</div>' +
     '<div class="lc-sec"><div class="lc-lab">🎯 Focus</div><div class="lc-focus">' + learning.focus + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">🏷 Keywords</div><div class="lc-pills">' + learning.keywords.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
