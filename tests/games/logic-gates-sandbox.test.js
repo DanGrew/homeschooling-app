@@ -76,30 +76,6 @@ test('clicking switch twice returns wire to inactive colour', async ({ page }) =
   expect(colour).toBe('#ccc');
 });
 
-test('Lessons button is present in nav', async ({ page }) => {
-  await page.goto(URL);
-  await expect(page.locator('.nav-lesson-btn')).toBeVisible();
-});
-
-test('Exercises button is present in nav', async ({ page }) => {
-  await page.goto(URL);
-  await expect(page.locator('.nav-exercise-btn')).toBeVisible();
-});
-
-test('Lessons popout lists 8 lessons', async ({ page }) => {
-  await page.goto(URL);
-  await page.locator('.nav-lesson-btn').click();
-  const items = page.locator('.nav-lesson-item');
-  await expect(items).toHaveCount(8);
-});
-
-test('Exercises popout lists 2 exercises', async ({ page }) => {
-  await page.goto(URL);
-  await page.locator('.nav-exercise-btn').click();
-  const items = page.locator('.nav-exercise-item');
-  await expect(items).toHaveCount(2);
-});
-
 test('switching to Converging filter shows puzzle with switches', async ({ page }) => {
   await page.goto(URL);
   await page.locator('#nav-filter-slot button[data-value="converging"]').click();

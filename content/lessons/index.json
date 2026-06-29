@@ -1,9 +1,5 @@
 [
   {
-    "file": "logic-gates.json",
-    "activity": "Logic Gates"
-  },
-  {
     "file": "say-words.json",
     "activity": "Say Words"
   },

@@ -23,21 +23,6 @@
 <script>
 window.ACTIVITY_ID = 'logic-gates';
 window.DICT_BASE = '../../../content/dictionary/entries/';
-window.LEARNINGS_BASE = '../../../content/learnings/';
-window.LESSONS = [
-  { id: 'logic-gates-lesson-meet_switch', number: 1, title: 'Meet the Switch' },
-  { id: 'and_gate',               number: 2, title: 'AND Gate',      puzzle_id: 'and_station' },
-  { id: 'or_gate',                number: 3, title: 'OR Gate',       puzzle_id: 'or_station' },
-  { id: 'not_gate',               number: 4, title: 'NOT Gate' },
-  { id: 'xor_gate',               number: 5, title: 'XOR Gate',      puzzle_id: 'xor_station' },
-  { id: 'lesson_2-AND_2-AND-AND', number: 6, title: 'AND Cascade',   puzzle_id: '2-AND_2-AND-AND' },
-  { id: 'logic-gates-lesson-chain',        number: 7, title: 'Chain of Gates' },
-  { id: 'logic-gates-lesson-big_decision', number: 8, title: 'Big Decision' }
-];
-window.EXERCISES = [
-  { id: 'logic-gates-exercise-chain',    number: 1, title: 'Follow the Chain' },
-  { id: 'logic-gates-exercise-two_ways', number: 2, title: 'Two Ways' }
-];
 </script>
 
 <script src="../../../components/menu.js" defer></script>
@@ -50,7 +35,6 @@ window.EXERCISES = [
 <script type="module">
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
 import { buildSimpleFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
-import { GuidanceService } from '../../../components/guidance/guidance-service.js';
 
 var allItems = [];
 
@@ -95,151 +79,6 @@ buildSimpleFilterBar([
   filterFn = FILTERS[cat];
   applyFilter();
 }, 'all');
-
-function _findCurrentSvg() { return document.querySelector('#puzzle-area svg'); }
-
-var _FIND_SWITCH_IN_SVG = {
-  'true':  function(svg, label) { return svg.querySelector('[data-switch-label="' + label + '"]'); },
-  'false': function() { return null; }
-};
-function _findSwitch(label) {
-  var svg = document.querySelector('#puzzle-area svg');
-  return _FIND_SWITCH_IN_SVG[String(svg !== null)](svg, label);
-}
-
-var _RESET_ITEM = {
-  'true':  function(item) { paginator.reset([item]); },
-  'false': function() {}
-};
-function _navigateTo(id) {
-  var item = allItems.filter(function(i) { return i.id === id; })[0];
-  _RESET_ITEM[String(item !== undefined)](item);
-}
-
-var _LOCK_EL = {
-  'true':  function(g) { g.style.pointerEvents = 'none'; g.style.opacity = '0.4'; },
-  'false': function() {}
-};
-function _lockSwitch(label) {
-  var g = _findSwitch(label);
-  _LOCK_EL[String(g !== null)](g);
-}
-
-var _UNLOCK_EL = {
-  'true':  function(g) { g.style.pointerEvents = ''; g.style.opacity = ''; },
-  'false': function() {}
-};
-function _unlockSwitch(label) {
-  var g = _findSwitch(label);
-  _UNLOCK_EL[String(g !== null)](g);
-}
-
-var _UNLOCK_ALL_SVG = {
-  'true':  function(svg) { svg.querySelectorAll('[data-switch-label]').forEach(function(g) { g.style.pointerEvents = ''; g.style.opacity = ''; }); },
-  'false': function() {}
-};
-function _unlockAll() {
-  _UNLOCK_ALL_SVG[String(_findCurrentSvg() !== null)](_findCurrentSvg());
-}
-
-var _GET_STATES = {
-  'true':  function(svg) { return svg._getInputStates(); },
-  'false': function() { return {}; }
-};
-var _TOGGLE_IF_ON = {
-  'true':  function(svg, id) { svg._handleToggle(id); },
-  'false': function() {}
-};
-var _APPLY_SWITCH_OFF_G = {
-  'true': function(svg, g) {
-    var id = g.getAttribute('data-switch');
-    var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
-    _TOGGLE_IF_ON[String(!!states[id])](svg, id);
-  },
-  'false': function() {}
-};
-var _APPLY_SWITCH_OFF_SVG = {
-  'true': function(svg, label) {
-    var g = svg.querySelector('[data-switch-label="' + label + '"]');
-    _APPLY_SWITCH_OFF_G[String(g !== null)](svg, g);
-  },
-  'false': function() {}
-};
-function _setSwitchOff(label) {
-  var svg = _findCurrentSvg();
-  _APPLY_SWITCH_OFF_SVG[String(svg !== null)](svg, label);
-}
-
-var _LOCK_ACTIVE_G = {
-  'true':  function(svg, id) {
-    var g = svg.querySelector('[data-switch="' + id + '"]');
-    _LOCK_EL[String(g !== null)](g);
-  },
-  'false': function() {}
-};
-var _LOCK_ACTIVE_SWITCHES_SVG = {
-  'true': function(svg) {
-    var states = _GET_STATES[String(typeof svg._getInputStates === 'function')](svg);
-    Object.keys(states).forEach(function(id) { _LOCK_ACTIVE_G[String(!!states[id])](svg, id); });
-  },
-  'false': function() {}
-};
-function _lockActiveSwitches() {
-  var svg = _findCurrentSvg();
-  _LOCK_ACTIVE_SWITCHES_SVG[String(svg !== null)](svg);
-}
-
-var _SILENT_RESET_HAS_FN = {
-  'true':  function(svg) { svg._silentReset(); },
-  'false': function() {}
-};
-var _SILENT_RESET_SVG = {
-  'true':  function(svg) { _SILENT_RESET_HAS_FN[String(typeof svg._silentReset === 'function')](svg); },
-  'false': function() {}
-};
-function _doReset(svg) { _SILENT_RESET_SVG[String(svg !== null)](svg); }
-function _resetSwitches() {
-  var svg = _findCurrentSvg();
-  setTimeout(function() { _doReset(svg); }, 1500);
-}
-
-var PAGE_CTRL = {
-  'SHOW_SINGLE_AND_GATE':       function() { _navigateTo('and_station'); },
-  'SHOW_SINGLE_OR_GATE':        function() { _navigateTo('or_station'); },
-  'SHOW_SINGLE_NOT_GATE':       function() { _navigateTo('not_station'); },
-  'SHOW_LINEAR_OR_AND':         function() { _navigateTo('2-OR-1-AND'); },
-  'SHOW_LINEAR_AND_OR':         function() { _navigateTo('2-AND-1-OR'); },
-  'SHOW_CONVERGING_OR_OR_AND':  function() { _navigateTo('2-OR_2-OR-AND'); },
-  'SHOW_CONVERGING_AND_AND_OR': function() { _navigateTo('2-AND_2-AND-OR'); },
-  'LOCK_SWITCH_A':              function() { _lockSwitch('A'); },
-  'LOCK_SWITCH_B':              function() { _lockSwitch('B'); },
-  'LOCK_SWITCH_C':              function() { _lockSwitch('C'); },
-  'LOCK_SWITCH_D':              function() { _lockSwitch('D'); },
-  'UNLOCK_SWITCH_A':            function() { _unlockSwitch('A'); },
-  'UNLOCK_SWITCH_B':            function() { _unlockSwitch('B'); },
-  'UNLOCK_SWITCH_C':            function() { _unlockSwitch('C'); },
-  'UNLOCK_SWITCH_D':            function() { _unlockSwitch('D'); },
-  'SET_SWITCH_A_OFF':           function() { _setSwitchOff('A'); },
-  'LOCK_ACTIVE_SWITCHES':       function() { _lockActiveSwitches(); },
-  'RESET_SWITCHES':             function() { _resetSwitches(); },
-  'PAGE_CONTROL_RESET':         function() { _unlockAll(); }
-};
-
-var _CTRL_DISPATCH = {
-  'true':  function(type) { PAGE_CTRL[type](); },
-  'false': function() {}
-};
-window.addEventListener('page:control', function(e) {
-  _CTRL_DISPATCH[String(e.detail.type in PAGE_CTRL)](e.detail.type);
-});
-
-var _guidance = new GuidanceService();
-window.guidanceService = {
-  start: function(entry) {
-    allItems.filter(function(i) { return i.id === entry.puzzle_id; }).slice(0, 1).forEach(function(item) { paginator.reset([item]); });
-    _guidance.start(entry);
-  }
-};
 
 Promise.all([
   fetch('../../../content/logic-gates/sandbox.json?v=2').then(function(r) { return r.json(); }),

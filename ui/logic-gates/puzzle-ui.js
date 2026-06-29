@@ -2,27 +2,9 @@
   var currentConfig = null;
   var currentSvg    = null;
   var originalStates = [];
-  var solved = false;
 
   function stationToggle(id) {
     currentSvg._handleToggle(id);
-    checkGoal();
-  }
-
-  function goalMet() {
-    var states = currentSvg._getInputStates();
-    var out = window.LogicEngine.evalGraph(currentConfig, states);
-    return currentConfig.goal.every(g => out[g.id] === g.value);
-  }
-
-  var NOOP = function() {};
-  function dispatchSolved() { window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'PUZZLE_SOLVED' } })); }
-  var SOLVE_DISPATCH = { 'true:true': NOOP, 'true:false': dispatchSolved, 'false:true': NOOP, 'false:false': NOOP };
-
-  function checkGoal() {
-    var wasSolved = solved;
-    solved = goalMet();
-    SOLVE_DISPATCH[solved + ':' + wasSolved]();
   }
 
   function onReset() {
@@ -39,7 +21,6 @@
 
   function loadPuzzle(config) {
     currentConfig = JSON.parse(JSON.stringify(config));
-    solved = false;
     originalStates = currentConfig.inputs.map(i => i.state);
     [document.getElementById('goal-text')].filter(Boolean).forEach(function(gt) {
       gt.textContent = goalText(currentConfig.goal, currentConfig.outputs);
@@ -48,7 +29,6 @@
     var next = window.StationUI.buildStation(currentConfig, stationToggle);
     placeSvg(area, next);
     currentSvg = next;
-    checkGoal();
   }
 
   window.addEventListener('load', function() {
