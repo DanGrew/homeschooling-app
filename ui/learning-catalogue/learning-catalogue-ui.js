@@ -5,6 +5,7 @@ var LC = {
   listEl: null,
   detailEl: null,
   chipsEl: null,
+  currentEl: null,
   searchEl: null,
   filterEl: null,
   talkPopEl: null,
@@ -82,7 +83,7 @@ function lcOnSearch(e) {
 
 function lcRenderChip(chip) {
   var el = document.createElement('button');
-  el.className = lcChipClass(chip, LC.chip);
+  el.className = lcChipClass(chip, LC.chip) + ' lc-chip-' + chip.type;
   el.textContent = chip.icon || chip.label;
   el.setAttribute('aria-label', chip.label);
   el.setAttribute('title', chip.label);
@@ -95,6 +96,7 @@ function lcRenderChip(chip) {
 function lcRenderChips() {
   LC.chipsEl.innerHTML = '';
   LC.chips.forEach(lcRenderChip);
+  LC.currentEl.textContent = (LC.chip.icon ? LC.chip.icon + ' ' : '') + LC.chip.label;
 }
 
 function lcSelectChip(chip) {
@@ -134,6 +136,7 @@ function initLearningCatalogue() {
   LC.listEl = document.getElementById('lc-list');
   LC.detailEl = document.getElementById('lc-detail');
   LC.chipsEl = document.getElementById('lc-chips');
+  LC.currentEl = document.getElementById('lc-current');
   LC.searchEl = document.getElementById('lc-search');
   LC.filterEl = document.getElementById('lc-filter');
   LC.talkPopEl = document.getElementById('lc-talk-pop');
