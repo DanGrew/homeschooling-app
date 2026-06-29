@@ -84,7 +84,7 @@ function lcOnSearch(e) {
 function lcRenderChip(chip) {
   var el = document.createElement('button');
   el.className = lcChipClass(chip, LC.chip) + ' lc-chip-' + chip.type;
-  el.textContent = chip.icon || chip.label;
+  el.textContent = chip.icon;
   el.setAttribute('aria-label', chip.label);
   el.setAttribute('title', chip.label);
   el.setAttribute('data-testid', 'lc-chip');
@@ -96,7 +96,7 @@ function lcRenderChip(chip) {
 function lcRenderChips() {
   LC.chipsEl.innerHTML = '';
   LC.chips.forEach(lcRenderChip);
-  LC.currentEl.textContent = (LC.chip.icon ? LC.chip.icon + ' ' : '') + LC.chip.label;
+  LC.currentEl.textContent = LC.chip.icon + ' ' + LC.chip.label;
 }
 
 function lcSelectChip(chip) {
