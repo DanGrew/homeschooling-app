@@ -1,6 +1,6 @@
 import { makeSpeakable, makeInteractive } from '../../components/speech/speakable.js';
 import { speak } from '../../components/speech/speech-ui.js';
-import { w2r, pieSeg, annulusSeg, hex, lsnMix, slotEvent, shuffled } from '../../core/colour-wheel/colour-wheel-core.js';
+import { w2r, pieSeg, annulusSeg, hex, lsnMix } from '../../core/colour-wheel/colour-wheel-core.js';
 
 var LSN_COLOURS={
   red:            {hex:'#E74C3C',label:'Red'},
@@ -51,7 +51,6 @@ var TERTIARIES  =[
 ];
 
 var slotA=null,slotB=null,sel=null;
-var _slotALocked=false,_slotBLocked=false;
 
 function el(id){return document.getElementById(id);}
 
@@ -70,9 +69,6 @@ var SLOT_ASSIGN={
   'a':function(){slotA=sel;},
   'b':function(){slotB=sel;}
 };
-
-var SLOT_GET={'a':function(){return slotA;},'b':function(){return slotB;}};
-
 
 function getMixResult(){
   return [slotA,slotB].filter(Boolean)
@@ -95,12 +91,10 @@ function doSlot(slot){
   el('lsn-slot-b').style.background=[slotB].filter(Boolean).map(function(c){return hex(c,LSN_COLOURS);}).concat(['#f0f0f0'])[0];
   renderPalette();
   updateResult();
-  [SLOT_GET[slot]()].filter(Boolean).forEach(function(c){window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:slotEvent(slot,c)}}));});
 }
 
-var SLOT_LOCKED={'a':function(){return _slotALocked;},'b':function(){return _slotBLocked;}};
 function handleSlot(slot){
-  [sel].filter(Boolean).filter(function(){return !SLOT_LOCKED[slot]();}).forEach(function(){doSlot(slot);});
+  [sel].filter(Boolean).forEach(function(){doSlot(slot);});
 }
 
 (function buildWheel(){
@@ -116,9 +110,6 @@ function handleSlot(slot){
     svg.appendChild(p);
     [colourId].filter(Boolean).forEach(function(id){
       makeSpeakable(p,LSN_COLOURS[id].label);
-      p.addEventListener('click',function(){
-        window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:id.replace(/-/g,'_').toUpperCase()+'_TAPPED'}}));
-      });
     });
   }
   PRIMARIES.forEach(function(s){addPath(pieSeg(cx,cy,rPi,s.start,s.start+120,gap),hex(s.c,LSN_COLOURS),s.c);});
@@ -140,7 +131,6 @@ function renderPaletteOrder(order){
     makeInteractive(sw,function(){
       handleSwatch(c);
       speak(LSN_COLOURS[c].label);
-      window.dispatchEvent(new CustomEvent('guidance:event',{detail:{type:c.replace(/-/g,'_').toUpperCase()+'_TAPPED'}}));
     });
     pal.appendChild(sw);
   });
@@ -152,19 +142,3 @@ renderPaletteOrder(PALETTE);
 el('lsn-slot-a').addEventListener('click',function(){handleSlot('a');});
 el('lsn-slot-b').addEventListener('click',function(){handleSlot('b');});
 makeInteractive(el('lsn-result'),function(){[getMixResult()].filter(Boolean).forEach(function(c){speak(c.label);});});
-
-var PAGE_CTRL={
-  'HIDE_COLOUR_WHEEL':function(){el('wheel-svg').parentElement.style.display='none';},
-  'HIDE_MIXER':function(){el('lsn-mixer').style.display='none';},
-  'LOCK_SLOT_A':function(){_slotALocked=true;},
-  'LOCK_SLOT_B':function(){_slotBLocked=true;},
-  'SHUFFLE_PALETTE':function(){sel=null;renderPaletteOrder(shuffled(PALETTE));},
-  'PAGE_CONTROL_RESET':function(){
-    el('wheel-svg').parentElement.style.display='flex';
-    el('lsn-mixer').style.display='flex';
-    _slotALocked=false;_slotBLocked=false;
-    sel=null;renderPaletteOrder(PALETTE);
-  }
-};
-var PAGE_CTRL_DISPATCH={'true':function(t){PAGE_CTRL[t]();},'false':function(){}};
-window.addEventListener('page:control',function(e){PAGE_CTRL_DISPATCH[String(e.detail.type in PAGE_CTRL)](e.detail.type);});

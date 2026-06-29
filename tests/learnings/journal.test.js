@@ -1,7 +1,6 @@
 const { test, expect } = require('@playwright/test')
 
 const URL = '/homeschooling-app/app/learnings/'
-const COLOUR_WHEEL_URL = '/homeschooling-app/app/activities/colour-wheel/'
 
 async function seedEvent(page, event) {
   await page.evaluate((evt) => new Promise((resolve) => {
@@ -28,42 +27,41 @@ test('shows entry after seeding an event', async ({ page }) => {
   await seedEvent(page, {
     id: 'test-1',
     version: 1,
-    type: 'lesson_completed',
+    type: 'learning_completed',
     timestamp: Date.now(),
-    lessonId: 'colour-wheel-lesson-make_orange',
-    activityId: 'colour-wheel'
+    learning_id: 'domino',
+    activity_id: 'domino'
   })
   await page.reload()
   await expect(page.locator('.entry')).toBeVisible()
 })
 
-test('entry resolves lesson title from activity JSON', async ({ page }) => {
+test('entry resolves learning title from activity JSON', async ({ page }) => {
   await page.goto(URL)
   await seedEvent(page, {
     id: 'test-2',
     version: 1,
-    type: 'lesson_completed',
+    type: 'learning_completed',
     timestamp: Date.now(),
-    lessonId: 'colour-wheel-lesson-make_orange',
-    activityId: 'colour-wheel'
+    learning_id: 'domino',
+    activity_id: 'domino'
   })
   await page.reload()
-  await expect(page.locator('.entry-title')).toContainText('Make Orange')
+  await expect(page.locator('.entry-title')).toContainText('Domino Match')
 })
 
-test('entry shows activity source and lesson number', async ({ page }) => {
+test('entry shows activity source', async ({ page }) => {
   await page.goto(URL)
   await seedEvent(page, {
     id: 'test-3',
     version: 1,
-    type: 'lesson_completed',
+    type: 'learning_completed',
     timestamp: Date.now(),
-    lessonId: 'colour-wheel-lesson-make_orange',
-    activityId: 'colour-wheel'
+    learning_id: 'domino',
+    activity_id: 'domino'
   })
   await page.reload()
-  await expect(page.locator('.entry-source')).toContainText('Colour Wheel')
-  await expect(page.locator('.entry-source')).toContainText('Lesson 1')
+  await expect(page.locator('.entry-source')).toContainText('Domino')
 })
 
 test('entry shows EYFS criteria tags', async ({ page }) => {
@@ -71,10 +69,10 @@ test('entry shows EYFS criteria tags', async ({ page }) => {
   await seedEvent(page, {
     id: 'test-4',
     version: 1,
-    type: 'lesson_completed',
+    type: 'learning_completed',
     timestamp: Date.now(),
-    lessonId: 'colour-wheel-lesson-make_orange',
-    activityId: 'colour-wheel'
+    learning_id: 'domino',
+    activity_id: 'domino'
   })
   await page.reload()
   await expect(page.locator('.entry-criteria .tag').first()).toBeVisible()
@@ -103,35 +101,11 @@ test('recent event visible under default filter', async ({ page }) => {
   await seedEvent(page, {
     id: 'test-5',
     version: 1,
-    type: 'lesson_completed',
+    type: 'learning_completed',
     timestamp: Date.now(),
-    lessonId: 'colour-wheel-lesson-make_orange',
-    activityId: 'colour-wheel'
+    learning_id: 'domino',
+    activity_id: 'domino'
   })
   await page.reload()
   await expect(page.locator('.entry')).toBeVisible()
-})
-
-test('completing a lesson via colour-wheel then visiting journal shows entry', async ({ page }) => {
-  await page.goto(COLOUR_WHEEL_URL)
-  await page.waitForFunction(() => window.guidanceService)
-  await page.locator('.nav-lesson-btn').click()
-  await page.locator('.nav-lesson-item').first().click()
-  const fire = t => page.evaluate(type => window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type } })), t)
-  await page.locator('#guidance-overlay').waitFor({ state: 'visible' })
-  await fire('RED_TAPPED')
-  await fire('YELLOW_TAPPED')
-  await fire('BLUE_TAPPED')
-  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
-  await fire('BADGE_TAPPED')
-  await fire('ORANGE_TAPPED')
-  await fire('RED_LOADED_A')
-  await fire('YELLOW_LOADED_B')
-  await page.locator('[data-word-bubble]').waitFor({ state: 'visible' })
-  await fire('BADGE_TAPPED')
-  await fire('ORANGE_TAPPED')
-  await page.locator('#guidance-overlay [data-action="next"]').click()
-  await page.waitForTimeout(300)
-  await page.goto(URL)
-  await expect(page.locator('.entry-title')).toContainText('Make Orange')
 })
