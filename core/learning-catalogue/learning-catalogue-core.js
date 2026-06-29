@@ -21,15 +21,15 @@ function lcAllLearnings(groups) {
 function lcAddPlaygroundChip(chips, seen, index, id) {
   if (seen[id]) return;
   seen[id] = true;
-  chips.push({ type: 'playground', id: id, label: index.playgrounds[id].name });
+  chips.push({ type: 'playground', id: id, label: index.playgrounds[id].name, icon: index.playgrounds[id].emoji });
 }
 
 function lcAreaChip(area) {
-  return { type: 'area', id: area.id, label: area.title };
+  return { type: 'area', id: area.id, label: area.title, icon: area.icon };
 }
 
 function lcBuildChips(index, learnings) {
-  var chips = [{ type: 'all', id: 'all', label: 'All' }];
+  var chips = [{ type: 'all', id: 'all', label: 'All', icon: '✨' }];
   index.areas.forEach(function(area) { chips.push(lcAreaChip(area)); });
   var seen = {};
   learnings.forEach(function(learning) {

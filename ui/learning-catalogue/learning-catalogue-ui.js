@@ -83,7 +83,9 @@ function lcOnSearch(e) {
 function lcRenderChip(chip) {
   var el = document.createElement('button');
   el.className = lcChipClass(chip, LC.chip);
-  el.textContent = chip.label;
+  el.textContent = chip.icon || chip.label;
+  el.setAttribute('aria-label', chip.label);
+  el.setAttribute('title', chip.label);
   el.setAttribute('data-testid', 'lc-chip');
   el.setAttribute('data-chip', chip.id);
   el.addEventListener('click', function() { lcSelectChip(chip); });
