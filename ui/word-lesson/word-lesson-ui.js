@@ -114,20 +114,6 @@ function showTagMode(tag) {
   paginator.enable();
 }
 
-function showLessonWords(l) {
-  var lessonWords = [].concat(l.words).map(function(w) {
-    return words.find(function(e) { return e.word === w; });
-  }).filter(Boolean);
-  isCustom = false;
-  document.getElementById('custom-input').style.display = 'none';
-  filtered = lessonWords;
-  paginator.reset(filtered);
-  paginator.enable();
-}
-
-var LESSON_FILTER_HANDLER = { 'true': showTagMode, 'false': function() {} };
-var GUIDANCE_START_HANDLER = { 'true': showLessonWords, 'false': function(l) { LESSON_FILTER_HANDLER[String(!!l.filter)](l.filter); } };
-
 var FILTER_HANDLERS = { 'true': showCustomMode, 'false': showTagMode };
 
 function onFilterClick(tag) {
@@ -363,11 +349,7 @@ function doTraceChar(charIdx) {
   charEngines[charIdx] = engine;
 }
 
-function emitWordTraced() {
-  window.dispatchEvent(new CustomEvent('guidance:event', {detail: {type: 'WORD_' + currentWord + '_TRACED'}}));
-}
-
-function onWordComplete() { isTracing = false; emitWordTraced(); _phonemeChain.then(function() { speak(currentWord); }); showBanner(); }
+function onWordComplete() { isTracing = false; _phonemeChain.then(function() { speak(currentWord); }); showBanner(); }
 
 var START_TRACE_GUARD = { 'true': doStartTrace, 'false': () => {} };
 
@@ -421,15 +403,6 @@ export function init() {
   makeSpeakable(document.getElementById('btn-sayit'), getSayItLabel);
   document.getElementById('btn-generate').addEventListener('click', handleGenerate);
   document.getElementById('custom-word-input').addEventListener('keydown', e => { ['Enter'].filter(k => k === e.key).forEach(handleGenerate); });
-  window.addEventListener('guidance:start', function() {
-    [window.guidanceService].filter(Boolean)
-      .map(function(s) { return s._lesson; })
-      .filter(Boolean)
-      .forEach(function(l) { GUIDANCE_START_HANDLER[String(!!l.words)](l); });
-  });
-  window.addEventListener('guidance:stop', function() {
-    showTagMode('all');
-  });
 
   window.__wlShowBanner = showBanner;
   loadDictionary().then(() => {
