@@ -94,12 +94,6 @@ const MAPPINGS = [
     match: (name, full) => full.replace(/\\/g, '/').includes('/audio/') && name.endsWith('.json')
   },
   {
-    label: 'content/colour-wheel-lessons',
-    schema: 'content/schemas/content/colour-wheel-lessons.schema.json',
-    searchDir: 'content/lessons',
-    match: (name) => name === 'colour-wheel.json'
-  },
-  {
     label: 'content/learnings',
     schema: 'content/schemas/content/learnings.schema.json',
     searchDir: 'content/learnings',

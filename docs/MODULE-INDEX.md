@@ -122,7 +122,6 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `content/dictionary/manifests/` | Index manifests for colouring/connect-dots/images |
 | `content/exercises/index.json` | Logic gate exercise catalog |
 | `content/learnings/` | 60+ learning pathways |
-| `content/lessons/` | Lesson metadata and navigation index |
 | `content/logic-gates/` | Logic puzzle configurations |
 | `content/physical/activities/` | Physical activity descriptions |
 | `content/puzzle/manifest.json` | Puzzle piece definitions |

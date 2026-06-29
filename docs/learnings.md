@@ -162,15 +162,4 @@ The more complex the graph, the more important this is. Single-gate lessons may 
 
 ## Lesson file location
 
-Lesson JSON lives in `content/lessons/<activity>.json`. Exercises are indexed in `content/exercises/index.json` and their JSON files live alongside lesson files or in a dedicated path depending on the activity.
-
-Each lesson file has the shape:
-
-```json
-{
-  "activity": "<activity-id>",
-  "lessons": [ ... ]
-}
-```
-
-Exercise files follow the same step schema but steps omit `text`.
+**Retired.** The old per-activity lesson format (`content/lessons/<activity>.json` + its generated `index.json`) has been removed — all activities now use `content/learnings/` (see above). This section is kept only as a historical pointer.
