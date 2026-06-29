@@ -2,9 +2,5 @@
   {
     "file": "say-words.json",
     "activity": "Say Words"
-  },
-  {
-    "file": "word-lesson.json",
-    "activity": "Trace Words"
   }
 ]

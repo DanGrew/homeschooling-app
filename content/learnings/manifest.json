@@ -13,34 +13,6 @@
     ]
   },
   {
-    "id": "animal_words",
-    "source": "Trace Words",
-    "title": "Animal Names",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "uw.animals-nature",
-      "cl.topic-vocabulary",
-      "literacy.word-recognition",
-      "literacy.letter-formation",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "circular_words",
-    "source": "Trace Words",
-    "title": "Round Letter Words",
-    "type": "lesson",
-    "number": 7,
-    "criteria": [
-      "pd.fine-motor-circular",
-      "pd.fine-motor",
-      "literacy.letter-formation",
-      "literacy.phonics",
-      "cl.topic-vocabulary"
-    ]
-  },
-  {
     "id": "colouring-free",
     "source": "Colouring Playground",
     "title": "Free Colouring",
@@ -58,20 +30,6 @@
     "criteria": [
       "ead.colour-recognition",
       "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "cvc_phonics",
-    "source": "Trace Words",
-    "title": "Short Words",
-    "type": "lesson",
-    "number": 6,
-    "criteria": [
-      "literacy.phonics",
-      "literacy.letter-formation",
-      "literacy.print-concepts",
-      "pd.fine-motor",
-      "cl.topic-vocabulary"
     ]
   },
   {
@@ -118,20 +76,6 @@
       "uw.cause-effect",
       "cl.listening",
       "maths.pattern"
-    ]
-  },
-  {
-    "id": "emotion_words",
-    "source": "Trace Words",
-    "title": "How Are You Feeling?",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "cl.feeling-vocabulary",
-      "psed.emotion-vocab",
-      "cl.topic-vocabulary",
-      "literacy.word-recognition",
-      "pd.fine-motor"
     ]
   },
   {
@@ -182,33 +126,6 @@
       "cl.sequencing-language",
       "uw.animals-nature",
       "uw.seasonal-change"
-    ]
-  },
-  {
-    "id": "how_are_you_feeling",
-    "source": "Trace Words",
-    "title": "How Are You Feeling?",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "literacy.word-recognition",
-      "pd.fine-motor",
-      "psed.emotion-vocab",
-      "cl.feeling-vocabulary"
-    ]
-  },
-  {
-    "id": "medical_words",
-    "source": "Trace Words",
-    "title": "At the Doctor",
-    "type": "lesson",
-    "number": 8,
-    "criteria": [
-      "cl.technical-vocab",
-      "uw.community",
-      "cl.topic-vocabulary",
-      "literacy.word-recognition",
-      "pd.fine-motor"
     ]
   },
   {
@@ -439,19 +356,6 @@
     ]
   },
   {
-    "id": "things_that_go",
-    "source": "Trace Words",
-    "title": "Things That Go",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "literacy.word-recognition",
-      "pd.fine-motor",
-      "cl.topic-vocabulary",
-      "uw.community"
-    ]
-  },
-  {
     "id": "uppercase_letters",
     "source": "Letters & Numbers",
     "title": "Capital Letters",
@@ -474,19 +378,6 @@
       "literacy.phonics",
       "pd.fine-motor",
       "literacy.word-recognition"
-    ]
-  },
-  {
-    "id": "wild_animals",
-    "source": "Trace Words",
-    "title": "Wild Animals",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "literacy.word-recognition",
-      "pd.fine-motor",
-      "uw.animals-nature",
-      "uw.world-awareness"
     ]
   },
   {
@@ -562,30 +453,6 @@
       "literacy.word-recognition",
       "pd.fine-motor",
       "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "word_farm_animals",
-    "source": "Trace Words",
-    "title": "Farm Animals",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "literacy.word-recognition",
-      "pd.fine-motor",
-      "uw.animals-nature"
-    ]
-  },
-  {
-    "id": "word_fruit_shop",
-    "source": "Trace Words",
-    "title": "Fruit Shop",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "literacy.word-recognition",
-      "pd.fine-motor",
-      "cl.topic-vocabulary"
     ]
   }
 ]
