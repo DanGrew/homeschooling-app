@@ -88,9 +88,6 @@ var paginator=createPaginator({
       var tile=document.createElement('div');
       tile.className='tile';
       makeSpeakable(tile, w.name);
-      tile.addEventListener('click', function() {
-        window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: w.id.replace(/-/g, '_').toUpperCase() + '_SPOKEN' } }));
-      });
       var imgDiv=document.createElement('div');
       imgDiv.className='tile-img';
       var img=document.createElement('img');
@@ -115,36 +112,6 @@ loadImages(all,function(){
 <script>
   window.DICT_BASE='../../../content/dictionary/entries/';
   window.ACTIVITY_ID='say-words';
-  window.LESSONS=[
-    {id:'say-words-lesson-farm_animals',number:1,title:'Farm Animals'},
-    {id:'say-words-lesson-safari_animals',number:2,title:'Safari Animals'},
-    {id:'say-words-lesson-core_emotions',number:3,title:'How Are You Feeling?'},
-    {id:'say-words-lesson-fruit_shop',number:4,title:'Fruit Shop'},
-    {id:'say-words-lesson-vehicles',number:5,title:'Things That Go'},
-    {id:'say-words-lesson-exotic_fruit',number:6,title:'Exotic Fruits'},
-    {id:'say-words-lesson-medical',number:7,title:"At the Doctor's"}
-  ];
-</script>
-<script type="module">
-  import{GuidanceService}from'../../../components/guidance/guidance-service.js';
-  window.LEARNINGS_BASE='../../../content/learnings/';
-  window.guidanceService=new GuidanceService();
-</script>
-<script>
-  window.addEventListener('guidance:start', function() {
-    [window.guidanceService].filter(Boolean)
-      .map(function(s) { return s._lesson; })
-      .filter(Boolean)
-      .filter(function(l) { return l.filter; })
-      .forEach(function(l) {
-        var btn = document.querySelector('#nav-filter-slot button[data-tag="' + l.filter + '"]');
-        [btn].filter(Boolean).forEach(function(b) { b.click(); });
-      });
-  });
-  window.addEventListener('guidance:stop', function() {
-    var btn = document.querySelector('#nav-filter-slot button[data-tag="all"]');
-    [btn].filter(Boolean).forEach(function(b) { b.click(); });
-  });
 </script>
 <script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">import '../../../components/speech/speech-ui.js';</script>
