@@ -1,18 +1,5 @@
 [
   {
-    "id": "alphabet_sweep",
-    "source": "Letters & Numbers",
-    "title": "Your Turn — a to z",
-    "type": "lesson",
-    "number": 7,
-    "criteria": [
-      "literacy.letter-formation",
-      "literacy.phonics",
-      "pd.fine-motor",
-      "psed.independence"
-    ]
-  },
-  {
     "id": "animal_words",
     "source": "Trace Words",
     "title": "Animal Names",
@@ -75,30 +62,6 @@
     ]
   },
   {
-    "id": "digits_one_to_five",
-    "source": "Letters & Numbers",
-    "title": "Count and Write 1 to 5",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "maths.counting-5",
-      "maths.numeral-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "digits_six_to_ten",
-    "source": "Letters & Numbers",
-    "title": "Count and Write 6 to 10",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "maths.counting-10",
-      "maths.numeral-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
     "id": "domino",
     "source": "Domino",
     "title": "Domino Match",
@@ -131,18 +94,6 @@
       "psed.emotion-vocab",
       "cl.topic-vocabulary",
       "literacy.word-recognition",
-      "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "first_five",
-    "source": "Letters & Numbers",
-    "title": "First Five Letters",
-    "type": "lesson",
-    "number": 3,
-    "criteria": [
-      "literacy.phonics",
-      "maths.number-order",
       "pd.fine-motor"
     ]
   },
@@ -212,32 +163,6 @@
     ]
   },
   {
-    "id": "numerals_five_to_nine",
-    "source": "Letters & Numbers",
-    "title": "Write 5 to 9",
-    "type": "lesson",
-    "number": 5,
-    "criteria": [
-      "pd.numeral-formation",
-      "maths.numeral-recognition",
-      "pd.fine-motor",
-      "psed.self-regulation"
-    ]
-  },
-  {
-    "id": "numerals_zero_to_four",
-    "source": "Letters & Numbers",
-    "title": "Write 0 to 4",
-    "type": "lesson",
-    "number": 4,
-    "criteria": [
-      "pd.numeral-formation",
-      "maths.numeral-recognition",
-      "pd.fine-motor",
-      "psed.self-regulation"
-    ]
-  },
-  {
     "id": "pairs",
     "source": "Pairs",
     "title": "Pairs",
@@ -266,19 +191,6 @@
     ]
   },
   {
-    "id": "pre_writing_shapes",
-    "source": "Letters & Numbers",
-    "title": "Shapes in Letters",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "pd.fine-motor",
-      "ead.mark-making",
-      "maths.shape-2d",
-      "psed.self-regulation"
-    ]
-  },
-  {
     "id": "puzzle",
     "source": "Puzzle",
     "title": "Puzzle",
@@ -286,17 +198,6 @@
     "criteria": [
       "maths.spatial",
       "pd.fine-motor"
-    ]
-  },
-  {
-    "id": "round_letters",
-    "source": "Letters & Numbers",
-    "title": "Round Letters",
-    "type": "lesson",
-    "number": 2,
-    "criteria": [
-      "pd.fine-motor-circular",
-      "literacy.phonics"
     ]
   },
   {
@@ -327,31 +228,6 @@
       "pd.fine-motor",
       "cl.topic-vocabulary",
       "uw.community"
-    ]
-  },
-  {
-    "id": "uppercase_letters",
-    "source": "Letters & Numbers",
-    "title": "Capital Letters",
-    "type": "lesson",
-    "number": 6,
-    "criteria": [
-      "literacy.letter-formation",
-      "literacy.print-concepts",
-      "pd.fine-motor",
-      "cl.topic-vocabulary"
-    ]
-  },
-  {
-    "id": "vowels",
-    "source": "Letters & Numbers",
-    "title": "Vowels",
-    "type": "lesson",
-    "number": 1,
-    "criteria": [
-      "literacy.phonics",
-      "pd.fine-motor",
-      "literacy.word-recognition"
     ]
   },
   {
