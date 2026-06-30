@@ -103,11 +103,9 @@ Hit a stale `CLAUDE.md`/doc while working (wrong path, renamed file, changed com
 
 ## Content Manifests
 
-`node scripts/generate-manifests.js` regenerates generated manifests from the content files, including `content/learnings/manifest.json`, `content/lessons/index.json`, and `content/dictionary/manifests/`. Run it and commit the result after adding/removing/renaming any learning, lesson, or dictionary entry.
+`node scripts/generate-manifests.js` regenerates generated manifests from the content files, including `content/learnings/manifest.json` and `content/dictionary/manifests/`. Run it and commit the result after adding/removing/renaming any learning or dictionary entry. (The old `content/lessons/` format and its `index.json` were retired — all activities use `content/learnings/`.)
 
-**Gotcha:** the `check-manifests` CI gate only diffs `content/dictionary/manifests/` and `content/lessons/index.json` — it does **not** verify `content/learnings/manifest.json`. That manifest can therefore drift silently (stale entries for deleted content). Two downstream effects:
-- The Curriculum Coverage page (`app/curriculum/`) builds its tables from `content/learnings/manifest.json`.
-- `tests/curriculum.test.js` hard-codes the lesson/exercise row counts. When learnings change, regenerate the manifest AND update those counts, or the `e2e-test` CI job fails on a row-count mismatch.
+**Gotcha:** the `check-manifests` CI gate only diffs `content/dictionary/manifests/` — it does **not** verify `content/learnings/manifest.json`. That manifest can therefore drift silently (stale entries for deleted content). It still feeds the `check-manifest-files` gate (every entry must point to an existing file), so always regenerate after adding/removing learnings. The Curriculum Coverage page (`app/curriculum/`) and `tests/curriculum.test.js` now build from the learning catalogue (`content/learning-catalogue/`), not this manifest, so manifest drift no longer breaks them.
 
 ## Guidance + Page Control Pattern
 

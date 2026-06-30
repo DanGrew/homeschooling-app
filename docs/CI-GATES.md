@@ -28,7 +28,7 @@ node scripts/validate-schemas.js reports/vj.txt         # content JSON vs schema
 node scripts/validate-catalogue-refs.js reports/cr.txt  # learning-catalogue cross-file refs
 node scripts/contracts/run.js                           # page contract rules
 node scripts/generate-manifests.js && \
-  git diff --exit-code content/dictionary/manifests/ content/lessons/index.json
+  git diff --exit-code content/dictionary/manifests/
 
 npm run test:unit                                       # Vitest
 npx playwright test tests/<file>.test.js                # only the file you touched
@@ -59,7 +59,7 @@ npx playwright test tests/<file>.test.js                # only the file you touc
 | `validate-catalogue-refs` | a learning-catalogue card has a cross-file ref that doesn't resolve: `area` ≠ its file home, a `curriculum` tag absent from `content/curriculum/criteria.json`, a `playgrounds[].id` missing from the index registry or `app/activities/<id>/`, or a `learningIcons` id absent from the registry | `node scripts/validate-catalogue-refs.js <out>` |
 | `check-contracts` | a page breaks a contract rule (activityId, guidanceServiceWired, menuBar, speakableUI) | `node scripts/contracts/run.js` |
 | `contracts-speakable` | speakable-button contract tests fail | `npx playwright test --config playwright.contracts.config.js` |
-| `check-manifests` | generated manifests are stale (`content/dictionary/manifests/`, `content/lessons/index.json`) | `node scripts/generate-manifests.js` then `git diff` |
+| `check-manifests` | generated manifests are stale (`content/dictionary/manifests/`) | `node scripts/generate-manifests.js` then `git diff` |
 
 Each `arch-check` run prints a `SUMMARY:` line and exits non-zero on violations.
 

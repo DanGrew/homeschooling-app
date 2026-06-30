@@ -53,21 +53,6 @@ if (puzzleMissingImage.length) {
   console.log('content/puzzle/manifest.json: all images present');
 }
 
-var lessonsDir = path.join(__dirname, '..', 'content/lessons');
-var lessonIndex = fs.readdirSync(lessonsDir)
-  .filter(function(f) { return f.endsWith('.json') && f !== 'index.json'; })
-  .sort()
-  .map(function(file) {
-    try {
-      var data = JSON.parse(fs.readFileSync(path.join(lessonsDir, file), 'utf8'));
-      return data.label ? { file: file, activity: data.label } : null;
-    } catch(e) { return null; }
-  })
-  .filter(Boolean);
-
-fs.writeFileSync(path.join(lessonsDir, 'index.json'), JSON.stringify(lessonIndex, null, 2) + '\n');
-console.log('content/lessons/index.json: ' + lessonIndex.length + ' entries');
-
 var learningsDir = path.join(__dirname, '..', 'content/learnings');
 var learningsManifest = fs.readdirSync(learningsDir)
   .filter(function(f) { return f.endsWith('.json') && f !== 'manifest.json'; })
