@@ -218,3 +218,38 @@ test('object boxes are at least 280px tall on desktop', async ({ page }) => {
   const h = await page.locator('#objects-a').evaluate(el => el.getBoundingClientRect().height)
   expect(h).toBeGreaterThanOrEqual(280)
 })
+
+// --- ten-frame grid ---
+
+test('A box renders a ten-frame of exactly 10 cells', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  await expect(page.locator('#objects-a > div > div > div')).toHaveCount(10)
+})
+
+test('total box renders two stacked ten-frames of 20 cells', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  await expect(page.locator('#objects-total > div > div > div')).toHaveCount(20)
+})
+
+test('partial fill leaves the rest of the ten-frame as empty cells', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  for (let i = 0; i < 3; i++) await clickInteractive(page, '#btn-a-plus')
+  await expect(page.locator('#objects-a > div > div > div')).toHaveCount(10)
+  await expect(page.locator('#objects-a img')).toHaveCount(3)
+  await expect(page.locator('#objects-a > div > div > div:not(:has(img))')).toHaveCount(7)
+})
+
+test('total fills A then B left-to-right across cells', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/number-interaction/')
+  await ready(page)
+  for (let i = 0; i < 6; i++) await clickInteractive(page, '#btn-a-plus')
+  await clickInteractive(page, '#btn-b-plus')
+  const aSrc = await page.locator('#objects-a img').first().getAttribute('src')
+  const totalImgs = page.locator('#objects-total img')
+  await expect(totalImgs).toHaveCount(7)
+  for (let i = 0; i < 6; i++) await expect(totalImgs.nth(i)).toHaveAttribute('src', aSrc)
+  await expect(totalImgs.nth(6)).not.toHaveAttribute('src', aSrc)
+})
