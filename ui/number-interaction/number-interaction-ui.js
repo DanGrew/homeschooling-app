@@ -3,8 +3,13 @@ import { getVoice } from '../../components/speech/voice-service.js';
 import { makeInteractive } from '../../components/speech/speakable.js';
 import { comparisonColor, clamp, makeImg, labelState, computeChange } from '../../core/number-interaction/number-interaction-core.js';
 
-const SZ = 'width:min(62px,8vw);height:min(62px,8vw)';
-const SZ_SM = 'width:min(48px,6.2vw);height:min(48px,6.2vw)';
+const FRAME_CELL = 'min(52px,6.4vw)';
+const FRAME_CELL_SM = 'min(40px,5vw)';
+const IMG_FILL = 'width:82%;height:82%;object-fit:contain';
+const CELL_STYLE = {
+  'true': 'border:2px solid #E3E3E3;background:#FFF;',
+  'false': 'border:2px dashed #D2D2D2;'
+};
 
 let aCount = 0, bCount = 0, aKey = '', bKey = '', MAX = 10, counting = false;
 
@@ -51,32 +56,38 @@ function makeImgEl(item, sz) {
   return img;
 }
 
-var SHOW_GHOST = {
-  'true': function(container, key, sz) {
-    var img = document.createElement('img');
-    img.src = key.url; img.alt = key.name;
-    img.style.cssText = sz + ';opacity:0.4;';
-    img.draggable = false;
-    makeInteractive(img, () => stopAndSpeak(stopCounting(), () => speak(key.name)));
-    container.appendChild(img);
-  },
-  'false': function() {}
-};
+function frameCell(filled) {
+  var c = document.createElement('div');
+  c.style.cssText = 'box-sizing:border-box;display:flex;align-items:center;justify-content:center;border-radius:8px;width:100%;height:100%;' + CELL_STYLE[String(filled)];
+  return c;
+}
+
+function renderFrames(container, flat, capacity, cellSz) {
+  container.innerHTML = '';
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;align-items:center;';
+  Array.from({length: capacity / 10}, (_, f) => {
+    var grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(5,' + cellSz + ');grid-template-rows:repeat(2,' + cellSz + ');gap:5px;';
+    Array.from({length: 10}, (_, j) => {
+      var key = flat[f * 10 + j];
+      var c = frameCell(!!key);
+      [key].filter(Boolean).forEach(k => c.appendChild(makeImgEl(k, IMG_FILL)));
+      grid.appendChild(c);
+    });
+    wrap.appendChild(grid);
+  });
+  container.appendChild(wrap);
+}
 
 var LABEL_TEXT = { empty: '', same: 'same', bigger: 'bigger', smaller: 'smaller' };
 export function render() {
   var aContainer = document.getElementById('objects-a');
   var bContainer = document.getElementById('objects-b');
-  aContainer.innerHTML = '';
-  bContainer.innerHTML = '';
-  Array.from({length: aCount}, () => { aContainer.appendChild(makeImgEl(aKey, SZ)); });
-  SHOW_GHOST[String(aCount === 0)](aContainer, aKey, SZ);
-  Array.from({length: bCount}, () => { bContainer.appendChild(makeImgEl(bKey, SZ)); });
-  SHOW_GHOST[String(bCount === 0)](bContainer, bKey, SZ);
-  var totalContainer = document.getElementById('objects-total');
-  totalContainer.innerHTML = '';
-  Array.from({length: aCount}, () => { totalContainer.appendChild(makeImgEl(aKey, SZ_SM)); });
-  Array.from({length: bCount}, () => { totalContainer.appendChild(makeImgEl(bKey, SZ_SM)); });
+  renderFrames(aContainer, Array.from({length: aCount}, () => aKey), 10, FRAME_CELL);
+  renderFrames(bContainer, Array.from({length: bCount}, () => bKey), 10, FRAME_CELL);
+  var totalFlat = [].concat(Array.from({length: aCount}, () => aKey), Array.from({length: bCount}, () => bKey));
+  renderFrames(document.getElementById('objects-total'), totalFlat, 20, FRAME_CELL_SM);
   document.getElementById('num-a').textContent = aCount;
   document.getElementById('num-b').textContent = bCount;
   document.getElementById('num-total').textContent = aCount + bCount;

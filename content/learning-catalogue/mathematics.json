@@ -185,6 +185,21 @@
       "playgrounds": [
         { "id": "character-lesson", "note": "Trace each numeral from start to finish" }
       ]
+    },
+    {
+      "id": "subitise-small-amounts",
+      "icon": "👀",
+      "title": "Quick look",
+      "learningIcons": ["observe", "count"],
+      "keywords": ["how many", "at a glance", "quick look", "ten frame", "without counting", "subitise", "five frame"],
+      "focus": "See how many are in a small group at a glance, without counting one by one.",
+      "concepts": ["Subitising", "Ten-frame", "Quick recognition", "How many"],
+      "lookFor": ["Says how many without counting each one", "Uses the ten-frame rows to read the amount", "Spots a full row of five", "Knows a full frame is ten"],
+      "curriculum": ["maths.subitising", "maths.ten-frame"],
+      "area": "mathematics",
+      "playgrounds": [
+        { "id": "number-interaction", "note": "Glance at the ten-frame and say how many before counting" }
+      ]
     }
   ]
 }
