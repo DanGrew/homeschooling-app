@@ -116,6 +116,12 @@ const MAPPINGS = [
     schema: 'content/schemas/content/learning-catalogue-area.schema.json',
     searchDir: 'content/learning-catalogue',
     match: (name) => name.endsWith('.json') && name !== 'index.json'
+  },
+  {
+    label: 'content/graphemes',
+    schema: 'content/schemas/content/graphemes.schema.json',
+    searchDir: 'content/phonics',
+    match: (name) => name === 'graphemes.json'
   }
 ];
 
