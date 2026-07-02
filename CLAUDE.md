@@ -87,37 +87,6 @@ Any server *you* (the agent) start during a session, tear down before ending the
 
 **Gotcha:** the `check-manifests` CI gate only diffs `content/dictionary/manifests/` — it does **not** verify `content/learnings/manifest.json`. That manifest can therefore drift silently (stale entries for deleted content). It still feeds the `check-manifest-files` gate (every entry must point to an existing file), so always regenerate after adding/removing learnings. The Curriculum Coverage page (`app/curriculum/`) and `tests/curriculum.test.js` now build from the learning catalogue (`content/learning-catalogue/`), not this manifest, so manifest drift no longer breaks them.
 
-## Guidance + Page Control Pattern
-
-Activities that use the guidance system (`components/guidance/guidance-service.js`) communicate with the page via two custom events on `window`:
-
-**`guidance:event`** — page → guidance. Fired by the page when the child does something (taps, selects, etc.). Guidance checks against the current step's `expect` and advances if matched.
-```js
-window.dispatchEvent(new CustomEvent('guidance:event', { detail: { type: 'PRESET_WAKE_UP_SELECTED' } }));
-```
-
-**`page:control`** — guidance → page. Fired by guidance to instruct the page to change state. Two sources:
-- `lesson.pageControls[]` — fires once on lesson start
-- `step.pageControls[]` — fires on each step load
-- `PAGE_CONTROL_RESET` — always fires on lesson stop
-
-The page registers a `PAGE_CTRL` map and listens:
-```js
-var PAGE_CTRL = {
-  'HIDE_SOMETHING': function() { ... },
-  'PAGE_CONTROL_RESET': function() { ... }
-};
-window.addEventListener('page:control', function(e) {
-  if (e.detail.type in PAGE_CTRL) PAGE_CTRL[e.detail.type]();
-});
-```
-
-**Rule:** never modify `guidance-service.js` to add new behaviour. All page-specific logic goes in the page's `PAGE_CTRL` map. New controls are just new string keys.
-
-**Step matching:** a step's `expect` is either a single event string, or an array of event strings (array = ALL listed events must be collected before the step advances; progress shows as dots). Each `guidance:event` is handled independently and advances at most one step.
-
-**Cascade gotcha:** one user action can dispatch several guidance events in sequence (e.g. a single object tap fires `OBJECT_SELECTED` and then `DIFFERENT_OBJECT_SELECTED`). If consecutive steps expect those events, a single action can advance multiple steps at once — looking like skipped steps. Guard by resetting page-local interaction state (e.g. `lastSelectedId`) on `CLEAR_CANVAS` / `PAGE_CONTROL_RESET` so a lesson starts clean and the first action fires only the intended event.
-
 ## Page Index
 
 Full table of activity pages → paths → shared deps lives in **`docs/PAGE-INDEX.md`**. Read it when you need to locate a page or its dependencies; don't keep it resident.

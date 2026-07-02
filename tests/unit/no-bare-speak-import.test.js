@@ -5,7 +5,6 @@ import { join } from 'path';
 const ROOT = join(__dirname, '../..');
 const EXEMPT = [
   join(ROOT, 'components/speech'),
-  join(ROOT, 'components/guidance'),
 ];
 
 function isExempt(filePath) {

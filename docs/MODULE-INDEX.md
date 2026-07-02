@@ -99,9 +99,6 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `components/menu.js` | Nav bar builder |
 | `components/adult-prompts/adult-prompts-ui.js` | Adult guidance prompt overlays |
 | `components/filter-bar/filter-bar-ui.js` | Filter/sort UI widget |
-| `components/guidance/guidance-service.js` | Guidance system coordinator |
-| `components/guidance/guidance-overlay.js` | Guidance modal overlay |
-| `components/guidance/word-bubble.js` | Speech bubble UI |
 | `components/pagination/paginator-ui.js` | Pagination control UI |
 | `components/speech/speakable.js` | Text-to-speech markup (makeSpeakable) |
 | `components/speech/speech-ui.js` | Speech UI controller |
