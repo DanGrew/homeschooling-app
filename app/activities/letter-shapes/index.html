@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Letter Shapes</title>
+<link rel="stylesheet" href="../../../styles/theme.css">
+<link rel="stylesheet" href="../../../styles/style.css">
+<link rel="stylesheet" href="../../../styles/speakable.css">
+<script src="../../../components/menu.js" defer></script>
+<style>
+.ls-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:18px 14px 48px;background:#fff8f0;}
+.wrap{width:100%;max-width:560px;}
+.ls-scroll h1{font-size:1.9em;text-align:center;margin-bottom:12px;color:#333;}
+.legend{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;background:#fff;border-radius:14px;padding:9px 14px;box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:.82em;}
+.leg{display:flex;align-items:center;gap:6px;font-weight:600;}
+.sw{width:14px;height:14px;border-radius:4px;display:inline-block;}
+.c-line{background:#3498DB;}.c-curve{background:#27AE60;}.c-circle{background:#9B59B6;}.c-diag{background:#F39C12;}.c-dot{background:#E74C3C;}
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:18px;}
+.tab{border:none;background:#f1eef8;color:#7b4fc0;font-weight:700;font-size:1em;padding:11px 22px;border-radius:999px;cursor:pointer;}
+.tab.on{background:#7b4fc0;color:#fff;box-shadow:0 3px 10px rgba(123,79,192,.3);}
+.panel{background:#fff;border-radius:22px;box-shadow:0 4px 14px rgba(0,0,0,.10);padding:20px 22px 24px;min-height:340px;}
+.panel-title{font-size:1.15em;font-weight:700;margin-bottom:16px;text-align:center;}
+.hl{color:#7b4fc0;}
+.groups{margin-bottom:20px;}
+.grp{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;justify-content:center;}
+.grplabel{font-size:.72em;color:#9ca3af;font-weight:700;width:100%;text-align:center;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;}
+.pick{width:40px;height:46px;border:2px solid #e6e3ef;background:#fff;border-radius:11px;font-size:1.3em;font-weight:800;cursor:pointer;color:#333;}
+.pick.on{border-color:#7b4fc0;background:#f6f1fd;}
+.shapepick{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:20px;}
+.pick.shape{width:auto;padding:0 14px;height:44px;font-size:.95em;display:inline-flex;align-items:center;gap:7px;font-weight:700;}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:center;}
+.identify-row{gap:26px;}
+.chips{max-width:250px;}
+.glyph{min-width:150px;text-align:center;}
+.fallback{font-size:120px;font-weight:800;color:#c9c4d6;line-height:1;}
+.chip{border:2px solid #e6e3ef;background:#fff;border-radius:14px;padding:11px 16px;font-size:1em;font-weight:700;display:inline-flex;align-items:center;gap:8px;cursor:pointer;color:#333;}
+.chip .tick{visibility:hidden;color:#27AE60;}
+.chip.tapped[data-has="true"]{border-color:#27AE60;background:#eafaf1;}
+.chip.tapped[data-has="true"] .tick{visibility:visible;}
+.chip.tapped[data-has="false"]{border-color:#E74C3C;background:#fdecea;}
+.abc{display:grid;grid-template-columns:repeat(7,1fr);gap:9px;}
+.letterbtn{aspect-ratio:1;border:2px solid #e6e3ef;background:#fff;border-radius:12px;font-size:1.5em;font-weight:800;display:flex;align-items:center;justify-content:center;color:#333;}
+.letterbtn.on{border-color:#27AE60;background:#eafaf1;box-shadow:0 0 0 3px #d3f0e0;}
+.slots{margin-bottom:20px;}
+.slotwrap{text-align:center;}
+.slot{width:70px;height:70px;border:3px dashed #cdcad9;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.66em;color:#b7b3c6;font-weight:700;}
+.slot.filled{border-style:solid;border-color:#7b4fc0;background:#f6f1fd;}
+.ordnum{font-size:.66em;color:#9ca3af;font-weight:700;margin-bottom:2px;}
+.tile{width:70px;height:70px;border:2px solid #e6e3ef;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.arrow{font-size:1.5em;color:#cdcad9;}
+.hint{margin-top:18px;font-size:.85em;color:#9ca3af;text-align:center;}
+.hint.done{color:#27AE60;font-weight:700;font-size:1em;}
+.picklabel{font-size:.82em;color:#9ca3af;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="nav-bar" data-home="../../lessons/" data-title="Letter Shapes" data-instruction="Explore the shapes that build each letter" data-no-links="standalone sandbox activity"></div>
+<div class="game-area">
+  <div class="ls-scroll">
+    <div class="wrap">
+      <h1 data-speakable-container>Letter Shapes ✏️🔷</h1>
+      <div class="legend" data-speakable-container>
+        <span class="leg"><span class="sw c-line"></span>line</span>
+        <span class="leg"><span class="sw c-curve"></span>curve</span>
+        <span class="leg"><span class="sw c-circle"></span>circle</span>
+        <span class="leg"><span class="sw c-diag"></span>diagonal</span>
+        <span class="leg"><span class="sw c-dot"></span>dot</span>
+      </div>
+      <div class="tabs">
+        <button class="tab on" data-mode="identify">Identify</button>
+        <button class="tab" data-mode="match">Match</button>
+        <button class="tab" data-mode="order">Order</button>
+      </div>
+      <div class="panel" id="ls-panel" data-speakable-container></div>
+    </div>
+  </div>
+</div>
+<script type="module" src="../../../components/speech/speech-ui.js"></script>
+<script type="module">
+import '../../../components/speech/speakable.js';
+import { initLetterShapes } from '../../../ui/letter-shapes/letter-shapes-ui.js';
+initLetterShapes();
+</script>
+<script>window.ACTIVITY_ID='letter-shapes';</script>
+<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
+</body>
+</html>

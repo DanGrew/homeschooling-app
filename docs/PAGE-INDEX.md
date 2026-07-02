@@ -52,3 +52,4 @@ Activity pages and their shared dependencies. Referenced from `CLAUDE.md`.
 | Object Playground | `app/activities/object-playground/index.html` | core/object-playground, ui/object-playground |
 | Crossing Playground (Frogger) | `app/activities/frogger/index.html` | core/frogger, ui/frogger, content/frogger/scenarios |
 | Paint Playground | `app/activities/paint-playground/index.html` | core/paint-playground, ui/paint-playground |
+| Letter Shapes | `app/activities/letter-shapes/index.html` | core/letter-shapes, ui/letter-shapes, content/phonics/graphemes |

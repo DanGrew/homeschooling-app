@@ -48,6 +48,7 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `core/frogger/frogger-core.js` | Frogger simulation: grid, lanes, entities, spawning, player, collision |
 | `core/frogger/frogger-loader.js` | Frogger scenario JSON parser + field validator |
 | `core/paint-playground/paint-playground-core.js` | Paint playground: canvas state init, viewport, pan bounds |
+| `core/letter-shapes/letter-shapes-core.js` | Letter Shapes: stroke-shape map, family grouping, shape membership, order pool/tiles, panel HTML builders |
 
 ## ui/
 | Module | Purpose |
@@ -66,6 +67,7 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `ui/object-playground/object-playground-ui.js` | Object playground: SVG canvas render, init |
 | `ui/frogger/frogger-renderer.js` | Frogger DOM renderer: grid, entities, player hop animation, collision highlight |
 | `ui/paint-playground/paint-playground-ui.js` | Paint playground: two-layer canvas init, viewport positioning |
+| `ui/letter-shapes/letter-shapes-ui.js` | Letter Shapes: fetch graphemes, mode/panel render, tap wiring, completion telemetry |
 | `ui/logic-gates/puzzle-ui.js` | Logic puzzle board UI |
 | `ui/logic-gates/sandbox-ui.js` | Logic gate builder UI |
 | `ui/match-colour-shape/match-colour-shape-ui.js` | Match game UI |
