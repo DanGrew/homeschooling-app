@@ -88,6 +88,14 @@ function isOrderComplete(strokes, placed) {
   return strokes.length > 0 && placed.length === strokes.length;
 }
 
+function isCorrectPlacement(strokes, placed, shape) {
+  return shape === strokes[placed.length];
+}
+
+function countShapes(strokes) {
+  return PRIMITIVES.filter(function(p) { return strokes.indexOf(p) !== -1; }).length;
+}
+
 function glyphHtml(letter) {
   if (GLYPHS[letter]) {
     return '<svg width="150" height="150" viewBox="0 0 100 125" fill="none" stroke-width="9" stroke-linecap="round">' + GLYPHS[letter] + '</svg>';
@@ -122,9 +130,14 @@ function chipsHtml(strokes) {
   }).join('');
 }
 
+function countHtml(total, selector) {
+  return '<span class="count" data-total="' + total + '" data-sel="' + selector + '">0/' + total + '</span>';
+}
+
 function identifyPanelHtml(shapeMap, current) {
   var strokes = shapeMap[current] || [];
-  return '<div class="panel-title">What shapes make <span class="hl">' + current + '</span>?</div>' +
+  return '<div class="panel-title">What shapes make <span class="hl">' + current + '</span>? ' +
+    countHtml(countShapes(strokes), ".chip.tapped[data-has='true']") + '</div>' +
     letterPickerHtml(shapeMap, current) +
     '<div class="row identify-row"><div class="glyph">' + glyphHtml(current) + '</div>' +
     '<div class="row chips">' + chipsHtml(strokes) + '</div></div>' +
@@ -139,12 +152,13 @@ function shapePickerHtml(current) {
 
 function matchPanelHtml(shapeMap, currentShape) {
   var lit = lettersWithShape(shapeMap, currentShape, ALPHABET);
-  return '<div class="panel-title">Which letters have a <span class="hl" style="color:' + COLOURS[currentShape] + '">' + SHORT[currentShape] + '</span>?</div>' +
+  return '<div class="panel-title">Which letters have a <span class="hl" style="color:' + COLOURS[currentShape] + '">' + SHORT[currentShape] + '</span>? ' +
+    countHtml(lit.length, '.letterbtn.found') + '</div>' +
     shapePickerHtml(currentShape) +
     '<div class="abc">' + ALPHABET.map(function(l) {
-      return '<div class="letterbtn' + (lit.indexOf(l) !== -1 ? ' on' : '') + '">' + l + '</div>';
+      return '<button class="letterbtn" data-cell="' + l + '" data-has="' + (lit.indexOf(l) !== -1) + '">' + l + '</button>';
     }).join('') + '</div>' +
-    '<div class="hint">The whole alphabet — every letter built from this stroke glows.</div>';
+    '<div class="hint">Find every letter built from this stroke — tap to check.</div>';
 }
 
 function orderSlotsHtml(strokes, placed) {
@@ -179,12 +193,12 @@ function orderPanelHtml(shapeMap, current, placed) {
 export {
   PRIMITIVES, COLOURS, SHORT, FAMILIES, ALPHABET,
   buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
-  buildOrderPool, availableTiles, isOrderComplete,
+  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes,
   glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
 };
 if (typeof module !== 'undefined') module.exports = {
   PRIMITIVES, COLOURS, SHORT, FAMILIES, ALPHABET,
   buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
-  buildOrderPool, availableTiles, isOrderComplete,
+  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes,
   glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
 };

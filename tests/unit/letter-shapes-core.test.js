@@ -4,7 +4,7 @@ const require = createRequire(import.meta.url);
 const {
   PRIMITIVES, FAMILIES, ALPHABET,
   buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
-  buildOrderPool, availableTiles, isOrderComplete,
+  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes,
   glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
 } = require('../../core/letter-shapes/letter-shapes-core.js');
 
@@ -104,6 +104,27 @@ describe('isOrderComplete', function() {
   });
 });
 
+describe('isCorrectPlacement', function() {
+  it('accepts only the stroke expected at the next slot', function() {
+    var strokes = ['circle', 'straight line'];
+    expect(isCorrectPlacement(strokes, [], 'circle')).toBe(true);
+    expect(isCorrectPlacement(strokes, [], 'straight line')).toBe(false);
+    expect(isCorrectPlacement(strokes, ['circle'], 'straight line')).toBe(true);
+  });
+  it('rejects a distractor that is not part of the letter', function() {
+    expect(isCorrectPlacement(['curve'], [], 'diagonal')).toBe(false);
+  });
+});
+
+describe('countShapes', function() {
+  it('counts distinct primitives present, not repeated strokes', function() {
+    expect(countShapes(['circle', 'straight line'])).toBe(2);
+    expect(countShapes(['straight line', 'straight line'])).toBe(1);
+    expect(countShapes(['curve', 'straight line', 'straight line'])).toBe(2);
+    expect(countShapes([])).toBe(0);
+  });
+});
+
 describe('glyphHtml', function() {
   it('renders a stroke-coloured svg for a known glyph', function() {
     var html = glyphHtml('a');
@@ -131,14 +152,24 @@ describe('identifyPanelHtml', function() {
     expect(html).toContain('data-shape="dot" data-has="false"');
     expect(html).toContain('What shapes make');
   });
+  it('shows a progress count of the correct chips to find', function() {
+    var html = identifyPanelHtml({ a: ['circle', 'straight line'] }, 'a');
+    expect(html).toContain('data-total="2"');
+    expect(html).toContain('>0/2<');
+  });
 });
 
 describe('matchPanelHtml', function() {
-  it('lights letters that contain the selected shape across the whole alphabet', function() {
+  it('renders unticked letter buttons with a has flag, not pre-highlighted', function() {
     var html = matchPanelHtml({ a: ['circle'], o: ['circle'], c: ['curve'] }, 'circle');
-    expect(html).toContain('class="letterbtn on">a');
-    expect(html).toContain('class="letterbtn on">o');
-    expect(html).toContain('class="letterbtn">c');
+    expect(html).toContain('data-cell="a" data-has="true"');
+    expect(html).toContain('data-cell="c" data-has="false"');
+    expect(html).not.toContain('letterbtn on');
+  });
+  it('counts how many letters contain the shape', function() {
+    var html = matchPanelHtml({ a: ['circle'], o: ['circle'], c: ['curve'] }, 'circle');
+    expect(html).toContain('data-total="2"');
+    expect(html).toContain('>0/2<');
   });
 });
 
