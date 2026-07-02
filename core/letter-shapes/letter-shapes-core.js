@@ -107,12 +107,17 @@ function swatchHtml(shape) {
   return '<span class="sw c-' + SHORT[shape] + '"></span>';
 }
 
+var STROKE_ICON = {
+  'straight line': '<line x1="20" y1="7" x2="20" y2="33"/>',
+  'curve': '<path d="M27,9 A13,13 0 1 0 27,31"/>',
+  'circle': '<circle cx="20" cy="20" r="13"/>',
+  'diagonal': '<line x1="11" y1="31" x2="29" y2="9"/>'
+};
+
 function strokeSwatchHtml(shape) {
-  var w = shape === 'straight line' ? '12px' : '32px';
-  var h = shape === 'straight line' ? '44px' : '32px';
-  var radius = (shape === 'circle' || shape === 'dot') ? '50%' : '6px';
-  var rot = shape === 'diagonal' ? 'transform:rotate(35deg);' : '';
-  return '<span class="sw c-' + SHORT[shape] + '" style="width:' + w + ';height:' + h + ';border-radius:' + radius + ';' + rot + '"></span>';
+  var col = COLOURS[shape];
+  var inner = STROKE_ICON[shape] || '<circle cx="20" cy="20" r="6" fill="' + col + '"/>';
+  return '<svg class="strokeicon" viewBox="0 0 40 40" fill="none" stroke="' + col + '" stroke-width="6" stroke-linecap="round">' + inner + '</svg>';
 }
 
 function letterPickerHtml(shapeMap, current) {
@@ -139,9 +144,11 @@ function identifyPanelHtml(shapeMap, current) {
   return '<div class="panel-title">What shapes make <span class="hl">' + current + '</span>? ' +
     countHtml(countShapes(strokes), ".chip.tapped[data-has='true']") + '</div>' +
     letterPickerHtml(shapeMap, current) +
+    '<div class="mode-body">' +
     '<div class="row identify-row"><div class="glyph">' + glyphHtml(current) + '</div>' +
     '<div class="row chips">' + chipsHtml(strokes) + '</div></div>' +
-    '<div class="hint">Tap the strokes you can see — the right ones turn green. The letter is drawn in matching stroke colours.</div>';
+    '<div class="hint">Tap the strokes you can see — the right ones turn green. The letter is drawn in matching stroke colours.</div>' +
+    '</div>';
 }
 
 function shapePickerHtml(current) {
@@ -154,11 +161,13 @@ function matchPanelHtml(shapeMap, currentShape) {
   var lit = lettersWithShape(shapeMap, currentShape, ALPHABET);
   return '<div class="panel-title">Which letters have a <span class="hl" style="color:' + COLOURS[currentShape] + '">' + SHORT[currentShape] + '</span>? ' +
     countHtml(lit.length, '.letterbtn.found') + '</div>' +
+    '<div class="mode-body">' +
     shapePickerHtml(currentShape) +
     '<div class="abc">' + ALPHABET.map(function(l) {
       return '<button class="letterbtn" data-cell="' + l + '" data-has="' + (lit.indexOf(l) !== -1) + '">' + l + '</button>';
     }).join('') + '</div>' +
-    '<div class="hint">Find every letter built from this stroke — tap to check.</div>';
+    '<div class="hint">Find every letter built from this stroke — tap to check.</div>' +
+    '</div>';
 }
 
 function orderSlotsHtml(strokes, placed) {
@@ -185,9 +194,11 @@ function orderPanelHtml(shapeMap, current, placed) {
     : '<div class="row"><span class="picklabel">tap a stroke</span>' + orderPoolHtml(strokes, placed) + '</div>';
   return '<div class="panel-title">Make <span class="hl">' + current + '</span> — tap the strokes in order</div>' +
     letterPickerHtml(shapeMap, current) +
+    '<div class="mode-body">' +
     '<div class="row slots">' + orderSlotsHtml(strokes, placed) + '</div>' +
     footer +
-    '<div class="hint">Tap the strokes one at a time, in the order you\'d write them.</div>';
+    '<div class="hint">Tap the strokes one at a time, in the order you\'d write them.</div>' +
+    '</div>';
 }
 
 export {
