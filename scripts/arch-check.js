@@ -7,7 +7,7 @@ const { extractInlineScripts } = require('./html-utils');
 const rule = process.argv[2];
 const outputFile = process.argv[3];
 
-if (!rule || !outputFile) {
+if (require.main === module && (!rule || !outputFile)) {
   console.error("Usage: node arch-check.js <rule> <outputFile>");
   process.exit(1);
 }
@@ -41,6 +41,85 @@ function findMatches(content, regex) {
   while ((m = re.exec(content)) !== null) {
     const line = content.slice(0, m.index).split('\n').length;
     results.push({ line, text: m[0].slice(0, 60).replace(/\s+/g, ' ') });
+  }
+  return results;
+}
+
+const DOM_PATTERN = /\b(document|window|navigator|location|requestAnimationFrame|cancelAnimationFrame|fetch|decodeAudioBuffer|decodeAudioData)\b|\.(?:style\b|classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|remove\b|insertBefore\b|addEventListener\b|removeEventListener\b|setAttribute\b|getAttribute\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b|cssText\b|createElementNS\b|createBufferSource\b|createGain\b|resume\b|decodeAudioData\b|clearRect\b|fillRect\b|strokeRect\b|drawImage\b|beginPath\b|moveTo\b|lineTo\b|arc\b|fill\b|stroke\b|fillText\b|strokeText\b|getImageData\b|putImageData\b|createLinearGradient\b|createRadialGradient\b)/;
+
+function hasTopLevelReturn(body) {
+  let depth = 0;
+  for (let i = 0; i < body.length; i++) {
+    if (body[i] === '{') { depth++; continue; }
+    if (body[i] === '}') { depth--; continue; }
+    if (depth === 0 && /^return\b/.test(body.slice(i))) return true;
+  }
+  return false;
+}
+
+function matchDelimiter(s, open, openCh, closeCh) {
+  let depth = 0;
+  for (let k = open; k < s.length; k++) {
+    if (s[k] === openCh) depth++;
+    else if (s[k] === closeCh) { depth--; if (depth === 0) return k; }
+  }
+  return -1;
+}
+
+// Given the index just after a transform method's '(', return the block-body of an
+// inline callback (function(){…} or (…)=>{…}), or null if the argument is not a
+// block-body callback (named-fn reference, expression-body arrow, etc.).
+function extractBlockCallbackBody(s, i) {
+  while (i < s.length && /\s/.test(s[i])) i++;
+  let braceStart = -1;
+  if (s.startsWith('function', i)) {
+    const paren = s.indexOf('(', i);
+    if (paren === -1) return null;
+    const closeParen = matchDelimiter(s, paren, '(', ')');
+    if (closeParen === -1) return null;
+    let j = closeParen + 1;
+    while (j < s.length && /\s/.test(s[j])) j++;
+    if (s[j] !== '{') return null;
+    braceStart = j;
+  } else {
+    let j = i;
+    if (s[j] === '(') {
+      const close = matchDelimiter(s, j, '(', ')');
+      if (close === -1) return null;
+      j = close + 1;
+    } else if (/[A-Za-z_$]/.test(s[j])) {
+      while (j < s.length && /[\w$]/.test(s[j])) j++;
+    } else {
+      return null;
+    }
+    while (j < s.length && /\s/.test(s[j])) j++;
+    if (s[j] !== '=' || s[j + 1] !== '>') return null;
+    j += 2;
+    while (j < s.length && /\s/.test(s[j])) j++;
+    if (s[j] !== '{') return null; // expression-body arrow — out of scope
+    braceStart = j;
+  }
+  const end = matchDelimiter(s, braceStart, '{', '}');
+  if (end === -1) return null;
+  return s.slice(braceStart + 1, end);
+}
+
+// Flags block-body callbacks passed to array-transform methods that hold pure
+// logic (top-level return or a computation token) and touch no DOM — the
+// untestable-by-vitest gap no-pure-fn-outside-core misses (named fns only).
+function detectInlineCallbackViolations(script) {
+  const METHOD_RE = /\.(map|filter|reduce|reduceRight|flatMap|sort|find|findIndex|some|every)\s*\(/g;
+  const COMPUTATION_PATTERN = /\bMath\.\w+|\bparseInt\b|\bparseFloat\b|[-+*/%]|[<>]=?|[=!]==/;
+  const results = [];
+  let m;
+  while ((m = METHOD_RE.exec(script)) !== null) {
+    const openParen = m.index + m[0].length - 1;
+    const body = extractBlockCallbackBody(script, openParen + 1);
+    if (body === null) continue;
+    if (DOM_PATTERN.test(body)) continue;
+    if (!hasTopLevelReturn(body) && !COMPUTATION_PATTERN.test(body)) continue;
+    const line = script.slice(0, m.index).split('\n').length;
+    results.push({ line, method: m[1] });
   }
   return results;
 }
@@ -274,19 +353,8 @@ if (rule === 'no-pure-fn-outside-core') {
   // Named function declarations outside core/ with params + logic + no DOM access belong in core/.
   // "Logic" = top-level return OR Math.* / numeric computation in body.
   // Once in core/, check:untested enforces unit tests exist.
-  const DOM_PATTERN = /\b(document|window|navigator|location|requestAnimationFrame|cancelAnimationFrame|fetch|decodeAudioBuffer|decodeAudioData)\b|\.(?:style\b|classList\b|textContent\b|innerHTML\b|innerText\b|appendChild\b|removeChild\b|remove\b|insertBefore\b|addEventListener\b|removeEventListener\b|setAttribute\b|getAttribute\b|querySelector\b|querySelectorAll\b|getElementById\b|offsetTop\b|offsetLeft\b|offsetWidth\b|offsetHeight\b|clientHeight\b|clientWidth\b|scrollTo\b|scrollLeft\b|scrollTop\b|cssText\b|createElementNS\b|createBufferSource\b|createGain\b|resume\b|decodeAudioData\b|clearRect\b|fillRect\b|strokeRect\b|drawImage\b|beginPath\b|moveTo\b|lineTo\b|arc\b|fill\b|stroke\b|fillText\b|strokeText\b|getImageData\b|putImageData\b|createLinearGradient\b|createRadialGradient\b)/;
   const THIN_DISPATCHER = /^\s*return\s+\w+\[.*\]\s*\(.*\)\s*;?\s*$/s;
   const COMPUTATION_PATTERN = /\bMath\.\w+\s*\(|\bparseInt\b|\bparseFloat\b|\bNumber\b|\bisNaN\b|\bisFinite\b/;
-
-  function hasTopLevelReturn(body) {
-    let depth = 0;
-    for (let i = 0; i < body.length; i++) {
-      if (body[i] === '{') { depth++; continue; }
-      if (body[i] === '}') { depth--; continue; }
-      if (depth === 0 && /^return\b/.test(body.slice(i))) return true;
-    }
-    return false;
-  }
 
   function hasLogic(body) {
     return hasTopLevelReturn(body) || COMPUTATION_PATTERN.test(body);
@@ -346,6 +414,20 @@ if (rule === 'no-pure-fn-outside-core') {
   });
 }
 
+if (rule === 'no-logic-in-inline-callbacks') {
+  getAllFiles(path.join(ROOT, 'app'), ['.html']).forEach(file => {
+    const html = read(file);
+    const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+    extractInlineScripts(html).forEach((script, i) => {
+      const label = rel + ' (block ' + (i + 1) + ')';
+      scanned.push(label);
+      detectInlineCallbackViolations(script).forEach(({ line }) => {
+        violations.push(`${label}:${line} — transform callback with pure logic; extract to core/ + unit test`);
+      });
+    });
+  });
+}
+
 let output = `## ${rule}\n`;
 
 if (violations.length === 0) {
@@ -357,7 +439,10 @@ if (violations.length === 0) {
 
 output += `\nSUMMARY: ${violations.length === 0 ? '✅' : '❌'} ${violations.length} / ${scanned.length} files\n`;
 
-fs.writeFileSync(outputFile, output);
-console.log(output);
+if (require.main === module) {
+  fs.writeFileSync(outputFile, output);
+  console.log(output);
+  process.exit(violations.length > 0 ? 1 : 0);
+}
 
-process.exit(violations.length > 0 ? 1 : 0);
+module.exports = { detectInlineCallbackViolations };
