@@ -36,7 +36,7 @@
       "icon": "📏",
       "title": "Compare sizes",
       "learningIcons": ["compare", "observe"],
-      "keywords": ["big", "small", "bigger", "smaller", "tall", "huge", "tiny"],
+      "keywords": ["big", "small", "bigger", "smaller", "tall", "huge", "tiny", "medium", "large"],
       "focus": "Compare two objects and say which is bigger or smaller.",
       "concepts": ["Size", "Comparing", "Big and small", "Biggest and smallest"],
       "lookFor": ["Says which is bigger", "Puts objects in size order", "Uses words like bigger and smaller", "Makes something as big or as small as it can"],
