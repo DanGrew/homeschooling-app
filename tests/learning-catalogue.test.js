@@ -56,6 +56,20 @@ test('back returns from detail to the list', async ({ page }) => {
   await expect(page.locator('#lc-detail')).toBeHidden()
 })
 
+test('returning from a card keeps the list scroll position', async ({ page }) => {
+  await page.goto(URL)
+  const lastTitle = allLearnings[allLearnings.length - 1].title
+  await page.locator('.lc-card', { hasText: lastTitle }).scrollIntoViewIfNeeded()
+  const before = await page.locator('.lc-scroll').evaluate(el => el.scrollTop)
+  expect(before).toBeGreaterThan(0)
+  await page.locator('.lc-card', { hasText: lastTitle }).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await page.locator('[data-testid="lc-back"]').click()
+  await expect(page.locator('#lc-list')).toBeVisible()
+  const after = await page.locator('.lc-scroll').evaluate(el => el.scrollTop)
+  expect(Math.abs(after - before)).toBeLessThan(5)
+})
+
 test('standard nav-bar with home link is present', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('.nav-bar')).toHaveCSS('width', '56px')
