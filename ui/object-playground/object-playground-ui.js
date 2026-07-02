@@ -109,19 +109,6 @@ function showEdgeFlash(svgEl, objId) {
   });
 }
 
-function _applyLocks(toolboxEl, addBtn, undoBtn, locks) {
-  [locks.colour].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="colour"]').forEach(function(el) { el.style.display = 'none'; }); });
-  [locks.size].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="size"]').forEach(function(el) { el.style.display = 'none'; }); });
-  [locks.shape].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="shape"]').forEach(function(el) { el.style.display = 'none'; }); });
-  [locks.rotation].filter(Boolean).forEach(function() { toolboxEl.querySelectorAll('[data-prop="rotation"]').forEach(function(el) { el.style.display = 'none'; }); });
-  [locks.direction].filter(Boolean).forEach(function() {
-    ['move-left', 'move-right', 'move-up', 'move-down'].forEach(function(action) {
-      toolboxEl.querySelectorAll('[data-action="' + action + '"]').forEach(function(el) { el.style.display = 'none'; });
-    });
-  });
-  [locks.addRemove].filter(Boolean).forEach(function() { addBtn.disabled = true; undoBtn.style.display = 'none'; });
-}
-
 function initObjectPlayground() {
   var wrap = document.getElementById('obj-viewport');
   var svgEl = document.getElementById('obj-world');
@@ -131,7 +118,6 @@ function initObjectPlayground() {
   var w = wrap.clientWidth;
   var h = wrap.clientHeight;
   var state = initObjectState(w, h);
-  var objLocks = {};
   var _spawnIndex = 0;
 
   svgEl.setAttribute('width', state.world.width);
@@ -169,31 +155,25 @@ function initObjectPlayground() {
   function redraw() {
     renderObjects(svgEl, state);
     renderToolbox(toolboxEl, state);
-    _applyLocks(toolboxEl, addBtn, undoBtn, objLocks);
     renderControls(addBtn, undoBtn, state);
-    [objLocks.addRemove].filter(Boolean).forEach(function() { addBtn.disabled = true; undoBtn.style.display = 'none'; });
   }
 
   redraw();
 
   addBtn.addEventListener('click', function() {
-    [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
-      var pos = gridSpawn(state.viewport, _spawnIndex);
-      _spawnIndex++;
-      var spawnX = pos.x;
-      var spawnY = pos.y;
-      [1].filter(function() { return canAddObject(state); }).forEach(function() {
-        state = addObject(state, spawnX, spawnY);
-        redraw();
-      });
+    var pos = gridSpawn(state.viewport, _spawnIndex);
+    _spawnIndex++;
+    var spawnX = pos.x;
+    var spawnY = pos.y;
+    [1].filter(function() { return canAddObject(state); }).forEach(function() {
+      state = addObject(state, spawnX, spawnY);
+      redraw();
     });
   });
 
   undoBtn.addEventListener('click', function() {
-    [1].filter(function() { return !objLocks.addRemove; }).forEach(function() {
-      state = restoreDeleted(state);
-      redraw();
-    });
+    state = restoreDeleted(state);
+    redraw();
   });
 
   var panGesture = { active: false };
@@ -276,7 +256,7 @@ function initObjectPlayground() {
         _speak(sel.colour + ' ' + sel.shape);
       });
     });
-    [deleteRow].filter(Boolean).filter(function() { return !objLocks.addRemove; }).forEach(function() {
+    [deleteRow].filter(Boolean).forEach(function() {
       var selIds = state.objects.filter(function(o) { return o.selected; }).map(function(o) { return o.id; });
       [selIds[0]].filter(Boolean).forEach(function(id) {
         state = removeObject(state, id);
@@ -286,7 +266,7 @@ function initObjectPlayground() {
     });
     var actionRow = e.target.closest('[data-action^="move-"]');
     var flashIds = [];
-    [actionRow].filter(Boolean).filter(function() { return !objLocks.direction; }).forEach(function(el) {
+    [actionRow].filter(Boolean).forEach(function(el) {
       var dir = el.getAttribute('data-action').replace('move-', '');
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
       var animFrom = [sel].filter(Boolean).map(function(s) { return getVisualPos(s, objAnims); })[0];

@@ -57,7 +57,7 @@ npx playwright test tests/<file>.test.js                # only the file you touc
 | `check-manifest-files` | `content/learnings/manifest.json` references missing files | `node scripts/check-manifest-files.js <out>` |
 | `validate-json` | content JSON violates its schema (incl. the learning-catalogue index + area schemas) | `node scripts/validate-schemas.js <out>` |
 | `validate-catalogue-refs` | a learning-catalogue card has a cross-file ref that doesn't resolve: `area` ≠ its file home, a `curriculum` tag absent from `content/curriculum/criteria.json`, a `playgrounds[].id` missing from the index registry or `app/activities/<id>/`, or a `learningIcons` id absent from the registry | `node scripts/validate-catalogue-refs.js <out>` |
-| `check-contracts` | a page breaks a contract rule (activityId, guidanceServiceWired, menuBar, speakableUI) | `node scripts/contracts/run.js` |
+| `check-contracts` | a page breaks a contract rule (activityId, menuBar, speakableUI) | `node scripts/contracts/run.js` |
 | `contracts-speakable` | speakable-button contract tests fail | `npx playwright test --config playwright.contracts.config.js` |
 | `check-manifests` | generated manifests are stale (`content/dictionary/manifests/`) | `node scripts/generate-manifests.js` then `git diff` |
 
