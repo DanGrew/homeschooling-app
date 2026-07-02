@@ -63,7 +63,7 @@
   }
 
   document.addEventListener('click',function(){
-    document.querySelectorAll('.nav-lesson-popout,.nav-exercise-popout,.nav-links-popout,.nav-custom-popout').forEach(function(p){p.style.display='none';});
+    document.querySelectorAll('.nav-links-popout,.nav-custom-popout').forEach(function(p){p.style.display='none';});
   });
 
   window.__buildNavPopout=function(iconHtml,label,minWidth,items,onSelect){
@@ -141,81 +141,6 @@
         }
       });
     });
-  }
-
-  if(window.LESSONS&&window.LESSONS.length){
-    document.body.classList.add('has-lessons');
-    var lsnContainer=document.createElement('div');
-    lsnContainer.className='nav-btn-container';
-    var lsnBtn=makeNavBtn('button',{},'&#128218;','Lessons');
-    lsnBtn.classList.add('nav-lesson-btn');
-    var lsnPopout=fixedPopout(190);
-    lsnPopout.className='nav-lesson-popout';
-    window.LESSONS.forEach(function(l,i){
-      var item=document.createElement('button');
-      item.textContent='Lesson '+l.number+': '+l.title;
-      item.className='nav-lesson-item';
-      item.style.cssText='display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;'+(i>0?'border-top:1px solid #f0f0f0;':'');
-      item.addEventListener('click',function(e){
-        e.stopPropagation();
-        lsnPopout.style.display='none';
-        [window.guidanceService].filter(Boolean).forEach(function(svc){
-          svc.start(l);
-        });
-      });
-      lsnPopout.appendChild(item);
-    });
-    lsnBtn.addEventListener('click',function(e){
-      e.stopPropagation();
-      togglePopout(lsnPopout,lsnBtn);
-    });
-    window.addEventListener('load',function(){
-      if(typeof window.__makeSpeakable==='function'){
-        window.__makeSpeakable(lsnBtn,'Lessons');
-        lsnPopout.querySelectorAll('.nav-lesson-item').forEach(function(item){
-          window.__makeSpeakable(item,function(){return item.textContent;});
-        });
-      }
-    });
-    lsnContainer.appendChild(lsnBtn);
-    bar.appendChild(lsnContainer);
-  }
-
-  if(window.EXERCISES&&window.EXERCISES.length){
-    var exContainer=document.createElement('div');
-    exContainer.className='nav-btn-container';
-    var exBtn=makeNavBtn('button',{},'&#128221;','Exercises');
-    exBtn.classList.add('nav-exercise-btn');
-    var exPopout=fixedPopout(210);
-    exPopout.className='nav-exercise-popout';
-    window.EXERCISES.forEach(function(ex,i){
-      var item=document.createElement('button');
-      item.textContent='Exercise '+ex.number+': '+ex.title;
-      item.className='nav-exercise-item';
-      item.style.cssText='display:block;width:100%;padding:12px 16px;text-align:left;border:none;background:none;cursor:pointer;font-size:0.9em;font-weight:600;color:#333;white-space:nowrap;'+(i>0?'border-top:1px solid #f0f0f0;':'');
-      item.addEventListener('click',function(e){
-        e.stopPropagation();
-        exPopout.style.display='none';
-        [window.guidanceService].filter(Boolean).forEach(function(svc){
-          svc.start(ex);
-        });
-      });
-      exPopout.appendChild(item);
-    });
-    exBtn.addEventListener('click',function(e){
-      e.stopPropagation();
-      togglePopout(exPopout,exBtn);
-    });
-    window.addEventListener('load',function(){
-      if(typeof window.__makeSpeakable==='function'){
-        window.__makeSpeakable(exBtn,'Exercises');
-        exPopout.querySelectorAll('.nav-exercise-item').forEach(function(item){
-          window.__makeSpeakable(item,function(){return item.textContent;});
-        });
-      }
-    });
-    exContainer.appendChild(exBtn);
-    bar.appendChild(exContainer);
   }
 
   if(bar.dataset.links){

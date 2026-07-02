@@ -14,7 +14,7 @@ Activity pages and their shared dependencies. Referenced from `CLAUDE.md`.
 | Routine scheduler | `app/routine/index.html` | ui/routine, core/routine |
 | Attributions | `app/attributions.html` | — |
 | Physical hub | `app/physical/index.html` | core/physical |
-| Letter tracing | `app/activities/character-lesson/index.html` | core/trace, ui/trace, ui/character-lesson, components/guidance, components/adult-prompts |
+| Letter tracing | `app/activities/character-lesson/index.html` | core/trace, ui/trace, ui/character-lesson, components/adult-prompts |
 | Clock lesson | `app/activities/clock/index.html` | core/clock, ui/clock |
 | Clock game | `app/activities/clock/game-mc.html` | core/clock, ui/clock |
 | Colour wheel | `app/activities/colour-wheel/index.html` | core/colour-wheel, ui/colour-wheel |
@@ -33,7 +33,7 @@ Activity pages and their shared dependencies. Referenced from `CLAUDE.md`.
 | Pairs memory | `app/activities/pairs/index.html` | core/pairs, ui/pairs, core/card-game, ui/card-game |
 | Domino match | `app/activities/domino/index.html` | core/pairs (filterByTag), ui/domino, ui/card-game |
 | Shopping game | `app/activities/shopping-game/index.html` | core/shopping-game, ui/shopping-game, core/card-game, ui/card-game |
-| Word lesson | `app/activities/word-lesson/index.html` | ui/word-lesson, components/guidance |
+| Word lesson | `app/activities/word-lesson/index.html` | ui/word-lesson |
 | Word builder | `app/activities/word-builder/index.html` | core/word-builder, ui/word-builder, components/speech, components/success-banner |
 | Word match | `app/activities/word-match/index.html` | core/word-match, ui/word-match |
 | Primary colours | `app/activities/primary-colours/index.html` | core/shapes, ui/shared |
