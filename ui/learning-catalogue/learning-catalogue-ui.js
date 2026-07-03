@@ -3,6 +3,8 @@ var LC = {
   iconMap: {},
   playgrounds: {},
   listEl: null,
+  scrollEl: null,
+  listScroll: 0,
   detailEl: null,
   chipsEl: null,
   currentEl: null,
@@ -60,16 +62,18 @@ function lcShowDetail(learning) {
     '<div class="lc-sec"><div class="lc-lab">📚 Curriculum</div><div class="lc-pills">' + learning.curriculum.map(function(k) { return '<span class="lc-pill lc-cur">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">▶ Where to practise</div>' + learning.playgrounds.map(function(v) { return '<a class="lc-venue" data-testid="lc-venue" href="' + activityHref(v.id) + '"><span class="lc-vi">' + LC.playgrounds[v.id].emoji + '</span><span class="lc-vt"><b>' + LC.playgrounds[v.id].name + '</b><span>' + v.note + '</span></span><span class="lc-go">▶</span></a>'; }).join('') + '</div>';
   LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);
+  LC.listScroll = LC.scrollEl.scrollTop;
   LC.filterEl.style.display = 'none';
   LC.listEl.style.display = 'none';
   LC.detailEl.style.display = 'block';
-  window.scrollTo(0, 0);
+  LC.scrollEl.scrollTop = 0;
 }
 
 function lcShowList() {
   LC.detailEl.style.display = 'none';
   LC.filterEl.style.display = 'block';
   LC.listEl.style.display = 'block';
+  LC.scrollEl.scrollTop = LC.listScroll;
 }
 
 function lcApplyFilter() {
@@ -134,6 +138,7 @@ function lcOnIndex(index) {
 
 function initLearningCatalogue() {
   LC.listEl = document.getElementById('lc-list');
+  LC.scrollEl = document.querySelector('.lc-scroll');
   LC.detailEl = document.getElementById('lc-detail');
   LC.chipsEl = document.getElementById('lc-chips');
   LC.currentEl = document.getElementById('lc-current');
