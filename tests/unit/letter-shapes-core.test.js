@@ -4,7 +4,7 @@ const require = createRequire(import.meta.url);
 const {
   PRIMITIVES, FAMILIES, ALPHABET,
   buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
-  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes,
+  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes, parseJsonResponse,
   glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
 } = require('../../core/letter-shapes/letter-shapes-core.js');
 
@@ -113,6 +113,14 @@ describe('isCorrectPlacement', function() {
   });
   it('rejects a distractor that is not part of the letter', function() {
     expect(isCorrectPlacement(['curve'], [], 'diagonal')).toBe(false);
+  });
+});
+
+describe('parseJsonResponse', function() {
+  it('delegates to the response json parser', function() {
+    var payload = { a: ['circle'] };
+    var response = { json: function() { return payload; } };
+    expect(parseJsonResponse(response)).toBe(payload);
   });
 });
 

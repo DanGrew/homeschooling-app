@@ -96,6 +96,10 @@ function countShapes(strokes) {
   return PRIMITIVES.filter(function(p) { return strokes.indexOf(p) !== -1; }).length;
 }
 
+function parseJsonResponse(response) {
+  return response.json();
+}
+
 function glyphHtml(letter) {
   if (GLYPHS[letter]) {
     return '<svg width="150" height="150" viewBox="0 0 100 125" fill="none" stroke-width="9" stroke-linecap="round">' + GLYPHS[letter] + '</svg>';
@@ -204,12 +208,12 @@ function orderPanelHtml(shapeMap, current, placed) {
 export {
   PRIMITIVES, COLOURS, SHORT, FAMILIES, ALPHABET,
   buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
-  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes,
+  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes, parseJsonResponse,
   glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
 };
 if (typeof module !== 'undefined') module.exports = {
   PRIMITIVES, COLOURS, SHORT, FAMILIES, ALPHABET,
   buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
-  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes,
+  buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes, parseJsonResponse,
   glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
 };

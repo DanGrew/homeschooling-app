@@ -1,13 +1,11 @@
 import { makeSpeakable } from '../../components/speech/speakable.js';
 import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 import {
-  buildLetterShapeMap, isOrderComplete, isCorrectPlacement,
+  buildLetterShapeMap, isOrderComplete, isCorrectPlacement, parseJsonResponse,
   identifyPanelHtml, matchPanelHtml, orderPanelHtml
 } from '../../core/letter-shapes/letter-shapes-core.js';
 
 var REGISTRY = new URL('../../content/phonics/graphemes.json', import.meta.url).href;
-
-function toJson(r) { return r.json(); }
 
 export function initLetterShapes() {
   var panel = document.getElementById('ls-panel');
@@ -104,5 +102,5 @@ export function initLetterShapes() {
   }
 
   document.querySelectorAll('.tab').forEach(bindTab);
-  fetch(REGISTRY).then(toJson).then(function(data) { shapeMap = buildLetterShapeMap(data); render(); });
+  fetch(REGISTRY).then(parseJsonResponse).then(function(data) { shapeMap = buildLetterShapeMap(data); render(); });
 }
