@@ -35,3 +35,22 @@ test('assigning colours to slots updates result', async ({ page }) => {
   await page.locator('#lsn-slot-b').click()
   await expect(page.locator('#lsn-result-label')).toHaveText('Orange')
 })
+
+test('tapping the result label speaks the mixed colour, not "Result"', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__utterances = []
+    window.SpeechSynthesisUtterance = function (text) { this.text = text; window.__utterances.push(text) }
+    const stub = { speak: () => {}, cancel: () => {}, resume: () => {}, getVoices: () => [], addEventListener: () => {} }
+    try { Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: stub }) } catch (e) {}
+  })
+  await page.goto('/homeschooling-app/app/activities/colour-wheel/')
+  await page.locator('#lsn-sw-red').click()
+  await page.locator('#lsn-slot-a').click()
+  await page.locator('#lsn-sw-blue').click()
+  await page.locator('#lsn-slot-b').click()
+  await expect(page.locator('#lsn-result-label')).toHaveText('Purple')
+  await page.evaluate(() => { window.__utterances = [] })
+  await page.locator('#lsn-result-label').click()
+  await expect.poll(() => page.evaluate(() => window.__utterances)).toContain('Purple')
+  expect(await page.evaluate(() => window.__utterances)).not.toContain('Result')
+})
