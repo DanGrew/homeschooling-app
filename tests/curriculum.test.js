@@ -59,7 +59,7 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads catalogue + physical rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(33)
+  await expect(rows).toHaveCount(34)
 })
 
 test('Mix colours card has Colour mixing in EAD column', async ({ page }) => {
