@@ -38,6 +38,25 @@ test('tapping a card opens its detail view', async ({ page }) => {
   await expect(page.locator('.lc-focus')).toContainText(sample.focus)
 })
 
+test('a card with an explain field shows a Why section with its text', async ({ page }) => {
+  const explained = allLearnings.find(l => l.explain)
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: explained.title }).click()
+  const why = page.locator('.lc-sec', { hasText: '💡 Why' })
+  await expect(why).toBeVisible()
+  await expect(why).toContainText('fire')
+  await expect(why).toContainText('water')
+  await expect(why).toContainText(explained.explain)
+})
+
+test('a card without an explain field renders no Why section', async ({ page }) => {
+  const plain = allLearnings.find(l => !l.explain)
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: plain.title }).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('.lc-sec', { hasText: '💡 Why' })).toHaveCount(0)
+})
+
 test('Where to practise launches each venue in free mode', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.lc-card', { hasText: sample.title }).click()

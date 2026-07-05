@@ -23,6 +23,7 @@
       "learningIcons": ["compare", "observe"],
       "keywords": ["warm", "cool", "red", "blue", "sort", "orange", "green", "purple", "amber", "magenta", "vermillion", "teal", "indigo", "chartreuse"],
       "focus": "Sort colours into warm and cool families.",
+      "explain": "Some colours feel warm and some feel cool. Warm colours — red, orange and yellow — remind us of fire and sunshine, so they feel toasty and cosy. Cool colours — blue, green and purple — remind us of water, ice and the sky, so they feel calm and fresh. Look at a colour and ask: does it feel like fire, or like water?",
       "concepts": ["Colour families", "Warm", "Cool", "Tertiary colours"],
       "lookFor": ["Groups red and orange as warm", "Groups blue and green as cool", "Explains why a colour is warm or cool", "Sorts tertiary colours into warm or cool (knows purple is cool)"],
       "curriculum": ["ead.colour-families", "ead.colour-recognition", "cl.prediction"],

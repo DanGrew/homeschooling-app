@@ -56,6 +56,7 @@ function lcShowDetail(learning) {
     '<div class="lc-d-title">' + learning.title + '</div>' +
     '<div class="lc-d-icons">' + learning.learningIcons.map(function(id) { return LC.iconMap[id]; }).join(' ') + '</div>' +
     '<div class="lc-sec"><div class="lc-lab">🎯 Focus</div><div class="lc-focus">' + learning.focus + '</div></div>' +
+    (learning.explain ? '<div class="lc-sec"><div class="lc-lab">💡 Why</div><div class="lc-focus">' + learning.explain + '</div></div>' : '') +
     '<div class="lc-sec"><div class="lc-lab">🏷 Keywords</div><div class="lc-pills">' + learning.keywords.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">🧠 Concepts</div><div class="lc-pills">' + learning.concepts.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">👀 Look for</div><ul class="lc-look">' + learning.lookFor.map(function(k) { return '<li>' + k + '</li>'; }).join('') + '</ul></div>' +
