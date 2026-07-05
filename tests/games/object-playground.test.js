@@ -242,6 +242,34 @@ test('size indicator appears after cycling size', async ({ page }) => {
   await expect(page.locator('[data-dir-arrow]')).toHaveCount(4);
 });
 
+test('pressing Add announces the new object', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  await page.evaluate(() => { window.__speechLog = []; window.__speakInterrupt = function(t) { window.__speechLog.push(t); }; });
+  await page.locator('#obj-add-btn').click();
+  const shape = await page.locator('[data-obj]').last().getAttribute('data-shape');
+  const log = await page.evaluate(() => window.__speechLog);
+  expect(log).toHaveLength(1);
+  expect(log[0]).toMatch(/^\w+ \w+$/);
+  expect(log[0].endsWith(shape)).toBe(true);
+});
+
+test('finishing a drag announces the moved object', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  const obj = page.locator('[data-testid="object-obj-9"]');
+  await obj.click();
+  await page.locator('[data-pick="obj-9"]').click();
+  const shape = await obj.getAttribute('data-shape');
+  await page.evaluate(() => { window.__speechLog = []; window.__speakInterrupt = function(t) { window.__speechLog.push(t); }; });
+  const box = await obj.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2 + 80);
+  await page.mouse.up();
+  const log = await page.evaluate(() => window.__speechLog);
+  expect(log[log.length - 1]).toMatch(/^\w+ \w+$/);
+  expect(log[log.length - 1].endsWith(shape)).toBe(true);
+});
+
 test('refreshing produces a different layout', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform1 = await page.locator('[data-testid="object-obj-0"]').getAttribute('transform');

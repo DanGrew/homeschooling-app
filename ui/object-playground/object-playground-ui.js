@@ -168,6 +168,9 @@ function initObjectPlayground() {
     [1].filter(function() { return canAddObject(state); }).forEach(function() {
       state = addObject(state, spawnX, spawnY);
       redraw();
+      [state.objects[state.objects.length - 1]].filter(Boolean).forEach(function(o) {
+        _speak(o.colour + ' ' + o.shape);
+      });
     });
   });
 
@@ -214,6 +217,11 @@ function initObjectPlayground() {
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; });
       sel.slice(0, 1).filter(function() { return sel.length === 1; }).forEach(function(o) {
+        _speak(o.colour + ' ' + o.shape);
+      });
+    });
+    [gesture].filter(function(g) { return g.onObj && g.isSelected && g.moved; }).forEach(function() {
+      state.objects.filter(function(o) { return o.selected; }).slice(0, 1).forEach(function(o) {
         _speak(o.colour + ' ' + o.shape);
       });
     });
