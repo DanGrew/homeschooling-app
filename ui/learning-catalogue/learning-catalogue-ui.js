@@ -59,6 +59,7 @@ function lcShowDetail(learning) {
     '<div class="lc-sec"><div class="lc-lab">🏷 Keywords</div><div class="lc-pills">' + learning.keywords.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">🧠 Concepts</div><div class="lc-pills">' + learning.concepts.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">👀 Look for</div><ul class="lc-look">' + learning.lookFor.map(function(k) { return '<li>' + k + '</li>'; }).join('') + '</ul></div>' +
+    [learning.explain].filter(Boolean).map(function(x) { return '<div class="lc-sec"><div class="lc-lab">💡 Why</div><div class="lc-focus">' + x + '</div></div>'; }).join('') +
     '<div class="lc-sec"><div class="lc-lab">📚 Curriculum</div><div class="lc-pills">' + learning.curriculum.map(function(k) { return '<span class="lc-pill lc-cur">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">▶ Where to practise</div>' + learning.playgrounds.map(function(v) { return '<a class="lc-venue" data-testid="lc-venue" href="' + activityHref(v.id) + '"><span class="lc-vi">' + LC.playgrounds[v.id].emoji + '</span><span class="lc-vt"><b>' + LC.playgrounds[v.id].name + '</b><span>' + v.note + '</span></span><span class="lc-go">▶</span></a>'; }).join('') + '</div>';
   LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);

@@ -27,6 +27,7 @@
             "items": { "type": "string" }
           },
           "focus": { "type": "string" },
+          "explain": { "type": "string" },
           "concepts": {
             "type": "array",
             "minItems": 1,
