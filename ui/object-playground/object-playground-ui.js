@@ -168,6 +168,9 @@ function initObjectPlayground() {
     [1].filter(function() { return canAddObject(state); }).forEach(function() {
       state = addObject(state, spawnX, spawnY);
       redraw();
+      [state.objects[state.objects.length - 1]].filter(Boolean).forEach(function(o) {
+        _speak(o.colour + ' ' + o.shape);
+      });
     });
   });
 

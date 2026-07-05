@@ -242,6 +242,17 @@ test('size indicator appears after cycling size', async ({ page }) => {
   await expect(page.locator('[data-dir-arrow]')).toHaveCount(4);
 });
 
+test('pressing Add announces the new object', async ({ page }) => {
+  await page.goto('/homeschooling-app/app/activities/object-playground/');
+  await page.evaluate(() => { window.__speechLog = []; window.__speakInterrupt = function(t) { window.__speechLog.push(t); }; });
+  await page.locator('#obj-add-btn').click();
+  const shape = await page.locator('[data-obj]').last().getAttribute('data-shape');
+  const log = await page.evaluate(() => window.__speechLog);
+  expect(log).toHaveLength(1);
+  expect(log[0]).toMatch(/^\w+ \w+$/);
+  expect(log[0].endsWith(shape)).toBe(true);
+});
+
 test('refreshing produces a different layout', async ({ page }) => {
   await page.goto('/homeschooling-app/app/activities/object-playground/');
   const transform1 = await page.locator('[data-testid="object-obj-0"]').getAttribute('transform');
