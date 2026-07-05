@@ -64,6 +64,21 @@
       ]
     },
     {
+      "id": "strokes-in-letters",
+      "icon": "🔷",
+      "title": "Strokes in letters",
+      "learningIcons": ["observe", "compare"],
+      "keywords": ["letter", "shape", "stroke", "line", "curve", "circle", "diagonal", "dot", "family", "match", "order", "build"],
+      "focus": "Discover that every letter is built from a few strokes — spot the shapes, match letters that share them, and put the strokes in order.",
+      "concepts": ["Stroke families (lines, curves, circles, diagonals, dots)", "Letters are built from strokes", "Letter families that share a shape", "Language of direction (up, down, round, back)", "Visual discrimination of letter shapes", "Sequencing strokes in formation order"],
+      "lookFor": ["Spots the straight lines, curves and circles in a letter", "Names the strokes a letter is made from", "Matches letters that share a shape (c, a, o all have a curve)", "Puts the strokes in order to build a letter", "Uses direction words — up, down, round, back"],
+      "curriculum": ["literacy.letter-formation", "literacy.word-recognition", "maths.shape-2d", "maths.pattern", "cl.sequencing-language"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "letter-shapes", "note": "Spot the strokes in each letter, match letters by shape, and tap the strokes in order" }
+      ]
+    },
+    {
       "id": "rhyming-words",
       "icon": "🎵",
       "title": "Rhyming words",

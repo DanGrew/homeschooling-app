@@ -16,7 +16,8 @@
     "character-lesson": { "emoji": "✏️", "name": "Letter Tracing" },
     "word-lesson": { "emoji": "📝", "name": "Trace Words" },
     "word-builder": { "emoji": "🔡", "name": "Word Builder" },
-    "say-words": { "emoji": "🗣️", "name": "Say Words" }
+    "say-words": { "emoji": "🗣️", "name": "Say Words" },
+    "letter-shapes": { "emoji": "🔷", "name": "Letter Shapes" }
   },
   "talkPrompts": {
     "actions": ["Name / point out", "Compare", "Count / measure", "Predict", "Pick a favourite"],
