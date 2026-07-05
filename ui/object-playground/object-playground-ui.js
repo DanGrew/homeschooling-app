@@ -220,11 +220,6 @@ function initObjectPlayground() {
         _speak(o.colour + ' ' + o.shape);
       });
     });
-    [gesture].filter(function(g) { return g.onObj && g.isSelected && g.moved; }).forEach(function() {
-      state.objects.filter(function(o) { return o.selected; }).slice(0, 1).forEach(function(o) {
-        _speak(o.colour + ' ' + o.shape);
-      });
-    });
   });
 
   svgEl.addEventListener('pointercancel', function() {
