@@ -53,7 +53,7 @@ var OBJ_SPEAK_PROP = {
   colour: function(o) { return o.colour; },
   shape: function(o) { return o.shape; },
   size: function(o) { return o.size; },
-  rotation: function() { return 'rotated'; }
+  rotation: function(o, rotDir) { return rotationCue(rotDir); }
 };
 
 function _speak(text) {
@@ -244,7 +244,7 @@ function initObjectPlayground() {
       state = applyToolboxClick(state, gesture, prop, OBJ_ROT_STEP[rotDir]);
       redraw();
       var sel = state.objects.filter(function(o) { return o.selected; })[0];
-      [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel)); });
+      [OBJ_SPEAK_PROP[prop]].filter(Boolean).forEach(function(fn) { _speak(fn(sel, rotDir)); });
       [sel].filter(Boolean).filter(function() { return prop === 'rotation'; }).forEach(function(o) {
         showRotationIndicator(svgEl, o, rotDir);
       });

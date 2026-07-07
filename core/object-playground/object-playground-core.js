@@ -338,6 +338,10 @@ function gridSpawn(viewport, index) {
   };
 }
 
+var OBJ_ROT_CUE = { cw: 'clockwise', acw: 'anticlockwise' };
+
+function rotationCue(rotDir) { return OBJ_ROT_CUE[rotDir]; }
+
 function getVisualPos(obj, animMap) {
   var anim = animMap[obj.id];
   if (!anim) return { x: obj.x, y: obj.y };
@@ -358,5 +362,5 @@ if (typeof module !== 'undefined') module.exports = {
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
   canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
   easeOutQuad, objTransform, getVisualPos, OBJ_ANIM_DURATION,
-  OBJ_SPAWN_CELL, gridSpawn
+  OBJ_SPAWN_CELL, gridSpawn, OBJ_ROT_CUE, rotationCue
 };
