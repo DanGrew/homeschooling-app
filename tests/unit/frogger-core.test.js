@@ -19,7 +19,10 @@ const {
   MIN_OBSTACLE_GAP,
   rowEntities,
   countCollectibles,
-  getCollectAssetPath
+  getCollectAssetPath,
+  isCollectible,
+  shouldBuildActiveTray,
+  allSlotsFilled
 } = require2('../../core/frogger/frogger-core.js')
 
 // ---- helpers ----
@@ -807,4 +810,36 @@ test('getCollectAssetPath returns undefined when assets missing', () => {
 test('getCollectAssetPath returns undefined when collectible maps to empty string', () => {
   const theme = { assets: { '': undefined }, map: { collectible: '' } }
   expect(getCollectAssetPath(theme)).toBeUndefined()
+})
+
+test('isCollectible is true for collectible entities', () => {
+  expect(isCollectible({ type: 'collectible' })).toBe(true)
+})
+
+test('isCollectible is false for non-collectible entities', () => {
+  expect(isCollectible({ type: 'obstacle' })).toBe(false)
+})
+
+test('shouldBuildActiveTray true when collectGoal set and total positive', () => {
+  expect(shouldBuildActiveTray({ collectGoal: 3 }, 3)).toBe(true)
+})
+
+test('shouldBuildActiveTray false when no collectGoal', () => {
+  expect(shouldBuildActiveTray({}, 3)).toBe(false)
+})
+
+test('shouldBuildActiveTray false when total is zero', () => {
+  expect(shouldBuildActiveTray({ collectGoal: 3 }, 0)).toBe(false)
+})
+
+test('allSlotsFilled true when filled equals total', () => {
+  expect(allSlotsFilled(3, 3)).toBe(true)
+})
+
+test('allSlotsFilled true when filled exceeds total', () => {
+  expect(allSlotsFilled(4, 3)).toBe(true)
+})
+
+test('allSlotsFilled false when filled below total', () => {
+  expect(allSlotsFilled(2, 3)).toBe(false)
 })

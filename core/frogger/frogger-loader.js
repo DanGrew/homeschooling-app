@@ -40,4 +40,10 @@ function parseScenario(json) {
   return json;
 }
 
-if (typeof module !== 'undefined') module.exports = { parseScenario };
+var SCENARIO_DIR = '../../../content/frogger/scenarios/';
+
+function froggerScenarioUrl(file) {
+  return SCENARIO_DIR + file;
+}
+
+if (typeof module !== 'undefined') module.exports = { parseScenario, froggerScenarioUrl };

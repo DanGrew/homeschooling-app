@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { derivePieces, shufflePieces, checkPlacement, isComplete, isLocked } from '../../core/puzzle/puzzle-core.js'
+import { derivePieces, shufflePieces, checkPlacement, isComplete, isLocked, resolvePuzzleImage } from '../../core/puzzle/puzzle-core.js'
 
 describe('derivePieces', () => {
   it('generates correct count for 1x1', () => {
@@ -126,5 +126,24 @@ describe('isLocked', () => {
 
   it('returns false when a different piece is locked', () => {
     expect(isLocked('p_r1_c1', { '0_0': { pieceId: 'p_r0_c0', correct: true } })).toBe(false)
+  })
+})
+
+describe('resolvePuzzleImage', () => {
+  const manifest = [
+    { id: 'paw-patrol', image: 'paw.jpg' },
+    { id: 'bluey', image: 'bluey.jpg' }
+  ]
+
+  it('returns the image of the matching entry', () => {
+    expect(resolvePuzzleImage(manifest, 'bluey', 'fallback.jpg')).toBe('bluey.jpg')
+  })
+
+  it('falls back when no entry matches', () => {
+    expect(resolvePuzzleImage(manifest, 'unknown', 'fallback.jpg')).toBe('fallback.jpg')
+  })
+
+  it('falls back on an empty manifest', () => {
+    expect(resolvePuzzleImage([], 'paw-patrol', 'fallback.jpg')).toBe('fallback.jpg')
   })
 })

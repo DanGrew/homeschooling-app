@@ -46,7 +46,7 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `core/word-match/word-match-core.js` | Word matching game |
 | `core/object-playground/object-playground-core.js` | Object playground: state init, shape rendering, constants |
 | `core/frogger/frogger-core.js` | Frogger simulation: grid, lanes, entities, spawning, player, collision |
-| `core/frogger/frogger-loader.js` | Frogger scenario JSON parser + field validator |
+| `core/frogger/frogger-loader.js` | Frogger scenario JSON parser + field validator + scenario content-URL builder |
 | `core/paint-playground/paint-playground-core.js` | Paint playground: canvas state init, viewport, pan bounds |
 | `core/letter-shapes/letter-shapes-core.js` | Letter Shapes: stroke-shape map, family grouping, shape membership, order pool/tiles, panel HTML builders |
 
