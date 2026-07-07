@@ -43,6 +43,14 @@ var LSN_MIXES={
 
 var PALETTE=['red','yellow','blue','orange','green','purple','red-orange','yellow-orange','yellow-green','blue-green','blue-purple','red-purple'];
 
+var NEUTRALS=[
+  {id:'black',hex:'#2B2B2B',label:'Black',border:'transparent'},
+  {id:'brown',hex:'#6B5030',label:'Brown',border:'transparent'},
+  {id:'pink', hex:'#F5A9C4',label:'Pink', border:'transparent'},
+  {id:'white',hex:'#FFFFFF',label:'White',border:'#ccc'},
+  {id:'grey', hex:'#9AA0A6',label:'Grey', border:'transparent'}
+];
+
 var PRIMARIES   =[{c:'red',start:-60},{c:'yellow',start:60},{c:'blue',start:180}];
 var SECONDARIES =[{c:'orange',start:0},{c:'green',start:120},{c:'purple',start:240}];
 var TERTIARIES  =[
@@ -137,7 +145,19 @@ function renderPaletteOrder(order){
 }
 
 
+function renderNeutrals(){
+  var strip=el('lsn-neutrals');
+  NEUTRALS.forEach(function(n){
+    var sw=document.createElement('div');
+    sw.id='lsn-sw-'+n.id;
+    sw.style.cssText='width:48px;height:48px;border-radius:50%;background:'+n.hex+';cursor:pointer;border:4px solid '+n.border+';';
+    makeInteractive(sw,function(){speak(n.label);});
+    strip.appendChild(sw);
+  });
+}
+
 renderPaletteOrder(PALETTE);
+renderNeutrals();
 
 el('lsn-slot-a').addEventListener('click',function(){handleSlot('a');});
 el('lsn-slot-b').addEventListener('click',function(){handleSlot('b');});
