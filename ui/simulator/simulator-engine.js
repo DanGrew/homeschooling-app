@@ -3,7 +3,6 @@ import {
   objectRenderType, resolveAnimName, nextSpriteIdx, parseAction, findAction, shouldTriggerWin,
   gridMajorKey,
 } from '../../core/simulator/simulator-core.js';
-import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 
 var DISPLAY = { 'true': '', 'false': 'none' };
 
@@ -24,7 +23,6 @@ var WIN_BANNER_DELAY = 3000;
 var TRIGGER_WIN = {
   'true': function(engine) {
     engine.won = true;
-    recordLearningEvent({ version: 1, type: 'simulator_completed', timestamp: Date.now(), learning_id: globalThis.LEARNING_ID, variant_id: engine.spec.simulation?.id, activity_id: globalThis.ACTIVITY_ID }, null, engine.spec.simulation?.title);
     setTimeout(function() { engine._execActions(engine.spec.win_response); }, 300);
     setTimeout(function() { engine._showRestartBanner(); }, WIN_BANNER_DELAY);
   },

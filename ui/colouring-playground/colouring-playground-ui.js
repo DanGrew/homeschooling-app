@@ -4,7 +4,6 @@ import { buildFilterBar } from '../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../components/pagination/paginator-ui.js';
 import { makeSpeakable } from '../../components/speech/speakable.js';
 import { mixHex, baseOf, BASE_COLOURS as BASE } from '../../core/colouring-playground/colouring-playground-core.js';
-import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 
 var LAYOUT = {
   magic:  {ref:'none', palette:'none', guided:'none', free:'none'},
@@ -153,11 +152,9 @@ export function initColouringPlayground() {
 
   var COMPLETE_FN={
     guided:function(){
-      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-guided',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID},null,'Guided Colouring');
       eventFired=true;resetBtn.style.display='';
     },
     free:function(){
-      recordLearningEvent({version:1,type:'learning_completed',timestamp:Date.now(),learning_id:'colouring-free',variant_id:currentPic.id,activity_id:window.ACTIVITY_ID},null,'Free Colouring');
       eventFired=true;resetBtn.style.display='';
     }
   };
