@@ -1,7 +1,6 @@
 import { makeSpeakable } from '../../components/speech/speakable.js';
-import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 import {
-  buildLetterShapeMap, isOrderComplete, isCorrectPlacement, parseJsonResponse,
+  buildLetterShapeMap, isCorrectPlacement, parseJsonResponse,
   identifyPanelHtml, matchPanelHtml, orderPanelHtml
 } from '../../core/letter-shapes/letter-shapes-core.js';
 
@@ -9,7 +8,7 @@ var REGISTRY = new URL('../../content/phonics/graphemes.json', import.meta.url).
 
 export function initLetterShapes() {
   var panel = document.getElementById('ls-panel');
-  var state = { cur: 'a', mode: 'identify', matchShape: 'circle', placed: [], eventFired: false };
+  var state = { cur: 'a', mode: 'identify', matchShape: 'circle', placed: [] };
   var shapeMap = {};
 
   var PANELS = {
@@ -20,37 +19,18 @@ export function initLetterShapes() {
 
   function strokesOf() { return [shapeMap[state.cur], []].find(Boolean); }
 
-  function noop() {}
-
-  function doFire() {
-    state.eventFired = true;
-    recordLearningEvent({
-      version: 1,
-      type: 'learning_completed',
-      timestamp: Date.now(),
-      learning_id: 'letter-shapes',
-      variant_id: state.cur,
-      activity_id: window.ACTIVITY_ID
-    }, null, 'Letter Shapes');
-  }
-
-  var FIRE = { 'true': doFire, 'false': noop };
-  function fireComplete() { FIRE[String(!state.eventFired)](); }
-  var ON_COMPLETE = { 'true': fireComplete, 'false': noop };
-
   function refreshCount() {
     panel.querySelectorAll('.count').forEach(function(c) {
       c.textContent = panel.querySelectorAll(c.getAttribute('data-sel')).length + '/' + c.getAttribute('data-total');
     });
   }
 
-  function pickLetter(l) { state.cur = l; state.placed = []; state.eventFired = false; render(); }
+  function pickLetter(l) { state.cur = l; state.placed = []; render(); }
   function pickShape(s) { state.matchShape = s; render(); }
 
   function placeCorrect(tile, shape) {
     state.placed.push(shape);
     render();
-    ON_COMPLETE[String(isOrderComplete(strokesOf(), state.placed))]();
   }
   function placeWrong(tile) { tile.classList.add('wrong'); }
   var PLACE = { 'true': placeCorrect, 'false': placeWrong };
@@ -92,7 +72,6 @@ export function initLetterShapes() {
   function selectMode(tab) {
     state.mode = tab.getAttribute('data-mode');
     state.placed = [];
-    state.eventFired = false;
     document.querySelectorAll('.tab').forEach(function(t) { t.classList.toggle('on', t === tab); });
     render();
   }
