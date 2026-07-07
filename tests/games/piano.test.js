@@ -34,8 +34,7 @@ test('lesson page songs popout uses fixed positioning', async ({ page }) => {
   const popout = page.locator('.nav-custom-popout')
   await page.locator('.nav-bar .nav-btn-container button').click()
   await expect(popout).toBeVisible()
-  const pos = await popout.evaluate(el => getComputedStyle(el).position)
-  expect(pos).toBe('fixed')
+  await expect(popout).toHaveCSS('position', 'fixed')
 })
 
 test('lesson page songs popout closes when clicking outside', async ({ page }) => {
