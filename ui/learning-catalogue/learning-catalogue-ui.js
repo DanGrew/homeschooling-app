@@ -58,7 +58,7 @@ function lcShowDetail(learning) {
     '<div class="lc-d-title">' + learning.title + '</div>' +
     '<div class="lc-d-icons">' + learning.learningIcons.map(function(id) { return LC.iconMap[id]; }).join(' ') + '</div>' +
     '<div class="lc-sec"><div class="lc-lab">🎯 Focus</div><div class="lc-focus">' + learning.focus + '</div></div>' +
-    [learning.makePictures].filter(Boolean).map(function(pics) { return '<div class="lc-sec"><div class="lc-lab">🖼️ Pictures to make</div><div class="lc-pics" data-testid="lc-pics">' + mpTilesHtml(pics, renderObjectShape) + '</div></div>'; }).join('') +
+    mpSectionHtml(learning.makePictures, renderObjectShape) +
     '<div class="lc-sec"><div class="lc-lab">🏷 Keywords</div><div class="lc-pills">' + learning.keywords.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">🧠 Concepts</div><div class="lc-pills">' + learning.concepts.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">👀 Look for</div><ul class="lc-look">' + learning.lookFor.map(function(k) { return '<li>' + k + '</li>'; }).join('') + '</ul></div>' +
@@ -66,7 +66,7 @@ function lcShowDetail(learning) {
     '<div class="lc-sec"><div class="lc-lab">📚 Curriculum</div><div class="lc-pills">' + learning.curriculum.map(function(k) { return '<span class="lc-pill lc-cur">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">▶ Where to practise</div>' + learning.playgrounds.map(function(v) { return '<a class="lc-venue" data-testid="lc-venue" href="' + activityHref(v.id) + '"><span class="lc-vi">' + LC.playgrounds[v.id].emoji + '</span><span class="lc-vt"><b>' + LC.playgrounds[v.id].name + '</b><span>' + v.note + '</span></span><span class="lc-go">▶</span></a>'; }).join('') + '</div>';
   LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);
-  LC.pics = learning.makePictures || [];
+  LC.pics = learning.makePictures;
   Array.prototype.forEach.call(LC.detailEl.querySelectorAll('.lc-pic'), function(el) {
     el.addEventListener('click', function() { lcOpenPic(LC.pics[Number(el.getAttribute('data-idx'))]); });
   });

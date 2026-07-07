@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { mpStripDot, mpObjectSvg, mpComposePicture, mpTilesHtml } = require('../../core/learning-catalogue/make-picture-core.js');
+const { mpStripDot, mpObjectSvg, mpComposePicture, mpTilesHtml, mpSectionHtml } = require('../../core/learning-catalogue/make-picture-core.js');
 
 function fakeShape(shape, colour) {
   return '<rect fill="#123456"/><circle cx="0" cy="-25" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>';
@@ -58,5 +58,18 @@ describe('mpTilesHtml', () => {
     expect(out).toContain('data-idx="1"');
     expect(out).toContain('>House<');
     expect(out).toContain('>Car<');
+  });
+});
+
+describe('mpSectionHtml', () => {
+  it('returns an empty string when there are no pictures', () => {
+    expect(mpSectionHtml(undefined, fakeShape)).toBe('');
+  });
+  it('wraps the tiles in a Pictures to make section when pictures exist', () => {
+    const pics = [{ title: 'House', objects: [{ shape: 'square', colour: 'red', size: 'large', x: 0.5, y: 0.5 }] }];
+    const out = mpSectionHtml(pics, fakeShape);
+    expect(out).toContain('Pictures to make');
+    expect(out).toContain('class="lc-pics"');
+    expect(out).toContain('data-idx="0"');
   });
 });

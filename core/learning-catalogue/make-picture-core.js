@@ -30,7 +30,13 @@ function mpTilesHtml(makePictures, renderShape) {
   }).join('');
 }
 
+function mpSectionHtml(makePictures, renderShape) {
+  if (!makePictures) return '';
+  return '<div class="lc-sec"><div class="lc-lab">🖼️ Pictures to make</div><div class="lc-pics" data-testid="lc-pics">' +
+    mpTilesHtml(makePictures, renderShape) + '</div></div>';
+}
+
 if (typeof module !== 'undefined') module.exports = {
-  MP_TILE, MP_K, MP_SIZE_MAP,
-  mpStripDot, mpObjectSvg, mpComposePicture, mpTilesHtml
+  MP_TILE, MP_PAD, MP_K, MP_SIZE_MAP,
+  mpStripDot, mpObjectSvg, mpComposePicture, mpTilesHtml, mpSectionHtml
 };
