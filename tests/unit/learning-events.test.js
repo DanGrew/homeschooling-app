@@ -4,12 +4,7 @@ vi.mock('../../core/telemetry/learning-db.js', () => ({
   saveEvent: vi.fn()
 }));
 
-vi.mock('../../components/learning-moments/learning-moment-service.js', () => ({
-  showLearningMoment: vi.fn()
-}));
-
 import { saveEvent } from '../../core/telemetry/learning-db.js';
-import { showLearningMoment } from '../../components/learning-moments/learning-moment-service.js';
 import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
 
 beforeEach(() => { vi.clearAllMocks(); });
@@ -36,22 +31,7 @@ describe('recordLearningEvent', () => {
     expect(() => recordLearningEvent({ version: 1, type: 'test', timestamp: 0 })).not.toThrow();
   });
 
-  it('calls showLearningMoment when moment provided', () => {
-    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, 'You made orange!');
-    expect(showLearningMoment).toHaveBeenCalledWith('You made orange!', undefined);
-  });
-
-  it('calls showLearningMoment with default when moment absent', () => {
-    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 });
-    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!', undefined);
-  });
-
-  it('passes activity name to showLearningMoment', () => {
-    recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, null, 'AND Gate');
-    expect(showLearningMoment).toHaveBeenCalledWith('Learning Moment! - Well Done!', 'AND Gate');
-  });
-
-  it('records event even when moment provided', () => {
+  it('records event even when extra args provided', () => {
     recordLearningEvent({ version: 1, type: 'test', timestamp: 0 }, 'You solved it!');
     expect(saveEvent).toHaveBeenCalledOnce();
   });
