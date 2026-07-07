@@ -187,6 +187,51 @@ test('Talk prompts popup closes via the close button', async ({ page }) => {
   await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeHidden()
 })
 
+const picCard = allLearnings.find(l => l.makePictures)
+
+test('a card with makePictures shows a Pictures to make section with one tile per picture', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: picCard.title }).click()
+  const section = page.locator('.lc-sec', { hasText: '🖼️ Pictures to make' })
+  await expect(section).toBeVisible()
+  await expect(page.locator('[data-testid="lc-pic"]')).toHaveCount(picCard.makePictures.length)
+  for (const pic of picCard.makePictures) {
+    await expect(page.locator('.lc-pic', { hasText: pic.title })).toBeVisible()
+  }
+  await expect(page.locator('[data-testid="lc-pic"] svg').first()).toBeVisible()
+})
+
+test('tapping a picture tile opens the enlarge popup with its title', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: picCard.title }).click()
+  await expect(page.locator('[data-testid="lc-picpop"]')).toBeHidden()
+  await page.locator('[data-testid="lc-pic"]').first().click()
+  await expect(page.locator('[data-testid="lc-picpop"]')).toBeVisible()
+  await expect(page.locator('[data-testid="lc-picpop-title"]')).toHaveText(picCard.makePictures[0].title)
+  await expect(page.locator('#lc-picpop-svg svg')).toBeVisible()
+})
+
+test('the enlarge popup closes via the close button and the backdrop', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: picCard.title }).click()
+  await page.locator('[data-testid="lc-pic"]').first().click()
+  await expect(page.locator('[data-testid="lc-picpop"]')).toBeVisible()
+  await page.locator('[data-testid="lc-picpop-close"]').click()
+  await expect(page.locator('[data-testid="lc-picpop"]')).toBeHidden()
+  await page.locator('[data-testid="lc-pic"]').nth(1).click()
+  await expect(page.locator('[data-testid="lc-picpop"]')).toBeVisible()
+  await page.locator('#lc-picpop-backdrop').click({ position: { x: 8, y: 8 } })
+  await expect(page.locator('[data-testid="lc-picpop"]')).toBeHidden()
+})
+
+test('a card without makePictures renders no Pictures to make section', async ({ page }) => {
+  const plain = allLearnings.find(l => !l.makePictures)
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: plain.title }).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('.lc-sec', { hasText: '🖼️ Pictures to make' })).toHaveCount(0)
+})
+
 test('Talk prompts button is available on the detail view too', async ({ page }) => {
   await page.goto(URL)
   await page.locator('.lc-card', { hasText: sample.title }).click()

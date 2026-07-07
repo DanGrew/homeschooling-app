@@ -62,6 +62,64 @@
       "playgrounds": [
         { "id": "colour-wheel", "note": "Mix two colours and see what new colour they make" }
       ]
+    },
+    {
+      "id": "make-a-picture",
+      "icon": "🖼️",
+      "title": "Make a picture",
+      "learningIcons": ["observe", "create", "talk"],
+      "keywords": ["house", "car", "tree", "build", "copy", "shapes"],
+      "focus": "Recreate a picture using playground objects — matching shape, colour, size and where each piece goes.",
+      "concepts": ["Position", "Matching", "Shape", "Colour", "Size"],
+      "lookFor": ["Chooses the right shape for each part", "Matches the colour to the picture", "Places pieces in roughly the right spot", "Talks about what they are making"],
+      "curriculum": ["maths.spatial", "maths.shape-2d", "pd.fine-motor", "cl.topic-vocabulary", "ead.colour-recognition", "psed.self-regulation", "ead.making-modelling", "maths.size-measure", "uw.cause-effect", "psed.independence", "cl.descriptive-vocab"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "object-playground", "note": "Show your child a picture and let them build it" }
+      ],
+      "makePictures": [
+        { "title": "House", "objects": [
+          { "shape": "triangle", "colour": "red", "size": "large", "x": 0.5, "y": 0.34 },
+          { "shape": "square", "colour": "red", "size": "large", "x": 0.5, "y": 0.62 },
+          { "shape": "rectangle", "colour": "blue", "size": "small", "x": 0.5, "y": 0.82, "rot": 90 }
+        ] },
+        { "title": "Car", "objects": [
+          { "shape": "rectangle", "colour": "blue", "size": "large", "x": 0.5, "y": 0.5 },
+          { "shape": "rectangle", "colour": "blue", "size": "small", "x": 0.5, "y": 0.32 },
+          { "shape": "circle", "colour": "orange", "size": "medium", "x": 0.3, "y": 0.72 },
+          { "shape": "circle", "colour": "orange", "size": "medium", "x": 0.7, "y": 0.72 }
+        ] },
+        { "title": "Tree", "objects": [
+          { "shape": "circle", "colour": "green", "size": "large", "x": 0.5, "y": 0.4 },
+          { "shape": "rectangle", "colour": "orange", "size": "medium", "x": 0.5, "y": 0.78, "rot": 90 }
+        ] },
+        { "title": "Rocket", "objects": [
+          { "shape": "triangle", "colour": "purple", "size": "large", "x": 0.5, "y": 0.22 },
+          { "shape": "rectangle", "colour": "purple", "size": "large", "x": 0.5, "y": 0.52, "rot": 90 },
+          { "shape": "triangle", "colour": "red", "size": "small", "x": 0.28, "y": 0.8 },
+          { "shape": "triangle", "colour": "red", "size": "small", "x": 0.72, "y": 0.8 }
+        ] },
+        { "title": "Caterpillar", "objects": [
+          { "shape": "circle", "colour": "red", "size": "medium", "x": 0.16, "y": 0.54 },
+          { "shape": "circle", "colour": "orange", "size": "medium", "x": 0.35, "y": 0.46 },
+          { "shape": "circle", "colour": "yellow", "size": "medium", "x": 0.53, "y": 0.54 },
+          { "shape": "circle", "colour": "green", "size": "medium", "x": 0.71, "y": 0.46 },
+          { "shape": "circle", "colour": "blue", "size": "small", "x": 0.86, "y": 0.56 }
+        ] },
+        { "title": "Traffic light", "objects": [
+          { "shape": "rectangle", "colour": "purple", "size": "large", "x": 0.5, "y": 0.5, "rot": 90 },
+          { "shape": "circle", "colour": "red", "size": "small", "x": 0.5, "y": 0.28 },
+          { "shape": "circle", "colour": "yellow", "size": "small", "x": 0.5, "y": 0.5 },
+          { "shape": "circle", "colour": "green", "size": "small", "x": 0.5, "y": 0.72 }
+        ] },
+        { "title": "Face", "objects": [
+          { "shape": "circle", "colour": "orange", "size": "large", "x": 0.5, "y": 0.5 },
+          { "shape": "circle", "colour": "blue", "size": "small", "x": 0.38, "y": 0.42 },
+          { "shape": "circle", "colour": "blue", "size": "small", "x": 0.62, "y": 0.42 },
+          { "shape": "triangle", "colour": "red", "size": "small", "x": 0.5, "y": 0.56 },
+          { "shape": "rectangle", "colour": "purple", "size": "small", "x": 0.5, "y": 0.72 }
+        ] }
+      ]
     }
   ]
 }

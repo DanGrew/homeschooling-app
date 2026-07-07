@@ -56,6 +56,19 @@
 .lc-talk-col{flex:1;}
 .lc-talk-ch{font-size:12px;color:#9a6bd0;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
 .lc-talk-ul{margin:0;padding-left:18px;font-size:15px;line-height:1.9;color:#444;}
+.lc-pics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+.lc-pic{display:flex;flex-direction:column;align-items:center;gap:5px;background:#fff;border:1px solid #e6e3ef;border-radius:14px;padding:8px 6px;cursor:pointer;}
+.lc-pic:active{transform:scale(.96);}
+.lc-pic-svg{width:100%;aspect-ratio:1;background:#faf9fc;border-radius:10px;}
+.lc-pic-svg svg{width:100%;height:100%;display:block;}
+.lc-pic-t{font-size:11px;font-weight:600;color:#55556a;text-align:center;line-height:1.2;}
+.lc-picpop{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;}
+.lc-picpop-backdrop{position:absolute;inset:0;background:rgba(20,16,30,.55);}
+.lc-picpop-card{position:relative;background:#fff;border-radius:20px;padding:20px;max-width:440px;width:88%;box-shadow:0 12px 44px rgba(0,0,0,.32);}
+.lc-picpop-x{position:absolute;top:10px;right:12px;background:none;border:none;font-size:20px;color:#8a8a9a;cursor:pointer;line-height:1;padding:2px 4px;}
+.lc-picpop-svg{width:100%;aspect-ratio:1;max-width:340px;margin:6px auto 0;background:#faf9fc;border-radius:14px;}
+.lc-picpop-svg svg{width:100%;height:100%;display:block;}
+.lc-picpop-title{text-align:center;font-size:18px;font-weight:800;color:#2b2b3a;margin-top:12px;}
 </style>
 </head>
 <body>
@@ -78,7 +91,17 @@
       <div id="lc-talk-cols" class="lc-talk-cols" data-testid="lc-talk-cols"></div>
     </div>
   </div>
+  <div id="lc-picpop" class="lc-picpop" data-testid="lc-picpop" role="dialog" aria-label="Picture">
+    <div id="lc-picpop-backdrop" class="lc-picpop-backdrop"></div>
+    <div class="lc-picpop-card">
+      <button id="lc-picpop-close" class="lc-picpop-x" data-testid="lc-picpop-close" aria-label="Close">✕</button>
+      <div id="lc-picpop-svg" class="lc-picpop-svg"></div>
+      <div id="lc-picpop-title" class="lc-picpop-title" data-testid="lc-picpop-title"></div>
+    </div>
+  </div>
 </div>
+<script src="../../../core/object-playground/object-playground-core.js"></script>
+<script src="../../../core/learning-catalogue/make-picture-core.js"></script>
 <script src="../../../core/learning-catalogue/learning-catalogue-core.js"></script>
 <script src="../../../ui/learning-catalogue/learning-catalogue-ui.js"></script>
 <script src="../../../components/menu.js" defer></script>
