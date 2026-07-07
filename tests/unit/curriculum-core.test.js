@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, cardVenues, cardCriteria, cardToRow, flattenCatalogue, defaultCompare, colCompare } = require('../../core/curriculum/curriculum-core.js');
+const { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, cardVenues, cardCriteria, cardToRow, flattenCatalogue, defaultCompare, colCompare, sortRows, criteriaLabels, glossaryRowHtml, coverageRowHtml, coverageHeaderLabels } = require('../../core/curriculum/curriculum-core.js');
 
 const PLAYGROUNDS = {
   'colour-wheel': { name: 'Colour Wheel' },
@@ -198,5 +198,62 @@ describe('colCompare', () => {
   });
   it('uses correct column key fn', () => {
     expect(colCompare({ title: 'Z', activity: 'A' }, { title: 'A', activity: 'Z' }, true, keyFns, 1)).toBeLessThan(0);
+  });
+});
+
+describe('sortRows', () => {
+  const keyFns = [function(r) { return r.title; }];
+  it('sorts in place ascending by column key', () => {
+    const rows = [{ title: 'C' }, { title: 'A' }, { title: 'B' }];
+    sortRows(rows, true, keyFns, 0);
+    expect(rows.map(r => r.title)).toEqual(['A', 'B', 'C']);
+  });
+  it('sorts descending when sortAsc is false', () => {
+    const rows = [{ title: 'A' }, { title: 'C' }, { title: 'B' }];
+    sortRows(rows, false, keyFns, 0);
+    expect(rows.map(r => r.title)).toEqual(['C', 'B', 'A']);
+  });
+  it('returns the same array reference', () => {
+    const rows = [{ title: 'A' }];
+    expect(sortRows(rows, true, keyFns, 0)).toBe(rows);
+  });
+});
+
+describe('criteriaLabels', () => {
+  it('joins criterion labels with a comma', () => {
+    expect(criteriaLabels([{ label: 'Speaking' }, { label: 'Listening' }])).toBe('Speaking, Listening');
+  });
+  it('returns empty string for no criteria', () => {
+    expect(criteriaLabels([])).toBe('');
+  });
+});
+
+describe('glossaryRowHtml', () => {
+  it('renders label, shortLabel, covers and joined criteria cells', () => {
+    const area = { label: 'Communication', shortLabel: 'CL', covers: 'talk', criteria: [{ label: 'Speaking' }, { label: 'Listening' }] };
+    expect(glossaryRowHtml(area)).toBe('<td>Communication</td><td>CL</td><td>talk</td><td>Speaking, Listening</td>');
+  });
+});
+
+describe('coverageRowHtml', () => {
+  const areas = [{ id: 'cl' }, { id: 'md' }];
+  it('renders lesson, activity and one cell per area with br-joined labels', () => {
+    const row = { title: 'Shapes', activity: 'Object Playground', byArea: { cl: ['Speaking'], md: ['Counting', 'Sorting'] } };
+    expect(coverageRowHtml(row, areas)).toBe(
+      '<td class="col-lesson">Shapes</td><td class="col-activity">Object Playground</td><td>Speaking</td><td>Counting<br>Sorting</td>'
+    );
+  });
+  it('renders empty cells when an area has no labels', () => {
+    const row = { title: 'X', activity: 'Y', byArea: { cl: [], md: [] } };
+    expect(coverageRowHtml(row, areas)).toBe('<td class="col-lesson">X</td><td class="col-activity">Y</td><td></td><td></td>');
+  });
+});
+
+describe('coverageHeaderLabels', () => {
+  it('prefixes Lesson and Activity before area short labels', () => {
+    expect(coverageHeaderLabels([{ shortLabel: 'CL' }, { shortLabel: 'MD' }])).toEqual(['Lesson', 'Activity', 'CL', 'MD']);
+  });
+  it('returns just the fixed columns when no areas', () => {
+    expect(coverageHeaderLabels([])).toEqual(['Lesson', 'Activity']);
   });
 });

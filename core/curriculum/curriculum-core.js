@@ -80,4 +80,26 @@ function colCompare(a, b, sortAsc, colKeyFns, sortCol) {
   return COMPARE_DIR[String(sortAsc)](colKeyFns[sortCol](a), colKeyFns[sortCol](b));
 }
 
-if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, cardVenues, cardCriteria, cardToRow, flattenCatalogue, defaultCompare, colCompare };
+function sortRows(target, sortAsc, colKeyFns, sortCol) {
+  target.sort(function(a, b) { return colCompare(a, b, sortAsc, colKeyFns, sortCol); });
+  return target;
+}
+
+function criteriaLabels(criteria) {
+  return criteria.map(function(c) { return c.label; }).join(', ');
+}
+
+function glossaryRowHtml(area) {
+  return '<td>' + area.label + '</td><td>' + area.shortLabel + '</td><td>' + area.covers + '</td><td>' + criteriaLabels(area.criteria) + '</td>';
+}
+
+function coverageRowHtml(row, areas) {
+  return '<td class="col-lesson">' + row.title + '</td><td class="col-activity">' + row.activity + '</td>' +
+    areas.map(function(area) { return '<td>' + row.byArea[area.id].join('<br>') + '</td>'; }).join('');
+}
+
+function coverageHeaderLabels(areas) {
+  return ['Lesson', 'Activity'].concat(areas.map(function(a) { return a.shortLabel; }));
+}
+
+if (typeof module !== 'undefined') module.exports = { lessonCriteria, buildCriterionMap, buildByArea, lessonToRow, flattenLessons, physicalToRow, flattenPhysical, cardVenues, cardCriteria, cardToRow, flattenCatalogue, defaultCompare, colCompare, sortRows, criteriaLabels, glossaryRowHtml, coverageRowHtml, coverageHeaderLabels };

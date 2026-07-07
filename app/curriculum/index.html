@@ -62,7 +62,7 @@ var sortAsc = true;
 var SORT_CLASS = { 'true': 'sort-asc', 'false': 'sort-desc' };
 var SORT_FNS = {
   'true':  function(target) { target.sort(defaultCompare); },
-  'false': function(target, sc, sa) { target.sort(function(a, b) { return colCompare(a, b, sa, colKeyFns, sc); }); }
+  'false': function(target, sc, sa) { sortRows(target, sa, colKeyFns, sc); }
 };
 var SET_SORT_CLASS = {
   'true':  function(th, sa) { th.classList.add(SORT_CLASS[String(sa)]); },
@@ -91,8 +91,7 @@ function buildColKeyFns() {
 
 function renderGlossaryRow(area) {
   var tr = document.createElement('tr');
-  var criteriaHtml = area.criteria.map(function(c) { return c.label; }).join(', ');
-  tr.innerHTML = '<td>' + area.label + '</td><td>' + area.shortLabel + '</td><td>' + area.covers + '</td><td>' + criteriaHtml + '</td>';
+  tr.innerHTML = glossaryRowHtml(area);
   return tr;
 }
 
@@ -106,8 +105,7 @@ var ROW_CLASS = { 'card': '', 'physical': 'row-physical' };
 function buildCoverageRow(row) {
   var tr = document.createElement('tr');
   tr.className = ROW_CLASS[row.type];
-  tr.innerHTML = '<td class="col-lesson">' + row.title + '</td><td class="col-activity">' + row.activity + '</td>' +
-    areas.map(function(area) { return '<td>' + row.byArea[area.id].join('<br>') + '</td>'; }).join('');
+  tr.innerHTML = coverageRowHtml(row, areas);
   return tr;
 }
 
@@ -143,7 +141,7 @@ function handleHeaderClick(i) {
 function renderCoverageHeader() {
   var head = document.getElementById('coverage-head');
   var hr = document.createElement('tr');
-  ['Lesson', 'Activity'].concat(areas.map(function(a) { return a.shortLabel; }))
+  coverageHeaderLabels(areas)
     .forEach(function(label, i) { hr.appendChild(buildHeaderTh(label, i, handleHeaderClick)); });
   head.appendChild(hr);
 }
