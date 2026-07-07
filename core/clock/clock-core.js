@@ -89,3 +89,11 @@ export function generateChoices(presets, correctIdx, n) {
   }
   return indices;
 }
+
+export function manifestToOptions(manifest) {
+  return manifest.map(function(m) { return {value: m.id, label: m.label, icon: m.icon}; });
+}
+
+export function findOptionByValue(options, value) {
+  return options.find(function(o) { return o.value === value; }) || null;
+}

@@ -63,5 +63,9 @@ function noteTimingDistance(elapsed, hitTime) {
   return Math.abs(elapsed - hitTime);
 }
 
-if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo, isNoteHit, noteTimingDistance };
+function pianoSortByTitle(songs) {
+  return songs.slice().sort(function(a, b) { return a.title.localeCompare(b.title); });
+}
+
+if (typeof module !== 'undefined') module.exports = { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo, isNoteHit, noteTimingDistance, pianoSortByTitle };
 

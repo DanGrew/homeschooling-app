@@ -183,3 +183,19 @@ describe('noteInfo', () => {
   });
 });
 
+
+describe('pianoSortByTitle', () => {
+  const { pianoSortByTitle } = require('../../core/piano/piano-core.js');
+  it('sorts songs alphabetically by title', () => {
+    const songs = [{ title: 'Twinkle' }, { title: 'Baa Baa' }, { title: 'Old MacDonald' }];
+    expect(pianoSortByTitle(songs).map(s => s.title)).toEqual(['Baa Baa', 'Old MacDonald', 'Twinkle']);
+  });
+  it('does not mutate the input array', () => {
+    const songs = [{ title: 'B' }, { title: 'A' }];
+    pianoSortByTitle(songs);
+    expect(songs.map(s => s.title)).toEqual(['B', 'A']);
+  });
+  it('returns empty array for empty input', () => {
+    expect(pianoSortByTitle([])).toEqual([]);
+  });
+});

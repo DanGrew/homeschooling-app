@@ -11,13 +11,14 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `core/telemetry/learning-journal-core.js` | Aggregates events into journal data |
 | `core/dictionary/dictionary-core.js` | Loads concept/rep data with caching |
 | `core/dictionary/dictionary-helpers-core.js` | Filters and transforms dictionary entries |
-| `core/shapes/shapes-core.js` | SVG shape/colour generators, random pickers |
+| `core/collections/collections-core.js` | Generic array helpers extracted from inline HTML: `notNull`, `firstIndexAfter`, `sortByName` |
+| `core/shapes/shapes-core.js` | SVG shape/colour generators, random pickers, `shuffle` |
 | `core/curriculum/curriculum-core.js` | Lesson criteria mapping, EYFS alignment |
 | `core/logic-gates/logic-engine.js` | Boolean gate evaluator (AND/OR/XOR/NOT) |
-| `core/logic-gates/logic-gates-core.js` | Logic puzzle game logic |
+| `core/logic-gates/logic-gates-core.js` | Logic puzzle game logic, `tagCategory` |
 | `core/logic-gates/puzzle-generator.js` | Generates logic gate puzzles |
 | `core/trace/trace-core.js` | Letter tracing: path tracking, validation |
-| `core/clock/clock-core.js` | Time parsing, display |
+| `core/clock/clock-core.js` | Time parsing, display, profile-manifest options |
 | `core/colour-wheel/colour-wheel-core.js` | RGB colour mixing logic |
 | `core/colour-mixing/colour-mixing-core.js` | Colour blending utilities |
 | `core/colouring-playground/colouring-playground-core.js` | Freeform painting core |
@@ -30,12 +31,12 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `core/match-colour-shape/match-colour-shape-core.js` | Colour+shape matching game logic |
 | `core/move-blocks/move-blocks-core.js` | Block puzzle solver |
 | `core/number-interaction/number-interaction-core.js` | Number recognition/counting |
-| `core/card-game/card-game-engine.js` | Shared card-game engine: shuffle, create, flip, resolve, layout key |
+| `core/card-game/card-game-engine.js` | Shared card-game engine: shuffle, create, flip, resolve, layout key, build-players, phase-active |
 | `core/pairs/pairs-core.js` | Pairs memory game logic |
 | `core/pairs/pairs-content.js` | Pairs content loader + tag filtering |
 | `core/shopping-game/shopping-game-core.js` | Shopping game: list assignment, flip logic, scoring |
 | `core/pagination/paginator-core.js` | Page navigation logic |
-| `core/piano/piano-core.js` | Note data, song parsing, key mapping |
+| `core/piano/piano-core.js` | Note data, song parsing, key mapping, title sort |
 | `core/physical/physical-activity-core.js` | Physical activity coordination |
 | `core/puzzle/puzzle-core.js` | Jigsaw puzzle logic |
 | `core/routine/routine-core.js` | Daily routine scheduling |

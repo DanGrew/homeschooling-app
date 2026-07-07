@@ -50,7 +50,7 @@ function newRound(){
   document.getElementById('shape').innerHTML=svg(current.type,col);
   var optContainer=document.getElementById('options');
   optContainer.innerHTML='';
-  types.slice().sort(function(){return Math.random()-0.5;}).forEach(function(t){
+  shuffle(types).forEach(function(t){
     optContainer.appendChild(makeOption(t,col));
   });
 }

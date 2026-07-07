@@ -1,6 +1,6 @@
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
-const { cardGameShuffle, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip, cgGameLayoutKey } = require('../../core/card-game/card-game-engine.js')
+const { cardGameShuffle, cardGameStateActive, cardGameBuildPlayers, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip, cgGameLayoutKey } = require('../../core/card-game/card-game-engine.js')
 
 const PLAYERS = [{ id: 'p0', name: 'Alice', icon: 'cat', role: 'child' }, { id: 'p1', name: 'Bob', icon: 'dog', role: 'adult' }]
 
@@ -157,5 +157,43 @@ describe('cgGameLayoutKey', function() {
   })
   test('3 player shared returns 3p', function() {
     expect(cgGameLayoutKey({ players: [{},{},{}] }, 'shared')).toBe('3p')
+  })
+})
+
+describe('cardGameStateActive', () => {
+  test('waiting phase is active', () => {
+    expect(cardGameStateActive({ phase: 'waiting' })).toBe(true)
+  })
+  test('revealing phase is active', () => {
+    expect(cardGameStateActive({ phase: 'revealing' })).toBe(true)
+  })
+  test('resolving phase is blocked', () => {
+    expect(cardGameStateActive({ phase: 'resolving' })).toBe(false)
+  })
+  test('complete phase is blocked', () => {
+    expect(cardGameStateActive({ phase: 'complete' })).toBe(false)
+  })
+})
+
+describe('cardGameBuildPlayers', () => {
+  const RAW = [
+    { name: 'Alice', icon: 'cat', role: 'child' },
+    { name: 'Bob', icon: 'dog', role: 'adult' },
+    { name: '', icon: 'fox', role: 'child' }
+  ]
+  test('builds sequential ids p0, p1, ...', () => {
+    const players = cardGameBuildPlayers(RAW, 2)
+    expect(players.map(p => p.id)).toEqual(['p0', 'p1'])
+  })
+  test('slices to the requested count', () => {
+    expect(cardGameBuildPlayers(RAW, 2)).toHaveLength(2)
+  })
+  test('carries over icon and role', () => {
+    const p = cardGameBuildPlayers(RAW, 1)[0]
+    expect(p).toEqual({ id: 'p0', name: 'Alice', icon: 'cat', role: 'child' })
+  })
+  test('falls back to "Player N" when name is blank', () => {
+    const players = cardGameBuildPlayers(RAW, 3)
+    expect(players[2].name).toBe('Player 3')
   })
 })

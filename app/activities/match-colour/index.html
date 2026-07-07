@@ -48,7 +48,7 @@ function newRound(){
   document.getElementById('shape').innerHTML=svg(current.type,current.col);
   var swatchContainer=document.getElementById('swatches');
   swatchContainer.innerHTML='';
-  colours.slice().sort(function(){return Math.random()-0.5;}).forEach(function(c){
+  shuffle(colours).forEach(function(c){
     swatchContainer.appendChild(makeSwatch(c));
   });
 }

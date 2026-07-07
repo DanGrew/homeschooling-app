@@ -7,6 +7,18 @@ function cardGameShuffle(arr) {
   return a;
 }
 
+var CARD_GAME_BLOCKED_PHASES = { resolving: true, complete: true };
+
+function cardGameStateActive(state) {
+  return !CARD_GAME_BLOCKED_PHASES[state.phase];
+}
+
+function cardGameBuildPlayers(players, count) {
+  return players.slice(0, count).map(function(p, i) {
+    return { id: 'p' + i, name: [p.name, 'Player ' + (i + 1)].filter(Boolean)[0], icon: p.icon, role: p.role };
+  });
+}
+
 function cardGameCreateGame(players, gridSize, buildDeck, initPlayerExtra) {
   var extra = initPlayerExtra || function() { return {}; };
   return {
@@ -75,4 +87,4 @@ function cgGameLayoutKey(state, mode) {
     .concat([[keyMap[mode]].filter(Boolean).concat([keyMap[String(modeIs2p)]])[0]])[0];
 }
 
-if (typeof module !== 'undefined') module.exports = { cardGameShuffle, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip, cgGameLayoutKey };
+if (typeof module !== 'undefined') module.exports = { cardGameShuffle, cardGameStateActive, cardGameBuildPlayers, cardGameCreateGame, cardGameFlipCard, cardGameResolveFlip, cgGameLayoutKey };
