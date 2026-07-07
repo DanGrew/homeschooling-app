@@ -12,6 +12,8 @@ var LC = {
   filterEl: null,
   talkPopEl: null,
   talkColsEl: null,
+  picPopEl: null,
+  pics: [],
   groups: [],
   chips: [],
   chip: { type: 'all', id: 'all', label: 'All' },
@@ -56,6 +58,7 @@ function lcShowDetail(learning) {
     '<div class="lc-d-title">' + learning.title + '</div>' +
     '<div class="lc-d-icons">' + learning.learningIcons.map(function(id) { return LC.iconMap[id]; }).join(' ') + '</div>' +
     '<div class="lc-sec"><div class="lc-lab">🎯 Focus</div><div class="lc-focus">' + learning.focus + '</div></div>' +
+    mpSectionHtml(learning.makePictures, renderObjectShape) +
     '<div class="lc-sec"><div class="lc-lab">🏷 Keywords</div><div class="lc-pills">' + learning.keywords.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">🧠 Concepts</div><div class="lc-pills">' + learning.concepts.map(function(k) { return '<span class="lc-pill">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">👀 Look for</div><ul class="lc-look">' + learning.lookFor.map(function(k) { return '<li>' + k + '</li>'; }).join('') + '</ul></div>' +
@@ -63,6 +66,10 @@ function lcShowDetail(learning) {
     '<div class="lc-sec"><div class="lc-lab">📚 Curriculum</div><div class="lc-pills">' + learning.curriculum.map(function(k) { return '<span class="lc-pill lc-cur">' + k + '</span>'; }).join('') + '</div></div>' +
     '<div class="lc-sec"><div class="lc-lab">▶ Where to practise</div>' + learning.playgrounds.map(function(v) { return '<a class="lc-venue" data-testid="lc-venue" href="' + activityHref(v.id) + '"><span class="lc-vi">' + LC.playgrounds[v.id].emoji + '</span><span class="lc-vt"><b>' + LC.playgrounds[v.id].name + '</b><span>' + v.note + '</span></span><span class="lc-go">▶</span></a>'; }).join('') + '</div>';
   LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);
+  LC.pics = learning.makePictures;
+  Array.prototype.forEach.call(LC.detailEl.querySelectorAll('.lc-pic'), function(el) {
+    el.addEventListener('click', function() { lcOpenPic(LC.pics[Number(el.getAttribute('data-idx'))]); });
+  });
   LC.listScroll = LC.scrollEl.scrollTop;
   LC.filterEl.style.display = 'none';
   LC.listEl.style.display = 'none';
@@ -118,6 +125,16 @@ function lcReady(index, groups) {
   lcApplyFilter();
 }
 
+function lcOpenPic(pic) {
+  document.getElementById('lc-picpop-svg').innerHTML = mpComposePicture(pic, renderObjectShape);
+  document.getElementById('lc-picpop-title').textContent = pic.title;
+  LC.picPopEl.style.display = 'flex';
+}
+
+function lcClosePic() {
+  LC.picPopEl.style.display = 'none';
+}
+
 function lcOpenTalk() {
   LC.talkPopEl.style.display = 'flex';
 }
@@ -147,9 +164,12 @@ function initLearningCatalogue() {
   LC.filterEl = document.getElementById('lc-filter');
   LC.talkPopEl = document.getElementById('lc-talk-pop');
   LC.talkColsEl = document.getElementById('lc-talk-cols');
+  LC.picPopEl = document.getElementById('lc-picpop');
   LC.searchEl.addEventListener('input', lcOnSearch);
   document.getElementById('lc-talk-btn').addEventListener('click', lcOpenTalk);
   document.getElementById('lc-talk-close').addEventListener('click', lcCloseTalk);
   document.getElementById('lc-talk-backdrop').addEventListener('click', lcCloseTalk);
+  document.getElementById('lc-picpop-close').addEventListener('click', lcClosePic);
+  document.getElementById('lc-picpop-backdrop').addEventListener('click', lcClosePic);
   lcFetchJson(LC.base + 'index.json').then(lcOnIndex);
 }

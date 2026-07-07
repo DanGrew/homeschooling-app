@@ -44,6 +44,35 @@
             "items": { "type": "string" }
           },
           "area": { "type": "string" },
+          "makePictures": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["title", "objects"],
+              "additionalProperties": false,
+              "properties": {
+                "title": { "type": "string" },
+                "objects": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "object",
+                    "required": ["shape", "colour", "size", "x", "y"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "shape": { "enum": ["circle", "square", "triangle", "rectangle", "pentagon", "star", "heart"] },
+                      "colour": { "enum": ["red", "yellow", "blue", "orange", "green", "purple"] },
+                      "size": { "enum": ["small", "medium", "large", "x-large", "xx-large"] },
+                      "x": { "type": "number", "minimum": 0, "maximum": 1 },
+                      "y": { "type": "number", "minimum": 0, "maximum": 1 },
+                      "rot": { "type": "number" }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "playgrounds": {
             "type": "array",
             "minItems": 1,
