@@ -351,9 +351,21 @@ function rowEntities(scenario, rowId) {
   return [].concat(scenario.entities[rowId]).filter(Boolean);
 }
 
+function isCollectible(e) {
+  return e.type === 'collectible';
+}
+
+function shouldBuildActiveTray(scenario, total) {
+  return !!scenario.collectGoal && total > 0;
+}
+
+function allSlotsFilled(filled, total) {
+  return filled >= total;
+}
+
 function countCollectibles(scenario) {
   return Object.keys(Object.assign({}, scenario.entities)).reduce(function(sum, rowId) {
-    return sum + rowEntities(scenario, rowId).filter(function(e) { return e.type === 'collectible'; }).length;
+    return sum + rowEntities(scenario, rowId).filter(isCollectible).length;
   }, 0);
 }
 
@@ -392,5 +404,8 @@ if (typeof module !== 'undefined') module.exports = {
   stepObstacleVisualX,
   rowEntities,
   countCollectibles,
-  getCollectAssetPath
+  getCollectAssetPath,
+  isCollectible,
+  shouldBuildActiveTray,
+  allSlotsFilled
 };

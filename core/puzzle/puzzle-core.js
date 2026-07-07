@@ -28,3 +28,7 @@ export function isComplete(placements, total) {
 export function isLocked(pieceId, placements) {
   return Object.values(placements).some(p => p.pieceId === pieceId && p.correct);
 }
+
+export function resolvePuzzleImage(manifest, puzzleId, fallbackImage) {
+  return manifest.filter(e => e.id === puzzleId).concat({ image: fallbackImage })[0].image;
+}

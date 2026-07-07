@@ -40,8 +40,8 @@ function fetchJson(path) { return fetch(path).then(function(r) { return r.json()
 function loadEntry(entry) {
   var themeFiles = [entry.theme].filter(Boolean);
   Promise.all([
-    fetchJson('../../../content/frogger/scenarios/' + entry.file)
-  ].concat(themeFiles.map(function(t) { return fetchJson('../../../content/frogger/scenarios/' + t); })))
+    fetchJson(froggerScenarioUrl(entry.file))
+  ].concat(themeFiles.map(t => fetchJson(froggerScenarioUrl(t)))))
     .then(function(results) {
       var scenario = parseScenario(results[0]);
       var theme = [results[1]].filter(Boolean)[0];
@@ -51,7 +51,7 @@ function loadEntry(entry) {
 }
 
 var list = document.getElementById('frogger-scenario-list');
-fetchJson('../../../content/frogger/scenarios/index.json')
+fetchJson(froggerScenarioUrl('index.json'))
   .then(function(index) {
     index.forEach(function(entry) {
       var btn = makeSpeakableButton(entry.title);
@@ -170,7 +170,7 @@ var TRAY_BUILD = { 'true': initActiveTray, 'false': clearCollectTray };
 
 function buildCollectTray(scenario) {
   var total = countCollectibles(scenario);
-  var key = String(!![scenario.collectGoal].filter(Boolean).filter(function() { return total > 0; }).length);
+  var key = String(shouldBuildActiveTray(scenario, total));
   TRAY_BUILD[key](scenario, total);
 }
 
@@ -196,7 +196,7 @@ function fillCollectSlot(theme) {
     setTimeout(function() { slot.style.transform = 'scale(1)'; }, 200);
     collectFilled++;
     [collectResetBtn].filter(Boolean)
-      .filter(function() { return collectFilled >= collectSlots.length; })
+      .filter(() => allSlotsFilled(collectFilled, collectSlots.length))
       .forEach(function(btn) { btn.style.display = ''; });
   });
 }
@@ -212,7 +212,7 @@ function unCollectEntity(e) { e.collected = false; }
 
 function onCollectReset() {
   resetPlayer(state, activeScenario, 'start');
-  state.entities.filter(function(e) { return e.type === 'collectible'; }).forEach(unCollectEntity);
+  state.entities.filter(isCollectible).forEach(unCollectEntity);
   collectSlots.forEach(resetCollectSlot);
   collectFilled = 0;
   [collectResetBtn].filter(Boolean).forEach(function(btn) { btn.style.display = 'none'; });

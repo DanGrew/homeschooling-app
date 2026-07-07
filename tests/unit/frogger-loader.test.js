@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require2 = createRequire(import.meta.url);
-const { parseScenario } = require2('../../core/frogger/frogger-loader.js');
+const { parseScenario, froggerScenarioUrl } = require2('../../core/frogger/frogger-loader.js');
 
 function makeRow(overrides) {
   return Object.assign(
@@ -137,5 +137,15 @@ describe('parseScenario', () => {
     var row0 = makeRow({ id: 'r0', y: 0 });
     var row1 = makeRow({ id: 'r1', y: 1 }); delete row1.baseTile;
     expect(() => parseScenario(makeScenario({ rows: [row0, row1] }))).toThrow('row[1] missing required field: baseTile');
+  });
+});
+
+describe('froggerScenarioUrl', () => {
+  test('prefixes the scenarios content dir', () => {
+    expect(froggerScenarioUrl('rain.json')).toBe('../../../content/frogger/scenarios/rain.json');
+  });
+
+  test('builds the index url', () => {
+    expect(froggerScenarioUrl('index.json')).toBe('../../../content/frogger/scenarios/index.json');
   });
 });

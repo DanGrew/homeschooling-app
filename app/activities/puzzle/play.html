@@ -56,7 +56,7 @@
 <script src="../../../ui/colouring/colouring-common.js"></script>
 <script type="module" src="../../../components/success-banner.js"></script>
 <script type="module">
-  import { derivePieces, shufflePieces, checkPlacement, isComplete } from '../../../core/puzzle/puzzle-core.js';
+  import { derivePieces, shufflePieces, checkPlacement, isComplete, resolvePuzzleImage } from '../../../core/puzzle/puzzle-core.js';
   import { buildGrid, clearSelectedSlot, fillSelectedSlot, placeInCell, clearCell, markCell, lockCell } from '../../../ui/puzzle/puzzle-grid-ui.js';
   import { buildTray, highlightTray, removeTrayPiece, restoreTrayPiece, lockTrayPiece } from '../../../ui/puzzle/puzzle-tray-ui.js';
   import { showBanner, hideBanner } from '../../../components/success-banner.js';
@@ -255,9 +255,7 @@
   fullImage.onerror = () => { sizeGrid(); start(); };
 
   fetch('../../../content/puzzle/manifest.json').then(function(r) { return r.json(); }).then(function(manifest) {
-    var matched = manifest.filter(function(e) { return e.id === puzzleId; });
-    matched.push({ image: '../../../assets/shared/images/paw-patrol.jpg' });
-    PUZZLE.src = matched[0].image;
+    PUZZLE.src = resolvePuzzleImage(manifest, puzzleId, '../../../assets/shared/images/paw-patrol.jpg');
     fullImage.src = PUZZLE.src;
     refImg.src = PUZZLE.src;
   });
