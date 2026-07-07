@@ -13,11 +13,12 @@ The browser gates are slow — run the targeted file, not the whole suite.
 ```bash
 mkdir -p reports
 
-# All 12 architecture rules (instant, no npm install needed)
+# All 13 architecture rules (instant, no npm install needed)
 for r in no-dom-in-core no-ui-imports no-stray-files no-app-exports \
          no-json-in-repo app-index-only no-media-outside-assets \
          no-css-outside-styles no-md-outside-docs no-guard-chain \
-         no-filter-conditional no-pure-fn-outside-core; do
+         no-filter-conditional no-pure-fn-outside-core \
+         no-logic-in-inline-callbacks; do
   node scripts/arch-check.js "$r" "reports/$r.txt" || echo "FAIL: $r"
 done
 
