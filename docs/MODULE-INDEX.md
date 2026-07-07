@@ -22,6 +22,8 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `core/colour-mixing/colour-mixing-core.js` | Colour blending utilities |
 | `core/colouring-playground/colouring-playground-core.js` | Freeform painting core |
 | `core/connect-the-dots/connect-the-dots-core.js` | Connect-the-dots game logic |
+| `core/domino/domino-core.js` | Domino engine: tile generation, dealing, placement/validation, board geometry, turns |
+| `core/domino/domino-page-logic.js` | Domino page pure helpers: predicates, id pluck, tile lookup, per-player summary, random sample |
 | `core/count-shapes/count-shapes-core.js` | Shape counting game |
 | `core/character-worksheet/character-worksheet-core.js` | Worksheet generation/rendering |
 | `core/filter-bar/filter-bar-core.js` | Filtering/sorting utilities |

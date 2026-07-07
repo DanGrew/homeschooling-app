@@ -12,6 +12,7 @@
 <script src="../../../components/menu.js" defer></script>
 <script src="../../../core/pairs/pairs-content.js"></script>
 <script src="../../../core/domino/domino-core.js"></script>
+<script src="../../../core/domino/domino-page-logic.js"></script>
 <script src="../../../core/dictionary/image-service.js"></script>
 <script src="../../../ui/card-game/card-game-ui.js"></script>
 <script src="../../../ui/domino/domino-ui.js"></script>
@@ -92,7 +93,7 @@ function selectTile(tileId) {
   clearDominoPreview(boardViewport);
   setDominoEndpointsActive(boardViewport, true);
   var player = gameState.players[gameState.turnIndex];
-  [gameState.hands[player.id].filter(function(t) { return t.id === tileId; })[0]]
+  [dominoFindTileById(gameState.hands[player.id], tileId)]
     .filter(Boolean)
     .forEach(function(tile) { [DOMINO_TILE_SPEAK[gameState.matchType]].filter(Boolean).forEach(function(fn) { fn(tile); }); });
 }
@@ -117,7 +118,7 @@ function onEndpointTap(endpointIndex) {
 
 function onPreviewRotate() {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
-    [turnState.previewEndpointIndex].filter(function(i) { return i !== null; }).forEach(function(epIdx) {
+    [turnState.previewEndpointIndex].filter(dominoIsNotNull).forEach(function(epIdx) {
       var rot = findNextPreviewRotation(Number(turnState.previewRotation), tileId, epIdx, gameState);
       [getPreviewPlacement(gameState, tileId, epIdx, rot)].filter(Boolean).forEach(function(preview) {
         turnState.previewRotation = rot;
@@ -137,9 +138,7 @@ function flashTileRed(tileId) {
 function showSummary() {
   dominoEmit('game_complete', {
     matchType: gameState.matchType,
-    per_player: gameState.players.map(function(p) {
-      return { player_id: p.id, tiles_placed: gameState.stats[p.id].tilesPlaced, tiles_drawn: gameState.stats[p.id].tilesDrawn };
-    })
+    per_player: dominoPerPlayerSummary(gameState.players, gameState.stats)
   });
   showScreen('summary');
   renderDominoSummary(summaryScreen, gameState, function() {
@@ -148,8 +147,8 @@ function showSummary() {
 }
 
 function afterTurn() {
-  [gameState].filter(function(s) { return s.phase === 'complete'; }).forEach(showSummary);
-  [gameState].filter(function(s) { return s.phase !== 'complete'; }).forEach(function() {
+  [gameState].filter(dominoIsPhaseComplete).forEach(showSummary);
+  [gameState].filter(dominoIsPhaseIncomplete).forEach(function() {
     var player = gameState.players[gameState.turnIndex];
     renderDominoHandover(gameScreen, player, function() {
       dominoEmit('turn_start', { player_id: player.id });
@@ -169,7 +168,7 @@ function onSubmitSuccess() {
 function onSubmit() {
   [turnState.selectedTileId].filter(Boolean).forEach(function(tileId) {
     var rot = Number(turnState.previewRotation);
-    [turnState.previewEndpointIndex].filter(function(idx) { return idx !== null; }).forEach(function(epIdx) {
+    [turnState.previewEndpointIndex].filter(dominoIsNotNull).forEach(function(epIdx) {
       var playerId = gameState.players[gameState.turnIndex].id;
       dominoEmit('placement_submitted', { tile_id: tileId, location_id: 'endpoint_' + epIdx });
       var result = placeTile(gameState, tileId, epIdx, rot);
@@ -202,7 +201,7 @@ function onDrawSuccess(r) {
 
 function onDraw() {
   var playerId = gameState.players[gameState.turnIndex].id;
-  [drawTile(gameState)].filter(function(r) { return r.success; }).forEach(function(r) {
+  [drawTile(gameState)].filter(dominoResultSucceeded).forEach(function(r) {
     onDrawSuccess(Object.assign({ player_id: playerId }, r));
   });
 }
@@ -223,16 +222,16 @@ fetch('../../../content/dictionary/dictionary.json')
   });
 
 function startGame(setupState) {
-  [setupState].filter(function(s) { return !DOMINO_STATIC_MATCH_TYPES_CORE[s.matchType]; })
+  [setupState].filter(s => dominoIsDynamicMatchType(s, DOMINO_STATIC_MATCH_TYPES_CORE))
     .forEach(function(s) {
       var tagEntries = filterByTag(allEntries, s.matchType);
-      var ids = tagEntries.map(function(e) { return e.id; });
-      s.values = ids.slice().sort(function() { return Math.random() - 0.5; }).slice(0, 7);
+      var ids = tagEntries.map(dominoPluckId);
+      s.values = dominoPickRandomSample(ids, 7);
     });
   gameState = createDominoGame(setupState);
   turnState = { selectedTileId: null, previewEndpointIndex: null, previewRotation: null };
   boardViewport._dominoPanState = null;
-  dominoEmit('game_start', { matchType: gameState.matchType, players: gameState.players.map(function(p) { return p.id; }) });
+  dominoEmit('game_start', { matchType: gameState.matchType, players: gameState.players.map(dominoPluckId) });
   showScreen('game');
   renderDominoBoard(boardViewport, gameState, makeBoardOpts());
   renderDominoTray(trayEl, gameState, makeTrayOpts());
