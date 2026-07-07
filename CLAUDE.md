@@ -122,7 +122,7 @@ function onReset() {
 - One event per completed session — guard with `eventFired` flag
 - Reset flag on play-again / reset
 - No intermediate events (taps, matches, etc.) — completion only
-- Events stored in IndexedDB; visible on learnings page (`app/learnings/index.html`)
+- Events stored in IndexedDB
 
 ## Module Index
 
