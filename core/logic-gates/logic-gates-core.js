@@ -10,4 +10,8 @@ function cellCenter(cell, cellW, cellH) {
   return { x: cell[0] * cellW + cellW / 2, y: cell[1] * cellH + cellH / 2 };
 }
 
-if (typeof module !== 'undefined') module.exports = { goalText, cellCenter };
+function tagCategory(items, category) {
+  return items.map(function(item) { return Object.assign({}, item, { category: category }); });
+}
+
+if (typeof module !== 'undefined') module.exports = { goalText, cellCenter, tagCategory };

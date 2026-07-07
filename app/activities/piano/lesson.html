@@ -64,7 +64,7 @@ new MutationObserver(_wire).observe(_sd,{childList:true,subtree:true});
 <script src="../../../ui/piano/piano-song-ui.js"></script>
 <script>
 loadPianoSongs('../../../content/audio/songs/', function(songs) {
-  songs.sort(function(a, b) { return a.title.localeCompare(b.title); });
+  songs = pianoSortByTitle(songs);
   initSongLesson(songs, {
     display: document.getElementById('section-display'),
     prev:    document.getElementById('btn-prev'),

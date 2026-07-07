@@ -63,7 +63,7 @@
   </div>
 </div>
 <script type="module">
-import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, presetSkyColour} from '../../../core/clock/clock-core.js';
+import {hourToSky, nextDegrees, parseTime, nextMinuteDeg, presetSkyColour, manifestToOptions, findOptionByValue} from '../../../core/clock/clock-core.js';
 import {init as clockInit, setHandDeg} from '../../../ui/clock/clock-ui.js';
 import {render as skyRender} from '../../../ui/clock/sky-ui.js';
 import {render as digitalRender} from '../../../ui/clock/digital-ui.js';
@@ -163,7 +163,7 @@ var _profileLoaders = {};
 function buildProfileFilter() {
   buildSimpleFilterBar(_manifestOptions, function(profileId) {
     _profileLoaders[profileId]();
-    [_manifestOptions.find(function(o) { return o.value === profileId; })].filter(Boolean).forEach(function(o) {
+    [findOptionByValue(_manifestOptions, profileId)].filter(Boolean).forEach(function(o) {
       profileTitleEl.textContent = o.label;
     });
   }, DEFAULT_PROFILE);
@@ -173,7 +173,7 @@ function buildProfileFilter() {
 fetch('../../../content/clock/profiles/manifest.json')
   .then(function(r) { return r.json(); })
   .then(function(manifest) {
-    _manifestOptions = manifest.map(function(m) { return {value: m.id, label: m.label, icon: m.icon}; });
+    _manifestOptions = manifestToOptions(manifest);
     manifest.forEach(function(m) {
       _profileLoaders[m.id] = function() {
         fetch('../../../content/clock/profiles/' + m.id + '.json')

@@ -85,7 +85,7 @@ Promise.all([
   fetch('../../../content/logic-gates/puzzles-linear.json?v=1').then(function(r) { return r.json(); }),
   fetch('../../../content/logic-gates/puzzles-converging.json?v=1').then(function(r) { return r.json(); })
 ]).then(function(results) {
-  var stations = results[0].map(function(s) { return Object.assign({}, s, { category: 'primitive' }); });
+  var stations = tagCategory(results[0], 'primitive');
   allItems = stations.concat(results[1]).concat(results[2]);
   applyFilter();
 }).catch(function(err) {

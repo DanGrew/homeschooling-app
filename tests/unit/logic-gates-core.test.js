@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { goalText, cellCenter } = require('../../core/logic-gates/logic-gates-core.js');
+const { goalText, cellCenter, tagCategory } = require('../../core/logic-gates/logic-gates-core.js');
 
 describe('cellCenter', () => {
   test('[0,0] with 90x65 → {x:45, y:32.5}', () => {
@@ -35,5 +35,26 @@ describe('goalText', () => {
   });
   test('fountain OFF goal', () => {
     expect(goalText([{ id: 'O3', value: false }], outputs)).toBe('Turn the fountain OFF');
+  });
+});
+
+describe('tagCategory', () => {
+  test('adds category to each item', () => {
+    const items = [{ id: 'a' }, { id: 'b' }];
+    expect(tagCategory(items, 'primitive')).toEqual([
+      { id: 'a', category: 'primitive' },
+      { id: 'b', category: 'primitive' }
+    ]);
+  });
+  test('does not mutate the input items', () => {
+    const items = [{ id: 'a' }];
+    tagCategory(items, 'primitive');
+    expect(items[0]).toEqual({ id: 'a' });
+  });
+  test('overwrites an existing category', () => {
+    expect(tagCategory([{ id: 'a', category: 'old' }], 'new')).toEqual([{ id: 'a', category: 'new' }]);
+  });
+  test('returns empty array for empty input', () => {
+    expect(tagCategory([], 'primitive')).toEqual([]);
   });
 });

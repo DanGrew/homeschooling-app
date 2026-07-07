@@ -57,6 +57,7 @@
 import Dictionary from '../../../core/dictionary/dictionary-core.js';
 import { loadColouringPictures } from '../../../core/dictionary/dictionary-helpers-core.js';
 import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
+import { firstIndexAfter, sortByName } from '../../../core/collections/collections-core.js';
 function ns(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   Object.keys(attrs).forEach(function(k){el.setAttribute(k,attrs[k]);});
@@ -113,7 +114,8 @@ function addImage(idx){
   var item=document.createElement('div');
   item.className='worksheet-item';item.dataset.idx=idx;
   item.appendChild(renderSVG(pictures[idx],idx));
-  var after=Array.from(sheet.querySelectorAll('.worksheet-item')).filter(function(el){return parseInt(el.dataset.idx)>idx;})[0];
+  var items=Array.from(sheet.querySelectorAll('.worksheet-item'));
+  var after=items[firstIndexAfter(items.map(el=>parseInt(el.dataset.idx,10)),idx)];
   ({'true':function(){sheet.insertBefore(item,after);},'false':function(){sheet.appendChild(item);}})[String(!!after)]();
 }
 
@@ -125,7 +127,7 @@ function removeImage(idx){
 
 Dictionary.init('../../../content/dictionary/');
 loadColouringPictures(pictures,function(){
-  pictures.sort(function(a,b){return a.name.localeCompare(b.name);});
+  sortByName(pictures);
   buildFilterBar(pictures,function(filtered){buildPanel(filtered);});
 },function(){document.getElementById('panel-list').textContent='⚠️ Failed to load — check connection';
 });

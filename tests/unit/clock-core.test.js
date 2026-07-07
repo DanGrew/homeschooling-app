@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hourToAngles, hourToSky, nextDegrees, generateChoices, parseTime, numeralToMinuteDeg, nextMinuteDeg } from '../../core/clock/clock-core.js'
+import { hourToAngles, hourToSky, nextDegrees, generateChoices, parseTime, numeralToMinuteDeg, nextMinuteDeg, manifestToOptions, findOptionByValue } from '../../core/clock/clock-core.js'
 
 describe('hourToAngles', () => {
   it('returns zero degrees for hour 0 (12 o\'clock)', () => {
@@ -201,5 +201,29 @@ describe('generateChoices', () => {
     const small = [{}, {}, {}]
     const choices = generateChoices(small, 0, 10)
     expect(choices.length).toBeLessThanOrEqual(small.length)
+  })
+})
+
+describe('manifestToOptions', () => {
+  it('maps id/label/icon into value/label/icon options', () => {
+    const manifest = [{ id: 'a', label: 'A', icon: '🅰️', extra: 1 }, { id: 'b', label: 'B', icon: '🅱️' }]
+    expect(manifestToOptions(manifest)).toEqual([
+      { value: 'a', label: 'A', icon: '🅰️' },
+      { value: 'b', label: 'B', icon: '🅱️' }
+    ])
+  })
+
+  it('returns empty array for empty manifest', () => {
+    expect(manifestToOptions([])).toEqual([])
+  })
+})
+
+describe('findOptionByValue', () => {
+  const options = [{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }]
+  it('returns the matching option', () => {
+    expect(findOptionByValue(options, 'b')).toEqual({ value: 'b', label: 'B' })
+  })
+  it('returns null when no option matches', () => {
+    expect(findOptionByValue(options, 'z')).toBe(null)
   })
 })

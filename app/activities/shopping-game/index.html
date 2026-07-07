@@ -53,7 +53,6 @@ var eventFired = false;
 
 var SG_NOOP = function() {};
 var SG_SCREEN_ACTIVE = { 'true': ' active', 'false': '' };
-var SG_BLOCKED_PHASES = { resolving: true, complete: true };
 var SG_EVENT_KEY = { 'true': 'fired', 'false': 'pending' };
 var SG_EVENT_HANDLERS = {
   fired: SG_NOOP,
@@ -114,9 +113,7 @@ function startGame(cfg) {
   eventFired = false;
   var contentEntries = filterByTags(allEntries, cfg.tags);
   var contentSet = buildContentSet(contentEntries, cfg.gridSize);
-  var players = cfg.players.slice(0, cfg.playerCount).map(function(p, i) {
-    return { id: 'p' + i, name: [p.name, 'Player ' + (i + 1)].filter(Boolean)[0], icon: p.icon, role: p.role };
-  });
+  var players = cardGameBuildPlayers(cfg.players, cfg.playerCount);
   gameMode = [cfg.mode, 'shared'].filter(Boolean)[0];
   handoverDelay = 0;
   gameState = createShoppingGame(players, cfg.gridSize, contentSet);
@@ -134,7 +131,7 @@ window.addEventListener('resize', function() {
 });
 
 function handleFlip(cardIndex) {
-  [gameState].filter(Boolean).filter(function(s) { return !SG_BLOCKED_PHASES[s.phase]; }).forEach(function(s) {
+  [gameState].filter(Boolean).filter(cardGameStateActive).forEach(function(s) {
     var result = flipShoppingCard(s, cardIndex);
     gameState = result.state;
     result.events.forEach(function(ev) { applyEvent(ev, cardIndex); });

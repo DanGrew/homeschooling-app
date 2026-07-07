@@ -32,6 +32,7 @@ import { loadConnectDots } from '../../../core/dictionary/dictionary-helpers-cor
 import { buildFilterBar } from '../../../components/filter-bar/filter-bar-ui.js';
 import { createPaginator } from '../../../components/pagination/paginator-ui.js';
 import { tightVB, tapKey } from '../../../core/connect-the-dots/connect-the-dots-core.js';
+import { notNull } from '../../../core/collections/collections-core.js';
 var nextDot,prevDot,complete,paginator,currentShape;
 
 function ns(tag,attrs){
@@ -102,7 +103,7 @@ function doCorrect(n){
   var shape=currentShape;
   document.getElementById('c'+n).setAttribute('fill','#2ECC71');
   document.getElementById('c'+n).setAttribute('stroke','#27AE60');
-  [prevDot].filter(function(p){return p!==null;}).forEach(function(p){
+  [prevDot].filter(notNull).forEach(function(p){
     var f=shape.dots[p-1],t=shape.dots[n-1];
     drawLine(f.cx,f.cy,t.cx,t.cy);
   });

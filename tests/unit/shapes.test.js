@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { svg, pickCol, colours, types, colourNames } = require('../../core/shapes/shapes-core.js');
+const { svg, pickCol, shuffle, colours, types, colourNames } = require('../../core/shapes/shapes-core.js');
 
 describe('svg', () => {
   it('wraps output in svg element with viewBox', () => {
@@ -85,5 +85,26 @@ describe('colourNames', () => {
     expect(colourNames['#F1C40F']).toBe('Yellow');
     expect(colourNames['#E67E22']).toBe('Orange');
     expect(colourNames['#9B59B6']).toBe('Purple');
+  });
+});
+
+describe('shuffle', () => {
+  it('returns a new array (does not mutate input)', () => {
+    const input = ['a', 'b', 'c'];
+    const out = shuffle(input);
+    expect(out).not.toBe(input);
+    expect(input).toEqual(['a', 'b', 'c']);
+  });
+
+  it('preserves length and membership', () => {
+    const input = ['a', 'b', 'c', 'd', 'e'];
+    const out = shuffle(input);
+    expect(out).toHaveLength(input.length);
+    expect(out.slice().sort()).toEqual(input.slice().sort());
+  });
+
+  it('handles empty and single-element arrays', () => {
+    expect(shuffle([])).toEqual([]);
+    expect(shuffle(['x'])).toEqual(['x']);
   });
 });
