@@ -41,7 +41,7 @@ describe('mpComposePicture', () => {
       { shape: 'square', colour: 'red', size: 'large', x: 0.5, y: 0.62 }
     ] };
     const out = mpComposePicture(pic, fakeShape);
-    expect(out).toContain('viewBox="0 0 100 100"');
+    expect(out).toContain('viewBox="-12 -12 124 124"');
     expect((out.match(/<g /g) || []).length).toBe(2);
   });
 });

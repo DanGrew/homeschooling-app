@@ -1,4 +1,5 @@
 var MP_TILE = 100;
+var MP_PAD = 12;
 var MP_K = 0.34;
 var MP_SIZE_MAP = { small: 1, medium: 1.6, large: 2.3 };
 
@@ -16,7 +17,8 @@ function mpObjectSvg(obj, renderShape) {
 }
 
 function mpComposePicture(picture, renderShape) {
-  return '<svg viewBox="0 0 ' + MP_TILE + ' ' + MP_TILE + '">' +
+  var vb = -MP_PAD + ' ' + -MP_PAD + ' ' + (MP_TILE + MP_PAD * 2) + ' ' + (MP_TILE + MP_PAD * 2);
+  return '<svg viewBox="' + vb + '">' +
     picture.objects.map(function(o) { return mpObjectSvg(o, renderShape); }).join('') + '</svg>';
 }
 
