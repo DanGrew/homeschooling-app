@@ -8,7 +8,7 @@ const {
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
   canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
-  gridSpawn, OBJ_SPAWN_CELL
+  gridSpawn, OBJ_SPAWN_CELL, rotationCue
 } = require('../../core/object-playground/object-playground-core.js');
 
 describe('gridSpawn', () => {
@@ -868,5 +868,19 @@ describe('moveSelectedObject', () => {
     const origX = state.objects.find(o => o.id === 'obj-0').x;
     moveSelectedObject(state, 'right');
     expect(state.objects.find(o => o.id === 'obj-0').x).toBe(origX);
+  });
+});
+
+describe('rotationCue', () => {
+  it('maps clockwise (cw) to "clockwise"', () => {
+    expect(rotationCue('cw')).toBe('clockwise');
+  });
+
+  it('maps anticlockwise (acw) to "anticlockwise"', () => {
+    expect(rotationCue('acw')).toBe('anticlockwise');
+  });
+
+  it('gives the two directions distinct cues', () => {
+    expect(rotationCue('cw')).not.toBe(rotationCue('acw'));
   });
 });
