@@ -5,10 +5,10 @@
       "icon": "🔤",
       "title": "Letter sounds",
       "learningIcons": ["listen", "talk"],
-      "keywords": ["letter", "sound", "phonics", "a", "e", "i", "o", "u", "b", "c", "vowel", "name"],
+      "keywords": ["letter", "sound", "phonics", "a", "e", "i", "o", "u", "b", "c", "vowel", "name", "starts with"],
       "focus": "Hear the sound and name of each letter.",
       "concepts": ["Letter sounds", "Letter names", "Phonics", "Vowels"],
-      "lookFor": ["Hears a letter's sound", "Says the letter's sound back", "Names the letter", "Spots the letter that makes a sound", "Knows a, e, i, o, u are vowels and every word needs one"],
+      "lookFor": ["Hears a letter's sound", "Says the letter's sound back", "Names the letter", "Spots the letter that makes a sound", "Knows a, e, i, o, u are vowels and every word needs one", "Thinks of a word that starts with a letter's sound"],
       "curriculum": ["literacy.phonics"],
       "area": "literacy",
       "playgrounds": [

@@ -55,8 +55,8 @@
       "learningIcons": ["create", "observe"],
       "keywords": ["mix", "red", "yellow", "blue", "orange", "green", "purple", "primary", "secondary", "tertiary", "amber", "chartreuse", "vermillion", "teal", "indigo", "magenta"],
       "focus": "Mix two primary colours and watch them make a new colour.",
-      "concepts": ["Colour mixing", "Primary colours", "Secondary colours", "Tertiary colours", "Predicting"],
-      "lookFor": ["Picks two colours to mix", "Guesses what they will make", "Names the new colour", "Knows red and yellow make orange, red and blue make purple, blue and yellow make green", "Mixes a primary and a secondary to make a tertiary like amber or teal"],
+      "concepts": ["Colour mixing", "Primary colours", "Secondary colours", "Tertiary colours", "Predicting", "Colours sit on a spectrum"],
+      "lookFor": ["Picks two colours to mix", "Guesses what they will make", "Names the new colour", "Knows red and yellow make orange, red and blue make purple, blue and yellow make green", "Mixes a primary and a secondary to make a tertiary like amber or teal", "Sees a colour as closer to one primary than another"],
       "curriculum": ["ead.colour-mixing", "cl.prediction", "uw.cause-effect", "cl.technical-vocab"],
       "area": "expressive-arts-design",
       "playgrounds": [
