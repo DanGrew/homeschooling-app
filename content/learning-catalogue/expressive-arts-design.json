@@ -120,6 +120,36 @@
           { "shape": "rectangle", "colour": "purple", "size": "small", "x": 0.5, "y": 0.72 }
         ] }
       ]
+    },
+    {
+      "id": "rhythm-and-beat",
+      "icon": "🥁",
+      "title": "Rhythm & beat",
+      "learningIcons": ["listen", "observe"],
+      "keywords": ["rhythm", "beat", "pulse", "timing", "tap", "in time", "steady", "fast", "slow", "note"],
+      "focus": "Tap each falling note as it reaches the line — feeling the steady beat of the music.",
+      "concepts": ["Rhythm", "Beat", "Steady pulse", "Timing", "Tapping in time"],
+      "lookFor": ["Taps the key as the note reaches the line", "Feels when a note is about to arrive", "Keeps a steady beat", "Claps just the pulse of a song", "Speeds up or slows down to stay in time"],
+      "curriculum": ["ead.rhythm", "ead.music-exploration", "pd.fine-motor"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "piano", "note": "Play in time with the beat — tap each note as it reaches the line" }
+      ]
+    },
+    {
+      "id": "high-low-loud-soft",
+      "icon": "🎹",
+      "title": "High, low, loud, soft",
+      "learningIcons": ["listen", "create"],
+      "keywords": ["high", "low", "loud", "soft", "quiet", "fast", "slow", "pitch", "volume", "tempo", "note", "note name", "tune", "song", "memory"],
+      "focus": "Follow a song note by note — playing high and low, loud and soft, and remembering the tune.",
+      "concepts": ["Pitch (high/low)", "Volume (loud/quiet)", "Tempo (fast/slow)", "Note names", "Playing a tune in sequence", "Musical memory", "Music and feelings"],
+      "lookFor": ["Plays a high note and a low note", "Plays loud, then soft", "Plays fast, then slow", "Follows the note chips across a song", "Names a note", "Remembers and repeats a few notes", "Plays something happy, sad or calm"],
+      "curriculum": ["ead.pitch", "ead.note-names", "ead.music-exploration"],
+      "area": "expressive-arts-design",
+      "playgrounds": [
+        { "id": "piano", "note": "Explore high/low, loud/soft, fast/slow — follow the song note by note" }
+      ]
     }
   ]
 }

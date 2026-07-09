@@ -17,7 +17,10 @@
     "word-lesson": { "emoji": "📝", "name": "Trace Words" },
     "word-builder": { "emoji": "🔡", "name": "Word Builder" },
     "say-words": { "emoji": "🗣️", "name": "Say Words" },
-    "letter-shapes": { "emoji": "🔷", "name": "Letter Shapes" }
+    "letter-shapes": { "emoji": "🔷", "name": "Letter Shapes" },
+    "piano": { "emoji": "🎹", "name": "Piano" },
+    "simulator": { "emoji": "🌱", "name": "Simulator" },
+    "story-time": { "emoji": "📖", "name": "Story Time" }
   },
   "talkPrompts": {
     "actions": ["Name / point out", "Compare", "Count / measure", "Predict", "Pick a favourite"],

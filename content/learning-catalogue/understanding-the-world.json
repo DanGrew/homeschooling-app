@@ -63,6 +63,21 @@
         { "id": "word-builder", "note": "Build words for vehicles, food and helpers" },
         { "id": "say-words", "note": "Listen and name fruit, vehicles and helpers" }
       ]
+    },
+    {
+      "id": "how-a-plant-grows",
+      "icon": "🌱",
+      "title": "How a plant grows",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["plant", "seed", "shoot", "grow", "water", "sun", "light", "garden", "watering can", "tomato", "fruit", "harvest", "life cycle", "first", "then", "next"],
+      "focus": "Give a plant water and sunshine and watch it grow from seed to fruit.",
+      "concepts": ["What a plant needs", "Life-cycle (seed → shoot → bloom → fruit)", "Cause and effect", "Sequencing (first / then / next)", "Garden tools"],
+      "lookFor": ["Names garden tools like the watering can", "Says a plant needs water and light", "Watches the plant grow after watering and sunning it", "Puts the growing steps in order", "Uses first / then / next to describe the sequence"],
+      "curriculum": ["uw.animals-nature", "uw.world-awareness", "uw.cause-effect", "cl.sequencing-language"],
+      "area": "understanding-the-world",
+      "playgrounds": [
+        { "id": "simulator", "note": "Water and sun the plant, then watch it grow from seed to fruit" }
+      ]
     }
   ]
 }
