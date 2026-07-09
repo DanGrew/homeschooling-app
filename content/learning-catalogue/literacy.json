@@ -92,6 +92,21 @@
       "playgrounds": [
         { "id": "say-words", "note": "Listen for words that rhyme and say one back" }
       ]
+    },
+    {
+      "id": "understand-a-story",
+      "icon": "📖",
+      "title": "Understand a story",
+      "learningIcons": ["listen", "talk"],
+      "keywords": ["story", "listen", "predict", "recall", "remember", "new word", "vocabulary", "character", "feel", "words", "follow", "read along"],
+      "focus": "Listen to a story, follow the words as they light up, and talk about what happens.",
+      "concepts": ["Listening to a story", "Predicting what happens next", "Recalling the story", "New vocabulary", "How characters feel", "Following words left to right"],
+      "lookFor": ["Predicts what happens next", "Recalls what happened in the story", "Taps a new word to hear it and learn what it means", "Follows the highlighted words left to right", "Says how a character felt"],
+      "curriculum": ["literacy.story-comprehension", "literacy.print-concepts", "literacy.phonics", "cl.topic-vocabulary", "cl.listening"],
+      "area": "literacy",
+      "playgrounds": [
+        { "id": "story-time", "note": "Listen and follow the words, then talk about what happens and how characters feel" }
+      ]
     }
   ]
 }

@@ -16,6 +16,21 @@
         { "id": "word-builder", "note": "Spell out words for how we feel" },
         { "id": "say-words", "note": "Listen and name how someone feels" }
       ]
+    },
+    {
+      "id": "looking-after-myself",
+      "icon": "🚽",
+      "title": "Looking after myself",
+      "learningIcons": ["observe", "talk"],
+      "keywords": ["potty", "toilet", "wash hands", "self-care", "independent", "routine", "nappy", "need", "first", "then", "next", "bathroom"],
+      "focus": "Help a friend notice they need the toilet and follow every step, from bathroom to washing hands.",
+      "concepts": ["Self-care", "Independence", "Daily routine", "Recognising the need to go", "Sequencing (first / then / next)"],
+      "lookFor": ["Notices the friend needs the toilet", "Follows the steps — bathroom, potty, wash hands", "Chooses the toilet over the nappy or toys", "Puts the routine in order", "Talks about their own toilet routine"],
+      "curriculum": ["psed.independence", "psed.self-regulation", "cl.sequencing-language"],
+      "area": "personal-social-emotional",
+      "playgrounds": [
+        { "id": "simulator", "note": "Help your friend recognise the need and follow every step to the potty" }
+      ]
     }
   ]
 }

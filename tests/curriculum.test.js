@@ -59,7 +59,42 @@ test('coverage table header has all seven area abbreviations', async ({ page }) 
 test('coverage table loads catalogue + physical rows', async ({ page }) => {
   await page.goto(URL)
   const rows = page.locator('.coverage tbody tr')
-  await expect(rows).toHaveCount(35)
+  await expect(rows).toHaveCount(40)
+})
+
+test('Rhythm & beat card shows Piano venue and covers ead.rhythm', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Rhythm & beat' }).first()
+  await expect(row.locator('.col-activity')).toContainText('Piano')
+  await expect(row.locator('td').nth(2)).toContainText('Rhythm')
+})
+
+test('High, low, loud, soft card shows Piano venue and covers ead.pitch', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'High, low, loud, soft' }).first()
+  await expect(row.locator('.col-activity')).toContainText('Piano')
+  await expect(row.locator('td').nth(2)).toContainText('pitch')
+})
+
+test('How a plant grows card shows Simulator venue', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'How a plant grows' }).first()
+  await expect(row.locator('.col-activity')).toContainText('Simulator')
+  await expect(row.locator('td').nth(5)).toContainText('nature')
+})
+
+test('Looking after myself card shows Simulator venue in PSED', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Looking after myself' }).first()
+  await expect(row.locator('.col-activity')).toContainText('Simulator')
+  await expect(row.locator('td').nth(6)).toContainText('Independence')
+})
+
+test('Understand a story card shows Story Time venue and covers story comprehension', async ({ page }) => {
+  await page.goto(URL)
+  const row = page.locator('.coverage tbody tr').filter({ hasText: 'Understand a story' }).first()
+  await expect(row.locator('.col-activity')).toContainText('Story Time')
+  await expect(row.locator('td').nth(7)).toContainText('Story comprehension')
 })
 
 test('Mix colours card has Colour mixing in EAD column', async ({ page }) => {
