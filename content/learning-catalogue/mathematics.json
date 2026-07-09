@@ -115,10 +115,10 @@
       "icon": "🧭",
       "title": "Move up, down, left, right",
       "learningIcons": ["observe", "talk"],
-      "keywords": ["up", "down", "left", "right", "move"],
+      "keywords": ["up", "down", "left", "right", "move", "towards", "away"],
       "focus": "Move an object up, down, left or right and say which way it went.",
       "concepts": ["Direction", "Up and down", "Left and right"],
-      "lookFor": ["Moves an object the way you ask", "Names the direction it moved", "Knows all four directions"],
+      "lookFor": ["Moves an object the way you ask", "Names the direction it moved", "Knows all four directions", "Moves an object towards or away from something"],
       "curriculum": ["maths.spatial", "cl.technical-vocab"],
       "area": "mathematics",
       "playgrounds": [
