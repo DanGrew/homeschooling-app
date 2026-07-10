@@ -5,7 +5,6 @@ const path = require('path');
 const { JSDOM } = require('jsdom');
 const { check: checkMenuBar } = require('./rules/menuBar.js');
 const { check: checkSpeakableUI } = require('./rules/speakableUI.js');
-const { check: checkActivityId } = require('./rules/activityId.js');
 const { report } = require('./reporter.js');
 
 const ROOT = path.resolve(__dirname, '..', '..');
@@ -47,7 +46,6 @@ function validate(abs, html, optOuts) {
   const errors = [];
   errors.push(...checkMenuBar(doc, optOuts).map(e => `[menuBar] ${e}`));
   errors.push(...checkSpeakableUI(doc, html, optOuts).map(e => `[speakableUI] ${e}`));
-  errors.push(...checkActivityId(doc, html, optOuts).map(e => `[activityId] ${e}`));
   return errors;
 }
 

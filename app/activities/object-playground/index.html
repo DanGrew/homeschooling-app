@@ -41,9 +41,6 @@
     <button id="obj-undo-btn" data-testid="obj-undo-btn" style="display:none">&#8617;</button>
   </div>
 </div>
-<script>
-window.ACTIVITY_ID='object-playground';
-</script>
 <script src="../../../core/object-playground/object-playground-core.js"></script>
 <script src="../../../ui/object-playground/object-playground-ui.js"></script>
 <script type="module">
@@ -52,7 +49,5 @@ import '../../../components/speech/speech-ui.js';
 makeSpeakable(document.getElementById('obj-add-btn'), 'Add object');
 makeSpeakable(document.getElementById('obj-undo-btn'), 'Undo delete');
 </script>
-<script>window.addEventListener('load', initObjectPlayground);</script>
-<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
-</body>
+<script>window.addEventListener('load', initObjectPlayground);</script></body>
 </html>

@@ -1,9 +1,0 @@
-{
-  "activity": "story-time",
-  "prompts": [
-    { "type": "word", "text": "Before pressing play, introduce 1–2 unfamiliar words from the story: '[word] means [meaning] — listen out for it.' After the story, revisit: 'Did you hear [word]? What was happening then?'" },
-    { "type": "say",  "text": "Model left-to-right reading: point to the highlighted words as they're spoken. 'The words go this way — left to right, just like this.' Brief but important — reinforces print direction." },
-    { "type": "ask",  "text": "Core prediction question: 'What do you think will happen next?' Ask before pressing play. Don't answer it — wait. Return to it at any natural pause in the story." },
-    { "type": "ask",  "text": "After the story: 'How did [character] feel when [event]? How do you know?' — draws out perspective-taking and emotion vocabulary from the narrative." }
-  ]
-}

@@ -102,7 +102,6 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | Module | Purpose |
 |--------|---------|
 | `components/menu.js` | Nav bar builder |
-| `components/adult-prompts/adult-prompts-ui.js` | Adult guidance prompt overlays |
 | `components/filter-bar/filter-bar-ui.js` | Filter/sort UI widget |
 | `components/pagination/paginator-ui.js` | Pagination control UI |
 | `components/speech/speakable.js` | Text-to-speech markup (makeSpeakable) |
@@ -113,7 +112,6 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 ## content/
 | Path | Purpose |
 |------|---------|
-| `content/adult-prompts/` | Parental guidance JSON per activity |
 | `content/audio/songs/` | Song metadata (lyrics, melody, playback) |
 | `content/clock/presets.json` | Clock preset times |
 | `content/curriculum/criteria.json` | EYFS/NCETM learning criteria |
