@@ -1,9 +1,0 @@
-{
-  "activity": "character-lesson",
-  "prompts": [
-    { "type": "word", "text": "Distinguish letter name from letter sound: the letter is called 'ay' but makes the /a/ sound (as in apple). Name both each time: 'That's the letter A — it says /a/.'" },
-    { "type": "say",  "text": "When a letter appears, say it together — name, then sound — then find it nearby: 'That's B, it says /b/. Can you spot a B anywhere around us?'" },
-    { "type": "ask",  "text": "Core question to return to: 'What sound does this letter make?' Knowing the sound is what leads to reading, not just the name." },
-    { "type": "ask",  "text": "Build connections: 'What word starts with [letter]?' Use familiar words first — their name, family names, favourite foods." }
-  ]
-}

@@ -14,7 +14,7 @@ Activity pages and their shared dependencies. Referenced from `CLAUDE.md`.
 | Routine scheduler | `app/routine/index.html` | ui/routine, core/routine |
 | Attributions | `app/attributions.html` | — |
 | Physical hub | `app/physical/index.html` | core/physical |
-| Letter tracing | `app/activities/character-lesson/index.html` | core/trace, ui/trace, ui/character-lesson, components/adult-prompts |
+| Letter tracing | `app/activities/character-lesson/index.html` | core/trace, ui/trace, ui/character-lesson |
 | Clock lesson | `app/activities/clock/index.html` | core/clock, ui/clock |
 | Clock game | `app/activities/clock/game-mc.html` | core/clock, ui/clock |
 | Colour wheel | `app/activities/colour-wheel/index.html` | core/colour-wheel, ui/colour-wheel |

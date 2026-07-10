@@ -1,9 +1,0 @@
-{
-  "activity": "match-colour",
-  "prompts": [
-    { "type": "word", "text": "Colour vocabulary to use throughout: red, blue, green, yellow, orange, purple. Always say the colour name before and after the match — name → recognition → name again. Repetition builds the vocabulary." },
-    { "type": "ask",  "text": "Before they tap: 'What colour is it called? Can you spot the matching one?' — name before choosing, not after. Builds intentional labelling rather than lucky guessing." },
-    { "type": "say",  "text": "Real-world connection to return to throughout: 'Can you find something [colour] nearby?' — moves colour recognition from screen to environment." },
-    { "type": "ask",  "text": "Introduce colour families: 'Which colours are warm — red, orange, yellow? Which are cool — blue, green, purple?' — a higher-order category for children who are confident with individual names." }
-  ]
-}

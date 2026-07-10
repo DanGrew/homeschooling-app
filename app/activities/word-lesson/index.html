@@ -47,15 +47,11 @@
 
 <script src="../../../core/trace/trace-core.js"></script>
 <script src="../../../ui/trace/trace-ui.js"></script>
-<script>
-  window.ACTIVITY_ID='word-lesson';
-</script>
 <script type="module">
 import { init } from '../../../ui/word-lesson/word-lesson-ui.js';
 import { loadRegistry, loadGraphemes } from '../../../components/phonics/phonics-service.js';
 loadRegistry().then(function() { init(); loadGraphemes().catch(function() {}); });
 </script>
-<script src="../../../components/adult-prompts/adult-prompts-ui.js" defer></script>
 <script type="module">
 import { makeSpeakable } from '../../../components/speech/speakable.js';
 import '../../../components/speech/speech-ui.js';
