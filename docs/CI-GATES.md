@@ -5,6 +5,9 @@ checklist** — write code to satisfy them the first time instead of discovering
 failure after pushing. Sources: `.github/workflows/test.yml` and
 `.github/workflows/check-manifests.yml`.
 
+One further gate — **mutation** (StrykerJS) — is **not** in CI at all: it runs
+locally on demand. See *Mutation gate — local, not CI* below.
+
 ## Run everything locally before committing
 
 The static gates (arch + JSON + manifests) are instant and catch most surprises.
@@ -63,6 +66,39 @@ npx playwright test tests/<file>.test.js                # only the file you touc
 | `check-manifests` | generated manifests are stale (`content/dictionary/manifests/`) | `node scripts/generate-manifests.js` then `git diff` |
 
 Each `arch-check` run prints a `SUMMARY:` line and exits non-zero on violations.
+
+## Mutation gate — local, not CI
+
+| Gate | Fails when | Command |
+|---|---|---|
+| `mutation` (**local only**) | a mutant in `core/**/*-core.js` survives the unit suite | `npm run test:mutation` |
+
+Coverage proves a line *executed*; mutation proves a test would *catch a bug* in
+it. StrykerJS (`stryker.config.mjs`) mutates the pure, DOM-free
+`core/**/*-core.js` layer by **glob** — a new core module is under the gate
+automatically — and reruns the full Vitest unit suite against each mutant.
+
+- **This gate does NOT run in CI, by design.** Mutation is slow (~11.5 min here)
+  and CI runs burn GitHub Actions minutes for a signal that lands on `main`
+  where no PR-watcher sees it. As of 2026-07-14 every Grew repo runs mutation
+  **locally on demand** via `claude-workflow/tools/mutation-all` instead — see
+  `tools/mutation-all.md`. **Do not add a `mutation.yml` workflow.** The bar did
+  not change; only the trigger did.
+- **`npm run test:mutation` is the entry point the Grew-wide sweep calls.**
+  `mutation-all` is a thin driver: its `REPOS=(name|dir|command)` list shells out
+  to whatever command each repo supplies. This script is this repo's third
+  field — keep the name stable, or the sweep breaks.
+- **Target is 100%** (`thresholds: { high: 100, low: 100, break: 100 }`). It
+  ships **red** at its baseline — **78.87%** over 5519 mutants (3934 killed, 419
+  timed out, 925 survived, 241 no-coverage), ~11.5 min locally. Survivors are
+  cleared by a follow-up sweep task.
+- **Survivors are resolved, never excluded.** Kill it with a real test, delete
+  dead code, or restructure so the gate can see the behaviour. Never lower the
+  threshold and never add an "equivalent mutant" exclusion to go green. The only
+  legitimate `!`-exception is *structural* — a file the tool cannot meaningfully
+  analyse — and it carries a one-line reason in the config.
+- A test that re-parses source (`vm`, re-`require`) cannot kill a Stryker
+  survivor; restructuring is what kills it.
 
 ## Rules that bite most often
 
