@@ -15,6 +15,12 @@
 
 Both run in CI on every PR. Both must pass.
 
+On top of these, a **mutation gate** (StrykerJS, `npm run test:mutation`) mutates
+`core/**/*-core.js` and reruns the unit suite against each mutant — proving the
+tests *catch* a regression rather than merely execute the line. It runs on push
+to `main` only (slow), targets 100%, and ships red at its baseline. Full rules in
+`docs/CI-GATES.md` → *Mutation gate*.
+
 ---
 
 ## Playwright — local setup
