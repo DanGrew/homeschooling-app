@@ -84,6 +84,10 @@ automatically — and reruns the full Vitest unit suite against each mutant.
   **locally on demand** via `claude-workflow/tools/mutation-all` instead — see
   `tools/mutation-all.md`. **Do not add a `mutation.yml` workflow.** The bar did
   not change; only the trigger did.
+- **`npm run test:mutation` is the entry point the Grew-wide sweep calls.**
+  `mutation-all` is a thin driver: its `REPOS=(name|dir|command)` list shells out
+  to whatever command each repo supplies. This script is this repo's third
+  field — keep the name stable, or the sweep breaks.
 - **Target is 100%** (`thresholds: { high: 100, low: 100, break: 100 }`). It
   ships **red** at its baseline — **78.87%** over 5519 mutants (3934 killed, 419
   timed out, 925 survived, 241 no-coverage), ~11.5 min locally. Survivors are
