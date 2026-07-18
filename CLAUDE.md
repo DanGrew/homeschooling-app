@@ -47,7 +47,7 @@ See `TESTING.md` for full ways of working. Summary:
 - **Vitest** (`npm run test:unit`) — pure functions, no DOM, `tests/unit/`
 - **Playwright** (`npm test`) — user journeys, browser interactions, `tests/`
 - Both required to pass on every PR.
-- **StrykerJS** (`npm run test:mutation`) — mutation gate over `core/**/*-core.js`; runs on push to `main` only (slow), targets 100%, ships red at baseline. Survivors get killed with real tests — never excluded. See `docs/CI-GATES.md` → *Mutation gate*.
+- **StrykerJS** (`npm run test:mutation`) — mutation gate over `core/**/*-core.js`; targets 100%, ships red at baseline. Survivors get killed with real tests — never excluded. **Runs locally on demand, never in CI** (slow; don't add a `mutation.yml`) — the Grew-wide sweep is `claude-workflow/tools/mutation-all`. See `docs/CI-GATES.md` → *Mutation gate — local, not CI*.
 
 **Never run the full Playwright suite (`npm test`) without explicit user permission.** Full suite takes ~4 minutes. Run only the specific test file for the feature under development: `npx playwright test tests/<file>.test.js`. CI runs the full suite on every PR.
 

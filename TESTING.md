@@ -17,9 +17,11 @@ Both run in CI on every PR. Both must pass.
 
 On top of these, a **mutation gate** (StrykerJS, `npm run test:mutation`) mutates
 `core/**/*-core.js` and reruns the unit suite against each mutant — proving the
-tests *catch* a regression rather than merely execute the line. It runs on push
-to `main` only (slow), targets 100%, and ships red at its baseline. Full rules in
-`docs/CI-GATES.md` → *Mutation gate*.
+tests *catch* a regression rather than merely execute the line. It targets 100%
+and ships red at its baseline. It runs **locally on demand, never in CI** (slow,
+and CI minutes are not spent on it) — the Grew-wide sweep is
+`claude-workflow/tools/mutation-all`. Full rules in `docs/CI-GATES.md` →
+*Mutation gate — local, not CI*.
 
 ---
 

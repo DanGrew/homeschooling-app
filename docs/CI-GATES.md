@@ -5,9 +5,8 @@ checklist** — write code to satisfy them the first time instead of discovering
 failure after pushing. Sources: `.github/workflows/test.yml` and
 `.github/workflows/check-manifests.yml`.
 
-One further gate — **mutation** (`.github/workflows/mutation.yml`) — runs on
-**push to `main` only**, not on PRs, because it is slow. See *Mutation gate*
-below.
+One further gate — **mutation** (StrykerJS) — is **not** in CI at all: it runs
+locally on demand. See *Mutation gate — local, not CI* below.
 
 ## Run everything locally before committing
 
@@ -68,22 +67,23 @@ npx playwright test tests/<file>.test.js                # only the file you touc
 
 Each `arch-check` run prints a `SUMMARY:` line and exits non-zero on violations.
 
-## Mutation gate
+## Mutation gate — local, not CI
 
-| Gate (CI job) | Fails when | Local command |
+| Gate | Fails when | Command |
 |---|---|---|
-| `mutation` (main only) | a mutant in `core/**/*-core.js` survives the unit suite | `npm run test:mutation` |
+| `mutation` (**local only**) | a mutant in `core/**/*-core.js` survives the unit suite | `npm run test:mutation` |
 
 Coverage proves a line *executed*; mutation proves a test would *catch a bug* in
 it. StrykerJS (`stryker.config.mjs`) mutates the pure, DOM-free
 `core/**/*-core.js` layer by **glob** — a new core module is under the gate
 automatically — and reruns the full Vitest unit suite against each mutant.
 
-- **Runs on push to `main` only** (`core/**`, `tests/unit/**`, the config, the
-  lockfile). It is slow, and PR checks are advisory anyway, so it never gates a
-  PR. Because the signal lands where no PR-watcher sees it, a failing run opens
-  (or comments on) a single GitHub issue labelled `mutation-gate`, and closes it
-  again once green.
+- **This gate does NOT run in CI, by design.** Mutation is slow (~11.5 min here)
+  and CI runs burn GitHub Actions minutes for a signal that lands on `main`
+  where no PR-watcher sees it. As of 2026-07-14 every Grew repo runs mutation
+  **locally on demand** via `claude-workflow/tools/mutation-all` instead — see
+  `tools/mutation-all.md`. **Do not add a `mutation.yml` workflow.** The bar did
+  not change; only the trigger did.
 - **Target is 100%** (`thresholds: { high: 100, low: 100, break: 100 }`). It
   ships **red** at its baseline — **78.87%** over 5519 mutants (3934 killed, 419
   timed out, 925 survived, 241 no-coverage), ~11.5 min locally. Survivors are

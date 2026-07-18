@@ -25,12 +25,13 @@ export default {
   htmlReporter: { fileName: 'reports/mutation/mutation.html' },
   mutate: ['core/**/*-core.js'],
   // Target 100% (mirrors the grew-tv-app + homeschooling-tools gates).
-  // `break: 100` means the run is RED until every mutant is killed. This is
-  // ADVISORY and NON-BLOCKING in CI: it runs on `main` only (never a PR gate)
-  // and Grew checks never block a merge — the red/green signal just lands on
-  // main, which is why the workflow self-notifies via a `mutation-gate` issue.
-  // To implementers it is a real gate: kill survivors with real tests. Never
-  // lower this bar or exclude "equivalent" mutants to go green.
+  // `break: 100` means the run is RED until every mutant is killed.
+  //
+  // This gate runs LOCALLY ON DEMAND, never in CI — mutation is slow and CI
+  // minutes are not spent on it (Grew-wide decision 2026-07-14; the sweep is
+  // `claude-workflow/tools/mutation-all`). Do not add a `mutation.yml`. The bar
+  // is unchanged by that: kill survivors with real tests, never lower this
+  // threshold, never exclude an "equivalent" mutant to go green.
   //
   // It ships RED today: baseline 78.87% over 5519 mutants (3934 killed, 419
   // timed out, 925 survived, 241 no-coverage; ~11.5 min). The survivor-sweep
