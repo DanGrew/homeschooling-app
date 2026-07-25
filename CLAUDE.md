@@ -1,130 +1,55 @@
-# CLAUDE.md
+# homeschooling-app — root index
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The **public** app: the shell and its HTML/SVG activities, for a child aged 3–4. Served as a
+static site from GitHub Pages at `https://dangrew.github.io/homeschooling-app/` — **no build
+step**. Curriculum thinking and EYFS reference material live in the private `homeschooling`
+repo, not here.
 
-## STOP — Read Before Implementing
+## ⛔ Before you implement
 
-Before any implementation:
-1. Make a **worktree off `origin/main`** and work there — never branch-switch the primary checkout (see *Working rules* below — the full process lives in claude-workflow)
-2. Read `TESTING.md` — this repo has tight CI quality checks; skipping this causes refactor cycles
-3. Skim `docs/CI-GATES.md` — the full list of enforced PR gates (architecture rules, layer/file-home rules, the core-function-needs-a-unit-test rule, contracts, manifests) and the one-shot local command to run them all before committing. Writing to these up front avoids post-push refactor cycles.
-4. **Verify the spec's premise against current code before building.** Specs can go stale as the code moves on. If a spec assumes behaviour that no longer holds (e.g. it assumes objects spawn stacked but the add button now spawns at spread positions), do not silently implement around it — confirm with the user whether the task is still relevant; they often already know. A wrong premise means wasted build/test/revert cycles.
+- **Work in a worktree off `origin/main`** — never branch-switch the primary checkout.
+- Read `docs/TESTING.md` — tight CI checks here; skipping it causes refactor cycles.
+- Skim `docs/GATES.md` — every enforced PR gate, and the one command that runs them locally.
+- ⛔ **Verify the spec's premise against current code** before building → `docs/NORMS.md`.
 
-## Project
+Process rules are **claude-workflow**'s, not this repo's:
 
-Public-facing homeschooling app. Activities built for a child aged 3–4. This repo contains only the app shell and HTML/SVG activities — curriculum thinking and EYFS reference material lives in the private `homeschooling` repo.
+- `docs/WAYS.md` — worktrees, draft-PR / never-merge, the modes. An index; read the part you need.
+- `product-homeschooling/CLAUDE.md` — this product's board, its specs, and its deltas.
 
-**Architecture:** app is a static site served via GitHub Pages at `https://dangrew.github.io/homeschooling-app/`. No build step — files are served directly, relative links work as-is.
+## Start here
 
-## Repository Structure
+Root holds only this file and `README.md`; everything else is `docs/`, flat, area in the name.
 
-- `index.html` — root redirect to `app/`
-- `app/index.html` — home page (Lessons / Worksheets / Games tiles)
-- `app/lessons/` — lessons section
-- `app/worksheets/` — worksheets section
-- `app/games/` — games activities (count shapes, match colour, match shape, connect the dots, etc.)
+| name | what it holds | read it when |
+|---|---|---|
+| `docs/TESTING.md` | the two test layers and how they are worked | ⭐ before your first change |
+| `docs/GATES.md` | every enforced PR gate + the one-shot local command | before pushing, or a gate went red |
+| `docs/ARCHITECTURE.md` | the three-layer structure — `core/` · `ui/` · pages | placing a new file, or extracting logic |
+| `docs/LOCAL.md` | running it locally: the worktree symlink, one port per worktree | you need to see it in a browser |
+| `docs/MODULES.md` | every `core/`, `ui/`, `components/`, `content/` module → purpose | ⛔ finding a module — don't keep it resident |
+| `docs/PAGES.md` | activity pages → paths → shared deps | ⛔ locating a page — don't keep it resident |
+| `docs/VOICE.md` | the voice-interaction system, its CSS contracts and traps | ⭐ touching **any** speakable element |
+| `docs/TELEMETRY.md` | the one `learning_completed` event every activity fires | adding or changing an activity |
+| `docs/MANIFESTS.md` | regenerating content manifests, and what CI does **not** check | you added, removed or renamed a learning |
+| `docs/NORMS.md` | output standards, regression-test rule, the Playwright rule | ⭐ before your first deliverable |
+| `docs/BUDGET.md` | the over-target report — generated, and it must drain | you're answering a size flag |
 
-## Working rules (process) — read claude-workflow first
+## The shape of the site
 
-This is a **code repo**; it holds homeschooling-app **code specifics only**. The
-shared **process** rules — worktrees, draft-PR / never-merge, the workflow modes +
-state machine, working norms, keep-docs-current, token efficiency — live in
-**claude-workflow**, the single source of truth. Read
-`/Users/dan/dan-grew-repos/claude-workflow/homeschooling/CLAUDE.md` (the
-homeschooling entry) → `WAYS-OF-WORKING.md`. Don't restate those rules here.
+| path | what it is |
+|---|---|
+| `index.html` | root redirect to `app/` |
+| `app/index.html` | home page — Lessons / Worksheets / Games tiles |
+| `app/lessons/` · `app/worksheets/` · `app/games/` | the three sections; games holds count-shapes, match-colour, match-shape, connect-the-dots and friends |
 
-## Output Standards
+## True before you open anything
 
-- SVG: no comments, no decorative whitespace, no `id`/`class` unless needed for CSS
-- HTML: inline styles only, no unused rules, no comments
-- Markdown: no preamble, no trailing summaries — content only
-
-Return only the generated output unless explanation is explicitly requested.
-
-## Testing
-
-See `TESTING.md` for full ways of working. Summary:
-- **Vitest** (`npm run test:unit`) — pure functions, no DOM, `tests/unit/`
-- **Playwright** (`npm test`) — user journeys, browser interactions, `tests/`
-- Both required to pass on every PR.
-- **StrykerJS** (`npm run test:mutation`) — mutation gate over `core/**/*-core.js`; targets 100%, ships red at baseline. Survivors get killed with real tests — never excluded. **Runs locally on demand, never in CI** (slow; don't add a `mutation.yml`) — the Grew-wide sweep is `claude-workflow/tools/mutation-all`. See `docs/CI-GATES.md` → *Mutation gate — local, not CI*.
-
-**Never run the full Playwright suite (`npm test`) without explicit user permission.** Full suite takes ~4 minutes. Run only the specific test file for the feature under development: `npx playwright test tests/<file>.test.js`. CI runs the full suite on every PR.
-
-**Every bug fix ships a regression test proven to fail on the old code.** Write the test, watch it fail *before* the fix, then make it pass — don't wait to be asked. A fix without a red-then-green test isn't done.
-
-**First-time setup — primary checkout only:** `npm install`, then `npx playwright install chromium` (the browser binary is not vendored). **In a worktree, do NOT `npm install`** — symlink the primary's `node_modules` instead (see the next paragraph); it's instant and avoids a permission prompt. Playwright auto-starts its own web server (`webServer` in `playwright.config.js`) — you do NOT need to start a server to run tests.
-
-**Fresh worktree needs `node_modules` before the server or tests run.** A worktree starts with no `node_modules`, and `test-server.js` does `require('./node_modules/serve-handler')` *relative to the script dir* — so the worktree itself must have one, even with the no-`cd` run form. Symlink the primary checkout's instead of a fresh `npm install`:
-```bash
-ln -sfn /abs/path/to/homeschooling-app/node_modules /abs/path/to/<worktree>/node_modules
-```
-`.gitignore` ignores `node_modules` (no trailing slash) so the symlink is **not** committed — never `rm` it to "clean" before a commit; `git add -A` is already safe. Deleting it is what breaks `node test-server.js` with `Cannot find module './node_modules/serve-handler'`.
-
-**Run the app locally (no IntelliJ needed) — serve from the worktree you're working in, so what you see is *that worktree's* code. Always give the no-`cd` form: pass `test-server.js` by its absolute path, never `cd` into the worktree first** (a `cd` in a compound command triggers a permission prompt):
-```bash
-PORT=3001 node /abs/path/to/<worktree>/test-server.js     # → http://localhost:3001/
-```
-Static site, no build step. `test-server.js` serves **its own directory** (`public: __dirname`) and `chdir`s to it on startup via `serve-handler`, so the directory served is wherever the *script file* lives — pointing `node` at the worktree's `test-server.js` serves that worktree regardless of your shell's cwd, no `cd` needed (and it still works if your shell's launch dir was since deleted — e.g. a cleaned-up worktree). It strips the `/homeschooling-app` GitHub-Pages path prefix, so both `http://localhost:3001/` and `http://localhost:3001/homeschooling-app/...` resolve (the latter matches the deployed Pages URL). Open `/` → redirects to `app/`. Needs `node_modules` present (for the `serve-handler` dep) — in a worktree that's the symlink above, **not** a fresh `npm install`.
-
-**One port per worktree — never reuse a server across worktrees.** Each worktree serves only its own files, so a server on `:3000` from another tree (or IntelliJ's autostart) will show you the *wrong* worktree's code. Pick a distinct `PORT` per worktree and hand the user that exact URL when they need to test your branch — they can't `git checkout` your worktree from the shared checkout, so a running server pointed at the worktree is how they see your change. Same rule for Playwright: it reads `PORT`/a `.port` file (default 3000) and will `reuseExistingServer` locally — set a per-worktree `PORT` (or `.port`) so a test run can't silently hit another tree's server.
-
-**Servers are on-demand, one per worktree, stopped when done — not always-on.** A worktree is just files; nothing serves it until someone starts a server. When a change needs the user to eyeball it, the hand-off MUST give them the copy-paste **start command** and the **URL**, and tell them to **stop it when done**. Don't start one speculatively, and don't leave stale servers running across worktrees (that's how the wrong-tree-on-`:3000` mixup happens). Template:
-```bash
-# start — pass the worktree's test-server.js by absolute path (no cd):
-PORT=3007 node <worktree-path>/test-server.js     # → http://localhost:3007/app/...
-# stop when done:  Ctrl-C  (or, if backgrounded:)  lsof -ti:3007 | xargs kill
-```
-Any server *you* (the agent) start during a session, tear down before ending the session unless the user still has it open to test.
-
-## Tooling
-
-(`gh` CLI path + general tooling: see claude-workflow `WAYS-OF-WORKING.md`.)
-**Parallel agents:** `gh pr create` is blocked in the agent sandbox — PR creation must always be done from the main session after agents complete.
-
-## Content Manifests
-
-`node scripts/generate-manifests.js` regenerates generated manifests from the content files, including `content/learnings/manifest.json` and `content/dictionary/manifests/`. Run it and commit the result after adding/removing/renaming any learning or dictionary entry. (The old `content/lessons/` format and its `index.json` were retired — all activities use `content/learnings/`.)
-
-**Gotcha:** the `check-manifests` CI gate only diffs `content/dictionary/manifests/` — it does **not** verify `content/learnings/manifest.json`. That manifest can therefore drift silently (stale entries for deleted content). It still feeds the `check-manifest-files` gate (every entry must point to an existing file), so always regenerate after adding/removing learnings. The Curriculum Coverage page (`app/curriculum/`) and `tests/curriculum.test.js` now build from the learning catalogue (`content/learning-catalogue/`), not this manifest, so manifest drift no longer breaks them.
-
-## Page Index
-
-Full table of activity pages → paths → shared deps lives in **`docs/PAGE-INDEX.md`**. Read it when you need to locate a page or its dependencies; don't keep it resident.
-
-## Telemetry Pattern
-
-All activities record a `learning_completed` event at session end using `recordLearningEvent` from `core/telemetry/learning-events.js`. Reference implementation: `ui/colouring-playground/colouring-playground-ui.js`.
-
-```js
-import { recordLearningEvent } from '../../core/telemetry/learning-events.js';
-
-var eventFired = false;
-
-function onActivityComplete() {
-  if (eventFired) return;
-  eventFired = true;
-  recordLearningEvent({
-    version: 1,
-    type: 'learning_completed',
-    timestamp: Date.now(),
-    learning_id: 'activity-id',   // stable string identifying the activity/mode
-    variant_id: variantId,        // e.g. content pack, puzzle id, catalog — omit if no variant
-    activity_id: 'activity-id'    // same as learning_id unless activity has sub-modes
-  });
-}
-
-function onReset() {
-  eventFired = false;  // allow re-fire after reset/play-again
-}
-```
-
-**Rules:**
-- One event per completed session — guard with `eventFired` flag
-- Reset flag on play-again / reset
-- No intermediate events (taps, matches, etc.) — completion only
-- Events stored in IndexedDB
-
-## Module Index
-
-Full table of every `core/`, `ui/`, `components/`, and `content/` module → purpose lives in **`docs/MODULE-INDEX.md`**. Read it when you need to find the right module; don't keep it resident.
+- ⛔ **Every bug fix ships a regression test proven to fail on the old code** — red first, then
+  green. Details in `docs/NORMS.md`.
+- ⛔ **Never run the full Playwright suite** (`npm test`, ~4 min) without explicit permission —
+  run the one file for your feature. CI runs the full suite on every PR.
+- ⛔ **Markdown lives in `docs/`** — enforced by the `no-md-outside-docs` gate, which permits
+  only `README.md` and this file at the root.
+- ⚠️ **Mutation (`npm run test:mutation`) runs locally, never in CI** — it is slow; don't add a
+  `mutation.yml`. The Grew-wide sweep is `claude-workflow/tools/mutation-all`.
