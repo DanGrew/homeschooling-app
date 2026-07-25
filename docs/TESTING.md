@@ -1,6 +1,6 @@
 # Testing — Ways of Working
 
-> **Full enforced-gate list:** see `docs/CI-GATES.md`. It covers everything CI
+> **Full enforced-gate list:** see `GATES.md`. It covers everything CI
 > checks beyond the two test layers below — the architecture rules (incl.
 > `no-pure-fn-outside-core`), file-home rules, the rule that every `core/`
 > function needs a unit test, page contracts, and manifest freshness — plus a
@@ -20,7 +20,7 @@ On top of these, a **mutation gate** (StrykerJS, `npm run test:mutation`) mutate
 tests *catch* a regression rather than merely execute the line. It targets 100%
 and ships red at its baseline. It runs **locally on demand, never in CI** (slow,
 and CI minutes are not spent on it) — the Grew-wide sweep is
-`claude-workflow/tools/mutation-all`. Full rules in `docs/CI-GATES.md` →
+`claude-workflow/tools/mutation-all`. Full rules in `GATES.md` →
 *Mutation gate — local, not CI*.
 
 ---

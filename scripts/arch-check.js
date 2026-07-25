@@ -327,7 +327,11 @@ if (rule === 'no-css-outside-styles') {
 }
 
 if (rule === 'no-md-outside-docs') {
-  const ALLOWED_ROOT_FILES = new Set(['README.md', 'TESTING.md', 'CLAUDE.md', 'ARCHITECTURE.md', 'TESTING-GAPS.md', 'LICENCE', 'LICENSE', 'CONTRACT-VIOLATIONS.md']);
+  // RULES.md §3: only CLAUDE.md and README.md may sit at a repo root. The
+  // TESTING.md / ARCHITECTURE.md exceptions went away when those two moved into
+  // docs/; TESTING-GAPS.md and CONTRACT-VIOLATIONS.md were allowances for files
+  // that never existed. A licence is not documentation.
+  const ALLOWED_ROOT_FILES = new Set(['README.md', 'CLAUDE.md', 'LICENCE', 'LICENSE']);
   const EXCLUDED_DIRS = new Set(['node_modules', 'docs', 'coverage', 'reports', '.claude', '.github', '.githooks', 'test-results']);
   function walkMd(dir, depth) {
     if (!fs.existsSync(dir)) return;
