@@ -18,7 +18,6 @@ var ROTATION_GEOMETRY = {
 var HORIZONTAL_ROT = { 0: true, 45: true, 180: true, 225: true };
 var NEXT_ROTATION = { 0: 90, 90: 180, 180: 270, 270: 45, 45: 135, 135: 225, 225: 315, 315: 0 };
 var CONNECT_DELTA = { east: { dc: -1, dr: 0 }, west: { dc: 1, dr: 0 }, south: { dc: 0, dr: -1 }, north: { dc: 0, dr: 1 } };
-var NEIGHBOR_DIRS = [{ dc: 1, dr: 0 }, { dc: -1, dr: 0 }, { dc: 0, dr: 1 }, { dc: 0, dr: -1 }];
 
 function cellKey(col, row) { return col + ',' + row; }
 
@@ -50,20 +49,20 @@ function hasCollision(endpoint, rotation, boardTiles) {
   var cd = CONNECT_DELTA[endpoint.direction];
   var connectingTile = cellToTile[cellKey(endpoint.col + cd.dc, endpoint.row + cd.dr)];
 
-  var newCellKeys = {};
-  for (var nki = 0; nki < newCells.length; nki++) {
-    newCellKeys[cellKey(newCells[nki].col, newCells[nki].row)] = true;
-  }
-
+  // Each new cell's own other half is never in cellToTile at this point — a
+  // board tile occupying it would already have returned true in the overlap
+  // loop above — so no self-skip is needed here.
   for (var ai = 0; ai < newCells.length; ai++) {
-    for (var di = 0; di < NEIGHBOR_DIRS.length; di++) {
-      var nc = newCells[ai].col + NEIGHBOR_DIRS[di].dc;
-      var nr = newCells[ai].row + NEIGHBOR_DIRS[di].dr;
-      var nk = cellKey(nc, nr);
-      if (newCellKeys[nk]) continue;
-      var adjTile = cellToTile[nk];
-      if (adjTile && adjTile !== connectingTile) return true;
-    }
+    var c = newCells[ai].col;
+    var r = newCells[ai].row;
+    var eastTile  = cellToTile[cellKey(c + 1, r)];
+    var westTile  = cellToTile[cellKey(c - 1, r)];
+    var southTile = cellToTile[cellKey(c, r + 1)];
+    var northTile = cellToTile[cellKey(c, r - 1)];
+    if (eastTile  && eastTile  !== connectingTile) return true;
+    if (westTile  && westTile  !== connectingTile) return true;
+    if (southTile && southTile !== connectingTile) return true;
+    if (northTile && northTile !== connectingTile) return true;
   }
   return false;
 }
@@ -370,5 +369,9 @@ if (typeof module !== 'undefined') module.exports = {
   NEXT_ROTATION,
   findNextPreviewRotation,
   buildDominoShapeSvg,
-  buildDominoNumberSvg
+  buildDominoNumberSvg,
+  cellKey,
+  placedTileCells,
+  hasCollision,
+  dominoShuffle
 };
