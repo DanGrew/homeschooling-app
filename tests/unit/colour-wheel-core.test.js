@@ -24,6 +24,12 @@ describe('pieSeg', () => {
     expect(d).toContain('M150 150');
     expect(d).toContain(' A55 55 ');
   });
+  it('produces the exact path for a known segment (pins the coordinate maths)', () => {
+    var d = pieSeg(100, 100, 50, 0, 90, 5);
+    expect(d).toBe(
+      'M100 100 L104.3577871373829 50.19026509541272 A50 50 0 0 1 149.8097349045873 95.64221286261709Z'
+    );
+  });
 });
 
 describe('annulusSeg', () => {
@@ -36,6 +42,13 @@ describe('annulusSeg', () => {
     var d = annulusSeg(150, 150, 100, 60, 0, 120, 0);
     expect(d).toContain(' A100 100 ');
     expect(d).toContain(' A60 60 ');
+  });
+  it('produces the exact path for a known segment (pins the coordinate maths)', () => {
+    var d = annulusSeg(100, 100, 80, 50, 0, 90, 5);
+    expect(d).toBe(
+      'M106.97245941981265 20.30442415266036 A80 80 0 0 1 179.69557584733963 93.02754058018735 ' +
+      'L149.8097349045873 95.64221286261709 A50 50 0 0 0 104.3577871373829 50.19026509541272Z'
+    );
   });
 });
 
