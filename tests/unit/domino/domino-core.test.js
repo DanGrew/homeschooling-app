@@ -1,4 +1,4 @@
-const { generateTiles, dealHands, validatePlacement, playerHasValidPlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, DOMINO_VALUES, ROTATION_GEOMETRY, NEXT_ROTATION, findNextPreviewRotation } = require('../../../core/domino/domino-core.js')
+const { generateTiles, dealHands, validatePlacement, playerHasValidPlacement, checkCompletion, createInitialBoard, createDominoGame, advanceTurn, placeTile, drawTile, getPreviewPlacement, getDominoMatchTypes, DOMINO_VALUES, DOMINO_STATIC_MATCH_TYPES_CORE, ROTATION_GEOMETRY, NEXT_ROTATION, findNextPreviewRotation, buildDominoShapeSvg, buildDominoNumberSvg, cellKey, placedTileCells, hasCollision, dominoShuffle } = require('../../../core/domino/domino-core.js')
 
 // ---- generateTiles ----
 
@@ -449,6 +449,17 @@ test('initial board starting tile has rotation 0', () => {
   expect(board.tiles[0].rotation).toBe(0)
 })
 
+test('initial board endpoint columns are exact', () => {
+  const tile = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const board = createInitialBoard(tile)
+  const west = board.endpoints.find(ep => ep.direction === 'west')
+  const east = board.endpoints.find(ep => ep.direction === 'east')
+  expect(west.col).toBe(-1)
+  expect(west.row).toBe(0)
+  expect(east.col).toBe(2)
+  expect(east.row).toBe(0)
+})
+
 // ---- advanceTurn ----
 
 function makeState(overrides) {
@@ -858,4 +869,445 @@ test('findNextPreviewRotation returns current rotation when all rotations collid
   const state = makeStateForRotation(boardTiles, endpoints)
   const next = findNextPreviewRotation(0, 'any', 0, state)
   expect(next).toBe(0)
+})
+
+// ---- DOMINO_VALUES exact content ----
+
+test('DOMINO_VALUES has exact values for each match type', () => {
+  expect(DOMINO_VALUES.colours).toEqual(['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'])
+  expect(DOMINO_VALUES.shapes).toEqual(['circle', 'square', 'triangle', 'star', 'heart', 'diamond', 'cross'])
+  expect(DOMINO_VALUES.numbers).toEqual(['0', '1', '2', '3', '4', '5', '6'])
+})
+
+// ---- generateTiles: exact id and orientation ----
+
+test('generateTiles first tile is the self-pair of the first value', () => {
+  expect(generateTiles('colours')[0].id).toBe('red-red')
+})
+
+test('generateTiles builds every id from left and right joined with a hyphen', () => {
+  generateTiles('colours').forEach(t => {
+    expect(t.id).toBe(t.left + '-' + t.right)
+  })
+})
+
+test('generateTiles orientation is exactly horizontal', () => {
+  generateTiles('colours').forEach(t => {
+    expect(t.orientation).toBe('horizontal')
+  })
+})
+
+test('generateTiles never produces an out-of-range value pair', () => {
+  const values = DOMINO_VALUES.colours
+  generateTiles('colours').forEach(t => {
+    expect(values).toContain(t.left)
+    expect(values).toContain(t.right)
+  })
+  const ids = generateTiles('colours').map(t => t.id)
+  expect(ids).not.toContain('undefined-undefined')
+})
+
+// ---- validatePlacement default rotation ----
+
+test('validatePlacement defaults rotation to 0 when omitted entirely', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue' }
+  const ep = { value: 'red', col: 2, row: 0, direction: 'east' }
+  expect(validatePlacement(tile, ep).valid).toBe(true)
+})
+
+// ---- advanceTurn: multi-player skip chain ----
+
+test('advanceTurn skips multiple blocked players before landing on one who can place', () => {
+  const blocked = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const playable = { id: 'p-p', left: 'purple', right: 'purple', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }, { id: 'p2' }],
+    turnIndex: 2,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [blocked], p1: [blocked], p2: [playable] },
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
+  }
+  advanceTurn(state)
+  expect(state.turnIndex).toBe(2)
+  expect(state.phase).toBe('playing')
+})
+
+// ---- dealHands: fallback path when no shuffle produces an all-playable start ----
+
+function makeUnplayableTileSet(n) {
+  const tiles = []
+  for (let k = 0; k < n; k++) {
+    tiles.push({ id: 'u' + k, left: 'L' + k, right: 'R' + k, orientation: 'horizontal' })
+  }
+  return tiles
+}
+
+test('dealHands falls back to a raw deal when no shuffle produces an all-playable start', () => {
+  // every tile has a value unique to itself, so no hand tile can ever match
+  // the starting tile's endpoints — every one of the 100 shuffle attempts fails
+  const tiles = makeUnplayableTileSet(15) // 2 players * 7 + 1 starting tile
+  const result = dealHands(tiles, 2)
+  expect(Object.keys(result.hands)).toHaveLength(2)
+  expect(result.hands['p0']).toHaveLength(7)
+  expect(result.hands['p1']).toHaveLength(7)
+  expect(result.startingTile).toBeDefined()
+  expect(result.drawPile).toHaveLength(0)
+})
+
+// ---- placeTile: a rotation with non-zero row offset (270 / north) ----
+
+test('placeTile with rotation 270 places at correct row and updates the north endpoint', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileC = { id: 'green-red', left: 'green', right: 'red', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [tileC], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
+      endpoints: [
+        { value: 'red',  col: 0, row: -2, direction: 'north' },
+        { value: 'blue', col: 2, row: 0,  direction: 'east' }
+      ]
+    }
+  }
+  placeTile(state, 'green-red', 0, 270)
+  expect(state.board.endpoints).toHaveLength(2)
+  const placed = state.board.tiles.find(pt => pt.tile.id === 'green-red')
+  expect(placed.col).toBe(0)
+  expect(placed.row).toBe(-3)
+  const northEp = state.board.endpoints.find(ep => ep.direction === 'north')
+  expect(northEp.col).toBe(0)
+  expect(northEp.row).toBe(-4)
+  const eastEp = state.board.endpoints.find(ep => ep.direction === 'east')
+  expect(eastEp.value).toBe('blue')
+  expect(eastEp.col).toBe(2)
+})
+
+// ---- getPreviewPlacement: explicit-rotation collision, and auto-search ----
+
+test('getPreviewPlacement returns null for an explicit rotation that collides', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileB = { id: 'blue-green', left: 'blue', right: 'green', orientation: 'horizontal' }
+  const tileC = { id: 'red-green', left: 'red', right: 'green', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [tileC] },
+    board: {
+      tiles: [
+        { tile: tileA, col: 0, row: 0, rotation: 0 },
+        { tile: tileB, col: 3, row: 1, rotation: 0 }
+      ],
+      endpoints: [{ value: 'red', col: 2, row: 0, direction: 'east' }]
+    }
+  }
+  expect(getPreviewPlacement(state, 'red-green', 0, 0)).toBeNull()
+})
+
+test('getPreviewPlacement auto-search skips non-matching rotations to find a valid one further down the list', () => {
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [{ id: 'z-r', left: 'zzz', right: 'red', orientation: 'horizontal' }] },
+    board: { tiles: [], endpoints: [{ value: 'red', col: 2, row: 0, direction: 'east' }] }
+  }
+  const preview = getPreviewPlacement(state, 'z-r', 0)
+  expect(preview.rotation).toBe(180)
+})
+
+test('getPreviewPlacement falls back to the first non-colliding rotation when none validly match', () => {
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [{ id: 'q-z', left: 'qqq', right: 'zzz', orientation: 'horizontal' }] },
+    board: { tiles: [], endpoints: [{ value: 'red', col: 2, row: 0, direction: 'east' }] }
+  }
+  const preview = getPreviewPlacement(state, 'q-z', 0)
+  expect(preview).not.toBeNull()
+  expect(preview.rotation).toBe(0)
+})
+
+// ---- cellKey / placedTileCells / hasCollision (exported for direct testing) ----
+
+test('cellKey joins col and row with a comma', () => {
+  expect(cellKey(3, 5)).toBe('3,5')
+  expect(cellKey(-1, 0)).toBe('-1,0')
+})
+
+test('placedTileCells returns two cells right of a horizontal tile', () => {
+  expect(placedTileCells({ col: 2, row: 3, rotation: 0 })).toEqual([{ col: 2, row: 3 }, { col: 3, row: 3 }])
+})
+
+test('placedTileCells returns two cells below a vertical tile', () => {
+  expect(placedTileCells({ col: 2, row: 3, rotation: 90 })).toEqual([{ col: 2, row: 3 }, { col: 2, row: 4 }])
+})
+
+test('hasCollision vertical placement checks the second (row+1) cell for adjacency too', () => {
+  const endpoint = { col: 2, row: 2, direction: 'south' }
+  // horizontal board tile at {2,4}/{3,4}: adjacent to the vertical tile's row+1 cell {2,3}, not to {2,2}
+  const boardTiles = [{ col: 2, row: 4, rotation: 0 }]
+  expect(hasCollision(endpoint, 90, boardTiles)).toBe(true)
+})
+
+test('hasCollision uses rotation 270 row offset to place the mutant tile', () => {
+  const endpoint = { col: 0, row: 5, direction: 'north' }
+  // rotation 270: colOff 0, rowOff -1 -> tileRow = 5 + (-1) = 4; vertical cells {0,4},{0,5}
+  const boardTiles = [{ col: 0, row: 4, rotation: 90 }] // occupies {0,4},{0,5} — direct overlap
+  expect(hasCollision(endpoint, 270, boardTiles)).toBe(true)
+})
+
+test('hasCollision excludes the connecting tile itself when placing south', () => {
+  const endpoint = { col: 5, row: 5, direction: 'south' }
+  const connectingBoardTile = { col: 5, row: 4, rotation: 0 } // horizontal: {5,4},{6,4}
+  expect(hasCollision(endpoint, 90, [connectingBoardTile])).toBe(false)
+})
+
+// ---- buildDominoShapeSvg: exact output per shape ----
+
+test('buildDominoShapeSvg circle', () => {
+  expect(buildDominoShapeSvg('circle')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="16" cy="16" r="13" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg square', () => {
+  expect(buildDominoShapeSvg('square')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><rect x="3" y="3" width="26" height="26" rx="4" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg triangle', () => {
+  expect(buildDominoShapeSvg('triangle')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><polygon points="16,3 29,29 3,29" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg star', () => {
+  expect(buildDominoShapeSvg('star')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><polygon points="16,2 19.5,11.5 29.5,11.5 21.5,17.5 24.5,27 16,21 7.5,27 10.5,17.5 2.5,11.5 12.5,11.5" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg heart', () => {
+  expect(buildDominoShapeSvg('heart')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><path d="M16,28 C4,18 2,8 8,5 C11,3.5 14,6 16,10 C18,6 21,3.5 24,5 C30,8 28,18 16,28 Z" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg diamond', () => {
+  expect(buildDominoShapeSvg('diamond')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><polygon points="16,2 30,16 16,30 2,16" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg cross', () => {
+  expect(buildDominoShapeSvg('cross')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><path d="M11,3 L21,3 L21,11 L29,11 L29,21 L21,21 L21,29 L11,29 L11,21 L3,21 L3,11 L11,11 Z" fill="#444"/></svg>')
+})
+
+test('buildDominoShapeSvg unknown shape returns just the base svg wrapper', () => {
+  expect(buildDominoShapeSvg('nope')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"></svg>')
+})
+
+// ---- buildDominoNumberSvg: exact output per value ----
+
+test('buildDominoNumberSvg 0 has no dots', () => {
+  expect(buildDominoNumberSvg('0')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"></svg>')
+})
+
+test('buildDominoNumberSvg 1 has exact single dot', () => {
+  expect(buildDominoNumberSvg('1')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="16" cy="16" r="4" fill="#333"/></svg>')
+})
+
+test('buildDominoNumberSvg 2 has exact two dots', () => {
+  expect(buildDominoNumberSvg('2')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="8" cy="8" r="4" fill="#333"/><circle cx="24" cy="24" r="4" fill="#333"/></svg>')
+})
+
+test('buildDominoNumberSvg 3 has exact three dots', () => {
+  expect(buildDominoNumberSvg('3')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="8" cy="8" r="4" fill="#333"/><circle cx="16" cy="16" r="4" fill="#333"/><circle cx="24" cy="24" r="4" fill="#333"/></svg>')
+})
+
+test('buildDominoNumberSvg 4 has exact four dots', () => {
+  expect(buildDominoNumberSvg('4')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="8" cy="8" r="4" fill="#333"/><circle cx="24" cy="8" r="4" fill="#333"/><circle cx="8" cy="24" r="4" fill="#333"/><circle cx="24" cy="24" r="4" fill="#333"/></svg>')
+})
+
+test('buildDominoNumberSvg 5 has exact five dots', () => {
+  expect(buildDominoNumberSvg('5')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="8" cy="8" r="4" fill="#333"/><circle cx="24" cy="8" r="4" fill="#333"/><circle cx="16" cy="16" r="4" fill="#333"/><circle cx="8" cy="24" r="4" fill="#333"/><circle cx="24" cy="24" r="4" fill="#333"/></svg>')
+})
+
+test('buildDominoNumberSvg 6 has exact six dots', () => {
+  expect(buildDominoNumberSvg('6')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"><circle cx="8" cy="8" r="4" fill="#333"/><circle cx="24" cy="8" r="4" fill="#333"/><circle cx="8" cy="16" r="4" fill="#333"/><circle cx="24" cy="16" r="4" fill="#333"/><circle cx="8" cy="24" r="4" fill="#333"/><circle cx="24" cy="24" r="4" fill="#333"/></svg>')
+})
+
+test('buildDominoNumberSvg unknown value falls back to no dots', () => {
+  expect(buildDominoNumberSvg('9')).toBe('<svg viewBox="0 0 32 32" style="width:26px;height:26px;"></svg>')
+})
+
+// ---- DOMINO_STATIC_MATCH_TYPES_CORE ----
+
+test('DOMINO_STATIC_MATCH_TYPES_CORE marks colours, shapes and numbers as static', () => {
+  expect(DOMINO_STATIC_MATCH_TYPES_CORE).toEqual({ colours: true, shapes: true, numbers: true })
+})
+
+// ---- getDominoMatchTypes ----
+
+test('getDominoMatchTypes returns the 3 static types plus discovered tag types', () => {
+  const prev = global.getAvailableTags
+  global.getAvailableTags = (entries) => entries.map(e => e.tag)
+  const result = getDominoMatchTypes([{ tag: 'animals' }, { tag: 'vehicles' }])
+  global.getAvailableTags = prev
+  expect(result).toEqual([
+    { value: 'colours', label: 'Colours' },
+    { value: 'shapes', label: 'Shapes' },
+    { value: 'numbers', label: 'Numbers' },
+    { value: 'animals', label: 'Animals' },
+    { value: 'vehicles', label: 'Vehicles' }
+  ])
+})
+
+test('getDominoMatchTypes returns just the 3 static types when no tags are available', () => {
+  const prev = global.getAvailableTags
+  global.getAvailableTags = () => []
+  const result = getDominoMatchTypes([])
+  global.getAvailableTags = prev
+  expect(result).toEqual([
+    { value: 'colours', label: 'Colours' },
+    { value: 'shapes', label: 'Shapes' },
+    { value: 'numbers', label: 'Numbers' }
+  ])
+})
+
+// ---- dominoShuffle (exported for direct testing) ----
+
+test('dominoShuffle does not mutate the input array', () => {
+  const arr = [1, 2, 3, 4, 5]
+  dominoShuffle(arr)
+  expect(arr).toEqual([1, 2, 3, 4, 5])
+})
+
+test('dominoShuffle returns an array with the same elements', () => {
+  const arr = [1, 2, 3, 4, 5]
+  const shuffled = dominoShuffle(arr)
+  expect(shuffled).toHaveLength(5)
+  expect([...shuffled].sort()).toEqual([1, 2, 3, 4, 5])
+})
+
+test('dominoShuffle uses a rigged rng of 0 to swap every element toward the front', () => {
+  const original = Math.random
+  Math.random = () => 0
+  const arr = [1, 2, 3, 4, 5]
+  const shuffled = dominoShuffle(arr)
+  Math.random = original
+  expect(shuffled).toEqual([2, 3, 4, 5, 1])
+})
+
+test('dominoShuffle bounds the swap index by i+1, not i-1 or a division', () => {
+  const original = Math.random
+  Math.random = () => 0.99999
+  const arr = [1, 2, 3]
+  const shuffled = dominoShuffle(arr)
+  Math.random = original
+  expect(shuffled).toEqual([1, 2, 3])
+})
+
+// ---- HORIZONTAL_ROT: every horizontal rotation, not just 0 ----
+
+test('placedTileCells treats rotation 45 as horizontal', () => {
+  expect(placedTileCells({ col: 1, row: 1, rotation: 45 })).toEqual([{ col: 1, row: 1 }, { col: 2, row: 1 }])
+})
+
+test('placedTileCells treats rotation 180 as horizontal', () => {
+  expect(placedTileCells({ col: 1, row: 1, rotation: 180 })).toEqual([{ col: 1, row: 1 }, { col: 2, row: 1 }])
+})
+
+test('placedTileCells treats rotation 225 as horizontal', () => {
+  expect(placedTileCells({ col: 1, row: 1, rotation: 225 })).toEqual([{ col: 1, row: 1 }, { col: 2, row: 1 }])
+})
+
+// ---- hasCollision: north-direction connecting tile exclusion ----
+
+test('hasCollision excludes the connecting tile itself when placing north', () => {
+  const endpoint = { col: 5, row: 5, direction: 'north' }
+  const connectingBoardTile = { col: 5, row: 6, rotation: 0 } // horizontal: {5,6},{6,6}
+  expect(hasCollision(endpoint, 180, [connectingBoardTile])).toBe(false)
+})
+
+test('hasCollision detects a board tile directly west of the placement', () => {
+  const endpoint = { col: 10, row: 10, direction: 'south' }
+  const boardTiles = [{ col: 9, row: 10, rotation: 90 }] // vertical: {9,10},{9,11}, west of {10,10}
+  expect(hasCollision(endpoint, 0, boardTiles)).toBe(true)
+})
+
+// ---- advanceTurn: degenerate zero-player fallthrough ----
+
+test('advanceTurn with zero players falls through to complete', () => {
+  const state = { players: [], turnIndex: 0, phase: 'playing', drawPile: [], hands: {}, board: { endpoints: [], tiles: [] } }
+  advanceTurn(state)
+  expect(state.phase).toBe('complete')
+})
+
+// ---- placeTile: not-found sentinel and invalid endpoint index ----
+
+test('placeTile returns failure for an out-of-range endpoint index', () => {
+  const state = makePlayingState()
+  expect(placeTile(state, 'blue-green', 99).success).toBe(false)
+})
+
+test('placeTile initial tileIdx sentinel correctly signals not-found', () => {
+  const tileA = { id: 'red-blue', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const tileX = { id: 'filler', left: 'zzz', right: 'zzz', orientation: 'horizontal' }
+  const tileY = { id: 'blue-green', left: 'blue', right: 'green', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [tileX, tileY], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
+    board: {
+      tiles: [{ tile: tileA, col: 0, row: 0, rotation: 0 }],
+      endpoints: [
+        { value: 'red',  col: -1, row: 0, direction: 'west' },
+        { value: 'blue', col:  2, row: 0, direction: 'east' }
+      ]
+    }
+  }
+  // 'does-not-exist' is never in hand[0..1] — tileIdx must stay at its
+  // not-found sentinel, not fall through to treat hand[1] (tileY, which
+  // would otherwise validly place) as the target.
+  expect(placeTile(state, 'does-not-exist', 1).success).toBe(false)
+})
+
+// ---- getPreviewPlacement: explicit-rotation col/row use geom offsets ----
+
+test('getPreviewPlacement explicit rotation computes col/row from geom offsets, not the endpoint alone', () => {
+  const state = {
+    players: [{ id: 'p0' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [],
+    hands: { p0: [{ id: 'x-y', left: 'x', right: 'y', orientation: 'horizontal' }] },
+    board: { tiles: [], endpoints: [{ value: 'red', col: 5, row: 5, direction: 'west' }] }
+  }
+  const preview180 = getPreviewPlacement(state, 'x-y', 0, 180)
+  expect(preview180.col).toBe(4) // endpoint.col(5) + geom180.colOff(-1)
+  expect(preview180.row).toBe(5) // endpoint.row(5) + geom180.rowOff(0)
+
+  const preview270 = getPreviewPlacement(state, 'x-y', 0, 270)
+  expect(preview270.row).toBe(4) // endpoint.row(5) + geom270.rowOff(-1)
+})
+
+// ---- drawTile: tilesDrawn stat increments, not decrements ----
+
+test('drawTile increments tilesDrawn stat', () => {
+  const tile = { id: 'r-b', left: 'red', right: 'blue', orientation: 'horizontal' }
+  const state = {
+    players: [{ id: 'p0' }, { id: 'p1' }],
+    turnIndex: 0,
+    phase: 'playing',
+    drawPile: [tile],
+    hands: { p0: [], p1: [] },
+    stats: { p0: { tilesPlaced: 0, tilesDrawn: 0 }, p1: { tilesPlaced: 0, tilesDrawn: 0 } },
+    board: { endpoints: [{ value: 'purple', col: -1, row: 0, direction: 'west' }, { value: 'purple', col: 2, row: 0, direction: 'east' }], tiles: [] }
+  }
+  drawTile(state)
+  expect(state.stats['p0'].tilesDrawn).toBe(1)
 })
