@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { toMins, getTodayKey, buildOrderedDays, pixelsPerMin, formatTimeLabel, slotLineClass, blockLayout, focusedScrollX, nowScrollTop, nowInRange, fmtActivity, findCurrentNext, dayLabel } = require('../../core/routine/routine-core.js');
+const { toMins, getTodayKey, buildOrderedDays, pixelsPerMin, formatTimeLabel, slotLineClass, blockLayout, focusedScrollX, nowScrollTop, nowInRange, fmtActivity, findCurrentNext, dayLabel, scheduleTimeBounds } = require('../../core/routine/routine-core.js');
 
 const ALL_DAYS = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
 
@@ -26,6 +26,28 @@ describe('getTodayKey', () => {
   it('matches current day of week', () => {
     const expected = ALL_DAYS[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1];
     expect(getTodayKey()).toBe(expected);
+  });
+
+  describe('exact day for each weekday', () => {
+    beforeEach(() => { vi.useFakeTimers(); });
+    afterEach(() => { vi.useRealTimers(); });
+
+    const cases = [
+      ['2026-01-04T12:00:00.000Z', 'sunday'],
+      ['2026-01-05T12:00:00.000Z', 'monday'],
+      ['2026-01-06T12:00:00.000Z', 'tuesday'],
+      ['2026-01-07T12:00:00.000Z', 'wednesday'],
+      ['2026-01-08T12:00:00.000Z', 'thursday'],
+      ['2026-01-09T12:00:00.000Z', 'friday'],
+      ['2026-01-10T12:00:00.000Z', 'saturday'],
+    ];
+
+    cases.forEach(([iso, day]) => {
+      it(`returns "${day}"`, () => {
+        vi.setSystemTime(new Date(iso));
+        expect(getTodayKey()).toBe(day);
+      });
+    });
   });
 });
 
@@ -77,6 +99,19 @@ describe('buildOrderedDays', () => {
     const { focusedIndex } = buildOrderedDays(R, 'wednesday');
     expect(focusedIndex).toBe(2); // windowRadius = 2
   });
+
+  it('rolling: focusedIndex correctly finds today even when earlier days are omitted', () => {
+    const R = makeRoutine(true, 3, ['monday', 'wednesday', 'friday']);
+    const { days, focusedIndex } = buildOrderedDays(R, 'wednesday');
+    expect(focusedIndex).toBe(1);
+    expect(days[focusedIndex].key).toBe('wednesday');
+  });
+
+  it('non-rolling: returns a copy, not the same array reference', () => {
+    const R = makeRoutine(false, 0, ['monday', 'tuesday']);
+    const { days } = buildOrderedDays(R, 'monday');
+    expect(days).not.toBe(R.days);
+  });
 });
 
 describe('pixelsPerMin', () => {
@@ -114,6 +149,9 @@ describe('blockLayout', () => {
     expect(top).toBe(120);
     expect(height).toBe(60);
   });
+  it('top respects a non-zero grid start', () => {
+    expect(blockLayout(120, 180, 60, 1).top).toBe(60);
+  });
 });
 
 describe('focusedScrollX', () => {
@@ -132,6 +170,9 @@ describe('nowScrollTop', () => {
   });
   it('clamps to 0', () => {
     expect(nowScrollTop(0, 0, 1, 600, 36)).toBe(0);
+  });
+  it('respects non-zero gridStartMins and ppm scaling', () => {
+    expect(nowScrollTop(100, 20, 2, 0, 0)).toBe(160);
   });
 });
 
@@ -185,5 +226,31 @@ describe('findCurrentNext', () => {
     const { current, next } = findCurrentNext([], 500);
     expect(current).toBeNull();
     expect(next).toBeNull();
+  });
+  it('boundary: an item is not current exactly at its own end time', () => {
+    const single = [{ start: '08:00', end: '09:00' }];
+    const { current } = findCurrentNext(single, toMins('09:00'));
+    expect(current).toBeNull();
+  });
+  it('boundary: an item is current exactly at its own start time', () => {
+    const single = [{ start: '08:00', end: '09:00' }];
+    const { current } = findCurrentNext(single, toMins('08:00'));
+    expect(current).toBe(single[0]);
+  });
+  it('boundary: an item exactly at its start is current, not next', () => {
+    const single = [{ start: '08:00', end: '09:00' }];
+    const { next } = findCurrentNext(single, toMins('08:00'));
+    expect(next).toBeNull();
+  });
+});
+
+describe('scheduleTimeBounds', () => {
+  it('returns first start and last end in minutes', () => {
+    const schedule = [{ start: '08:00', end: '09:00' }, { start: '10:00', end: '11:30' }];
+    expect(scheduleTimeBounds(schedule)).toEqual({ firstStart: 480, lastEnd: 690 });
+  });
+  it('handles unordered schedule entries', () => {
+    const schedule = [{ start: '14:00', end: '15:00' }, { start: '08:00', end: '09:00' }];
+    expect(scheduleTimeBounds(schedule)).toEqual({ firstStart: 480, lastEnd: 900 });
   });
 });

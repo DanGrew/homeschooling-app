@@ -41,5 +41,3 @@ export function resolveWordEntry(concept) {
   const word = display.toLowerCase().replace(/[^a-z0-9]/g, '');
   return { word, displayName: display, tags: concept.tags || [], id: concept.id };
 }
-
-if (typeof module !== 'undefined') module.exports = { validWord, charFile, bestVoice, extractWordTags, filterWordsByTag, wrapIdx, resolveWordEntry };

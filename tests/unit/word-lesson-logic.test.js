@@ -14,6 +14,12 @@ describe('validWord', () => {
   test('rejects special chars', () => expect(validWord('abc!')).toBe(false))
   test('single letter valid', () => expect(validWord('a')).toBe(true))
   test('single digit valid', () => expect(validWord('0')).toBe(true))
+  test('accepts lowercase z boundary', () => expect(validWord('z')).toBe(true))
+  test('accepts uppercase Z boundary', () => expect(validWord('Z')).toBe(true))
+  test('accepts digit 9 boundary', () => expect(validWord('9')).toBe(true))
+  test('rejects the char just past lowercase z', () => expect(validWord('{')).toBe(false))
+  test('rejects the char just past uppercase Z', () => expect(validWord('[')).toBe(false))
+  test('rejects the char just past digit 9', () => expect(validWord(':')).toBe(false))
 })
 
 describe('charFile', () => {
@@ -24,4 +30,6 @@ describe('charFile', () => {
   test('uppercase maps to lowercase filename', () => expect(charFile('M')).toBe('upper-m.svg'))
   test('digit 0', () => expect(charFile('0')).toBe('0.svg'))
   test('digit 9', () => expect(charFile('9')).toBe('9.svg'))
+  test('char just past lowercase z falls through to the default', () => expect(charFile('{')).toBe('{.svg'))
+  test('char just past uppercase Z falls through to the default', () => expect(charFile('[')).toBe('[.svg'))
 })
