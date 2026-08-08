@@ -93,7 +93,7 @@ export function parseAction(action) {
   var mv = action.match(/^move:\s*(\S+)\s+(-?\d+)\s+(-?\d+)$/);
   if (mv) return { type: 'move', args: [mv[1], mv[2], mv[3]] };
   var dl = action.match(/^delay:\s*(\d+)\s+(.+)$/);
-  if (dl) return { type: 'delay', args: [parseInt(dl[1]), dl[2].trim()] };
+  if (dl) return { type: 'delay', args: [parseInt(dl[1]), dl[2].trimEnd()] };
   var sht = action.match(/^show_tray:\s*(.+)$/);
   if (sht) return { type: 'show_tray', args: sht[1].trim().split(/\s+/) };
   if (action === 'hide_tray') return { type: 'hide_tray', args: [] };
