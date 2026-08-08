@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { hourToAngles, hourToSky, nextDegrees, generateChoices, parseTime, numeralToMinuteDeg, nextMinuteDeg, manifestToOptions, findOptionByValue } from '../../core/clock/clock-core.js'
+import { hourToAngles, hourToSky, nextDegrees, parseTime, numeralToMinuteDeg, nextMinuteDeg, presetSkyColour, manifestToOptions, findOptionByValue } from '../../core/clock/clock-core.js'
 
 describe('hourToAngles', () => {
   it('returns zero degrees for hour 0 (12 o\'clock)', () => {
@@ -104,6 +104,45 @@ describe('hourToSky', () => {
     const unique = new Set(xs.map(x => Math.round(x)))
     expect(unique.size).toBe(hours.length)
   })
+
+  // Pins the exact colour bucket (incl. every "< N" boundary) and the exact
+  // celestial arc position for every distinct hour, so a boundary or
+  // arithmetic tweak in hourColors/hourToSky changes an asserted value.
+  const EXACT = [
+    [0,  '#0D1458', '#1A237E', false, 28.499999999999996, 8.287187078897965],
+    [1,  '#0D1458', '#1A237E', false, 38.87078106059161, 5.090373558749814],
+    [4,  '#0D1458', '#1A237E', false, 71.49999999999999, 8.287187078897961],
+    [5,  '#0D1458', '#1A237E', false, 80.40559159102155, 13.372583002030478],
+    [6,  '#FF7043', '#FFB74D', true, 7, 36],
+    [7,  '#FF7043', '#FFB74D', true, 8.078099776181585, 28.87933011339794],
+    [8,  '#FF7043', '#FFB74D', true, 11.258338680195976, 22.115720348238142],
+    [9,  '#81D4FA', '#E1F5FE', true, 16.381246253874718, 16.04832634052053],
+    [10, '#81D4FA', '#E1F5FE', true, 23.189938520074456, 10.981392561023046],
+    [11, '#039BE5', '#B3E5FC', true, 31.342999217945, 7.168996227122587],
+    [12, '#039BE5', '#B3E5FC', true, 40.43159983987848, 4.802306810181644],
+    [13, '#039BE5', '#B3E5FC', true, 49.99999999999999, 4],
+    [14, '#039BE5', '#B3E5FC', true, 59.56840016012151, 4.802306810181644],
+    [16, '#039BE5', '#B3E5FC', true, 76.81006147992554, 10.981392561023043],
+    [17, '#EF6C00', '#FFA726', true, 83.61875374612528, 16.048326340520525],
+    [18, '#EF6C00', '#FFA726', true, 88.74166131980402, 22.115720348238135],
+    [19, '#4527A0', '#7E57C2', true, 91.92190022381841, 28.879330113397934],
+    [20, '#1A237E', '#3949AB', false, 7, 36],
+    [21, '#1A237E', '#3949AB', false, 8.465189469570063, 27.717790556719336],
+    [22, '#1A237E', '#3949AB', false, 12.760907637269135, 20],
+    [23, '#1A237E', '#3949AB', false, 19.594408408978452, 13.372583002030481],
+  ]
+
+  EXACT.forEach(([hour, top, bottom, sun, cx, cy]) => {
+    it(`hour ${hour} pins exact colour, sun/moon and celestial position`, () => {
+      const sky = hourToSky(hour)
+      expect(sky.topColor).toBe(top)
+      expect(sky.bottomColor).toBe(bottom)
+      expect(sky.sun).toBe(sun)
+      expect(sky.moon).toBe(!sun)
+      expect(sky.celestialX).toBeCloseTo(cx, 9)
+      expect(sky.celestialY).toBeCloseTo(cy, 9)
+    })
+  })
 })
 
 describe('nextDegrees', () => {
@@ -170,37 +209,39 @@ describe('nextMinuteDeg', () => {
   it('55 min to 0 min (step to 12) is 30 degrees', () => { expect(nextMinuteDeg(55, 0)).toBeCloseTo(30) })
 })
 
-describe('generateChoices', () => {
-  const PRESETS = [0,1,2,3,4,5,6,7,8,9].map(i => ({ label: 'P' + i }))
+describe('presetSkyColour', () => {
+  // Every bucket's lower and upper hour, both edges of the boundary — pins
+  // the from/to/bg/fg literals for each of the seven buckets and the
+  // `>=`/`<=` edges.
+  const EXACT = [
+    ['00:00', 0, 4,  '#1a1a2e', '#ffffff'],
+    ['04:59', 0, 4,  '#1a1a2e', '#ffffff'],
+    ['05:00', 5, 7,  '#ff7043', '#ffffff'],
+    ['07:59', 5, 7,  '#ff7043', '#ffffff'],
+    ['08:00', 8, 11, '#b3e5fc', '#333333'],
+    ['11:59', 8, 11, '#b3e5fc', '#333333'],
+    ['12:00', 12, 14, '#fff9c4', '#333333'],
+    ['14:59', 12, 14, '#fff9c4', '#333333'],
+    ['15:00', 15, 17, '#ffe0b2', '#333333'],
+    ['17:59', 15, 17, '#ffe0b2', '#333333'],
+    ['18:00', 18, 20, '#7e57c2', '#ffffff'],
+    ['20:59', 18, 20, '#7e57c2', '#ffffff'],
+    ['21:00', 21, 23, '#1a237e', '#ffffff'],
+    ['23:59', 21, 23, '#1a237e', '#ffffff'],
+  ]
 
-  it('always includes the correct index', () => {
-    for (let i = 0; i < 20; i++) {
-      const correct = Math.floor(Math.random() * PRESETS.length)
-      expect(generateChoices(PRESETS, correct, 4)).toContain(correct)
-    }
-  })
-
-  it('returns exactly n indices', () => {
-    expect(generateChoices(PRESETS, 0, 4)).toHaveLength(4)
-    expect(generateChoices(PRESETS, 0, 3)).toHaveLength(3)
-  })
-
-  it('returns no duplicates', () => {
-    const choices = generateChoices(PRESETS, 0, 4)
-    expect(new Set(choices).size).toBe(choices.length)
-  })
-
-  it('all indices are valid preset positions', () => {
-    generateChoices(PRESETS, 0, 4).forEach(i => {
-      expect(i).toBeGreaterThanOrEqual(0)
-      expect(i).toBeLessThan(PRESETS.length)
+  EXACT.forEach(([time, from, to, bg, fg]) => {
+    it(`${time} pins bucket [${from},${to}] bg ${bg} / fg ${fg}`, () => {
+      expect(presetSkyColour(time)).toEqual({ from, to, bg, fg })
     })
   })
 
-  it('caps at presets length when n exceeds pool', () => {
-    const small = [{}, {}, {}]
-    const choices = generateChoices(small, 0, 10)
-    expect(choices.length).toBeLessThanOrEqual(small.length)
+  it('falls back to the default colours for an hour above every bucket', () => {
+    expect(presetSkyColour('25:00')).toEqual({ bg: 'rgba(255,255,255,0.88)', fg: '#333333' })
+  })
+
+  it('falls back to the default colours for an hour below every bucket', () => {
+    expect(presetSkyColour('-1:00')).toEqual({ bg: 'rgba(255,255,255,0.88)', fg: '#333333' })
   })
 })
 
