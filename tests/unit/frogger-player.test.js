@@ -15,7 +15,9 @@ const {
   collectEntity,
   resetPlayer,
   isSafeMove,
-  getMovePreview
+  getMovePreview,
+  activePlatformsInRow,
+  findCarryingPlatform
 } = require2('../../core/frogger/frogger-core.js')
 
 // ---- helpers ----
@@ -515,4 +517,255 @@ test('detectCollisions: collectible in different row does not trigger', () => {
   })
   const state = simWithPlayer(scenario, 4, 5)
   expect(detectCollisions(state, scenario)).toBeNull()
+})
+
+test('detectCollisions returns null when state has no player', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = createSimulation(scenario)
+  expect(detectCollisions(state, scenario)).toBeNull()
+})
+
+test('detectCollisions: obstacle in same row but not overlapping player tile does not trigger', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('road', 5)],
+    entities: { road: [{ id: 'car1', type: 'obstacle', x: 8, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  expect(detectCollisions(state, scenario)).toBeNull()
+})
+
+test('detectCollisions: collectible in same row but not overlapping player tile does not trigger pickup', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g5', 5)],
+    entities: { g5: [{ id: 'gem1', type: 'collectible', x: 8, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 5)
+  expect(detectCollisions(state, scenario)).toBeNull()
+})
+
+// ---- getRowAtY / getRowById: missing rows key ----
+
+test('getRowAtY tolerates a scenario without a rows key', () => {
+  expect(getRowAtY({}, 3)).toBeNull()
+})
+
+test('getRowById tolerates a scenario without a rows key', () => {
+  expect(getRowById({}, 'r1')).toBeNull()
+})
+
+test('getRowAtY does not spuriously match when searching for y=undefined with no rows key', () => {
+  expect(getRowAtY({}, undefined)).toBeNull()
+})
+
+test('getRowById does not spuriously match when searching for id=undefined with no rows key', () => {
+  expect(getRowById({}, undefined)).toBeNull()
+})
+
+// ---- entityOverlapsPlayerTile boundary ----
+
+test('entity overlap boundary: playerX+1 exactly equals entity.x is not an overlap', () => {
+  expect(entityOverlapsPlayerTile({ x: 5, width: 1 }, 4)).toBe(false)
+})
+
+// ---- isOnPlatform: extra clause isolation ----
+
+test('isOnPlatform returns false when player is on an unknown row', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = simWithPlayer(scenario, 4, 9)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'river', x: 4, width: 2, collected: false })
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+test('isOnPlatform ignores a collected platform at the same tile', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = simWithPlayer(scenario, 4, 3)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'river', x: 4, width: 2, collected: true })
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+test('isOnPlatform ignores a non-platform entity at the same tile', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = simWithPlayer(scenario, 4, 3)
+  state.entities.push({ id: 'car1', type: 'obstacle', rowId: 'river', x: 4, width: 2, collected: false })
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+test('isOnPlatform ignores a platform in a different row', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3), makeHazardRow('lake', 4)] })
+  const state = simWithPlayer(scenario, 4, 3)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'lake', x: 4, width: 2, collected: false })
+  expect(isOnPlatform(state, scenario, state.player)).toBe(false)
+})
+
+// ---- activePlatformsInRow ----
+
+test('activePlatformsInRow excludes collected platforms', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'river', x: 4, width: 2, collected: true })
+  expect(activePlatformsInRow(state, 'river', 4)).toHaveLength(0)
+})
+
+test('activePlatformsInRow excludes non-platform entities', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'car1', type: 'obstacle', rowId: 'river', x: 4, width: 2, collected: false })
+  expect(activePlatformsInRow(state, 'river', 4)).toHaveLength(0)
+})
+
+test('activePlatformsInRow excludes platforms in a different row', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3), makeHazardRow('lake', 4)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'lake', x: 4, width: 2, collected: false })
+  expect(activePlatformsInRow(state, 'river', 4)).toHaveLength(0)
+})
+
+test('activePlatformsInRow excludes playerX one tile past the platform (exclusive upper bound)', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'river', x: 4, width: 2, collected: false })
+  expect(activePlatformsInRow(state, 'river', 6)).toHaveLength(0)
+})
+
+test('activePlatformsInRow includes a matching platform', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'log1', type: 'platform', rowId: 'river', x: 4, width: 2, collected: false })
+  const result = activePlatformsInRow(state, 'river', 5)
+  expect(result).toHaveLength(1)
+  expect(result[0].id).toBe('log1')
+})
+
+// ---- findCarryingPlatform ----
+
+test('findCarryingPlatform returns the platform under the player', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 4, width: 2 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 3)
+  expect(findCarryingPlatform(state, scenario, state.player).id).toBe('log1')
+})
+
+test('findCarryingPlatform returns null when player is not over a platform', () => {
+  const scenario = makeScenario({
+    rows: [makeHazardRow('river', 3)],
+    entities: { river: [{ id: 'log1', type: 'platform', x: 7, width: 2 }] }
+  })
+  const state = simWithPlayer(scenario, 4, 3)
+  expect(findCarryingPlatform(state, scenario, state.player)).toBeNull()
+})
+
+test('findCarryingPlatform returns null when player is on an unknown row', () => {
+  const scenario = makeScenario({ rows: [makeHazardRow('river', 3)] })
+  const state = simWithPlayer(scenario, 4, 9)
+  expect(findCarryingPlatform(state, scenario, state.player)).toBeNull()
+})
+
+// ---- resetPlayer: missing inputs ----
+
+test('resetPlayer tolerates a scenario without a resetPoints key', () => {
+  const scenario = { grid: { rows: 8, cols: 10 }, rows: [makeGroundRow('g7', 7)] }
+  const state = simWithPlayer(scenario, 2, 2)
+  expect(() => resetPlayer(state, scenario, 'start')).not.toThrow()
+  expect(state.player.x).toBe(2)
+})
+
+test('resetPlayer does not spuriously match when searching for id=undefined with no resetPoints key', () => {
+  const scenario = { grid: { rows: 8, cols: 10 }, rows: [makeGroundRow('g7', 7)] }
+  const state = simWithPlayer(scenario, 2, 2)
+  expect(() => resetPlayer(state, scenario, undefined)).not.toThrow()
+  expect(state.player.x).toBe(2)
+})
+
+test('resetPlayer does nothing when state has no player', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = createSimulation(scenario)
+  expect(() => resetPlayer(state, scenario, 'start')).not.toThrow()
+})
+
+// ---- applyInput: inclusive boundary ----
+
+test('applyInput allows moving left onto x=0 exactly (boundary is inclusive)', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 1, 7)
+  applyInput(state, scenario, 'left')
+  expect(state.player.x).toBe(0)
+})
+
+test('applyInput allows moving up onto y=0 exactly (boundary is inclusive)', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g1', 1), makeGroundRow('g0', 0)] })
+  const state = simWithPlayer(scenario, 5, 1)
+  applyInput(state, scenario, 'up')
+  expect(state.player.y).toBe(0)
+})
+
+// ---- tileHasBlocker: clause isolation ----
+
+test('tileHasBlocker ignores a non-blocker entity at the target tile', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g5', 5)] })
+  const state = createSimulation(scenario)
+  state.entities.push({ id: 'car1', type: 'obstacle', rowId: 'g5', x: 3, width: 1, collected: false })
+  expect(tileHasBlocker(state.entities, scenario, 3, 5)).toBe(false)
+})
+
+// ---- isSafeMove: inclusive boundaries ----
+
+test('isSafeMove allows landing exactly on x=0', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 1, 7)
+  expect(isSafeMove(state, scenario, state.player, -1, 0)).toBe(true)
+})
+
+test('isSafeMove allows landing exactly on y=0', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g1', 1), makeGroundRow('g0', 0)] })
+  const state = simWithPlayer(scenario, 5, 1)
+  expect(isSafeMove(state, scenario, state.player, 0, -1)).toBe(true)
+})
+
+test('isSafeMove treats negative y as out of bounds even if a row is defined there', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g0', 0), makeGroundRow('gNeg', -1)]
+  })
+  const state = simWithPlayer(scenario, 5, 0)
+  expect(isSafeMove(state, scenario, state.player, 0, -1)).toBe(false)
+})
+
+test('isSafeMove treats y === grid.rows as out of bounds even if a row is defined there', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g7', 7), makeGroundRow('gExtra', 8)]
+  })
+  const state = simWithPlayer(scenario, 5, 7)
+  expect(isSafeMove(state, scenario, state.player, 0, 1)).toBe(false)
+})
+
+test('isSafeMove is unsafe when landing on an in-bounds row with no row definition there', () => {
+  const scenario = makeScenario({ rows: [makeGroundRow('g7', 7)] })
+  const state = simWithPlayer(scenario, 5, 7)
+  expect(isSafeMove(state, scenario, state.player, 0, -1)).toBe(false)
+})
+
+test('isSafeMove: obstacle present in destination row but not at destination tile is safe', () => {
+  const scenario = makeScenario({
+    rows: [makeGroundRow('g6', 6), makeGroundRow('g7', 7)],
+    entities: { g6: [{ id: 'o1', type: 'obstacle', x: 1, width: 1 }] }
+  })
+  const state = simWithPlayer(scenario, 5, 7)
+  expect(isSafeMove(state, scenario, state.player, 0, -1)).toBe(true)
+})
+
+// ---- getMovePreview: direction sign ----
+
+test('getMovePreview up checks the row above (y-1), not below', () => {
+  const scenario = makeScenario({
+    rows: [
+      makeWallRow('w4', 4),
+      makeGroundRow('g5', 5),
+      makeGroundRow('g6', 6)
+    ]
+  })
+  const state = simWithPlayer(scenario, 5, 5)
+  const preview = getMovePreview(state, scenario, state.player)
+  expect(preview.up).toBe(false)
+  expect(preview.down).toBe(true)
 })

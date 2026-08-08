@@ -14,7 +14,6 @@ function createSimulation(scenario, seed) {
   var rows = {};
   var entities = [];
   var spawnCounters = {};
-  var prng = createPRNG(seed || 42);
 
   (scenario.rows || []).forEach(function(rowDef) {
     rows[rowDef.id] = { def: rowDef };
@@ -22,7 +21,6 @@ function createSimulation(scenario, seed) {
       spawnCounters[rowDef.id] = rowDef.spawns[0].spawnEvery;
     }
   });
-  void prng;
 
   var entityMap = scenario.entities || {};
   Object.keys(entityMap).forEach(function(rowId) {
@@ -370,7 +368,7 @@ function countCollectibles(scenario) {
 }
 
 function getCollectAssetPath(theme) {
-  return [theme.assets].filter(Boolean).map(function(a) { return a[theme.map.collectible]; }).filter(Boolean)[0];
+  return [theme.assets].filter(Boolean).map(function(a) { return a[theme.map.collectible]; })[0];
 }
 
 if (typeof module !== 'undefined') module.exports = {
