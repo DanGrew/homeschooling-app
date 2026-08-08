@@ -118,5 +118,6 @@ function getShoppingScores(state) {
 
 if (typeof module !== 'undefined') module.exports = {
   SHOPPING_GRID_SIZES, shoppingListSize, shoppingGridCols,
-  createShoppingGame, flipShoppingCard, resolveShoppingFlip, getShoppingScores
+  createShoppingGame, flipShoppingCard, resolveShoppingFlip, getShoppingScores,
+  shoppingNextTurn
 };
