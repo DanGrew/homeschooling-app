@@ -55,15 +55,19 @@ function groupLettersByFamily(shapeMap, families) {
     var letters = f.letters.filter(function(l) { return shapeMap[l]; });
     letters.forEach(function(l) { covered[l] = true; });
     return { label: f.label, letters: letters };
-  });
+  }).filter(function(g) { return g.letters.length; });
   var extra = Object.keys(shapeMap).filter(function(l) { return !covered[l]; }).sort();
   if (extra.length) groups.push({ label: 'more letters', letters: extra });
-  return groups.filter(function(g) { return g.letters.length; });
+  return groups;
+}
+
+function strokesFor(shapeMap, key) {
+  return shapeMap[key] || [];
 }
 
 function lettersWithShape(shapeMap, shape, alphabet) {
   return alphabet.filter(function(l) {
-    return (shapeMap[l] || []).indexOf(shape) !== -1;
+    return strokesFor(shapeMap, l).indexOf(shape) !== -1;
   });
 }
 
@@ -144,7 +148,7 @@ function countHtml(total, selector) {
 }
 
 function identifyPanelHtml(shapeMap, current) {
-  var strokes = shapeMap[current] || [];
+  var strokes = strokesFor(shapeMap, current);
   return '<div class="panel-title">What shapes make <span class="hl">' + current + '</span>? ' +
     countHtml(countShapes(strokes), ".chip.tapped[data-has='true']") + '</div>' +
     letterPickerHtml(shapeMap, current) +
@@ -191,7 +195,7 @@ function orderPoolHtml(strokes, placed) {
 }
 
 function orderPanelHtml(shapeMap, current, placed) {
-  var strokes = shapeMap[current] || [];
+  var strokes = strokesFor(shapeMap, current);
   var done = isOrderComplete(strokes, placed);
   var footer = done
     ? '<div class="hint done">✓ that\'s how you make ' + current + '!</div>'
@@ -207,13 +211,17 @@ function orderPanelHtml(shapeMap, current, placed) {
 
 export {
   PRIMITIVES, COLOURS, SHORT, FAMILIES, ALPHABET,
-  buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
+  buildLetterShapeMap, groupLettersByFamily, lettersWithShape, strokesFor,
   buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes, parseJsonResponse,
-  glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
+  glyphHtml, swatchHtml, strokeSwatchHtml, letterPickerHtml, chipsHtml, countHtml,
+  identifyPanelHtml, shapePickerHtml, matchPanelHtml,
+  orderSlotsHtml, orderPoolHtml, orderPanelHtml
 };
 if (typeof module !== 'undefined') module.exports = {
   PRIMITIVES, COLOURS, SHORT, FAMILIES, ALPHABET,
-  buildLetterShapeMap, groupLettersByFamily, lettersWithShape,
+  buildLetterShapeMap, groupLettersByFamily, lettersWithShape, strokesFor,
   buildOrderPool, availableTiles, isOrderComplete, isCorrectPlacement, countShapes, parseJsonResponse,
-  glyphHtml, letterPickerHtml, identifyPanelHtml, matchPanelHtml, orderPanelHtml
+  glyphHtml, swatchHtml, strokeSwatchHtml, letterPickerHtml, chipsHtml, countHtml,
+  identifyPanelHtml, shapePickerHtml, matchPanelHtml,
+  orderSlotsHtml, orderPoolHtml, orderPanelHtml
 };
