@@ -1,4 +1,5 @@
 import { createRequire } from 'module';
+import { vi, afterEach } from 'vitest';
 const require = createRequire(import.meta.url);
 const {
   OBJ_SHAPES, OBJ_COLOURS, OBJ_SIZES, OBJ_ROTATIONS, OBJ_SIZE_MAP,
@@ -8,7 +9,8 @@ const {
   objectsAtPoint, bringToFront, applyStackPick,
   cycleProperty, selectObject, deselectAll, handleTap, handlePropertyCycle, buildStackHTML, buildToolboxHTML,
   canAddObject, addObject, removeObject, restoreDeleted, moveSelectedObject,
-  gridSpawn, OBJ_SPAWN_CELL, rotationCue
+  gridSpawn, OBJ_SPAWN_CELL, rotationCue,
+  renderObjectShape, easeOutQuad, objTransform, getVisualPos, OBJ_ANIM_DURATION
 } = require('../../core/object-playground/object-playground-core.js');
 
 describe('gridSpawn', () => {
@@ -51,15 +53,15 @@ describe('gridSpawn', () => {
 
 describe('constants', () => {
   it('OBJ_SHAPES has 7 entries', () => {
-    expect(OBJ_SHAPES).toHaveLength(7);
-    expect(OBJ_SHAPES).toContain('circle');
-    expect(OBJ_SHAPES).toContain('heart');
+    expect(OBJ_SHAPES).toEqual(['circle', 'square', 'triangle', 'rectangle', 'pentagon', 'star', 'heart']);
   });
 
   it('OBJ_COLOURS has 6 entries', () => {
-    expect(OBJ_COLOURS).toHaveLength(6);
-    expect(OBJ_COLOURS).toContain('orange');
-    expect(OBJ_COLOURS).toContain('purple');
+    expect(OBJ_COLOURS).toEqual(['red', 'yellow', 'blue', 'orange', 'green', 'purple']);
+  });
+
+  it('OBJ_SPAWN_RADIUS is double the base radius', () => {
+    expect(OBJ_SPAWN_RADIUS).toBe(OBJ_BASE_R * 2);
   });
 
   it('OBJ_SIZES has 5 entries including x-large and xx-large', () => {
@@ -89,6 +91,15 @@ describe('objPick', () => {
     const arr = ['a', 'b', 'c'];
     for (let i = 0; i < 30; i++) {
       expect(arr).toContain(objPick(arr));
+    }
+  });
+
+  it('picks by index using Math.random multiplied by the array length', () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    try {
+      expect(objPick(['a', 'b', 'c', 'd'])).toBe('c');
+    } finally {
+      randomSpy.mockRestore();
     }
   });
 });
@@ -152,6 +163,38 @@ describe('initObjectState', () => {
 
   it('stackObjects starts empty', () => {
     expect(state.stackObjects).toEqual([]);
+  });
+});
+
+describe('initObjectState — deterministic spawn maths', () => {
+  it('spawns at exactly viewport+margin when Math.random is 0', () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    try {
+      const s = initObjectState(800, 600);
+      const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['xx-large']) + 4;
+      s.objects.forEach(obj => {
+        expect(obj.x).toBe(800 + margin);
+        expect(obj.y).toBe(600 + margin);
+      });
+    } finally {
+      randomSpy.mockRestore();
+    }
+  });
+
+  it('spreads spawn position multiplicatively across the viewport range', () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    try {
+      const s = initObjectState(800, 600);
+      const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP['xx-large']) + 4;
+      const expectedX = 800 + margin + 0.5 * (800 - margin * 2);
+      const expectedY = 600 + margin + 0.5 * (600 - margin * 2);
+      s.objects.forEach(obj => {
+        expect(obj.x).toBeCloseTo(expectedX, 6);
+        expect(obj.y).toBeCloseTo(expectedY, 6);
+      });
+    } finally {
+      randomSpy.mockRestore();
+    }
   });
 });
 
@@ -659,6 +702,21 @@ describe('buildToolboxHTML', () => {
     expect(html).toContain('data-action="move-up"');
     expect(html).toContain('data-action="move-down"');
   });
+
+  it('renders the exact markup for every row, in order', () => {
+    const expected =
+      '<div class="obj-tool-row" data-prop="shape"><span class="obj-tool-label">Shape</span><span class="obj-tool-val">circle</span></div>' +
+      '<div class="obj-tool-row" data-prop="colour"><span class="obj-tool-label">Colour</span><span class="obj-tool-val">red</span></div>' +
+      '<div class="obj-tool-row" data-prop="size"><span class="obj-tool-label">Size</span><span class="obj-tool-val">medium</span></div>' +
+      '<div class="obj-tool-row" data-prop="rotation" data-rot-dir="cw"><span class="obj-tool-label">↻ Spin</span><span class="obj-tool-val">90°</span></div>' +
+      '<div class="obj-tool-row" data-prop="rotation" data-rot-dir="acw"><span class="obj-tool-label">↺ Spin back</span><span class="obj-tool-val">90°</span></div>' +
+      '<div class="obj-tool-row" data-action="move-left"><span class="obj-tool-label">⬅</span><span class="obj-tool-val">Left</span></div>' +
+      '<div class="obj-tool-row" data-action="move-right"><span class="obj-tool-label">➡</span><span class="obj-tool-val">Right</span></div>' +
+      '<div class="obj-tool-row" data-action="move-up"><span class="obj-tool-label">⬆</span><span class="obj-tool-val">Up</span></div>' +
+      '<div class="obj-tool-row" data-action="move-down"><span class="obj-tool-label">⬇</span><span class="obj-tool-val">Down</span></div>' +
+      '<div class="obj-tool-row obj-tool-delete" data-action="delete"><span class="obj-tool-label">Delete</span><span class="obj-tool-val">✕</span></div>';
+    expect(html).toBe(expected);
+  });
 });
 
 describe('canAddObject', () => {
@@ -717,6 +775,33 @@ describe('addObject', () => {
   it('does not mutate original state', () => {
     expect(state.objects.length).toBe(10);
   });
+
+  it('assigns the new object an obj-<nextId> id', () => {
+    const added = next.objects[next.objects.length - 1];
+    expect(added.id).toBe('obj-' + state.nextId);
+  });
+
+  it('spawns unselected', () => {
+    const added = next.objects[next.objects.length - 1];
+    expect(added.selected).toBe(false);
+  });
+
+  it('starts zIndex counting from -1 when there are no existing objects', () => {
+    const empty = Object.assign({}, state, { objects: [] });
+    const added = addObject(empty, 10, 20);
+    expect(added.objects[0].zIndex).toBe(0);
+  });
+
+  it('picks the new object size only from the small/medium/large slice', () => {
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.7);
+    try {
+      const withSize = addObject(initObjectState(800, 600), 400, 300);
+      const added = withSize.objects[withSize.objects.length - 1];
+      expect(added.size).toBe('large');
+    } finally {
+      randomSpy.mockRestore();
+    }
+  });
 });
 
 describe('removeObject', () => {
@@ -747,6 +832,17 @@ describe('removeObject', () => {
 
   it('does not mutate original state', () => {
     expect(state.objects.find(o => o.id === 'obj-3')).toBeDefined();
+  });
+
+  it('keeps other objects untouched when removing one', () => {
+    expect(next.objects).toHaveLength(9);
+    expect(next.objects.find(o => o.id === 'obj-5')).toBeDefined();
+  });
+
+  it('keeps other stackObjects entries when removing one', () => {
+    const withStack = Object.assign({}, state, { stackObjects: ['obj-3', 'obj-5'] });
+    const result = removeObject(withStack, 'obj-3');
+    expect(result.stackObjects).toEqual(['obj-5']);
   });
 });
 
@@ -882,5 +978,287 @@ describe('rotationCue', () => {
 
   it('gives the two directions distinct cues', () => {
     expect(rotationCue('cw')).not.toBe(rotationCue('acw'));
+  });
+});
+
+describe('renderObjectShape', () => {
+  it('renders a circle with fill, stroke and orientation dot', () => {
+    const svg = renderObjectShape('circle', 'red');
+    expect(svg).toContain('<circle r="32" fill="#E74C3C" stroke="#C0392B" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="0" cy="-25" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+  });
+
+  it('renders a square with a rounded rect and the shared orientation dot', () => {
+    const svg = renderObjectShape('square', 'blue');
+    expect(svg).toContain('<rect x="-32" y="-32" width="64" height="64" rx="6" fill="#3498DB" stroke="#2980B9" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="0" cy="-25" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+  });
+
+  it('renders a triangle with its own orientation dot at cy=-22', () => {
+    const svg = renderObjectShape('triangle', 'green');
+    expect(svg).toContain('<polygon points="0,-32 27.7,16 -27.7,16" fill="#2ECC71" stroke="#27AE60" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="0" cy="-22" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+  });
+
+  it('renders a rectangle with its own orientation dot at cy=-17', () => {
+    const svg = renderObjectShape('rectangle', 'yellow');
+    expect(svg).toContain('<rect x="-38.4" y="-20.8" width="76.8" height="41.6" rx="6" fill="#F1C40F" stroke="#D4AC0D" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="0" cy="-17" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+  });
+
+  it('renders a pentagon with fill, stroke and the shared orientation dot', () => {
+    const svg = renderObjectShape('pentagon', 'purple');
+    expect(svg).toContain('<polygon points="0,-32 30.4,-9.9 18.8,25.9 -18.8,25.9 -30.4,-9.9" fill="#9B59B6" stroke="#7D3C98" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="0" cy="-25" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+  });
+
+  it('renders a star with its own orientation dot at cy=-24', () => {
+    const svg = renderObjectShape('star', 'orange');
+    expect(svg).toContain('<polygon points="0,-32 7.9,-10.9 30.4,-9.9 12.8,4.2 18.8,25.9 0,13.4 -18.8,25.9 -12.8,4.2 -30.4,-9.9 -7.9,-10.9" fill="#F39C12" stroke="#D68910" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="0" cy="-24" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+  });
+
+  it('renders any unmatched shape name as a heart with its own orientation dot', () => {
+    const svg = renderObjectShape('heart', 'red');
+    expect(svg).toContain('fill="#E74C3C" stroke="#C0392B" stroke-width="3"/>');
+    expect(svg).toContain('<circle cx="14" cy="-14" r="4" fill="#fff" stroke="#333" stroke-width="1.5"/>');
+    expect(svg).not.toContain('<circle r="32"');
+  });
+});
+
+describe('easeOutQuad', () => {
+  it('returns 0 at t=0', () => {
+    expect(easeOutQuad(0)).toBe(0);
+  });
+
+  it('returns 1 at t=1', () => {
+    expect(easeOutQuad(1)).toBe(1);
+  });
+
+  it('returns 0.75 at t=0.5', () => {
+    expect(easeOutQuad(0.5)).toBe(0.75);
+  });
+
+  it('is monotonically increasing between 0 and 1', () => {
+    expect(easeOutQuad(0.25)).toBeLessThan(easeOutQuad(0.75));
+  });
+});
+
+describe('objTransform', () => {
+  it('formats a translate/rotate/scale transform string', () => {
+    const result = objTransform({ x: 10, y: 20 }, 90, 1.5);
+    expect(result).toBe('translate(10.0,20.0) rotate(90) scale(1.5)');
+  });
+});
+
+describe('getVisualPos', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it('returns the object position directly when there is no animation entry', () => {
+    const obj = { id: 'obj-0', x: 50, y: 60 };
+    expect(getVisualPos(obj, {})).toEqual({ x: 50, y: 60 });
+  });
+
+  it('returns the end position and clears the animation once the duration has elapsed', () => {
+    vi.useFakeTimers();
+    const start = Date.now();
+    const obj = { id: 'obj-0', x: 300, y: 400 };
+    const animMap = { 'obj-0': { startTime: start, fromX: 100, fromY: 100, toX: 300, toY: 400 } };
+    vi.advanceTimersByTime(OBJ_ANIM_DURATION);
+    const pos = getVisualPos(obj, animMap);
+    expect(pos).toEqual({ x: 300, y: 400 });
+    expect(animMap['obj-0']).toBeUndefined();
+  });
+
+  it('interpolates position partway through the animation using easeOutQuad', () => {
+    vi.useFakeTimers();
+    const start = Date.now();
+    const obj = { id: 'obj-0', x: 999, y: 999 };
+    const animMap = { 'obj-0': { startTime: start, fromX: 10, fromY: 20, toX: 110, toY: 220 } };
+    const elapsed = Math.floor(OBJ_ANIM_DURATION / 2);
+    vi.advanceTimersByTime(elapsed);
+    const pos = getVisualPos(obj, animMap);
+    const t = elapsed / OBJ_ANIM_DURATION;
+    const e = easeOutQuad(t);
+    expect(pos.x).toBeCloseTo(10 + (110 - 10) * e, 5);
+    expect(pos.y).toBeCloseTo(20 + (220 - 20) * e, 5);
+    expect(animMap['obj-0']).toBeDefined();
+  });
+});
+
+describe('getDragMoves — active gating', () => {
+  it('returns empty when not active even when onObj/isSelected/moved are all true', () => {
+    const g = { active: false, onObj: true, isSelected: true, moved: true, originObjX: 100, originObjY: 200 };
+    expect(getDragMoves(g, 50, 30)).toHaveLength(0);
+  });
+});
+
+describe('getDragMoves / getPanMoves — threshold boundary is exclusive', () => {
+  const dragBase = { active: true, onObj: true, isSelected: true, moved: false, originObjX: 100, originObjY: 200 };
+  const panBase = { active: true, onObj: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+
+  it('getDragMoves returns a move when dx is exactly at the threshold', () => {
+    expect(getDragMoves(dragBase, PAN_THRESHOLD, 0)).toHaveLength(1);
+  });
+
+  it('getDragMoves returns a move when dy is exactly at the threshold', () => {
+    expect(getDragMoves(dragBase, 0, PAN_THRESHOLD)).toHaveLength(1);
+  });
+
+  it('getPanMoves returns a pan target when dx is exactly at the threshold', () => {
+    expect(getPanMoves(panBase, PAN_THRESHOLD, 0)).toHaveLength(1);
+  });
+
+  it('getPanMoves returns a pan target when dy is exactly at the threshold', () => {
+    expect(getPanMoves(panBase, 0, PAN_THRESHOLD)).toHaveLength(1);
+  });
+});
+
+describe('getDragCancelMoves — active gating', () => {
+  it('returns empty when not active even when isSelected/moved are true', () => {
+    const g = { active: false, isSelected: true, moved: true, originObjX: 50, originObjY: 60 };
+    expect(getDragCancelMoves(g)).toHaveLength(0);
+  });
+});
+
+describe('updateDragPosition — margin uses OBJ_SIZE_MAP multiplicatively', () => {
+  it('clamps a large object using the multiplied (not divided) margin', () => {
+    const base = initObjectState(800, 600);
+    const large = Object.assign({}, base, {
+      objects: base.objects.map(o => o.id === 'obj-0' ? Object.assign({}, o, { size: 'large' }) : o)
+    });
+    const state = selectObject(large, 'obj-0');
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP.large);
+    const next = updateDragPosition(state, 99999, 99999);
+    expect(next.objects.find(o => o.id === 'obj-0').x).toBe(state.world.width - margin);
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(state.world.height - margin);
+  });
+});
+
+describe('objectsAtPoint — radius uses OBJ_SIZE_MAP multiplicatively, boundary inclusive', () => {
+  const isolate = (size) => {
+    const base = initObjectState(800, 600);
+    return Object.assign({}, base, {
+      objects: base.objects.map((o, i) =>
+        i === 0 ? Object.assign({}, o, { size, x: 400, y: 300 }) : Object.assign({}, o, { x: -9999, y: -9999 })
+      )
+    });
+  };
+
+  it('hits a large object just inside its multiplied radius', () => {
+    const state = isolate('large');
+    const r = OBJ_BASE_R * OBJ_SIZE_MAP.large;
+    const result = objectsAtPoint(state, 400 + r - 1, 300);
+    expect(result.map(o => o.id)).toContain('obj-0');
+  });
+
+  it('includes an object exactly at the hit-radius boundary', () => {
+    const state = isolate('small');
+    const r = OBJ_BASE_R * OBJ_SIZE_MAP.small;
+    const result = objectsAtPoint(state, 400 + r, 300);
+    expect(result.map(o => o.id)).toContain('obj-0');
+  });
+});
+
+describe('bringToFront — comparator and mutation safety', () => {
+  it('assigns ascending zIndex by real numeric rank, not by pairwise sum', () => {
+    const base = initObjectState(800, 600);
+    const zIndices = [40, 10, 30, 20, 0, 1, 2, 3, 4, 5];
+    const state = Object.assign({}, base, {
+      objects: base.objects.map((o, i) => Object.assign({}, o, { zIndex: zIndices[i] }))
+    });
+    const next = bringToFront(state, 'obj-9');
+    const expectedRank = ['obj-4', 'obj-5', 'obj-6', 'obj-7', 'obj-8', 'obj-1', 'obj-3', 'obj-2', 'obj-0'];
+    expectedRank.forEach((id, rank) => {
+      expect(next.objects.find(o => o.id === id).zIndex).toBe(rank);
+    });
+    expect(next.objects.find(o => o.id === 'obj-9').zIndex).toBe(9);
+  });
+
+  it('does not mutate the order of the original objects array', () => {
+    const base = initObjectState(800, 600);
+    const zIndices = [40, 10, 30, 20, 0, 1, 2, 3, 4, 5];
+    const state = Object.assign({}, base, {
+      objects: base.objects.map((o, i) => Object.assign({}, o, { zIndex: zIndices[i] }))
+    });
+    const idsBefore = state.objects.map(o => o.id);
+    bringToFront(state, 'obj-5');
+    expect(state.objects.map(o => o.id)).toEqual(idsBefore);
+  });
+});
+
+describe('removeObject — stackObjects filter keeps other ids', () => {
+  it('keeps other stackObjects entries when removing one', () => {
+    const state = Object.assign({}, selectObject(initObjectState(800, 600), 'obj-3'), {
+      stackObjects: ['obj-3', 'obj-5']
+    });
+    const next = removeObject(state, 'obj-3');
+    expect(next.stackObjects).toEqual(['obj-5']);
+  });
+});
+
+describe('moveSelectedObject — up/down clamp to world bounds', () => {
+  const clampState = (y) => {
+    const base = initObjectState(800, 600);
+    const withSel = selectObject(base, 'obj-0');
+    return Object.assign({}, withSel, {
+      objects: withSel.objects.map(o => o.id === 'obj-0' ? Object.assign({}, o, { x: 800, y, size: 'medium' }) : o)
+    });
+  };
+
+  it('clamps to world top boundary', () => {
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP.medium);
+    const state = clampState(margin);
+    const next = moveSelectedObject(state, 'up');
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(margin);
+  });
+
+  it('clamps to world bottom boundary', () => {
+    const base = initObjectState(800, 600);
+    const margin = Math.ceil(OBJ_BASE_R * OBJ_SIZE_MAP.medium);
+    const maxY = base.world.height - margin;
+    const state = clampState(maxY);
+    const next = moveSelectedObject(state, 'down');
+    expect(next.objects.find(o => o.id === 'obj-0').y).toBe(maxY);
+  });
+});
+
+describe('buildStackHTML — exact markup and picking the right object', () => {
+  it('wraps a single preview svg in the expected markup', () => {
+    const state = initObjectState(800, 600);
+    const obj = state.objects.find(o => o.id === 'obj-2');
+    const html = buildStackHTML(['obj-2'], state.objects);
+    expect(html).toBe(
+      '<div class="obj-stack-row" data-pick="obj-2"><svg width="36" height="36" viewBox="-36 -36 72 72">' +
+      renderObjectShape(obj.shape, obj.colour) + '</svg></div>'
+    );
+  });
+
+  it('joins multiple stack rows with no separator', () => {
+    const state = initObjectState(800, 600);
+    const html = buildStackHTML(['obj-2', 'obj-5'], state.objects);
+    const row2 = buildStackHTML(['obj-2'], state.objects);
+    const row5 = buildStackHTML(['obj-5'], state.objects);
+    expect(html).toBe(row2 + row5);
+  });
+
+  it('renders the requested object, not just the first one in the array', () => {
+    const state = initObjectState(800, 600);
+    const objs = state.objects.map((o, i) => Object.assign({}, o, { shape: i === 3 ? 'star' : 'circle', colour: 'red' }));
+    const html = buildStackHTML(['obj-3'], objs);
+    expect(html).toContain(renderObjectShape('star', 'red'));
+    expect(html).not.toContain(renderObjectShape('circle', 'red'));
+  });
+});
+
+describe('buildGesture — no target id defaults origin to 0', () => {
+  const state = initObjectState(800, 600);
+
+  it('defaults originObjX/Y to 0 when no target id', () => {
+    const g = buildGesture(state, undefined, 0, 0, 0, 0, 0, 0);
+    expect(g.originObjX).toBe(0);
+    expect(g.originObjY).toBe(0);
   });
 });
