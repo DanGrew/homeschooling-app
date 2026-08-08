@@ -1,6 +1,21 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo } = require('../../core/piano/piano-core.js');
+const { PIANO_CONFIG, generateNotes, scoreMessage, simpleNoteInfo, noteInfo, isNoteHit, noteTimingDistance } = require('../../core/piano/piano-core.js');
+
+describe('PIANO_CONFIG exact values', () => {
+  it('NOTES is the exact expected sequence', () => {
+    expect(PIANO_CONFIG.NOTES).toEqual(['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5']);
+  });
+  it('NOTE_LABELS is the exact expected sequence', () => {
+    expect(PIANO_CONFIG.NOTE_LABELS).toEqual(['C','D','E','F','G','A','B','↑C','↑D','↑E','↑F','↑G']);
+  });
+  it('KEY_COLORS is the exact expected sequence', () => {
+    expect(PIANO_CONFIG.KEY_COLORS).toEqual(['#FFB3B3','#FFCBA4','#FFF0A3','#B3FFB3','#A3D9FF','#B3C6FF','#E0B3FF','#FFB3E6','#B3FFEE','#D4FFB3','#FFCCF2','#C5F2CC']);
+  });
+  it('BLACK_KEYS colours are the exact expected values', () => {
+    expect(PIANO_CONFIG.BLACK_KEYS.map(bk => bk.color)).toEqual(['#D4D4FF', '#CCBBFF', '#D4FFEE']);
+  });
+});
 
 describe('PIANO_CONFIG', () => {
   it('has 12 notes', () => expect(PIANO_CONFIG.NOTES).toHaveLength(12));
@@ -75,6 +90,18 @@ describe('generateNotes', () => {
     expect(notes).toHaveLength(PIANO_CONFIG.NOTE_COUNT);
     notes.forEach(n => expect(typeof n.keyIndex).toBe('number'));
   });
+
+  it('first note keyIndex and hitTime follow the seeded rng exactly', () => {
+    const notes = generateNotes(PIANO_CONFIG, seededRng);
+    expect(notes[0].keyIndex).toBe(0);
+    expect(notes[0].hitTime).toBe(PIANO_CONFIG.LOOKAHEAD_MS + 600);
+  });
+
+  it('second note keyIndex and hitTime follow the seeded rng and gap formula exactly', () => {
+    const notes = generateNotes(PIANO_CONFIG, seededRng);
+    expect(notes[1].keyIndex).toBe(1);
+    expect(notes[1].hitTime).toBe(6000);
+  });
 });
 
 describe('PIANO_CONFIG BLACK_KEYS', () => {
@@ -122,7 +149,33 @@ describe('scoreMessage', () => {
   it('0 → Keep playing', () => expect(scoreMessage(0).text).toBe('Keep playing!'));
   it('3 → Keep playing', () => expect(scoreMessage(3).text).toBe('Keep playing!'));
   it('returns emoji', () => expect(scoreMessage(10).emoji).toBeTruthy());
-  it('sub includes count for non-perfect', () => expect(scoreMessage(7).sub).toContain('7'));
+  it('7 → exact emoji and sub', () => {
+    expect(scoreMessage(7).emoji).toBe('🎉');
+    expect(scoreMessage(7).sub).toBe('7 out of 10!');
+  });
+  it('4 → exact emoji and sub', () => {
+    expect(scoreMessage(4).emoji).toBe('⭐');
+    expect(scoreMessage(4).sub).toBe('4 out of 10!');
+  });
+  it('0 → exact emoji and sub', () => {
+    expect(scoreMessage(0).emoji).toBe('🎵');
+    expect(scoreMessage(0).sub).toBe('0 out of 10');
+  });
+});
+
+describe('isNoteHit', () => {
+  it('true when elapsed exactly at hitTime', () => expect(isNoteHit(1000, 1000, 400)).toBe(true));
+  it('true within the window before hitTime', () => expect(isNoteHit(700, 1000, 400)).toBe(true));
+  it('true within the window after hitTime', () => expect(isNoteHit(1300, 1000, 400)).toBe(true));
+  it('true exactly at the window boundary', () => expect(isNoteHit(600, 1000, 400)).toBe(true));
+  it('false just outside the window before', () => expect(isNoteHit(599, 1000, 400)).toBe(false));
+  it('false just outside the window after', () => expect(isNoteHit(1401, 1000, 400)).toBe(false));
+});
+
+describe('noteTimingDistance', () => {
+  it('returns the gap when elapsed is before hitTime', () => expect(noteTimingDistance(700, 1000)).toBe(300));
+  it('returns the gap when elapsed is after hitTime', () => expect(noteTimingDistance(1300, 1000)).toBe(300));
+  it('returns 0 when elapsed equals hitTime', () => expect(noteTimingDistance(1000, 1000)).toBe(0));
 });
 
 describe('simpleNoteInfo', () => {

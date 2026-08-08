@@ -25,6 +25,21 @@ describe('getDistractors',()=>{
     expect(d).toHaveLength(3);
     expect(d.every(i=>i.id!=='circle')).toBe(true);
   });
+  it('pins the exact shared-tag pool and shuffle order with a seeded rng',()=>{
+    let n=0; const seededRng=()=>{n+=1; return (n%10)/10;};
+    const d=getDistractors(items[0],items,3,seededRng);
+    expect(d).toEqual([items[3],items[2],items[1]]);
+  });
+  it('pins the exact fallback pool and shuffle order with a seeded rng',()=>{
+    let n=0; const seededRng=()=>{n+=1; return (n%10)/10;};
+    const d=getDistractors(items[4],items,3,seededRng);
+    expect(d).toEqual([items[5],items[3],items[2]]);
+  });
+  it('calls the injected rng to shuffle',()=>{
+    let calls=0; const countingRng=()=>{calls+=1; return Math.random();};
+    getDistractors(items[0],items,3,countingRng);
+    expect(calls).toBeGreaterThan(0);
+  });
 });
 
 describe('buildRound',()=>{
@@ -40,5 +55,13 @@ describe('buildRound',()=>{
   it('choices are unique',()=>{
     const r=buildRound(items);
     expect(new Set(r.choices.map(c=>c.id)).size).toBe(4);
+  });
+  it('pins the exact target and choice order with a seeded rng',()=>{
+    let n=4; const seededRng=()=>{n+=1; return (n%10)/10;};
+    const r=buildRound(items,seededRng);
+    expect(r).toEqual({
+      target: items[3],
+      choices: [items[2], items[3], items[0], items[1]],
+    });
   });
 });

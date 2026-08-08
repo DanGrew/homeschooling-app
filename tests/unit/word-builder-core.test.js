@@ -1,6 +1,4 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const { parseWord, buildTileSet, validateLetter, isWordComplete, pickWord } = require('../../core/word-builder/word-builder-core.js');
+import { parseWord, buildTileSet, validateLetter, isWordComplete, pickWord, slotKey } from '../../core/word-builder/word-builder-core.js';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -73,6 +71,21 @@ describe('buildTileSet', () => {
     const tiles = buildTileSet("CAN'T", 'distractors');
     expect(tiles).not.toContain("'");
   });
+
+  test('alphabet mode ignores mode-adjacent input (mode must equal exactly "alphabet")', () => {
+    const tiles = buildTileSet('CAT', 'not-alphabet');
+    expect(tiles.length).toBeLessThan(26);
+  });
+
+  test('distractors mode pins the exact tile set with a seeded rng (noise excludes unique letters)', () => {
+    let n = 0; const seededRng = () => { n += 1; return (n % 10) / 10; };
+    expect(buildTileSet('CAT', 'distractors', seededRng)).toEqual(['C', 'A', 'R', 'S', 'U', 'Q', 'T']);
+  });
+
+  test('distractors mode never duplicates a unique letter as noise', () => {
+    const tiles = buildTileSet('CAT', 'distractors');
+    expect(new Set(tiles).size).toBe(tiles.length);
+  });
 });
 
 describe('validateLetter', () => {
@@ -121,4 +134,24 @@ describe('pickWord', () => {
 
   test('null on empty list', () => expect(pickWord([])).toBeNull());
   test('null on null', () => expect(pickWord(null)).toBeNull());
+  test('pins the exact pick with a seeded rng', () => {
+    let n = 4; const seededRng = () => { n += 1; return (n % 10) / 10; };
+    const items = [{ label: 'A' }, { label: 'B' }, { label: 'C' }];
+    expect(pickWord(items, seededRng)).toBe(items[1]);
+  });
+});
+
+describe('slotKey', () => {
+  test('locked takes priority over everything', () => {
+    expect(slotKey({ locked: true, error: true }, true)).toBe('locked');
+  });
+  test('error takes priority over target', () => {
+    expect(slotKey({ locked: false, error: true }, true)).toBe('error');
+  });
+  test('target when not locked or errored', () => {
+    expect(slotKey({ locked: false, error: false }, true)).toBe('target');
+  });
+  test('default when none apply', () => {
+    expect(slotKey({ locked: false, error: false }, false)).toBe('default');
+  });
 });

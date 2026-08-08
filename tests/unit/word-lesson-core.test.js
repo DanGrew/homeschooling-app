@@ -14,6 +14,10 @@ describe('bestVoice', () => {
     const voices = [make('en-US', 'Alex'), make('fr-FR', 'Amelie')];
     expect(bestVoice(voices).name).toBe('Alex');
   });
+  it('prefers the female voice pattern over an earlier non-matching en-GB voice', () => {
+    const voices = [make('en-GB', 'Daniel'), make('en-GB', 'Serena')];
+    expect(bestVoice(voices).name).toBe('Serena');
+  });
   it('returns null when no match', () => {
     expect(bestVoice([make('fr-FR', 'Amelie')])).toBeNull();
   });
@@ -49,6 +53,13 @@ describe('extractWordTags', () => {
     const middle = t.slice(1, -1);
     expect(middle).toEqual([...middle].sort());
   });
+  it('does not synthesize a tag for a word with no tags property', () => {
+    expect(extractWordTags(words)).toEqual(['all', 'animals', 'easy', 'food', 'custom']);
+  });
+  it('sorts tags alphabetically regardless of insertion order', () => {
+    const outOfOrder = [{ tags: ['food'] }, { tags: ['animals', 'easy'] }];
+    expect(extractWordTags(outOfOrder)).toEqual(['all', 'animals', 'easy', 'food', 'custom']);
+  });
 });
 
 describe('filterWordsByTag', () => {
@@ -64,6 +75,13 @@ describe('filterWordsByTag', () => {
   });
   it('no matching tag returns empty', () => {
     expect(filterWordsByTag(words, 'sport')).toHaveLength(0);
+  });
+  it('"all" returns a copy, not the same array reference', () => {
+    expect(filterWordsByTag(words, 'all')).not.toBe(words);
+  });
+  it('a word with no tags property is excluded from a specific-tag filter', () => {
+    const localWords = [{ word: 'x', tags: ['a'] }, { word: 'y' }];
+    expect(filterWordsByTag(localWords, 'a')).toEqual([{ word: 'x', tags: ['a'] }]);
   });
 });
 
