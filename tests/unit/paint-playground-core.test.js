@@ -80,6 +80,17 @@ describe('PAINT_BRUSHES', () => {
       expect(typeof b.join).toBe('string');
     });
   });
+
+  test('pins the exact cap and join styles per brush', () => {
+    expect(PAINT_BRUSHES.pencil.cap).toBe('round');
+    expect(PAINT_BRUSHES.pencil.join).toBe('round');
+    expect(PAINT_BRUSHES.crayon.cap).toBe('round');
+    expect(PAINT_BRUSHES.crayon.join).toBe('round');
+    expect(PAINT_BRUSHES.paintbrush.cap).toBe('round');
+    expect(PAINT_BRUSHES.paintbrush.join).toBe('round');
+    expect(PAINT_BRUSHES.marker.cap).toBe('square');
+    expect(PAINT_BRUSHES.marker.join).toBe('miter');
+  });
 });
 
 describe('CRAYON_PASSES', () => {
@@ -97,6 +108,17 @@ describe('CRAYON_PASSES', () => {
   });
 });
 
+describe('CRAYON_PASSES exact values', () => {
+  test('pins the exact ox/oy offsets, including their signs', () => {
+    expect(CRAYON_PASSES).toEqual([
+      { ox: 0, oy: 0, wf: 1.0, a: 0.40 },
+      { ox: -1, oy: 0, wf: 0.7, a: 0.20 },
+      { ox: 2, oy: 1, wf: 0.6, a: 0.20 },
+      { ox: -2, oy: -1, wf: 0.5, a: 0.15 }
+    ]);
+  });
+});
+
 describe('paintClientToCanvas', () => {
   test('converts client coords to canvas coords', () => {
     const pt = paintClientToCanvas(300, 200, 56, 0, 100, 50);
@@ -108,6 +130,11 @@ describe('paintClientToCanvas', () => {
     const pt = paintClientToCanvas(100, 100, 0, 0, 500, 300);
     expect(pt.x).toBe(600);
     expect(pt.y).toBe(400);
+  });
+
+  test('subtracts rectTop from clientY before adding viewportY', () => {
+    const pt = paintClientToCanvas(300, 200, 56, 40, 100, 50);
+    expect(pt.y).toBe(200 - 40 + 50);
   });
 });
 
@@ -123,6 +150,18 @@ describe('GLITTER_OFFSETS', () => {
       expect(typeof g.r).toBe('number');
       expect(g.r).toBeGreaterThan(0);
     });
+  });
+
+  test('pins the exact dx/dy values, including their signs', () => {
+    expect(GLITTER_OFFSETS).toEqual([
+      { dx: 0, dy: 0, r: 3.0 },
+      { dx: -8, dy: -6, r: 2.0 },
+      { dx: 10, dy: -4, r: 2.0 },
+      { dx: -5, dy: 9, r: 2.0 },
+      { dx: 8, dy: 7, r: 2.0 },
+      { dx: -12, dy: 2, r: 1.5 },
+      { dx: 6, dy: -11, r: 1.5 }
+    ]);
   });
 });
 
@@ -153,5 +192,13 @@ describe('buildStarPath', () => {
     const outerDist = Math.sqrt(path[0].x ** 2 + path[0].y ** 2);
     const innerDist = Math.sqrt(path[1].x ** 2 + path[1].y ** 2);
     expect(outerDist).toBeGreaterThan(innerDist);
+  });
+
+  test('pins the exact coordinates of the first outer and inner vertices', () => {
+    const path = buildStarPath(0, 0, 10, 5, 4);
+    expect(path[0].x).toBeCloseTo(0, 5);
+    expect(path[0].y).toBeCloseTo(-10, 5);
+    expect(path[1].x).toBeCloseTo(3.5355339059, 5);
+    expect(path[1].y).toBeCloseTo(-3.5355339059, 5);
   });
 });

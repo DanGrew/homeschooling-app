@@ -163,6 +163,14 @@ describe('flipCard — match', () => {
     expect(events.map(function(e) { return e.type; })).toContain('tray_update');
   });
 
+  it('tray_update carries the matched contentId and playerId', () => {
+    const s = game(['apple']);
+    const [first, second] = matchingPair(s);
+    const { events } = flipCard(flipCard(s, first).state, second);
+    const ev = events.find(function(e) { return e.type === 'tray_update'; });
+    expect(ev.data).toEqual({ playerId: 'p0', contentId: 'apple' });
+  });
+
   it('adds pair to current player', () => {
     const s = game(['apple']);
     const [first, second] = matchingPair(s);
@@ -218,6 +226,7 @@ describe('flipCard — mismatch', () => {
     const ev = events.find(function(e) { return e.type === 'match_fail'; });
     expect(ev).toBeDefined();
     expect(ev.data.cardIndices).toEqual([first, second]);
+    expect(ev.data.contentIds).toEqual(['apple', 'banana']);
   });
 
   it('phase becomes resolving on mismatch', () => {

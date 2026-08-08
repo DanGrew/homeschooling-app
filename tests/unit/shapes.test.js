@@ -9,6 +9,11 @@ describe('svg', () => {
     expect(out).toMatch(/<\/svg>$/);
   });
 
+  it('emits the exact style attribute with both width and height set from cssSize', () => {
+    const out = svg('circle', '#ff0000', '100px');
+    expect(out).toContain('style="width:100px;height:100px">');
+  });
+
   it('applies default cssSize', () => {
     expect(svg('circle', '#ff0000')).toContain('clamp(100px,28vmin,220px)');
   });
@@ -49,6 +54,12 @@ describe('svg', () => {
     types.forEach(t => {
       expect(svg(t, '#AABBCC')).toContain('fill="#AABBCC"');
     });
+  });
+});
+
+describe('types', () => {
+  it('pins the exact list of shape type names', () => {
+    expect(types).toEqual(['circle', 'square', 'triangle', 'star', 'rectangle', 'heart']);
   });
 });
 
@@ -106,5 +117,17 @@ describe('shuffle', () => {
   it('handles empty and single-element arrays', () => {
     expect(shuffle([])).toEqual([]);
     expect(shuffle(['x'])).toEqual(['x']);
+  });
+
+  describe('with a pinned random sequence', () => {
+    afterEach(() => { vi.restoreAllMocks(); });
+
+    it('applies the Fisher-Yates swap at each step using floor(random * (i + 1))', () => {
+      vi.spyOn(Math, 'random')
+        .mockReturnValueOnce(0.9) // i=3: floor(0.9*4)=3 (self-swap)
+        .mockReturnValueOnce(0.1) // i=2: floor(0.1*3)=0
+        .mockReturnValueOnce(0.6); // i=1: floor(0.6*2)=1 (self-swap)
+      expect(shuffle(['A', 'B', 'C', 'D'])).toEqual(['C', 'B', 'A', 'D']);
+    });
   });
 });

@@ -131,4 +131,23 @@ describe('createPaginatorState — edge cases', () => {
     expect(state.isAtStart()).toBe(true);
     expect(state.isAtEnd()).toBe(true);
   });
+
+  it('defaults items to an empty list when none is given', () => {
+    var state = createPaginatorState({ perPage: 5 });
+    expect(state.getPageCount()).toBe(1);
+    expect(state.getSlice()).toEqual([]);
+  });
+
+  it('reset with no argument defaults to an empty list', () => {
+    var state = createPaginatorState({ items: items(10), perPage: 5 });
+    state.reset();
+    expect(state.getPageCount()).toBe(1);
+    expect(state.getSlice()).toEqual([]);
+  });
+
+  it('defaults wrap to false when not given', () => {
+    var state = createPaginatorState({ items: items(3), perPage: 1 });
+    state.next(); state.next(); state.next();
+    expect(state.getPage()).toBe(2);
+  });
 });

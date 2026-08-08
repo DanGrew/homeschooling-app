@@ -47,7 +47,7 @@ describe('buildByArea', () => {
     expect(result['md']).toEqual(['Counting']);
   });
   it('sorts labels within area', () => {
-    const result = buildByArea(['cl2', 'cl1'], map, AREAS);
+    const result = buildByArea(['cl1', 'cl2'], map, AREAS);
     expect(result['cl']).toEqual(['Listening', 'Speaking']);
   });
   it('empty array for area with no matching criteria', () => {
@@ -67,6 +67,7 @@ describe('lessonToRow', () => {
     expect(row.title).toBe('Numbers');
     expect(row.activity).toBe('Counting Game');
     expect(row.byArea['md']).toEqual(['Counting']);
+    expect(row.type).toBe('lesson');
   });
 });
 
