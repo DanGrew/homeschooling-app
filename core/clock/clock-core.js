@@ -16,7 +16,7 @@ export function hourToSky(hour) {
   var isSun = hour >= 6 && hour < 20;
   var a = isSun
     ? (hour - 6) / 14 * Math.PI
-    : (hour >= 20 ? hour - 20 : hour + 4) / 12 * Math.PI;
+    : (hour + 4) / 12 * Math.PI;
   var cx = (1 - Math.cos(a)) / 2 * 86 + 7;
   var cy = (1 - Math.sin(a)) * 32 + 4;
   var colors = hourColors(hour);
@@ -34,15 +34,6 @@ export function nextDegrees(fromHour, toHour) {
   return delta <= 0 ? delta + 360 : delta;
 }
 
-export function shuffle(arr) {
-  var a = arr.slice();
-  for (var i = a.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-  }
-  return a;
-}
-
 export function parseTime(timeStr) {
   var parts = timeStr.split(':');
   return { hour: parseInt(parts[0], 10), minute: parseInt(parts[1], 10) };
@@ -53,7 +44,6 @@ export function numeralToMinuteDeg(n) {
 }
 
 export function nextMinuteDeg(fromMin, toMin) {
-  if (fromMin === toMin) return 0;
   var from = fromMin / 60 * 360;
   var to   = toMin   / 60 * 360;
   var delta = to - from;
@@ -74,20 +64,6 @@ export function presetSkyColour(time) {
   var hour = parseInt(time.split(':')[0], 10);
   return _PRESET_SKY.filter(function(s) { return hour >= s.from && hour <= s.to; })[0]
     || {bg: 'rgba(255,255,255,0.88)', fg: '#333333'};
-}
-
-export function generateChoices(presets, correctIdx, n) {
-  var indices = [correctIdx];
-  var pool = presets.map(function(_, i) { return i; }).filter(function(i) { return i !== correctIdx; });
-  while (indices.length < n && pool.length > 0) {
-    var r = Math.floor(Math.random() * pool.length);
-    indices.push(pool.splice(r, 1)[0]);
-  }
-  for (var i = indices.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
-  }
-  return indices;
 }
 
 export function manifestToOptions(manifest) {
