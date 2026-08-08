@@ -1,8 +1,12 @@
+import { createRequire } from 'module';
 import {
   evalCond, applyStateAction, resolveScene, resolveImgFit, resolveImgSrc, resolveObject,
   objectRenderType, resolveAnimName, nextSpriteIdx, parseAction, findAction, shouldTriggerWin,
   gridMajorKey,
 } from '../../core/simulator/simulator-core.js';
+
+const require = createRequire(import.meta.url);
+const cjs = require('../../core/simulator/simulator-core.js');
 
 describe('evalCond — state comparisons', () => {
   it('>= true when equal', () => expect(evalCond({ x: 3 }, 'state.x >= 3')).toBe(true));
@@ -19,6 +23,16 @@ describe('evalCond — state comparisons', () => {
   it('returns false for malformed string', () => expect(evalCond({}, 'not_valid')).toBe(false));
   it('returns false for null', () => expect(evalCond({}, null)).toBe(false));
   it('returns false for unknown key', () => expect(evalCond({}, 'state.missing >= 1')).toBe(false));
+  it('ignores leading text before the state expression', () => expect(evalCond({ x: 1 }, 'xxstate.x >= 1')).toBe(false));
+  it('ignores trailing text after the value', () => expect(evalCond({ x: 1 }, 'state.x >= 1xx')).toBe(false));
+  it('reads a multi-digit value', () => expect(evalCond({ x: 12 }, 'state.x >= 12')).toBe(true));
+  it('allows no space before the operator', () => expect(evalCond({ x: 1 }, 'state.x>=1')).toBe(true));
+  it('allows no space after the operator', () => expect(evalCond({ x: 1 }, 'state.x >=1')).toBe(true));
+  it('does not treat a truthy non-object with an all-shaped property as a combinator', () => {
+    const cond = function () {};
+    cond.all = ['state.x >= 1'];
+    expect(evalCond({ x: 1 }, cond)).toBe(false);
+  });
 });
 
 describe('evalCond — combinators', () => {
@@ -30,6 +44,7 @@ describe('evalCond — combinators', () => {
     const cond = { any: [{ all: ['state.a >= 3', 'state.b >= 3'] }, 'state.c >= 5'] };
     expect(evalCond({ a: 3, b: 3, c: 0 }, cond)).toBe(true);
   });
+  it('returns false for an object with neither all nor any', () => expect(evalCond({}, {})).toBe(false));
 });
 
 describe('applyStateAction', () => {
@@ -40,6 +55,10 @@ describe('applyStateAction', () => {
   it('returns true for state action', () => expect(applyStateAction({ x: 0 }, 'state.x += 1')).toBe(true));
   it('returns false for non-state action', () => expect(applyStateAction({}, 'say: hello')).toBe(false));
   it('returns false for unrecognised', () => expect(applyStateAction({}, 'unknown')).toBe(false));
+  it('ignores leading text before the state expression', () => expect(applyStateAction({ x: 0 }, 'xstate.x += 1')).toBe(false));
+  it('ignores trailing text after the value', () => expect(applyStateAction({ x: 0 }, 'state.x += 1extra')).toBe(false));
+  it('allows no space before the operator', () => { const s = { x: 0 }; expect(applyStateAction(s, 'state.x+=1')).toBe(true); expect(s.x).toBe(1); });
+  it('allows no space after the operator', () => { const s = { x: 0 }; expect(applyStateAction(s, 'state.x +=1')).toBe(true); expect(s.x).toBe(1); });
 });
 
 describe('resolveScene', () => {
@@ -102,6 +121,7 @@ describe('nextSpriteIdx', () => {
   it('sets exact index via delta from 0', () => expect(nextSpriteIdx(['a', 'b', 'c'], 0, 2)).toBe(2));
   it('returns 0 when spriteStates is null', () => expect(nextSpriteIdx(null, 0, 1)).toBe(0));
   it('handles undefined currentIdx as 0', () => expect(nextSpriteIdx(['a', 'b', 'c'], undefined, 1)).toBe(1));
+  it('advances from a defined non-zero currentIdx, not from 0', () => expect(nextSpriteIdx(['a', 'b', 'c', 'd', 'e'], 2, 1)).toBe(3));
 });
 
 describe('parseAction', () => {
@@ -130,6 +150,118 @@ describe('parseAction', () => {
   it('splash_at negative coords', () => expect(parseAction('splash_at: -10 300')).toEqual({ type: 'splash_at', args: [-10, 300] }));
   it('flip_x', () => expect(parseAction('flip_x: character')).toEqual({ type: 'flip_x', args: ['character'] }));
   it('unknown returns noop', () => expect(parseAction('gobbledygook')).toEqual({ type: 'noop', args: [] }));
+});
+
+describe('parseAction — regex boundaries', () => {
+  describe('state', () => {
+    it('rejects leading text', () => expect(parseAction('xstate.x += 1').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('state.x += 1extra').type).toBe('noop'));
+    it('allows no space before the operator', () => expect(parseAction('state.x+=1')).toEqual({ type: 'state', args: ['state.x+=1'] }));
+    it('allows no space after the operator', () => expect(parseAction('state.x +=1')).toEqual({ type: 'state', args: ['state.x +=1'] }));
+  });
+
+  describe('animate', () => {
+    it('rejects leading text', () => expect(parseAction('xanimate: grow').type).toBe('noop'));
+    it('rejects an embedded trailing newline', () => expect(parseAction('animate: grow\n').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('animate:grow')).toEqual({ type: 'animate', args: ['grow'] }));
+    it('trims trailing whitespace from the message', () => expect(parseAction('animate: grow flower  ')).toEqual({ type: 'animate', args: ['grow flower'] }));
+  });
+
+  describe('say', () => {
+    it('rejects leading text', () => expect(parseAction('xsay: hello').type).toBe('noop'));
+    it('rejects an embedded trailing newline', () => expect(parseAction('say: hello\n').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('say:hello')).toEqual({ type: 'say', args: ['hello'] }));
+    it('trims trailing whitespace from the message', () => expect(parseAction('say: hello world  ')).toEqual({ type: 'say', args: ['hello world'] }));
+  });
+
+  describe('show', () => {
+    it('rejects trailing text', () => expect(parseAction('show: obj1 x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('show:obj1')).toEqual({ type: 'show', args: ['obj1'] }));
+  });
+
+  describe('hide', () => {
+    it('rejects leading text', () => expect(parseAction('xhide: obj1').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('hide: obj1 x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('hide:obj1')).toEqual({ type: 'hide', args: ['obj1'] }));
+  });
+
+  describe('fade_in', () => {
+    it('rejects leading text', () => expect(parseAction('xfade_in: obj1').type).toBe('noop'));
+    it('rejects a non-numeric duration', () => expect(parseAction('fade_in: obj1 x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('fade_in:obj1')).toEqual({ type: 'fade_in', args: ['obj1', 800] }));
+    it('allows multiple spaces before the duration', () => expect(parseAction('fade_in: obj1  400')).toEqual({ type: 'fade_in', args: ['obj1', 400] }));
+  });
+
+  describe('fade_out', () => {
+    it('default duration', () => expect(parseAction('fade_out: obj1')).toEqual({ type: 'fade_out', args: ['obj1', 800] }));
+    it('custom multi-digit duration', () => expect(parseAction('fade_out: obj1 400')).toEqual({ type: 'fade_out', args: ['obj1', 400] }));
+    it('allows multiple spaces before the duration', () => expect(parseAction('fade_out: obj1  400')).toEqual({ type: 'fade_out', args: ['obj1', 400] }));
+    it('rejects leading text', () => expect(parseAction('xfade_out: obj1').type).toBe('noop'));
+    it('rejects a non-numeric duration', () => expect(parseAction('fade_out: obj1 x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('fade_out:obj1')).toEqual({ type: 'fade_out', args: ['obj1', 800] }));
+  });
+
+  describe('show_tool', () => {
+    it('rejects leading text', () => expect(parseAction('xshow_tool: brush').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('show_tool: brush x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('show_tool:brush')).toEqual({ type: 'show_tool', args: ['brush'] }));
+  });
+
+  describe('hide_tool', () => {
+    it('rejects leading text', () => expect(parseAction('xhide_tool: brush').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('hide_tool: brush x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('hide_tool:brush')).toEqual({ type: 'hide_tool', args: ['brush'] }));
+  });
+
+  describe('set_sprite', () => {
+    it('rejects trailing text', () => expect(parseAction('set_sprite: actor 2x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('set_sprite:actor 2')).toEqual({ type: 'set_sprite', args: ['actor', 2] }));
+    it('allows multiple spaces before the index', () => expect(parseAction('set_sprite: actor  2')).toEqual({ type: 'set_sprite', args: ['actor', 2] }));
+    it('reads a multi-digit index', () => expect(parseAction('set_sprite: actor 20')).toEqual({ type: 'set_sprite', args: ['actor', 20] }));
+  });
+
+  describe('advance_sprite', () => {
+    it('rejects leading text', () => expect(parseAction('xadvance_sprite: actor').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('advance_sprite: actor x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('advance_sprite:actor')).toEqual({ type: 'advance_sprite', args: ['actor'] }));
+  });
+
+  describe('splash_at', () => {
+    it('rejects leading text', () => expect(parseAction('xsplash_at: 100 250').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('splash_at: 100 250x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('splash_at:100 250')).toEqual({ type: 'splash_at', args: [100, 250] }));
+    it('allows multiple spaces between coordinates', () => expect(parseAction('splash_at: 100  250')).toEqual({ type: 'splash_at', args: [100, 250] }));
+  });
+
+  describe('flip_x', () => {
+    it('rejects leading text', () => expect(parseAction('xflip_x: character').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('flip_x: character x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('flip_x:character')).toEqual({ type: 'flip_x', args: ['character'] }));
+  });
+
+  describe('move', () => {
+    it('rejects leading text', () => expect(parseAction('xmove: obj1 100 200').type).toBe('noop'));
+    it('rejects trailing text', () => expect(parseAction('move: obj1 100 200x').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('move:obj1 100 200')).toEqual({ type: 'move', args: ['obj1', '100', '200'] }));
+    it('allows multiple spaces before the first coordinate', () => expect(parseAction('move: obj1  100 200')).toEqual({ type: 'move', args: ['obj1', '100', '200'] }));
+    it('allows multiple spaces before the second coordinate', () => expect(parseAction('move: obj1 100  200')).toEqual({ type: 'move', args: ['obj1', '100', '200'] }));
+  });
+
+  describe('delay', () => {
+    it('rejects leading text', () => expect(parseAction('xdelay: 750 show: obj1').type).toBe('noop'));
+    it('rejects an embedded trailing newline', () => expect(parseAction('delay: 5 hello\n').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('delay:750 show: obj1')).toEqual({ type: 'delay', args: [750, 'show: obj1'] }));
+    it('allows multiple spaces before the inner action', () => expect(parseAction('delay: 750  show: obj1')).toEqual({ type: 'delay', args: [750, 'show: obj1'] }));
+    it('trims trailing whitespace from the inner action', () => expect(parseAction('delay: 750 show: obj1  ')).toEqual({ type: 'delay', args: [750, 'show: obj1'] }));
+  });
+
+  describe('show_tray', () => {
+    it('rejects leading text', () => expect(parseAction('xshow_tray: card_a').type).toBe('noop'));
+    it('rejects an embedded trailing newline', () => expect(parseAction('show_tray: card_a\n').type).toBe('noop'));
+    it('allows no space after the colon', () => expect(parseAction('show_tray:card_a')).toEqual({ type: 'show_tray', args: ['card_a'] }));
+    it('collapses multiple spaces between cards to one split', () => expect(parseAction('show_tray: card_a  card_b')).toEqual({ type: 'show_tray', args: ['card_a', 'card_b'] }));
+    it('trims trailing whitespace before splitting', () => expect(parseAction('show_tray: card_a card_b  ')).toEqual({ type: 'show_tray', args: ['card_a', 'card_b'] }));
+  });
 });
 
 describe('findAction', () => {
@@ -198,6 +330,42 @@ describe('findAction', () => {
     expect(r.type).toBe('say');
     expect(r.text).toContain('tool');
   });
+
+  it('ignores tool_tap actions entirely when no tool is selected', () => {
+    const spec = makeSpec([{ when: { tool_tap: { tool: 'brush', target: 'canvas' } }, do: ['x'] }]);
+    const r = findAction(spec, { x: 0 }, 'canvas', null, false);
+    expect(r.type).toBe('none');
+  });
+
+  it('does not match a tool_tap action targeting a different object', () => {
+    const spec = makeSpec([{ when: { tool_tap: { tool: 'brush', target: 'other' } }, do: ['x'] }]);
+    const r = findAction(spec, { x: 0 }, 'canvas', 'brush', false);
+    expect(r.type).toBe('none');
+  });
+
+  it('falls through to tap when no tool_tap actions exist for the target at all', () => {
+    const spec = makeSpec([{ when: { tap: 'canvas' }, do: ['x'] }]);
+    const r = findAction(spec, { x: 0 }, 'canvas', 'brush', false);
+    expect(r.type).toBe('exec');
+  });
+
+  it('does not prompt to pick a tool when the spec defines no toolbar', () => {
+    const spec = makeSpec([{ when: { tool_tap: { tool: 'brush', target: 'canvas' } }, do: ['x'] }], null);
+    const r = findAction(spec, { x: 0 }, 'canvas', null, false);
+    expect(r.type).toBe('none');
+  });
+
+  it('does not prompt to pick a tool when no tool_tap action targets this object', () => {
+    const spec = makeSpec([{ when: { tool_tap: { tool: 'brush', target: 'other' } }, do: ['x'] }], [{ id: 'brush', sprite: 'brush' }]);
+    const r = findAction(spec, { x: 0 }, 'canvas', null, false);
+    expect(r.type).toBe('none');
+  });
+
+  it('does not prompt to pick a tool when there are no actions at all', () => {
+    const spec = makeSpec([], [{ id: 'brush', sprite: 'brush' }]);
+    const r = findAction(spec, { x: 0 }, 'canvas', null, false);
+    expect(r.type).toBe('none');
+  });
 });
 
 describe('shouldTriggerWin', () => {
@@ -212,4 +380,16 @@ describe('gridMajorKey', () => {
   it('returns 0 for 0', () => expect(gridMajorKey(0)).toBe('0'));
   it('returns 1 for non-multiples of 100', () => expect(gridMajorKey(50)).toBe('1'));
   it('returns 1 for 1', () => expect(gridMajorKey(1)).toBe('1'));
+});
+
+describe('CJS module.exports guard', () => {
+  it('exposes exactly the same function set via require as via import', () => {
+    const names = [
+      'evalCond', 'applyStateAction', 'resolveScene', 'resolveImgFit', 'resolveImgSrc',
+      'resolveObject', 'objectRenderType', 'resolveAnimName', 'nextSpriteIdx', 'parseAction',
+      'findAction', 'shouldTriggerWin', 'gridMajorKey',
+    ];
+    expect(Object.keys(cjs).sort()).toEqual([...names].sort());
+    names.forEach(name => expect(typeof cjs[name]).toBe('function'));
+  });
 });
