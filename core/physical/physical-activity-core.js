@@ -5,8 +5,7 @@ const LEVEL_COLORS = {
 };
 
 function nodeLevel(nodeId, graphData) {
-  const node = graphData.nodes.find(n => n.id === nodeId);
-  return node ? node.level : 'ground';
+  return graphData.nodes.find(n => n.id === nodeId)?.level;
 }
 
 export function renderRouteSteps(route, routeLabels, graphData) {
@@ -58,7 +57,6 @@ export function renderActivityContent(activity, graphData, criteriaMap = {}) {
       const c = criteriaMap[id];
       return c ? `<span style="display:inline-block;background:#EBF5FB;color:#1A5276;border-radius:12px;padding:4px 12px;font-size:0.85em;font-weight:bold;margin:3px;">[${c.areaLabel}] ${c.label}</span>` : '';
     })
-    .filter(Boolean)
     .join('');
 
   const routeHTML = renderRouteSteps(activity.route, activity.route_labels, graphData);
@@ -166,11 +164,11 @@ ${renderActivityContent(activity, graphData, criteriaMap)}
 }
 
 export function renderIndexContent(activities) {
-  const competencyColors = ['#D5F5E3', '#D6EAF8', '#FEF9E7', '#FDEDEC'];
+  const competencyColors = ['#D5F5E3', '#D6EAF8'];
 
   const tiles = activities.map(({ name, activity }) => {
     const badges = activity.competencies.slice(0, 2)
-      .map((c, i) => `<span style="font-size:0.7em;background:${competencyColors[i % 4]};border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">${c.replace(/_/g, ' ')}</span>`)
+      .map((c, i) => `<span style="font-size:0.7em;background:${competencyColors[i]};border-radius:8px;padding:2px 8px;margin:2px;display:inline-block;">${c.replace(/_/g, ' ')}</span>`)
       .join('');
     return `  <a class="tile" href="activities/${name}/" style="background:#F0FFF4;">
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px 4px;gap:6px;">
