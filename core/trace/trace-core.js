@@ -9,7 +9,7 @@ function pointAtDist(samples, sampleStep, dist) {
 
 function nearestOnPath(pt, center, stroke) {
   const RADIUS = 30;
-  const centerIdx = Math.min(stroke.samples.length - 1, Math.round(center / stroke.sampleStep));
+  const centerIdx = Math.round(center / stroke.sampleStep);
   let best = center, bestD2 = Infinity;
   for (let i = 0; i <= RADIUS; i++) {
     const idx = Math.min(stroke.samples.length - 1, centerIdx + i);

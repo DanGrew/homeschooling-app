@@ -2,12 +2,13 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { parseSubPaths, pointAtDist, nearestOnPath, advanceDist, animationProgress, resolveOpts, TraceState } = require('../../core/trace/trace-core.js');
 
-function makeStroke(totalLen, n = 100) {
+function makeStroke(totalLen, n = 100, opts = {}) {
+  const { x0 = 0, y0 = 0, dy = 0 } = opts;
   const sampleStep = totalLen / n;
   const samples = [];
   for (let i = 0; i <= n; i++) {
     const d = (i / n) * totalLen;
-    samples.push({ d, x: d, y: 0 });
+    samples.push({ d, x: x0 + d, y: y0 + d * dy });
   }
   return { totalLen, samples, sampleStep };
 }
@@ -40,6 +41,10 @@ describe('pointAtDist', () => {
   it('clamps beyond totalLen', () => {
     expect(pointAtDist(stroke.samples, stroke.sampleStep, 999).x).toBe(100);
   });
+  it('divides distance by sampleStep to find the index', () => {
+    const halfStepStroke = makeStroke(100, 50);
+    expect(pointAtDist(halfStepStroke.samples, halfStepStroke.sampleStep, 10).x).toBeCloseTo(10, 0);
+  });
 });
 
 describe('nearestOnPath', () => {
@@ -52,6 +57,24 @@ describe('nearestOnPath', () => {
   });
   it('does not look behind center', () => {
     expect(nearestOnPath({ x: 5, y: 0 }, 40, stroke)).toBeGreaterThanOrEqual(40);
+  });
+  it('divides center by sampleStep to place the search window', () => {
+    const halfStepStroke = makeStroke(100, 50);
+    expect(nearestOnPath({ x: 20, y: 0 }, 20, halfStepStroke)).toBeCloseTo(20, 0);
+  });
+  it('searches the full radius window, including its last step', () => {
+    expect(nearestOnPath({ x: 40, y: 0 }, 10, stroke)).toBe(40);
+  });
+  it('sums the squared x and y offsets rather than subtracting them', () => {
+    const diagonal = makeStroke(100, 100, { dy: 1 });
+    expect(nearestOnPath({ x: 55, y: 45 }, 50, diagonal)).toBeCloseTo(50, 0);
+  });
+  it('uses (s.y - pt.y) for the y offset, not (s.y + pt.y)', () => {
+    const diagonal = makeStroke(100, 100, { dy: 1 });
+    expect(nearestOnPath({ x: 50, y: 20 }, 10, diagonal)).toBeCloseTo(35, 0);
+  });
+  it('keeps the earlier sample on a distance tie', () => {
+    expect(nearestOnPath({ x: 10.5, y: 0 }, 0, stroke)).toBe(10);
   });
 });
 
@@ -72,6 +95,13 @@ describe('advanceDist', () => {
     const d = advanceDist({ x: 99, y: 0 }, stroke, 0, 999, 0.04);
     expect(d).toBeLessThanOrEqual(100 * 0.04 + 1);
   });
+  it('allows exactly-at-tolerance distance through', () => {
+    expect(advanceDist({ x: 45, y: 0 }, stroke, 0, 45, 0.04)).not.toBeNull();
+  });
+  it('measures distance from ball using both x and y offsets, subtracted not added', () => {
+    const diagonal = makeStroke(100, 100, { dy: 1 });
+    expect(advanceDist({ x: 50, y: 50 }, diagonal, 50, 1, 0.04)).not.toBeNull();
+  });
 });
 
 describe('resolveOpts', () => {
@@ -81,6 +111,8 @@ describe('resolveOpts', () => {
     expect(o.maxStep).toBe(0.04);
     expect(o.completionAt).toBe(0.96);
     expect(o.onComplete).toBeNull();
+    expect(o.onStrokeStart).toBeNull();
+    expect(o.onStrokeComplete).toBeNull();
     expect(o.interactive).toBe(true);
     expect(o.progressStroke).toBe('#FFD700');
   });
@@ -100,10 +132,9 @@ describe('resolveOpts', () => {
   });
   it('applyProgressAttrs skips unset attrs', () => {
     const o = resolveOpts({});
-    const el = { attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } };
-    o.applyProgressAttrs(el);
-    expect(el.attrs['stroke-width']).toBeUndefined();
-    expect(el.attrs['style']).toBeUndefined();
+    const setAttribute = vi.fn();
+    o.applyProgressAttrs({ setAttribute });
+    expect(setAttribute).not.toHaveBeenCalled();
   });
 });
 
@@ -121,13 +152,17 @@ describe('TraceState.reset', () => {
   it('returns dashOffsets equal to totalLen per stroke', () => {
     expect(makeState({}, 2).reset().dashOffsets).toEqual([100, 100]);
   });
+  it('starts with _strokeJustCompleted false', () => {
+    expect(makeState()._strokeJustCompleted).toBe(false);
+  });
   it('clears state flags', () => {
     const state = makeState();
-    state.done = true; state.active = true; state.currentDist = 50;
+    state.done = true; state.active = true; state.currentDist = 50; state._strokeJustCompleted = true;
     state.reset();
     expect(state.done).toBe(false);
     expect(state.active).toBe(false);
     expect(state.currentDist).toBe(0);
+    expect(state._strokeJustCompleted).toBe(false);
   });
 });
 
@@ -154,6 +189,30 @@ describe('TraceState.tryActivate', () => {
   it('rejects when not interactive', () => {
     expect(makeState({ interactive: false }).tryActivate(0, 0, 1)).toEqual({ activated: false });
   });
+  it('activates exactly at the tolerance boundary', () => {
+    const state = makeState();
+    expect(state.tryActivate(45, 0, 1)).toEqual({ activated: true });
+  });
+  it('measures x offset by subtraction, not addition', () => {
+    const stroke = makeStroke(100, 100, { x0: 100 });
+    const state = new TraceState([stroke], resolveOpts({ tolerance: 1 }));
+    expect(state.tryActivate(100, 0, 1)).toEqual({ activated: true });
+  });
+  it('measures y offset by subtraction, not addition', () => {
+    const stroke = makeStroke(100, 100, { y0: 100 });
+    const state = new TraceState([stroke], resolveOpts({ tolerance: 1 }));
+    expect(state.tryActivate(0, 100, 1)).toEqual({ activated: true });
+  });
+  it('sums the squared x and y offsets rather than subtracting them', () => {
+    const state = makeState({ tolerance: Math.sqrt(50) });
+    expect(state.tryActivate(6, 8, 1)).toEqual({ activated: false });
+  });
+  it('calls onStrokeStart with the current stroke index on activation', () => {
+    const onStrokeStart = vi.fn();
+    const state = makeState({ onStrokeStart });
+    state.tryActivate(0, 0, 1);
+    expect(onStrokeStart).toHaveBeenCalledWith(0);
+  });
 });
 
 describe('TraceState.advance', () => {
@@ -170,6 +229,11 @@ describe('TraceState.advance', () => {
     state.tryActivate(0, 0, 1);
     expect(state.advance(0, 200, 1).type).toBe('noop');
   });
+  it('returns noop when pointerId matches but active is false', () => {
+    const state = makeState();
+    state.activePointerId = 1;
+    expect(state.advance(10, 0, 1).type).toBe('noop');
+  });
   it('returns move command for normal advance', () => {
     const state = makeState({ completionAt: 0.99 });
     state.tryActivate(0, 0, 1);
@@ -177,6 +241,14 @@ describe('TraceState.advance', () => {
     expect(cmd.type).toBe('move');
     expect(cmd.strokeIdx).toBe(0);
     expect(cmd.cx).toBeGreaterThan(0);
+    expect(cmd.dashOffset).toBe(100 - state.currentDist);
+  });
+  it('treats the exact completionAt boundary as completion, not a move', () => {
+    const state = makeState({ completionAt: 0.9, tolerance: 999, maxStep: 1 });
+    state.tryActivate(0, 0, 1);
+    state.currentDist = 90;
+    const cmd = state.advance(90, 0, 1);
+    expect(cmd.type).toBe('complete-stroke');
   });
   it('returns complete-stroke and done=true on single stroke', () => {
     const state = makeState({ completionAt: 0.5, tolerance: 999, maxStep: 1 });
@@ -186,6 +258,8 @@ describe('TraceState.advance', () => {
     expect(cmd.type).toBe('complete-stroke');
     expect(cmd.prevStrokeIdx).toBe(0);
     expect(state.done).toBe(true);
+    expect(state.active).toBe(false);
+    expect(state._strokeJustCompleted).toBe(true);
   });
   it('calls onComplete on single stroke completion', () => {
     const onComplete = vi.fn();
@@ -203,6 +277,14 @@ describe('TraceState.advance', () => {
     expect(cmd.type).toBe('complete-stroke');
     expect(state.currentStrokeIdx).toBe(1);
     expect(state.done).toBe(false);
+  });
+  it('calls onStrokeComplete with the next stroke index and its start point', () => {
+    const onStrokeComplete = vi.fn();
+    const state = makeState({ completionAt: 0.5, tolerance: 999, maxStep: 1, onStrokeComplete }, 2);
+    state.tryActivate(0, 0, 1);
+    state.currentDist = 80;
+    state.advance(90, 0, 1);
+    expect(onStrokeComplete).toHaveBeenCalledWith(1, 0, 0);
   });
 });
 
@@ -289,6 +371,31 @@ describe('TraceState.animationTick', () => {
     const cmd = state.animationTick(600, 1000);
     expect(cmd.completedIdxs).toEqual([0]);
   });
+  it('anchors _startTime to the first tick timestamp, not to zero', () => {
+    const state = makeState();
+    const cmd = state.animationTick(500, 1000);
+    expect(cmd.done).toBe(false);
+    expect(cmd.cx).toBeCloseTo(0, 0);
+  });
+  it('computes elapsed time as (ts - startTime) / duration', () => {
+    const state = makeState();
+    state.animationTick(500, 1000);
+    const cmd = state.animationTick(600, 1000);
+    expect(cmd.done).toBe(false);
+  });
+  it('stops the animating flag once the tick completes', () => {
+    const state = makeState();
+    state.beginAnimation();
+    state.animationTick(0, 1000);
+    state.animationTick(1000, 1000);
+    expect(state._animating).toBe(false);
+  });
+  it('dashOffset is totalLen minus the remaining distance on the stroke', () => {
+    const state = makeState();
+    state.animationTick(500, 1000);
+    const cmd = state.animationTick(600, 1000);
+    expect(cmd.dashOffset).toBeCloseTo(90, 0);
+  });
 });
 
 describe('animationProgress', () => {
@@ -310,5 +417,8 @@ describe('animationProgress', () => {
     const { strokeIdx, rem } = animationProgress(0.6, totalLen, strokes);
     expect(strokeIdx).toBe(1);
     expect(rem).toBeCloseTo(10);
+  });
+  it('clamps to the last stroke without going out of bounds when rem exceeds every stroke', () => {
+    expect(animationProgress(1.5, totalLen, strokes)).toEqual({ strokeIdx: 1, rem: 50 });
   });
 });
