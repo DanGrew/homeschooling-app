@@ -28,6 +28,14 @@ describe('buildSoundIndex', function() {
     var index = buildSoundIndex(GRAPHEMES);
     expect(Object.keys(index)).not.toContain('');
   });
+
+  it('tolerates a grapheme with no sounds property at all', function() {
+    var graphemes = Object.assign({}, GRAPHEMES, {
+      'lower-x': { type: 'letter', characters: 'x', asset: null }
+    });
+    var index = buildSoundIndex(graphemes);
+    expect(Object.keys(index)).not.toContain('undefined');
+  });
 });
 
 describe('getAssetPath', function() {
@@ -81,5 +89,11 @@ describe('graphemeIdForChar', function() {
   it('returns null for non-alphanumeric', function() {
     expect(graphemeIdForChar('!')).toBeNull();
     expect(graphemeIdForChar(' ')).toBeNull();
+  });
+
+  it('respects the upper bound of each range, not just the lower bound', function() {
+    expect(graphemeIdForChar('{')).toBeNull();
+    expect(graphemeIdForChar('[')).toBeNull();
+    expect(graphemeIdForChar(':')).toBeNull();
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { derivePieces, shufflePieces, checkPlacement, isComplete, isLocked, resolvePuzzleImage } from '../../core/puzzle/puzzle-core.js'
 
 describe('derivePieces', () => {
@@ -57,6 +57,20 @@ describe('shufflePieces', () => {
     const shuffled = shufflePieces(pieces)
     expect(shuffled).toHaveLength(1)
     expect(shuffled[0]).toEqual(pieces[0])
+  })
+
+  describe('with a pinned random sequence', () => {
+    afterEach(() => { vi.restoreAllMocks() })
+
+    it('applies the Fisher-Yates swap at each step using floor(random * (i + 1))', () => {
+      const pieces = derivePieces({ rows: 1, cols: 4 })
+      vi.spyOn(Math, 'random')
+        .mockReturnValueOnce(0.9) // i=3: floor(0.9*4)=3 (self-swap)
+        .mockReturnValueOnce(0.1) // i=2: floor(0.1*3)=0
+        .mockReturnValueOnce(0.6) // i=1: floor(0.6*2)=1 (self-swap)
+      const shuffled = shufflePieces(pieces)
+      expect(shuffled.map(p => p.id)).toEqual(['p_r0_c2', 'p_r0_c1', 'p_r0_c0', 'p_r0_c3'])
+    })
   })
 })
 

@@ -98,6 +98,10 @@ describe('active', () => {
     expect(style).toContain('background:#fff');
     expect(style).toContain('color:#333');
   });
+  it('includes the trailing font and cursor styles', () => {
+    const style = active(true, '#3498DB');
+    expect(style).toContain('font-family:inherit;font-size:0.95em;cursor:pointer;');
+  });
 });
 
 describe('tagIcon', () => {
@@ -107,6 +111,17 @@ describe('tagIcon', () => {
   it('known tag returns emoji', () => {
     expect(tagIcon('animals')).toBe('\uD83D\uDC3E');
     expect(tagIcon('fruit')).toBe('\uD83C\uDF4E');
+  });
+  it('every registered tag maps to its own distinct emoji', () => {
+    expect(tagIcon('emotions')).toBe('\uD83D\uDE0A');
+    expect(tagIcon('vehicles')).toBe('\uD83D\uDE97');
+    expect(tagIcon('medical')).toBe('\uD83C\uDFE5');
+    expect(tagIcon('vegetables')).toBe('\uD83E\uDD66');
+    expect(tagIcon('dairy')).toBe('\uD83E\uDDC0');
+    expect(tagIcon('bakery')).toBe('\uD83E\uDD50');
+    expect(tagIcon('groceries')).toBe('\uD83D\uDED2');
+    expect(tagIcon('paw-patrol')).toBe('\uD83D\uDC3E\uD83D\uDE93');
+    expect(tagIcon('claude')).toBe('\uD83E\uDD16');
   });
   it('unknown tag returns uppercased first char', () => {
     expect(tagIcon('custom')).toBe('C');
@@ -146,6 +161,10 @@ describe('collapsedBtn', () => {
     expect(s).toContain('width:40px');
     expect(s).toContain('height:40px');
   });
+  it('includes the trailing padding, font-size and flex-shrink styles', () => {
+    const s = collapsedBtn(false, '#000');
+    expect(s).toContain('padding:0;font-size:1.2em;flex-shrink:0;');
+  });
 });
 
 describe('expandedBtn', () => {
@@ -156,12 +175,17 @@ describe('expandedBtn', () => {
   });
   it('inactive state uses neutral colours', () => {
     const s = expandedBtn(false, '#2ECC71');
+    expect(s).toContain('border:2px solid #ddd');
     expect(s).toContain('background:#fff');
     expect(s).toContain('color:#333');
   });
   it('full-width layout', () => {
     const s = expandedBtn(false, '#000');
     expect(s).toContain('width:100%');
+  });
+  it('includes the trailing text-align and flex-shrink styles', () => {
+    const s = expandedBtn(false, '#000');
+    expect(s).toContain('text-align:left;flex-shrink:0;');
   });
 });
 

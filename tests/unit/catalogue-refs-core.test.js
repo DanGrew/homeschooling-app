@@ -40,32 +40,32 @@ describe('validateLearning', () => {
   it('flags an area that does not match the file home', () => {
     const errs = validateLearning(Object.assign({}, VALID, { area: 'communication-language' }), CTX);
     expect(errs).toHaveLength(1);
-    expect(errs[0]).toContain('does not match its file home');
+    expect(errs[0]).toBe('count-to-5: area "communication-language" does not match its file home "mathematics"');
   });
 
   it('flags a curriculum tag that is not a valid criterion id', () => {
     const errs = validateLearning(Object.assign({}, VALID, { curriculum: ['maths.nope'] }), CTX);
     expect(errs).toHaveLength(1);
-    expect(errs[0]).toContain('not a valid criterion id');
+    expect(errs[0]).toBe('count-to-5: curriculum tag "maths.nope" is not a valid criterion id');
   });
 
   it('flags a learningIcon outside the registry', () => {
     const errs = validateLearning(Object.assign({}, VALID, { learningIcons: ['count', 'sparkle'] }), CTX);
     expect(errs).toHaveLength(1);
-    expect(errs[0]).toContain('not in the icon registry');
+    expect(errs[0]).toBe('count-to-5: learningIcon "sparkle" is not in the icon registry');
   });
 
   it('flags a playground missing from the registry and the activities dir', () => {
     const errs = validateLearning(Object.assign({}, VALID, { playgrounds: [{ id: 'ghost', note: 'x' }] }), CTX);
     expect(errs).toHaveLength(2);
-    expect(errs.some(e => e.includes('not in the playgrounds registry'))).toBe(true);
-    expect(errs.some(e => e.includes('no app/activities/ghost/ directory'))).toBe(true);
+    expect(errs).toContain('count-to-5: playground "ghost" is not in the playgrounds registry');
+    expect(errs).toContain('count-to-5: playground "ghost" has no app/activities/ghost/ directory');
   });
 
   it('flags a registered playground that has no activity directory', () => {
     const ctx = Object.assign({}, CTX, { playgroundIds: ['object-playground', 'ghost'] });
     const errs = validateLearning(Object.assign({}, VALID, { playgrounds: [{ id: 'ghost', note: 'x' }] }), ctx);
     expect(errs).toHaveLength(1);
-    expect(errs[0]).toContain('no app/activities/ghost/ directory');
+    expect(errs[0]).toBe('count-to-5: playground "ghost" has no app/activities/ghost/ directory');
   });
 });

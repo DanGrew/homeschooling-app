@@ -49,6 +49,25 @@ describe('pickFruitPair', () => {
     expect(['apple', 'lemon']).toContain(a)
     expect(['apple', 'lemon']).toContain(b)
   })
+
+  it('varies which fruit is picked first across many draws', () => {
+    const seen = new Set()
+    for (let i = 0; i < 200; i++) {
+      const [a] = pickFruitPair(FRUITS)
+      seen.add(a)
+    }
+    expect(seen.size).toBeGreaterThan(3)
+  })
+
+  it('varies the offset between the two fruits across many draws', () => {
+    const offsets = new Set()
+    for (let i = 0; i < 200; i++) {
+      const [a, b] = pickFruitPair(FRUITS)
+      const idxA = FRUITS.indexOf(a), idxB = FRUITS.indexOf(b)
+      offsets.add(((idxB - idxA) % FRUITS.length + FRUITS.length) % FRUITS.length)
+    }
+    expect(offsets.size).toBeGreaterThan(1)
+  })
 })
 
 describe('pluralize', () => {
@@ -80,6 +99,11 @@ describe('makeImg', () => {
   it('returns img tag string', () => expect(makeImg({ url: '/img.png' }, '60px')).toMatch(/^<img /));
   it('includes url', () => expect(makeImg({ url: '/img.png' }, '60px')).toContain('src="/img.png"'));
   it('includes size in style', () => expect(makeImg({ url: '/x.png' }, '80px')).toContain('80px'));
+  it('returns the exact tag including transition and draggable attributes', () => {
+    expect(makeImg({ url: '/img.png' }, '60px')).toBe(
+      '<img src="/img.png" style="60px;transition:transform 0.15s,filter 0.15s;" draggable="false">'
+    );
+  });
 })
 
 describe('labelState', () => {
@@ -87,6 +111,9 @@ describe('labelState', () => {
   it('same when equal non-zero', () => expect(labelState(3, 3)).toBe('same'));
   it('bigger when self > other', () => expect(labelState(5, 3)).toBe('bigger'));
   it('smaller when self < other', () => expect(labelState(2, 4)).toBe('smaller'));
+  it('falls back to empty when no condition matches (defensive default)', () => {
+    expect(labelState(NaN, NaN)).toBe('empty');
+  });
 })
 
 describe('pluralize', () => {
@@ -115,6 +142,7 @@ describe('computeChange', () => {
     const r = computeChange('b', 1, 2, 3, 10);
     expect(r.newA).toBe(2);
     expect(r.newB).toBe(4);
+    expect(r.changed).toBe(true);
   });
   it('clamps at max', () => {
     const r = computeChange('a', 1, 10, 0, 10);

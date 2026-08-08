@@ -38,6 +38,12 @@ describe('buildCatalogItems', () => {
   it('returns empty array when filtered list is empty', () => {
     expect(buildCatalogItems([], CATALOGS)).toHaveLength(0);
   });
+
+  it('drops falsy tag entries', () => {
+    const withFalsyTag = { name: 'Bakery', tags: ['food', null, ''], items: [{ name: 'Bread', barcode: '004', icon: '🍞' }] };
+    const result = buildCatalogItems([withFalsyTag], [withFalsyTag]);
+    expect(result[0].tags).toEqual(['food']);
+  });
 });
 
 describe('loadCatalog', () => {
@@ -52,16 +58,16 @@ describe('loadCatalog', () => {
 
   it('throws when items is missing', async () => {
     vi.stubGlobal('fetch', () => Promise.resolve({ ok: true, json: () => Promise.resolve({ name: 'Empty' }) }));
-    await expect(loadCatalog('/catalog.json')).rejects.toThrow();
+    await expect(loadCatalog('/catalog.json')).rejects.toThrow('Catalog has no items');
   });
 
   it('throws when items is empty', async () => {
     vi.stubGlobal('fetch', () => Promise.resolve({ ok: true, json: () => Promise.resolve({ name: 'Empty', items: [] }) }));
-    await expect(loadCatalog('/catalog.json')).rejects.toThrow();
+    await expect(loadCatalog('/catalog.json')).rejects.toThrow('Catalog has no items');
   });
 
   it('throws when fetch fails', async () => {
     vi.stubGlobal('fetch', () => Promise.resolve({ ok: false, status: 404 }));
-    await expect(loadCatalog('/catalog.json')).rejects.toThrow();
+    await expect(loadCatalog('/catalog.json')).rejects.toThrow('Failed to load catalog: 404');
   });
 });

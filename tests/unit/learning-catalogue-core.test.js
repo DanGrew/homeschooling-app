@@ -128,6 +128,11 @@ describe('lcChipClass', () => {
     const play = { type: 'playground', id: 'object-playground' };
     expect(lcChipClass(area, play)).toBe('lc-chip');
   });
+  it('leaves a same-type chip off when the id differs', () => {
+    const a = { type: 'area', id: 'mathematics' };
+    const b = { type: 'area', id: 'communication-language' };
+    expect(lcChipClass(a, b)).toBe('lc-chip');
+  });
 });
 
 describe('lcMatchesQuery', () => {
@@ -143,6 +148,12 @@ describe('lcMatchesQuery', () => {
   });
   it('rejects when neither title nor keywords match', () => {
     expect(lcMatchesQuery(COUNT, 'zebra')).toBe(false);
+  });
+  it('short-circuits on an empty query without touching title', () => {
+    expect(lcMatchesQuery({ keywords: [] }, '')).toBe(true);
+  });
+  it('matches a keyword at index 0, not just later in the string', () => {
+    expect(lcMatchesQuery({ title: 'Count to 5', keywords: ['many'] }, 'many')).toBe(true);
   });
 });
 

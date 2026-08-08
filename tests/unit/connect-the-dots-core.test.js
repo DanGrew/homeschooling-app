@@ -26,6 +26,11 @@ describe('tightVB', () => {
     const nParts = tightVB(narrow).split(' ').map(Number);
     expect(wParts[2]).toBe(nParts[2]);
   });
+
+  it('pins the exact viewBox for a known shape', () => {
+    const s = { vb: '0 0 1000 200', dots: [{ cx: 200, cy: 10 }, { cx: 400, cy: 300 }] };
+    expect(tightVB(s)).toBe('140 -8 320 326');
+  });
 });
 
 describe('tapKey', () => {
