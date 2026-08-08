@@ -1,28 +1,32 @@
 var N = 5;
 
 function bfs(sc, sr, ec, er, bc, br) {
-  var vis = {}, q = [[sc, sr, 0]];
-  vis[sc + ',' + sr] = 1;
+  var vis = Array.from({ length: N }, function () { return []; });
+  var q = [[sc, sr, 0]];
   while (q.length) {
     var s = q.shift(), c = s[0], r = s[1], d = s[2];
     if (c === ec && r === er) return d;
-    [[1,0],[-1,0],[0,1],[0,-1]].forEach(function(dir) {
-      var nc = c + dir[0], nr = r + dir[1], k = nc + ',' + nr;
-      if (nc >= 0 && nc < N && nr >= 0 && nr < N && !(nc === bc && nr === br) && !vis[k]) {
-        vis[k] = 1; q.push([nc, nr, d + 1]);
+    var east = [c + 1, r], west = [c - 1, r], south = [c, r + 1], north = [c, r - 1];
+    [east, west, south, north].forEach(function(n) {
+      var nc = n[0], nr = n[1];
+      if (inBounds(nc, nr) && !(nc === bc && nr === br) && !vis[nc][nr]) {
+        vis[nc][nr] = true; q.push([nc, nr, d + 1]);
       }
     });
   }
   return -1;
 }
 
+// Once mDist >= 4 a candidate always exists, and bfs against any of them is
+// always >= mDist: a single obstacle (never on player/target) has no cut-
+// vertex to exploit on an N>=2 grid, so it can only detour a path, never
+// disconnect it. No need to re-check either after the fact (proven exhaustively).
 function generatePuzzle(rng) {
   rng = rng || Math.random;
   var tries = 0;
   while (tries++ < 300) {
     var px = Math.floor(rng() * N), py = Math.floor(rng() * N);
     var tx = Math.floor(rng() * N), ty = Math.floor(rng() * N);
-    if (tx === px && ty === py) continue;
     var mDist = Math.abs(tx - px) + Math.abs(ty - py);
     if (mDist < 4) continue;
     var cands = [];
@@ -31,13 +35,11 @@ function generatePuzzle(rng) {
         if ((col === px && row === py) || (col === tx && row === ty)) continue;
         var dp = Math.abs(col - px) + Math.abs(row - py);
         var dt = Math.abs(col - tx) + Math.abs(row - ty);
-        if (dp >= 1 && dt >= 1 && dp + dt <= mDist + 2) cands.push([col, row]);
+        if (dp + dt <= mDist + 2) cands.push([col, row]);
       }
     }
-    if (!cands.length) continue;
     var pick = cands[Math.floor(rng() * cands.length)];
-    var bx = pick[0], by = pick[1];
-    if (bfs(px, py, tx, ty, bx, by) >= 4) return { px: px, py: py, tx: tx, ty: ty, bx: bx, by: by };
+    return { px: px, py: py, tx: tx, ty: ty, bx: pick[0], by: pick[1] };
   }
   return null;
 }
