@@ -27,8 +27,8 @@ Each was looked at and judged the right size for what it holds.
 
 ## Shape findings — index or doc, not both
 
-`RULES.md` §1: an **index** points and never explains; a **doc** explains one concern and never points onward. A file whose position says one and whose content says the other is a defect independent of its length.
+`MACHINERY-SHAPE.md` §1: an **index** points and never explains; a **doc** explains one concern and never points onward. A file whose position says one and whose content says the other is a defect independent of its length.
 
 _None._
 
-**Refs:** `RULES.md` · `tools/doc-budget.md`
+**Refs:** `MACHINERY-SHAPE.md` · `tools/doc-budget.md`
