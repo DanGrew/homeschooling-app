@@ -327,7 +327,7 @@ if (rule === 'no-css-outside-styles') {
 }
 
 if (rule === 'no-md-outside-docs') {
-  // RULES.md §3: only CLAUDE.md and README.md may sit at a repo root. The
+  // MACHINERY-SHAPE.md §3: only CLAUDE.md and README.md may sit at a repo root. The
   // TESTING.md / ARCHITECTURE.md exceptions went away when those two moved into
   // docs/; TESTING-GAPS.md and CONTRACT-VIOLATIONS.md were allowances for files
   // that never existed. A licence is not documentation.
