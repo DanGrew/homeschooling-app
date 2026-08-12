@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 
 const portFile = path.join(__dirname, '.port')
-const PORT = process.env.PORT ||
+const PORT = process.env.CHECKS_LOCAL_PORT || process.env.PORT ||
   (fs.existsSync(portFile) ? fs.readFileSync(portFile, 'utf8').trim() : '3000')
 
 module.exports = defineConfig({
