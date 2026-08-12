@@ -6,9 +6,6 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | Module | Purpose |
 |--------|---------|
 | `core/guidance/lesson-pool.js` | Fisher-Yates shuffle + pool init for randomPools lesson steps |
-| `core/telemetry/learning-events.js` | Records learning events with UUID |
-| `core/telemetry/learning-db.js` | Persists events to IndexedDB |
-| `core/telemetry/learning-journal-core.js` | Aggregates events into journal data |
 | `core/dictionary/dictionary-core.js` | Loads concept/rep data with caching |
 | `core/dictionary/dictionary-helpers-core.js` | Filters and transforms dictionary entries |
 | `core/collections/collections-core.js` | Generic array helpers extracted from inline HTML: `notNull`, `firstIndexAfter`, `sortByName` |
@@ -70,7 +67,7 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `ui/object-playground/object-playground-ui.js` | Object playground: SVG canvas render, init |
 | `ui/frogger/frogger-renderer.js` | Frogger DOM renderer: grid, entities, player hop animation, collision highlight |
 | `ui/paint-playground/paint-playground-ui.js` | Paint playground: two-layer canvas init, viewport positioning |
-| `ui/letter-shapes/letter-shapes-ui.js` | Letter Shapes: fetch graphemes, mode/panel render, tap wiring, completion telemetry |
+| `ui/letter-shapes/letter-shapes-ui.js` | Letter Shapes: fetch graphemes, mode/panel render, tap wiring |
 | `ui/logic-gates/puzzle-ui.js` | Logic puzzle board UI |
 | `ui/logic-gates/sandbox-ui.js` | Logic gate builder UI |
 | `ui/match-colour-shape/match-colour-shape-ui.js` | Match game UI |
