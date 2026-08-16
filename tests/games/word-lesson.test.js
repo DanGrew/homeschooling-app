@@ -80,9 +80,12 @@ test('custom mode disables paginator buttons', async ({ page }) => {
 // --- watch mode ---
 
 test('Watch shows Reset and disables Watch during animation', async ({ page }) => {
+  await page.route('**/assets/language-characters/**', route =>
+    new Promise(r => setTimeout(() => r(route.continue()), 800))
+  )
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
-  await page.waitForTimeout(500)
+  await page.waitForFunction(() => document.getElementById('word-container').querySelectorAll('svg').length > 0)
   await page.locator('#btn-watch').click()
   await expect(page.locator('#btn-stop')).toBeVisible()
   await expect(page.locator('#btn-watch')).toBeDisabled()
@@ -91,7 +94,7 @@ test('Watch shows Reset and disables Watch during animation', async ({ page }) =
 test('Reset stops Watch animation and hides Reset', async ({ page }) => {
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
-  await page.waitForTimeout(500)
+  await page.waitForFunction(() => document.getElementById('word-container').querySelectorAll('svg').length > 0)
   await page.locator('#btn-watch').click()
   await expect(page.locator('#btn-stop')).toBeVisible()
   await page.locator('#btn-stop').click()
@@ -117,9 +120,12 @@ test('Watch animation completes and hides Reset', async ({ page }) => {
 // --- try it mode ---
 
 test('Try It hides Try It button and hides Reset', async ({ page }) => {
+  await page.route('**/assets/language-characters/**', route =>
+    new Promise(r => setTimeout(() => r(route.continue()), 800))
+  )
   await page.goto(URL)
   await page.waitForFunction(() => document.getElementById('word-label').textContent.length > 0)
-  await page.waitForTimeout(500)
+  await page.waitForFunction(() => document.getElementById('word-container').querySelectorAll('svg').length > 0)
   await page.locator('#btn-tryit').click()
   await expect(page.locator('#btn-tryit')).not.toBeVisible()
   await expect(page.locator('#btn-stop')).not.toBeVisible()
