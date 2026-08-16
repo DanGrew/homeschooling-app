@@ -107,6 +107,26 @@
       ]
     },
     {
+      "id": "chatting-and-conversation",
+      "icon": "💬",
+      "title": "Chatting & conversation",
+      "type": "life-moment",
+      "focus": "Every ordinary chat along the way — in the car, over toys, on the walk to nowhere in particular — and the huge amount of thinking, feeling and connecting that happens inside it.",
+      "area": "moments",
+      "themes": [
+        { "title": "The back-and-forth of a real conversation",
+          "detail": "It starts as a coo answered with a coo, long before there are any words, and grows into holding an exchange across several turns and changing the subject — even getting the grammar wrong in exactly the way that shows a rule has just been picked up (\"I runned really fast\")." },
+        { "title": "Words for what's going on inside — and what keeps them well",
+          "detail": "Happy, sad, angry, worried — the words that let a feeling be said instead of only acted out — alongside noticing that someone else might be feeling something different, and picking up the everyday facts of staying well: sleep, food, teeth, moving about, not too much screen." },
+        { "title": "Wondering, guessing and why",
+          "detail": "A real guess offered to \"I wonder what would happen if…\", ideas joined together with because and so, more of what's been noticed said aloud with a wider vocabulary than just \"thing\" or \"look\", and a problem explained out loud after it's been solved." },
+        { "title": "Who's who in my life",
+          "detail": "Family, and the wider people who make up their world, named and described — the different shapes a family can take, and their own place in it: a life pieced together from a photo and a story about before they can remember, and starting to feel like someone who matters in all of it." },
+        { "title": "People are different, and that's ordinary",
+          "detail": "Skin, hair, dress, names, ways of doing things — noticed straightforwardly rather than skipped over, and met with the same interest and warmth as anything else in the world worth talking about." }
+      ]
+    },
+    {
       "id": "following-instructions-and-helping",
       "icon": "🧹",
       "title": "Following instructions & helping",
@@ -142,6 +162,24 @@
           "detail": "Noticing when two words rhyme, filling in the one that's been deliberately left out, clapping out the syllables and hearing how a word ends — the groundwork phonics later gives a name to." },
         { "title": "Numbers that come round in a song",
           "detail": "Counting songs and rhymes are one of the first places the number-word sequence gets said out loud past five — the chain of numbers riding on a tune rather than sitting on a page." }
+      ]
+    },
+    {
+      "id": "shopping",
+      "icon": "🛒",
+      "title": "Shopping",
+      "type": "life-moment",
+      "focus": "The trip that turns number into something real — how many, is it enough, which one's bigger — worked out with actual things in your hands rather than on paper.",
+      "area": "moments",
+      "themes": [
+        { "title": "Working it out on the spot",
+          "detail": "Real, out-loud number problems that come up in the aisle — is that enough satsumas for the week, how many more we need — worked out with the actual things going into the trolley rather than on paper." },
+        { "title": "Enough for everyone",
+          "detail": "One for you, one for your sister, is there a spare — sharing out fairly is a real-world problem too, and shopping hands over a fresh one every trip." },
+        { "title": "The numeral and the pile",
+          "detail": "A number on a list, a price label, a checkout screen — matched to a counted-out pile of the real thing, and read back the other way: however many ends up in the bag is the numeral it stands for." },
+        { "title": "Bigger, smaller, heavier, lighter",
+          "detail": "The big cabbage against the small one, the heavy bag against the light one — sized up by eye and by hand, with the words that come with it." }
       ]
     },
     {
