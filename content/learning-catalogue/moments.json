@@ -107,6 +107,26 @@
       ]
     },
     {
+      "id": "chatting-and-conversation",
+      "icon": "💬",
+      "title": "Chatting & conversation",
+      "type": "life-moment",
+      "focus": "Every ordinary chat along the way — in the car, over toys, on the walk to nowhere in particular — and the huge amount of thinking, feeling and connecting that happens inside it.",
+      "area": "moments",
+      "themes": [
+        { "title": "The back-and-forth of a real conversation",
+          "detail": "It starts as a coo answered with a coo, long before there are any words, and grows into holding an exchange across several turns and changing the subject — even getting the grammar wrong in exactly the way that shows a rule has just been picked up (\"I runned really fast\")." },
+        { "title": "Words for what's going on inside — and what keeps them well",
+          "detail": "Happy, sad, angry, worried — the words that let a feeling be said instead of only acted out — alongside noticing that someone else might be feeling something different, and picking up the everyday facts of staying well: sleep, food, teeth, moving about, not too much screen." },
+        { "title": "Wondering, guessing and why",
+          "detail": "A real guess offered to \"I wonder what would happen if…\", ideas joined together with because and so, more of what's been noticed said aloud with a wider vocabulary than just \"thing\" or \"look\", and a problem explained out loud after it's been solved." },
+        { "title": "Who's who in my life",
+          "detail": "Family, and the wider people who make up their world, named and described — the different shapes a family can take, and their own place in it: a life pieced together from a photo and a story about before they can remember, and starting to feel like someone who matters in all of it." },
+        { "title": "People are different, and that's ordinary",
+          "detail": "Skin, hair, dress, names, ways of doing things — noticed straightforwardly rather than skipped over, and met with the same interest and warmth as anything else in the world worth talking about." }
+      ]
+    },
+    {
       "id": "following-instructions-and-helping",
       "icon": "🧹",
       "title": "Following instructions & helping",
