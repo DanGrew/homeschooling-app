@@ -19,6 +19,26 @@
         { "title": "First this, then that",
           "detail": "Getting dressed has a natural order — pants before trousers, socks before shoes — and putting words to it (\"first... then...\") is early sequencing, for real." }
       ]
+    },
+    {
+      "id": "washing-and-teeth",
+      "icon": "🪥",
+      "title": "Washing & teeth",
+      "type": "life-moment",
+      "focus": "The short, repeated bits of the day — hands, face, teeth, the toilet — where a child slowly takes over looking after their own body.",
+      "area": "moments",
+      "themes": [
+        { "title": "Doing it myself",
+          "detail": "Brushing teeth, washing hands, managing the toilet — the same few jobs every single day, moving from done-for-them, to done-with-help, to done alone without anyone asking." },
+        { "title": "The toilet, at their own pace",
+          "detail": "Readiness shows itself — noticing a wet nappy, longer dry stretches, saying they need to go — and it goes best as friendly co-operation rather than a deadline somebody else set." },
+        { "title": "Teeth, morning and night",
+          "detail": "One of the first things in a child's life that happens twice a day, every day, whether they feel like it or not — as much the shape of a habit as a clean mouth." },
+        { "title": "Knowing why, not just when",
+          "detail": "Washing sticks once the reason comes with it — that hands carry things you can't see, and that looking after your own body is something you do on purpose." },
+        { "title": "Before eating, after the toilet",
+          "detail": "Two fixed hinges in the day, and a child who has the words for them has somewhere to hang washing — a moment of its own rather than a random interruption." }
+      ]
     }
   ]
 }
