@@ -105,6 +105,24 @@
         { "title": "Settling down",
           "detail": "Winding down with someone calm close by, the blanket or bear that has to be within reach, and sleep quietly taking its place among the things a child knows keep them well." }
       ]
+    },
+    {
+      "id": "bath-and-water-play",
+      "icon": "🛁",
+      "title": "Bath & water play",
+      "type": "life-moment",
+      "focus": "A tub, a couple of cups and something to pour with — the everyday place a child first works out bigger, smaller and which one holds more.",
+      "area": "moments",
+      "themes": [
+        { "title": "Bigger, smaller, heavier",
+          "detail": "Showing with hands and saying it in words — \"bigger\", \"smaller\", \"tall\", \"heavy\" — comparing one thing in the water against another, the first informal measuring talk." },
+        { "title": "Which cup holds more",
+          "detail": "Two containers side by side, and a question that gets answered by pouring rather than counting — the everyday version of capacity, worked out with cups, jugs and whatever's floating in the tub." },
+        { "title": "Longer, heavier, more of it",
+          "detail": "A sponge, a duck, a toy boat — sized up directly against another rather than against a memory of what came before, weighed in the hand or laid end to end." },
+        { "title": "A guess, then the pour that checks it",
+          "detail": "Which one turns out to hold more — guessed first, then tested by pouring — and the word that reports the result: this one holds more than that one." }
+      ]
     }
   ]
 }
