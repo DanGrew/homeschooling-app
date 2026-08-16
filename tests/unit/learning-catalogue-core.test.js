@@ -3,8 +3,8 @@ const require = createRequire(import.meta.url);
 const {
   buildIconMap, assembleGroups, activityHref,
   lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
-  lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
-  lcTalkColumn, lcTalkColumnsHtml
+  lcSearchTexts, lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
+  lcActivitySection, lcActivityBody, lcTalkColumn, lcTalkColumnsHtml
 } = require('../../core/learning-catalogue/learning-catalogue-core.js');
 
 describe('buildIconMap', () => {
@@ -69,6 +69,12 @@ const DRESSED = {
   focus: 'The daily wrestle with buttons and socks.',
   themes: [{ title: 'Buttons, zips, and getting there myself', detail: 'Doing up a button.' }]
 };
+const RAMPS = {
+  id: 'ramp-races', title: 'Ramp races', type: 'activity', area: 'activities', minutes: 45,
+  focus: 'Roll things down a propped-up book, then change one thing.',
+  getOut: ['A big hardback book'], run: ['Prop the book.', 'Send a car down.'],
+  say: ['Which goes furthest?'], again: ['Race two at once']
+};
 const GROUPS = [
   { id: 'mathematics', title: 'Mathematics', learnings: [COUNT] },
   { id: 'expressive-arts-design', title: 'Expressive Arts & Design', learnings: [PAINT] }
@@ -128,8 +134,14 @@ describe('lcCardType', () => {
   it('reads life-moment off the type field', () => {
     expect(lcCardType(DRESSED)).toBe('life-moment');
   });
+  it('reads activity off the type field', () => {
+    expect(lcCardType(RAMPS)).toBe('activity');
+  });
   it('defaults an untyped entry to learning', () => {
     expect(lcCardType(COUNT)).toBe('learning');
+  });
+  it('falls back to learning for a type it does not know', () => {
+    expect(lcCardType({ type: 'sing-song' })).toBe('learning');
   });
 });
 
@@ -178,6 +190,24 @@ describe('lcMatchesQuery', () => {
   it('rejects a life-moment query that matches neither title nor theme titles', () => {
     expect(lcMatchesQuery(DRESSED, 'zebra')).toBe(false);
   });
+  it('matches an activity on its focus line, which is all it has beyond the title', () => {
+    expect(lcMatchesQuery(RAMPS, 'propped')).toBe(true);
+  });
+  it('rejects an activity query that matches neither title nor focus', () => {
+    expect(lcMatchesQuery(RAMPS, 'zebra')).toBe(false);
+  });
+});
+
+describe('lcSearchTexts', () => {
+  it('offers theme titles for a life-moment', () => {
+    expect(lcSearchTexts(DRESSED)).toEqual(['Buttons, zips, and getting there myself']);
+  });
+  it('offers keywords for a learning', () => {
+    expect(lcSearchTexts(COUNT)).toEqual(['how many', '3']);
+  });
+  it('offers the focus line for an activity, which has neither themes nor keywords', () => {
+    expect(lcSearchTexts(RAMPS)).toEqual(['Roll things down a propped-up book, then change one thing.']);
+  });
 });
 
 describe('lcMatchesChip', () => {
@@ -200,6 +230,44 @@ describe('lcMatchesChip', () => {
 describe('lcFilterLearnings', () => {
   it('keeps learnings matching both chip and query', () => {
     expect(lcFilterLearnings([COUNT, PAINT], 'mix', ALL)).toEqual([PAINT]);
+  });
+});
+
+describe('lcActivitySection', () => {
+  it('wraps a label and its items as a titled list section', () => {
+    expect(lcActivitySection('🧺 Get out', ['A book', 'A ball'])).toBe(
+      '<div class="lc-sec"><div class="lc-lab">🧺 Get out</div>' +
+      '<ul class="lc-look"><li>A book</li><li>A ball</li></ul></div>'
+    );
+  });
+  it('renders an empty list for no items', () => {
+    expect(lcActivitySection('💬 Say', [])).toBe(
+      '<div class="lc-sec"><div class="lc-lab">💬 Say</div><ul class="lc-look"></ul></div>'
+    );
+  });
+});
+
+describe('lcActivityBody', () => {
+  it('emits get out, then run it, then say, then again next time', () => {
+    const html = lcActivityBody(RAMPS);
+    expect(html).toBe(
+      lcActivitySection('🧺 Get out', RAMPS.getOut) +
+      lcActivitySection('▶ Run it', RAMPS.run) +
+      lcActivitySection('💬 Say', RAMPS.say) +
+      lcActivitySection('🔁 Again next time', RAMPS.again)
+    );
+  });
+  it('keeps the four sections in the order you need them on the day', () => {
+    const html = lcActivityBody(RAMPS);
+    const at = (label) => html.indexOf(label);
+    expect(at('🧺 Get out')).toBeLessThan(at('▶ Run it'));
+    expect(at('▶ Run it')).toBeLessThan(at('💬 Say'));
+    expect(at('💬 Say')).toBeLessThan(at('🔁 Again next time'));
+  });
+  it('includes every line of every section', () => {
+    const html = lcActivityBody(RAMPS);
+    ['A big hardback book', 'Prop the book.', 'Send a car down.', 'Which goes furthest?', 'Race two at once']
+      .forEach(line => expect(html).toContain('<li>' + line + '</li>'));
   });
 });
 

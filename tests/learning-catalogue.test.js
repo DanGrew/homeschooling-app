@@ -266,3 +266,49 @@ test('searching a life-moment theme surfaces its card', async ({ page }) => {
   await page.locator('#lc-search').fill(moment.themes[0].title.split(' ')[0])
   await expect(cardByTitle(page, moment.title)).toBeVisible()
 })
+
+const activities = allLearnings.filter(l => l.type === 'activity')
+const activity = activities[0]
+
+test('the activities sit in their own group, apart from the screen cards', async ({ page }) => {
+  await page.goto(URL)
+  const chip = page.locator('[data-testid="lc-chip"][data-chip="activities"]')
+  await chip.click()
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(activities.length)
+  await expect(page.locator('.lc-area')).toHaveText(['Activities'])
+  for (const a of activities) {
+    await expect(cardByTitle(page, a.title)).toBeVisible()
+  }
+})
+
+test('an activity list card shows how long it takes', async ({ page }) => {
+  await page.goto(URL)
+  await expect(cardByTitle(page, activity.title).locator('.lc-mins')).toHaveText(activity.minutes + ' min')
+})
+
+test('an activity opens a detail view saying what to get out, do, say, and change next time', async ({ page }) => {
+  await page.goto(URL)
+  await cardByTitle(page, activity.title).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('.lc-focus')).toContainText(activity.focus)
+  for (const label of ['🧺 Get out', '▶ Run it', '💬 Say', '🔁 Again next time']) {
+    await expect(page.locator('.lc-lab', { hasText: label })).toBeVisible()
+  }
+  for (const line of [...activity.getOut, ...activity.run, ...activity.say, ...activity.again]) {
+    await expect(page.locator('#lc-detail li', { hasText: line })).toBeVisible()
+  }
+})
+
+test('an activity needs no screen — its detail offers no playground to open', async ({ page }) => {
+  await page.goto(URL)
+  await cardByTitle(page, activity.title).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('[data-testid="lc-venue"]')).toHaveCount(0)
+  await expect(page.locator('.lc-sec', { hasText: '📚 Curriculum' })).toHaveCount(0)
+})
+
+test('searching an activity focus line surfaces its card', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#lc-search').fill('propped')
+  await expect(cardByTitle(page, 'Ramp races')).toBeVisible()
+})
