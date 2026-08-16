@@ -67,7 +67,8 @@ function cardToRow(card, criterionMap, areas, playgroundsMap) {
 function flattenCatalogue(areaFiles, criterionMap, areas, playgroundsMap) {
   var result = [];
   areaFiles.forEach(function(f) {
-    (f.learnings || []).forEach(function(card) { result.push(cardToRow(card, criterionMap, areas, playgroundsMap)); });
+    (f.learnings || []).filter(function(card) { return card.type !== 'life-moment'; })
+      .forEach(function(card) { result.push(cardToRow(card, criterionMap, areas, playgroundsMap)); });
   });
   return result;
 }

@@ -187,6 +187,15 @@ describe('flattenCatalogue', () => {
   it('tolerates an area file with no learnings', () => {
     expect(flattenCatalogue([{}], map, AREAS, PLAYGROUNDS)).toEqual([]);
   });
+  it('excludes life-moment entries — they carry no curriculum coupling by design', () => {
+    const areaFiles = [
+      { learnings: [{ title: 'A', curriculum: ['cl1'], playgrounds: [{ id: 'colour-wheel' }] },
+                    { id: 'getting-dressed', title: 'Getting dressed', type: 'life-moment', focus: 'x', themes: [] }] }
+    ];
+    const result = flattenCatalogue(areaFiles, map, AREAS, PLAYGROUNDS);
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe('A');
+  });
 });
 
 describe('colCompare', () => {
