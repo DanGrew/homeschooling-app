@@ -125,6 +125,28 @@
         { "title": "Lining up, queuing, waiting a turn",
           "detail": "The everyday choreography of being somewhere with other people — standing in line, waiting to be served, taking a turn and giving one back — managed with a little more patience each time." }
       ]
+    },
+    {
+      "id": "boundaries-and-feelings",
+      "icon": "🫂",
+      "title": "Boundaries & feelings",
+      "type": "life-moment",
+      "focus": "The moments feelings run high and a boundary holds anyway — where a child starts naming what's going on inside them, and finds their way back after it's passed.",
+      "area": "moments",
+      "themes": [
+        { "title": "Words for what's going on inside",
+          "detail": "Cross, worried, happy, sad — the words that let a big feeling be said instead of only shown, and the start of a child noticing it in themselves before somebody else has to point it out." },
+        { "title": "No, and I'll do it myself",
+          "detail": "The toddler \"no\" and the insistence on doing it without help — a normal, healthy stretch of finding out where they end and everyone else begins, inside boundaries that stay calm and the same every time." },
+        { "title": "Waiting for a turn",
+          "detail": "The first taste of holding back rather than grabbing — a minute held onto, \"your turn's coming\" believed rather than argued with — the earliest form of self-control, built well before it's easy." },
+        { "title": "Coming back down",
+          "detail": "From needing someone close by to settle, to a few deep breaths remembered alone — calming down starts as something done together and slowly becomes something a child can do for themselves, the size of the reaction gradually catching up to the size of the thing that caused it." },
+        { "title": "Because, so that, I think",
+          "detail": "The words that carry a reason rather than just a fact — \"because...\", \"so that...\" — the beginning of explaining what's happening rather than only reacting to it." },
+        { "title": "Falling out, and finding a way back",
+          "detail": "A disagreement with another child, listened to and talked through rather than smoothed over — and a mistake taken as an ordinary part of getting better at something, not proof that something's gone wrong." }
+      ]
     }
   ]
 }
