@@ -105,6 +105,26 @@
         { "title": "Settling down",
           "detail": "Winding down with someone calm close by, the blanket or bear that has to be within reach, and sleep quietly taking its place among the things a child knows keep them well." }
       ]
+    },
+    {
+      "id": "following-instructions-and-helping",
+      "icon": "🧹",
+      "title": "Following instructions & helping",
+      "type": "life-moment",
+      "focus": "The stretch of the day where a request turns into an action — fetching, tidying, waiting a turn — and where a child starts doing it because they understood, not because they were shown.",
+      "area": "moments",
+      "themes": [
+        { "title": "Doing what's asked, first time",
+          "detail": "\"Get your shoes and wait by the door\" — holding a two-part instruction in mind and acting on both parts in order, with a \"why\" answered when they ask. Understanding runs ahead of what a child can say back, so they're following far more than they could yet explain." },
+        { "title": "Finding it from the words alone",
+          "detail": "\"The bag is under the table\" — working out where something is from the words alone, no pointing, no showing. A test of listening rather than looking." },
+        { "title": "A real job, not a pretend one",
+          "detail": "Fetching the milk, washing their own plate after snack, watering something that's growing — a task that actually needs doing, handed over because they can do it, not because it keeps them busy. Checking on a seed or bulb over the weeks it takes to grow adds patience to the job." },
+        { "title": "Remembering the rule without being asked",
+          "detail": "The agreed rule of the house or the setting, kept without an adult saying it again — the quiet sign that a rule has actually landed, not just been heard." },
+        { "title": "Lining up, queuing, waiting a turn",
+          "detail": "The everyday choreography of being somewhere with other people — standing in line, waiting to be served, taking a turn and giving one back — managed with a little more patience each time." }
+      ]
     }
   ]
 }
