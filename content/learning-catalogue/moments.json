@@ -83,6 +83,28 @@
         { "title": "Talk while the hands are busy",
           "detail": "One of the calmest talking stretches in the day — hands occupied, heads side by side — and the words that come with it, up and down and round and back, land attached to something actually being done." }
       ]
+    },
+    {
+      "id": "bedtime",
+      "icon": "🌙",
+      "title": "Bedtime",
+      "type": "life-moment",
+      "focus": "The quietest stretch of the day, and the one that carries more books, rhymes and settling than any other.",
+      "area": "moments",
+      "themes": [
+        { "title": "The story before lights out",
+          "detail": "A book at the end of the day, the same favourites asked for again and again, joining in with the lines they know by heart — and afterwards, who in it was brave and who was kind." },
+        { "title": "Words that only live in books",
+          "detail": "Stories carry words the day never says out loud — enormous, invitation, caterpillar — and the back-and-forth about what's happening on the page is where a child picks them up." },
+        { "title": "How a book works",
+          "detail": "Which way up it goes, the cover and whose name is on it, words running along the line, pages turning in order — all soaked up from being the one holding it." },
+        { "title": "Rhymes and songs at the end of the day",
+          "detail": "The wind-down songs and the rhymes that always come next — the rhythm of them, the beats inside words, and the last word of a line filled in before it arrives." },
+        { "title": "The same order, every night",
+          "detail": "Bath, pyjamas, teeth, two stories, lights out — an order a child comes to know well enough to say what's coming next, and the before / then / after that words that ride along with it." },
+        { "title": "Settling down",
+          "detail": "Winding down with someone calm close by, the blanket or bear that has to be within reach, and sleep quietly taking its place among the things a child knows keep them well." }
+      ]
     }
   ]
 }

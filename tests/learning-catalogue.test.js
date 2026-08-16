@@ -17,11 +17,17 @@ const allLearnings = groups.flatMap(g => g.learnings)
 const sample = groups[0].learnings[0]
 const sampleVenue = sample.playgrounds[0]
 
+// A card's title is the only place its title is the WHOLE text — keywords and concepts on other
+// cards can contain it as a substring ("bedtime" on Times of day vs the Bedtime moment card).
+const exactly = text => new RegExp('^' + text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$')
+const cardByTitle = (page, title) =>
+  page.locator('.lc-card').filter({ has: page.locator('.lc-title', { hasText: exactly(title) }) })
+
 test('renders every card read from the area JSON files', async ({ page }) => {
   await page.goto(URL)
   await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(allLearnings.length)
   for (const learning of allLearnings) {
-    await expect(page.locator('.lc-card', { hasText: learning.title })).toBeVisible()
+    await expect(cardByTitle(page, learning.title)).toBeVisible()
   }
 })
 
@@ -32,7 +38,7 @@ test('groups cards by EYFS area in index order', async ({ page }) => {
 
 test('tapping a card opens its detail view', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await cardByTitle(page, sample.title).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await expect(page.locator('#lc-list')).toBeHidden()
   await expect(page.locator('.lc-focus')).toContainText(sample.focus)
@@ -41,7 +47,7 @@ test('tapping a card opens its detail view', async ({ page }) => {
 test('a card with an explain field shows a Why section with its text', async ({ page }) => {
   const explained = allLearnings.find(l => l.explain)
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: explained.title }).click()
+  await cardByTitle(page, explained.title).click()
   const why = page.locator('.lc-sec', { hasText: '💡 Why' })
   await expect(why).toBeVisible()
   await expect(why).toContainText('fire')
@@ -52,14 +58,14 @@ test('a card with an explain field shows a Why section with its text', async ({ 
 test('a card without an explain field renders no Why section', async ({ page }) => {
   const plain = allLearnings.find(l => !l.explain)
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: plain.title }).click()
+  await cardByTitle(page, plain.title).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await expect(page.locator('.lc-sec', { hasText: '💡 Why' })).toHaveCount(0)
 })
 
 test('Where to practise launches each venue in free mode', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await cardByTitle(page, sample.title).click()
   const venues = page.locator('[data-testid="lc-venue"]')
   await expect(venues).toHaveCount(sample.playgrounds.length)
   await expect(venues.first()).toHaveText(new RegExp(index.playgrounds[sampleVenue.id].name))
@@ -68,7 +74,7 @@ test('Where to practise launches each venue in free mode', async ({ page }) => {
 
 test('back returns from detail to the list', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await cardByTitle(page, sample.title).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await page.locator('[data-testid="lc-back"]').click()
   await expect(page.locator('#lc-list')).toBeVisible()
@@ -78,10 +84,10 @@ test('back returns from detail to the list', async ({ page }) => {
 test('returning from a card keeps the list scroll position', async ({ page }) => {
   await page.goto(URL)
   const lastTitle = allLearnings[allLearnings.length - 1].title
-  await page.locator('.lc-card', { hasText: lastTitle }).scrollIntoViewIfNeeded()
+  await cardByTitle(page, lastTitle).scrollIntoViewIfNeeded()
   const before = await page.locator('.lc-scroll').evaluate(el => el.scrollTop)
   expect(before).toBeGreaterThan(0)
-  await page.locator('.lc-card', { hasText: lastTitle }).click()
+  await cardByTitle(page, lastTitle).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await page.locator('[data-testid="lc-back"]').click()
   await expect(page.locator('#lc-list')).toBeVisible()
@@ -109,7 +115,7 @@ test('typing in search narrows the list to matching cards', async ({ page }) => 
   await page.goto(URL)
   await page.locator('#lc-search').fill(sample.title)
   await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(1)
-  await expect(page.locator('.lc-card', { hasText: sample.title })).toBeVisible()
+  await expect(cardByTitle(page, sample.title)).toBeVisible()
 })
 
 test('clearing the search restores the full grouped list', async ({ page }) => {
@@ -155,7 +161,7 @@ test('the current-filter label shows the selected filter name on screen', async 
 
 test('opening a card hides the filter bar; back restores it', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await cardByTitle(page, sample.title).click()
   await expect(page.locator('#lc-filter')).toBeHidden()
   await page.locator('[data-testid="lc-back"]').click()
   await expect(page.locator('#lc-filter')).toBeVisible()
@@ -191,7 +197,7 @@ const picCard = allLearnings.find(l => l.makePictures)
 
 test('a card with makePictures shows a Pictures to make section with one tile per picture', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: picCard.title }).click()
+  await cardByTitle(page, picCard.title).click()
   const section = page.locator('.lc-sec', { hasText: '🖼️ Pictures to make' })
   await expect(section).toBeVisible()
   await expect(page.locator('[data-testid="lc-pic"]')).toHaveCount(picCard.makePictures.length)
@@ -203,7 +209,7 @@ test('a card with makePictures shows a Pictures to make section with one tile pe
 
 test('tapping a picture tile opens the enlarge popup with its title', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: picCard.title }).click()
+  await cardByTitle(page, picCard.title).click()
   await expect(page.locator('[data-testid="lc-picpop"]')).toBeHidden()
   await page.locator('[data-testid="lc-pic"]').first().click()
   await expect(page.locator('[data-testid="lc-picpop"]')).toBeVisible()
@@ -213,7 +219,7 @@ test('tapping a picture tile opens the enlarge popup with its title', async ({ p
 
 test('the enlarge popup closes via the close button and the backdrop', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: picCard.title }).click()
+  await cardByTitle(page, picCard.title).click()
   await page.locator('[data-testid="lc-pic"]').first().click()
   await expect(page.locator('[data-testid="lc-picpop"]')).toBeVisible()
   await page.locator('[data-testid="lc-picpop-close"]').click()
@@ -227,14 +233,14 @@ test('the enlarge popup closes via the close button and the backdrop', async ({ 
 test('a card without makePictures renders no Pictures to make section', async ({ page }) => {
   const plain = allLearnings.find(l => !l.makePictures)
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: plain.title }).click()
+  await cardByTitle(page, plain.title).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await expect(page.locator('.lc-sec', { hasText: '🖼️ Pictures to make' })).toHaveCount(0)
 })
 
 test('Talk prompts button is available on the detail view too', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: sample.title }).click()
+  await cardByTitle(page, sample.title).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await expect(page.locator('[data-testid="lc-talk-btn"]')).toBeVisible()
   await page.locator('[data-testid="lc-talk-btn"]').click()
@@ -245,7 +251,7 @@ const moment = allLearnings.find(l => l.type === 'life-moment')
 
 test('a life-moment card opens a detail view listing its themes, with no curriculum or venue sections', async ({ page }) => {
   await page.goto(URL)
-  await page.locator('.lc-card', { hasText: moment.title }).click()
+  await cardByTitle(page, moment.title).click()
   await expect(page.locator('#lc-detail')).toBeVisible()
   await expect(page.locator('.lc-focus')).toContainText(moment.focus)
   for (const theme of moment.themes) {
@@ -258,5 +264,5 @@ test('a life-moment card opens a detail view listing its themes, with no curricu
 test('searching a life-moment theme surfaces its card', async ({ page }) => {
   await page.goto(URL)
   await page.locator('#lc-search').fill(moment.themes[0].title.split(' ')[0])
-  await expect(page.locator('.lc-card', { hasText: moment.title })).toBeVisible()
+  await expect(cardByTitle(page, moment.title)).toBeVisible()
 })
