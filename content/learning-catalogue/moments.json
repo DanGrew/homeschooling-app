@@ -21,6 +21,28 @@
       ]
     },
     {
+      "id": "garden-and-park-play",
+      "icon": "🌳",
+      "title": "Garden & park play",
+      "type": "life-moment",
+      "focus": "The part of the day that happens outdoors — running about, balls, mud and whatever's growing — and the only one that asks for the whole body at once.",
+      "area": "moments",
+      "themes": [
+        { "title": "Running, wheeling, out of breath",
+          "detail": "Outside is where the big movements live — running, climbing, a scooter or a trike, hopping across the grass, balancing along a low wall. It's also the part of the day a child properly gets out of breath, which under-fives need daily rather than weekly." },
+        { "title": "Balls, and getting them where you want",
+          "detail": "Kicking, throwing, catching — starting as a two-handed scramble at a big ball, and slowly turning into aim: passing to someone, hitting what they meant to hit, judging how hard." },
+        { "title": "Handfuls of the natural world",
+          "detail": "Leaves, conkers, bark, stones, a snail on the path — picked up, turned over, smelled, carried home in a pocket. Seeds and bulbs that get planted and then checked on for weeks, and the gentleness that comes with something being alive." },
+        { "title": "Weather, seasons and things that push back",
+          "detail": "Rain on the face, wind moving the trees, mud that sticks and puddles that splash. The same park looks nothing like itself in October and June — and a swing being pushed or a wagon pulled is a child's first honest encounter with a force." },
+        { "title": "Words for what's out there",
+          "detail": "Outside hands over words nothing indoors does — knobbly, prickly, soggy, damp — because the child is holding the thing while the word for it arrives, and describing what they can see, hear and smell while they're standing in it." },
+        { "title": "Mud, sticks and repeating patterns",
+          "detail": "Mark-making without paper — fingers through mud, a stick dragged across gravel. And what gets collected tends to get laid out in a line, stick, leaf, stick, leaf, which is the first repeating pattern a child makes for themselves." }
+      ]
+    },
+    {
       "id": "washing-and-teeth",
       "icon": "🪥",
       "title": "Washing & teeth",
