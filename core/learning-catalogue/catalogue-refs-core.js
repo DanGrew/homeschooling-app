@@ -11,17 +11,17 @@ function validateLearning(learning, ctx) {
   if (learning.area !== ctx.areaId) {
     errors.push(learning.id + ': area "' + learning.area + '" does not match its file home "' + ctx.areaId + '"');
   }
-  learning.curriculum.forEach(function(tag) {
+  (learning.curriculum || []).forEach(function(tag) {
     if (ctx.criterionIds.indexOf(tag) === -1) {
       errors.push(learning.id + ': curriculum tag "' + tag + '" is not a valid criterion id');
     }
   });
-  learning.learningIcons.forEach(function(icon) {
+  (learning.learningIcons || []).forEach(function(icon) {
     if (ctx.iconIds.indexOf(icon) === -1) {
       errors.push(learning.id + ': learningIcon "' + icon + '" is not in the icon registry');
     }
   });
-  learning.playgrounds.forEach(function(venue) {
+  (learning.playgrounds || []).forEach(function(venue) {
     if (ctx.playgroundIds.indexOf(venue.id) === -1) {
       errors.push(learning.id + ': playground "' + venue.id + '" is not in the playgrounds registry');
     }

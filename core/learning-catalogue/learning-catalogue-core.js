@@ -33,9 +33,13 @@ function lcBuildChips(index, learnings) {
   index.areas.forEach(function(area) { chips.push(lcAreaChip(area)); });
   var seen = {};
   learnings.forEach(function(learning) {
-    learning.playgrounds.forEach(function(venue) { lcAddPlaygroundChip(chips, seen, index, venue.id); });
+    (learning.playgrounds || []).forEach(function(venue) { lcAddPlaygroundChip(chips, seen, index, venue.id); });
   });
   return chips;
+}
+
+function lcCardType(learning) {
+  return learning.type === 'life-moment' ? 'life-moment' : 'learning';
 }
 
 function lcChipClass(chip, active) {
@@ -46,13 +50,14 @@ function lcMatchesQuery(learning, query) {
   var q = query.trim().toLowerCase();
   if (q === '') return true;
   if (learning.title.toLowerCase().indexOf(q) >= 0) return true;
+  if (learning.themes) return learning.themes.some(function(t) { return t.title.toLowerCase().indexOf(q) >= 0; });
   return learning.keywords.some(function(k) { return k.toLowerCase().indexOf(q) >= 0; });
 }
 
 function lcMatchesChip(learning, chip) {
   if (chip.type === 'all') return true;
   if (chip.type === 'area') return learning.area === chip.id;
-  return learning.playgrounds.some(function(venue) { return venue.id === chip.id; });
+  return (learning.playgrounds || []).some(function(venue) { return venue.id === chip.id; });
 }
 
 function lcFilterLearnings(learnings, query, chip) {
@@ -76,7 +81,7 @@ function lcTalkColumnsHtml(talkPrompts) {
 
 if (typeof module !== 'undefined') module.exports = {
   buildIconMap, assembleGroups, activityHref,
-  lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcChipClass,
+  lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
   lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
   lcTalkColumn, lcTalkColumnsHtml
 };

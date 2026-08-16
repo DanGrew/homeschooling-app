@@ -68,4 +68,9 @@ describe('validateLearning', () => {
     expect(errs).toHaveLength(1);
     expect(errs[0]).toBe('count-to-5: playground "ghost" has no app/activities/ghost/ directory');
   });
+
+  it('returns no errors for a life-moment entry with no curriculum, learningIcons or playgrounds', () => {
+    const moment = { id: 'getting-dressed', type: 'life-moment', area: 'mathematics' };
+    expect(validateLearning(moment, CTX)).toEqual([]);
+  });
 });

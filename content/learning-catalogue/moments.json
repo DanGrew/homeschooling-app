@@ -1,0 +1,24 @@
+{
+  "learnings": [
+    {
+      "id": "getting-dressed",
+      "icon": "👕",
+      "title": "Getting dressed",
+      "type": "life-moment",
+      "focus": "The daily wrestle with buttons and socks — full of fine motor practice, and the first place a toddler insists on doing it themselves.",
+      "area": "moments",
+      "themes": [
+        { "title": "Buttons, zips, and getting there myself",
+          "detail": "Doing up a button, working a zip, pulling on socks — the fiddly motor skill getting dressed asks for every day, moving from needing help to graduated help to none at all." },
+        { "title": "Two things, in order",
+          "detail": "\"Vest on, then socks\" — a two-part instruction the child has to hold in mind and act on in the right order, with a \"why\" thrown in when they ask." },
+        { "title": "Naming what's going on",
+          "detail": "Colours, textures, the names of what's being pulled on and off — narrated out loud, it floods the child with rich, precise words for something they're already looking at." },
+        { "title": "Choosing, and wanting to do it myself",
+          "detail": "Picking what to wear is one of a toddler's first real choices, and the \"me do it\" phase that comes with it is healthy — met best with calm, consistent patience rather than a rush." },
+        { "title": "First this, then that",
+          "detail": "Getting dressed has a natural order — pants before trousers, socks before shoes — and putting words to it (\"first... then...\") is early sequencing, for real." }
+      ]
+    }
+  ]
+}
