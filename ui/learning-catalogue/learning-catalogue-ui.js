@@ -50,7 +50,20 @@ function lcRenderLearningListCard(learning) {
   return card;
 }
 
-var LC_LIST_CARD_RENDERERS = { 'life-moment': lcRenderMomentListCard, 'learning': lcRenderLearningListCard };
+function lcRenderActivityListCard(activity) {
+  var card = document.createElement('div');
+  card.className = 'lc-card lc-card-activity';
+  card.setAttribute('data-testid', 'lc-card');
+  card.innerHTML =
+    '<div class="lc-row1"><span class="lc-ico">' + activity.icon + '</span>' +
+    '<span class="lc-title">' + activity.title + '</span>' +
+    '<span class="lc-mins">' + activity.minutes + ' min</span></div>' +
+    '<div class="lc-activity-focus">' + activity.focus + '</div>';
+  card.addEventListener('click', function() { lcShowDetail(activity); });
+  return card;
+}
+
+var LC_LIST_CARD_RENDERERS = { 'life-moment': lcRenderMomentListCard, 'activity': lcRenderActivityListCard, 'learning': lcRenderLearningListCard };
 
 function lcRenderListCard(learning) {
   return LC_LIST_CARD_RENDERERS[lcCardType(learning)](learning);
@@ -112,7 +125,23 @@ function lcShowLearningDetail(learning) {
   LC.scrollEl.scrollTop = 0;
 }
 
-var LC_DETAIL_RENDERERS = { 'life-moment': lcShowMomentDetail, 'learning': lcShowLearningDetail };
+function lcShowActivityDetail(activity) {
+  LC.detailEl.innerHTML =
+    '<a class="lc-back" data-testid="lc-back">← Back</a>' +
+    '<div class="lc-hero">' + activity.icon + '</div>' +
+    '<div class="lc-d-title">' + activity.title + '</div>' +
+    '<div class="lc-d-mins">about ' + activity.minutes + ' minutes</div>' +
+    '<div class="lc-sec"><div class="lc-lab">🎯 What it is</div><div class="lc-focus">' + activity.focus + '</div></div>' +
+    lcActivityBody(activity);
+  LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);
+  LC.listScroll = LC.scrollEl.scrollTop;
+  LC.filterEl.style.display = 'none';
+  LC.listEl.style.display = 'none';
+  LC.detailEl.style.display = 'block';
+  LC.scrollEl.scrollTop = 0;
+}
+
+var LC_DETAIL_RENDERERS = { 'life-moment': lcShowMomentDetail, 'activity': lcShowActivityDetail, 'learning': lcShowLearningDetail };
 
 function lcShowDetail(learning) {
   return LC_DETAIL_RENDERERS[lcCardType(learning)](learning);

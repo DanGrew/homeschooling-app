@@ -67,7 +67,9 @@ function cardToRow(card, criterionMap, areas, playgroundsMap) {
 function flattenCatalogue(areaFiles, criterionMap, areas, playgroundsMap) {
   var result = [];
   areaFiles.forEach(function(f) {
-    (f.learnings || []).filter(function(card) { return card.type !== 'life-moment'; })
+    // Only untyped cards are curriculum-tagged learnings; life-moments and activities
+    // carry no `curriculum[]`, so they have no row in this table.
+    (f.learnings || []).filter(function(card) { return !card.type; })
       .forEach(function(card) { result.push(cardToRow(card, criterionMap, areas, playgroundsMap)); });
   });
   return result;
