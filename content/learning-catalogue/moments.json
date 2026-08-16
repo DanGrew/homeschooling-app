@@ -143,6 +143,86 @@
         { "title": "Bigger, smaller, heavier, lighter",
           "detail": "The big cabbage against the small one, the heavy bag against the light one — sized up by eye and by hand, with the words that come with it." }
       ]
+    },
+    {
+      "id": "playing-with-others",
+      "icon": "🤝",
+      "title": "Playing with others",
+      "type": "life-moment",
+      "focus": "The play that happens shoulder to shoulder with another child — games, pretend, patience, and the occasional falling out that gets talked through.",
+      "area": "moments",
+      "themes": [
+        { "title": "Finding your way into a game",
+          "detail": "From two-and-a-bit, children start seeking each other out rather than just playing side by side — and a shared pretend idea gets picked up, added to and carried on together rather than staying just one child's." },
+        { "title": "Deciding who's who and making it up as you go",
+          "detail": "Who's the mummy, who's the dog, what happens next — roles get chosen, argued over and settled, and the story gets narrated out loud as it's acted out, in voices and sentences borrowed for the part." },
+        { "title": "Waiting, joining in, playing by the rules",
+          "detail": "The wait for a turn without grabbing, joining a group game whether it was someone else's idea or an adult's, and later on, games that come with actual rules and something to aim for." },
+        { "title": "Falling out, and finding a way through it",
+          "detail": "A disagreement listened to rather than smoothed over, a compromise reached with help, and a growing sense of how the other child might be feeling — all of it building toward relationships that hold up over time." },
+        { "title": "Spotting the pattern without counting",
+          "detail": "Dice, dominoes, a board game's little grid of dots — glanced at and named instantly, without stopping to count them one by one." }
+      ]
+    },
+    {
+      "id": "boundaries-and-feelings",
+      "icon": "🫂",
+      "title": "Boundaries & feelings",
+      "type": "life-moment",
+      "focus": "The moments feelings run high and a boundary holds anyway — where a child starts naming what's going on inside them, and finds their way back after it's passed.",
+      "area": "moments",
+      "themes": [
+        { "title": "Words for what's going on inside",
+          "detail": "Cross, worried, happy, sad — the words that let a big feeling be said instead of only shown, and the start of a child noticing it in themselves before somebody else has to point it out." },
+        { "title": "No, and I'll do it myself",
+          "detail": "The toddler \"no\" and the insistence on doing it without help — a normal, healthy stretch of finding out where they end and everyone else begins, inside boundaries that stay calm and the same every time." },
+        { "title": "Waiting for a turn",
+          "detail": "The first taste of holding back rather than grabbing — a minute held onto, \"your turn's coming\" believed rather than argued with — the earliest form of self-control, built well before it's easy." },
+        { "title": "Coming back down",
+          "detail": "From needing someone close by to settle, to a few deep breaths remembered alone — calming down starts as something done together and slowly becomes something a child can do for themselves, the size of the reaction gradually catching up to the size of the thing that caused it." },
+        { "title": "Because, so that, I think",
+          "detail": "The words that carry a reason rather than just a fact — \"because...\", \"so that...\" — the beginning of explaining what's happening rather than only reacting to it." },
+        { "title": "Falling out, and finding a way back",
+          "detail": "A disagreement with another child, listened to and talked through rather than smoothed over — and a mistake taken as an ordinary part of getting better at something, not proof that something's gone wrong." }
+      ]
+    },
+    {
+      "id": "bath-and-water-play",
+      "icon": "🛁",
+      "title": "Bath & water play",
+      "type": "life-moment",
+      "focus": "A tub, a couple of cups and something to pour with — the everyday place a child first works out bigger, smaller and which one holds more.",
+      "area": "moments",
+      "themes": [
+        { "title": "Bigger, smaller, heavier",
+          "detail": "Showing with hands and saying it in words — \"bigger\", \"smaller\", \"tall\", \"heavy\" — comparing one thing in the water against another, the first informal measuring talk." },
+        { "title": "Which cup holds more",
+          "detail": "Two containers side by side, and a question that gets answered by pouring rather than counting — the everyday version of capacity, worked out with cups, jugs and whatever's floating in the tub." },
+        { "title": "Longer, heavier, more of it",
+          "detail": "A sponge, a duck, a toy boat — sized up directly against another rather than against a memory of what came before, weighed in the hand or laid end to end." },
+        { "title": "A guess, then the pour that checks it",
+          "detail": "Which one turns out to hold more — guessed first, then tested by pouring — and the word that reports the result: this one holds more than that one." }
+      ]
+    },
+    {
+      "id": "out-and-about",
+      "icon": "🚶",
+      "title": "Out & about",
+      "type": "life-moment",
+      "focus": "The trips beyond the front door — the walk to the shops, the school run, the bus into town — and the wider world only met by going out into it.",
+      "area": "moments",
+      "themes": [
+        { "title": "Reading the way there",
+          "detail": "Road signs, shop names, bus numbers and the first letter of their own name — print starting to mean something, spotted on the pavement rather than taught at a table. Alongside it, a route walked often enough to describe back, and the pavement manners that keep the walk safe: holding hands, crossing carefully, staying alert to bikes and scooters." },
+        { "title": "New words for what's out there",
+          "detail": "Pointing and naming together, then whole sentences about what's just been seen, heard or smelled — and the unusual, precise words only the outside world hands over, like stroll and knobbly." },
+        { "title": "Wondering out loud",
+          "detail": "A conversation that runs for several turns and changes subject on its own, and the open \"I wonder what would happen if...\" questions a walk keeps supplying answers to." },
+        { "title": "Weather and living things met along the way",
+          "detail": "Rain, wind, a change of season noticed trip to trip, and the plants and creatures encountered outside the garden — handled gently, looked at closely, and talked about using words that only apply once you're standing in it." },
+        { "title": "The people and places along the way",
+          "detail": "Different people noticed and asked about — straightforwardly, building positive attitudes rather than awkwardness — the jobs people do, the family and community talked about on the way, and the odd place that turns out to matter to somebody." }
+      ]
     }
   ]
 }
