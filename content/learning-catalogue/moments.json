@@ -105,6 +105,24 @@
         { "title": "Settling down",
           "detail": "Winding down with someone calm close by, the blanket or bear that has to be within reach, and sleep quietly taking its place among the things a child knows keep them well." }
       ]
+    },
+    {
+      "id": "shopping",
+      "icon": "🛒",
+      "title": "Shopping",
+      "type": "life-moment",
+      "focus": "The trip that turns number into something real — how many, is it enough, which one's bigger — worked out with actual things in your hands rather than on paper.",
+      "area": "moments",
+      "themes": [
+        { "title": "Working it out on the spot",
+          "detail": "Real, out-loud number problems that come up in the aisle — is that enough satsumas for the week, how many more we need — worked out with the actual things going into the trolley rather than on paper." },
+        { "title": "Enough for everyone",
+          "detail": "One for you, one for your sister, is there a spare — sharing out fairly is a real-world problem too, and shopping hands over a fresh one every trip." },
+        { "title": "The numeral and the pile",
+          "detail": "A number on a list, a price label, a checkout screen — matched to a counted-out pile of the real thing, and read back the other way: however many ends up in the bag is the numeral it stands for." },
+        { "title": "Bigger, smaller, heavier, lighter",
+          "detail": "The big cabbage against the small one, the heavy bag against the light one — sized up by eye and by hand, with the words that come with it." }
+      ]
     }
   ]
 }
