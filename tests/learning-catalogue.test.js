@@ -96,7 +96,7 @@ test('standard nav-bar with home link is present', async ({ page }) => {
   await expect(page.locator('.activity-title')).toContainText('Learning Catalogue')
 })
 
-const playgroundNames = [...new Set(allLearnings.flatMap(l => l.playgrounds.map(v => index.playgrounds[v.id].name)))]
+const playgroundNames = [...new Set(allLearnings.flatMap(l => (l.playgrounds || []).map(v => index.playgrounds[v.id].name)))]
 
 test('renders an All chip plus one chip per area and per playground present', async ({ page }) => {
   await page.goto(URL)
@@ -132,7 +132,7 @@ test('tapping an area chip shows only that area, preserving its header', async (
 test('tapping a playground chip shows only learnings that practise there', async ({ page }) => {
   await page.goto(URL)
   const name = playgroundNames[0]
-  const expected = allLearnings.filter(l => l.playgrounds.some(v => index.playgrounds[v.id].name === name)).length
+  const expected = allLearnings.filter(l => (l.playgrounds || []).some(v => index.playgrounds[v.id].name === name)).length
   await page.locator('[data-testid="lc-chip"][aria-label="' + name + '"]').click()
   await expect(page.locator('[data-testid="lc-chip"][aria-label="' + name + '"]')).toHaveClass(/lc-chip-on/)
   await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(expected)
@@ -239,4 +239,24 @@ test('Talk prompts button is available on the detail view too', async ({ page })
   await expect(page.locator('[data-testid="lc-talk-btn"]')).toBeVisible()
   await page.locator('[data-testid="lc-talk-btn"]').click()
   await expect(page.locator('[data-testid="lc-talk-pop"]')).toBeVisible()
+})
+
+const moment = allLearnings.find(l => l.type === 'life-moment')
+
+test('a life-moment card opens a detail view listing its themes, with no curriculum or venue sections', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('.lc-card', { hasText: moment.title }).click()
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('.lc-focus')).toContainText(moment.focus)
+  for (const theme of moment.themes) {
+    await expect(page.locator('.lc-theme-title', { hasText: theme.title })).toBeVisible()
+  }
+  await expect(page.locator('.lc-sec', { hasText: '📚 Curriculum' })).toHaveCount(0)
+  await expect(page.locator('.lc-sec', { hasText: '▶ Where to practise' })).toHaveCount(0)
+})
+
+test('searching a life-moment theme surfaces its card', async ({ page }) => {
+  await page.goto(URL)
+  await page.locator('#lc-search').fill(moment.themes[0].title.split(' ')[0])
+  await expect(page.locator('.lc-card', { hasText: moment.title })).toBeVisible()
 })

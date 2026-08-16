@@ -33,6 +33,7 @@
     { "id": "expressive-arts-design", "title": "Expressive Arts & Design", "icon": "🎨", "order": 4, "file": "expressive-arts-design.json" },
     { "id": "understanding-the-world", "title": "Understanding the World", "icon": "🌍", "order": 5, "file": "understanding-the-world.json" },
     { "id": "literacy", "title": "Literacy", "icon": "📖", "order": 6, "file": "literacy.json" },
-    { "id": "personal-social-emotional", "title": "Personal, Social & Emotional", "icon": "🤝", "order": 7, "file": "personal-social-emotional.json" }
+    { "id": "personal-social-emotional", "title": "Personal, Social & Emotional", "icon": "🤝", "order": 7, "file": "personal-social-emotional.json" },
+    { "id": "moments", "title": "Life Moments", "icon": "🌤️", "order": 8, "file": "moments.json" }
   ]
 }

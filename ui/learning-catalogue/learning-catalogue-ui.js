@@ -24,7 +24,19 @@ function lcFetchJson(url) {
   return fetch(url).then(function(r) { return r.json(); });
 }
 
-function lcRenderListCard(learning) {
+function lcRenderMomentListCard(moment) {
+  var card = document.createElement('div');
+  card.className = 'lc-card lc-card-moment';
+  card.setAttribute('data-testid', 'lc-card');
+  card.innerHTML =
+    '<div class="lc-row1"><span class="lc-ico">' + moment.icon + '</span>' +
+    '<span class="lc-title">' + moment.title + '</span></div>' +
+    '<div class="lc-moment-focus">' + moment.focus + '</div>';
+  card.addEventListener('click', function() { lcShowDetail(moment); });
+  return card;
+}
+
+function lcRenderLearningListCard(learning) {
   var card = document.createElement('div');
   card.className = 'lc-card';
   card.setAttribute('data-testid', 'lc-card');
@@ -36,6 +48,12 @@ function lcRenderListCard(learning) {
     '<div class="lc-venues">' + learning.playgrounds.map(function(v) { return '<span class="lc-vtag">' + LC.playgrounds[v.id].emoji + ' ' + LC.playgrounds[v.id].name + '</span>'; }).join('') + '</div>';
   card.addEventListener('click', function() { lcShowDetail(learning); });
   return card;
+}
+
+var LC_LIST_CARD_RENDERERS = { 'life-moment': lcRenderMomentListCard, 'learning': lcRenderLearningListCard };
+
+function lcRenderListCard(learning) {
+  return LC_LIST_CARD_RENDERERS[lcCardType(learning)](learning);
 }
 
 function lcRenderGroup(group) {
@@ -51,7 +69,24 @@ function lcRenderList(groups) {
   groups.forEach(function(group) { lcRenderGroup(group); });
 }
 
-function lcShowDetail(learning) {
+function lcShowMomentDetail(moment) {
+  LC.detailEl.innerHTML =
+    '<a class="lc-back" data-testid="lc-back">← Back</a>' +
+    '<div class="lc-hero">' + moment.icon + '</div>' +
+    '<div class="lc-d-title">' + moment.title + '</div>' +
+    '<div class="lc-sec"><div class="lc-lab">🎯 Focus</div><div class="lc-focus">' + moment.focus + '</div></div>' +
+    '<div class="lc-sec"><div class="lc-lab">🌤️ What this moment carries</div>' +
+    moment.themes.map(function(t) { return '<div class="lc-theme"><div class="lc-theme-title">' + t.title + '</div><div class="lc-theme-detail">' + t.detail + '</div></div>'; }).join('') +
+    '</div>';
+  LC.detailEl.querySelector('.lc-back').addEventListener('click', lcShowList);
+  LC.listScroll = LC.scrollEl.scrollTop;
+  LC.filterEl.style.display = 'none';
+  LC.listEl.style.display = 'none';
+  LC.detailEl.style.display = 'block';
+  LC.scrollEl.scrollTop = 0;
+}
+
+function lcShowLearningDetail(learning) {
   LC.detailEl.innerHTML =
     '<a class="lc-back" data-testid="lc-back">← Back</a>' +
     '<div class="lc-hero">' + learning.icon + '</div>' +
@@ -75,6 +110,12 @@ function lcShowDetail(learning) {
   LC.listEl.style.display = 'none';
   LC.detailEl.style.display = 'block';
   LC.scrollEl.scrollTop = 0;
+}
+
+var LC_DETAIL_RENDERERS = { 'life-moment': lcShowMomentDetail, 'learning': lcShowLearningDetail };
+
+function lcShowDetail(learning) {
+  return LC_DETAIL_RENDERERS[lcCardType(learning)](learning);
 }
 
 function lcShowList() {

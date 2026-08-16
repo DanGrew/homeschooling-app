@@ -9,84 +9,116 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "type": "object",
-        "required": ["id", "icon", "title", "learningIcons", "keywords", "focus", "concepts", "lookFor", "curriculum", "area", "playgrounds"],
-        "additionalProperties": false,
-        "properties": {
-          "id": { "type": "string" },
-          "icon": { "type": "string" },
-          "title": { "type": "string" },
-          "learningIcons": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "type": "string" }
-          },
-          "keywords": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "type": "string" }
-          },
-          "focus": { "type": "string" },
-          "explain": { "type": "string" },
-          "concepts": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "type": "string" }
-          },
-          "lookFor": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "type": "string" }
-          },
-          "curriculum": {
-            "type": "array",
-            "minItems": 1,
-            "items": { "type": "string" }
-          },
-          "area": { "type": "string" },
-          "makePictures": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": ["title", "objects"],
-              "additionalProperties": false,
-              "properties": {
-                "title": { "type": "string" },
-                "objects": {
-                  "type": "array",
-                  "minItems": 1,
-                  "items": {
-                    "type": "object",
-                    "required": ["shape", "colour", "size", "x", "y"],
-                    "additionalProperties": false,
-                    "properties": {
-                      "shape": { "enum": ["circle", "square", "triangle", "rectangle", "pentagon", "star", "heart"] },
-                      "colour": { "enum": ["red", "yellow", "blue", "orange", "green", "purple"] },
-                      "size": { "enum": ["small", "medium", "large", "x-large", "xx-large"] },
-                      "x": { "type": "number", "minimum": 0, "maximum": 1 },
-                      "y": { "type": "number", "minimum": 0, "maximum": 1 },
-                      "rot": { "type": "number" }
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["id", "icon", "title", "learningIcons", "keywords", "focus", "concepts", "lookFor", "curriculum", "area", "playgrounds"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "icon": { "type": "string" },
+              "title": { "type": "string" },
+              "learningIcons": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" }
+              },
+              "keywords": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" }
+              },
+              "focus": { "type": "string" },
+              "explain": { "type": "string" },
+              "concepts": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" }
+              },
+              "lookFor": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" }
+              },
+              "curriculum": {
+                "type": "array",
+                "minItems": 1,
+                "items": { "type": "string" }
+              },
+              "area": { "type": "string" },
+              "makePictures": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["title", "objects"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "title": { "type": "string" },
+                    "objects": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "required": ["shape", "colour", "size", "x", "y"],
+                        "additionalProperties": false,
+                        "properties": {
+                          "shape": { "enum": ["circle", "square", "triangle", "rectangle", "pentagon", "star", "heart"] },
+                          "colour": { "enum": ["red", "yellow", "blue", "orange", "green", "purple"] },
+                          "size": { "enum": ["small", "medium", "large", "x-large", "xx-large"] },
+                          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+                          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+                          "rot": { "type": "number" }
+                        }
+                      }
                     }
+                  }
+                }
+              },
+              "playgrounds": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["id", "note"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": { "type": "string" },
+                    "note": { "type": "string" }
                   }
                 }
               }
             }
           },
-          "playgrounds": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "object",
-              "required": ["id", "note"],
-              "additionalProperties": false,
-              "properties": {
-                "id": { "type": "string" },
-                "note": { "type": "string" }
+          {
+            "type": "object",
+            "title": "life-moment — a routine already happening in the day that carries learning",
+            "required": ["id", "icon", "title", "type", "focus", "area", "themes"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "icon": { "type": "string" },
+              "title": { "type": "string" },
+              "type": { "const": "life-moment" },
+              "focus": { "type": "string" },
+              "area": { "type": "string" },
+              "themes": {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 6,
+                "items": {
+                  "type": "object",
+                  "required": ["title", "detail"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "title": { "type": "string" },
+                    "detail": { "type": "string" }
+                  }
+                }
               }
             }
           }
-        }
+        ]
       }
     }
   }

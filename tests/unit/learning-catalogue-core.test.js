@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const {
   buildIconMap, assembleGroups, activityHref,
-  lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcChipClass,
+  lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
   lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
   lcTalkColumn, lcTalkColumnsHtml
 } = require('../../core/learning-catalogue/learning-catalogue-core.js');
@@ -64,6 +64,11 @@ const PAINT = {
   title: 'Mix colours', keywords: ['red', 'blue'], area: 'expressive-arts-design',
   playgrounds: [{ id: 'object-playground' }, { id: 'paint-playground' }]
 };
+const DRESSED = {
+  id: 'getting-dressed', title: 'Getting dressed', type: 'life-moment', area: 'moments',
+  focus: 'The daily wrestle with buttons and socks.',
+  themes: [{ title: 'Buttons, zips, and getting there myself', detail: 'Doing up a button.' }]
+};
 const GROUPS = [
   { id: 'mathematics', title: 'Mathematics', learnings: [COUNT] },
   { id: 'expressive-arts-design', title: 'Expressive Arts & Design', learnings: [PAINT] }
@@ -114,6 +119,18 @@ describe('lcBuildChips', () => {
     const ids = lcBuildChips(INDEX, [COUNT]).filter(c => c.type === 'playground').map(c => c.id);
     expect(ids).toEqual(['object-playground']);
   });
+  it('does not crash on a life-moment entry with no playgrounds field', () => {
+    expect(() => lcBuildChips(INDEX, [DRESSED])).not.toThrow();
+  });
+});
+
+describe('lcCardType', () => {
+  it('reads life-moment off the type field', () => {
+    expect(lcCardType(DRESSED)).toBe('life-moment');
+  });
+  it('defaults an untyped entry to learning', () => {
+    expect(lcCardType(COUNT)).toBe('learning');
+  });
 });
 
 describe('lcChipClass', () => {
@@ -155,6 +172,12 @@ describe('lcMatchesQuery', () => {
   it('matches a keyword at index 0, not just later in the string', () => {
     expect(lcMatchesQuery({ title: 'Count to 5', keywords: ['many'] }, 'many')).toBe(true);
   });
+  it('matches a life-moment on a theme title, not keywords', () => {
+    expect(lcMatchesQuery(DRESSED, 'buttons')).toBe(true);
+  });
+  it('rejects a life-moment query that matches neither title nor theme titles', () => {
+    expect(lcMatchesQuery(DRESSED, 'zebra')).toBe(false);
+  });
 });
 
 describe('lcMatchesChip', () => {
@@ -168,6 +191,9 @@ describe('lcMatchesChip', () => {
   it('matches a playground chip when the learning lists it', () => {
     expect(lcMatchesChip(PAINT, { type: 'playground', id: 'paint-playground' })).toBe(true);
     expect(lcMatchesChip(COUNT, { type: 'playground', id: 'paint-playground' })).toBe(false);
+  });
+  it('does not crash matching a life-moment entry against a playground chip', () => {
+    expect(lcMatchesChip(DRESSED, { type: 'playground', id: 'paint-playground' })).toBe(false);
   });
 });
 
