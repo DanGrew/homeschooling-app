@@ -105,6 +105,26 @@
         { "title": "Settling down",
           "detail": "Winding down with someone calm close by, the blanket or bear that has to be within reach, and sleep quietly taking its place among the things a child knows keep them well." }
       ]
+    },
+    {
+      "id": "out-and-about",
+      "icon": "🚶",
+      "title": "Out & about",
+      "type": "life-moment",
+      "focus": "The trips beyond the front door — the walk to the shops, the school run, the bus into town — and the wider world only met by going out into it.",
+      "area": "moments",
+      "themes": [
+        { "title": "Reading the way there",
+          "detail": "Road signs, shop names, bus numbers and the first letter of their own name — print starting to mean something, spotted on the pavement rather than taught at a table. Alongside it, a route walked often enough to describe back, and the pavement manners that keep the walk safe: holding hands, crossing carefully, staying alert to bikes and scooters." },
+        { "title": "New words for what's out there",
+          "detail": "Pointing and naming together, then whole sentences about what's just been seen, heard or smelled — and the unusual, precise words only the outside world hands over, like stroll and knobbly." },
+        { "title": "Wondering out loud",
+          "detail": "A conversation that runs for several turns and changes subject on its own, and the open \"I wonder what would happen if...\" questions a walk keeps supplying answers to." },
+        { "title": "Weather and living things met along the way",
+          "detail": "Rain, wind, a change of season noticed trip to trip, and the plants and creatures encountered outside the garden — handled gently, looked at closely, and talked about using words that only apply once you're standing in it." },
+        { "title": "The people and places along the way",
+          "detail": "Different people noticed and asked about — straightforwardly, building positive attitudes rather than awkwardness — the jobs people do, the family and community talked about on the way, and the odd place that turns out to matter to somebody." }
+      ]
     }
   ]
 }
