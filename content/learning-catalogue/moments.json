@@ -41,6 +41,28 @@
         { "title": "Mud, sticks and repeating patterns",
           "detail": "Mark-making without paper — fingers through mud, a stick dragged across gravel. And what gets collected tends to get laid out in a line, stick, leaf, stick, leaf, which is the first repeating pattern a child makes for themselves." }
       ]
+    },
+    {
+      "id": "drawing-and-making",
+      "icon": "🖍️",
+      "title": "Drawing & making",
+      "type": "life-moment",
+      "focus": "Paper, pens and a box of junk — the quietest stretch of the day, and the one quietly building the hand that will write.",
+      "area": "moments",
+      "themes": [
+        { "title": "The hand that will hold a pencil",
+          "detail": "Pinching a crayon between thumb and fingers, snipping with scissors, one hand steadily becoming the one that does the fiddly work — the whole apparatus handwriting needs later, built while the child thinks they're just colouring in." },
+        { "title": "Marks that mean something",
+          "detail": "The point where a scribble stops being a scribble — \"that says mummy\", the first letter of a name, a pretend list down the side of the page, an amount recorded in whatever squiggles the child invents for it." },
+        { "title": "Colour, and what things feel like",
+          "detail": "Paint on fingers, clay, fabric, cornflour and mud — colours getting named while they're being used, and materials sorted by hand into the rough and the smooth, the sticky and the dry." },
+        { "title": "Having an idea, then making it",
+          "detail": "Rummaging through the box before settling on what it's going to be, a circle that turns into a face, a cereal box that is definitely a rocket — the thing carries an idea the child had first." },
+        { "title": "Shapes that stack and fit",
+          "detail": "Blocks, inset puzzles, the flat-sided piece that goes on the bottom and the pointy one that makes the roof — shape learned by whether it works, long before it's learned by name." },
+        { "title": "Talk while the hands are busy",
+          "detail": "One of the calmest talking stretches in the day — hands occupied, heads side by side — and the words that come with it, up and down and round and back, land attached to something actually being done." }
+      ]
     }
   ]
 }
