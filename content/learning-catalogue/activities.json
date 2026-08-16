@@ -1,0 +1,189 @@
+{
+  "learnings": [
+    {
+      "id": "ramp-races",
+      "icon": "🏎️",
+      "title": "Ramp races",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 45,
+      "focus": "Roll things down a propped-up book, guess which goes furthest, then change one thing and run it again.",
+      "getOut": [
+        "A big hardback book and a cushion",
+        "Toy cars",
+        "A ball, a wooden block, an apple, a rolled-up sock",
+        "A towel (for the second round)"
+      ],
+      "run": [
+        "Prop the book on the cushion to make a ramp.",
+        "Send one thing at a time down it. Mark where each one stops.",
+        "Ask him to guess which goes furthest BEFORE each run.",
+        "Then change exactly one thing — steeper, or lay the towel over the ramp — and send the same thing again.",
+        "Compare: same object, one change, different result."
+      ],
+      "say": [
+        "Which do you think goes furthest?",
+        "Why that one?",
+        "What happened?",
+        "It went further because…"
+      ],
+      "again": [
+        "Race two things at once",
+        "Let him pick what to change",
+        "Guess before every single run"
+      ]
+    },
+    {
+      "id": "pots-and-pans-band",
+      "icon": "🥁",
+      "title": "Pots & pans band",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Copy a beat, play it loud then soft, fast then slow, and swap the rhyming word in a song you both know.",
+      "getOut": [
+        "Two saucepans",
+        "Wooden spoons",
+        "A tub with rice in it",
+        "Anything else that rattles"
+      ],
+      "run": [
+        "Round one — copy my beat. Two claps, then three, then long-short-long.",
+        "Round two — loud and soft, fast and slow, on command.",
+        "Round three — sing a whole song with the band playing, then swap the rhyming word: cat, hat, mat, sprat.",
+        "Put his hand flat on the pan straight after he hits it. It is still buzzing — that buzz IS the sound."
+      ],
+      "say": [
+        "Can you copy this?",
+        "Now do it quietly",
+        "What rhymes with cat?",
+        "Feel that — it's still buzzing"
+      ],
+      "again": [
+        "He leads and you copy",
+        "Add a third round he invents"
+      ]
+    },
+    {
+      "id": "animal-olympics",
+      "icon": "🐸",
+      "title": "Animal olympics",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 40,
+      "focus": "Six animal-move stations called two at a time, finishing with throwing and catching.",
+      "getOut": [
+        "Nothing at all",
+        "A ball, for the last station"
+      ],
+      "run": [
+        "Set up six stations: frog jumps, flamingo stand, crab walk, kangaroo hops, bear crawl, throw and catch.",
+        "Call TWO at a time — \"do the frog, then the flamingo\" — so he has to hold both in mind.",
+        "Hold the flamingo to a count of five.",
+        "Count the catches out loud together."
+      ],
+      "say": [
+        "Which animal moves like that?",
+        "Can you hold it to five?",
+        "How many did we catch?"
+      ],
+      "again": [
+        "He invents a station",
+        "Different order every round",
+        "Three instructions at a time"
+      ]
+    },
+    {
+      "id": "treasure-map",
+      "icon": "🗺️",
+      "title": "Treasure map",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 40,
+      "focus": "Draw the house from above, mark an X, and send him to find the toy — then swap over.",
+      "getOut": [
+        "Paper and a pen",
+        "One toy to hide"
+      ],
+      "run": [
+        "Draw the house or garden FROM ABOVE — boxes for rooms, a squiggle for the sofa.",
+        "Say out loud that you are looking down from the sky, like a bird.",
+        "Mark an X where the toy is. He finds it.",
+        "Swap — he hides one and draws the map."
+      ],
+      "say": [
+        "We're looking down from the sky",
+        "Go towards the window",
+        "Is it left or right of the table?",
+        "Where are we on the map now?"
+      ],
+      "again": [
+        "Do it outside instead",
+        "Two X's on one map",
+        "He draws first"
+      ]
+    },
+    {
+      "id": "toy-shop",
+      "icon": "🛒",
+      "title": "Toy shop",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 45,
+      "focus": "His toys become stock, real coins change hands, and you swap roles halfway through.",
+      "getOut": [
+        "Toys, as the stock",
+        "Real coins",
+        "A bag",
+        "Paper for price labels"
+      ],
+      "run": [
+        "He prices things 1p to 5p and writes the labels himself.",
+        "You buy. He counts out the change.",
+        "Ask for awkward things — more cars than blocks, fewer than three.",
+        "Swap roles halfway: you sell, he buys.",
+        "Sort the shop before opening — by size, by colour, by what it is made of."
+      ],
+      "say": [
+        "How many altogether?",
+        "Which pile has more?",
+        "That's far too expensive!",
+        "Can I have fewer than three?"
+      ],
+      "again": [
+        "Sort the stock a different way each time",
+        "Give him a fixed amount to spend"
+      ]
+    },
+    {
+      "id": "name-in-strange-places",
+      "icon": "✍️",
+      "title": "His name in strange places",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "His name written everywhere except paper — water on the patio, a finger through flour, chalk, a steamed-up window.",
+      "getOut": [
+        "A paintbrush and a bucket of water",
+        "A tray of flour",
+        "Chalk",
+        "Bath crayons"
+      ],
+      "run": [
+        "BIG first — whole arm, water on the patio.",
+        "Then smaller — a finger dragged through flour.",
+        "Then small — chalk on the path, or a bath crayon on a steamed-up window.",
+        "Never on paper. That is the whole point of it."
+      ],
+      "say": [
+        "Where does the O start?",
+        "That one's a tall letter",
+        "Big arm — all the way round"
+      ],
+      "again": [
+        "Write your names too",
+        "Just the first letter when he tires of it"
+      ]
+    }
+  ]
+}

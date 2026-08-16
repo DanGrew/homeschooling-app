@@ -196,6 +196,15 @@ describe('flattenCatalogue', () => {
     expect(result).toHaveLength(1);
     expect(result[0].title).toBe('A');
   });
+  it('excludes activity entries — structured play carries no curriculum coupling either', () => {
+    const areaFiles = [
+      { learnings: [{ title: 'A', curriculum: ['cl1'], playgrounds: [{ id: 'colour-wheel' }] },
+                    { id: 'ramp-races', title: 'Ramp races', type: 'activity', focus: 'x', run: [] }] }
+    ];
+    const result = flattenCatalogue(areaFiles, map, AREAS, PLAYGROUNDS);
+    expect(result).toHaveLength(1);
+    expect(result[0].title).toBe('A');
+  });
 });
 
 describe('colCompare', () => {
