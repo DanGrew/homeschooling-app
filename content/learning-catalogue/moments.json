@@ -127,6 +127,26 @@
       ]
     },
     {
+      "id": "playing-with-others",
+      "icon": "🤝",
+      "title": "Playing with others",
+      "type": "life-moment",
+      "focus": "The play that happens shoulder to shoulder with another child — games, pretend, patience, and the occasional falling out that gets talked through.",
+      "area": "moments",
+      "themes": [
+        { "title": "Finding your way into a game",
+          "detail": "From two-and-a-bit, children start seeking each other out rather than just playing side by side — and a shared pretend idea gets picked up, added to and carried on together rather than staying just one child's." },
+        { "title": "Deciding who's who and making it up as you go",
+          "detail": "Who's the mummy, who's the dog, what happens next — roles get chosen, argued over and settled, and the story gets narrated out loud as it's acted out, in voices and sentences borrowed for the part." },
+        { "title": "Waiting, joining in, playing by the rules",
+          "detail": "The wait for a turn without grabbing, joining a group game whether it was someone else's idea or an adult's, and later on, games that come with actual rules and something to aim for." },
+        { "title": "Falling out, and finding a way through it",
+          "detail": "A disagreement listened to rather than smoothed over, a compromise reached with help, and a growing sense of how the other child might be feeling — all of it building toward relationships that hold up over time." },
+        { "title": "Spotting the pattern without counting",
+          "detail": "Dice, dominoes, a board game's little grid of dots — glanced at and named instantly, without stopping to count them one by one." }
+      ]
+    },
+    {
       "id": "boundaries-and-feelings",
       "icon": "🫂",
       "title": "Boundaries & feelings",
