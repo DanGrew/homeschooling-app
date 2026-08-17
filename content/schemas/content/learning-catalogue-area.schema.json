@@ -117,6 +117,25 @@
                 }
               }
             }
+          },
+          {
+            "type": "object",
+            "title": "activity — structured play you set up, using things already in the house",
+            "required": ["id", "icon", "title", "type", "area", "minutes", "focus", "getOut", "run", "say", "again"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "icon": { "type": "string" },
+              "title": { "type": "string" },
+              "type": { "const": "activity" },
+              "area": { "type": "string" },
+              "minutes": { "type": "integer", "minimum": 5, "maximum": 60 },
+              "focus": { "type": "string" },
+              "getOut": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "run": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+              "say": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+              "again": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+            }
           }
         ]
       }

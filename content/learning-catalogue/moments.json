@@ -107,6 +107,26 @@
       ]
     },
     {
+      "id": "chatting-and-conversation",
+      "icon": "💬",
+      "title": "Chatting & conversation",
+      "type": "life-moment",
+      "focus": "Every ordinary chat along the way — in the car, over toys, on the walk to nowhere in particular — and the huge amount of thinking, feeling and connecting that happens inside it.",
+      "area": "moments",
+      "themes": [
+        { "title": "The back-and-forth of a real conversation",
+          "detail": "It starts as a coo answered with a coo, long before there are any words, and grows into holding an exchange across several turns and changing the subject — even getting the grammar wrong in exactly the way that shows a rule has just been picked up (\"I runned really fast\")." },
+        { "title": "Words for what's going on inside — and what keeps them well",
+          "detail": "Happy, sad, angry, worried — the words that let a feeling be said instead of only acted out — alongside noticing that someone else might be feeling something different, and picking up the everyday facts of staying well: sleep, food, teeth, moving about, not too much screen." },
+        { "title": "Wondering, guessing and why",
+          "detail": "A real guess offered to \"I wonder what would happen if…\", ideas joined together with because and so, more of what's been noticed said aloud with a wider vocabulary than just \"thing\" or \"look\", and a problem explained out loud after it's been solved." },
+        { "title": "Who's who in my life",
+          "detail": "Family, and the wider people who make up their world, named and described — the different shapes a family can take, and their own place in it: a life pieced together from a photo and a story about before they can remember, and starting to feel like someone who matters in all of it." },
+        { "title": "People are different, and that's ordinary",
+          "detail": "Skin, hair, dress, names, ways of doing things — noticed straightforwardly rather than skipped over, and met with the same interest and warmth as anything else in the world worth talking about." }
+      ]
+    },
+    {
       "id": "following-instructions-and-helping",
       "icon": "🧹",
       "title": "Following instructions & helping",
@@ -124,6 +144,62 @@
           "detail": "The agreed rule of the house or the setting, kept without an adult saying it again — the quiet sign that a rule has actually landed, not just been heard." },
         { "title": "Lining up, queuing, waiting a turn",
           "detail": "The everyday choreography of being somewhere with other people — standing in line, waiting to be served, taking a turn and giving one back — managed with a little more patience each time." }
+      ]
+    },
+    {
+      "id": "music-and-singing",
+      "icon": "🎵",
+      "title": "Music & singing",
+      "type": "life-moment",
+      "focus": "Songs, rhymes and whatever's to hand for banging out a beat — the loudest, most physical stretch of the day, and one that plants rhythm and rhyme long before either has a name.",
+      "area": "moments",
+      "themes": [
+        { "title": "From listening to singing the whole thing",
+          "detail": "Turning towards a tune and swaying to it, joining in with a few sounds or words, then — bit by bit — a whole favourite song sung or said from memory, right through, with nobody starting it off." },
+        { "title": "Clapping, stamping, moving with it",
+          "detail": "Whole-body movement in time with a rhythm — clapping, stamping, linking a few movements into a little sequence — and the same beat banged out on whatever's at hand: a bottle on a table, a twig on a fence." },
+        { "title": "Rhymes spotted, and finished before they land",
+          "detail": "Noticing when two words rhyme, filling in the one that's been deliberately left out, clapping out the syllables and hearing how a word ends — the groundwork phonics later gives a name to." },
+        { "title": "Numbers that come round in a song",
+          "detail": "Counting songs and rhymes are one of the first places the number-word sequence gets said out loud past five — the chain of numbers riding on a tune rather than sitting on a page." }
+      ]
+    },
+    {
+      "id": "shopping",
+      "icon": "🛒",
+      "title": "Shopping",
+      "type": "life-moment",
+      "focus": "The trip that turns number into something real — how many, is it enough, which one's bigger — worked out with actual things in your hands rather than on paper.",
+      "area": "moments",
+      "themes": [
+        { "title": "Working it out on the spot",
+          "detail": "Real, out-loud number problems that come up in the aisle — is that enough satsumas for the week, how many more we need — worked out with the actual things going into the trolley rather than on paper." },
+        { "title": "Enough for everyone",
+          "detail": "One for you, one for your sister, is there a spare — sharing out fairly is a real-world problem too, and shopping hands over a fresh one every trip." },
+        { "title": "The numeral and the pile",
+          "detail": "A number on a list, a price label, a checkout screen — matched to a counted-out pile of the real thing, and read back the other way: however many ends up in the bag is the numeral it stands for." },
+        { "title": "Bigger, smaller, heavier, lighter",
+          "detail": "The big cabbage against the small one, the heavy bag against the light one — sized up by eye and by hand, with the words that come with it." }
+      ]
+    },
+    {
+      "id": "playing-with-others",
+      "icon": "🤝",
+      "title": "Playing with others",
+      "type": "life-moment",
+      "focus": "The play that happens shoulder to shoulder with another child — games, pretend, patience, and the occasional falling out that gets talked through.",
+      "area": "moments",
+      "themes": [
+        { "title": "Finding your way into a game",
+          "detail": "From two-and-a-bit, children start seeking each other out rather than just playing side by side — and a shared pretend idea gets picked up, added to and carried on together rather than staying just one child's." },
+        { "title": "Deciding who's who and making it up as you go",
+          "detail": "Who's the mummy, who's the dog, what happens next — roles get chosen, argued over and settled, and the story gets narrated out loud as it's acted out, in voices and sentences borrowed for the part." },
+        { "title": "Waiting, joining in, playing by the rules",
+          "detail": "The wait for a turn without grabbing, joining a group game whether it was someone else's idea or an adult's, and later on, games that come with actual rules and something to aim for." },
+        { "title": "Falling out, and finding a way through it",
+          "detail": "A disagreement listened to rather than smoothed over, a compromise reached with help, and a growing sense of how the other child might be feeling — all of it building toward relationships that hold up over time." },
+        { "title": "Spotting the pattern without counting",
+          "detail": "Dice, dominoes, a board game's little grid of dots — glanced at and named instantly, without stopping to count them one by one." }
       ]
     },
     {
@@ -164,6 +240,44 @@
           "detail": "A real problem worth solving because it's about to go in the oven — four bowls and two spoons, does everyone get one; a tray with two gaps left and a question about how many more scoops that means." },
         { "title": "Heavier, bigger, more",
           "detail": "Flour hefted in one hand against sugar in the other before either touches a scale, a jug filling faster than a cup, one bowl plainly bigger than another — size, weight and capacity judged by hand and eye long before a number gets attached to any of them." }
+      ]
+    },
+    {
+      "id": "bath-and-water-play",
+      "icon": "🛁",
+      "title": "Bath & water play",
+      "type": "life-moment",
+      "focus": "A tub, a couple of cups and something to pour with — the everyday place a child first works out bigger, smaller and which one holds more.",
+      "area": "moments",
+      "themes": [
+        { "title": "Bigger, smaller, heavier",
+          "detail": "Showing with hands and saying it in words — \"bigger\", \"smaller\", \"tall\", \"heavy\" — comparing one thing in the water against another, the first informal measuring talk." },
+        { "title": "Which cup holds more",
+          "detail": "Two containers side by side, and a question that gets answered by pouring rather than counting — the everyday version of capacity, worked out with cups, jugs and whatever's floating in the tub." },
+        { "title": "Longer, heavier, more of it",
+          "detail": "A sponge, a duck, a toy boat — sized up directly against another rather than against a memory of what came before, weighed in the hand or laid end to end." },
+        { "title": "A guess, then the pour that checks it",
+          "detail": "Which one turns out to hold more — guessed first, then tested by pouring — and the word that reports the result: this one holds more than that one." }
+      ]
+    },
+    {
+      "id": "out-and-about",
+      "icon": "🚶",
+      "title": "Out & about",
+      "type": "life-moment",
+      "focus": "The trips beyond the front door — the walk to the shops, the school run, the bus into town — and the wider world only met by going out into it.",
+      "area": "moments",
+      "themes": [
+        { "title": "Reading the way there",
+          "detail": "Road signs, shop names, bus numbers and the first letter of their own name — print starting to mean something, spotted on the pavement rather than taught at a table. Alongside it, a route walked often enough to describe back, and the pavement manners that keep the walk safe: holding hands, crossing carefully, staying alert to bikes and scooters." },
+        { "title": "New words for what's out there",
+          "detail": "Pointing and naming together, then whole sentences about what's just been seen, heard or smelled — and the unusual, precise words only the outside world hands over, like stroll and knobbly." },
+        { "title": "Wondering out loud",
+          "detail": "A conversation that runs for several turns and changes subject on its own, and the open \"I wonder what would happen if...\" questions a walk keeps supplying answers to." },
+        { "title": "Weather and living things met along the way",
+          "detail": "Rain, wind, a change of season noticed trip to trip, and the plants and creatures encountered outside the garden — handled gently, looked at closely, and talked about using words that only apply once you're standing in it." },
+        { "title": "The people and places along the way",
+          "detail": "Different people noticed and asked about — straightforwardly, building positive attitudes rather than awkwardness — the jobs people do, the family and community talked about on the way, and the odd place that turns out to matter to somebody." }
       ]
     }
   ]
