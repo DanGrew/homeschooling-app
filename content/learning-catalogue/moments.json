@@ -225,6 +225,24 @@
       ]
     },
     {
+      "id": "cooking-and-baking",
+      "icon": "🥣",
+      "title": "Cooking & baking",
+      "type": "life-moment",
+      "focus": "Weighing, stirring and sharing out what's been made — the kitchen turns numbers into something you can taste, long before they're written down.",
+      "area": "moments",
+      "themes": [
+        { "title": "Counting as it goes in",
+          "detail": "A raisin dropped in for each hole in the bun tin, spoonfuls counted one by one, eggs cracked in one at a time — and the last number said covering the whole lot, not needing a recount to check." },
+        { "title": "Numbers you can point to",
+          "detail": "A recipe card, the digits on a scale, a timer counting down — numerals a child spots, matches to a pile of something, and starts to read as an amount rather than a shape with a name." },
+        { "title": "Enough to go round",
+          "detail": "A real problem worth solving because it's about to go in the oven — four bowls and two spoons, does everyone get one; a tray with two gaps left and a question about how many more scoops that means." },
+        { "title": "Heavier, bigger, more",
+          "detail": "Flour hefted in one hand against sugar in the other before either touches a scale, a jug filling faster than a cup, one bowl plainly bigger than another — size, weight and capacity judged by hand and eye long before a number gets attached to any of them." }
+      ]
+    },
+    {
       "id": "bath-and-water-play",
       "icon": "🛁",
       "title": "Bath & water play",
