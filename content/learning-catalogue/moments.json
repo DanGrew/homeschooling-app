@@ -147,6 +147,24 @@
       ]
     },
     {
+      "id": "music-and-singing",
+      "icon": "🎵",
+      "title": "Music & singing",
+      "type": "life-moment",
+      "focus": "Songs, rhymes and whatever's to hand for banging out a beat — the loudest, most physical stretch of the day, and one that plants rhythm and rhyme long before either has a name.",
+      "area": "moments",
+      "themes": [
+        { "title": "From listening to singing the whole thing",
+          "detail": "Turning towards a tune and swaying to it, joining in with a few sounds or words, then — bit by bit — a whole favourite song sung or said from memory, right through, with nobody starting it off." },
+        { "title": "Clapping, stamping, moving with it",
+          "detail": "Whole-body movement in time with a rhythm — clapping, stamping, linking a few movements into a little sequence — and the same beat banged out on whatever's at hand: a bottle on a table, a twig on a fence." },
+        { "title": "Rhymes spotted, and finished before they land",
+          "detail": "Noticing when two words rhyme, filling in the one that's been deliberately left out, clapping out the syllables and hearing how a word ends — the groundwork phonics later gives a name to." },
+        { "title": "Numbers that come round in a song",
+          "detail": "Counting songs and rhymes are one of the first places the number-word sequence gets said out loud past five — the chain of numbers riding on a tune rather than sitting on a page." }
+      ]
+    },
+    {
       "id": "shopping",
       "icon": "🛒",
       "title": "Shopping",
