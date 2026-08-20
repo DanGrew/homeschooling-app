@@ -193,6 +193,15 @@ function lcReady(index, groups) {
   LC.chip = LC.chips[0];
   lcRenderChips();
   lcApplyFilter();
+  lcOpenFromQuery();
+}
+
+// The atlas's Learning-cards row deep-links here with ?id=<learning-id> (TASK-ATLAS-
+// LEARNINGS-LINK) — the one route this page has ever had for "open a specific learning"
+// from outside itself. core.lcFindById resolves to 0 or 1 matches, so opening it is one
+// branchless forEach; no id, or a stale one, leaves the list showing (ui-cyclomatic).
+function lcOpenFromQuery() {
+  lcFindById(LC.groups, new URLSearchParams(location.search).get('id')).forEach(lcShowDetail);
 }
 
 function lcOpenPic(pic) {

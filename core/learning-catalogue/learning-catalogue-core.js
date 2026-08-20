@@ -18,6 +18,14 @@ function lcAllLearnings(groups) {
   return groups.reduce(function(acc, group) { return acc.concat(group.learnings); }, []);
 }
 
+// The atlas's Learning-cards row deep-links here with ?id=<learning-id> (TASK-ATLAS-
+// LEARNINGS-LINK) — this is that lookup, a real filter over every learning rather than a
+// null-sentinel: 0 or 1 matches, so the caller can .forEach() it open with no branch of its
+// own (ui-cyclomatic).
+function lcFindById(groups, id) {
+  return lcAllLearnings(groups).filter(function(l) { return l.id === id; });
+}
+
 function lcAddPlaygroundChip(chips, seen, index, id) {
   if (seen[id]) return;
   seen[id] = true;
@@ -107,7 +115,7 @@ function lcTalkColumnsHtml(talkPrompts) {
 
 if (typeof module !== 'undefined') module.exports = {
   buildIconMap, assembleGroups, activityHref,
-  lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
+  lcAllLearnings, lcFindById, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
   lcSearchTexts, lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
   lcActivitySection, lcActivityBody, lcTalkColumn, lcTalkColumnsHtml
 };
