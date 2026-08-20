@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const {
   buildIconMap, assembleGroups, activityHref,
-  lcAllLearnings, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
+  lcAllLearnings, lcFindById, lcAddPlaygroundChip, lcAreaChip, lcBuildChips, lcCardType, lcChipClass,
   lcSearchTexts, lcMatchesQuery, lcMatchesChip, lcFilterLearnings, lcFilter,
   lcActivitySection, lcActivityBody, lcTalkColumn, lcTalkColumnsHtml
 } = require('../../core/learning-catalogue/learning-catalogue-core.js');
@@ -87,6 +87,24 @@ describe('lcAllLearnings', () => {
   });
   it('returns an empty list for no groups', () => {
     expect(lcAllLearnings([])).toEqual([]);
+  });
+});
+
+// TASK-ATLAS-LEARNINGS-LINK: the atlas's Learning-cards row deep-links here by id.
+describe('lcFindById', () => {
+  const idGroups = [
+    { id: 'mathematics', title: 'Mathematics', learnings: [{ ...COUNT, id: 'count-to-5' }] },
+    { id: 'expressive-arts-design', title: 'Expressive Arts & Design', learnings: [{ ...PAINT, id: 'mix-colours' }] }
+  ];
+
+  it('resolves to the one learning carrying that id, across groups', () => {
+    expect(lcFindById(idGroups, 'mix-colours')).toEqual([{ ...PAINT, id: 'mix-colours' }]);
+  });
+  it('resolves to an empty list for an id no learning carries', () => {
+    expect(lcFindById(idGroups, 'ghost')).toEqual([]);
+  });
+  it('resolves to an empty list for a null id (no ?id= on the URL)', () => {
+    expect(lcFindById(idGroups, null)).toEqual([]);
   });
 });
 

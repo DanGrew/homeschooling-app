@@ -44,6 +44,28 @@ test('tapping a card opens its detail view', async ({ page }) => {
   await expect(page.locator('.lc-focus')).toContainText(sample.focus)
 })
 
+// TASK-ATLAS-LEARNINGS-LINK: the atlas's node panel links a Learning card straight to its
+// detail here — ?id=<learning-id>, the one route this page has ever had for that.
+test('a ?id= query param opens straight to that learning\'s detail, not the list', async ({ page }) => {
+  await page.goto(URL + '?id=' + sample.id)
+  await expect(page.locator('#lc-detail')).toBeVisible()
+  await expect(page.locator('#lc-list')).toBeHidden()
+  await expect(page.locator('.lc-d-title')).toHaveText(sample.title)
+})
+
+test('an unknown ?id= leaves the list showing, not a blank detail view', async ({ page }) => {
+  await page.goto(URL + '?id=not-a-real-learning')
+  await expect(page.locator('#lc-list')).toBeVisible()
+  await expect(page.locator('#lc-detail')).toBeHidden()
+})
+
+test('back from a deep-linked detail returns to the full list, same as opening a card', async ({ page }) => {
+  await page.goto(URL + '?id=' + sample.id)
+  await page.locator('[data-testid="lc-back"]').click()
+  await expect(page.locator('#lc-list')).toBeVisible()
+  await expect(page.locator('[data-testid="lc-card"]')).toHaveCount(allLearnings.length)
+})
+
 test('a card with an explain field shows a Why section with its text', async ({ page }) => {
   const explained = allLearnings.find(l => l.explain)
   await page.goto(URL)
