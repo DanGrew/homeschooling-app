@@ -219,6 +219,42 @@
         "Hunt outside only — bark, stones, leaves, the gate",
         "Friday: take the scraps down and see if he still has them"
       ]
+    },
+    {
+      "id": "letter-hunt",
+      "icon": "🥫",
+      "title": "Letter hunt",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Pick a letter, write it big on a card, then hunt it across everything in the cupboard that has writing on it — matching the shape in his hand to the shapes on the packets.",
+      "getOut": [
+        "A blank card or a piece of paper, for the letter",
+        "Eight or so things from the cupboard that have writing on them — cereal boxes, tins, jars, a bottle, a bag of pasta",
+        "A pen, and sticky labels or masking tape"
+      ],
+      "run": [
+        "Pick the letter. Start with the one his name begins with — that's the one he cares about. Mummy's, daddy's and Millie's come another day.",
+        "He writes it big on the card. Help him if he needs it, but his hand holds the pen. That card is what he carries round.",
+        "Spread the packets on the floor, writing facing up. Every one has to have words on it — that's the whole game.",
+        "He holds his card up against a packet and looks for the same shape. Found one, the packet goes in a pile. He is matching a shape, not remembering a letter — the card does the remembering for him.",
+        "Ask where it is without letting him point. Above the picture, under the big word, on the side.",
+        "Say what each bit of print is FOR. The big word is its name. The little numbers say when to eat it by. The picture is not the words.",
+        "Finish by labelling three things that belong to whoever the letter is for — his drawer, his cup, his box — in his own handwriting."
+      ],
+      "say": [
+        "Hold your card up next to it. Is it the same shape?",
+        "There it is!",
+        "Where is it? Tell me without pointing.",
+        "Which bit is the name of it?",
+        "That's mummy's letter — what else has she got?"
+      ],
+      "again": [
+        "Mummy's letter, then daddy's, then Millie's",
+        "The bathroom shelf instead of the kitchen",
+        "A mark on paper for every one he finds, then count the marks",
+        "No card this time — see if he remembers the shape"
+      ]
     }
   ]
 }
