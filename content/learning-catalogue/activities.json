@@ -184,6 +184,41 @@
         "Write your names too",
         "Just the first letter when he tires of it"
       ]
+    },
+    {
+      "id": "word-hunt",
+      "icon": "🔍",
+      "title": "Word hunt",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Take three words out of a book, stick them on the wall, then spend the rest of the week finding them — in the kitchen, the garden, on the way to the car.",
+      "getOut": [
+        "Any book with describing words in it — a That's Not My… is perfect",
+        "Three scraps of paper and some tape",
+        "A basket or a bag for what he collects"
+      ],
+      "run": [
+        "Read the book properly first, for the story. Don't teach anything yet.",
+        "Read it again. This time stop on three words and only three — rough, soft, shiny. Say each one and let him touch the patch.",
+        "Write each word on a scrap and tape it somewhere he walks past — the fridge, the back door, the bottom stair.",
+        "Now hunt the house. One more thing for each word. He decides what counts, not you.",
+        "Tip the basket out and sort it into piles — everything rough here, everything smooth there. Two piles work better than five.",
+        "Leave the words up all week. Every time you meet one, say it out loud: that wall is rough, this towel is soft."
+      ],
+      "say": [
+        "What does that feel like?",
+        "Find me something else that's rough",
+        "Is that one rough, or smooth?",
+        "Which pile does it go in?",
+        "That's our word from the book!"
+      ],
+      "again": [
+        "Three new words from a different book",
+        "He picks the words this time",
+        "Hunt outside only — bark, stones, leaves, the gate",
+        "Friday: take the scraps down and see if he still has them"
+      ]
     }
   ]
 }
