@@ -295,6 +295,44 @@
         "Throw it standing on one leg",
         "He decides where the line goes"
       ]
+    },
+    {
+      "id": "when-you-were-little",
+      "icon": "📼",
+      "title": "When you were little",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Watch two or three old videos of himself, guess before each one what he could and couldn't do back then, then go and do that same thing today.",
+      "getOut": [
+        "Two or three home videos, the oldest you have — pick ones where he's doing something, not just sitting",
+        "A photo of you or grandma at about his age",
+        "A pencil, for marking the doorframe"
+      ],
+      "run": [
+        "Line the clips up oldest first. Don't play anything yet.",
+        "Tell him how old he was in the first one and ask what he thinks he could do back then. He remembers well — make him commit to an answer before he sees it.",
+        "Play it. Then check his guess against what actually happened.",
+        "Now go and do that same thing today. If he's crawling up the step in the clip, go to that step and climb it. If he's saying wa-wa, say water. The difference has to be something he does with his body, not something you tell him.",
+        "Mark his height on the doorframe, then hold the screen up beside it to show how far up he used to come.",
+        "Put the clips in order. Which one happened first, and how does he know?",
+        "Finish on the photo of you or grandma small. Same question — what's different from now?"
+      ],
+      "say": [
+        "You were one. What do you think you could do?",
+        "Watch — were you right?",
+        "You couldn't do that then. Can you do it now?",
+        "You can do it now because…",
+        "Which one happened first?",
+        "Who else is in this one? Tell me something about them.",
+        "That's grandma when she was little. What's different?"
+      ],
+      "again": [
+        "A clip he picks himself",
+        "Clips from last month instead of last year — smaller differences are harder to spot",
+        "Photos of the house, the car, the pram",
+        "He tells you what happens in the clip before you play it"
+      ]
     }
   ]
 }
