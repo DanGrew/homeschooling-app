@@ -184,6 +184,155 @@
         "Write your names too",
         "Just the first letter when he tires of it"
       ]
+    },
+    {
+      "id": "word-hunt",
+      "icon": "🔍",
+      "title": "Word hunt",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Take three words out of a book, stick them on the wall, then spend the rest of the week finding them — in the kitchen, the garden, on the way to the car.",
+      "getOut": [
+        "Any book with describing words in it — a That's Not My… is perfect",
+        "Three scraps of paper and some tape",
+        "A basket or a bag for what he collects"
+      ],
+      "run": [
+        "Read the book properly first, for the story. Don't teach anything yet.",
+        "Read it again. This time stop on three words and only three — rough, soft, shiny. Say each one and let him touch the patch.",
+        "Write each word on a scrap and tape it somewhere he walks past — the fridge, the back door, the bottom stair.",
+        "Now hunt the house. One more thing for each word. He decides what counts, not you.",
+        "Tip the basket out and sort it into piles — everything rough here, everything smooth there. Two piles work better than five.",
+        "Leave the words up all week. Every time you meet one, say it out loud: that wall is rough, this towel is soft."
+      ],
+      "say": [
+        "What does that feel like?",
+        "Find me something else that's rough",
+        "Is that one rough, or smooth?",
+        "Which pile does it go in?",
+        "That's our word from the book!"
+      ],
+      "again": [
+        "Three new words from a different book",
+        "He picks the words this time",
+        "Hunt outside only — bark, stones, leaves, the gate",
+        "Friday: take the scraps down and see if he still has them"
+      ]
+    },
+    {
+      "id": "letter-hunt",
+      "icon": "🥫",
+      "title": "Letter hunt",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Pick a letter, write it big on a card, then hunt it across everything in the cupboard that has writing on it — matching the shape in his hand to the shapes on the packets.",
+      "getOut": [
+        "A blank card or a piece of paper, for the letter",
+        "Eight or so things from the cupboard that have writing on them — cereal boxes, tins, jars, a bottle, a bag of pasta",
+        "A pen, and sticky labels or masking tape"
+      ],
+      "run": [
+        "Pick the letter. Start with the one his name begins with — that's the one he cares about. Mummy's, daddy's and Millie's come another day.",
+        "He writes it big on the card. Help him if he needs it, but his hand holds the pen. That card is what he carries round.",
+        "Spread the packets on the floor, writing facing up. Every one has to have words on it — that's the whole game.",
+        "He holds his card up against a packet and looks for the same shape. Found one, the packet goes in a pile. He is matching a shape, not remembering a letter — the card does the remembering for him.",
+        "Ask where it is without letting him point. Above the picture, under the big word, on the side.",
+        "Say what each bit of print is FOR. The big word is its name. The little numbers say when to eat it by. The picture is not the words.",
+        "Finish by labelling three things that belong to whoever the letter is for — his drawer, his cup, his box — in his own handwriting."
+      ],
+      "say": [
+        "Hold your card up next to it. Is it the same shape?",
+        "There it is!",
+        "Where is it? Tell me without pointing.",
+        "Which bit is the name of it?",
+        "That's mummy's letter — what else has she got?"
+      ],
+      "again": [
+        "Mummy's letter, then daddy's, then Millie's",
+        "The bathroom shelf instead of the kitchen",
+        "A mark on paper for every one he finds, then count the marks",
+        "No card this time — see if he remembers the shape"
+      ]
+    },
+    {
+      "id": "socks-and-a-basket",
+      "icon": "🧦",
+      "title": "Socks & a basket",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Rolled-up socks thrown at a washing basket, then a balloon to catch. Nothing rolls away, so nobody spends the session fetching.",
+      "getOut": [
+        "Six or seven pairs of socks, rolled into balls",
+        "A washing basket, and a saucepan for later",
+        "One balloon",
+        "A strip of tape for the line he throws from"
+      ],
+      "run": [
+        "Rolled socks, not a ball. A ball rolls off and the whole session turns into fetching — socks stay where they land. That one choice is what keeps this calm.",
+        "Tape a line on the floor with the basket a short step away. Close enough that his first throw goes in.",
+        "He throws all six from the line, then collects all six himself. That's the loop, and he can run it without you in it.",
+        "When most of them go in, ask whether he can still do it from further back — then move the line back one step. Move the line, not the basket, and change nothing else.",
+        "Once the basket is easy from a distance, swap it for the saucepan. Smaller target, same spot.",
+        "Two piles at the end — the ones that went in and the ones that didn't. Which pile is bigger?",
+        "Then the balloon. It's much bigger than a sock and much lighter, so it falls slowly and his hands have time to get there. When the balloon is easy, throw a rolled sock instead."
+      ],
+      "say": [
+        "Both hands ready, before it comes",
+        "Watch it all the way into your hands",
+        "Do you think you can still get it in from back here?",
+        "How many are in the basket? Don't count them — just look.",
+        "That one went wide because…",
+        "That one nearly went in — what will you do differently?",
+        "Which pile is bigger?"
+      ],
+      "again": [
+        "One step further back each day",
+        "Underarm only, then overarm only",
+        "The other hand, and see how much harder it is",
+        "Throw it standing on one leg",
+        "He decides where the line goes"
+      ]
+    },
+    {
+      "id": "when-you-were-little",
+      "icon": "📼",
+      "title": "When you were little",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Watch two or three old videos of himself, guess before each one what he could and couldn't do back then, then go and do that same thing today.",
+      "getOut": [
+        "Two or three home videos, the oldest you have — pick ones where he's doing something, not just sitting",
+        "A photo of you or grandma at about his age",
+        "A pencil, for marking the doorframe"
+      ],
+      "run": [
+        "Line the clips up oldest first. Don't play anything yet.",
+        "Tell him how old he was in the first one and ask what he thinks he could do back then. He remembers well — make him commit to an answer before he sees it.",
+        "Play it. Then check his guess against what actually happened.",
+        "Now go and do that same thing today. If he's crawling up the step in the clip, go to that step and climb it. If he's saying wa-wa, say water. The difference has to be something he does with his body, not something you tell him.",
+        "Mark his height on the doorframe, then hold the screen up beside it to show how far up he used to come.",
+        "Put the clips in order. Which one happened first, and how does he know?",
+        "Finish on the photo of you or grandma small. Same question — what's different from now?"
+      ],
+      "say": [
+        "You were one. What do you think you could do?",
+        "Watch — were you right?",
+        "You couldn't do that then. Can you do it now?",
+        "You can do it now because…",
+        "Which one happened first?",
+        "Who else is in this one? Tell me something about them.",
+        "That's grandma when she was little. What's different?"
+      ],
+      "again": [
+        "A clip he picks himself",
+        "Clips from last month instead of last year — smaller differences are harder to spot",
+        "Photos of the house, the car, the pram",
+        "He tells you what happens in the clip before you play it"
+      ]
     }
   ]
 }
