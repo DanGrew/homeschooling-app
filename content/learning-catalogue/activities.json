@@ -255,6 +255,46 @@
         "A mark on paper for every one he finds, then count the marks",
         "No card this time — see if he remembers the shape"
       ]
+    },
+    {
+      "id": "socks-and-a-basket",
+      "icon": "🧦",
+      "title": "Socks & a basket",
+      "type": "activity",
+      "area": "activities",
+      "minutes": 30,
+      "focus": "Rolled-up socks thrown at a washing basket, then a balloon to catch. Nothing rolls away, so nobody spends the session fetching.",
+      "getOut": [
+        "Six or seven pairs of socks, rolled into balls",
+        "A washing basket, and a saucepan for later",
+        "One balloon",
+        "A strip of tape for the line he throws from"
+      ],
+      "run": [
+        "Rolled socks, not a ball. A ball rolls off and the whole session turns into fetching — socks stay where they land. That one choice is what keeps this calm.",
+        "Tape a line on the floor with the basket a short step away. Close enough that his first throw goes in.",
+        "He throws all six from the line, then collects all six himself. That's the loop, and he can run it without you in it.",
+        "When most of them go in, ask whether he can still do it from further back — then move the line back one step. Move the line, not the basket, and change nothing else.",
+        "Once the basket is easy from a distance, swap it for the saucepan. Smaller target, same spot.",
+        "Two piles at the end — the ones that went in and the ones that didn't. Which pile is bigger?",
+        "Then the balloon. It's much bigger than a sock and much lighter, so it falls slowly and his hands have time to get there. When the balloon is easy, throw a rolled sock instead."
+      ],
+      "say": [
+        "Both hands ready, before it comes",
+        "Watch it all the way into your hands",
+        "Do you think you can still get it in from back here?",
+        "How many are in the basket? Don't count them — just look.",
+        "That one went wide because…",
+        "That one nearly went in — what will you do differently?",
+        "Which pile is bigger?"
+      ],
+      "again": [
+        "One step further back each day",
+        "Underarm only, then overarm only",
+        "The other hand, and see how much harder it is",
+        "Throw it standing on one leg",
+        "He decides where the line goes"
+      ]
     }
   ]
 }
