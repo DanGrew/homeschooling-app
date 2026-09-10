@@ -53,28 +53,6 @@ if (puzzleMissingImage.length) {
   console.log('content/puzzle/manifest.json: all images present');
 }
 
-var learningsDir = path.join(__dirname, '..', 'content/learnings');
-var learningsManifest = fs.readdirSync(learningsDir)
-  .filter(function(f) { return f.endsWith('.json') && f !== 'manifest.json'; })
-  .sort()
-  .map(function(f) {
-    try {
-      var data = JSON.parse(fs.readFileSync(path.join(learningsDir, f), 'utf8'));
-      var type = data.type || (f.includes('exercise') ? 'exercise' : 'lesson');
-      var entry = { id: data.id, source: data.source, title: data.title, type: type };
-      if (data.number != null) entry.number = data.number;
-      if (Array.isArray(data.criteria)) entry.criteria = data.criteria;
-      return entry;
-    } catch(e) { return null; }
-  })
-  .filter(Boolean);
-
-fs.writeFileSync(
-  path.join(learningsDir, 'manifest.json'),
-  JSON.stringify(learningsManifest, null, 2) + '\n'
-);
-console.log('content/learnings/manifest.json: ' + learningsManifest.length + ' entries');
-
 // paint backgrounds — scan configured folder, emit manifest with page-relative paths
 var paintBgConfigPath = path.join(__dirname, '..', 'content/paint-playground/backgrounds.config.json');
 var paintBgConfig = fs.existsSync(paintBgConfigPath) ? JSON.parse(fs.readFileSync(paintBgConfigPath, 'utf8')) : {};

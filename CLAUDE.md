@@ -30,7 +30,7 @@ Root holds only this file and `README.md`; everything else is `docs/`, flat, are
 | `docs/MODULES.md` | every `core/`, `ui/`, `components/`, `content/` module → purpose | ⛔ finding a module — don't keep it resident |
 | `docs/PAGES.md` | activity pages → paths → shared deps | ⛔ locating a page — don't keep it resident |
 | `docs/VOICE.md` | the voice-interaction system, its CSS contracts and traps | ⭐ touching **any** speakable element |
-| `docs/MANIFESTS.md` | regenerating content manifests, and what CI does **not** check | you added, removed or renamed a learning |
+| `docs/MANIFESTS.md` | regenerating content manifests, and what CI does **not** check | you added, removed or renamed a dictionary entry |
 | `docs/NORMS.md` | output standards, regression-test rule, the Playwright rule | ⭐ before your first deliverable |
 | `docs/BUDGET.md` | the over-target report — generated, and it must drain | you're answering a size flag |
 
