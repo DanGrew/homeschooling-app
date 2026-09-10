@@ -58,7 +58,7 @@ npx playwright test tests/<file>.test.js                # only the file you touc
 | `no-guard-chain` | chained noop-guard dispatch tables in `ui/`/`app/` | `… no-guard-chain <out>` |
 | `no-filter-conditional` | `[null]`/`[undefined].filter(...)` sentinel, or a negation filter on a single-element array | `… no-filter-conditional <out>` |
 | `ui-cyclomatic` | a `ui/` function exceeds the complexity ceiling | `node scripts/check-ui-cyclomatic.js <out>` |
-| `check-manifest-files` | `content/learnings/manifest.json` references missing files | `node scripts/check-manifest-files.js <out>` |
+| `check-manifest-files` | a manifest references a missing file — puzzle, story-time audio, simulator sims, paint-playground backgrounds, shared images | `node scripts/check-manifest-files.js <out>` |
 | `validate-json` | content JSON violates its schema (incl. the learning-catalogue index + area schemas) | `node scripts/validate-schemas.js <out>` |
 | `validate-catalogue-refs` | a learning-catalogue card has a cross-file ref that doesn't resolve: `area` ≠ its file home, a `curriculum` tag absent from `content/curriculum/criteria.json`, a `playgrounds[].id` missing from the index registry or `app/activities/<id>/`, or a `learningIcons` id absent from the registry | `node scripts/validate-catalogue-refs.js <out>` |
 | `check-contracts` | a page breaks a contract rule (menuBar, speakableUI) | `node scripts/contracts/run.js` |
@@ -120,6 +120,6 @@ automatically — and reruns the full Vitest unit suite against each mutant.
 - **File homes.** JSON → `content/`, media → `assets/`, CSS → `styles/`,
   `.md`/`.txt` → `docs/` (plus the allowed root files above). New docs like this
   one go under `docs/`.
-- **Manifests.** Adding/removing/renaming a learning, lesson, or dictionary entry
-  means `node scripts/generate-manifests.js` + commit. See CLAUDE.md "Content
-  Manifests" for the `content/learnings/manifest.json` coverage-test coupling.
+- **Manifests.** Adding/removing/renaming a dictionary entry means
+  `node scripts/generate-manifests.js` + commit. Learnings have no manifest and
+  need no regeneration — see `MANIFESTS.md`.
