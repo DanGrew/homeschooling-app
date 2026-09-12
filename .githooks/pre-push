@@ -66,3 +66,14 @@ if [ -n "$changed_modules" ]; then
   echo "   (CLAUDE.md > Page Index / Module Index)"
   echo ""
 fi
+
+# Remind to key new activities into the atlas -- the catalogue is the source of truth,
+# and the atlas roster is downstream of it
+changed_activities=$(git diff --name-only origin/main...HEAD 2>/dev/null | grep -E '^content/learning-catalogue/activities\.json$' || true)
+if [ -n "$changed_activities" ]; then
+  echo ""
+  echo "WARNING: Activity catalogue changed -- does the atlas roster need the new id?"
+  echo "   (homeschooling repo: atlas/content/overlays/manifests/activities.manifest.json)"
+  echo "   (homeschooling repo: atlas/content/overlays/activities/)"
+  echo ""
+fi
