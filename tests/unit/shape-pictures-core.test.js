@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  trianglePoints, partShape, partBounds, indexPieces, pictureViewBox, pieceCounts,
+  trianglePoints, partShape, paintShape, partBounds, indexPieces, pictureViewBox, pieceCounts,
   unknownPieces, overusedPieces, pieceChecklist, setSize, pieceIcon, levelDots, pictureId,
 } from '../../core/shape-pictures/shape-pictures-core.js';
 
@@ -40,6 +40,12 @@ describe('partShape', () => {
   it('triangle polygon points are rounded', () => expect(partShape({ kind: 'tri', leg: 1.4142 }, { mx: 2, my: 2, dir: 'up' })).toEqual({
     tag: 'polygon', attrs: { points: '1,2 3,2 2,1' },
   }));
+});
+
+describe('paintShape', () => {
+  it('fills the shape with its piece colour and keeps its geometry', () => expect(paintShape(
+    { colour: 'G' }, { tag: 'circle', attrs: { cx: 1, cy: 2, r: 0.5 } }, { G: '#7fb02b', R: '#e4312b' },
+  )).toEqual({ tag: 'circle', attrs: { fill: '#7fb02b', cx: 1, cy: 2, r: 0.5 } }));
 });
 
 describe('partBounds', () => {

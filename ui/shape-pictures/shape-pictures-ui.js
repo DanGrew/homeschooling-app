@@ -1,4 +1,4 @@
-import { indexPieces, partShape, pictureViewBox, pieceChecklist, pieceIcon, levelDots, pictureId } from '../../core/shape-pictures/shape-pictures-core.js';
+import { indexPieces, partShape, paintShape, pictureViewBox, pieceChecklist, pieceIcon, levelDots, pictureId } from '../../core/shape-pictures/shape-pictures-core.js';
 import { firstIndexAfter, sortByName } from '../../core/collections/collections-core.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
@@ -13,22 +13,22 @@ function svgEl(tag, attrs) {
   return el;
 }
 
-function pieceEl(piece, shape) {
-  return svgEl(shape.tag, Object.assign({ fill: model.colours[piece.colour] }, shape.attrs));
-}
-
 function pictureSvg(picture) {
   var svg = svgEl('svg', { viewBox: pictureViewBox(picture, model.byId, PAD), preserveAspectRatio: 'xMidYMid meet', role: 'img', 'aria-label': picture.name + ' picture', class: 'sp-pic' });
   var g = svgEl('g', { stroke: '#fff', 'stroke-width': '0.04', 'stroke-linejoin': 'round' });
-  picture.parts.forEach(function(part) { g.appendChild(pieceEl(model.byId[part.piece], partShape(model.byId[part.piece], part))); });
+  picture.parts.forEach(function(part) {
+    var painted = paintShape(model.byId[part.piece], partShape(model.byId[part.piece], part), model.colours);
+    g.appendChild(svgEl(painted.tag, painted.attrs));
+  });
   svg.appendChild(g);
   return svg;
 }
 
 function iconSvg(piece) {
   var icon = pieceIcon(piece);
+  var painted = paintShape(piece, icon.shape, model.colours);
   var svg = svgEl('svg', { viewBox: icon.viewBox, 'aria-hidden': 'true' });
-  svg.appendChild(pieceEl(piece, icon.shape));
+  svg.appendChild(svgEl(painted.tag, painted.attrs));
   return svg;
 }
 

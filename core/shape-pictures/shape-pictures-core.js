@@ -86,6 +86,10 @@ var BOUNDS = {
   tri: (piece, part) => pointsBounds(trianglePoints(piece, part)),
 };
 
+export function paintShape(piece, shape, colours) {
+  return { tag: shape.tag, attrs: Object.assign({ fill: colours[piece.colour] }, shape.attrs) };
+}
+
 export function partBounds(piece, part) {
   return BOUNDS[piece.kind](piece, part);
 }
@@ -158,6 +162,6 @@ export function pictureId(picture) {
 }
 
 if (typeof module !== 'undefined') module.exports = {
-  trianglePoints, partShape, partBounds, indexPieces, pictureViewBox, pieceCounts,
+  trianglePoints, partShape, paintShape, partBounds, indexPieces, pictureViewBox, pieceCounts,
   unknownPieces, overusedPieces, pieceChecklist, setSize, pieceIcon, levelDots, pictureId,
 };
