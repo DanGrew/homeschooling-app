@@ -117,19 +117,14 @@
       { "piece": "CG", "cx": 7.5, "cy": 3 },
       { "piece": "Bo", "x": 7.25, "y": 4 }
     ]},
-    { "name": "Bike", "level": 2, "parts": [
-      { "piece": "CG", "cx": 2, "cy": 4 },
-      { "piece": "Lo", "x": 3, "y": 3.75, "flat": true },
-      { "piece": "Tb", "mx": 4, "my": 3.75, "dir": "up" },
-      { "piece": "Lr", "x": 3.75, "y": 2.25, "flat": true },
-      { "piece": "Sy", "cx": 4.25, "cy": 2.25, "dir": "up" },
-      { "piece": "Bo", "x": 5.75, "y": 2 },
-      { "piece": "By", "x": 5.5, "y": 1.5, "flat": true },
-      { "piece": "Ag", "cx": 6, "cy": 4, "angle": 0 },
-      { "piece": "Ag", "cx": 6, "cy": 4, "angle": 90 },
-      { "piece": "Ar", "cx": 6, "cy": 4, "angle": 180 },
-      { "piece": "Ay", "cx": 6, "cy": 4, "angle": 270 },
-      { "piece": "Co", "cx": 6, "cy": 4 }
+    { "name": "Bike", "level": 1, "parts": [
+      { "piece": "Cg", "cx": 1, "cy": 3 },
+      { "piece": "Co", "cx": 4, "cy": 3 },
+      { "piece": "Lr", "x": 1.5, "y": 2.75, "flat": true },
+      { "piece": "Bb", "x": 1.75, "y": 1.75 },
+      { "piece": "Sy", "cx": 2, "cy": 1.75, "dir": "up" },
+      { "piece": "By", "x": 3, "y": 1.75 },
+      { "piece": "Bo", "x": 2.75, "y": 1.25, "flat": true }
     ]},
     { "name": "Castle", "level": 3, "parts": [
       { "piece": "Lo", "x": 4.25, "y": 0 },
