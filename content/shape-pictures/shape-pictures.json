@@ -66,20 +66,21 @@
       { "piece": "Tb", "rx": 4.9, "ry": 2.3, "sx": -1, "sy": -1 },
       { "piece": "Tr", "mx": 4, "my": 5, "dir": "up" },
       { "piece": "CG", "cx": 4, "cy": 3 },
-      { "piece": "Sy", "cx": 3.6, "cy": 2.8, "dir": "down" },
-      { "piece": "Sy", "cx": 4.4, "cy": 2.8, "dir": "down" },
+      { "piece": "Sy", "cx": 3.4, "cy": 2.8, "dir": "right" },
+      { "piece": "Sy", "cx": 4.6, "cy": 2.8, "dir": "left" },
       { "piece": "Lr", "x": 3, "y": 5, "flat": true }
     ]},
     { "name": "Plane", "level": 2, "parts": [
-      { "piece": "Tb", "rx": 2, "ry": 2.75, "sx": 1, "sy": -1 },
-      { "piece": "Lr", "x": 3, "y": 2.25, "flat": true },
-      { "piece": "Qb", "x": 2, "y": 2.75 },
-      { "piece": "Ry", "x": 3, "y": 2.75 },
-      { "piece": "Lo", "x": 3, "y": 3.75, "flat": true },
-      { "piece": "So", "cx": 5, "cy": 3.25, "dir": "right" },
-      { "piece": "Bg", "x": 5.5, "y": 2.5 },
-      { "piece": "Cg", "cx": 3.5, "cy": 4.75 },
-      { "piece": "Co", "cx": 4.5, "cy": 4.75 }
+      { "piece": "Lr", "x": 1.5, "y": 2, "flat": true },
+      { "piece": "Lo", "x": 4.5, "y": 2, "flat": true },
+      { "piece": "Cg", "cx": 2.5, "cy": 2.25 },
+      { "piece": "Co", "cx": 5.5, "cy": 2.25 },
+      { "piece": "Bb", "x": 2.5, "y": 3.5, "flat": true },
+      { "piece": "By", "x": 4.5, "y": 3.5, "flat": true },
+      { "piece": "Ry", "x": 3.5, "y": 1, "turn": true },
+      { "piece": "Qb", "x": 3.5, "y": 3 },
+      { "piece": "So", "cx": 4, "cy": 1, "dir": "up" },
+      { "piece": "Sy", "cx": 4, "cy": 4, "dir": "down" }
     ]},
     { "name": "Helicopter", "level": 2, "parts": [
       { "piece": "Lo", "x": 3.8, "y": 2.75, "flat": true },
@@ -161,19 +162,20 @@
       { "piece": "Qr", "x": 4.25, "y": 6 }
     ]},
     { "name": "Train", "level": 3, "parts": [
-      { "piece": "Bo", "x": 4, "y": 2 },
-      { "piece": "Lr", "x": 1, "y": 1.5, "flat": true },
-      { "piece": "QB", "x": 1, "y": 2 },
-      { "piece": "Qr", "x": 1.5, "y": 2.5 },
-      { "piece": "Ry", "x": 3, "y": 3 },
-      { "piece": "Bb", "x": 5, "y": 3.75, "flat": true },
-      { "piece": "SR", "cx": 6.5, "cy": 3.5, "dir": "down" },
-      { "piece": "Sy", "cx": 6, "cy": 4.5, "dir": "down" },
-      { "piece": "Sy", "cx": 7, "cy": 4.5, "dir": "down" },
-      { "piece": "Cg", "cx": 2, "cy": 4.5 },
-      { "piece": "Co", "cx": 4, "cy": 4.5 },
-      { "piece": "Lo", "x": 1, "y": 5, "flat": true },
-      { "piece": "Bg", "x": 3, "y": 5, "flat": true }
+      { "piece": "SR", "cx": 1, "cy": 3.5, "dir": "down" },
+      { "piece": "Sy", "cx": 0.5, "cy": 4.5, "dir": "down" },
+      { "piece": "Sy", "cx": 1.5, "cy": 4.5, "dir": "down" },
+      { "piece": "Bb", "x": 1.75, "y": 3.75, "flat": true },
+      { "piece": "Bo", "x": 5.75, "y": 2 },
+      { "piece": "Lr", "x": 2.5, "y": 1.5, "flat": true },
+      { "piece": "QB", "x": 2.5, "y": 2 },
+      { "piece": "Qr", "x": 3, "y": 2.5 },
+      { "piece": "Ry", "x": 4.5, "y": 3 },
+      { "piece": "Tb", "rx": 6.5, "ry": 4.5, "sx": 1, "sy": -1 },
+      { "piece": "Cg", "cx": 3.5, "cy": 4.5 },
+      { "piece": "Co", "cx": 5.5, "cy": 4.5 },
+      { "piece": "Lo", "x": 2.5, "y": 5, "flat": true },
+      { "piece": "Bg", "x": 4.5, "y": 5, "flat": true }
     ]}
   ]
 }
