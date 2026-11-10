@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shape Pictures — a wooden shape set and the pictures built from it",
+  "type": "object",
+  "required": ["colours", "pieces", "pictures"],
+  "additionalProperties": false,
+  "properties": {
+    "colours": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+    },
+    "pieces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "kind", "colour", "count"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["circle", "semi", "arc", "bar", "rect", "tri"] },
+          "colour": { "type": "string" },
+          "count": { "type": "integer", "minimum": 1 },
+          "r": { "type": "number", "exclusiveMinimum": 0 },
+          "inner": { "type": "number", "exclusiveMinimum": 0 },
+          "len": { "type": "number", "exclusiveMinimum": 0 },
+          "thick": { "type": "number", "exclusiveMinimum": 0 },
+          "w": { "type": "number", "exclusiveMinimum": 0 },
+          "h": { "type": "number", "exclusiveMinimum": 0 },
+          "leg": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "additionalProperties": false,
+        "allOf": [
+          { "if": { "properties": { "kind": { "enum": ["circle", "semi"] } } }, "then": { "required": ["r"] } },
+          { "if": { "properties": { "kind": { "const": "arc" } } }, "then": { "required": ["r", "inner"] } },
+          { "if": { "properties": { "kind": { "const": "bar" } } }, "then": { "required": ["len", "thick"] } },
+          { "if": { "properties": { "kind": { "const": "rect" } } }, "then": { "required": ["w", "h"] } },
+          { "if": { "properties": { "kind": { "const": "tri" } } }, "then": { "required": ["leg"] } }
+        ]
+      }
+    },
+    "pictures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "level", "parts"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "level": { "type": "integer", "minimum": 1, "maximum": 3 },
+          "parts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["piece"],
+              "additionalProperties": false,
+              "properties": {
+                "piece": { "type": "string" },
+                "x": { "type": "number" }, "y": { "type": "number" },
+                "cx": { "type": "number" }, "cy": { "type": "number" },
+                "mx": { "type": "number" }, "my": { "type": "number" },
+                "rx": { "type": "number" }, "ry": { "type": "number" },
+                "sx": { "enum": [-1, 1] }, "sy": { "enum": [-1, 1] },
+                "dir": { "enum": ["up", "down", "left", "right"] },
+                "angle": { "enum": [0, 90, 180, 270] },
+                "flat": { "type": "boolean" },
+                "turn": { "type": "boolean" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

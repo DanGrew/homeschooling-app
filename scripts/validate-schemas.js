@@ -118,6 +118,12 @@ const MAPPINGS = [
     match: (name) => name.endsWith('.json') && name !== 'index.json'
   },
   {
+    label: 'content/shape-pictures',
+    schema: 'content/schemas/content/shape-pictures.schema.json',
+    searchDir: 'content/shape-pictures',
+    match: (name) => name.endsWith('.json')
+  },
+  {
     label: 'content/graphemes',
     schema: 'content/schemas/content/graphemes.schema.json',
     searchDir: 'content/phonics',
