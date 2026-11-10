@@ -111,15 +111,16 @@ var QUADRANT = {
 var inBox = (b, x, y, m) => x > b[0] + m && x < b[2] - m && y > b[1] + m && y < b[3] - m;
 var dist = (x, y, cx, cy) => Math.hypot(x - cx, y - cy);
 
-function inTriangle(pts, x, y, m) {
-  var area = (pts[1][0] - pts[0][0]) * (pts[2][1] - pts[0][1]) - (pts[1][1] - pts[0][1]) * (pts[2][0] - pts[0][0]);
-  var sign = Math.sign(area);
-  return [0, 1, 2].every((i) => {
-    var a = pts[i];
+export function edgeDistances(pts, x, y) {
+  return pts.map((a, i) => {
     var b = pts[(i + 1) % 3];
-    var cross = (b[0] - a[0]) * (y - a[1]) - (b[1] - a[1]) * (x - a[0]);
-    return sign * cross / Math.hypot(b[0] - a[0], b[1] - a[1]) > m;
+    return ((b[0] - a[0]) * (y - a[1]) - (b[1] - a[1]) * (x - a[0])) / Math.hypot(b[0] - a[0], b[1] - a[1]);
   });
+}
+
+function inTriangle(pts, x, y, m) {
+  var d = edgeDistances(pts, x, y);
+  return d.every((v) => v > m) || d.every((v) => v < -m);
 }
 
 var INSIDE = {
@@ -138,15 +139,16 @@ export function pointInPart(piece, part, x, y, margin) {
   return INSIDE[piece.kind](piece, part, x, y, margin);
 }
 
+export function gridSteps(lo, hi, step) {
+  return Array.from({ length: Math.ceil((hi - lo) / step) }, (_, i) => lo + (i + 0.5) * step);
+}
+
 export function partSamples(piece, part, step, margin) {
   var b = partBounds(piece, part);
-  var nx = Math.ceil((b[2] - b[0]) / step);
-  var ny = Math.ceil((b[3] - b[1]) / step);
-  var pts = [];
-  for (var i = 0; i < nx; i++) {
-    for (var j = 0; j < ny; j++) pts.push([b[0] + (i + 0.5) * step, b[1] + (j + 0.5) * step]);
-  }
-  return pts.filter((p) => pointInPart(piece, part, p[0], p[1], margin));
+  var ys = gridSteps(b[1], b[3], step);
+  return gridSteps(b[0], b[2], step)
+    .flatMap((x) => ys.map((y) => [x, y]))
+    .filter((p) => pointInPart(piece, part, p[0], p[1], margin));
 }
 
 var OVERLAP_STEP = 0.02;
@@ -158,11 +160,13 @@ export function overlapProblems(picture, byId) {
   var hits = (pts, q, m) => pts.some((p) => pointInPart(q.piece, q.part, p[0], p[1], m));
   var allIn = (pts, q) => pts.every((p) => pointInPart(q.piece, q.part, p[0], p[1], 0));
   var clash = (i, j) => hits(samples[i], parts[j], OVERLAP_MARGIN) && !allIn(samples[i], parts[j]) && !allIn(samples[j], parts[i]);
-  return parts.flatMap((_, i) => parts.map((__, j) => [i, j]).filter((pair) => pair[1] > i && clash(i, pair[1])));
+  return parts.flatMap((_, i) => parts.slice(i + 1).map((__, k) => [i, i + 1 + k]).filter((pair) => clash(pair[0], pair[1])));
 }
 
 export function indexPieces(pieces) {
-  return Object.fromEntries(pieces.map((p) => [p.id, p]));
+  var byId = {};
+  pieces.forEach((p) => { byId[p.id] = p; });
+  return byId;
 }
 
 export function pictureViewBox(picture, byId, pad) {
@@ -204,20 +208,19 @@ export function setSize(pieces) {
 }
 
 var ICON_PART = {
-  circle: (piece) => ({ cx: piece.r, cy: piece.r }),
-  rect: () => ({ x: 0, y: 0 }),
-  bar: () => ({ x: 0, y: 0 }),
-  semi: (piece) => ({ cx: piece.r, cy: piece.r, dir: 'up' }),
-  arc: (piece) => ({ cx: 0, cy: piece.r, angle: 270 }),
-  tri: (piece) => ({ mx: piece.leg / Math.SQRT2, my: piece.leg / Math.SQRT2, dir: 'up' }),
+  circle: () => ({ cx: 0, cy: 0 }),
+  rect: (piece) => ({ x: -piece.w / 2, y: -piece.h / 2 }),
+  bar: (piece) => ({ x: -piece.thick / 2, y: -piece.len / 2 }),
+  semi: (piece) => ({ cx: 0, cy: piece.r / 2, dir: 'up' }),
+  arc: (piece) => ({ cx: -piece.r / 2, cy: piece.r / 2, angle: 270 }),
+  tri: (piece) => ({ mx: 0, my: piece.leg / Math.SQRT2 / 2, dir: 'up' }),
 };
 
 export function pieceIcon(piece) {
   var part = ICON_PART[piece.kind](piece);
   var b = partBounds(piece, part);
   var side = Math.max(b[2] - b[0], b[3] - b[1]);
-  var viewBox = [b[0] - (side - (b[2] - b[0])) / 2, b[1] - (side - (b[3] - b[1])) / 2, side, side].map(round).join(' ');
-  return { viewBox: viewBox, shape: partShape(piece, part) };
+  return { viewBox: [-side / 2, -side / 2, side, side].map(round).join(' '), shape: partShape(piece, part) };
 }
 
 export function levelDots(level, max) {
@@ -227,8 +230,3 @@ export function levelDots(level, max) {
 export function pictureId(picture) {
   return picture.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 }
-
-if (typeof module !== 'undefined') module.exports = {
-  trianglePoints, partShape, paintShape, partBounds, pointInPart, partSamples, overlapProblems, indexPieces, pictureViewBox, pieceCounts,
-  unknownPieces, overusedPieces, pieceChecklist, setSize, pieceIcon, levelDots, pictureId,
-};

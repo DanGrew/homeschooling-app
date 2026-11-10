@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  trianglePoints, partShape, paintShape, partBounds, pointInPart, partSamples, overlapProblems, indexPieces, pictureViewBox, pieceCounts,
+  trianglePoints, partShape, paintShape, partBounds, pointInPart, partSamples, overlapProblems, edgeDistances, gridSteps, indexPieces, pictureViewBox, pieceCounts,
   unknownPieces, overusedPieces, pieceChecklist, setSize, pieceIcon, levelDots, pictureId,
 } from '../../core/shape-pictures/shape-pictures-core.js';
 
@@ -111,8 +111,58 @@ describe('pointInPart', () => {
   it('triangle wound the other way', () => expect(pointInPart(BIG_TRI, { rx: 4, ry: 1, sx: -1, sy: 1 }, 3.5, 1.5, 0)).toBe(true));
 });
 
+describe('pointInPart exact edges are outside', () => {
+  const S = { cx: 1, cy: 1 };
+  it('circle rim', () => expect(pointInPart({ kind: 'circle', r: 1 }, { cx: 0, cy: 0 }, 1, 0, 0)).toBe(false));
+  it('semi rim', () => expect(pointInPart(SEMI, { ...S, dir: 'up' }, 1, 0.5, 0)).toBe(false));
+  it('semi up flat edge', () => expect(pointInPart(SEMI, { ...S, dir: 'up' }, 1, 1, 0)).toBe(false));
+  it('semi down flat edge', () => expect(pointInPart(SEMI, { ...S, dir: 'down' }, 1, 1, 0)).toBe(false));
+  it('semi left flat edge', () => expect(pointInPart(SEMI, { ...S, dir: 'left' }, 1, 1, 0)).toBe(false));
+  it('semi right flat edge', () => expect(pointInPart(SEMI, { ...S, dir: 'right' }, 1, 1, 0)).toBe(false));
+  it('rect left edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 0, 0.5, 0)).toBe(false));
+  it('rect right edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 2, 0.5, 0)).toBe(false));
+  it('rect top edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 1, 0, 0)).toBe(false));
+  it('rect bottom edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 1, 1, 0)).toBe(false));
+  const RING = { kind: 'arc', r: 10, inner: 5 };
+  it('arc inner rim', () => expect(pointInPart(RING, { cx: 0, cy: 0, angle: 0 }, 3, 4, 0)).toBe(false));
+  it('arc outer rim', () => expect(pointInPart(RING, { cx: 0, cy: 0, angle: 0 }, 6, 8, 0)).toBe(false));
+  [[0, 1, 1], [90, -1, 1], [180, -1, -1], [270, 1, -1]].forEach(([angle, sx, sy]) => {
+    it(`arc at ${angle} is inside its quarter`, () => expect(pointInPart(RING, { cx: 0, cy: 0, angle }, 5 * sx, 5 * sy, 0)).toBe(true));
+    it(`arc at ${angle} excludes its vertical radial edge`, () => expect(pointInPart(RING, { cx: 0, cy: 0, angle }, 0, 7 * sy, 0)).toBe(false));
+    it(`arc at ${angle} excludes its horizontal radial edge`, () => expect(pointInPart(RING, { cx: 0, cy: 0, angle }, 7 * sx, 0, 0)).toBe(false));
+  });
+  const POS = { kind: 'tri', leg: 2 };
+  const POS_PART = { rx: 0, ry: 0, sx: 1, sy: 1 };
+  it('triangle wound one way: inside', () => expect(pointInPart(POS, POS_PART, 0.5, 0.5, 0)).toBe(true));
+  it('triangle wound one way: on an edge', () => expect(pointInPart(POS, POS_PART, 1, 0, 0)).toBe(false));
+  it('triangle wound one way: margin', () => expect(pointInPart(POS, POS_PART, 0.5, 0.05, 0.1)).toBe(false));
+  it('triangle wound one way: outside', () => expect(pointInPart(POS, POS_PART, 1.5, 1.5, 0)).toBe(false));
+  it('triangle wound the other way: on an edge', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 2, 3, 0)).toBe(false));
+  it('triangle wound the other way: margin', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 1.5, 2.95, 0.1)).toBe(false));
+  it('triangle placed away from the origin', () => expect(pointInPart(POS, { rx: -3, ry: 1, sx: 1, sy: 1 }, -2.5, 1.5, 0)).toBe(true));
+  it('edge-form triangle pointing left', () => expect(pointInPart(TRI, { mx: 2, my: 2, dir: 'left' }, 1.5, 2, 0)).toBe(true));
+});
+
+describe('edgeDistances', () => {
+  it('signed distance from each edge, in order', () => {
+    const d = edgeDistances([[0, 0], [2, 0], [0, 2]], 0.5, 0.5);
+    expect(d[0]).toBe(0.5);
+    expect(d[1]).toBeCloseTo(Math.SQRT2 / 2, 10);
+    expect(d[2]).toBe(0.5);
+  });
+  it('is negative outside an edge', () => expect(edgeDistances([[0, 0], [2, 0], [0, 2]], 0.5, -1)[0]).toBe(-1));
+  it('flips sign with winding', () => expect(edgeDistances([[0, 0], [0, 2], [2, 0]], 0.5, 0.5)).toEqual([-0.5, expect.any(Number), -0.5]));
+});
+
+describe('gridSteps', () => {
+  it('centres of each step between lo and hi', () => expect(gridSteps(1, 2, 0.5)).toEqual([1.25, 1.75]));
+  it('rounds a part step up', () => expect(gridSteps(0, 1.2, 0.5)).toEqual([0.25, 0.75, 1.25]));
+  it('is empty for a zero span', () => expect(gridSteps(3, 3, 0.5)).toEqual([]));
+});
+
 describe('partSamples', () => {
   const Q = { kind: 'rect', w: 1, h: 1 };
+  it('samples a part away from the origin', () => expect(partSamples(Q, { x: 1, y: 2 }, 0.5, 0)).toEqual([[1.25, 2.25], [1.25, 2.75], [1.75, 2.25], [1.75, 2.75]]));
   it('grid points inside the part', () => expect(partSamples(Q, { x: 0, y: 0 }, 0.5, 0)).toEqual([[0.25, 0.25], [0.25, 0.75], [0.75, 0.25], [0.75, 0.75]]));
   it('margin drops edge points', () => expect(partSamples(Q, { x: 0, y: 0 }, 0.5, 0.3)).toEqual([]));
   it('covers a non-square part', () => expect(partSamples(RECT, { x: 0, y: 0 }, 1, 0)).toEqual([[0.5, 0.5], [1.5, 0.5]]));
@@ -190,12 +240,12 @@ describe('setSize', () => {
 });
 
 describe('pieceIcon', () => {
-  it('circle fills a square box', () => expect(pieceIcon(CIRCLE)).toEqual({ viewBox: '0 0 1 1', shape: { tag: 'circle', attrs: { cx: 0.5, cy: 0.5, r: 0.5 } } }));
-  it('rect is centred in a square box', () => expect(pieceIcon(RECT)).toEqual({ viewBox: '0 -0.5 2 2', shape: { tag: 'rect', attrs: { x: 0, y: 0, width: 2, height: 1 } } }));
-  it('bar is centred sideways', () => expect(pieceIcon({ kind: 'bar', len: 1, thick: 0.5 }).viewBox).toBe('-0.25 0 1 1'));
-  it('semi bulges up', () => expect(pieceIcon(SEMI)).toEqual({ viewBox: '0 -0.25 1 1', shape: { tag: 'path', attrs: { d: 'M0,0.5 A0.5 0.5 0 0 1 1,0.5 Z' } } }));
-  it('arc sits in its quarter', () => expect(pieceIcon(ARC).viewBox).toBe('0 0 1 1'));
-  it('triangle points up', () => expect(pieceIcon(TRI)).toEqual({ viewBox: '0 -0.5 2 2', shape: { tag: 'polygon', attrs: { points: '0,1 2,1 1,0' } } }));
+  it('circle is centred in a square box', () => expect(pieceIcon(CIRCLE)).toEqual({ viewBox: '-0.5 -0.5 1 1', shape: { tag: 'circle', attrs: { cx: 0, cy: 0, r: 0.5 } } }));
+  it('wide rect sets the box by its width', () => expect(pieceIcon(RECT)).toEqual({ viewBox: '-1 -1 2 2', shape: { tag: 'rect', attrs: { x: -1, y: -0.5, width: 2, height: 1 } } }));
+  it('tall bar sets the box by its height', () => expect(pieceIcon({ kind: 'bar', len: 1, thick: 0.5 })).toEqual({ viewBox: '-0.5 -0.5 1 1', shape: { tag: 'rect', attrs: { x: -0.25, y: -0.5, width: 0.5, height: 1 } } }));
+  it('semi bulges up', () => expect(pieceIcon(SEMI)).toEqual({ viewBox: '-0.5 -0.5 1 1', shape: { tag: 'path', attrs: { d: 'M-0.5,0.25 A0.5 0.5 0 0 1 0.5,0.25 Z' } } }));
+  it('arc sits centred', () => expect(pieceIcon(ARC).viewBox).toBe('-0.5 -0.5 1 1'));
+  it('triangle points up', () => expect(pieceIcon(TRI)).toEqual({ viewBox: '-1 -1 2 2', shape: { tag: 'polygon', attrs: { points: '-1,0.5 1,0.5 0,-0.5' } } }));
 });
 
 describe('levelDots', () => {
