@@ -48,6 +48,7 @@ Activity pages and their shared dependencies. Referenced from `CLAUDE.md`.
 | Logic gates sandbox | `app/activities/logic-gates/sandbox.html` | core/logic-gates, ui/logic-gates |
 | Character worksheet | `app/worksheets/character-worksheet/index.html` | core/character-worksheet, ui/character-worksheet |
 | Colouring sheets | `app/worksheets/colouring-sheets/index.html` | core/dictionary, ui/colouring |
+| Shape pictures | `app/worksheets/shape-pictures/index.html` | core/shape-pictures, ui/shape-pictures |
 | Physical activities | `app/physical/activities/_shell.html` + variants | core/physical |
 | Object Playground | `app/activities/object-playground/index.html` | core/object-playground, ui/object-playground |
 | Crossing Playground (Frogger) | `app/activities/frogger/index.html` | core/frogger, ui/frogger, content/frogger/scenarios |
