@@ -24,7 +24,7 @@ Purpose of each `core/`, `ui/`, `components/`, and `content/` module. Referenced
 | `core/domino/domino-page-logic.js` | Domino page pure helpers: predicates, id pluck, tile lookup, per-player summary, random sample |
 | `core/count-shapes/count-shapes-core.js` | Shape counting game |
 | `core/character-worksheet/character-worksheet-core.js` | Worksheet generation/rendering |
-| `core/shape-pictures/shape-pictures-core.js` | Shape Pictures: piece geometry and bounds, picture viewBox, piece checklist, set-overuse check |
+| `core/shape-pictures/shape-pictures-core.js` | Shape Pictures: piece geometry and bounds, picture viewBox, piece checklist, set-overuse check, partial-overlap check (pieces may only touch or sit wholly on top) |
 | `core/filter-bar/filter-bar-core.js` | Filtering/sorting utilities |
 | `core/match-colour-shape/match-colour-shape-core.js` | Colour+shape matching game logic |
 | `core/move-blocks/move-blocks-core.js` | Block puzzle solver |

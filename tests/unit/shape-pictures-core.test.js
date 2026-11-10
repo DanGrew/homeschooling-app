@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import {
-  trianglePoints, partShape, paintShape, partBounds, indexPieces, pictureViewBox, pieceCounts,
+  trianglePoints, partShape, paintShape, partBounds, pointInPart, partSamples, overlapProblems, indexPieces, pictureViewBox, pieceCounts,
   unknownPieces, overusedPieces, pieceChecklist, setSize, pieceIcon, levelDots, pictureId,
 } from '../../core/shape-pictures/shape-pictures-core.js';
 
@@ -61,6 +61,80 @@ describe('partBounds', () => {
   it('arc at 0', () => expect(partBounds(ARC, { cx: 2, cy: 2, angle: 0 })).toEqual([2, 2, 3, 3]));
   it('arc at 180', () => expect(partBounds(ARC, { cx: 2, cy: 2, angle: 180 })).toEqual([1, 1, 2, 2]));
   it('triangle', () => expect(partBounds(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 })).toEqual([1, 1, 3, 3]));
+});
+
+describe('pointInPart', () => {
+  const UNIT = { kind: 'circle', r: 1 };
+  it('circle inside', () => expect(pointInPart(UNIT, { cx: 0, cy: 0 }, 0.5, 0, 0)).toBe(true));
+  it('circle margin shrinks the edge', () => expect(pointInPart(UNIT, { cx: 0, cy: 0 }, 0.95, 0, 0.1)).toBe(false));
+  it('circle outside', () => expect(pointInPart(UNIT, { cx: 0, cy: 0 }, 1.1, 0, 0)).toBe(false));
+  it('rect inside', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 1, 0.5, 0)).toBe(true));
+  it('rect margin', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 1.95, 0.5, 0.1)).toBe(false));
+  it('rect margin on top edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 1, 0.05, 0.1)).toBe(false));
+  it('rect margin on bottom edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 1, 0.95, 0.1)).toBe(false));
+  it('rect margin on left edge', () => expect(pointInPart(RECT, { x: 0, y: 0 }, 0.05, 0.5, 0.1)).toBe(false));
+  it('bar follows its lie', () => expect(pointInPart(BAR, { x: 0, y: 0, flat: true }, 1.5, 0.25, 0)).toBe(true));
+  it('bar upright excludes the flat area', () => expect(pointInPart(BAR, { x: 0, y: 0 }, 1.5, 0.25, 0)).toBe(false));
+  it('semi up holds the bulge', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'up' }, 1, 0.8, 0)).toBe(true));
+  it('semi up excludes below the flat edge', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'up' }, 1, 1.2, 0)).toBe(false));
+  it('semi up margin on the flat edge', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'up' }, 1, 0.95, 0.1)).toBe(false));
+  it('semi up excludes beyond the curve', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'up' }, 1, 0.45, 0.1)).toBe(false));
+  it('semi down', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'down' }, 1, 1.2, 0)).toBe(true));
+  it('semi down margin', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'down' }, 1, 1.05, 0.1)).toBe(false));
+  it('semi left', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'left' }, 0.8, 1, 0)).toBe(true));
+  it('semi left margin', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'left' }, 0.95, 1, 0.1)).toBe(false));
+  it('semi left excludes the right side', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'left' }, 1.2, 1, 0)).toBe(false));
+  it('semi right', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'right' }, 1.2, 1, 0)).toBe(true));
+  it('semi right margin', () => expect(pointInPart(SEMI, { cx: 1, cy: 1, dir: 'right' }, 1.05, 1, 0.1)).toBe(false));
+  it('arc at 0 holds its quarter ring', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.53, 2.53, 0)).toBe(true));
+  it('arc excludes its hole', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.2, 2.2, 0)).toBe(false));
+  it('arc excludes beyond its rim', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.75, 2.75, 0)).toBe(false));
+  it('arc inner margin', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.38, 2.38, 0.1)).toBe(false));
+  it('arc outer margin', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.66, 2.66, 0.1)).toBe(false));
+  it('arc excludes other quarters', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 90 }, 2.53, 2.53, 0)).toBe(false));
+  it('arc at 90', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 90 }, 1.47, 2.53, 0)).toBe(true));
+  it('arc at 180', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 180 }, 1.47, 1.47, 0)).toBe(true));
+  it('arc at 270', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 270 }, 2.53, 1.47, 0)).toBe(true));
+  it('arc at 0 margin on the radial edges', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.75, 2.05, 0.1)).toBe(false));
+  it('arc at 0 margin on the other radial edge', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 0 }, 2.05, 2.75, 0.1)).toBe(false));
+  it('arc at 90 margin', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 90 }, 1.95, 2.75, 0.1)).toBe(false));
+  it('arc at 90 margin on the other edge', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 90 }, 1.25, 2.05, 0.1)).toBe(false));
+  it('arc at 180 margin', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 180 }, 1.95, 1.25, 0.1)).toBe(false));
+  it('arc at 180 margin on the other edge', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 180 }, 1.25, 1.95, 0.1)).toBe(false));
+  it('arc at 270 margin', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 270 }, 2.05, 1.25, 0.1)).toBe(false));
+  it('arc at 270 margin on the other edge', () => expect(pointInPart(ARC, { cx: 2, cy: 2, angle: 270 }, 2.75, 1.95, 0.1)).toBe(false));
+  it('triangle inside', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 1.5, 2.5, 0)).toBe(true));
+  it('triangle excludes past the long edge', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 2.6, 1.6, 0)).toBe(false));
+  it('triangle margin', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 1.05, 2.5, 0.1)).toBe(false));
+  it('triangle margin on the long edge is a true distance', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 2.05, 2.1, 0.1)).toBe(false));
+  it('triangle long edge just inside the margin', () => expect(pointInPart(BIG_TRI, { rx: 1, ry: 3, sx: 1, sy: -1 }, 2, 2.2, 0.1)).toBe(true));
+  it('triangle wound the other way', () => expect(pointInPart(BIG_TRI, { rx: 4, ry: 1, sx: -1, sy: 1 }, 3.5, 1.5, 0)).toBe(true));
+});
+
+describe('partSamples', () => {
+  const Q = { kind: 'rect', w: 1, h: 1 };
+  it('grid points inside the part', () => expect(partSamples(Q, { x: 0, y: 0 }, 0.5, 0)).toEqual([[0.25, 0.25], [0.25, 0.75], [0.75, 0.25], [0.75, 0.75]]));
+  it('margin drops edge points', () => expect(partSamples(Q, { x: 0, y: 0 }, 0.5, 0.3)).toEqual([]));
+  it('covers a non-square part', () => expect(partSamples(RECT, { x: 0, y: 0 }, 1, 0)).toEqual([[0.5, 0.5], [1.5, 0.5]]));
+  it('drops points outside a circle', () => expect(partSamples({ kind: 'circle', r: 1 }, { cx: 1, cy: 1 }, 0.5, 0).length).toBe(12));
+});
+
+describe('overlapProblems', () => {
+  const byId = indexPieces([
+    { id: 'Q', kind: 'rect', w: 1, h: 1 },
+    { id: 'BIG', kind: 'rect', w: 2, h: 2 },
+  ]);
+  const pic = (...parts) => ({ parts });
+  it('pieces that only touch are fine', () => expect(overlapProblems(pic({ piece: 'Q', x: 0, y: 0 }, { piece: 'Q', x: 1, y: 0 }), byId)).toEqual([]));
+  it('pieces apart are fine', () => expect(overlapProblems(pic({ piece: 'Q', x: 0, y: 0 }, { piece: 'Q', x: 3, y: 0 }), byId)).toEqual([]));
+  it('a piece wholly on top of another is fine', () => expect(overlapProblems(pic({ piece: 'BIG', x: 0, y: 0 }, { piece: 'Q', x: 0.5, y: 0.5 }), byId)).toEqual([]));
+  it('a big piece over a small one is fine, whichever is listed first', () => expect(overlapProblems(pic({ piece: 'Q', x: 0.5, y: 0.5 }, { piece: 'BIG', x: 0, y: 0 }), byId)).toEqual([]));
+  it('a flush piece sitting wholly on top is fine', () => expect(overlapProblems(pic({ piece: 'BIG', x: 0, y: 0 }, { piece: 'Q', x: 0, y: 0 }), byId)).toEqual([]));
+  it('a corner overlap is a problem', () => expect(overlapProblems(pic({ piece: 'Q', x: 0, y: 0 }, { piece: 'Q', x: 0.5, y: 0.5 }), byId)).toEqual([[0, 1]]));
+  it('a thin overlap is still a problem', () => expect(overlapProblems(pic({ piece: 'Q', x: 0, y: 0 }, { piece: 'Q', x: 0.95, y: 0 }), byId)).toEqual([[0, 1]]));
+  it('names every clashing pair by position', () => expect(overlapProblems(pic(
+    { piece: 'Q', x: 5, y: 5 }, { piece: 'Q', x: 0, y: 0 }, { piece: 'BIG', x: 0.5, y: 0.5 },
+  ), byId)).toEqual([[1, 2]]));
 });
 
 describe('indexPieces', () => {
@@ -146,5 +220,8 @@ describe('shape-pictures content', () => {
   data.pictures.forEach((pic) => {
     it(`${pic.name} only uses pieces in the set`, () => expect(unknownPieces(pic, byId)).toEqual([]));
     it(`${pic.name} never uses a piece more times than the set has it`, () => expect(overusedPieces(pic, byId)).toEqual([]));
+    it(`${pic.name} has no piece partly overlapping another — each only touches, or sits wholly on top`, () => expect(
+      overlapProblems(pic, byId).map(([a, b]) => `${a}:${pic.parts[a].piece} × ${b}:${pic.parts[b].piece}`),
+    ).toEqual([]));
   });
 });
